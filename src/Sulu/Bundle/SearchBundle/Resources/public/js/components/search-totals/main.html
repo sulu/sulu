@@ -4,9 +4,9 @@
     <table>
         <tr>
             <% var i=0; %>
-            <% _.each(data, function(total, key) { if(total > 0) { i++; %>
+            <% _.each(data, function(total, key) { if (total > 0) { i++; %>
             <td>
-                <a href="#" class="category-link <% activeCategory === key %>active<% } %>" data-category="<%= key %>"> <%= translate(categories[key].name) %>:</a>
+                <a href="#" class="category-link <% if (activeCategory === key) { %>active<% } %>" data-category="<%= key %>"> <%= translate(categories[key].name) %>:</a>
                 <%= total %>
             </td>
             <% if(i % 3 === 0) { %>
