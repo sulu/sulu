@@ -102,6 +102,16 @@ interface ListBuilderInterface
     public function where(AbstractFieldDescriptor $fieldDescriptor, $value);
 
     /**
+     * Defines a constraint for the rows to return which are equals one of the values
+     * specified in the $values array - is able to process also null values
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     * @return mixed
+     */
+    public function inArray(AbstractFieldDescriptor $fieldDescriptor, $values);
+
+    /**
      * Defines a constraint for the rows to return which are not equal the specified values
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should not have

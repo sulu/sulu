@@ -109,6 +109,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $page = 1;
 
     /**
+     * The fields for the in array clauses
+     * @var
+     */
+    protected $inArrayFields;
+
+    /**
+     * The values for the in array clauses
+     * @var
+     */
+    protected $inArrayValues;
+
+    /**
      * {@inheritDoc}
      */
     public function setFields($fieldDescriptors)
@@ -241,5 +253,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor)
     {
         $this->groupByFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function inArray(AbstractFieldDescriptor $fieldDescriptor, $values){
+        $this->inArrayFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->inArrayValues[$fieldDescriptor->getName()] = $values;
     }
 }
