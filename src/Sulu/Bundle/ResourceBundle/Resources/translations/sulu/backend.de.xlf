@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="3" resname="resource.filter.conjunction">
                 <source>resource.filter.conjunction</source>
-                <target>Filtere Einträge auf die ... zutreffen</target>
+                <target>Filtere Einträge auf die</target>
             </trans-unit>
             <trans-unit id="4" resname="resource.filter.entityName">
                 <source>resource.filter.entityName</source>
@@ -21,6 +21,19 @@
             <trans-unit id="5" resname="resource.filter.conditions">
                 <source>resource.filter.conditions</source>
                 <target>Bedingungen</target>
+            </trans-unit>
+            <trans-unit id="6" resname="resource.filter.delete.warning">
+                <source>resource.filter.delete.warning</source>
+                <target>Wollen Sie wirklich die ausgewählten Filter löschen? Die gespeicherten Daten gehen dabei
+                    verloren.</target>
+            </trans-unit>
+            <trans-unit id="7" resname="resource.filter.conjunction.or">
+                <source>resource.filter.conjunction.or</source>
+                <target>mindestens eine Bedingung zutrifft</target>
+            </trans-unit>
+            <trans-unit id="8" resname="resource.filter.conjunction.and">
+                <source>resource.filter.conjunction.and</source>
+                <target>alle Bedingungen zutreffen</target>
             </trans-unit>
         </body>
     </file>

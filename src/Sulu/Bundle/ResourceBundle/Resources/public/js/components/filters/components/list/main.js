@@ -13,7 +13,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
 
 
     var bindCustomEvents = function() {
-        // add ckicked
+        // add clicked
         this.sandbox.on('sulu.list-toolbar.add', function() {
             this.sandbox.emit('sulu.resource.filters.new');
         }.bind(this));
@@ -59,16 +59,13 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         renderGrid: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/list'));
 
-            // TODO when list is accessed without type (e.g. contact) then a dropdown for adding new filters has to be
-            // visible instead of the simple add button
-
             // TODO adjust url to fetch filters by type
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'filterFields', '/admin/api/filters/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
-                    instanceName: 'filterToolbar',
+                    instanceName: 'filterSearch',
                     parentTemplate: 'default',
                     inHeader: true
                 },
@@ -76,7 +73,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
                     url: '/admin/api/filters?flat=true',
                     resultKey: 'filters',
-                    searchInstanceName: 'filters',
+                    searchInstanceName: 'filterSearch',
                     searchFields: ['name'],
                     viewOptions: {
                         table: {
