@@ -63,6 +63,11 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $sortField;
 
     /**
+     * @var AbstractDoctrineFieldDescriptor[]
+     */
+    protected $inArrayFields = array();
+
+    /**
      * @var \Doctrine\ORM\QueryBuilder
      */
     protected $queryBuilder;
@@ -150,6 +155,10 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $whereField->getJoins());
         }
 
+        foreach ($this->inArrayFields as $inArrayField) {
+            $joins = array_merge($joins, $inArrayField->getJoins());
+        }
+
         foreach ($this->whereNotFields as $whereNotField) {
             $joins = array_merge($joins, $whereNotField->getJoins());
         }
@@ -193,6 +202,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         // set where
         if (!empty($this->whereFields)) {
             $this->addWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
+        }
+
+        // set in array
+        if (!empty($this->inArrayFields)) {
+            $this->addInArrayStatements($this->inArrayFields, $this->inArrayValues, self::WHERE_COMPARATOR_EQUAL);
         }
 
         // set where not
@@ -289,6 +303,61 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
+    }
+
+    /**
+     * sets the in-array statements
+     * @param array $whereFields
+     * @param array $whereValues
+     * @param string $comparator
+     * @param string $connector
+     */
+    protected function addInArrayStatements(
+        array $whereFields,
+        array $whereValues,
+        $comparator = self::WHERE_COMPARATOR_EQUAL,
+        $connector = ' OR '
+    ) {
+        $whereParts = array();
+
+        foreach ($whereFields as $whereField) {
+            $values = $whereValues[$whereField->getName()];
+            $partials = $this->processInArrayValues($values, $whereField, $comparator, $connector);
+
+            // add new where statement but remove last or
+            $combinedWhereClause = implode('', $partials);
+            $whereParts[] = substr($combinedWhereClause, 0, strlen($combinedWhereClause) - strlen($connector));
+        }
+        $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
+    }
+
+    /**
+     * Creates the segments of on in-array statement
+     *
+     * @param array $values
+     * @param $whereField
+     * @param string $comparator
+     * @param string $connector and / or
+     *
+     * @return array
+     */
+    protected function processInArrayValues(array $values, $whereField, $comparator, $connector)
+    {
+        $partials = array();
+        $length = count($values);
+
+        for ($i = 0; $i < $length; $i++) {
+            if ($values[$i] === null) {
+                $partials[] = $whereField->getSelect() . ' ' .
+                    $this->convertNullComparator($comparator) . $connector;
+            } else {
+                $partials[] = $whereField->getSelect() . ' ' . $comparator .
+                    ' :' . $whereField->getName() . $i . $connector;
+                $this->queryBuilder->setParameter($whereField->getName() . $i, $values[$i]);
+            }
+        }
+
+        return $partials;
     }
 
     /**
