@@ -28,6 +28,14 @@ interface FilterManagerInterface
     public function getFieldDescriptors($locale);
 
     /**
+     * Returns an array of field descriptors specific for the list
+     *
+     * @param $locale
+     * @return DoctrineFieldDescriptor[]
+     */
+    public function getListFieldDescriptors($locale);
+
+    /**
      * Finds a filter by id and locale
      *
      * @param integer $id
@@ -68,4 +76,11 @@ interface FilterManagerInterface
      * @param $ids
      */
     public function batchDelete($ids);
+
+    /**
+     * Returns the configured class for a key
+     * @param string $key
+     * @return string|null
+     */
+    public function getClassMappingForKey($key);
 }
