@@ -78,9 +78,8 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = $node->getPropertyValueWithDefault($property->getName(), array());
-
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $data = $node->getProperty($property->getName())->getString();
+        $this->setData($data, $property);
     }
 
     /**
@@ -97,7 +96,7 @@ class InternalLinks extends ComplexContentType
             $data = $data->toArray();
         }
 
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $this->setData($data, $property);
     }
 
     /**
@@ -119,20 +118,7 @@ class InternalLinks extends ComplexContentType
     private function setData($data, PropertyInterface $property)
     {
         $refs = isset($data) ? $data : array();
-        $ids = array();
-        if (is_array($refs)) {
-            foreach ($refs as $index => $reference) {
-                // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($index)) {
-                    $ids[] = $index;
-                    continue;
-                }
-
-                $ids[] = $reference->getIdentifier();
-            }
-        }
-
-        $property->setValue($ids);
+        $property->setValue($refs);
     }
 
     /**
