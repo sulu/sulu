@@ -13,17 +13,32 @@
  * @constructor
  */
 define(['text!sulusearch/components/search-totals/main.html'], function(mainTemplate) {
+
+    'use strict';
+
     var defaults = {
             instanceName: null,
+            allCategory: 'all',
             categories: {}
         },
 
+        /**
+         * prefix for eventnames
+         * @type {string}
+         */
+        prefix = 'sulu.search-totals.',
+
+        /**
+         * create an eventname with given postfix
+         * @param postfix
+         * @returns {string}
+         */
         createEventName = function(postfix) {
-            return 'sulu.search-totals.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
+            return prefix + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         },
 
         /**
-         * update component
+         * update component with new totals and actove category
          * @event sulu.search-totals.[INSTANCE_NAME].update
          */
         UPDATE = function() {
@@ -42,6 +57,9 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
             this.bindDomEvents();
         },
 
+        /**
+         * @method bindCustomEvents
+         */
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE.call(this), function(data, category) {
                 this.data = data;
@@ -50,6 +68,9 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
             }.bind(this));
         },
 
+        /**
+         * @method bindDomEvents
+         */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.preventDefault();
@@ -64,13 +85,13 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
             }.bind(this), '.category-link');
         },
 
+        /**
+         * render component
+         * @method render
+         */
         render: function() {
-            var total = _.reduce(this.data, function(memo, total) {
-                return memo + total;
-            }, 0);
-
             var template = '';
-            if (total > 0) {
+            if (this.activeCategory === this.options.allCategory && this.getTotal() > 0) {
                 template = this.mainTemplate({
                     data: this.data,
                     categories: this.options.categories,
@@ -80,6 +101,16 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
             }
 
             this.$el.html(template);
+        },
+
+        /**
+         * returns current total overall categories
+         * @method getTotal
+         */
+        getTotal: function() {
+            return _.reduce(this.data, function(memo, total) {
+                return memo + total;
+            }, 0);
         }
     };
 });

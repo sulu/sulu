@@ -122,27 +122,26 @@
 .search-totals-wrapper {
   background-color: #ccc;
   padding: 20px;
-  margin-bottom: 50px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
-/* line 10, ../scss/modules/search-totals.scss */
+/* line 9, ../scss/modules/search-totals.scss */
 .search-totals-wrapper h2 {
   color: #666;
   font-size: 16px;
   line-height: 22px;
 }
-/* line 16, ../scss/modules/search-totals.scss */
+/* line 15, ../scss/modules/search-totals.scss */
 .search-totals-wrapper a {
   text-decoration: none;
   color: #666;
 }
-/* line 20, ../scss/modules/search-totals.scss */
+/* line 19, ../scss/modules/search-totals.scss */
 .search-totals-wrapper a.active {
   font-weight: bold;
 }
-/* line 26, ../scss/modules/search-totals.scss */
+/* line 25, ../scss/modules/search-totals.scss */
 .search-totals-wrapper table td {
   font-size: 14px;
 }
