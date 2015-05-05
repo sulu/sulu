@@ -15,6 +15,7 @@
     ],
     "require": {
         "cboden/ratchet": "0.3.*",
+        "doctrine/orm": "2.4.*",
         "doctrine/phpcr-bundle": "~1.2.0",
         "doctrine/phpcr-odm": "~1.2.0",
         "friendsofsymfony/http-cache": "1.0.*",
@@ -33,7 +34,6 @@
         "symfony/swiftmailer-bundle": "~2.3"
     },
     "require-dev": {
-        "doctrine/orm": "2.4.*",
         "phpcr/phpcr-shell": "~1.0.0@alpha",
         "doctrine/doctrine-bundle": "1.4.*",
         "jackalope/jackalope-jackrabbit": "~1.2.0",
