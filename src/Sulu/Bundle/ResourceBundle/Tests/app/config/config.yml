@@ -1,0 +1,10 @@
+sulu_resource:
+    aliases:
+        contact:
+            class: "Sulu\Bundle\ContactBundle\Entity\Contact"
+            features:
+                - "filters"
+        account:
+             class: "Sulu\Bundle\ContactBundle\Entity\Account"
+             features:
+                 - "filters"

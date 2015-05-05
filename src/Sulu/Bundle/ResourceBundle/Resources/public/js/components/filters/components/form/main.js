@@ -104,7 +104,7 @@ define(['filtersutil/header'], function(HeaderUtil) {
                 }
 
                 data.conjunction = data.conjunction.id;
-                data.entityName = this.options.type;
+                data.context = this.options.type;
 
                 this.sandbox.emit('sulu.resource.filters.save', data);
             }
