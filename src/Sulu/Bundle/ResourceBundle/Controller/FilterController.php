@@ -90,8 +90,6 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     private function getListRepresentation($request)
     {
-        $userCondition = array($this->getUser()->getId(), null);
-
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $fieldDescriptors = $this->getManager()->getListFieldDescriptors($this->getLocale($request));
@@ -108,7 +106,8 @@ class FilterController extends RestController implements ClassResourceInterface
             $listBuilder->where($fieldDescriptors['context'], $request->get('context'));
         }
 
-        // required
+        // return all filters created by the user or without user
+        $userCondition = array($this->getUser()->getId(), null);
         $listBuilder->inArray($fieldDescriptors['user'], $userCondition);
 
         $list = new ListRepresentation(
