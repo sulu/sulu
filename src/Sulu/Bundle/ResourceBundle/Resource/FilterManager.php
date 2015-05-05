@@ -177,6 +177,9 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setChanged(new \DateTime());
 
+        // set user for filter
+        $filter->setUser($user);
+
         // update condition groups and conditions
         if (isset($data['conditionGroups'])) {
             $get = function (ConditionGroupEntity $conditionGroup) {
