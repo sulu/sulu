@@ -59,8 +59,6 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         renderGrid: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/list'));
 
-            // TODO adjust url to fetch filters by type
-
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'filterFields', '/admin/api/filters/fields',
                 {
@@ -71,7 +69,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
-                    url: '/admin/api/filters?flat=true',
+                    url: '/admin/api/filters?flat=true&entityName='+this.options.type,
                     resultKey: 'filters',
                     searchInstanceName: 'filterSearch',
                     searchFields: ['name'],

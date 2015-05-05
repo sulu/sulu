@@ -89,15 +89,28 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     private function getListRepresentation($request)
     {
+        $entityClassName = $this->getManager()->getClassMappingForKey($request->get('entityName'));
+        $userCondition = array($this->getUser()->getId(), null);
+
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+        $fieldDescriptors = $this->getManager()->getListFieldDescriptors($this->getLocale($request));
+
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create(self::$entityName);
         $restHelper->initializeListBuilder(
             $listBuilder,
-            $this->getManager()->getFieldDescriptors($this->getLocale($request))
+            $fieldDescriptors
         );
+
+        if($entityClassName) {
+            $listBuilder->where($fieldDescriptors['entityName'], $entityClassName);
+        }
+
+        // required
+        $listBuilder->inArray($fieldDescriptors['user'], $userCondition);
+
         $list = new ListRepresentation(
             $listBuilder->execute(),
             self::$entityKey,
