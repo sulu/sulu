@@ -170,6 +170,7 @@ class MediaControllerTest extends SuluTestCase
         $fileVersionMeta->setFileVersion($fileVersion);
 
         $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
 
         $file->addFileVersion($fileVersion);
 

@@ -523,14 +523,27 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $portals = $this->webspaceManager->getPortals();
 
-        $this->assertCount(6, $portals);
+        $this->assertCount(9, $portals);
         $this->assertEquals('massiveart_us', $portals['massiveart_us']->getKey());
         $this->assertEquals('massiveart_ca', $portals['massiveart_ca']->getKey());
         $this->assertEquals('sulucmf_at', $portals['sulucmf_at']->getKey());
+        $this->assertEquals('dancmf_at', $portals['dancmf_at']->getKey());
         $this->assertEquals('sulucmf_singlelanguage_at', $portals['sulucmf_singlelanguage_at']->getKey());
         $this->assertEquals(
             'sulucmf_withoutportallocalizations_at',
             $portals['sulucmf_withoutportallocalizations_at']->getKey()
+        );
+        $this->assertEquals(
+            'sulucmf_io_error_templates',
+            $portals['sulucmf_io_error_templates']->getKey()
+        );
+        $this->assertEquals(
+            'sulucmf_io_error_templates_default_only',
+            $portals['sulucmf_io_error_templates_default_only']->getKey()
+        );
+        $this->assertEquals(
+            'sulucmf_io_error_templates_missing_default',
+            $portals['sulucmf_io_error_templates_missing_default']->getKey()
         );
     }
 
@@ -538,9 +551,10 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $urls = $this->webspaceManager->getUrls('dev');
 
-        $this->assertCount(13, $urls);
+        $this->assertCount(14, $urls);
         $this->assertContains('sulu.lo', $urls);
         $this->assertContains('sulu-single-language.lo', $urls);
+        $this->assertContains('sulu-error-templates.lo', $urls);
         $this->assertContains('sulu-without.lo', $urls);
         $this->assertContains('massiveart.lo', $urls);
         $this->assertContains('massiveart.lo/en-us/w', $urls);
@@ -557,8 +571,9 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $portalInformations = $this->webspaceManager->getPortalInformations('dev');
 
-        $this->assertCount(13, $portalInformations);
+        $this->assertCount(14, $portalInformations);
         $this->assertArrayHasKey('sulu.lo', $portalInformations);
+        $this->assertArrayHasKey('sulu-error-templates.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-single-language.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-without.lo', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo', $portalInformations);

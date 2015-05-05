@@ -384,4 +384,90 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($devUrl->getRedirect());
         $this->assertNull($devUrl->getSegment());
     }
+
+    public function testErrorTemplates()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/sulu.io_error_templates.xml'
+        );
+
+        $theme = $webspace->getTheme();
+        $errorTemplates = $theme->getErrorTemplates();
+
+        $this->assertEquals(
+            array(
+                'default' => 'ClientWebsiteBundle:views:error.html.twig',
+                '400' => 'ClientWebsiteBundle:views:error.400.html.twig',
+                '500' => 'ClientWebsiteBundle:views:error.500.html.twig',
+            ),
+            $errorTemplates
+        );
+
+        $this->assertEquals('ClientWebsiteBundle:views:error.500.html.twig', $theme->getErrorTemplate('500'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.400.html.twig', $theme->getErrorTemplate('400'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('409'));
+    }
+
+    public function testErrorTemplatesMissingDefault()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/sulu.io_error_templates_missing_default.xml'
+        );
+
+        $theme = $webspace->getTheme();
+        $errorTemplates = $theme->getErrorTemplates();
+
+        $this->assertEquals(
+            array(
+                '400' => 'ClientWebsiteBundle:views:error.400.html.twig',
+                '500' => 'ClientWebsiteBundle:views:error.500.html.twig',
+            ),
+            $errorTemplates
+        );
+
+        $this->assertEquals('ClientWebsiteBundle:views:error.500.html.twig', $theme->getErrorTemplate('500'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.400.html.twig', $theme->getErrorTemplate('400'));
+        $this->assertNull($theme->getErrorTemplate('409'));
+    }
+
+    public function testErrorTemplatesDefaultOnly()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/sulu.io_error_templates_default_only.xml'
+        );
+
+        $theme = $webspace->getTheme();
+        $errorTemplates = $theme->getErrorTemplates();
+
+        $this->assertEquals(
+            array(
+                'default' => 'ClientWebsiteBundle:views:error.html.twig',
+            ),
+            $errorTemplates
+        );
+
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('500'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('400'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('409'));
+    }
+
+    public function testErrorTemplatesDefaultFalse()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException'
+        );
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/sulu.io_error_templates_default_false.xml'
+        );
+    }
+
+    public function testErrorTemplatesManyDefaults()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException'
+        );
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/sulu.io_error_templates_many_defaults.xml'
+        );
+    }
 }

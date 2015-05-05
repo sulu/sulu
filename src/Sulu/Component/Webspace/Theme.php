@@ -27,6 +27,21 @@ class Theme implements ArrayableInterface
     private $excludedTemplates;
 
     /**
+     * A list of exception templates
+     * @var array
+     */
+    private $errorTemplates;
+
+    /**
+     * Theme constructor.
+     */
+    public function __construct()
+    {
+        $this->excludedTemplates = array();
+        $this->errorTemplates = array();
+    }
+
+    /**
      * Sets the key of the theme
      * @param string $key The key of the theme
      */
@@ -72,13 +87,51 @@ class Theme implements ArrayableInterface
     }
 
     /**
+     * Add a new error template for given code
+     * @param string $code
+     * @param string $template
+     */
+    public function addErrorTemplate($code, $template)
+    {
+        $this->errorTemplates[$code] = $template;
+    }
+
+    /**
+     * Returns a error template for given code
+     * @param string $code
+     * @return string|null
+     */
+    public function getErrorTemplate($code)
+    {
+        if (array_key_exists($code, $this->errorTemplates)) {
+            return $this->errorTemplates[$code];
+        }
+
+        if (array_key_exists('default', $this->errorTemplates)) {
+            return $this->errorTemplates['default'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a array of error template
+     * @return string[]
+     */
+    public function getErrorTemplates()
+    {
+        return $this->errorTemplates;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toArray($depth = null)
     {
         return array(
             'key' => $this->getKey(),
-            'excludedTemplates' => $this->getExcludedTemplates()
+            'excludedTemplates' => $this->getExcludedTemplates(),
+            'errorTemplates' => $this->getErrorTemplates(),
         );
     }
 }

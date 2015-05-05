@@ -789,12 +789,33 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('', $response['title']);
         $this->assertEquals(3, sizeof($items));
 
-        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2&tagOperator=and');
         $response = json_decode($client->getResponse()->getContent(), true);
         $items = $response['_embedded']['nodes'];
 
         $this->assertEquals('', $response['title']);
         $this->assertEquals(2, sizeof($items));
+
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2&tagOperator=or');
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
+
+        $this->assertEquals('', $response['title']);
+        $this->assertEquals(5, sizeof($items));
+
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2,tag3&tagOperator=and');
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
+
+        $this->assertEquals('', $response['title']);
+        $this->assertEquals(0, sizeof($items));
+
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2,tag3&tagOperator=or');
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
+
+        $this->assertEquals('', $response['title']);
+        $this->assertEquals(5, sizeof($items));
 
         $client->request(
             'GET',

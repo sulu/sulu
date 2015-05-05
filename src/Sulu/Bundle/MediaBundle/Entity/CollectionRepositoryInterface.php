@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+
 /**
  * Defines the method for the doctrine repository
  * @package Sulu\Bundle\MediaBundle\Entity
@@ -23,7 +25,7 @@ interface CollectionRepositoryInterface
      * @param array $filter
      * @return Collection[]
      */
-    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null, $sortBy = array());
+    public function findCollectionSet($depth = 0, $filter = array(), CollectionInterface $collection = null, $sortBy = array());
 
     /**
      * Finds the collection with a given id

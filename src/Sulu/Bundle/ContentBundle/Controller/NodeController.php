@@ -290,6 +290,7 @@ class NodeController extends RestController
         $includeSubFolders = $this->getBooleanRequestParameter($request, 'includeSubFolders', false, false);
         $limitResult = $this->getRequestParameter($request, 'limitResult');
         $tagNames = $this->getRequestParameter($request, 'tags');
+        $tagOperator = $this->getRequestParameter($request, 'tagOperator', false, 'or');
         $sortBy = $this->getRequestParameter($request, 'sortBy');
         $sortMethod = $this->getRequestParameter($request, 'sortMethod', false, 'asc');
         $exclude = $this->getRequestParameter($request, 'exclude');
@@ -328,6 +329,7 @@ class NodeController extends RestController
             'includeSubFolders' => $includeSubFolders,
             'limitResult' => $limitResult,
             'tags' => $resolvedTags,
+            'tagOperator' => $tagOperator,
             'sortBy' => $sortColumns,
             'sortMethod' => $sortMethod
         );
