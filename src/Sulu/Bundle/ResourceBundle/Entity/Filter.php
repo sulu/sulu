@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Filter
@@ -41,6 +42,31 @@ class Filter
      * @var \Doctrine\Common\Collections\Collection
      */
     private $conditionGroups;
+
+    /**
+     * @var UserInterface
+     */
+    private $user;
+
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $changed;
+
+    /**
+     * @var UserInterface
+     */
+    private $changer;
+
+    /**
+     * @var UserInterface
+     */
+    private $creator;
 
     /**
      * Constructor
@@ -151,27 +177,6 @@ class Filter
     }
 
     /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
-     */
-    private $changer;
-
-    /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
-     */
-    private $creator;
-
-
-    /**
      * Set created
      *
      * @param \DateTime $created
@@ -220,10 +225,10 @@ class Filter
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param UserInterface $changer
      * @return Filter
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -233,7 +238,7 @@ class Filter
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -243,10 +248,10 @@ class Filter
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param UserInterface $creator
      * @return Filter
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -256,7 +261,7 @@ class Filter
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return UserInterface
      */
     public function getCreator()
     {
@@ -284,5 +289,28 @@ class Filter
     public function getConjunction()
     {
         return $this->conjunction;
+    }
+
+    /**
+     * Set user
+     *
+     * @param UserInterface $user
+     * @return Filter
+     */
+    public function setUser(UserInterface $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return UserInterface
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

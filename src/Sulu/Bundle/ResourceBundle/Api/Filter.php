@@ -283,4 +283,24 @@ class Filter extends ApiWrapper
         return $this->entity->getCreated();
     }
 
+    /**
+     * Set user
+     *
+     * @param UserInterface $user
+     * @return Filter
+     */
+    public function setUser(UserInterface $user = null)
+    {
+        $this->entity->setUser($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return UserInterface
+     */
+    public function getUser()
+    {
+        return $this->entity->getUser();
+    }
 }
