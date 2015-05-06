@@ -16,7 +16,11 @@
                     <% } %>
                 </div>
                 <div class="search-results-description">
-                    <div class="search-results-title"><%= result.title %></div>
+                    <div class="search-results-title">
+                        <%= result.title %><% if (!!result.locale) { %>
+                        <span class="info">(<%= result.locale %>)</span>
+                        <% } %>
+                    </div>
                     <div class="search-results-details">
                         <div><%= result.description %></div>
                     </div>

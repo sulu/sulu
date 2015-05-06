@@ -82,25 +82,31 @@
 }
 
 /* line 77, ../scss/modules/search-results.scss */
+.search-results-title .info {
+  font-size: 12px;
+  color: #999999;
+}
+
+/* line 82, ../scss/modules/search-results.scss */
 .search-results-details {
   width: 250px;
   white-space: nowrap;
   font-size: 12px;
   color: #999999;
 }
-/* line 83, ../scss/modules/search-results.scss */
+/* line 88, ../scss/modules/search-results.scss */
 .search-results-details p {
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* line 90, ../scss/modules/search-results.scss */
+/* line 95, ../scss/modules/search-results.scss */
 .search-results-loader-container {
   margin: 50px 0 0;
 }
 
-/* line 94, ../scss/modules/search-results.scss */
+/* line 99, ../scss/modules/search-results.scss */
 .search-results-info-subline {
   margin: 20px 0;
   text-align: center;
@@ -108,7 +114,7 @@
   font-size: 12px;
 }
 
-/* line 101, ../scss/modules/search-results.scss */
+/* line 106, ../scss/modules/search-results.scss */
 .search-results-no-results {
   font-weight: 400;
   font-size: 24px;
