@@ -7,7 +7,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="locale" type="text" />
+        <field name="locale" type="text"/>
 
         <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface" inversed-by="userGroups">
             <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
