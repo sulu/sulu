@@ -51,6 +51,7 @@ class WebspaceInitializer implements InitializerInterface
     private function initializeBase(OutputInterface $output)
     {
         $basePath = '/' . $this->pathSegmentRegistry->getPathSegment('base');
+
         $output->writeln(sprintf('<info>Base</info>: %s', $basePath));
 
         if (!$this->nodeManager->has($basePath)) {
@@ -84,7 +85,10 @@ class WebspaceInitializer implements InitializerInterface
         $homePath = $webspacePath . '/' . $this->pathSegmentRegistry->getPathSegment('content');
 
         if ($this->nodeManager->has($homePath)) {
-            $homeDocument = $this->documentManager->find($homePath, null);
+            $homeDocument = $this->documentManager->find($homePath, 'fr', array(
+                'locale' => 'fr',
+                'load_ghost_content' => false,
+            ));
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
             $homeDocument = new HomeDocument();

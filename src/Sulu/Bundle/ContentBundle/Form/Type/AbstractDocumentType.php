@@ -80,6 +80,7 @@ abstract class AbstractDocumentType extends AbstractType
             return;
         }
 
+
         $form = $event->getForm();
         $webspaceKey = $form->getConfig()->getAttribute('webspace_key');
         $parent = $this->documentManager->find($this->sessionManager->getContentPath($webspaceKey));

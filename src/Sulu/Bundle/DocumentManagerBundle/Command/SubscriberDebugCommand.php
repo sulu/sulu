@@ -23,7 +23,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $eventName = $input->getArgument('event_name');
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
+        $dispatcher = $this->getContainer()->get('sulu_document_manager.event_dispatcher');
 
         if (!$eventName) {
             return $this->showEventNames($output);

@@ -13,37 +13,37 @@
             <argument type="service" id="sulu_document_manager.name_resolver" />
             <argument type="service" id="sulu_document_manager.node_manager" />
             <argument type="service" id="sulu_document_manager.document_strategy" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.behavior.path.explicit" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ExplicitSubscriber">
             <argument type="service" id="sulu_document_manager.document_strategy" />
             <argument type="service" id="sulu_document_manager.node_manager" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.suscriber.behavior.blame" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\BlameSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="security.token_storage" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
             <tag name="sulu.context" context="admin" />
         </service>
 
         <service id="sulu_document_manager.suscriber.behavior.timestamp" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\TimestampSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.suscriber.behavior.node_name" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\NodeNameSubscriber">
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.suscriber.behavior.uuid" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\UuidSubscriber">
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.suscriber.behavior.locale" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\LocaleSubscriber">
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
             <argument type="service" id="sulu_document_manager.document_registry" />
         </service>
 
@@ -51,61 +51,61 @@
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.suscriber.behavior.children" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ChildrenSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_factory" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.behavior.path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <!-- Core Subscribers -->
         <service id="sulu_document_manager.subscriber.core.instantiator" class="Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber">
             <argument type="service" id="sulu_document_manager.metadata_factory" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.core.registrator" class="Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.reorder" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber">
             <argument type="service" id="sulu_document_manager.node_manager" />
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <!-- PHPCR subscribers -->
         <service id="sulu_document_manager.subscriber.phpcr.find" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\FindSubscriber">
             <argument type="service" id="sulu_document_manager.metadata_factory" />
             <argument type="service" id="sulu_document_manager.node_manager" />
-            <argument type="service" id="event_dispatcher" />
-            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="sulu_document_manager.event_dispatcher" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.query" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber">
             <argument type="service" id="doctrine_phpcr.default_session" />
-            <argument type="service" id="event_dispatcher" />
-            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="sulu_document_manager.event_dispatcher" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.general" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.node_manager" />
-            <argument type="service" id="event_dispatcher" />
-            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="sulu_document_manager.event_dispatcher" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.remove" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\RemoveSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.node_manager" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
     </services>

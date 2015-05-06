@@ -11,48 +11,48 @@
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_navigationContext.document.subscriber.navigation_context" class="Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_redirect_type.document.subscriber.redirect_type" class="Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_resource_segment.document.subscriber.resource_segment" class="Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.workflow_stage" class="Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.workflow_stage" class="Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.shadow_locale" class="Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.title" class="Sulu\Component\Content\Document\Subscriber\TitleSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.fallback_localization" class="Sulu\Component\Content\Document\Subscriber\FallbackLocalizationSubscriber">
@@ -60,7 +60,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.extension" class="Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber">
@@ -68,25 +68,25 @@
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.namespace_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.order" class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.webspace" class="Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.route" class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <!-- Property container -->
@@ -108,14 +108,14 @@
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu.util.node_helper" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.behavior.remove_content" class="Sulu\Component\Content\Document\Subscriber\ContentRemoveSubscriber">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
     </services>

@@ -46,7 +46,7 @@
             <argument type="service" id="sulu_document_manager.node_manager" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument>/%sulu.content.node_names.base%/%sulu.content.node_names.snippet%</argument>
-            <tag name="kernel.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_snippet.form.snippet" class="%sulu_snippet.form.snippet.class%">

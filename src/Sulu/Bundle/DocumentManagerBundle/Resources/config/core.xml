@@ -6,15 +6,24 @@
 
     <services>
         <!-- Core -->
+        <service id="sulu_document_manager.event_dispatcher.debug" class="Sulu\Component\DocumentManager\EventDispatcher\DebugEventDispatcher" public="false">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="debug.stopwatch" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="sulu_document_manager" />
+        </service>
+
+        <service id="sulu_document_manager.event_dispatcher.standard" class="Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher" public="false">
+            <argument type="service" id="service_container" />
+        </service>
+
         <service id="sulu_document_manager.document_manager" class="Sulu\Component\DocumentManager\DocumentManager">
-            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument type="service" id="sulu_document_manager.node_manager" />
         </service>
 
         <service id="sulu_document_manager.document_registry" class="Sulu\Component\DocumentManager\DocumentRegistry" public="false">
             <argument>%sulu.content.language.default%</argument>
-            <argument type="service" id="logger" />
-            <tag name="monolog.logger" channel="document_manager" />
         </service>
 
         <service id="sulu_document_manager.node_manager" class="Sulu\Component\DocumentManager\NodeManager" public="false">
@@ -72,7 +81,7 @@
         <!-- Proxy manager -->
         <service id="sulu_document_manager.proxy_factory" class="Sulu\Component\DocumentManager\ProxyFactory">
             <argument type="service" id="sulu_document_manager.proxy_manager.factory.ghost" />
-            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
         </service>

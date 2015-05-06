@@ -40,6 +40,11 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
     private function configureDocumentManager($config, ContainerBuilder $container)
     {
+        $debug = $container->getParameter('kernel.debug');
+
+        $dispatcherId = $debug ? 'sulu_document_manager.event_dispatcher.debug' : 'sulu_document_manager.event_dispatcher.standard';
+        $container->setAlias('sulu_document_manager.event_dispatcher', $dispatcherId);
+
         $realMapping = array();
         foreach ($config['mapping'] as $alias => $mapping) {
             $realMapping[] = array_merge(array(
