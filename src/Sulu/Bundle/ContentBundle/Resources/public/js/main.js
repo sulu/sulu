@@ -40,16 +40,17 @@ define(['config'], function(Config) {
                 function(data) {
                     if (data.url === '/') {
                         // startpage
-                        return 'content/contents/<%= webspace %>/edit:index/details';
+                        return 'content/contents/<%= webspace %>/<%= locale %>/edit:index/details';
                     } else {
-                        return 'content/contents/<%= webspace %>/<%= languageCode %>/edit:<%= id %>/content';
+                        return 'content/contents/<%= webspace %>/<%= locale %>/edit:<%= id %>/content';
                     }
                 },
                 function(data) {
                     return {
                         id: data.id,
                         webspace: data.properties.webspace_key,
-                        url: data.url
+                        url: data.url,
+                        locale: data.locale
                     };
                 }
             );
