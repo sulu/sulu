@@ -1,6 +1,5 @@
 CHANGELOG for Sulu
 ==================
-FOO
 
 * dev-develop
     * ENHANCEMENT #797  [SearchBundle]   Rebuild command removed, now hooks into massive:search:index:rebuild
