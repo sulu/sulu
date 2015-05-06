@@ -133,16 +133,23 @@
   line-height: 22px;
 }
 /* line 15, ../scss/modules/search-totals.scss */
-.search-totals-wrapper a {
-  text-decoration: none;
+.search-totals-wrapper .name {
   color: #666;
 }
 /* line 19, ../scss/modules/search-totals.scss */
+.search-totals-wrapper a {
+  text-decoration: none;
+  color: #000;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+/* line 25, ../scss/modules/search-totals.scss */
 .search-totals-wrapper a.active {
   font-weight: bold;
 }
-/* line 25, ../scss/modules/search-totals.scss */
+/* line 31, ../scss/modules/search-totals.scss */
 .search-totals-wrapper table td {
+  width: 33%;
   font-size: 14px;
 }
 
