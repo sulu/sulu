@@ -109,7 +109,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadTemplateAttributes(\DOMXPath $xpath, $type)
     {
-        if ($type === 'page') {
+        if ($type === 'page' || $type === 'home') {
             $result = array(
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),

@@ -34,7 +34,7 @@
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
         "sulu-io/document-manager": "dev-master",
-        "sulu-io/document-manager": "dev-master",
+        "sulu/document-manager": "dev-master",
         "dantleech/decorator-generator": "dev-master"
     },
     "require-dev": {

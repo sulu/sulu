@@ -297,7 +297,7 @@ class ContentMapper implements ContentMapperInterface
         $options = array();
 
         if ($document instanceof WebspaceBehavior) {
-            $options['webspace_key'] = $webspaceKey;
+        $options['webspace_key'] = $webspaceKey;
         }
 
         if ($document instanceof ContentBehavior) {
