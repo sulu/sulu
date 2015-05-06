@@ -65,27 +65,32 @@ class SearchController
      */
     public function searchAction(Request $request)
     {
-        $query = $request->query->get('q');
+        $queryString = $request->query->get('q');
         $category = $request->query->get('category', null);
         $locale = $request->query->get('locale', null);
 
-
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
+        $aggregateHits = array();
+        $startTime = microtime(true);
 
-        $query = $this->searchManager->createSearch($query);
+        foreach ($this->searchManager->getIndexNames() as $indexName) {
+            $query = $this->searchManager->createSearch($queryString)->indexes(array($indexName));
 
-        if ($locale) {
-            $query->locale($locale);
+            if ($locale) {
+                $query->locale($locale);
+            }
+
+            if ($category) {
+                $query->category($category);
+            }
+
+            $aggregateHits += $query->execute();
         }
 
-        if ($category) {
-            $query->category($category);
-        }
+        $time = microtime(true) - $startTime;
 
-        $hits = $query->execute();
-
-        $adapter = new ArrayAdapter($hits);
+        $adapter = new ArrayAdapter($aggregateHits);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
@@ -104,8 +109,9 @@ class SearchController
             'page',
             'limit',
             false,
-            count($hits),
-            $this->getCategoryTotals($hits)
+            count($aggregateHits),
+            $this->getCategoryTotals($aggregateHits),
+            number_format($time, 8)
         );
 
         $view = View::create($representation);

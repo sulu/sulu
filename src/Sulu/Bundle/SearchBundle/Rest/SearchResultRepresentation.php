@@ -25,6 +25,14 @@ class SearchResultRepresentation extends PaginatedRepresentation
     protected $totals;
 
     /**
+     * @Expose
+     * @XmlAttribute
+     *
+     * @var float
+     */
+    protected $time;
+
+    /**
      * {@inheritDoc}
      * @param array $totals
      */
@@ -39,7 +47,8 @@ class SearchResultRepresentation extends PaginatedRepresentation
         $limitParameterName = null,
         $absolute = false,
         $total = null,
-        $totals = array()
+        $totals = array(),
+        $time
     ) {
         parent::__construct(
             $inline,
@@ -51,9 +60,11 @@ class SearchResultRepresentation extends PaginatedRepresentation
             $pageParameterName,
             $limitParameterName,
             $absolute,
-            $total
+            $total,
+            $time
         );
 
         $this->totals = $totals;
+        $this->time = $time;
     }
 }

@@ -14,7 +14,7 @@
             <field name="address" expr="object.getMainAddress() ? join(' ', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : ''" type="string" />
         </fields>
 
-        <index name="admin_account" />
+        <index name="account" />
     </mapping>
 
 </massive-search-mapping>
