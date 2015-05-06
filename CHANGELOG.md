@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
     * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen
     * BUGFIX      #--   [AdminBundle]    Fixed login for IE see [commit](https://github.com/sulu-io/sulu/commit/a50e48aa83d360b93b5db0a63300c2799d3bc8ab)
     * BUGFIX      #1045 [MediaBundle]    Fixed upload new media version
