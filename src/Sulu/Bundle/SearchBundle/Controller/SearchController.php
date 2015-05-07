@@ -85,7 +85,9 @@ class SearchController
                 $query->category($category);
             }
 
-            $aggregateHits += $query->execute();
+            foreach ($query->execute() as $key => $hit) {
+                $aggregateHits[] = $hit;
+            }
         }
 
         $time = microtime(true) - $startTime;
