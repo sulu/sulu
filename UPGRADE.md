@@ -16,7 +16,7 @@ Replace all instances of `->index('content')` with `->indexes(array('page',
 ### Search searches non-published pages by default
 
 Pages which are "Test" are no longer indexed. If you require only
-"published" pages modify your search query to start with: `state:published`
+"published" pages modify your search query to start with: `state:published AND `
 
 ### Smart content tag operator
 
