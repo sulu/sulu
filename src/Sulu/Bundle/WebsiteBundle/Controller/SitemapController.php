@@ -11,7 +11,10 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapXMLGeneratorInterface;
+use Sulu\Component\HttpCache\HttpCache;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,42 +27,47 @@ class SitemapController extends WebsiteController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         /** @var RequestAnalyzerInterface $requestAnalyzer */
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->get('sulu_website.sitemap');
 
-        $webspace = $requestAnalyzer->getWebspace();
-        $currentPortal = $requestAnalyzer->getPortal();
-        $defaultLocale = null;
-        if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
-            $defaultLocale = $defaultLocale->getLocalization();
-        }
+        /** @var SitemapXMLGeneratorInterface $sitemapXMLGenerator */
+        $sitemapXMLGenerator = $this->get('sulu_website.sitemap_xml_generator');
 
-        // remove empty first line
-        // FIXME empty line in website kernel
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
+        $flatSitemap = true;
+
+        // MULTI WEBSPACE SUPPORT NOT IMPLEMENTED YET
+        //
+        // if ($request->getHttpHost() == $requestAnalyzer->getLowestLevelDomain()) {
+        //     $webspaceSitemapInformations = $sitemapGenerator->generateAll($flatSitemap);
+        //     $preferredDomain = $requestAnalyzer->getLowestLevelDomain();
+        // } else {
+            $webspaceSitemapInformations = array(
+                $sitemapGenerator->generateAllLocals(
+                    $requestAnalyzer->getWebspace()->getKey(),
+                    $flatSitemap
+                )
+            );
+            $preferredDomain = $request->getHttpHost();
+        // }
+
+        // XML Response
         $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
+        $response->setMaxAge(240);
+        $response->setSharedMaxAge(960);
 
-        $localizations = array();
-        foreach ($requestAnalyzer->getPortal()->getLocalizations() as $localization) {
-            $localizations[] = $localization->getLocalization();
-        }
-
-        return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-            array(
-                'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
-                'locales' => $localizations,
-                'defaultLocale' => $defaultLocale,
-                'webspaceKey' => $webspace->getKey(),
-            ),
-            $response
+        $response->headers->set(
+            HttpCache::HEADER_REVERSE_PROXY_TTL,
+            $response->getAge() + $this->container->getParameter('sulu_website.sitemap.cache.lifetime')
         );
+
+        $response->headers->set('Content-Type', 'text/xml');
+        $response->setContent($sitemapXMLGenerator->generate($webspaceSitemapInformations, $preferredDomain));
+
+        // Generate XML
+        return $response;
     }
 }

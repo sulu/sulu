@@ -344,7 +344,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function testGenerateAllFlat()
     {
-        $result = $this->sitemapGenerator->generateAllLocals('default', true);
+        $result = $this->sitemapGenerator->generateAllLocals('default', true)->getSitemap();
 
         $this->assertEquals(11, sizeof($result));
         $this->assertEquals('', $result[0]['title']);
@@ -387,7 +387,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function testGenerateFlat()
     {
-        $result = $this->sitemapGenerator->generate('default', 'en', true);
+        $result = $this->sitemapGenerator->generate('default', 'en', true)->getSitemap();
 
         $this->assertEquals(6, sizeof($result));
         $this->assertEquals('', $result[0]['title']);
@@ -414,7 +414,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function testGenerateTree()
     {
-        $result = $this->sitemapGenerator->generate('default', 'en');
+        $result = $this->sitemapGenerator->generate('default', 'en')->getSitemap();
 
         $root = $result;
         $this->assertEquals('', $root['title']);
