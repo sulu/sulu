@@ -3,7 +3,7 @@
     <% _.each(sections, function(section) { %>
     <div class="search-results-section is-<%= section.category %>">
         <div class="search-results-section-header">
-            <%= translate(categories[section.category].name) %> (<%= section.results.length %>)
+            <%= translate(categories[section.category].name) %> (<%= totals[section.category] %>)
         </div>
         <ul class="search-results-section-content">
             <% _.each(section.results, function(result) { %>
