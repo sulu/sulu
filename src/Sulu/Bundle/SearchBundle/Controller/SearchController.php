@@ -74,8 +74,10 @@ class SearchController
         $aggregateHits = array();
         $startTime = microtime(true);
 
-        foreach ($this->searchManager->getIndexNames() as $indexName) {
-            $query = $this->searchManager->createSearch($queryString)->indexes(array($indexName));
+        $categories = $category ? array($category) : $this->searchManager->getCategoryNames();
+
+        foreach ($categories as $category) {
+            $query = $this->searchManager->createSearch($queryString);
 
             if ($locale) {
                 $query->locale($locale);
@@ -85,7 +87,7 @@ class SearchController
                 $query->category($category);
             }
 
-            foreach ($query->execute() as $key => $hit) {
+            foreach ($query->execute() as $hit) {
                 $aggregateHits[] = $hit;
             }
         }
