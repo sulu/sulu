@@ -69,7 +69,6 @@ class SearchController
         $category = $request->query->get('category', null);
         $locale = $request->query->get('locale', null);
 
-
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
 

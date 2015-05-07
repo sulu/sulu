@@ -96,6 +96,7 @@ class ReindexListener
 
         // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
         $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"';
+
         $queryManager = $session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $result = $query->execute();
@@ -125,7 +126,6 @@ class ReindexListener
                     if (!isset($count[$structureClass])) {
                         $count[$structureClass] = array(
                             'indexed' => 0,
-                            'deindexed' => 0,
                         );
                     }
 
@@ -133,13 +133,8 @@ class ReindexListener
                         continue;
                     }
 
-                    if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
-                        $this->searchManager->index($structure, $locale);
-                        $count[$structureClass]['indexed']++;
-                    } else {
-                        $this->searchManager->deindex($structure, $locale);
-                        $count[$structureClass]['deindexed']++;
-                    }
+                    $this->searchManager->index($structure, $locale);
+                    $count[$structureClass]['indexed']++;
                 } catch (\Exception $e) {
                     $output->writeln(
                         '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
@@ -154,15 +149,14 @@ class ReindexListener
         $output->writeln('');
 
         foreach ($count as $className => $stats) {
-            if ($stats['indexed'] == 0 && $stats['deindexed'] == 0) {
+            if ($stats['indexed'] == 0) {
                 continue;
             }
 
             $output->writeln(sprintf(
-                '<comment>Content</comment>: %s <info>%s</info> indexed, <info>%s</info> deindexed',
+                '<comment>Content</comment>: %s <info>%s</info> indexed',
                 $className,
-                $stats['indexed'],
-                $stats['deindexed']
+                $stats['indexed']
             ));
         }
     }

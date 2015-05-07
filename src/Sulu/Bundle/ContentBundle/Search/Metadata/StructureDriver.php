@@ -22,6 +22,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Structure;
+use Massive\Bundle\SearchBundle\Search\Field;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -150,7 +151,14 @@ class StructureDriver implements AdvancedDriverInterface
         // index the webspace
         $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
+            'index_strategy' => Field::INDEX_UNSTORED,
             'field' => $this->factory->createMetadataProperty('webspaceKey'),
+        ));
+
+        $indexMeta->addFieldMapping('state', array(
+            'type' => 'string',
+            'index_strategy' => Field::INDEX_UNSTORED,
+            'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
         ));
 
         $classMetadata->addIndexMetadata('_default', $indexMeta);

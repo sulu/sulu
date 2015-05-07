@@ -2,14 +2,21 @@
 
 ## dev-develop
 
-### Search
+### Search adapter name changed
 
 Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
 configuration.
 
+### Search index name changed
+
 Pages and snippets are now indexed in separate indexes for pages and snippets.
 Replace all instances of `->index('content')` with `->indexes(array('page',
 'snippet')`.
+
+### Search searches non-published pages by default
+
+Pages which are "Test" are no longer indexed. If you require only
+"published" pages modify your search query to start with: `state:published AND `
 
 ### Smart content tag operator
 
