@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
     * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
     * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen

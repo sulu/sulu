@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### PHPCR: Doctrine-Dbal
+
+The structure of data has changed. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ### Smart content tag operator
 
 The default operator for tags is now changed to OR. So you have to update with the following command,
