@@ -103,7 +103,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         }
 
-        return $this->sitemapGenerator->generate($webspaceKey, $locale);
+        return $this->sitemapGenerator->generate($webspaceKey, $locale)->getSitemap();
     }
 
     /**

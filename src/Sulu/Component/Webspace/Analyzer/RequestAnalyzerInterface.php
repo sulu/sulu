@@ -123,4 +123,11 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getAnalyticsKey();
+
+
+    /**
+     * Returns the lowest matching domain
+     * @return string
+     */
+    public function getLowestLevelDomain();
 }

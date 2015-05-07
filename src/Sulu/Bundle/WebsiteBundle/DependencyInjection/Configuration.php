@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('sitemap')
                         ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('cache_lifetime')->defaultValue(1)->end()
+                            ->scalarNode('cache_lifetime')->defaultValue(43200)->end()
                         ->end()
                     ->end()
                 ->end()
