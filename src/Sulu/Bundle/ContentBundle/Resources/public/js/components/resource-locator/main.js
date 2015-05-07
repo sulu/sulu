@@ -214,7 +214,7 @@ define([], function() {
                     html.push(
                             '<li data-id="' + history.id + '" data-path="' + history.resourceLocator + '">' +
                             '   <span class="options-restore"><i class="fa fa-refresh pointer"></i></span>' +
-                            '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 35) + '</span>' +
+                            '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 30) + '</span>' +
                             '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
                             '   <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>' +
                             '</li>'
