@@ -17,6 +17,15 @@ Replace all instances of `->index('content')` with `->indexes(array('page',
 
 Pages which are "Test" are no longer indexed. If you require only
 "published" pages modify your search query to start with: `state:published AND `
+and escape the quotes:
+
+```php
+$hits = $searchManager
+    ->createSearch(sprintf('state:published AND "%s"', str_replace('"', '\\"', $query)))
+    ->locale($locale)
+    ->index('page')
+    ->execute();
+```
 
 ### Smart content tag operator
 
