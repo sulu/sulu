@@ -8,7 +8,7 @@
         <locale property="locale" />
         <description property="body" />
         <image property="image" />
-        <category name="test_products" />
+        <category name="test" />
 
         <fields>
             <field name="title" type="string" />
