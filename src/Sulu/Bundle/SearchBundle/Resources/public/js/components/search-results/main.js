@@ -24,7 +24,7 @@ define([
             instanceName: '',
             searchUrl: '/admin/search',
             enabledCategoriesUrl: '/admin/search/categories',
-            pageLimit: 20
+            pageLimit: 100
         },
 
         createEventName = function(postfix) {
@@ -176,14 +176,14 @@ define([
          * Fetch the data from the server
          * @method load
          */
-        load: function(params) {
-            params = $.extend({
-                q: this.state.query,
-                page: this.state.page,
-                limit: 100
-            }, params);
+        load: function() {
+            var params = {
+                    q: this.state.query,
+                    page: this.state.page,
+                    limit: this.options.pageLimit
+                },
 
-            var url = this.options.searchUrl + '/query?' + $.param(params),
+                url = this.options.searchUrl + '/query?' + $.param(params),
                 category = this.state.category;
 
             // if category is 'all' search for everything
@@ -206,7 +206,7 @@ define([
 
                 this.state.page++;
 
-                return this.load({limit: this.options.pageLimit})
+                return this.load()
                     .then(this.mergeResults.bind(this))
                     .then(this.updateResults.bind(this))
                     .then(this.updateTotals.bind(this));

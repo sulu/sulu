@@ -71,15 +71,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     public function onNodeSave(ContentNodeEvent $event)
     {
         $structure = $event->getStructure();
-
-        // TODO: if the structure is the homepage, index it.
-        //       for some reason the content mapper never maps the state to published for a homepage
-        if ($structure->getPath() == '' || $structure->getNodeState() === Structure::STATE_PUBLISHED) {
-            $this->searchManager->index($structure);
-            return;
-        }
-
-        $this->searchManager->deindex($structure);
+        $this->searchManager->index($structure);
     }
 
     /**
