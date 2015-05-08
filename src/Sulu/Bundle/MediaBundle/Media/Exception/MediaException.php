@@ -164,6 +164,13 @@ class MediaException extends Exception
      */
     const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
 
+    /**
+     * The command service was not found
+     *
+     * @var int
+     */
+    const EXCEPTION_CODE_COMMAND_NOT_FOUND = 5022;
+
     public function toArray()
     {
         return array(
