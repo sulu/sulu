@@ -34,6 +34,7 @@ $hits = $searchManager
     ->locale($locale)
     ->index('page')
     ->execute();
+```
 
 ### PHPCR: Doctrine-Dbal
 
