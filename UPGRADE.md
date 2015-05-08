@@ -1,6 +1,6 @@
 # Upgrade
 
-## 0.18.0 (2015-05-08)
+## 0.18.0
 
 ### Search adapter name changed
 
