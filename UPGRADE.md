@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 0.18.0
 
 ## Search index rebuild
 
