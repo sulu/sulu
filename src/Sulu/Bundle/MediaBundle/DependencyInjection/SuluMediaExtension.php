@@ -45,7 +45,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.segments', $config['format_cache']['segments']);
 
         // converter
-        $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
+        $container->setParameter('sulu_media.image.command.tag', 'sulu_media.image.command');
         $container->setParameter('sulu_media.ghost_script.path', $config['ghost_script']['path']);
 
         // storage

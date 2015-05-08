@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
 
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyCommandNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
@@ -19,24 +19,36 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class CommandManager extends ContainerAware implements ManagerInterface
 {
     /**
-     * @var string The prefix to load the image command
+     * @var array
      */
-    private $prefix;
+    private $commandServices = array();
 
     /**
-     * @param string $prefix
+     * @var array
      */
-    public function __construct($prefix)
-    {
-        $this->prefix = $prefix;
+    private $service = array();
+
+    /**
+     * @param array $commandServices
+     */
+    public function __construct(
+        $commandServices = array()
+    ) {
+        $this->commandServices = $commandServices;
     }
 
     /**
-     * @param string $imageCommandName A String with the name of the image command to load
-     * @return CommandInterface
+     * {@inheritdoc}
      */
-    public function get($imageCommandName = '')
+    public function get($name = '')
     {
-        return $this->container->get($this->prefix . $imageCommandName);
+        if (!isset($this->service[$name])) {
+            if (!isset($this->commandServices[$name])) {
+                throw new ImageProxyCommandNotFoundException(sprintf('Service for "%s" was not found', $name));
+            }
+            $this->service[$name] = $this->container->get($this->commandServices[$name]);
+        }
+
+        return $this->service[$name];
     }
 }
