@@ -300,6 +300,10 @@ define([
          */
         dropDownInputClearHandler: function() {
             this.updateResults();
+
+            // reset totals
+            this.totals = {};
+            this.updateTotals();
         },
 
         /**
