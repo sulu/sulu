@@ -24,14 +24,15 @@
         "guzzle/plugin-log": "3.9.*",
         "imagine/imagine": "~0.6.1",
         "liip/theme-bundle": "1.1.*",
-        "massive/search-bundle": "~0.4",
+        "massive/search-bundle": "dev-develop",
         "php": ">=5.5",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
         "symfony-cmf/routing-bundle": "1.2.*",
         "symfony/symfony": "2.6.*",
         "willdurand/hateoas-bundle": "0.3.*",
-        "symfony/swiftmailer-bundle": "~2.3"
+        "symfony/swiftmailer-bundle": "~2.3",
+        "pagerfanta/pagerfanta": "~1.0"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",

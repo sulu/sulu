@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #797  [SearchBundle]   Rebuild command removed, now hooks into massive:search:index:rebuild
+    * ENHANCEMENT #797  [SearchBundle]   Unpublished pages are no longer deindexed - a "state" field has been added, see UPGRADE.md
+    * ENHANCEMENT #797  [ContactBundle]  Contacts and Accounts have massive search mappings
     * ENHANCEMENT #1076 [AdminBundle]    Moved some translations from admin-bundle to their specific bundles
     * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
