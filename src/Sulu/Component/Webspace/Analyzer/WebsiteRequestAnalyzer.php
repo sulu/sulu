@@ -455,15 +455,18 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      */
     private function getLowestLevelDomainByDomain($domain)
     {
-        foreach ($this->webspaceManager->getUrls($this->environment) as $url) {
-            $parsedUrl = parse_url('http://' . $url);
-            if (isset($parsedUrl['host'])) {
-                // Get Shortest available Domain match
-                // e.g.:
-                //     de.sulu.lo      -> sulu.lo
-                //     test.sulu.co.uk -> sulu.co.uk
-                if (fnmatch('*.' . $parsedUrl['host'], $domain)) {
-                    $domain = $parsedUrl['host'];
+        $urls = $this->webspaceManager->getUrls($this->environment);
+        if ($urls) {
+            foreach ($this->webspaceManager->getUrls($this->environment) as $url) {
+                $parsedUrl = parse_url('http://' . $url);
+                if (isset($parsedUrl['host'])) {
+                    // Get Shortest available Domain match
+                    // e.g.:
+                    //     de.sulu.lo      -> sulu.lo
+                    //     test.sulu.co.uk -> sulu.co.uk
+                    if (fnmatch('*.' . $parsedUrl['host'], $domain)) {
+                        $domain = $parsedUrl['host'];
+                    }
                 }
             }
         }
