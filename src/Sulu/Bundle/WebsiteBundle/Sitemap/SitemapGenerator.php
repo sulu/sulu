@@ -65,7 +65,6 @@ class SitemapGenerator implements SitemapGeneratorInterface
      */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
-
         $webSpaceSitemap = $this->getWebspaceSitemap($webspaceKey);
         $webSpaceSitemap->setSitemap(
             $this->generateByLocals($webspaceKey, $webSpaceSitemap->getLocalizations(), $flat)
