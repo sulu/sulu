@@ -80,8 +80,12 @@ class SitemapGenerator implements SitemapGeneratorInterface
     public function generate($webspaceKey, $locale, $flat = false)
     {
         $webspaceSitemapInformation = $this->getWebspaceSitemap($webspaceKey);
+        $sitemap = $this->generateByLocals($webspaceKey, array($locale), $flat);
+        if (sizeof($sitemap) === 1 && !$flat) {
+            $sitemap = $sitemap[0];
+        }
         $webspaceSitemapInformation->setSitemap(
-            $this->generateByLocals($webspaceKey, array($locale), $flat)
+            $sitemap
         );
 
         return $webspaceSitemapInformation;
