@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 0.18.0 (2015-05-08)
 
 ### Search adapter name changed
 
