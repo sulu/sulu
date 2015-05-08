@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
     * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
+    * ENHANCMENT  #1032 [MediaBundle]    Use service tags for image commands
     * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen
     * BUGFIX      #--   [AdminBundle]    Fixed login for IE see [commit](https://github.com/sulu-io/sulu/commit/a50e48aa83d360b93b5db0a63300c2799d3bc8ab)
     * BUGFIX      #1045 [MediaBundle]    Fixed upload new media version
