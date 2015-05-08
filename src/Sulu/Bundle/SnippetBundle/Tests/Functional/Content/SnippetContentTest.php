@@ -67,7 +67,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
     public function testPropertyRead()
     {
-        $this->property->expects($this->once())
+        $this->property->expects($this->exactly(2))
             ->method('getName')->will($this->returnValue('i18n:de-hotels'));
         $this->property->expects($this->once())
             ->method('setValue')

@@ -109,7 +109,9 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('format_cache')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('public_folder')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER)->end()
+                    ->scalarNode('path')->defaultValue('%kernel.root_dir%/../web/uploads/media')->end()
+                    ->booleanNode('save_image')->defaultValue(true)->end()
+                    ->scalarNode('segments')->defaultValue(10)->end()
                 ->end()
             ->end();
 

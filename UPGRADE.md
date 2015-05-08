@@ -25,6 +25,13 @@ $hits = $searchManager
     ->locale($locale)
     ->index('page')
     ->execute();
+
+### PHPCR: Doctrine-Dbal
+
+The structure of data has changed. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
 ```
 
 ### Smart content tag operator
@@ -34,6 +41,19 @@ because the previous default operator was AND.
 
 ```bash
 app/console sulu:upgrade:0.18.0:smart-content-operator tag and
+```
+
+### Media Format Cache Public Folder
+
+If you use the `sulu_media.format_cache.public_folder` parameter, 
+the following configuration update need to be done,
+because the parameter does not longer exists:
+
+``` yml
+sulu_media:
+    format_cache:
+        public_folder: 'public' # delete this line
+        path: %kernel.root_dir%/../public/uploads/media # add this new configuration
 ```
 
 ### Admin

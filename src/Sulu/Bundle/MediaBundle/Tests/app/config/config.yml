@@ -7,8 +7,6 @@ sulu_media:
     format_manager:
         response_headers:
             Expires: "+1 month"
-    format_cache:
-        public_folder: "web"
 
 # Doctrine Configuration
 doctrine:

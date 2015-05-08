@@ -296,7 +296,7 @@ input, select {
   padding: 0 50px;
 }
 /* line 59, ../scss/modules/login.scss */
-.sulu-login .box .frame .hide {
+.sulu-login .box .frame.hide {
   display: none;
 }
 /* line 65, ../scss/modules/login.scss */

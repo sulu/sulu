@@ -5,12 +5,18 @@ CHANGELOG for Sulu
     * ENHANCEMENT #797  [SearchBundle]   Rebuild command removed, now hooks into massive:search:index:rebuild
     * ENHANCEMENT #797  [SearchBundle]   Unpublished pages are no longer deindexed - a "state" field has been added, see UPGRADE.md
     * ENHANCEMENT #797  [ContactBundle]  Contacts and Accounts have massive search mappings
+    * ENHANCEMENT #1076 [AdminBundle]    Moved some translations from admin-bundle to their specific bundles
+    * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
+    * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
+    * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
+    * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen
     * BUGFIX      #--   [AdminBundle]    Fixed login for IE see [commit](https://github.com/sulu-io/sulu/commit/a50e48aa83d360b93b5db0a63300c2799d3bc8ab)
     * BUGFIX      #1045 [MediaBundle]    Fixed upload new media version
     * FEATURE     #496  [ContentBundle]  SmartContent: change default tag filter to OR operation and user can decide to use OR or AND    
     * ENHANCEMENT #1039 [ContactBundle]  Auto select new title or positions in contact form
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
+    * FEATURE     #977  [MediaBundle]    Made Format Cache parameters configurable, prefix ghostscript path parameter with sulu_media.
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
     * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay
