@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1076 [AdminBundle]    Moved some translations from admin-bundle to their specific bundles
     * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
     * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
