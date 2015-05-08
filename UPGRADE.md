@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+## Search index rebuild
+
+Old data in search index can cause problems. You should clear the folder `app/data` and rebuild the index.
+ 
+```bash
+rm -rf app/data/*
+app/console massive:search:index:rebuild
+```
+
 ### Search adapter name changed
 
 Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
