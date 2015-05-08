@@ -10,21 +10,18 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManager;
+use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\BrowserKit\Client;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
-use Sulu\Component\Content\StructureInterface;
 
 class SearchControllerTest extends SuluTestCase
 {
-    /**
-     * @var SearchController
-     */
-    private $controller;
-
     /**
      * @var SearchManager
      */
@@ -66,7 +63,7 @@ class SearchControllerTest extends SuluTestCase
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
-                        'test_products' => 0,
+                        'test' => 0,
                     ),
                     'total' => 0,
                 ),
@@ -92,7 +89,7 @@ class SearchControllerTest extends SuluTestCase
                                     'url' => '/foobar',
                                     'locale' => 'fr',
                                     'imageUrl' => null,
-                                    'category' => 'test_products',
+                                    'category' => 'test',
                                     'created' => '2015-04-10T00:00:00+00:00',
                                     'changed' => '2015-04-12T00:00:00+00:00',
                                     'creatorName' => 'dantleech',
@@ -107,7 +104,7 @@ class SearchControllerTest extends SuluTestCase
                         ),
                     ),
                     'totals' => array(
-                        'test_products' => 1,
+                        'test' => 1,
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
@@ -137,7 +134,7 @@ class SearchControllerTest extends SuluTestCase
                                     'url' => '/foobar',
                                     'locale' => 'fr',
                                     'imageUrl' => null,
-                                    'category' => 'test_products',
+                                    'category' => 'test',
                                     'created' => '2015-04-10T00:00:00+00:00',
                                     'changed' => '2015-04-12T00:00:00+00:00',
                                     'creatorName' => 'dantleech',
@@ -152,7 +149,7 @@ class SearchControllerTest extends SuluTestCase
                         ),
                     ),
                     'totals' => array(
-                        'test_products' => 2,
+                        'test' => 2,
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
@@ -174,13 +171,15 @@ class SearchControllerTest extends SuluTestCase
             $hitResult['document']['changerId'] = $this->user->getId();
         }
 
-
         $this->client->request('GET', '/search/query', $params);
 
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
         unset($result['_links']);
+
+        $this->assertArrayHasKey('time', $result);
+        unset($result['time']);
 
         $this->assertEquals($expectedResult, $result);
     }
@@ -193,7 +192,7 @@ class SearchControllerTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
 
-        $this->assertContains('test_products', $result);
+        $this->assertContains('test', $result);
     }
 
     public function setUp()
