@@ -151,13 +151,13 @@ class StructureDriver implements AdvancedDriverInterface
         // index the webspace
         $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_UNSTORED,
+            'index_strategy' => Field::INDEX_STORED_INDEXED,
             'field' => $this->factory->createMetadataProperty('webspaceKey'),
         ));
 
         $indexMeta->addFieldMapping('state', array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_UNSTORED,
+            'index_strategy' => Field::INDEX_STORED_INDEXED,
             'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
         ));
 
