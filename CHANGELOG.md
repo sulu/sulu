@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 0.18.1 (2015-05-09)
+    * HOTFIX      #1079 [SearchBundle]   Fix webspace-key index for content pages
+
 * 0.18.0 (2015-05-08)
     * ENHANCEMENT #797  [SearchBundle]   Rebuild command removed, now hooks into massive:search:index:rebuild
     * ENHANCEMENT #797  [SearchBundle]   Unpublished pages are no longer deindexed - a "state" field has been added, see UPGRADE.md
