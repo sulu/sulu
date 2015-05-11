@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
@@ -20,9 +20,20 @@ use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
-use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
+use Sulu\Component\Content\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Structure\Block;
+use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\ContentInstanceFactory;
+use DTL\DecoratorGenerator\DecoratorFactory;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -35,37 +46,43 @@ class StructureDriver implements AdvancedDriverInterface
     private $factory;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
      * @var string
      */
     private $mapping;
 
     /**
+     * @var StructureFactory
+     */
+    private $structureFactory;
+
+    /**
+     * @var MetadataFactory
+     */
+    private $metadataFactory;
+
+    /**
+     * @var DecoratorFactory
+     */
+    private $decoratorFactory;
+
+    /**
      * @param Factory $factory
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param StructureManagerInterface $structureManager
-     * @param string $pageIndexName
-     * @param string $snippetIndexName
+     * @param MetadataFactory $metadataFactory
+     * @param StructureFactory $structureFactory
+     * @param array $mapping
      */
     public function __construct(
         Factory $factory,
-        EventDispatcherInterface $eventDispatcher,
-        StructureManagerInterface $structureManager,
+        MetadataFactory $metadataFactory,
+        StructureFactory $structureFactory,
+        DecoratorFactory $decoratorFactory,
         array $mapping = array()
     ) {
         $this->factory = $factory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->structureManager = $structureManager;
         $this->mapping = $mapping;
+        $this->metadataFactory = $metadataFactory;
+        $this->structureFactory = $structureFactory;
+        $this->decoratorFactory = $decoratorFactory;
     }
 
     /**
@@ -76,22 +93,23 @@ class StructureDriver implements AdvancedDriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
-        if (!$class->implementsInterface('Sulu\Component\Content\StructureInterface')) {
+        if (!ContentInstanceFactory::isWrapped($class->name)) {
             return;
         }
 
-        if ($class->isAbstract()) {
+        if (!$class->implementsInterface(ContentBehavior::class)) {
             return;
         }
-
-        /** @var StructureInterface $structure */
-        $structure = $class->newInstance();
 
         $classMetadata = $this->factory->createClassMetadata($class->name);
 
+        $documentMetadata = $this->metadataFactory->getMetadataForClass(ContentInstanceFactory::getRealName($class->name));
+        $structureType = ContentInstanceFactory::getStructureType($class->name);
+        $structure = $this->structureFactory->getStructure($documentMetadata->getAlias(), $structureType);
+
         $indexMeta = $this->factory->createIndexMetadata();
         $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
-        $indexMeta->setLocaleField($this->factory->createMetadataField('languageCode'));
+        $indexMeta->setLocaleField($this->factory->createMetadataField('locale'));
 
         $indexName = 'content';
         $categoryName = 'content';
@@ -108,12 +126,18 @@ class StructureDriver implements AdvancedDriverInterface
         $indexMeta->setCategoryName($categoryName);
         $indexMeta->setIndexName($indexName);
 
-        foreach ($structure->getProperties(true) as $property) {
-            if ($property instanceof BlockProperty) {
+        foreach ($structure->getModelProperties() as $property) {
+            if ($property instanceof Block) {
                 $propertyMapping = new ComplexMetadata();
-                foreach ($property->getTypes() as $type) {
-                    foreach ($type->getChildProperties() as $typeProperty) {
-                        $this->mapProperty($typeProperty, $propertyMapping);
+                foreach ($property->getComponents() as $component) {
+                    foreach ($component->getChildren() as $componentProperty) {
+                        $propertyMapping->addFieldMapping(
+                            'title',
+                            array(
+                                'type' => 'string',
+                                'field' => $this->factory->createMetadataProperty('[' . $componentProperty->getName(). ']')
+                            )
+                        );
                     }
                 }
 
@@ -122,7 +146,7 @@ class StructureDriver implements AdvancedDriverInterface
                     array(
                         'type' => 'complex',
                         'mapping' => $propertyMapping,
-                        'field' => $this->factory->createMetadataField($property->getName()),
+                        'field' => $this->getContentField($property)
                     )
                 );
             } else {
@@ -130,36 +154,40 @@ class StructureDriver implements AdvancedDriverInterface
             }
         }
 
-        if ($structure->hasTag('sulu.rlp')) {
-            $prop = $structure->getPropertyByTagName('sulu.rlp');
-            $indexMeta->setUrlField($this->factory->createMetadataField($prop->getName()));
+        if ($class->isSubclassOf(ResourceSegmentBehavior::class)) {
+            $indexMeta->setUrlField($this->factory->createMetadataField('resourceSegment'));
         }
 
         if (!$indexMeta->getTitleField()) {
-            $prop = $structure->getProperty('title');
-            $indexMeta->setTitleField($this->factory->createMetadataField($prop->getName()));
+            if ($class->isSubclassOf(TitleBehavior::class)) {
+                $indexMeta->setTitleField($this->factory->createMetadataProperty('title'));
 
-            $indexMeta->addFieldMapping(
-                $prop->getName(),
-                array(
-                    'type' => 'string',
-                    'field' => $this->factory->createMetadataField($prop->getName()),
-                    'aggregated' => true,
-                    'indexed' => false,
-                )
-            );
+                $indexMeta->addFieldMapping(
+                    $prop->getName(),
+                    array(
+                        'type' => 'string',
+                        'field' => $this->factory->createMetadataField($prop->getName()),
+                        'aggregated' => true,
+                        'indexed' => false,
+                    )
+                );
+            }
         }
 
-        // index the webspace
-        $indexMeta->addFieldMapping('webspace_key', array(
-            'type' => 'string',
-            'field' => $this->factory->createMetadataProperty('webspaceKey'),
-        ));
+        if ($class->isSubclassOf(WebspaceBehavior::class)) {
+            // index the webspace
+            $indexMeta->addFieldMapping('webspace_key', array(
+                'type' => 'string',
+                'field' => $this->factory->createMetadataProperty('webspaceName'),
+            ));
+        }
 
-        $indexMeta->addFieldMapping('state', array(
-            'type' => 'string',
-            'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
-        ));
+        if ($class->isSubclassOf(WorkflowStageBehavior::class)) {
+            $indexMeta->addFieldMapping('state', array(
+                'type' => 'string',
+                'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
+            ));
+        }
 
         $classMetadata->addIndexMetadata('_default', $indexMeta);
 
@@ -171,21 +199,36 @@ class StructureDriver implements AdvancedDriverInterface
      */
     public function getAllClassNames()
     {
-        $structures = array_merge(
-            $this->structureManager->getStructures(Structure::TYPE_PAGE),
-            $this->structureManager->getStructures(Structure::TYPE_SNIPPET)
-        );
-        $classes = array();
+        $classNames = array();
+        foreach ($this->metadataFactory->getAliases() as $alias) {
+            $metadata = $this->metadataFactory->getMetadataForAlias($alias);
 
-        foreach ($structures as $structure) {
-            $classes[] = get_class($structure);
+            if (!$this->structureFactory->hasStructuresFor($alias)) {
+                continue;
+            }
+
+            foreach ($this->structureFactory->getStructures($alias) as $structure) {
+                $targetClassName = ContentInstanceFactory::getTargetClassName(
+                    $metadata->getClass(),
+                    $structure->getName()
+                );
+
+                // ensure that the target class exists
+                $this->decoratorFactory->generate(
+                    $metadata->getClass(),
+                    $targetClassName
+                );
+
+                $classNames[] = $targetClassName;
+            }
         }
 
-        return $classes;
+        return $classNames;
     }
 
-    private function mapProperty(PropertyInterface $property, $metadata)
+    private function mapProperty(Property $property, $metadata)
     {
+<<<<<<< HEAD
         if ($property->hasTag('sulu.search.field')) {
             $tag = $property->getTag('sulu.search.field');
             $tagAttributes = $tag->getAttributes();
@@ -232,7 +275,65 @@ class StructureDriver implements AdvancedDriverInterface
                         'indexed' => false,
                     )
                 );
-            }
+=======
+        if (false === $property->hasTag('sulu.search.field')) {
+            return;
         }
+
+        $tag = $property->getTag('sulu.search.field');
+        $tagAttributes = $tag['attributes'];
+
+        if ($metadata instanceof IndexMetadata && isset($tagAttributes['role'])) {
+            switch ($tagAttributes['role']) {
+                case 'title':
+                    $metadata->setTitleField($this->getContentField($property));
+                    $metadata->addFieldMapping($property->getName(), array(
+                        'field' => $this->getContentField($property),
+                        'type' => 'string',
+                    ));
+                    break;
+                case 'description':
+                    $metadata->setDescriptionField($this->getContentField($property));
+                    $metadata->addFieldMapping($property->getName(), array(
+                        'field' => $this->getContentField($property),
+                        'type' => 'string',
+                    ));
+                    break;
+                case 'image':
+                    $metadata->setImageUrlField($this->getContentField($property));
+                    break;
+                default:
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Unknown search field role "%s", role must be one of "%s"',
+                            $tagAttributes['role'],
+                            implode(', ', array('title', 'description', 'image'))
+                        )
+                    );
+>>>>>>> Search integration
+            }
+
+            return;
+        }
+
+        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+            $metadata->addFieldMapping(
+                $property->getName(),
+                array(
+                    'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                    'field' => $this->getContentField($property),
+                )
+            );
+        }
+    }
+
+
+    private function getContentField(Property $property)
+    {
+        $field = $this->factory->createMetadataExpression(sprintf(
+            'object.getContent().%s.getValue()', $property->getName()
+        ));
+
+        return $field;
     }
 }

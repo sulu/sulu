@@ -145,6 +145,14 @@ class StructureFactory implements StructureFactoryInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function hasStructuresFor($type)
+    {
+        return isset($this->typePaths[$type]);
+    }
+
+    /**
      * Return the structure names for the given type
      * (not necessarily valid).
      *
