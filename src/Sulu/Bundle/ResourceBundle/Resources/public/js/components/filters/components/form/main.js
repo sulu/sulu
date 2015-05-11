@@ -7,11 +7,16 @@
  * with this source code in the file LICENSE.
  */
 
-define(['filtersutil/header'], function(HeaderUtil) {
+define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
     'use strict';
 
-    var formSelector = '#filter-form';
+    var formSelector = '#filter-form',
+
+        constants = {
+            operatorSelector: '#operators',
+            operatorsUrl: '/admin/api/operators'
+        };
 
     return {
 
@@ -57,6 +62,8 @@ define(['filtersutil/header'], function(HeaderUtil) {
 
         initialize: function() {
             this.saved = true;
+            this.config = Config.get('sulu.resource.aliases').aliases;
+
             this.initializeValidation();
             this.bindCustomEvents();
             this.setHeaderBar(true);
@@ -114,8 +121,38 @@ define(['filtersutil/header'], function(HeaderUtil) {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/form'));
 
             this.setHeaderInformation();
+            this.startOperatorSelection();
 
             this.initForm(this.options.data);
+        },
+
+        /**
+         * Starts the operator selection component
+         */
+        startOperatorSelection: function(){
+            var $element = this.sandbox.dom.find(constants.operatorSelector),
+                typeConfig = this.getConfigForType(this.options.type);
+
+            this.sandbox.start([
+                {
+                    name: 'operator-selection@suluresource',
+                    options: {
+                        el: $element,
+                        fieldsUrl: typeConfig.fields,
+                        operatorsUrl: constants.operatorsUrl,
+                        data: this.options.data.conditionGroups
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Returns the config for a type or null if it does not exist
+         * @param type
+         * @returns {*}
+         */
+        getConfigForType: function(type){
+            return this.config[type] ? this.config[type] : null;
         },
 
         /**

@@ -69,6 +69,8 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
+        // TODO include check if feature filter is set for context
+
         if ($request->get('flat') == 'true') {
             $list = $this->getListRepresentation($request);
         } else {
@@ -90,6 +92,8 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     private function getListRepresentation($request)
     {
+        // TODO include check if feature filter is set for context
+
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $fieldDescriptors = $this->getManager()->getListFieldDescriptors($this->getLocale($request));

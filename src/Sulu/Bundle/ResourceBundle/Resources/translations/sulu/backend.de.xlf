@@ -35,6 +35,10 @@
                 <source>resource.filter.conjunction.and</source>
                 <target>alle Bedingungen zutreffen</target>
             </trans-unit>
+            <trans-unit id="9" resname="resource.filter.add-condition">
+                <source>resource.filter.add-condition</source>
+                <target>Bedingung hinzufügen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
