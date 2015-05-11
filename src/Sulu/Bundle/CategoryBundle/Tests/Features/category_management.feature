@@ -46,5 +46,5 @@ Feature: Category management
         And I fill in "change-name" with "Chocolate"
         And I fill in "change-key" with "chocolate"
         When I click the save icon
-        Then I expect a success notification to appear
+        And I wait to see "Chocolate"
         And the category "chocolate" should exist

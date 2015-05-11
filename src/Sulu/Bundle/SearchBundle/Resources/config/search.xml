@@ -4,24 +4,27 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="sulu_search.event_subscriber.content_mapper.class">Sulu\Bundle\SearchBundle\EventListener\ContentMapperSubscriber</parameter>
-        <parameter key="sulu_search.event_listener.search.class">Sulu\Bundle\SearchBundle\EventListener\SearchListener</parameter>
+        <parameter key="sulu_search.controller.search.class">Sulu\Bundle\SearchBundle\Controller\SearchController</parameter>
+        <parameter key="sulu_search.search.factory.class">Sulu\Bundle\SearchBundle\Search\Factory</parameter>
+        <parameter key="sulu_search.admin.class">Sulu\Bundle\SearchBundle\Admin\SuluSearchAdmin</parameter>
     </parameters>
 
     <services>
-        <!-- node save event listener -->
-        <service id="sulu_search.event_subscriber.content_mapper" class="%sulu_search.event_subscriber.content_mapper.class%">
+        <!-- Controller -->
+        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%" scope="request">
             <argument type="service" id="massive_search.search_manager" />
-            <argument type="service" id="sulu.phpcr.session" />
-
-            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.list_rest_helper" />
         </service>
 
-        <!-- search event to be sure that all structures are loaded (generated) -->
-        <service id="sulu_search.event_listener.search" class="%sulu_search.event_listener.search.class%">
-            <argument type="service" id="sulu.content.structure_manager" />
+        <!-- Custom factory -->
+        <service id="sulu_search.search.factory" class="%sulu_search.search.factory.class%" />
 
-            <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
+        <!-- Admin class -->
+        <service id="sulu_search.admin" class="%sulu_search.admin.class%">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument>%sulu_admin.name%</argument>
         </service>
     </services>
 </container>

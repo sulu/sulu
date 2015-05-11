@@ -51,6 +51,9 @@ define([
                     if (typeof(config.tags) !== 'undefined' && !!config.tags) {
                         App.dom.data($el, 'auraTags', config.tags);
                     }
+                    if (typeof(config.tagOperator) !== 'undefined' && !!config.tagOperator) {
+                        App.dom.data($el, 'auraPreSelectedTagOperator', config.tagOperator);
+                    }
                     if (typeof(config.sortMethod) !== 'undefined' && !!config.sortMethod) {
                         App.dom.data($el, 'auraPreSelectedSortMethod', config.sortMethod);
                     }

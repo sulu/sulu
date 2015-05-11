@@ -6,6 +6,12 @@
   min-width: 50px + $contentMinWidth;
 }
 
+.content-container {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
 .content-column {
   height: 100%;
   position: relative;
@@ -100,7 +106,7 @@
 .sidebar-column {
   height: 100%;
   overflow: hidden;
-  z-index: 101;
+  z-index: 99;
   position: relative;
 
   &.fixed {

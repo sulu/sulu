@@ -24,7 +24,6 @@ class PortalDefaultLocalizationNotFoundException extends WebspaceException
     /**
      * @param Webspace $webspace
      * @param Portal $portal
-     * @internal param string $urlPattern
      */
     public function __construct(Webspace $webspace, Portal $portal)
     {
