@@ -69,4 +69,14 @@ class ContactTitle implements JsonSerializable
             'title'=>$this->getTitle()
         ];
     }
+
+    /**
+     * Return the string representation of this title
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->getTitle();
+    }
 }

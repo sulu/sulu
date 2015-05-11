@@ -42,6 +42,18 @@ class NavigationItem implements \Iterator
     protected $action;
 
     /**
+     * Will be used for a custom behaviour of the navigation item
+     * @var string
+     */
+    private $event;
+
+    /**
+     * The event arguments
+     * @var string
+     */
+    private $eventArguments;
+
+    /**
      * Contains the children of this item, which are other NavigationItems
      * @var array
      */
@@ -170,6 +182,38 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * @return string
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param string $event
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEventArguments()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param string $event
+     */
+    public function setEventArguments($eventArguments)
+    {
+        $this->eventArguments = $eventArguments;
+    }
+
+    /**
      * Adds a child to the navigation item
      * @param NavigationItem $child
      */
@@ -289,6 +333,8 @@ class NavigationItem implements \Iterator
     {
         $new = $this->copyWithName();
         $new->setAction($this->getAction());
+        $new->setEvent($this->getEvent());
+        $new->setEventArguments($this->getEventArguments());
         $new->setIcon($this->getIcon());
         $new->setHeaderIcon($this->getHeaderIcon());
         $new->setHeaderTitle($this->getHeaderTitle());
@@ -449,6 +495,8 @@ class NavigationItem implements \Iterator
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
+            'event' => $this->getEvent(),
+            'eventArguments' => $this->getEventArguments(),
             'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()

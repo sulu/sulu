@@ -105,6 +105,15 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I click the close icon
+     * @Given I click the close icon in container ":selector"
+     */
+    public function iClickOnTheCloseIcon($selector = '')
+    {
+        $this->clickSelector($selector.' .fa-times');
+    }
+
+    /**
      * @Then I click the add icon
      */
     public function iClickOnTheAddIcon()
@@ -279,6 +288,14 @@ EOT;
     }
 
     /**
+     * @Then I wait for the column navigation column :index
+     */
+    public function iWaitForTheColumnNavigationColumn($index)
+    {
+        $this->waitForSelectorAndAssert('.column-navigation .column[data-column=\'' . $index . '\']');
+    }
+
+    /**
      * @Then I double click the column navigation item :itemTitle
      */
     public function iDoubleClickTheColumnNavigationItem($itemTitle)
@@ -326,6 +343,22 @@ EOT;
                 )
             );
         }
+    }
+
+    /**
+     * @Given I expect a data-navigation to appear
+     */
+    public function iWaitForADataNavigationToAppear()
+    {
+        $this->waitForSelectorAndAssert('.data-navigation-items');
+    }
+
+    /**
+     * @Given I expect a overlay to appear
+     */
+    public function iWaitForAOverlayToAppear()
+    {
+        $this->waitForSelectorAndAssert('.husky-overlay-container');
     }
 
     /**

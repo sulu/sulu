@@ -50,6 +50,14 @@
                 <source>snippet.delete-no-snippets-selected</source>
                 <target>No snippets selected</target>
             </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.category.snippet.title">
+                <source>search-overlay.category.snippet.title</source>
+                <target>Snippets</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085e2sdf5sds5acb2d39e" resname="search-overlay.placeholder.snippet">
+                <source>search-overlay.placeholder.snippet</source>
+                <target>Search snippets...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

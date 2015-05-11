@@ -54,6 +54,22 @@
                 <source>contacts.sidebar.company</source>
                 <target>Other companies</target>
             </trans-unit>
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2d34h" resname="search-overlay.category.contact.title">
+                <source>search-overlay.category.contact.title</source>
+                <target>Contacts</target>
+            </trans-unit>
+            <trans-unit id="e4blol69a8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder.contact">
+                <source>search-overlay.placeholder.contact</source>
+                <target>Search contacts...</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45b7f5acb2d39e" resname="search-overlay.category.account.title">
+                <source>search-overlay.category.account.title</source>
+                <target>Accounts</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45sds5acb2d39e" resname="search-overlay.placeholder.account">
+                <source>search-overlay.placeholder.account</source>
+                <target>Search accounts...</target>
+            </trans-unit>
             <trans-unit id="643c99ff2964652633a5ca2178d22191" resname="contact.accounts.bankAccount.label">
                 <source>contact.accounts.bankAccount.label</source>
                 <target>Bank account</target>
@@ -444,7 +460,7 @@
             </trans-unit>
             <trans-unit id="61788b1f08f29f6e5f1cb4076fd81272" resname="navigation.contacts">
                 <source>navigation.contacts</source>
-                <target>People</target>
+                <target>Contacts</target>
             </trans-unit>
             <trans-unit id="a5483734334073f618ff019ef3a41470" resname="navigation.contacts.people">
                 <source>navigation.contacts.people</source>
@@ -533,6 +549,10 @@
             <trans-unit id="9b5759b2b50bb1c9148289636b579c41" resname="contact.address.country">
                 <source>contact.address.country</source>
                 <target>Country</target>
+            </trans-unit>
+            <trans-unit id="435b1473d76660a3essds2e9335a8d5d" resname="navigation.search">
+                <source>navigation.search</source>
+                <target>Search</target>
             </trans-unit>
         </body>
     </file>
