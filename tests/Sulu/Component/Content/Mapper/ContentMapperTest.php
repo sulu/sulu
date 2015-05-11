@@ -125,32 +125,14 @@ class ContentMapperTest extends SuluTestCase
             array(
                 array(
                     'is_shadow' => false,
-                    'language' => 'de_at',
-                    'shadow_base_language' => 'de'
+                    'language' => 'de',
+                    'shadow_base_language' => null,
                 ),
                 array(
                     'is_shadow' => true,
-                    'language' => 'en_us',
+                    'language' => 'en',
                     'shadow_base_language' => 'de_at'
                 ),
-                array(),
-            ),
-            array(
-                array(
-                    'is_shadow' => false,
-                    'language' => 'de',
-                    'shadow_base_language' => 'fr'
-                ),
-                null,
-                array()
-            ),
-            array(
-                array(
-                    'is_shadow' => true,
-                    'language' => 'de',
-                    'shadow_base_language' => 'de'
-                ),
-                null,
                 array(
                     'exception' => 'Attempting to create shadow for "en" on a non-concrete locale "de_at" for document at "/cmf/sulu_io/contents/testname". Concrete languages are "de"',
                 ),
@@ -174,6 +156,19 @@ class ContentMapperTest extends SuluTestCase
                 array(
                     'exception' => 'shadow of itself',
                 )
+            ),
+            array(
+                array(
+                    'is_shadow' => false,
+                    'language' => 'de_at',
+                    'shadow_base_language' => 'de'
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en_us',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(),
             ),
             array(
                 array(
