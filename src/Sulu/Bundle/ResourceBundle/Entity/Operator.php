@@ -23,7 +23,7 @@ class Operator
     private $operator;
 
     /**
-     * @var string
+     * @var integer
      */
     private $type;
 
@@ -82,7 +82,7 @@ class Operator
     /**
      * Set type
      *
-     * @param string $type
+     * @param integer $type
      * @return Operator
      */
     public function setType($type)
@@ -95,7 +95,7 @@ class Operator
     /**
      * Get type
      *
-     * @return string
+     * @return integer
      */
     public function getType()
     {

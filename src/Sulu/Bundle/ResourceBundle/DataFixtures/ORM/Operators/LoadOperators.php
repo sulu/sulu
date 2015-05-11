@@ -18,8 +18,10 @@ use Sulu\Bundle\ResourceBundle\Entity\Operator;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorValue;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation;
+use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 
 /**
+ * Loads fixtures for operators
  * Class LoadOperators
  * @package Sulu\Bundle\ResourceBundle\DataFixtures\ORM\Operators
  */
@@ -43,7 +45,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
             foreach ($elements as $element) {
                 $operator = new Operator();
                 $operator->setId($i);
-                $operator->setType($element->getAttribute('type'));
+                $operator->setType($this->getTypeForString($element->getAttribute('type')));
                 $operator->setOperator($element->getAttribute('operator'));
                 $operator->setInputType($element->getAttribute('inputType'));
 
@@ -69,7 +71,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
      * @param Operator $operator
      * @param \DOMNodeList $translations
      */
-    private function processTranslations($manager, $operator, $translations)
+    protected function processTranslations($manager, $operator, $translations)
     {
         /** @var $node DOMNode */
         foreach ($translations as $node) {
@@ -91,12 +93,12 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
      * @param Operator $operator
      * @param $values \DOMNodeList
      */
-    private function processValues($manager, $xpath, $operator, $values)
+    protected function processValues($manager, $xpath, $operator, $values)
     {
         /** @var $node DOMNode */
         foreach ($values as $node) {
             $value = new OperatorValue();
-            $value->setType($node->getAttribute('type'));
+            $value->setValue($node->getAttribute('value'));
 
             $translations = $xpath->query('translations/translation', $node);
             /** @var $trans DOMNode */
@@ -122,5 +124,25 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    /**
+     * Returns integer for string type
+     * @param string $type
+     * @returns integer
+     */
+    protected function getTypeForString($type)
+    {
+        switch($type){
+            case 'string':
+                return DataTypes::STRING_TYPE;
+            case 'number':
+                    return DataTypes::NUMBER_TYPE;
+            case 'date':
+            case 'datetime':
+                return DataTypes::DATETIME_TYPE;
+            default:
+                return DataTypes::UNDEFINED_TYPE;
+        }
     }
 }

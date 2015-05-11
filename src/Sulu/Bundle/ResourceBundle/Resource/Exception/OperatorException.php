@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ResourceBundle\Filter\Exception;
+namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
- * Class FilterException
+ * Base exception for handling operator specific exceptions.
+ * Class OperatorException
  */
-class FilterException extends \Exception
+class OperatorException extends \Exception
 {
-
 }

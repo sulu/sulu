@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ResourceBundle\Filter;
+namespace Sulu\Bundle\ResourceBundle\Resource;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
@@ -17,10 +17,10 @@ use Sulu\Bundle\ResourceBundle\Api\Filter;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterDependencyNotFoundException;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterNotFoundException;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingConditionAttributeException;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingFilterAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -28,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 /**
+ * Manager responsible for filters
  * Class FilterManager
  * @package Sulu\Bundle\ResourceBundle\Filter
  */

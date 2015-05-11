@@ -16,6 +16,7 @@ use Sulu\Bundle\ResourceBundle\Entity\Condition;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup;
 use Sulu\Bundle\ResourceBundle\Entity\Filter;
 use Sulu\Bundle\ResourceBundle\Entity\FilterTranslation;
+use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpKernel\Client;
 
@@ -79,22 +80,22 @@ class FilterControllerTest extends SuluTestCase
         $conditionGroup1 = new ConditionGroup();
         $conditionGroup1->setFilter($filter);
         $conditionGroup1->addCondition(
-            $this->createCondition($conditionGroup1, Condition::TYPE_STRING, 'test', 'LIKE', 'name')
+            $this->createCondition($conditionGroup1, DataTypes::STRING_TYPE, 'test', 'LIKE', 'name')
         );
 
         $conditionGroup2 = new ConditionGroup();
         $conditionGroup2->setFilter($filter);
         $conditionGroup2->addCondition(
-            $this->createCondition($conditionGroup2, Condition::TYPE_NUMBER, '2', '=', 'id')
+            $this->createCondition($conditionGroup2, DataTypes::NUMBER_TYPE, '2', '=', 'id')
         );
 
         $conditionGroup3 = new ConditionGroup();
         $conditionGroup3->setFilter($filter);
         $conditionGroup3->addCondition(
-            $this->createCondition($conditionGroup3, Condition::TYPE_DATETIME, '2015-01-01', '>', 'created')
+            $this->createCondition($conditionGroup3, DataTypes::DATETIME_TYPE, '2015-01-01', '>', 'created')
         );
         $conditionGroup3->addCondition(
-            $this->createCondition($conditionGroup3, Condition::TYPE_DATETIME, '2015-02-02', '<', 'created')
+            $this->createCondition($conditionGroup3, DataTypes::DATETIME_TYPE, '2015-02-02', '<', 'created')
         );
 
         $filter->addConditionGroup($conditionGroup1);

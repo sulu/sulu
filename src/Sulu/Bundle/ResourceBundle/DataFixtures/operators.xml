@@ -94,10 +94,10 @@
             <translation locale="en">between</translation>
         </translations>
         <values>
-            <value type="1">
+            <value value="-1 week">
                 <translations>
-                    <translation locale="de">aktuelles Monat</translation>
-                    <translation locale="en">current month</translation>
+                    <translation locale="de">letzte Woche</translation>
+                    <translation locale="en">last week</translation>
                 </translations>
             </value>
         </values>

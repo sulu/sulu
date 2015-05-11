@@ -94,11 +94,10 @@ class ConditionGroup extends ApiWrapper
      * Set filter
      *
      * @param Filter $filter
-     * @return ConditionGroup
      */
     public function setFilter(Filter $filter)
     {
-        return $this->entity->setFilter($filter->getEntity());
+        $this->entity->setFilter($filter->getEntity());
     }
 
     /**
