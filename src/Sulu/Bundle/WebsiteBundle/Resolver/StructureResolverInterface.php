@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * Resolves the structure to an array

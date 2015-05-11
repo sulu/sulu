@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Behat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Bundle\ContentBundle\Behat\BaseStructureContext;

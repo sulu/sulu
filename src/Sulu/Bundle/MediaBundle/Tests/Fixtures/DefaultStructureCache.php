@@ -2,16 +2,16 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Fixtures;
 
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\PropertyTag;
-use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\Block\BlockProperty;
+use Sulu\Component\Content\Compat\Block\BlockPropertyType;
+use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\Section\SectionProperty;
 
 /**
  * DefaultStructureCache
  */
-class DefaultStructureCache extends \Sulu\Component\Content\Structure
+class DefaultStructureCache extends \Sulu\Component\Content\Compat\Structure
 {
     public function __construct()
     {

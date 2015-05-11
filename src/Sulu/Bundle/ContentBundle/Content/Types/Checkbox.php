@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**

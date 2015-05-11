@@ -43,8 +43,8 @@ class DebugHandlerTest extends \PHPUnit_Framework_TestCase
         $this->parameterBag = new ParameterBag();
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
         $this->response->headers = $this->parameterBag;
-        $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
-        $this->page = $this->prophesize('Sulu\Component\Content\PageInterface');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
+        $this->page = $this->prophesize('Sulu\Component\Content\Compat\PageInterface');
 
         $this->handlerNames = array('one', 'two', 'three');
         $this->proxyClientName = 'foo';

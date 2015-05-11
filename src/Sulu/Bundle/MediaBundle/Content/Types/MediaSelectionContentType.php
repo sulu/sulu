@@ -14,8 +14,8 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**

@@ -11,7 +11,7 @@ namespace Sulu\Component\Content;
 
 /**
  * Item for breadcrumb
- * @package Sulu\Component\Content
+ * @package Sulu\Component\Content\Compat
  */
 interface BreadcrumbItemInterface
 {

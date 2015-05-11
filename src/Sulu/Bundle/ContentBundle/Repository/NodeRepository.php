@@ -20,11 +20,12 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 /**
  * repository for node objects
@@ -260,7 +261,8 @@ class NodeRepository implements NodeRepositoryInterface
             $webspaceKey,
             $languageCode,
             $complete,
-            $excludeGhosts
+            $excludeGhosts,
+            $flat ? 1 : $depth
         );
         $result['total'] = sizeof($result['_embedded']['nodes']);
 
@@ -375,7 +377,7 @@ class NodeRepository implements NodeRepositoryInterface
                 false,
                 $excludeGhosts
             );
-            $embedded = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, true, $excludeGhosts);
+            $embedded = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, true, $excludeGhosts, $depth);
         } else {
             $embedded = array();
         }
@@ -470,8 +472,14 @@ class NodeRepository implements NodeRepositoryInterface
      * @param bool $excludeGhosts
      * @return array
      */
-    private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true, $excludeGhosts = false)
+    private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true, $excludeGhosts = false, $maxDepth = 1, $currentDepth = 0)
     {
+        $currentDepth++;
+
+        if ($maxDepth !== null && $currentDepth > $maxDepth) {
+            return array();
+        }
+
         $results = array();
         foreach ($nodes as $node) {
             $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
@@ -481,12 +489,13 @@ class NodeRepository implements NodeRepositoryInterface
                     $webspaceKey,
                     $languageCode,
                     $complete,
-                    $excludeGhosts
+                    $excludeGhosts,
+                    $maxDepth,
+                    $currentDepth
                 );
             }
             $results[] = $result;
         }
-
         return $results;
     }
 
@@ -658,9 +667,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->move($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        } catch (RepositoryException $ex) {
+        } catch (\Exception $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         }
 
@@ -675,7 +682,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->copy($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
+        } catch (DocumentManagerException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
@@ -692,7 +699,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
+        } catch (DocumentManagerException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
@@ -709,7 +716,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
+        } catch (DocumentManagerException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);

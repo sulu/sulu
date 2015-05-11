@@ -32,7 +32,10 @@
         "symfony/symfony": "2.6.*",
         "willdurand/hateoas-bundle": "0.3.*",
         "symfony/swiftmailer-bundle": "~2.3",
-        "pagerfanta/pagerfanta": "~1.0"
+        "pagerfanta/pagerfanta": "~1.0",
+        "sulu/document-manager": "dev-master",
+        "sulu/document-manager": "dev-master",
+        "dantleech/decorator-generator": "dev-master"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",
@@ -79,6 +82,11 @@
     "autoload": {
         "psr-0": {
             "Sulu\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Sulu\\": "tests/"
         }
     }
 }

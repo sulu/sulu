@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use SebastianBergmann\Exporter\Exception;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -57,6 +57,26 @@ class SingleInternalLink extends SimpleContentType
         $uuid = $property->getValue();
 
         return $uuid ? array($uuid) : array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $value = $this->defaultValue;
+        if ($node->hasProperty($property->getName())) {
+            $value = $node->getPropertyValue($property->getName());
+        }
+
+        // the RedirectType subscriber sets the internal link as a reference
+        if ($value instanceof NodeInterface) {
+            $value = $value->getIdentifier();
+        }
+
+        $property->setValue($value);
+
+        return $value;
     }
 
     /**
