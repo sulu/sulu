@@ -84,7 +84,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * @var TypeManagerInterface
      */
-    private $typeManager;
+    protected $typeManager;
 
     /**
      * @var StorageInterface
@@ -410,14 +410,17 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Modified an exists media
+     * Modifies an existing media
+     *
      * @param UploadedFile $uploadedFile
      * @param $data
      * @param UserInterface $user
-     * @return Media
+     *
      * @throws MediaNotFoundException
      * @throws FileVersionNotFoundException
      * @throws FileNotFoundException
+     *
+     * * @return Media
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
