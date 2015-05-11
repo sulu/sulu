@@ -420,7 +420,7 @@ class MediaManager implements MediaManagerInterface
      * @throws FileVersionNotFoundException
      * @throws FileNotFoundException
      *
-     * * @return Media
+     * @return Media
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
