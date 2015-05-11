@@ -41,13 +41,11 @@ class SaveStructureTest extends BaseTestCase
     public function testSaveStructureWithBlocks()
     {
         $document = new PageDocument();
-        $document->setTitle('Hello');
+        $document->setTitle('Places');
         $document->setStructureType('blocks');
         $document->setResourceSegment('/places');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $document->getContent()->bind(array(
-            'title' => 'Places',
-            'url' => '/places',
             'block' => array(
                 array(
                     'type' => 'article',
