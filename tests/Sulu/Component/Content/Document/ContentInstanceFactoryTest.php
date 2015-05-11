@@ -52,4 +52,14 @@ class ContentInstanceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->factory->getStructureType('stdClass');
     }
+
+    /**
+     * It should get the structure type for a class name with dashes in it
+     */
+    public function testGetStructureTypeWithDashes()
+    {
+        $className = ContentInstanceFactory::getTargetClassName(get_class($this->content->reveal()), 'foobar-bar-too');
+        $structureType = ContentInstanceFactory::getStructureType($className);
+        $this->assertEquals('foobar-bar-too', $structureType);
+    }
 }
