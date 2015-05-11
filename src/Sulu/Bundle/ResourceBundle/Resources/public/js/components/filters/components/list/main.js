@@ -11,7 +11,6 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
 
     'use strict';
 
-
     var bindCustomEvents = function() {
         // add clicked
         this.sandbox.on('sulu.list-toolbar.add', function() {
