@@ -14,7 +14,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
     var formSelector = '#filter-form',
 
         constants = {
-            operatorSelector: '#operators',
+            conditionSelector: '#conditions',
             operatorsUrl: '/admin/api/operators'
         };
 
@@ -127,15 +127,15 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         },
 
         /**
-         * Starts the operator selection component
+         * Starts the condition selection component
          */
         startOperatorSelection: function(){
-            var $element = this.sandbox.dom.find(constants.operatorSelector),
+            var $element = this.sandbox.dom.find(constants.conditionSelector),
                 typeConfig = this.getConfigForType(this.options.type);
 
             this.sandbox.start([
                 {
-                    name: 'operator-selection@suluresource',
+                    name: 'condition-selection@suluresource',
                     options: {
                         el: $element,
                         fieldsUrl: typeConfig.fields,

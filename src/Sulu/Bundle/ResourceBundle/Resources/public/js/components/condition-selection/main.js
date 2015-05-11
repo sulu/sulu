@@ -8,9 +8,9 @@
  */
 
 /**
- * handles operator selection
+ * handles condition selection
  *
- * @class OperatorSelection
+ * @class ConditionSelection
  * @constructor
  *
  * @param {Object} [options] Configuration object
@@ -24,6 +24,8 @@
  */
 define([], function() {
 
+    // TODO write data in attribute?
+
     'use strict';
 
     var UNDEFINED_TYPE = 0,
@@ -34,9 +36,9 @@ define([], function() {
         defaults = {
             operatorsUrl: null,
             fieldsUrl: null,
-            eventNamespace: 'sulu.operator-selection',
-            dataAttribute: 'operator-selection',
-            instanceName: 'operator',
+            eventNamespace: 'sulu.condition-selection',
+            dataAttribute: 'condition-selection',
+            instanceName: 'condition',
             translations: {
                 addButton: 'resource.filter.add-condition'
             },
@@ -44,8 +46,8 @@ define([], function() {
         },
 
         templates = {
-            container: function(id) {
-                return '<div class="operator-container" id="' + id + '" style="display:none"></div>';
+            container: function(cssClass, id) {
+                return '<div class="' + cssClass + '" id="' + id + '" style="display:none"></div>';
             },
             button: function(id, text) {
                 return [
@@ -58,30 +60,36 @@ define([], function() {
                     '</div>'
                 ].join('');
             },
-            row: function(id) {
-                return ['<div class="operator-row grid-row" data-id="', id , '"></div>'].join('');
+            row: function(cssClass, id) {
+                return ['<div class="',cssClass,' grid-row" data-id="', id , '"></div>'].join('');
             },
             removeButton: function(cssClass){
                 return [
                     '<div class="grid-col-1 align-center pointer ', cssClass, '">',
-                        '<span class="fa-minus-circle m-top-7"></span>',
+                        '<span class="fa-minus-circle m-top-5"></span>',
                     '</div>'
                 ].join('');
             }
         },
 
         constants = {
-            operatorSelectSelector: 'operator-select',
-            fieldSelectSelector: 'field-select',
-            removeButtonClass: 'operator-remove'
+            conditionContainerClass: 'conditions-container',
+            conditionRowClass: 'condition-row',
+            operatorSelectClass: 'operator-select',
+            fieldSelectClass: 'field-select',
+            removeButtonClass: 'condition-remove'
         },
 
         /**
          * raised when all overlay components returned their value
-         * @event sulu.operator-selection.initialized
+         * @event sulu.condition-selection.initialized
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
+        },
+
+        DATA_CHANGED = function() {
+            return createEventName.call(this, 'data-changed');
         },
 
         /**
@@ -129,55 +137,106 @@ define([], function() {
         },
 
         /**
-         * Renders a row for a condition group
+         * Renders a row for an existing condition group or a new row
          * @param conditionGroup
          */
         renderRow = function(conditionGroup) {
-            var condition = conditionGroup.conditions[0],
-                $row = this.sandbox.dom.createElement(templates.row(conditionGroup.id)),
-                $deleteButton = this.sandbox.dom.createElement(templates.removeButton(constants.removeButtonClass)),
-                $fieldSelect = createSelect.call(
-                    this,
-                    condition.field,
-                    'name',
-                    'translation',
-                    this.fields,
-                    constants.fieldSelectSelector,
-                    'grid-col-4'
-                ),
-                $operatorSelect = createSelect.call(
-                    this,
-                    condition.operator,
-                    'operator',
-                    'name',
-                    this.operators,
-                    constants.operatorSelectSelector,
-                    'grid-col-3'
-                ), // todo filter operators
+            var condition = {},
+                $row,
+                filteredOperators = [],
+                $deleteButton,
+                $fieldSelect,
+                $operatorSelect,
+                id = !!conditionGroup ? conditionGroup.id : 'new';
 
-                $valueComponent;
+            $row = this.sandbox.dom.createElement(templates.row(constants.conditionRowClass, id));
+            $deleteButton = this.sandbox.dom.createElement(templates.removeButton(constants.removeButtonClass));
 
-            // todo
-            // 2 conditions
-            // value is select field due to operator
-            // createValueInput(conditionGroup.conditions);
-            //if(conditionGroup.length === 1){
-            //    switch(conditionGroup[0].type){
-            //        case DATETIME_TYPE:
-            //            // TODO
-            //            break;
-            //        default:
-            //
-            //            break;
-            //    }
-            //}
+            if (!!conditionGroup) {
+                condition = conditionGroup.conditions[0];
+                filteredOperators = filterOperatorsByType.call(this, condition.type);
+                $fieldSelect = createFieldSelect.call(this, condition.field, false);
+            } else {
+                $fieldSelect = createFieldSelect.call(this, condition.field, true);
+            }
+
+            $operatorSelect = createOperatorSelect.call(this, condition.operator, filteredOperators, false);
+
+            // TODO 1 field selected?
+            //$valueComponent = createValueInput.call(this, conditionGroup);
 
             this.sandbox.dom.append($row, $deleteButton);
             this.sandbox.dom.append($row, $fieldSelect);
             this.sandbox.dom.append($row, $operatorSelect);
-            //this.sandbox.dom.append($row, $valueComponent);
+            //this.sandbox.dom.append($row, $valueComponent); // TODO
 
             this.sandbox.dom.append(this.$container, $row);
+        },
+
+        /**
+         * Creates a select for operators
+         * @param selectedOperator
+         * @param operators
+         * @param prependEmpty
+         */
+        createOperatorSelect = function(selectedOperator, operators, prependEmpty){
+            return createSelect.call(
+                this,
+                selectedOperator,
+                'operator',
+                'name',
+                operators,
+                constants.operatorSelectClass,
+                'grid-col-3',
+                prependEmpty
+            );
+        },
+
+        /**
+         * Creates a select for fields
+         * @param selectedField
+         * @param prependEmpty
+         */
+        createFieldSelect = function(selectedField, prependEmpty) {
+            return createSelect.call(
+                this,
+                selectedField,
+                'name',
+                'translation',
+                this.fields,
+                constants.fieldSelectClass,
+                'grid-col-4',
+                prependEmpty
+            );
+        },
+
+        /**
+         * Creates the input(s) depending on the condition group and the type of the selected field
+         * @param conditionGroup
+         */
+        createValueInput = function(conditionGroup){
+            // TODO
+            if(conditionGroup.conditions.length === 2) {
+
+            } else {
+
+            }
+        },
+
+        /**
+         * Filters operators by type
+         * @param type default is STRING_TYPE
+         */
+        filterOperatorsByType = function(type) {
+            var result = [];
+            type = type || STRING_TYPE;
+
+            this.operators.forEach(function(operator) {
+                if (operator.type === type) {
+                    result.push(operator);
+                }
+            }.bind(this));
+            return result;
         },
 
         /**
@@ -185,19 +244,24 @@ define([], function() {
          *
          * @param selected selected element
          * @param valueProperty name of the property which should be the value for each option
-         * @param displayProptery name of the property which holds the value that should be displayed
+         * @param displayProperty name of the property which holds the value that should be displayed
          * @param values array of objects to display in select
          * @param cssClass css class for the select
          * @param gridColClass class for a column of the grid which is used to wrapp the select
+         * @param prependEmpty prepend an empty option
          */
-        createSelect = function(selected, valueProperty, displayProptery, values, cssClass, gridColClass) {
+        createSelect = function(selected, valueProperty, displayProperty, values, cssClass, gridColClass, prependEmpty) {
             var options = [],
                 translateText = null,
                 $wrapper = this.sandbox.dom.createElement('<div class="' + gridColClass + '"></div>'),
                 $select = this.sandbox.dom.createElement('<select class="form-element ' + cssClass + '"></select>');
 
+            if(!!prependEmpty){
+                options.push('<option value=""></option>');
+            }
+
             values.forEach(function(value) {
-                translateText = this.sandbox.translate(value[displayProptery]);
+                translateText = this.sandbox.translate(value[displayProperty]);
                 if (value[valueProperty] === selected) {
                     options.push('<option value="' + value[valueProperty] + '" selected>' + translateText + '</option>');
                 } else {
@@ -218,7 +282,59 @@ define([], function() {
                 $addButton = this.sandbox.dom.createElement(
                     templates.button.call(this, this.options.ids.addButton, text)
                 );
-            this.sandbox.dom.append(this.$container, $addButton);
+            this.sandbox.dom.append(this.options.el, $addButton);
+        },
+
+
+        bindDomEvents = function(){
+            // add button
+            this.sandbox.dom.on(this.options.el, 'click', addConditionEventHandler.bind(this), '#'+this.options.ids.addButton);
+
+            // remove buttons
+            this.sandbox.dom.on(this.$container, 'click', removeConditionEventHandler.bind(this), '.'+constants.removeButtonClass);
+        },
+
+        bindCustomEvents = function(){
+            // TODO
+        },
+
+        /**
+         * Adds a new condition row
+         * @param event
+         */
+        addConditionEventHandler = function(event){
+            renderRow.call(this);
+        },
+
+        /**
+         * Removes a condition from the dom and the data
+         * @param event
+         */
+        removeConditionEventHandler = function(event){
+            var $el = this.sandbox.dom.parent(event.currentTarget, '.'+constants.conditionRowClass),
+                id = this.sandbox.dom.data($el, 'id'),
+                conditionGroupIdx = null;
+
+            if(id !== 'new') {
+                this.options.data.forEach(function(el, idx){
+                    if(el.id === id) {
+                        conditionGroupIdx = idx;
+                        return false;
+                    }
+                }.bind(this));
+                this.options.data.splice(conditionGroupIdx, 1);
+            }
+
+            this.sandbox.dom.remove($el);
+            updateDataAttribute.call(this);
+        },
+
+        /**
+         * Updates the data attribute for the data mapper
+         */
+        updateDataAttribute = function(){
+            // TODO update attribute and add validation type to fetch data
+            this.sandbox.emit(DATA_CHANGED.call(this));
         };
 
     return {
@@ -226,9 +342,9 @@ define([], function() {
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.options.ids = {
-                loader: 'operator-selection-' + this.options.instanceName + '-loader',
-                container: 'operator-selection-' + this.options.instanceName + '-container',
-                addButton: 'operator-selection-' + this.options.instanceName + '-add-button'
+                loader: 'condition-selection-' + this.options.instanceName + '-loader',
+                container: 'condition-selection-' + this.options.instanceName + '-container',
+                addButton: 'condition-selection-' + this.options.instanceName + '-add-button'
             };
 
             startLoader.call(this);
@@ -262,20 +378,23 @@ define([], function() {
             } else {
                 this.sandbox.logger.error('Url for fields and/or operators not specified or invalid!');
             }
-
         },
 
         render: function() {
-            this.$container = this.sandbox.dom.createElement(templates.container(this.options.ids.container));
+            this.$container = this.sandbox.dom.createElement(
+                templates.container(constants.conditionContainerClass, this.options.ids.container));
             this.sandbox.dom.append(this.options.el, this.$container);
 
             if (!!this.options.data) {
                 renderRows.call(this);
             }
-            renderAddButton.call(this);
 
+            renderAddButton.call(this);
             stopLoader.call(this);
             this.sandbox.dom.show(this.$container);
+            bindDomEvents.call(this);
+            bindCustomEvents.call(this);
+
             this.sandbox.emit(INITIALIZED.call(this));
         }
     };
