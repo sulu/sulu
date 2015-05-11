@@ -72,6 +72,7 @@ class ContentRemoveSubscriber implements EventSubscriberInterface
         $references = $node->getReferences();
 
         foreach ($references as $reference) {
+
             $referrer = $reference->getParent();
             $metadata = $this->metadataFactory->getMetadataForPhpcrNode($referrer);
 

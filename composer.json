@@ -33,7 +33,7 @@
         "willdurand/hateoas-bundle": "0.3.*",
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
-        "sulu-io/document-manager": "dev-master",
+        "sulu/document-manager": "dev-master",
         "sulu/document-manager": "dev-master",
         "dantleech/decorator-generator": "dev-master"
     },
