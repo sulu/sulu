@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +21,6 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Custom exception controller
- * @package Sulu\Bundle\WebsiteBundle\Controller
  */
 class ExceptionController extends BaseExceptionController
 {
@@ -28,68 +29,65 @@ class ExceptionController extends BaseExceptionController
      */
     private $requestAnalyzer;
 
-    public function __construct(\Twig_Environment $twig, $debug, RequestAnalyzerInterface $requestAnalyzer = null)
-    {
+    /**
+     * @var ParameterResolverInterface
+     */
+    private $parameterResolver;
+
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    public function __construct(
+        \Twig_Environment $twig,
+        $debug,
+        ParameterResolverInterface $parameterResolver,
+        ContentMapperInterface $contentMapper,
+        RequestAnalyzerInterface $requestAnalyzer = null
+    ) {
         parent::__construct($twig, $debug);
 
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->contentMapper = $contentMapper;
+        $this->parameterResolver = $parameterResolver;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function showAction(
         Request $request,
         FlattenException $exception,
-        DebugLoggerInterface $logger = null,
-        $_format = 'html'
+        DebugLoggerInterface $logger = null
     ) {
-        // remove empty first line
-        if (ob_get_length()) {
-            ob_clean();
+        $code = $exception->getStatusCode();
+        $showException = $request->attributes->get('showException', $this->debug);
+        $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
+
+        if ($showException || $request->getRequestFormat() !== 'html' || $template === null) {
+            return parent::showAction($request, $exception, $logger);
         }
 
-        if ($request->getRequestFormat() === 'html') {
-            if ($exception->getStatusCode() == 404) {
-                return new Response(
-                    $this->twig->render(
-                        'ClientWebsiteBundle:views:error404.html.twig',
-                        array(
-                            'request' => array(
-                                'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
-                                'locale' => $this->requestAnalyzer->getCurrentLocalization(),
-                                'portalUrl' => $this->requestAnalyzer->getPortalUrl(),
-                                'resourceLocatorPrefix' => $this->requestAnalyzer->getResourceLocatorPrefix(),
-                                'resourceLocator' => $this->requestAnalyzer->getResourceLocator(),
-                                'get' => $this->requestAnalyzer->getGetParameters(),
-                                'post' => $this->requestAnalyzer->getPostParameters(),
-                                'analyticsKey' => $this->requestAnalyzer->getAnalyticsKey()
-                            ),
-                            'path' => $request->getPathInfo()
-                        )
-                    ),
-                    404
-                );
-            } elseif ($exception->getStatusCode() < 500) {
-                $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-                $code = $exception->getStatusCode();
+        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
-                return new Response(
-                    $this->twig->render(
-                        'ClientWebsiteBundle:views:error.html.twig',
-                        array(
-                            'status_code' => $code,
-                            'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                            'exception' => $exception,
-                            'currentContent' => $currentContent,
-                            'request' => array(
-                                'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
-                                'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
-                            )
-                        )
-                    ),
-                    $exception->getStatusCode()
-                );
-            }
-        }
+        $parameter = array(
+            'status_code' => $code,
+            'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+            'exception' => $exception,
+            'currentContent' => $currentContent
+        );
+        $data = $this->parameterResolver->resolve(
+            $parameter,
+            $this->requestAnalyzer
+        );
 
-        return parent::showAction($request, $exception, $logger, $request->getRequestFormat());
+        return new Response(
+            $this->twig->render(
+                $template,
+                $data
+            ),
+            $code
+        );
     }
 }

@@ -26,6 +26,8 @@ define({
 
         app.components.addSource('sulusnippet', '/bundles/sulusnippet/js/components');
 
+        sandbox.urlManager.setUrl('snippet', 'snippet/snippets/<%= languageCode %>/edit:<%= id %>');
+
         function getContentLanguage() {
             // FIXME do not use user locale as default use default language of system instead
             return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;

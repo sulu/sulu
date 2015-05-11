@@ -1,6 +1,70 @@
 # Upgrade
 
-## dev-develop
+## 0.18.0
+
+## Search index rebuild
+
+Old data in search index can cause problems. You should clear the folder `app/data` and rebuild the index.
+ 
+```bash
+rm -rf app/data/*
+app/console massive:search:index:rebuild
+```
+
+### Search adapter name changed
+
+Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
+configuration.
+
+### Search index name changed
+
+Pages and snippets are now indexed in separate indexes for pages and snippets.
+Replace all instances of `->index('content')` with `->indexes(array('page',
+'snippet')`.
+
+### Search searches non-published pages by default
+
+Pages which are "Test" are no longer indexed. If you require only
+"published" pages modify your search query to start with: `state:published AND `
+and escape the quotes:
+
+```php
+$hits = $searchManager
+    ->createSearch(sprintf('state:published AND "%s"', str_replace('"', '\\"', $query)))
+    ->locale($locale)
+    ->index('page')
+    ->execute();
+```
+
+### PHPCR: Doctrine-Dbal
+
+The structure of data has changed. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+### Smart content tag operator
+
+The default operator for tags is now changed to OR. So you have to update with the following command,
+because the previous default operator was AND.
+
+```bash
+app/console sulu:upgrade:0.18.0:smart-content-operator tag and
+```
+
+### Media Format Cache Public Folder
+
+If you use the `sulu_media.format_cache.public_folder` parameter, 
+the following configuration update need to be done,
+because the parameter does not longer exists:
+
+``` yml
+sulu_media:
+    format_cache:
+        public_folder: 'public' # delete this line
+        path: %kernel.root_dir%/../public/uploads/media # add this new configuration
+```
 
 ### Admin
 
@@ -18,6 +82,79 @@ To be sure that it is possible to generate a preview image you should check if t
 {% if media.thumbnails['200x200'] is defined %}
 <img src="{{ media.thumbnails['200x200'] }}"/>
 {% endif %}
+```
+
+### Error templates
+
+Variables of exception template `ClientWebsiteBundle:error404.html.twig` has changed.
+
+* `status_code`: response code 
+* `status_text`: response text
+* `exception`: whole exception object
+* `currentContent`: content which was rendered before exception was thrown
+
+Especially for 404 exception the `path` variable has been removed.
+
+Before:
+```twig
+<p>The path "<em>{{ path }}</em>" does not exist.</p>
+```
+
+After:
+```twig
+<p>The path "<em>{{ request.resourceLocator }}</em>" does not exist.</p>
+```
+
+The behaviour of the errors has changed. In dev mode no custom error pages appears.
+To see them you have to open following url:
+
+```
+{portal-prefix}/_error/{status_code}
+sulu.lo/de/_error/500
+```
+
+More Information can be found in [sulu-docs](http://docs.sulu.io/en/latest/cookbook/custom-error-page.html).
+
+To keep the backward compatibility you have to add following lines to your webspace configuration:
+
+```xml
+<webspace>
+    ...
+    
+    <theme>
+        ...
+        
+        <error-templates>
+            <error-template code="404">ClientWebsiteBundle:views:error404.html.twig</error-template>
+            <error-template default="true">ClientWebsiteBundle:views:error.html.twig</error-template>
+        </error-templates>
+    </theme>
+    
+    ...
+</webspace>
+```
+
+### Twig Templates
+
+If a page has no url for a specific locale, it returns now the resource-locator to the index page (`'/'`) instead of a
+empty string (`''`).
+ 
+__Before:__
+```
+urls = array(
+    'de' => '/ueber-uns',
+    'en' => '/about-us',
+    'es' => ''
+);
+```
+
+__After:__
+```
+urls = array(
+    'de' => '/ueber-uns',
+    'en' => '/about-us',
+    'es' => '/'
+);
 ```
 
 ## 0.17.0

@@ -18,6 +18,7 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'key' => 'foo',
             'excludedTemplates' => array('portal_key'),
+            'errorTemplates'=> array(),
         );
 
         $this->theme->setKey($expected['key']);

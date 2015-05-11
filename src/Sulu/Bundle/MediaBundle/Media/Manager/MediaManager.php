@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
@@ -34,7 +35,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -63,7 +63,7 @@ class MediaManager implements MediaManagerInterface
      * The repository for communication with the database
      * @var CollectionRepository
      */
-    private $collectionRepository;
+    protected $collectionRepository;
 
     /**
      * @var EntityManager
@@ -142,7 +142,7 @@ class MediaManager implements MediaManagerInterface
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
-        TagmanagerInterface $tagManager,
+        TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
         $downloadPath,
         $maxFileSize
@@ -362,7 +362,9 @@ class MediaManager implements MediaManagerInterface
         $mediaEntities = $this->mediaRepository->findMedia(array('pagination' => false, 'ids' => $ids));
         $this->count = count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
-            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(
+                new Media($mediaEntity, $locale, null)
+            );
         }
 
         ksort($media);
@@ -476,6 +478,8 @@ class MediaManager implements MediaManagerInterface
             $data['version'] = $version;
 
             $fileVersion = clone($currentFileVersion);
+            $this->em->persist($fileVersion);
+
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
@@ -527,7 +531,7 @@ class MediaManager implements MediaManagerInterface
     private function buildData($uploadedFile, $data, $user)
     {
         if (!($uploadedFile instanceof UploadedFile)) {
-            throw new InvalidFileException('given uploadfile is not of instance UploadFile');
+            throw new InvalidFileException('Given uploaded file is not of instance UploadedFile');
         }
 
         $this->validator->validate($uploadedFile);
@@ -791,8 +795,7 @@ class MediaManager implements MediaManagerInterface
         $media->setAdditionalVersionData($versionData);
 
         // Set Current Url
-        if (
-            isset($versionData[$media->getVersion()])
+        if (isset($versionData[$media->getVersion()])
             && isset($versionData[$media->getVersion()]['url'])
         ) {
             $media->setUrl($versionData[$media->getVersion()]['url']);

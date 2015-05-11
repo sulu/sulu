@@ -92,7 +92,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
 
         // build where clause for tags
         if ($this->hasConfig('tags')) {
-            $sql2Where = array_merge($sql2Where, $this->buildTagsWhere($locale));
+            $sql2Where[] = $this->buildTagsWhere($locale);
         }
 
         if (sizeof($this->ids) > 0) {
@@ -102,6 +102,8 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         if (sizeof($this->excluded) > 0) {
             $sql2Where = array_merge($sql2Where, $this->buildPageExclude());
         }
+
+        $sql2Where = array_filter($sql2Where);
 
         return implode(' AND ', $sql2Where);
     }
@@ -232,8 +234,10 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     private function buildTagsWhere($languageCode)
     {
         $structure = $this->structureManager->getStructure('excerpt');
+
         $sql2Where = array();
         if ($structure->hasProperty('tags')) {
+            $tagOperator = $this->getConfig('tagOperator', 'OR');
             $property = new TranslatedProperty(
                 $structure->getProperty('tags'),
                 $languageCode,
@@ -243,9 +247,13 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             foreach ($this->getConfig('tags', array()) as $tag) {
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
             }
+
+            if (sizeof($sql2Where) > 0) {
+                return '(' . implode(' ' . strtoupper($tagOperator) . ' ', $sql2Where) . ')';
+            }
         }
 
-        return $sql2Where;
+        return '';
     }
 
     /**

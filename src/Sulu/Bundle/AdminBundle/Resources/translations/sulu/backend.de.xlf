@@ -402,62 +402,6 @@
                 <source>sulu.matcher.please-choose</source>
                 <target>Bitte wählen..</target>
             </trans-unit>
-            <trans-unit id="03588f70b26be004afd6ea794c008e8f" resname="navigation.pim">
-                <source>navigation.pim</source>
-                <target>PIM</target>
-            </trans-unit>
-            <trans-unit id="58cb513981ea607cf0fb3db202368f0e" resname="navigation.pim.products">
-                <source>navigation.pim.products</source>
-                <target>Produkte</target>
-            </trans-unit>
-            <trans-unit id="de3e19c8588a08fe9f82442df794228d" resname="pim.products.title">
-                <source>pim.products.title</source>
-                <target>Produkte</target>
-            </trans-unit>
-            <trans-unit id="ebe90aa605a30f7e0209542e24978b90" resname="products.key">
-                <source>products.key</source>
-                <target>Schlüssel</target>
-            </trans-unit>
-            <trans-unit id="40e391d7afad26a01d92dbc7b38c3e54" resname="products.contractual-article">
-                <source>products.contractual-article</source>
-                <target>Vertraglicher Artikel</target>
-            </trans-unit>
-            <trans-unit id="50b38cc2bbdde289f67a22b86ccb6aee" resname="products.name">
-                <source>products.name</source>
-                <target>Name</target>
-            </trans-unit>
-            <trans-unit id="ce420acf4b9e355e02abf093b1937ce5" resname="products.article-number">
-                <source>products.article-number</source>
-                <target>Artikelnummer</target>
-            </trans-unit>
-            <trans-unit id="73f857fb4aec3a9b7848fcd5826b3326" resname="products.manufacturer">
-                <source>products.manufacturer</source>
-                <target>Hersteller</target>
-            </trans-unit>
-            <trans-unit id="09d4af2742da58c78360f2e22a0d5e1a" resname="products.categories">
-                <source>products.categories</source>
-                <target>Kategorien</target>
-            </trans-unit>
-            <trans-unit id="0948dff11d35dcbad5b69e0e1b979fc3" resname="products.last-imported">
-                <source>products.last-imported</source>
-                <target>Zuletzt importiert</target>
-            </trans-unit>
-            <trans-unit id="51780238a1c0fa9ed158a47e2feede05" resname="sulu.products.import">
-                <source>sulu.products.import</source>
-                <target>Import</target>
-            </trans-unit>
-            <trans-unit id="3bfe10cbcfef0e1626de1015d91bbb1d" resname="sulu.products.map-header">
-                <source>sulu.products.map-header</source>
-                <target>Header zuordnen</target>
-            </trans-unit>
-            <trans-unit id="36a03673d868140980e8e2ec60baf4b4" resname="sulu.products.map-header-desc">
-                <source>sulu.products.map-header-desc</source>
-                <target>Bitte Spalten der existierenden Datenstruktur zuordnen.</target>
-            </trans-unit>
-            <trans-unit id="536fa243219a2512816261794df3121c" resname="sulu.products.unmatched-columns">
-                <source>sulu.products.unmatched-columns</source>
-                <target>Nicht zugeordnete Spalten</target>
-            </trans-unit>
             <trans-unit id="fee413c552881531c70b1ac61da07738" resname="public.deactivate">
                 <source>public.deactivate</source>
                 <target>Deaktivieren</target>
@@ -627,10 +571,6 @@
             <trans-unit id="b7c8c053e39fcd8e8a627e91dd6b650e" resname="public.disabled">
                 <source>public.disabled</source>
                 <target>Deaktiviert</target>
-            </trans-unit>
-            <trans-unit id="750e61b7718d049c72a2ec09d96df2ad" resname="navigation.financials">
-                <source>navigation.financials</source>
-                <target>Finanzdaten</target>
             </trans-unit>
             <trans-unit id="7b9e03b4c0a92d2120e3301c3d7a91e9" resname="public.public">
                 <source>public.public</source>

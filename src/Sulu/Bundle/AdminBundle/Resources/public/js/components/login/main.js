@@ -709,9 +709,9 @@ define([], function() {
 
             this.sandbox.dom.animate(this.dom.$frames, {left: -(this.sandbox.dom.position($frame).left) + 'px'}, {
                 duration: 300,
-                complete: function() {
+                complete: _.debounce(function() {
                     def.resolve();
-                }
+                }, 100)
             });
 
             // focus first input

@@ -83,19 +83,7 @@ class SnippetContent extends ComplexContentType
     protected function setData($data, PropertyInterface $property)
     {
         $refs = isset($data) ? $data : array();
-        $ids = array();
-        if (is_array($refs)) {
-            foreach ($refs as $i => $ref) {
-                // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($i)) {
-                    $ref = $i;
-                }
-
-                $ids[] = $ref;
-            }
-        }
-
-        $property->setValue($ids);
+        $property->setValue($refs);
     }
 
     /**
@@ -103,7 +91,10 @@ class SnippetContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $refs = $node->getPropertyValueWithDefault($property->getName(), array());
+        $refs = array();
+        if($node->hasProperty($property->getName())) {
+            $refs = $node->getProperty($property->getName())->getString();
+        }
         $this->setData($refs, $property);
     }
 
@@ -126,7 +117,6 @@ class SnippetContent extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-
         $snippetReferences = array();
         $values = $property->getValue();
 
