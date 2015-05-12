@@ -49,6 +49,12 @@ class FallbackController
 
         $app->onMessage($connection, $message);
 
+        // clean output buffer if there is data in it
+        // happens if a twig error occurs
+        if (ob_get_length() > 0) {
+            ob_clean();
+        }
+
         return new Response($connection->getData(), 200, array('Content-Type' => 'application/json'));
     }
 }
