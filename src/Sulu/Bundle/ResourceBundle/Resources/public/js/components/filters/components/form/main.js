@@ -85,6 +85,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             // filter saved
             this.sandbox.on('sulu.resource.filters.saved', function(model) {
                 this.options.data = model;
+                this.sandbox.form.setData(formSelector, model);
                 this.setHeaderBar(true);
                 this.setHeaderInformation();
             }, this);
@@ -214,6 +215,9 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                 this.setHeaderBar(false);
             }.bind(this), 'input, textarea');
             this.sandbox.on('husky.select.conjunction.selected.item', function() {
+                this.setHeaderBar(false);
+            }.bind(this));
+            this.sandbox.on('sulu.condition-selection.condition.data-changed', function() {
                 this.setHeaderBar(false);
             }.bind(this));
         }

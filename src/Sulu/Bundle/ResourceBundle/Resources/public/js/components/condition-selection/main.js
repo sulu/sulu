@@ -25,9 +25,7 @@
  */
 define([], function() {
 
-    // TODO write data in attribute?
-    // TODO update event to update saved elements with ids
-    // TODO validation
+    // TODO dataupdate when datapicker change
 
     'use strict';
 
@@ -103,6 +101,18 @@ define([], function() {
             return createEventName.call(this, 'initialized');
         },
 
+        /**
+         * update the elements of the condition selection
+         * @event data-changed
+         */
+        EVENT_DATA_CHANGED = function() {
+            return 'data-changed';
+        },
+
+        /**
+         * raised when all overlay components returned their value
+         * @event sulu.condition-selection.data-changed
+         */
         DATA_CHANGED = function() {
             return createEventName.call(this, 'data-changed');
         },
@@ -177,8 +187,8 @@ define([], function() {
                 $fieldSelect = createFieldSelect.call(this, condition.field, true, true);
             }
 
-            $operatorSelect = createOperatorSelect.call(this, condition.operator, filteredOperators, false, true);
             operator = getOperatorByOperandAndType.call(this, condition.operator, condition.type);
+            $operatorSelect = createOperatorSelect.call(this, operator, filteredOperators, false, true);
             $valueComponent = createValueInput.call(this, conditionGroup, operator, 'grid-col-4', true);
 
             this.sandbox.dom.append($row, $deleteButton);
@@ -199,19 +209,24 @@ define([], function() {
             var $wrapper,
                 $select = createSelect.call(
                     this,
-                    selectedOperator,
-                    'operator',
+                    !!selectedOperator ? selectedOperator.id : null,
+                    'id',
                     'name',
                     operators,
                     constants.operatorSelectClass,
                     prependEmpty
                 );
 
+            if (!!selectedOperator) {
+                this.sandbox.dom.data($select, 'type', selectedOperator.type);
+            }
+
             if (!!wrap) {
                 $wrapper = this.sandbox.dom.createElement(templates.col('grid-col-3'));
                 this.sandbox.dom.append($wrapper, $select);
                 return $wrapper;
             }
+
             return $select;
         },
 
@@ -252,7 +267,7 @@ define([], function() {
         createValueInput = function(conditionGroup, operator, gridColClass, wrap) {
             var $input = null,
                 $wrapper,
-                condition;
+                condition, id;
 
             if (!!conditionGroup && !!operator) {
                 if (conditionGroup.conditions.length > 1) {
@@ -260,6 +275,7 @@ define([], function() {
                 } else {
                     condition = conditionGroup.conditions[0];
                     $input = createInputForType.call(this, operator, condition.value);
+                    id = condition.id;
                 }
             } else if (!conditionGroup && !!operator) {
                 $input = createInputForType.call(this, operator, '');
@@ -268,9 +284,11 @@ define([], function() {
             }
 
             // add field to validation
-            if(!!this.options.validationSelector) {
+            if (!!this.options.validationSelector) {
                 this.sandbox.form.addField(this.options.validationSelector, $input);
             }
+
+            this.sandbox.dom.data($input, 'id', id);
 
             if (!!wrap) {
                 $wrapper = this.sandbox.dom.createElement(templates.col(gridColClass));
@@ -282,12 +300,29 @@ define([], function() {
         },
 
         /**
+         * Searches for an operator by id
+         */
+        getOperatorById = function(id) {
+            var result = null;
+            id = parseInt(id);
+
+            this.operators.forEach(function(op) {
+                if (op.id === id) {
+                    result = op;
+                    return false;
+                }
+            }.bind(this));
+
+            return result;
+        },
+
+        /**
          * Searches for an operator by its operand and type
          */
         getOperatorByOperandAndType = function(operand, type) {
             var result = null;
 
-            if(typeof type === 'string') {
+            if (typeof type === 'string') {
                 type = getTypeByName.call(this, type);
             }
 
@@ -307,23 +342,23 @@ define([], function() {
          * @param value
          */
         createInputForType = function(operator, value) {
-          switch(operator.inputType){
-              case 'date':
-              case 'datepicker':
-                  return createDatepicker.call(this, value, constants.valueInputClass);
-              case 'select':
-              case 'boolean':
-              case 'radio':
-              case 'checkbox':
-                  return createSelect.call(this, value, 'value', 'name', operator.values, constants.valueInputClass, true);
-              case '':
-              case 'simple':
-                  return createSimpleInput.call(this, value, constants.valueInputClass);
-              default:
-                  this.sandbox.logger.error('Input type "' + type + '" is not supported!');
-                  break;
+            switch (operator.inputType) {
+                case 'date':
+                case 'datepicker':
+                    return createDatepicker.call(this, value, constants.valueInputClass);
+                case 'select':
+                case 'boolean':
+                case 'radio':
+                case 'checkbox':
+                    return createSelect.call(this, value, 'value', 'name', operator.values, constants.valueInputClass, true);
+                case '':
+                case 'simple':
+                    return createSimpleInput.call(this, value, constants.valueInputClass);
+                default:
+                    this.sandbox.logger.error('Input type "' + type + '" is not supported!');
+                    break;
 
-          }
+            }
         },
 
         /**
@@ -332,18 +367,23 @@ define([], function() {
          * @param valueInputClass
          */
         createDatepicker = function(value, valueInputClass) {
-            var $datepicker = this.sandbox.dom.createElement('<div class="'+valueInputClass+'"></div>');
+            var $datepicker = this.sandbox.dom.createElement('<div class="' + valueInputClass + '"></div>');
             this.sandbox.start([
                 {
                     name: 'input@husky',
                     options: {
                         el: $datepicker,
-                        datepickerOptions: {"startDate":"1900-01-01", "endDate": new Date()},
+                        datepickerOptions: {"startDate": "1900-01-01", "endDate": new Date()},
                         skin: 'date',
                         value: value
                     }
                 }
             ]);
+
+            // FIXME
+            // updateValue: function() {
+            //    this.setValue(this.sandbox.dom.data(this.$el, 'value'));
+            // }
 
             return $datepicker;
         },
@@ -353,8 +393,8 @@ define([], function() {
          * @param value
          * @param cssClass
          */
-        createSimpleInput = function(value, cssClass){
-           return this.sandbox.dom.createElement(templates.input(value, cssClass));
+        createSimpleInput = function(value, cssClass) {
+            return this.sandbox.dom.createElement(templates.input(value, cssClass));
         },
 
         /**
@@ -364,7 +404,7 @@ define([], function() {
         filterOperatorsByType = function(type) {
             var result = [];
 
-            if(typeof type === 'string') {
+            if (typeof type === 'string') {
                 type = getTypeByName.call(this, type);
             } else {
                 type = type || UNDEFINED_TYPE;
@@ -383,8 +423,8 @@ define([], function() {
          * @param type
          * @returns {number}
          */
-        getTypeByName = function(type){
-            switch(type){
+        getTypeByName = function(type) {
+            switch (type) {
                 case 'string':
                     return STRING_TYPE;
                 case 'number':
@@ -397,7 +437,7 @@ define([], function() {
                 case 'datetime':
                     return DATETIME_TYPE;
                 default:
-                    this.sandbox.logger.error('Unsupported type "'+ type +'" found!');
+                    this.sandbox.logger.error('Unsupported type "' + type + '" found!');
                     return null;
             }
         },
@@ -417,7 +457,7 @@ define([], function() {
                 translateText = null,
                 $select = this.sandbox.dom.createElement(templates.select.call(this, cssClass));
 
-            if(!!prependEmpty){
+            if (!!prependEmpty) {
                 options.push('<option value=""></option>');
             }
 
@@ -430,7 +470,7 @@ define([], function() {
                 }
             }.bind(this));
 
-            if(!!this.options.validationSelector){
+            if (!!this.options.validationSelector) {
                 this.sandbox.form.addField(this.options.validationSelector, $select);
             }
 
@@ -449,34 +489,83 @@ define([], function() {
             this.sandbox.dom.append(this.options.el, $addButton);
         },
 
-        bindDomEvents = function(){
+        bindDOMEvents = function() {
             // add button
-            this.sandbox.dom.on(this.options.el, 'click', addConditionEventHandler.bind(this), '#'+this.options.ids.addButton);
+            this.sandbox.dom.on(this.options.el, 'click', addConditionEventHandler.bind(this), '#' + this.options.ids.addButton);
 
             // remove buttons
-            this.sandbox.dom.on(this.$container, 'click', removeConditionEventHandler.bind(this), '.'+constants.removeButtonClass);
+            this.sandbox.dom.on(this.$container, 'click', removeConditionEventHandler.bind(this), '.' + constants.removeButtonClass);
 
             // field changed event handler
-            this.sandbox.dom.on(this.$container, 'change', fieldChangedEventHandler.bind(this), '.'+constants.fieldSelectClass);
+            this.sandbox.dom.on(this.$container, 'change', fieldChangedEventHandler.bind(this), '.' + constants.fieldSelectClass);
 
             // operator changed event handler
-            this.sandbox.dom.on(this.$container, 'change', operatorChangedEventHandler.bind(this), '.'+constants.operatorSelectClass);
+            this.sandbox.dom.on(this.$container, 'change', operatorChangedEventHandler.bind(this), '.' + constants.operatorSelectClass);
+
+            // data change event handler
+            this.sandbox.dom.on(this.$el, EVENT_DATA_CHANGED.call(this), dataChangedEventHandler.bind(this));
+
+            // listen for select change
+            this.sandbox.dom.on(this.$container, 'change', function() {
+                updateDataAttribute.call(this);
+            }.bind(this), 'select');
+
+            // listen for input change
+            this.sandbox.dom.on(this.$container, 'change', function() {
+                updateDataAttribute.call(this);
+            }.bind(this), 'input');
+
+            // update operator data
+            this.sandbox.dom.on(this.$container, 'change', function(event) {
+                updateOperatorType.call(this, event);
+            }.bind(this), 'select.' + constants.operatorSelectClass);
+        },
+
+        updateOperatorType = function(event) {
+            var $select = event.currentTarget,
+                operatorId = this.sandbox.dom.val($select),
+                operator = getOperatorById.call(this, operatorId);
+
+            this.sandbox.dom.data($select, 'type', operator.type);
+        },
+
+        /**
+         * Triggers data update for component
+         */
+        dataChangedEventHandler = function() {
+            var data = this.sandbox.dom.data(this.options.el, 'condition-selection');
+            updateData.call(this, data);
+            updateDataAttribute.call(this);
+        },
+
+        /**
+         * Handles data update for component
+         * @param data
+         */
+        updateData = function(data) {
+            // remove all rows and remove them from validation
+            var $rows = this.sandbox.dom.find('.' + constants.conditionRowClass, this.$container);
+            this.sandbox.dom.each($rows, function(idx, $row) {
+                removeConditionFromDomAndValidation.call(this, $row);
+            }.bind(this));
+
+            // add new rows
+            this.options.data = data;
+            renderRows.call(this);
         },
 
         /**
          * Triggers updte of input field
          */
         operatorChangedEventHandler = function() {
-            var operatorValue = event.target.value,
+            var operatorId = event.target.value,
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
-                fieldName = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.fieldSelectClass, $row)),
-                field = getFieldByName.call(this, fieldName),
-                operator = getOperatorByOperandAndType.call(this, operatorValue, field.type),
+                operator = getOperatorById.call(this, operatorId),
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
 
             // remove field from validation
-            if(!!this.options.validationSelector) {
+            if (!!this.options.validationSelector) {
                 this.sandbox.form.removeField(this.options.validationSelector, $valueInput);
             }
 
@@ -484,8 +573,6 @@ define([], function() {
             this.sandbox.dom.remove($valueInput);
             $valueInput = createValueInput.call(this, null, operator, null, false);
             this.sandbox.dom.append($valueInputParent, $valueInput);
-
-            // TODO trigger change in data?
         },
 
         /**
@@ -503,7 +590,7 @@ define([], function() {
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
 
             // remove fields from validation
-            if(!!this.options.validationSelector) {
+            if (!!this.options.validationSelector) {
                 this.sandbox.form.removeField(this.options.validationSelector, $valueInput);
                 this.sandbox.form.removeField(this.options.validationSelector, $operatorSelect);
             }
@@ -517,8 +604,6 @@ define([], function() {
 
             this.sandbox.dom.append($operatorSelectParent, $operatorSelect);
             this.sandbox.dom.append($valueInputParent, $valueInput);
-
-            // TODO trigger change in data?
         },
 
         /**
@@ -540,39 +625,99 @@ define([], function() {
         /**
          * Adds a new condition row
          */
-        addConditionEventHandler = function(){
+        addConditionEventHandler = function() {
             renderRow.call(this);
+            this.sandbox.emit(DATA_CHANGED.call(this));
         },
 
         /**
          * Removes a condition from the dom and the data
          * @param event
          */
-        removeConditionEventHandler = function(event){
-            var $el = this.sandbox.dom.closest(event.currentTarget, '.'+constants.conditionRowClass),
-                id = this.sandbox.dom.data($el, 'id'),
-                conditionGroupIdx = null;
+        removeConditionEventHandler = function(event) {
+            var $row = this.sandbox.dom.closest(event.currentTarget, '.' + constants.conditionRowClass);
+            removeConditionFromDomAndValidation.call(this, $row);
+        },
 
-            if(id !== 'new') {
-                this.options.data.forEach(function(el, idx){
-                    if(el.id === id) {
-                        conditionGroupIdx = idx;
-                        return false;
-                    }
-                }.bind(this));
-                this.options.data.splice(conditionGroupIdx, 1);
+        /**
+         * Removes a condition form the dom and the validation
+         *
+         * @param $row
+         */
+        removeConditionFromDomAndValidation = function($row) {
+            var id = this.sandbox.dom.data($row, 'id'),
+                $fieldSelect = this.sandbox.dom.find('.' + constants.fieldSelectClass, $row),
+                $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row),
+                $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row);
+
+            if (!!this.options.validationSelector) {
+                this.sandbox.form.removeField(this.options.validationSelector, $fieldSelect);
+                this.sandbox.form.removeField(this.options.validationSelector, $operatorSelect);
+                this.sandbox.form.removeField(this.options.validationSelector, $valueInput);
             }
 
-            this.sandbox.dom.remove($el);
+            this.sandbox.dom.remove($row);
             updateDataAttribute.call(this);
+            this.sandbox.emit(DATA_CHANGED.call(this));
+        },
+
+        /**
+         * Retrieves data from a row for a conditiongroup
+         */
+        getDataFromRow = function($row) {
+            var cgData = {conditions: []},
+                cgId = this.sandbox.dom.data($row, 'id'),
+                fieldValue, operatorId, type, value, conditionId, condition, operator;
+
+            if (!!cgId && cgId !== 'new') {
+                cgData['id'] = cgId;
+            }
+
+            fieldValue = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.fieldSelectClass, $row));
+            type = this.sandbox.dom.data(this.sandbox.dom.find('.' + constants.operatorSelectClass, $row), 'type');
+            operatorId = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.operatorSelectClass, $row));
+            conditionId = this.sandbox.dom.data(this.sandbox.dom.find('.' + constants.valueInputClass, $row), 'id');
+            operator = getOperatorById.call(this, operatorId);
+
+            if (!!operator && operator.inputType === 'datepicker') {
+                value = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass + ' input', $row));
+            } else {
+                value = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass, $row));
+            }
+
+            condition = {
+                type: type,
+                field: fieldValue,
+                operator: !!operator ? operator.operator : null,
+                value: value
+            };
+
+            if (!!conditionId) {
+                condition.id = conditionId;
+            }
+
+            cgData.conditions.push(condition);
+            return cgData;
+        },
+
+        /**
+         * Retrieves data from current conditions
+         */
+        getData = function() {
+            var data = [],
+                $rows = this.sandbox.dom.find('.' + constants.conditionRowClass, this.$container);
+            this.sandbox.dom.each($rows, function(idx, $row) {
+                data.push(getDataFromRow.call(this, $row));
+            }.bind(this));
+            return data;
         },
 
         /**
          * Updates the data attribute for the data mapper
          */
-        updateDataAttribute = function(){
-            // TODO update attribute and add validation type to fetch data
-            this.sandbox.emit(DATA_CHANGED.call(this));
+        updateDataAttribute = function() {
+            this.data = getData.call(this);
+            this.sandbox.dom.data(this.options.el, 'conditionSelection', this.data);
         };
 
     return {
@@ -586,9 +731,6 @@ define([], function() {
             };
 
             startLoader.call(this);
-
-            // TODO set data via mapper or data
-
             this.fetchOperatorsAndFields();
         },
 
@@ -629,7 +771,7 @@ define([], function() {
             renderAddButton.call(this);
             stopLoader.call(this);
             this.sandbox.dom.show(this.$container);
-            bindDomEvents.call(this);
+            bindDOMEvents.call(this);
 
             this.sandbox.emit(INITIALIZED.call(this));
         }
