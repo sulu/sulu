@@ -21,11 +21,13 @@
  * @param {Object} [options.instanceName] Instance name for usage with multiple instances
  * @param {Object} [options.translations] Translation-keys for the component
  * @param {Object} [options.data] Data which should already be set
+ * @param {Object} [options.validationSelector] selector to add fields to validation
  */
 define([], function() {
 
     // TODO write data in attribute?
     // TODO update event to update saved elements with ids
+    // TODO validation
 
     'use strict';
 
@@ -33,7 +35,7 @@ define([], function() {
         STRING_TYPE = 1,
         NUMBER_TYPE = 2,
         DATETIME_TYPE = 3,
-        BOOLEAN_TYPE = 4, // TODO ?
+        BOOLEAN_TYPE = 4,
 
         defaults = {
             operatorsUrl: null,
@@ -44,7 +46,8 @@ define([], function() {
             translations: {
                 addButton: 'resource.filter.add-condition'
             },
-            data: []
+            data: [],
+            validationSelector: null
         },
 
         templates = {
@@ -73,10 +76,13 @@ define([], function() {
                 ].join('');
             },
             input: function(value, cssClass){
-                return ['<input class="form-element husky-validate ',cssClass,'" type="text" value="',value,'">'].join('');
+                return ['<input data-validation-required="true" class="form-element husky-validate ',cssClass,'" type="text" value="',value,'">'].join('');
             },
             col: function(cssClass) {
                 return ['<div class="',cssClass,'"></div>'].join('');
+            },
+            select: function(cssClass){
+                return ['<select data-validation-required="true" class="form-element husky-validate ', cssClass, '"></select>'].join('');
             }
         },
 
@@ -261,6 +267,11 @@ define([], function() {
                 $input = createSimpleInput.call(this, '', constants.valueInputClass);
             }
 
+            // add field to validation
+            if(!!this.options.validationSelector) {
+                this.sandbox.form.addField(this.options.validationSelector, $input);
+            }
+
             if (!!wrap) {
                 $wrapper = this.sandbox.dom.createElement(templates.col(gridColClass));
                 this.sandbox.dom.append($wrapper, $input);
@@ -301,7 +312,10 @@ define([], function() {
               case 'datepicker':
                   return createDatepicker.call(this, value, constants.valueInputClass);
               case 'select':
-                  return createSelect.call(this, value, 'value', 'name', operator.values, constants.valueInputClass);
+              case 'boolean':
+              case 'radio':
+              case 'checkbox':
+                  return createSelect.call(this, value, 'value', 'name', operator.values, constants.valueInputClass, true);
               case '':
               case 'simple':
                   return createSimpleInput.call(this, value, constants.valueInputClass);
@@ -371,7 +385,6 @@ define([], function() {
          */
         getTypeByName = function(type){
             switch(type){
-
                 case 'string':
                     return STRING_TYPE;
                 case 'number':
@@ -379,14 +392,13 @@ define([], function() {
                 case 'float':
                     return NUMBER_TYPE;
                 case 'boolean':
-                    this.sandbox.logger.error('Some types not yet supportet'); // TODO?
-                    return;
+                    return BOOLEAN_TYPE;
                 case 'date':
                 case 'datetime':
                     return DATETIME_TYPE;
                 default:
                     this.sandbox.logger.error('Unsupported type "'+ type +'" found!');
-                    return;
+                    return null;
             }
         },
 
@@ -403,7 +415,7 @@ define([], function() {
         createSelect = function(selected, valueProperty, displayProperty, values, cssClass, prependEmpty) {
             var options = [],
                 translateText = null,
-                $select = this.sandbox.dom.createElement('<select class="form-element ' + cssClass + '"></select>');
+                $select = this.sandbox.dom.createElement(templates.select.call(this, cssClass));
 
             if(!!prependEmpty){
                 options.push('<option value=""></option>');
@@ -417,6 +429,10 @@ define([], function() {
                     options.push('<option value="' + value[valueProperty] + '">' + translateText + '</option>');
                 }
             }.bind(this));
+
+            if(!!this.options.validationSelector){
+                this.sandbox.form.addField(this.options.validationSelector, $select);
+            }
 
             this.sandbox.dom.append($select, options.join(''));
             return $select;
@@ -433,7 +449,6 @@ define([], function() {
             this.sandbox.dom.append(this.options.el, $addButton);
         },
 
-
         bindDomEvents = function(){
             // add button
             this.sandbox.dom.on(this.options.el, 'click', addConditionEventHandler.bind(this), '#'+this.options.ids.addButton);
@@ -448,24 +463,24 @@ define([], function() {
             this.sandbox.dom.on(this.$container, 'change', operatorChangedEventHandler.bind(this), '.'+constants.operatorSelectClass);
         },
 
-        bindCustomEvents = function(){
-            // TODO
-        },
-
         /**
          * Triggers updte of input field
          */
         operatorChangedEventHandler = function() {
             var operatorValue = event.target.value,
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
-                fieldName = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.fieldSelectClass, this.$container)),
+                fieldName = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.fieldSelectClass, $row)),
                 field = getFieldByName.call(this, fieldName),
                 operator = getOperatorByOperandAndType.call(this, operatorValue, field.type),
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
 
-            // TODO do this only when type changes
-            // TODO stop possible component in valueInput
+            // remove field from validation
+            if(!!this.options.validationSelector) {
+                this.sandbox.form.removeField(this.options.validationSelector, $valueInput);
+            }
+
+            this.sandbox.stop($valueInput);
             this.sandbox.dom.remove($valueInput);
             $valueInput = createValueInput.call(this, null, operator, null, false);
             this.sandbox.dom.append($valueInputParent, $valueInput);
@@ -487,9 +502,14 @@ define([], function() {
                 $operatorSelectParent = this.sandbox.dom.parent($operatorSelect),
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
 
-            // TODO do this only when type changes
-            // TODO stop possible component in valueInput
+            // remove fields from validation
+            if(!!this.options.validationSelector) {
+                this.sandbox.form.removeField(this.options.validationSelector, $valueInput);
+                this.sandbox.form.removeField(this.options.validationSelector, $operatorSelect);
+            }
+
             this.sandbox.dom.remove($operatorSelect);
+            this.sandbox.stop($valueInput);
             this.sandbox.dom.remove($valueInput);
 
             $operatorSelect = createOperatorSelect.call(this, null, filteredOperators, true, false);
@@ -568,7 +588,6 @@ define([], function() {
             startLoader.call(this);
 
             // TODO set data via mapper or data
-            // TODO bindCustomEvents.call(this);
 
             this.fetchOperatorsAndFields();
         },
@@ -611,11 +630,8 @@ define([], function() {
             stopLoader.call(this);
             this.sandbox.dom.show(this.$container);
             bindDomEvents.call(this);
-            bindCustomEvents.call(this);
 
             this.sandbox.emit(INITIALIZED.call(this));
         }
     };
 });
-
-
