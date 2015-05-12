@@ -26,8 +26,6 @@ define([], function() {
 
     // TODO write data in attribute?
     // TODO update event to update saved elements with ids
-    // TODO bug when setting up multiple filtrs
-    //
 
     'use strict';
 
@@ -457,10 +455,10 @@ define([], function() {
         /**
          * Triggers updte of input field
          */
-        operatorChangedEventHandler = function(){
+        operatorChangedEventHandler = function() {
             var operatorValue = event.target.value,
-                $row = this.sandbox.dom.parent('.' + constants.conditionRowClass, event.target),
-                fieldName = this.sandbox.dom.val(this.sandbox.dom.find('.'+constants.fieldSelectClass, this.$container)),
+                $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
+                fieldName = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.fieldSelectClass, this.$container)),
                 field = getFieldByName.call(this, fieldName),
                 operator = getOperatorByOperandAndType.call(this, operatorValue, field.type),
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
@@ -483,7 +481,7 @@ define([], function() {
             var fieldName = event.target.value,
                 field = getFieldByName.call(this, fieldName),
                 filteredOperators = filterOperatorsByType.call(this, field.type),
-                $row = this.sandbox.dom.parent('.' + constants.conditionRowClass, event.target),
+                $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row)[0],
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
                 $operatorSelectParent = this.sandbox.dom.parent($operatorSelect),
@@ -500,7 +498,7 @@ define([], function() {
             this.sandbox.dom.append($operatorSelectParent, $operatorSelect);
             this.sandbox.dom.append($valueInputParent, $valueInput);
 
-             // TODO trigger change in data?
+            // TODO trigger change in data?
         },
 
         /**
@@ -531,7 +529,7 @@ define([], function() {
          * @param event
          */
         removeConditionEventHandler = function(event){
-            var $el = this.sandbox.dom.parent(event.currentTarget, '.'+constants.conditionRowClass),
+            var $el = this.sandbox.dom.closest(event.currentTarget, '.'+constants.conditionRowClass),
                 id = this.sandbox.dom.data($el, 'id'),
                 conditionGroupIdx = null;
 
