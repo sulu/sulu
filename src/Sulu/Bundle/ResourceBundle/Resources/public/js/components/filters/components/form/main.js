@@ -140,7 +140,8 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                         el: $element,
                         fieldsUrl: typeConfig.fields,
                         operatorsUrl: constants.operatorsUrl,
-                        data: this.options.data.conditionGroups
+                        data: this.options.data.conditionGroups,
+                        validationSelector: formSelector
                     }
                 }
             ]);
