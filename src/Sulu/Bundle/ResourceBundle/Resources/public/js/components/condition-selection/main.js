@@ -26,6 +26,8 @@ define([], function() {
 
     // TODO write data in attribute?
     // TODO update event to update saved elements with ids
+    // TODO bug when setting up multiple filtrs
+    //
 
     'use strict';
 
@@ -33,7 +35,7 @@ define([], function() {
         STRING_TYPE = 1,
         NUMBER_TYPE = 2,
         DATETIME_TYPE = 3,
-        BOOLEAN_TYPE = 4,
+        BOOLEAN_TYPE = 4, // TODO ?
 
         defaults = {
             operatorsUrl: null,
@@ -156,6 +158,7 @@ define([], function() {
                 $deleteButton,
                 $fieldSelect,
                 $operatorSelect,
+                operator,
                 $valueComponent,
                 id = !!conditionGroup ? conditionGroup.id : 'new';
 
@@ -171,7 +174,8 @@ define([], function() {
             }
 
             $operatorSelect = createOperatorSelect.call(this, condition.operator, filteredOperators, false, true);
-            $valueComponent = createValueInput.call(this, conditionGroup, 'grid-col-4', true);
+            operator = getOperatorByOperandAndType.call(this, condition.operator, condition.type);
+            $valueComponent = createValueInput.call(this, conditionGroup, operator, 'grid-col-4', true);
 
             this.sandbox.dom.append($row, $deleteButton);
             this.sandbox.dom.append($row, $fieldSelect);
@@ -237,21 +241,25 @@ define([], function() {
         /**
          * Creates the input(s) depending on the condition group and the type of the selected field
          * @param conditionGroup
+         * @param operator
          * @param gridColClass css class used for the wrapper of the input - should be a grid-col class
          * @param wrap
          */
-        createValueInput = function(conditionGroup, gridColClass, wrap) {
+        createValueInput = function(conditionGroup, operator, gridColClass, wrap) {
             var $input = null,
-                $wrapper;
+                $wrapper,
+                condition;
 
-            if (!!conditionGroup) {
-                if (conditionGroup.conditions.length === 2) {
-                    // TODO
+            if (!!conditionGroup && !!operator) {
+                if (conditionGroup.conditions.length > 1) {
                     this.sandbox.logger.error('Multiple conditions not yet supported!');
                 } else {
-                    $input = createInputForType.call(this, conditionGroup.conditions[0], constants.valueInputClass);
+                    condition = conditionGroup.conditions[0];
+                    $input = createInputForType.call(this, operator, condition.value);
                 }
-            } else { // new added row
+            } else if (!conditionGroup && !!operator) {
+                $input = createInputForType.call(this, operator, '');
+            } else {
                 $input = createSimpleInput.call(this, '', constants.valueInputClass);
             }
 
@@ -265,23 +273,67 @@ define([], function() {
         },
 
         /**
-         * Decides which input should be displayed for the given condition
-         * @param condition
+         * Searches for an operator by its operand and type
          */
-        createInputForType = function(condition) {
-          switch(condition.type){
-              case STRING_TYPE:
-              case NUMBER_TYPE:
-              case UNDEFINED_TYPE:
-                  return createSimpleInput.call(this, condition.value, constants.valueInputClass);
-              case DATETIME_TYPE:
-              case BOOLEAN_TYPE:
-                  // TODO
-                  this.sandbox.logger.error('Valueinput for this type not yet implemented!');
-                  break;
+        getOperatorByOperandAndType = function(operand, type) {
+            var result = null;
+
+            if(typeof type === 'string') {
+                type = getTypeByName.call(this, type);
+            }
+
+            this.operators.forEach(function(op) {
+                if (op.operator === operand && op.type === type) {
+                    result = op;
+                    return false;
+                }
+            }.bind(this));
+
+            return result;
+        },
+
+        /**
+         * Decides which input should be displayed for the given condition
+         * @param operator
+         * @param value
+         */
+        createInputForType = function(operator, value) {
+          switch(operator.inputType){
+              case 'date':
+              case 'datepicker':
+                  return createDatepicker.call(this, value, constants.valueInputClass);
+              case 'select':
+                  return createSelect.call(this, value, 'value', 'name', operator.values, constants.valueInputClass);
+              case '':
+              case 'simple':
+                  return createSimpleInput.call(this, value, constants.valueInputClass);
               default:
-                  this.sandbox.logger.log('Field type '+condition.type+' is unknown!');
+                  this.sandbox.logger.error('Input type "' + type + '" is not supported!');
+                  break;
+
           }
+        },
+
+        /**
+         * Creates and starts datepicker input field
+         * @param value
+         * @param valueInputClass
+         */
+        createDatepicker = function(value, valueInputClass) {
+            var $datepicker = this.sandbox.dom.createElement('<div class="'+valueInputClass+'"></div>');
+            this.sandbox.start([
+                {
+                    name: 'input@husky',
+                    options: {
+                        el: $datepicker,
+                        datepickerOptions: {"startDate":"1900-01-01", "endDate": new Date()},
+                        skin: 'date',
+                        value: value
+                    }
+                }
+            ]);
+
+            return $datepicker;
         },
 
         /**
@@ -321,17 +373,21 @@ define([], function() {
          */
         getTypeByName = function(type){
             switch(type){
+
                 case 'string':
                     return STRING_TYPE;
                 case 'number':
+                case 'integer':
+                case 'float':
                     return NUMBER_TYPE;
                 case 'boolean':
+                    this.sandbox.logger.error('Some types not yet supportet'); // TODO?
+                    return;
                 case 'date':
                 case 'datetime':
-                    this.sandbox.logger.error('Some types not yet supportet');
-                    return;
+                    return DATETIME_TYPE;
                 default:
-                    this.sandbox.logger.error('Unsupported type '+ type+' found!');
+                    this.sandbox.logger.error('Unsupported type "'+ type +'" found!');
                     return;
             }
         },
@@ -387,11 +443,36 @@ define([], function() {
             // remove buttons
             this.sandbox.dom.on(this.$container, 'click', removeConditionEventHandler.bind(this), '.'+constants.removeButtonClass);
 
+            // field changed event handler
             this.sandbox.dom.on(this.$container, 'change', fieldChangedEventHandler.bind(this), '.'+constants.fieldSelectClass);
+
+            // operator changed event handler
+            this.sandbox.dom.on(this.$container, 'change', operatorChangedEventHandler.bind(this), '.'+constants.operatorSelectClass);
         },
 
         bindCustomEvents = function(){
             // TODO
+        },
+
+        /**
+         * Triggers updte of input field
+         */
+        operatorChangedEventHandler = function(){
+            var operatorValue = event.target.value,
+                $row = this.sandbox.dom.parent('.' + constants.conditionRowClass, event.target),
+                fieldName = this.sandbox.dom.val(this.sandbox.dom.find('.'+constants.fieldSelectClass, this.$container)),
+                field = getFieldByName.call(this, fieldName),
+                operator = getOperatorByOperandAndType.call(this, operatorValue, field.type),
+                $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
+                $valueInputParent = this.sandbox.dom.parent($valueInput);
+
+            // TODO do this only when type changes
+            // TODO stop possible component in valueInput
+            this.sandbox.dom.remove($valueInput);
+            $valueInput = createValueInput.call(this, null, operator, null, false);
+            this.sandbox.dom.append($valueInputParent, $valueInput);
+
+            // TODO trigger change in data?
         },
 
         /**
@@ -403,11 +484,13 @@ define([], function() {
                 field = getFieldByName.call(this, fieldName),
                 filteredOperators = filterOperatorsByType.call(this, field.type),
                 $row = this.sandbox.dom.parent('.' + constants.conditionRowClass, event.target),
-                $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row),
-                $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row),
+                $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row)[0],
+                $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
                 $operatorSelectParent = this.sandbox.dom.parent($operatorSelect),
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
 
+            // TODO do this only when type changes
+            // TODO stop possible component in valueInput
             this.sandbox.dom.remove($operatorSelect);
             this.sandbox.dom.remove($valueInput);
 
@@ -426,7 +509,7 @@ define([], function() {
          * @returns {*}
          */
         getFieldByName = function(name) {
-            var result = null;
+            var result = {type: 'string'}; // default if no type is defined
             this.fields.forEach(function(field) {
                 if (field.name === name) {
                     result = field;
