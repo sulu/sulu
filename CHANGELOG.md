@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
+
 * 0.18.1 (2015-05-09)
     * HOTFIX      #1079 [SearchBundle]   Fix webspace-key index for content pages
 

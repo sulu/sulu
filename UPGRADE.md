@@ -157,6 +157,10 @@ urls = array(
 );
 ```
 
+### Util
+
+The `Sulu\Component\Util\UuidUtils` has been removed. Use the `Phpcr\Utils\UuidHelper` instead.
+
 ## 0.17.0
 
 ### Media
