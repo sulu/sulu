@@ -54,5 +54,15 @@ class SuluTestKernel extends SuluKernel
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Add the Sulu environment to the container name
+     */
+    protected function getContainerClass()
+    {
+        return $this->name.ucfirst($this->getContext()).ucfirst($this->environment).($this->debug ? 'Debug' : '').'ProjectContainer';
+    }
 }
 
