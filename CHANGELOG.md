@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1088 [ContactBundle]  Moved initialization of field-descriptors before init of list-builder in 
+                                         accounts cget action
     * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
 

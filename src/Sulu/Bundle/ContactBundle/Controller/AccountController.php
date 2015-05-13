@@ -365,8 +365,9 @@ class AccountController extends AbstractContactController implements SecuredCont
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
+            $fieldDescriptors = $this->getFieldDescriptors();
             $listBuilder = $this->generateFlatListBuilder($request, $filter);
-            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
