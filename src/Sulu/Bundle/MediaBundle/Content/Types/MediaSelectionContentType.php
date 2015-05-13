@@ -145,6 +145,7 @@ class MediaSelectionContentType extends ComplexContentType
             unset($value['data']);
         }
 
+
         // set value to node
         $node->setProperty($property->getName(), json_encode($value));
     }
