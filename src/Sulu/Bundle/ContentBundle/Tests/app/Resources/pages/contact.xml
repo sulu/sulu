@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template.xsd">
+
+    <key>contact</key>
+
+    <view>contact.html.twig</view>
+    <controller>Controller</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="url" type="resource_locator">
+            <tag name="sulu.rlp"/>
+        </property>
+        <property name="title" type="text_line">
+            <tag name="sulu.rlp.part" />
+        </property>
+        <property multilingual="true" name="name" type="text_line"/>
+        <property multilingual="false" name="email" type="text_line"/>
+        <property multilingual="false" name="telephone" type="text_line" />
+        <property name="information" type="text_line" />
+        <property name="smart-content" type="text_line" />
+    </properties>
+</template>
+

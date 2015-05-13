@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;

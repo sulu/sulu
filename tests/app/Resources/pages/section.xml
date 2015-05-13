@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
+          >
+
+    <key>section</key>
+
+    <view>ClientWebsiteBundle:templates:animals</view>
+    <controller>SuluWebsiteBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <meta>
+        <title lang="de">Tiers</title>
+        <title lang="en">Animals</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="de">Tier</title>
+                <title lang="en">Animals</title>
+            </meta>
+
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <meta>
+                <title lang="de">Adresse</title>
+                <title lang="en">Resourcelocator</title>
+            </meta>
+
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <section name="section">
+            <properties>
+                <property name="blog" type="text_line" mandatory="false">
+                    <meta>
+                        <title lang="de">Blog</title>
+                        <title lang="en">Blog</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</template>
+

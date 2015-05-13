@@ -12,10 +12,11 @@ namespace Sulu\Component\Content\Mapper;
 
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Interface of ContentMapper
@@ -299,13 +300,6 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
-
-    /**
-     * TRUE dont rename pages on save
-     * @param boolean $noRenamingFlag
-     * @return $this
-     */
-    public function setNoRenamingFlag($noRenamingFlag);
 
     /**
      * TRUE ignores mandatory in save

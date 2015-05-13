@@ -60,7 +60,7 @@ class NavigationQueryBuilder extends ContentQueryBuilder
      */
     protected function buildOrder($webspaceKey, $locale)
     {
-        return 'page.[sulu:order]';
+        return '';
     }
 
     public function init(array $options)

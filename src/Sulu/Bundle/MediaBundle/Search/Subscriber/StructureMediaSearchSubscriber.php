@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
 /**
  * This subscriber populates the image URL field
@@ -78,7 +79,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         $subject = $e->getSubject();
         $evaluator = $e->getFieldEvaluator();
 
-        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf(StructureInterface::class)) {
+        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf(ContentBehavior::class)) {
             return;
         }
 
@@ -87,7 +88,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         }
 
         $data = $evaluator->getValue($subject, $imageUrlField);
-        $locale = $subject->getLanguageCode();
+        $locale = $subject->getLocale();
 
         if (!$data) {
             $document->setImageUrl(null);

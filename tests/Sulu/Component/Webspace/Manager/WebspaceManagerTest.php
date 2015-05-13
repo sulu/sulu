@@ -13,7 +13,10 @@ namespace Sulu\Component\Webspace;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
+use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ */
 class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -33,6 +36,13 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->cacheDir = __DIR__ . '/../../../../Resources/cache';
+
+        if (file_exists($this->cacheDir)) {
+            $filesystem = new Filesystem();
+            $filesystem->remove($this->cacheDir);
+        }
+
         $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', array('locate'));
         $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
         $this->loader = new XmlFileLoader($locator);
@@ -43,18 +53,11 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir' => $this->cacheDir,
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid()
             )
         );
-    }
-
-    public function tearDown()
-    {
-        if (file_exists(__DIR__ . '/../../../../Resources/cache/WebspaceCollectionCache.php')) {
-            unlink(__DIR__ . '/../../../../Resources/cache/WebspaceCollectionCache.php');
-        }
     }
 
     public function testGetAll()
@@ -428,7 +431,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->logger,
             array(
                 'cache_dir' => __DIR__ . '/../../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
+                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both',
+                'cache_class' => 'WebspaceCollectionCache' . uniqid()
             )
         );
 

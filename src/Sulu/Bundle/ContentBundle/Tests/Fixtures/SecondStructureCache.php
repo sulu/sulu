@@ -10,12 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Fixtures;
 
-use Sulu\Component\Content\Property;
+use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
-use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Page;
 
 /**
  * This structure cache has more search features than DefaultStructureCache

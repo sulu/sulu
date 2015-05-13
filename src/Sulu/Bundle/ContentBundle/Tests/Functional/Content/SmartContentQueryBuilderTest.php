@@ -15,11 +15,11 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -134,19 +134,19 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 $template = 'block';
                 $data['article'] = array(
                     array(
-                        'title' => 'Blocktitle ' . $i,
+                        'title' => 'Block Title ' . $i,
                         'article' => 'Blockarticle ' . $i,
                         'type' => 'test'
                     ),
                     array(
-                        'title' => 'Blocktitle2 ' . $i,
+                        'title' => 'Block Title 2 ' . $i,
                         'article' => 'Blockarticle2 ' . $i,
                         'type' => 'test'
                     )
                 );
             } elseif ($i > $max / 3) {
                 $template = 'article';
-                $data['article'] = 'Blockarticle ' . $i;
+                $data['article'] = 'Text article ' . $i;
             }
 
             $request = ContentMapperRequest::create()

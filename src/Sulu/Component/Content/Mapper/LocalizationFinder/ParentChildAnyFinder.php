@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Property;
+use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 

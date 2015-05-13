@@ -87,6 +87,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
         try {
             return $this->execute($conn, $context, $message);
         } catch (\Exception $e) {
+            throw $e;
             // send fail message
             $conn->send(
                 json_encode(
