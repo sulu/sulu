@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1087 [ContactBundle]  Added function for adapting list-builder when override AccountController
     * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
 

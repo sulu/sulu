@@ -28,7 +28,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -368,6 +367,9 @@ class AccountController extends AbstractContactController implements SecuredCont
             $listBuilder = $this->generateFlatListBuilder($request, $filter);
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
+            // adapt list builder
+            $this->adaptFlatListBuilder($listBuilder);
+
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 self::$entityKey,
@@ -394,8 +396,19 @@ class AccountController extends AbstractContactController implements SecuredCont
     }
 
     /**
+     * In case of inheritance the list-builder may be edited here
+     *
+     * @param DoctrineListBuilder $listBuilder
+     */
+    protected function adaptFlatListBuilder($listBuilder)
+    {
+    }
+
+    /**
      * @param Request $request
-     * @param $filter
+     * @param array $filter
+     *
+     * @return DoctrineListBuilder
      */
     protected function generateFlatListBuilder(Request $request, $filter)
     {
