@@ -27,17 +27,6 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
  */
 class ContentSubscriber implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
-    {
-        return array(
-            Events::PERSIST => 'handlePersist',
-            Events::REMOVE => array(
-                array('handlePreRemove', 600),
-                array('handlePostRemove', -100),
-            ),
-        );
-    }
-
     /**
      * @var SearchManagerInterface
      */
@@ -49,11 +38,6 @@ class ContentSubscriber implements EventSubscriberInterface
     private $documentsToDeindex = array();
 
     /**
-     * @var ContentInstanceFactory
-     */
-    private $instanceFactory;
-
-    /**
      * @var MetadataFactoryInterface
      */
     private $metadataFactory;
@@ -63,12 +47,20 @@ class ContentSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         SearchManagerInterface $searchManager,
-        MetadataFactoryInterface $metadataFactory,
-        ContentInstanceFactory $instanceFactory
+        MetadataFactoryInterface $metadataFactory
     ) {
         $this->searchManager = $searchManager;
         $this->metadataFactory = $metadataFactory;
-        $this->instanceFactory = $instanceFactory;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            Events::PERSIST => 'handlePersist',
+            Events::REMOVE => array(
+                array('handlePreRemove', 600),
+            ),
+        );
     }
 
     /**
@@ -85,8 +77,7 @@ class ContentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $wrapper = $this->instanceFactory->getInstance($document, $document->getStructureType());
-        $this->searchManager->index($wrapper);
+        $this->searchManager->index($document);
     }
 
     /**
@@ -102,18 +93,6 @@ class ContentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $instance = $this->instanceFactory->getInstance($document);
-        $this->searchManager->deindex($instance);
-    }
-
-    /**
-     * Deindex any documents which have been deleted
-     *
-     * @param ContentNodeDeleteEvent
-     */
-    public function handlePostRemove(RemoveEvent $event)
-    {
-        foreach ($this->documentsToDeindex as $document) {
-        }
+        $this->searchManager->deindex($document);
     }
 }
