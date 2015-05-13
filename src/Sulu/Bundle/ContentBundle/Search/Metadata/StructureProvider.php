@@ -20,7 +20,6 @@ use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
-use Sulu\Component\Content\Compat\Structure;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
@@ -34,12 +33,18 @@ use Sulu\Component\Content\Document\ContentInstanceFactory;
 use DTL\DecoratorGenerator\DecoratorFactory;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Sulu\Component\DocumentManager\Metadata;
+use Massive\Bundle\SearchBundle\Search\Document;
+use Sulu\Component\Content\Structure\Structure;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
  */
-class StructureDriver implements AdvancedDriverInterface
+class StructureProvider implements ProviderInterface
 {
+    const FIELD_STRUCTURE_TYPE = '_structure_type';
+
     /**
      * @var Factory
      */
@@ -61,11 +66,6 @@ class StructureDriver implements AdvancedDriverInterface
     private $metadataFactory;
 
     /**
-     * @var DecoratorFactory
-     */
-    private $decoratorFactory;
-
-    /**
      * @param Factory $factory
      * @param MetadataFactory $metadataFactory
      * @param StructureFactory $structureFactory
@@ -75,14 +75,12 @@ class StructureDriver implements AdvancedDriverInterface
         Factory $factory,
         MetadataFactory $metadataFactory,
         StructureFactory $structureFactory,
-        DecoratorFactory $decoratorFactory,
         array $mapping = array()
     ) {
         $this->factory = $factory;
         $this->mapping = $mapping;
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
-        $this->decoratorFactory = $decoratorFactory;
     }
 
     /**
@@ -91,21 +89,22 @@ class StructureDriver implements AdvancedDriverInterface
      * @throws \InvalidArgumentException
      * @return IndexMetadataInterface|null
      */
-    public function loadMetadataForClass(\ReflectionClass $class)
+    public function getMetadataForObject($object)
     {
-        if (!ContentInstanceFactory::isWrapped($class->name)) {
+        if (!$object instanceof ContentBehavior) {
             return;
         }
 
-        if (!$class->implementsInterface(ContentBehavior::class)) {
-            return;
-        }
+        $documentMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
+        $structure = $this->structureFactory->getStructure($documentMetadata->getAlias(), $object->getStructureType());
 
-        $classMetadata = $this->factory->createClassMetadata($class->name);
+        return $this->getMetadata($documentMetadata, $structure);
+    }
 
-        $documentMetadata = $this->metadataFactory->getMetadataForClass(ContentInstanceFactory::getRealName($class->name));
-        $structureType = ContentInstanceFactory::getStructureType($class->name);
-        $structure = $this->structureFactory->getStructure($documentMetadata->getAlias(), $structureType);
+    public function getMetadata(Metadata $documentMetadata, Structure $structure)
+    {
+        $classMetadata = $this->factory->createClassMetadata($documentMetadata->getClass());
+        $class = new \ReflectionClass($documentMetadata->getClass());
 
         $indexMeta = $this->factory->createIndexMetadata();
         $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
@@ -115,7 +114,7 @@ class StructureDriver implements AdvancedDriverInterface
         $categoryName = 'content';
 
         foreach ($this->mapping as $className => $mapping) {
-            if (!$classMetadata->reflection->isSubclassOf($className)) {
+            if ($class->name !== $className) {
                 continue;
             }
 
@@ -189,6 +188,12 @@ class StructureDriver implements AdvancedDriverInterface
             ));
         }
 
+        $indexMeta->addFieldMapping(self::FIELD_STRUCTURE_TYPE, array(
+            'type' => 'string',
+            'index_strategy' => Field::INDEX_STORED_INDEXED,
+            'field' => $this->factory->createMetadataProperty('structureType'),
+        ));
+
         $classMetadata->addIndexMetadata('_default', $indexMeta);
 
         return $classMetadata;
@@ -197,9 +202,9 @@ class StructureDriver implements AdvancedDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function getAllClassNames()
+    public function getAllMetadata()
     {
-        $classNames = array();
+        $metadatas = array();
         foreach ($this->metadataFactory->getAliases() as $alias) {
             $metadata = $this->metadataFactory->getMetadataForAlias($alias);
 
@@ -207,23 +212,31 @@ class StructureDriver implements AdvancedDriverInterface
                 continue;
             }
 
+
             foreach ($this->structureFactory->getStructures($alias) as $structure) {
-                $targetClassName = ContentInstanceFactory::getTargetClassName(
-                    $metadata->getClass(),
-                    $structure->getName()
-                );
-
-                // ensure that the target class exists
-                $this->decoratorFactory->generate(
-                    $metadata->getClass(),
-                    $targetClassName
-                );
-
-                $classNames[] = $targetClassName;
+                $structureMetadata = $this->getMetadata($metadata, $structure);
+                $metadatas[] = $structureMetadata;
             }
         }
 
-        return $classNames;
+        return $metadatas;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetadataForDocument(Document $document)
+    {
+        if (!$document->hasField(self::FIELD_STRUCTURE_TYPE)) {
+            return null;
+        }
+
+        $className = $document->getClass();
+        $structureType = $document->getField(self::FIELD_STRUCTURE_TYPE)->getValue();
+        $documentMetadata = $this->metadataFactory->getMetadataForClass($className);
+        $structure = $this->structureFactory->getStructure($documentMetadata->getAlias(), $structureType);
+
+        return $this->getMetadata($documentMetadata, $structure);
     }
 
     private function mapProperty(Property $property, $metadata)

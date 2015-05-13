@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="sulu_content.search.metadata.driver.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureDriver</parameter>
+        <parameter key="sulu_content.search.metadata.provider.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureProvider</parameter>
         <parameter key="sulu_content.search.event_subscriber.blame_timestamp.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\BlameTimestampSubscriber</parameter>
         <parameter key="sulu_content.search.event_listener.search.class">Sulu\Bundle\ContentBundle\Search\EventListener\SearchListener</parameter>
         <parameter key="sulu_content.search.event_listener.reindex.class">Sulu\Bundle\ContentBundle\Search\EventListener\ReindexListener</parameter>
@@ -12,13 +12,12 @@
 
     <services>
 
-        <service id="sulu_content.search.metadata.driver.structure" class="%sulu_content.search.metadata.driver.structure.class%">
+        <service id="sulu_content.search.metadata.provider.structure" class="%sulu_content.search.metadata.provider.structure.class%">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
             <argument type="service" id="sulu_content.structure.factory" />
-            <argument type="service" id="sulu_content.document.decorator_factory" />
             <argument>%sulu_content.search.mapping%</argument>
-            <tag name="massive_search.metadata.driver" />
+            <tag name="massive_search.metadata.provider" />
         </service>
 
         <!-- Blame and Timestamp subscriber -->
