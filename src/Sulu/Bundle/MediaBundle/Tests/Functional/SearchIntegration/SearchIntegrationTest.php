@@ -14,10 +14,11 @@ class SearchIntegrationTest extends SuluTestCase
 {
     private $documentManager;
 
-    protected static function createKernel(array $options = array())
+    protected function getKernelConfiguration()
     {
-        $options['sulu_context'] = 'website';
-        return parent::createKernel($options);
+        return array(
+            'sulu_context' => 'website'
+        );
     }
 
     public function setUp()

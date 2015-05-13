@@ -168,6 +168,7 @@ class StructureFactory implements StructureFactoryInterface
         foreach ($this->typePaths[$type] as $pathConfig) {
             $structurePath = $pathConfig['path'];
 
+            // Ignore not-existing paths
             if (!file_exists($structurePath)) {
                 continue;
             }
