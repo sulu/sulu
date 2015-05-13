@@ -27,6 +27,7 @@ use Sulu\Component\DocumentManager\ClassNameInflector;
 class ContentInstanceFactory
 {
     const MARKER = '__DYNAMIC__';
+    const DASH = '__DASH__';
 
     /**
      * @var DecoratorFactory
@@ -73,7 +74,7 @@ class ContentInstanceFactory
      */
     public static function getTargetClassName($className, $structureType)
     {
-        return sprintf('%s\\%s%s', $className, self::MARKER, $structureType);
+        return sprintf('%s\\%s%s', $className, self::MARKER, str_replace('-', self::DASH, $structureType));
     }
 
     /**
@@ -90,6 +91,7 @@ class ContentInstanceFactory
             strstr($class, self::MARKER),
             strlen(self::MARKER)
         );
+        $structureType = str_replace(self::DASH, '-', $structureType);
 
         return $structureType;
     }

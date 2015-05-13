@@ -86,13 +86,7 @@ class ContentSubscriber implements EventSubscriberInterface
         }
 
         $wrapper = $this->instanceFactory->getInstance($document, $document->getStructureType());
-
-        if ($document->getWorkflowStage() === WorkflowStage::PUBLISHED) {
-            $this->searchManager->index($wrapper);
-            return;
-        }
-
-        $this->searchManager->deindex($wrapper);
+        $this->searchManager->index($wrapper);
     }
 
     /**

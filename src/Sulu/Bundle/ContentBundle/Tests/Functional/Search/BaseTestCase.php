@@ -62,14 +62,14 @@ class BaseTestCase extends SuluTestCase
 
     public function indexStructure($title, $url)
     {
-        $data = array(
-            'title' => $title,
-            'url' => $url
-        );
-
         /** @var ContentMapperInterface $mapper */
-        $structure = $this->contentMapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $document = $this->documentManager->create('page');
+        $document->setTitle($title);
+        $document->setStructureType('default');
+        $document->setParent($this->webspaceDocument);
+        $document->setResourceSegment($url);
+        $this->documentManager->persist($document, 'de');
 
-        return $structure;
+        return $document;
     }
 }

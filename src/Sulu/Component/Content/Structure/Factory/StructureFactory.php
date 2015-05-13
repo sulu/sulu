@@ -145,6 +145,14 @@ class StructureFactory implements StructureFactoryInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function hasStructuresFor($type)
+    {
+        return isset($this->typePaths[$type]);
+    }
+
+    /**
      * Return the structure names for the given type
      * (not necessarily valid).
      *
@@ -159,6 +167,12 @@ class StructureFactory implements StructureFactoryInterface
 
         foreach ($this->typePaths[$type] as $pathConfig) {
             $structurePath = $pathConfig['path'];
+
+            // Ignore not-existing paths
+            if (!file_exists($structurePath)) {
+                continue;
+            }
+
             $iterator = new \DirectoryIterator($structurePath);
             foreach ($iterator as $file) {
                 $ext = $file->getExtension();

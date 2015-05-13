@@ -1,5 +1,6 @@
 SuluContentBundle
 =================
+
 [![](https://travis-ci.org/sulu-cmf/SuluContentBundle.png)](https://travis-ci.org/sulu-cmf/SuluContentBundle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluContentBundle/badges/quality-score.png?s=ae0673b210ff6dd252a80fbb822e8ac789d24f73)](https://scrutinizer-ci.com/g/sulu-cmf/SuluContentBundle/)
 

@@ -40,4 +40,13 @@ interface StructureFactoryInterface
      * @return Structure[]
      */
     public function getStructures($type);
+
+    /**
+     * Return true if the given type has been registered with the structure factory
+     *
+     * @param string $type
+     *
+     * @return boolean
+     */
+    public function hasStructuresFor($type);
 }
