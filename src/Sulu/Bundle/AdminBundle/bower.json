@@ -19,6 +19,6 @@
     },
     "resolutions": {
         "jquery": "1.10.*",
-        "backbone": "~1.0.0"
+        "backbone": "1.1.*"
     }
 }

@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 0.18.2 (2015-05-15)
+    * HOTFIX      #1094 [MediaBundle]    Fixed media overlay version tab appearance
+
 * 0.18.1 (2015-05-09)
     * HOTFIX      #1079 [SearchBundle]   Fix webspace-key index for content pages
 
