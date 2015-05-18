@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ResourceBundle\Api;
 
+use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -51,10 +52,14 @@ class Condition extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("value")
-     * @return string
+     * @return mixed
      */
     public function getValue()
     {
+        // return a proper date if it is a datetime value
+        if($this->getType() === DataTypes::DATETIME_TYPE) {
+            return new \DateTime($this->entity->getValue());
+        }
         return $this->entity->getValue();
     }
 
