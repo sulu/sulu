@@ -280,6 +280,14 @@ EOT;
     }
 
     /**
+     * @Then I click the overlay tab ":title"
+     */
+    public function iClickTheOverlayTab($title)
+    {
+        $this->clickByTitle('.overlay-header .tabs-container ul li', $title);
+    }
+
+    /**
      * @Then I click the column navigation item :itemTitle
      */
     public function iClickTheColumnNavigationItem($itemTitle)
@@ -301,6 +309,14 @@ EOT;
     public function iDoubleClickTheColumnNavigationItem($itemTitle)
     {
         $this->clickByTitle('.column-navigation .item-text', $itemTitle, 'dblclick');
+    }
+
+    /**
+     * @Then I double click the data grid item :itemTitle
+     */
+    public function iDoubleClickTheDataGridItem($itemTitle)
+    {
+        $this->clickByTitle('.datagrid-container .item .title', $itemTitle, 'dblclick');
     }
 
     /**
@@ -355,6 +371,7 @@ EOT;
 
     /**
      * @Given I expect a overlay to appear
+     * @Given I wait for an overlay to appear
      */
     public function iWaitForAOverlayToAppear()
     {

@@ -34551,7 +34551,7 @@ define('__component__$tabs@husky',[],function() {
                         this.sandbox.logger.log('data could not be loaded:', data);
                     }.bind(this));
             } else if (!!this.options.data) {
-                this.render((this.options.data));
+                this.render(this.options.data);
             } else {
                 this.sandbox.logger.log('no data provided for tabs!');
             }
@@ -41390,7 +41390,8 @@ define('__component__$overlay@husky',[], function() {
 
             for (var i = -1, length = this.slides[slide].tabs.length; ++i < length;) {
                 this.overlay.slides[slide].tabs.push({
-                    title: this.slides[slide].tabs[i].title,
+                    id: i,
+                    name: this.slides[slide].tabs[i].title,
                     $el: this.sandbox.dom.createElement(this.slides[slide].tabs[i].data)
                 });
                 this.sandbox.dom.hide(this.overlay.slides[slide].tabs[i].$el);
@@ -41413,7 +41414,7 @@ define('__component__$overlay@husky',[], function() {
                     name: 'tabs@husky',
                     options: {
                         el: $element,
-                        data: {items: this.overlay.slides[slide].tabs},
+                        data: this.overlay.slides[slide].tabs,
                         instanceName: 'overlay' + this.options.instanceName,
                         skin: 'overlay'
                     }

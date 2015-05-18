@@ -96,6 +96,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
 
     /**
      * @Then I expect to see ":count" ":selector" elements
+     * @Then I wait to see ":count" ":selector" elements
      */
     public function iExpectToSeeNbElements($count, $selector)
     {
