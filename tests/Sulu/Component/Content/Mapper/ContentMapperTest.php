@@ -3061,19 +3061,6 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-1', $loadResult->getResourceLocator());
     }
 
-    public function testIgnoreMandatoryFlag()
-    {
-        $data = array(
-            'title' => 'News'
-        );
-
-        $this->mapper->setIgnoreMandatoryFlag(true)->save($data, 'external-link', 'sulu_io', 'en', 1);
-        $this->mapper->setIgnoreMandatoryFlag(false);
-
-        $data = array('title' => 'Google', 'external' => 'www.google.at');
-        $this->mapper->setIgnoreMandatoryFlag(true)->save($data, 'external-link', 'sulu_io', 'en', 1);
-    }
-
     public function testSaveInvalidResourceLocator()
     {
         $data = array(
