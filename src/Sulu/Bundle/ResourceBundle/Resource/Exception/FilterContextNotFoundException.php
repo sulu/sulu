@@ -27,10 +27,10 @@ class FilterContextNotFoundException extends FilterException
      */
     private $name;
 
-    public function __construct($id)
+    public function __construct($name)
     {
         $this->entityName = 'SuluResourceBundle:Filter';
-        $this->id = $id;
+        $this->id = $name;
         parent::__construct('The filter context with the name "' . $this->name . '" was not found.', 0);
     }
 

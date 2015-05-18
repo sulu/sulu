@@ -78,9 +78,16 @@ interface FilterManagerInterface
     public function batchDelete($ids);
 
     /**
-     * Returns the configured class for a key
-     * @param string $key
+     * Returns the configured class for a alias
+     * @param string $alias
      * @return string|null
      */
-    public function getClassMappingForKey($key);
+    public function getClassMappingForAlias($alias);
+
+    /**
+     * Returns the configured features for an alias
+     * @param $alias
+     * @return array|null
+     */
+    public function getFeaturesForAlias($alias);
 }

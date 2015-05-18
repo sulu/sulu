@@ -218,7 +218,7 @@ class FilterManager implements FilterManagerInterface
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
         if(array_key_exists('context', $data)) {
-            if ($this->getClassMappingForKey($data['context'])) {
+            if ($this->getClassMappingForAlias($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
                 throw new FilterContextNotFoundException(static::$filterEntityName, $data['context']);
@@ -439,13 +439,27 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Returns the configured class for a key
-     * @param string $key
+     * @param string $alias
      * @return string|null
      */
-    public function getClassMappingForKey($key)
+    public function getClassMappingForAlias($alias)
     {
-        if($this->aliasConfiguration && array_key_exists($key, $this->aliasConfiguration)){
-            return $this->aliasConfiguration[$key]['class'];
+        if($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)){
+            return $this->aliasConfiguration[$alias]['class'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the configured features for an alias
+     * @param $alias
+     * @return array|null
+     */
+    public function getFeaturesForAlias($alias)
+    {
+        if($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)){
+            return $this->aliasConfiguration[$alias]['features'];
         }
 
         return null;
