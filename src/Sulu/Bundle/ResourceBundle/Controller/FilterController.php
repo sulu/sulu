@@ -112,7 +112,7 @@ class FilterController extends RestController implements ClassResourceInterface
 
         // return all filters created by the user or without user
         $userCondition = array($this->getUser()->getId(), null);
-        $listBuilder->inArray($fieldDescriptors['user'], $userCondition);
+        $listBuilder->in($fieldDescriptors['user'], $userCondition);
 
         $list = new ListRepresentation(
             $listBuilder->execute(),
