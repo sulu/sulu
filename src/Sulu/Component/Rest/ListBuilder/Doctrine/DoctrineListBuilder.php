@@ -113,8 +113,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function execute()
     {
         // emit listbuilder.create event
-//        $event = new ListBuilderCreateEvent($this);
-//        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
+        $event = new ListBuilderCreateEvent($this);
+        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
 
         $this->queryBuilder = $this->createQueryBuilder();
 
