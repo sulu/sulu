@@ -22,6 +22,7 @@ use Sulu\Bundle\ResourceBundle\Resource\FilterManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
@@ -69,17 +70,24 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        // TODO include check if feature filter is set for context
+        // check if context exists and filters are enabled for the given context
+        $context = $request->get('context');
+        $features = $this->getManager()->getFeaturesForAlias($context);
 
-        if ($request->get('flat') == 'true') {
-            $list = $this->getListRepresentation($request);
+        if (!$features || array_search('filters', $features) === false) {
+            $exc = new RestException('Context unknown or filters not enabled for context!');
+            $view = $this->view($exc->toArray(), 400);
         } else {
-            $list = new CollectionRepresentation(
-                $this->getManager()->findAllByLocale($this->getLocale($request)),
-                self::$entityKey
-            );
+            if ($request->get('flat') == 'true') {
+                $list = $this->getListRepresentation($request);
+            } else {
+                $list = new CollectionRepresentation(
+                    $this->getManager()->findAllByLocale($this->getLocale($request)),
+                    self::$entityKey
+                );
+            }
+            $view = $this->view($list, 200);
         }
-        $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }
@@ -92,8 +100,6 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     private function getListRepresentation($request)
     {
-        // TODO include check if feature filter is set for context
-
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $fieldDescriptors = $this->getManager()->getListFieldDescriptors($this->getLocale($request));
