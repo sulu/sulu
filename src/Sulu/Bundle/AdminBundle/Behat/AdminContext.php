@@ -371,6 +371,7 @@ EOT;
 
     /**
      * @Given I expect a overlay to appear
+     * @Given I wait for an overlay to appear
      */
     public function iWaitForAOverlayToAppear()
     {

@@ -15,9 +15,6 @@ use Behat\Mink\Exception\ElementNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\Email;
-use Sulu\Bundle\MediaBundle\Entity\EmailType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -157,7 +154,6 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iAttachTheFileToTheCurrentDropZone($path)
     {
-
         if ($this->getMinkParameter('files_path')) {
             $fullPath = rtrim(
                     realpath($this->getMinkParameter('files_path')),
@@ -167,15 +163,8 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
             $fullPath = __DIR__ . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
         }
 
-        if (is_file($fullPath)) {
-            $path = $fullPath;
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'File doesn\'t exist (%s)',
-                    $fullPath
-                )
-            );
+        if (!is_file($fullPath)) {
+            throw new \InvalidArgumentException(sprintf('File doesn\'t exist (%s)', $fullPath));
         }
 
         $fields = $this->getSession()->getPage()->findAll('css', 'input[type="file"]');
@@ -186,7 +175,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
 
         /** @var NodeElement $field */
         $field = end($fields);
-        $field->attachFile($path);
+        $field->attachFile($fullPath);
     }
 
     /**
