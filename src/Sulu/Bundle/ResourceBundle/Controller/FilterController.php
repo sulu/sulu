@@ -74,7 +74,7 @@ class FilterController extends RestController implements ClassResourceInterface
         $context = $request->get('context');
         $features = $this->getManager()->getFeaturesForAlias($context);
 
-        if (!$features || array_search('filters', $features) === false) {
+        if ($context && (!$features || array_search('filters', $features) === false)) {
             $exc = new RestException('Context unknown or filters not enabled for context!');
             $view = $this->view($exc->toArray(), 400);
         } else {
