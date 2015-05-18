@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1100 [ContentBundle]  Replaced the checkboxes with radio buttons in overlay for creating node in new localization
     * ENHANCEMENT #1088 [ContactBundle]  Moved initialization of field-descriptors before init of list-builder in 
                                          accounts cget action
     * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
