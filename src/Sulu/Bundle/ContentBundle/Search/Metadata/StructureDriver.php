@@ -144,6 +144,8 @@ class StructureDriver implements AdvancedDriverInterface
                 array(
                     'type' => 'string',
                     'field' => $this->factory->createMetadataField($prop->getName()),
+                    'aggregated' => true,
+                    'indexed' => false,
                 )
             );
         }
@@ -151,13 +153,11 @@ class StructureDriver implements AdvancedDriverInterface
         // index the webspace
         $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_STORED_INDEXED,
             'field' => $this->factory->createMetadataProperty('webspaceKey'),
         ));
 
         $indexMeta->addFieldMapping('state', array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_STORED_INDEXED,
             'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
         ));
 
@@ -197,6 +197,8 @@ class StructureDriver implements AdvancedDriverInterface
                         $metadata->addFieldMapping($property->getName(), array(
                             'field' => $this->factory->createMetadataField($property->getName()),
                             'type' => 'string',
+                            'aggregated' => true,
+                            'indexed' => false,
                         ));
                         break;
                     case 'description':
@@ -204,6 +206,8 @@ class StructureDriver implements AdvancedDriverInterface
                         $metadata->addFieldMapping($property->getName(), array(
                             'field' => $this->factory->createMetadataField($property->getName()),
                             'type' => 'string',
+                            'aggregated' => true,
+                            'indexed' => false,
                         ));
                         break;
                     case 'image':
@@ -224,6 +228,8 @@ class StructureDriver implements AdvancedDriverInterface
                     array(
                         'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                         'field' => $this->factory->createMetadataField($property->getName()),
+                        'aggregated' => true,
+                        'indexed' => false,
                     )
                 );
             }
