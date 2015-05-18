@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 0.18.2 (2015-05-15)
+* 0.18.2 (2015-05-18)
     * HOTFIX      #1094 [MediaBundle]    Fixed media overlay version tab appearance
 
 * 0.18.1 (2015-05-09)
