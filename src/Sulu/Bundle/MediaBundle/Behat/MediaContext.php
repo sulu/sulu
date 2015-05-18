@@ -10,12 +10,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Behat;
 
+use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\Email;
-use Sulu\Bundle\MediaBundle\Entity\EmailType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -148,6 +147,35 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
                 'Expected "%s" items but got "%s"', $count, $actual
             ));
         }
+    }
+
+    /**
+     * @When I attach the file ":path" to the current drop-zone
+     */
+    public function iAttachTheFileToTheCurrentDropZone($path)
+    {
+        if ($this->getMinkParameter('files_path')) {
+            $fullPath = rtrim(
+                    realpath($this->getMinkParameter('files_path')),
+                    DIRECTORY_SEPARATOR
+                ) . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+        } else {
+            $fullPath = __DIR__ . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+        }
+
+        if (!is_file($fullPath)) {
+            throw new \InvalidArgumentException(sprintf('File doesn\'t exist (%s)', $fullPath));
+        }
+
+        $fields = $this->getSession()->getPage()->findAll('css', 'input[type="file"]');
+
+        if (count($fields) == 0) {
+            throw new ElementNotFoundException($this->getSession(), 'drop-zone upload field');
+        }
+
+        /** @var NodeElement $field */
+        $field = end($fields);
+        $field->attachFile($fullPath);
     }
 
     /**
