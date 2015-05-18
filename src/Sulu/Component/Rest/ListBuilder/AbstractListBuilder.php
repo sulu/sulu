@@ -69,18 +69,10 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereValues = array();
 
     /**
-     * The where-not fields to be checked.
-     *
+     * The comparators the where fields should use
      * @var array
      */
-    protected $whereNotFields = array();
-
-    /**
-     * The values the where-not fields should have.
-     *
-     * @var array
-     */
-    protected $whereNotValues = array();
+    protected $whereComparators = array();
 
     /**
      * group by fields.
@@ -140,6 +132,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
         $this->fields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getField($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->fields)) {
+            return $this->fields[$fieldName];
+        }
+
+        return null;
     }
 
     /**
@@ -218,19 +222,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
-    {
-        $this->whereNotFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereNotValues[$fieldDescriptor->getName()] = $value;
+        $this->whereComparators[$fieldDescriptor->getName()] = $comparator;
     }
 
     /**
