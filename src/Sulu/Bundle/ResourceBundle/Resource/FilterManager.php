@@ -301,6 +301,7 @@ class FilterManager implements FilterManagerInterface
                 } else {
                     $conditionEntity = new ConditionEntity();
                     $conditionEntity->setConditionGroup($conditionGroup);
+                    $conditionGroup->addCondition($conditionEntity);
                     $this->em->persist($conditionEntity);
                 }
 

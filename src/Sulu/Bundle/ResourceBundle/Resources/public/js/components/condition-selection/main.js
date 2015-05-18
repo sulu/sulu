@@ -25,8 +25,6 @@
  */
 define([], function() {
 
-    // TODO data update when datapicker change
-
     'use strict';
 
     var UNDEFINED_TYPE = 0,
@@ -55,31 +53,31 @@ define([], function() {
             button: function(id, text) {
                 return [
                     '<div class="grid-row">',
-                        '<div class="grid-col-3">',
-                            '<div id="' , id , '" class="btn action">',
-                                text,
-                            '</div>',
-                        '</div>',
+                    '<div class="grid-col-3">',
+                    '<div id="', id, '" class="btn action">',
+                    text,
+                    '</div>',
+                    '</div>',
                     '</div>'
                 ].join('');
             },
             row: function(cssClass, id) {
-                return ['<div class="',cssClass,' grid-row" data-id="', id , '"></div>'].join('');
+                return ['<div class="', cssClass, ' grid-row" data-id="', id, '"></div>'].join('');
             },
-            removeButton: function(cssClass){
+            removeButton: function(cssClass) {
                 return [
                     '<div class="grid-col-1 align-center pointer ', cssClass, '">',
-                        '<span class="fa-minus-circle m-top-5"></span>',
+                    '<span class="fa-minus-circle m-top-5"></span>',
                     '</div>'
                 ].join('');
             },
-            input: function(value, cssClass){
-                return ['<input data-validation-required="true" class="form-element husky-validate ',cssClass,'" type="text" value="',value,'">'].join('');
+            input: function(value, cssClass) {
+                return ['<input data-validation-required="true" class="form-element husky-validate ', cssClass, '" type="text" value="', value, '">'].join('');
             },
             col: function(cssClass) {
-                return ['<div class="',cssClass,'"></div>'].join('');
+                return ['<div class="', cssClass, '"></div>'].join('');
             },
-            select: function(cssClass){
+            select: function(cssClass) {
                 return ['<select data-validation-required="true" class="form-element husky-validate ', cssClass, '"></select>'].join('');
             }
         },
@@ -367,7 +365,12 @@ define([], function() {
          * @param valueInputClass
          */
         createDatepicker = function(value, valueInputClass) {
-            var $datepicker = this.sandbox.dom.createElement('<div data-value="'+value+'" class="' + valueInputClass + '"></div>');
+            var $datepicker = this.sandbox.dom.createElement('<div data-value="' + value + '" class="' + valueInputClass + '"></div>'),
+                dfdDatePicker = this.sandbox.data.deferred(), instance;
+
+            this.deferreds.push(dfdDatePicker);
+            instance = 'cs-datepicker' + this.deferreds.length;
+
             this.sandbox.start([
                 {
                     name: 'input@husky',
@@ -375,10 +378,15 @@ define([], function() {
                         el: $datepicker,
                         datepickerOptions: {"startDate": "1900-01-01", "endDate": new Date()},
                         skin: 'date',
-                        value: value
+                        value: value,
+                        instanceName: instance
                     }
                 }
             ]);
+
+            this.sandbox.on('husky.input.' + instance + '.initialized', function() {
+                dfdDatePicker.resolve();
+            }.bind(this));
 
             return $datepicker;
         },
@@ -653,7 +661,6 @@ define([], function() {
 
             this.sandbox.dom.remove($row);
             updateDataAttribute.call(this);
-            this.sandbox.emit(DATA_CHANGED.call(this));
         },
 
         /**
@@ -713,6 +720,7 @@ define([], function() {
         updateDataAttribute = function() {
             this.data = getData.call(this);
             this.sandbox.dom.data(this.options.el, 'conditionSelection', this.data);
+            this.sandbox.emit(DATA_CHANGED.call(this));
         };
 
     return {
@@ -755,6 +763,7 @@ define([], function() {
         },
 
         render: function() {
+            this.deferreds = [];
             this.$container = this.sandbox.dom.createElement(
                 templates.container(constants.conditionContainerClass, this.options.ids.container));
             this.sandbox.dom.append(this.options.el, this.$container);
@@ -766,7 +775,14 @@ define([], function() {
             renderAddButton.call(this);
             stopLoader.call(this);
             this.sandbox.dom.show(this.$container);
-            bindDOMEvents.call(this);
+
+            if (!!this.deferreds) {
+                this.sandbox.data.when.apply(this, this.deferreds).then(function() {
+                    bindDOMEvents.call(this);
+                }.bind(this));
+            } else {
+                bindDOMEvents.call(this);
+            }
 
             this.sandbox.emit(INITIALIZED.call(this));
         }
