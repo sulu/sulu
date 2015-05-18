@@ -310,7 +310,6 @@ class FilterManager implements FilterManagerInterface
                 );
                 $conditionEntity->setValue($this->getProperty($conditionData, 'value', $conditionEntity->getValue()));
                 $conditionEntity->setType($this->getProperty($conditionData, 'type', $conditionEntity->getType()));
-                $conditionGroup->addCondition($conditionEntity);
             }
         }
 
