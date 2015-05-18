@@ -11,6 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Factory for DoctrineListBuilders
@@ -19,16 +20,23 @@ use Doctrine\ORM\EntityManager;
 class DoctrineListBuilderFactory
 {
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
 
     /**
      * @param EntityManager $em
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -38,6 +46,6 @@ class DoctrineListBuilderFactory
      */
     public function create($entityName)
     {
-        return new DoctrineListBuilder($this->em, $entityName);
+        return new DoctrineListBuilder($this->em, $entityName, $this->eventDispatcher);
     }
 }

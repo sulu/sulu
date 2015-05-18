@@ -14,6 +14,9 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The listbuilder implementation for doctrine
@@ -21,6 +24,11 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     /**
      * @var EntityManager
      */
@@ -50,11 +58,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $whereNotFields = array();
-
-    /**
-     * @var AbstractDoctrineFieldDescriptor[]
-     */
     protected $inFields = array();
 
     /**
@@ -67,10 +70,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $queryBuilder;
 
-    public function __construct(EntityManager $em, $entityName)
+    public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
         $this->entityName = $entityName;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -108,6 +112,10 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function execute()
     {
+        // emit listbuilder.create event
+//        $event = new ListBuilderCreateEvent($this);
+//        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
+
         $this->queryBuilder = $this->createQueryBuilder();
 
         foreach ($this->fields as $field) {
@@ -149,10 +157,6 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $whereField->getJoins());
         }
 
-        foreach ($this->whereNotFields as $whereNotField) {
-            $joins = array_merge($joins, $whereNotField->getJoins());
-        }
-
         foreach ($this->inFields as $inField) {
             $joins = array_merge($joins, $inField->getJoins());
         }
@@ -191,12 +195,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set where
         if (!empty($this->whereFields)) {
-            $this->addWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
-        }
-
-        // set where not
-        if (!empty($this->whereNotFields)) {
-            $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
+            $this->addWheres($this->whereFields, $this->whereValues, $this->whereComparators);
         }
 
         if (!empty($this->groupByFields)) {
@@ -275,13 +274,15 @@ class DoctrineListBuilder extends AbstractListBuilder
      * sets where statement
      * @param array $whereFields
      * @param array $whereValues
-     * @param string $comparator
+     * @param array $whereComparators
+     * @internal param string $comparator
      */
-    protected function addWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    protected function addWheres(array $whereFields, array $whereValues, array $whereComparators)
     {
         $whereParts = array();
         foreach ($whereFields as $whereField) {
             $value = $whereValues[$whereField->getName()];
+            $comparator = $whereComparators[$whereField->getName()];
 
             if ($value === null) {
                 $whereParts[] = $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);

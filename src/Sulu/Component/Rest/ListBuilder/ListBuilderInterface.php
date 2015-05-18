@@ -20,6 +20,14 @@ interface ListBuilderInterface
 
     const WHERE_COMPARATOR_UNEQUAL = '!=';
 
+    const WHERE_COMPARATOR_GREATER = '>';
+
+    const WHERE_COMPARATOR_GREATER_THAN = '>=';
+
+    const WHERE_COMPARATOR_LESS = '<';
+
+    const WHERE_COMPARATOR_LESS_THAN = '<=';
+
     const SORTORDER_ASC = 'ASC';
 
     const SORTORDER_DESC = 'DESC';
@@ -37,6 +45,13 @@ interface ListBuilderInterface
      * @return ListBuilderInterface
      */
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
+
+    /**
+     * Gets a field descriptor from the ListBuilder
+     * @param string $fieldName
+     * @return AbstractFieldDescriptor
+     */
+    public function getField($fieldName);
 
     /**
      * Checks if field by name has been already added
@@ -97,17 +112,10 @@ interface ListBuilderInterface
      * Defines a constraint for the rows to return
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should have
+     * @param string $comparator The comparator use to compare the values
      * @return mixed
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value);
-
-    /**
-     * Defines a constraint for the rows to return which are not equal the specified values
-     * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
-     * @param string $value The value the FieldDescriptor should not have
-     * @return mixed
-     */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
 
     /**
      * Defines GROUP BY
