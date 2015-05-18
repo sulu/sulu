@@ -25,7 +25,7 @@
  */
 define([], function() {
 
-    // TODO dataupdate when datapicker change
+    // TODO data update when datapicker change
 
     'use strict';
 
@@ -367,7 +367,7 @@ define([], function() {
          * @param valueInputClass
          */
         createDatepicker = function(value, valueInputClass) {
-            var $datepicker = this.sandbox.dom.createElement('<div class="' + valueInputClass + '"></div>');
+            var $datepicker = this.sandbox.dom.createElement('<div data-value="'+value+'" class="' + valueInputClass + '"></div>');
             this.sandbox.start([
                 {
                     name: 'input@husky',
@@ -379,11 +379,6 @@ define([], function() {
                     }
                 }
             ]);
-
-            // FIXME
-            // updateValue: function() {
-            //    this.setValue(this.sandbox.dom.data(this.$el, 'value'));
-            // }
 
             return $datepicker;
         },
