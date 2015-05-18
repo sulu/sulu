@@ -43,7 +43,11 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
                 this._onMessage.notify(data);
 
                 if (!!data.options && !!data.options.id && !!this.messages[data.options.id]) {
-                    this.messages[data.options.id].resolve(data.handler, data.message);
+                    if (!data.error) {
+                        this.messages[data.options.id].resolve(data.handler, data.message);
+                    } else {
+                        this.messages[data.options.id].reject(data.handler, data.message);
+                    }
 
                     // remove handler
                     this.messages[data.options.id] = null;

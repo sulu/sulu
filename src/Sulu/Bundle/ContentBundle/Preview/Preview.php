@@ -142,8 +142,13 @@ class Preview implements PreviewInterface
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
 
-        $content = $this->update($userId, $webspaceKey, $locale, $property, $data, $content);
-        $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+        try {
+            $content = $this->update($userId, $webspaceKey, $locale, $property, $data, $content);
+        } catch (\Twig_Error $ex) {
+            throw new TwigPreviewException($ex);
+        } finally {
+            $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+        }
 
         return $content;
     }

@@ -26,6 +26,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
     * FEATURE     #977  [MediaBundle]    Made Format Cache parameters configurable, prefix ghostscript path parameter with sulu_media.
+    * BUGFIX      #1037 [ContentBundle]  Fixed preview renderer exception handling and removed global error handling
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
     * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay
