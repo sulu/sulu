@@ -36,7 +36,6 @@
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
 
         <!-- content mapper -->
-        <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_content.compat.data_normalizer" />
@@ -50,11 +49,8 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu.content.path_cleaner"/>
-            <argument type="service" id="sulu.content.template_resolver"/>
-            <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
-            <argument>%sulu.content.language.namespace%</argument>
+            <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
 
         <!-- localization finders -->

@@ -302,13 +302,6 @@ interface ContentMapperInterface
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 
     /**
-     * TRUE ignores mandatory in save
-     * @param bool $ignoreMandatoryFlag
-     * @return $this
-     */
-    public function setIgnoreMandatoryFlag($ignoreMandatoryFlag);
-
-    /**
      * converts a query result in a list of arrays
      * @param QueryResultInterface $queryResult
      * @param string $webspaceKey
