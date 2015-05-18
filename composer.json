@@ -24,7 +24,7 @@
         "guzzle/plugin-log": "3.9.*",
         "imagine/imagine": "~0.6.1",
         "liip/theme-bundle": "1.1.*",
-        "massive/search-bundle": "~1.0@dev",
+        "massive/search-bundle": "dev-metadata_provider",
         "php": ">=5.5",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
@@ -34,8 +34,7 @@
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
         "sulu/document-manager": "dev-master",
-        "sulu/document-manager": "dev-master",
-        "dantleech/decorator-generator": "dev-master"
+        "sulu/document-manager": "dev-master"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",
