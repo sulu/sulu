@@ -196,7 +196,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set where
         if (!empty($this->whereFields)) {
-            $this->addWheres($this->whereFields, $this->whereValues, $this->whereComparators);
+            $this->addWheres($this->whereFields, $this->whereValues, $this->whereComparators, $this->whereConjunctions);
         }
 
         if (!empty($this->groupByFields)) {
@@ -212,7 +212,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set between
         if (!empty($this->betweenFields)) {
-            $this->addBetweens($this->betweenFields, $this->betweenValues);
+            $this->addBetweens($this->betweenFields, $this->betweenValues, $this->betweenConjunctions);
         }
 
         if ($this->search != null) {
@@ -242,7 +242,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
 
             // null values
-            if(array_search(null, $inValues[$inField->getName()])) {
+            if (array_search(null, $inValues[$inField->getName()])) {
                 $inPart .= ' OR ' . $inField->getSelect() . ' IS NULL';
             }
 
@@ -257,20 +257,48 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param array $betweenFields
      * @param array $betweenValues
+     * @param array $betweenConjunctions
      */
-    protected function addBetweens(array $betweenFields, array $betweenValues)
+    protected function addBetweens(array $betweenFields, array $betweenValues, array $betweenConjunctions)
     {
         $betweenParts = array();
+        $firstConjunction = null;
+
         foreach ($betweenFields as $betweenField) {
-            $betweenParts[] = $betweenField->getSelect() .
+            $conjunction = ' ' . $betweenConjunctions[$betweenField->getName()] . ' ';
+
+            if(!$firstConjunction)  {
+                $firstConjunction = $conjunction;
+            }
+
+            $betweenParts[] = $conjunction . $betweenField->getSelect() .
                 ' BETWEEN :' . $betweenField->getName() . '1' .
                 ' AND :' . $betweenField->getName() . '2';
+
             $values = $betweenValues[$betweenField->getName()];
             $this->queryBuilder->setParameter($betweenField->getName() . '1', $values[0]);
             $this->queryBuilder->setParameter($betweenField->getName() . '2', $values[1]);
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $betweenParts) . ')');
+        $betweenString = $this->createQueryString($betweenParts, strlen($firstConjunction));
+        if (strtoupper($firstConjunction) === self::OR_CONJUNCTION) {
+            $this->queryBuilder->orWhere('(' . $betweenString . ')');
+        } else {
+            $this->queryBuilder->andWhere('(' . $betweenString . ')');
+        }
+    }
+
+    /**
+     * Concats array to string
+     * @param array $parts
+     * @param int $skipLetters
+     * @param string $glue
+     * @return string
+     */
+    protected function createQueryString(array $parts, $skipLetters, $glue = '')
+    {
+        $tmp = implode($glue, $parts);
+        return substr($tmp, $skipLetters);
     }
 
     /**
@@ -279,24 +307,59 @@ class DoctrineListBuilder extends AbstractListBuilder
      * @param array $whereFields
      * @param array $whereValues
      * @param array $whereComparators
+     * @param array $whereConjunctions
      * @internal param string $comparator
      */
-    protected function addWheres(array $whereFields, array $whereValues, array $whereComparators)
-    {
+    protected function addWheres(
+        array $whereFields,
+        array $whereValues,
+        array $whereComparators,
+        array $whereConjunctions
+    ) {
         $whereParts = array();
+        $firstConjunction = null;
+
         foreach ($whereFields as $whereField) {
+            $conjunction = ' ' . $whereConjunctions[$whereField->getName()] . ' ';
             $value = $whereValues[$whereField->getName()];
             $comparator = $whereComparators[$whereField->getName()];
+            $whereParts[] = $this->createWherePart($value, $whereField, $conjunction, $comparator);
 
-            if ($value === null) {
-                $whereParts[] = $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
-            } else {
-                $whereParts[] = $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
-                $this->queryBuilder->setParameter($whereField->getName(), $value);
+            if(!$firstConjunction)  {
+                $firstConjunction = $conjunction;
             }
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
+        $whereString = $this->createQueryString($whereParts, strlen($firstConjunction));
+        if (strtoupper($firstConjunction) === self::OR_CONJUNCTION) {
+            $this->queryBuilder->orWhere('(' . $whereString . ')');
+        } else {
+            $this->queryBuilder->andWhere('(' . $whereString . ')');
+        }
+    }
+
+    /**
+     * Creates a partial where statement
+     * @param $value
+     * @param $whereField
+     * @param $conjunction
+     * @param $comparator
+     * @return string
+     */
+    protected function createWherePart($value, $whereField, $conjunction, $comparator)
+    {
+        if ($value === null) {
+
+            return $conjunction . $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
+        } else {
+            if ($comparator === 'LIKE') {
+                $this->queryBuilder->setParameter($whereField->getName(), '%' . $value . '%');
+            } else {
+                $this->queryBuilder->setParameter($whereField->getName(), $value);
+            }
+
+            return $conjunction . $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
+        }
     }
 
     /**

@@ -14,12 +14,10 @@ use Sulu\Bundle\ResourceBundle\Api\Condition;
 use Sulu\Bundle\ResourceBundle\Api\ConditionGroup;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionFieldNotFound;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionTypeMismatchException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\OperatorException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\OperatorUnknownException;
 use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -69,7 +67,6 @@ class FilterListBuilder implements FilterListBuilderInterface
 
         // when a filter is set
         if ($filterId) {
-
             $filter = $this->manager->findByIdAndLocale($filterId, $locale);
 
             if (!$filter) {
@@ -86,8 +83,8 @@ class FilterListBuilder implements FilterListBuilderInterface
      * Creates a conditions for a condition group
      * @param ConditionGroup $conditionGroup
      * @param string $conjunction
-     * @throws FilterException
-     * @throws OperatorException
+     * @throws ConditionFieldNotFound
+     * @throws FeatureNotImplementedException
      */
     protected function processConditionGroup(ConditionGroup $conditionGroup, $conjunction)
     {
@@ -101,14 +98,8 @@ class FilterListBuilder implements FilterListBuilderInterface
         if (count($conditionGroup->getConditions()) === 1) {
             $this->createCondition($condition, $fieldDescriptor, $conjunction);
         } elseif (count($conditionGroup->getConditions()) === 2) {
-            $condition2 = $conditionGroup->getConditions()[1];
-            switch ($condition->getOperator()) {
-                case 'between':
-                    $this->createBetweenCondition($condition, $condition2, $fieldDescriptor, $conjunction);
-                    break;
-                default:
-                    throw new OperatorUnknownException($condition->getOperator());
-            }
+            // TODO implement if needed
+            throw new FeatureNotImplementedException('Multiple condition handling not yet implemented!');
         }
     }
 
@@ -120,28 +111,14 @@ class FilterListBuilder implements FilterListBuilderInterface
      */
     protected function createCondition(Condition $condition, $fieldDescriptor, $conjunction)
     {
-        // TODO conjunction
         $value = $this->getValue($condition);
-        $this->lb->where($fieldDescriptor, $value, $condition->getOperator());
-    }
 
-    /**
-     * Creates and adds a between condition to the listbuilder
-     * @param Condition $condition1
-     * @param Condition $condition2
-     * @param $fieldDescriptor
-     * @param $conjunction
-     */
-    protected function createBetweenCondition(
-        Condition $condition1,
-        Condition $condition2,
-        $fieldDescriptor,
-        $conjunction
-    ) {
-        // TODO conjunction
-        $value1 = $this->getValue($condition1);
-        $value2 = $this->getValue($condition2);
-        $this->lb->between($fieldDescriptor, [$value1, $value2]);
+        // relative date for cases like "within a week" or "within this month"
+        if($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
+            $this->lb->between($fieldDescriptor, [$value, new \Datetime()],$condition);
+        } else {
+            $this->lb->where($fieldDescriptor, $value, $condition->getOperator(), $conjunction);
+        }
     }
 
     /**
