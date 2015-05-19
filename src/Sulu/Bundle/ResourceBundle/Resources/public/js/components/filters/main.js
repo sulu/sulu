@@ -41,7 +41,6 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         FILTER_LIST = eventNamespace + 'list';
 
     return {
-
         initialize: function() {
             this.filter = null;
 

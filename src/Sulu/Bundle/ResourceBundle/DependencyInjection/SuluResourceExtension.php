@@ -40,7 +40,7 @@ class SuluResourceExtension extends Extension
             $config['filters']['conjunctions']
         );
 
-        $container->setparameter('sulu_resource.filters.aliases', $config['aliases']);
+        $container->setParameter('sulu_resource.filters.aliases', $config['aliases']);
     }
 
     /**
