@@ -26,7 +26,6 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
     };
 
     return {
-
         view: true,
 
         fullSize: {

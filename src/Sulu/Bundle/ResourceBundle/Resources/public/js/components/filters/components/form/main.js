@@ -19,7 +19,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         };
 
     return {
-
         name: 'Sulu Filter Form',
 
         view: true,
