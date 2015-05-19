@@ -67,6 +67,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereComparators = array();
 
     /**
+     * The conjunctions for the where clauses
+     * @var array
+     */
+    protected $whereConjunctions = array();
+
+    /**
      * group by fields
      * @var array
      */
@@ -95,6 +101,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      * @var array
      */
     protected $betweenValues = array();
+
+    /**
+     * The conjunctions for the between clauses
+     * @var array
+     */
+    protected $betweenConjunctions = array();
 
     /**
      * The page the resulting query will be returning
@@ -208,11 +220,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::AND_CONJUNCTION)
     {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
         $this->whereComparators[$fieldDescriptor->getName()] = $comparator;
+        $this->whereConjunctions[$fieldDescriptor->getName()] = $conjunction;
     }
 
     /**
@@ -227,10 +240,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values)
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::AND_CONJUNCTION)
     {
         $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->betweenValues[$fieldDescriptor->getName()] = $values;
+        $this->betweenConjunctions[$fieldDescriptor->getName()] = $conjunction;
     }
 
     /**

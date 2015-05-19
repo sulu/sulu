@@ -32,6 +32,10 @@ interface ListBuilderInterface
 
     const SORTORDER_DESC = 'DESC';
 
+    const AND_CONJUNCTION = 'AND';
+
+    const OR_CONJUNCTION = 'OR';
+
     /**
      * Sets all the field descriptors for the ListBuilder at once
      * @param AbstractFieldDescriptor[] $fieldDescriptors
@@ -113,9 +117,10 @@ interface ListBuilderInterface
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should have
      * @param string $comparator The comparator use to compare the values
+     * @param string $conjunction The conjunction to connect the where statements
      * @return mixed
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator, $conjunction);
 
     /**
      * Defines GROUP BY
@@ -135,8 +140,10 @@ interface ListBuilderInterface
      * Defines a between constraint
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
+     * @param string $conjunction The conjunction to connect the between statements
+     * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values);
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction);
 
     /**
      * The number of total elements for this list
