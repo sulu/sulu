@@ -34762,7 +34762,7 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /** templates container */
-            templates = {
+        templates = {
             skeleton: [
                 '<div class="husky-toolbar">',
                 '</div>'
@@ -34837,9 +34837,9 @@ define('__component__$toolbar@husky',[],function() {
          * @event husky.toolbar.[INSTANCE_NAME.]item.hide
          * @param {string} button The id of the button
          */
-         ITEM_HIDE = function() {
+        ITEM_HIDE = function() {
             return createEventName.call(this, 'item.hide');
-         },
+        },
 
         /**
          * event to show a button
@@ -34847,9 +34847,9 @@ define('__component__$toolbar@husky',[],function() {
          * @event husky.toolbar.[INSTANCE_NAME.]item.show
          * @param {string} button The id of the button
          */
-         ITEM_SHOW = function() {
+        ITEM_SHOW = function() {
             return createEventName.call(this, 'item.show');
-         },
+        },
 
         /**
          * event to mark a subitem
@@ -34857,9 +34857,9 @@ define('__component__$toolbar@husky',[],function() {
          * @event husky.toolbar.[INSTANCE_NAME.]item.mark
          * @param {string} button The id of the button
          */
-         ITEM_MARK = function() {
+        ITEM_MARK = function() {
             return createEventName.call(this, 'item.mark');
-         },
+        },
 
         /**
          * event to change a buttons default title and default icon
@@ -34868,7 +34868,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param {string} button The id of the button
          * @param {object} object with a icon and title
          */
-         BUTTON_SET = function() {
+        BUTTON_SET = function() {
             return createEventName.call(this, 'button.set');
         },
 
@@ -34880,7 +34880,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param {array} items The items to set
          * @param {integer} itemId The id or the index of the item to set selected - optional
          */
-         ITEMS_SET = function() {
+        ITEMS_SET = function() {
             return createEventName.call(this, 'items.set');
         },
 
@@ -34952,7 +34952,7 @@ define('__component__$toolbar@husky',[],function() {
 
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
                 if (!!this.items[button]) {
-                    this.items[button].initialized.then(function () {
+                    this.items[button].initialized.then(function() {
                         var index = getItemIndexById.call(this, id, this.items[button]);
                         changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
                         this.sandbox.emit(ITEM_MARK.call(this), this.items[button].items[index].id);
@@ -35024,7 +35024,7 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.addClass($item, 'highlight-animation');
 
                 // remove class after effect has finished
-                this.sandbox.dom.on($item,'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function(ev) {
+                this.sandbox.dom.on($item, 'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function(ev) {
                     this.sandbox.dom.removeClass(ev.currentTarget, 'highlight-animation');
                 }.bind(this));
             }
@@ -35052,9 +35052,9 @@ define('__component__$toolbar@husky',[],function() {
          * Shows a button
          * @param $button
          */
-         showItem = function($button) {
+        showItem = function($button) {
             this.sandbox.dom.removeClass($button, 'hidden');
-         },
+        },
 
         /**
          * Sets a button into loading state
@@ -35170,8 +35170,8 @@ define('__component__$toolbar@husky',[],function() {
                 return;
             }
             hideDropdowns.call(this);
-            if (!!item.parentId && !!this.items[item.parentId].itemsOption
-                && this.items[item.parentId].itemsOption.markable === true) {
+            if (!!item.parentId && !!this.items[item.parentId].itemsOption &&
+                this.items[item.parentId].itemsOption.markable === true) {
                 uniqueMarkItem.call(this, item.id);
             }
             if (!item.disabled) {
@@ -35333,7 +35333,7 @@ define('__component__$toolbar@husky',[],function() {
         setButtonWidth = function(listItem, parent) {
             var maxwidth = 0, i, length;
             if (parent.type === 'select') {
-                for(i = -1, length = parent.items.length; ++i < length;) {
+                for (i = -1, length = parent.items.length; ++i < length;) {
                     changeMainListItem.call(this, listItem, parent.items[i]);
                     if (this.sandbox.dom.width(listItem) > maxwidth) {
                         maxwidth = this.sandbox.dom.width(listItem);
@@ -35471,7 +35471,7 @@ define('__component__$toolbar@husky',[],function() {
                     data[i].position = 9000;
                 }
             }
-            data = data.sort(function(a, b){
+            data = data.sort(function(a, b) {
                 return a.position - b.position;
             });
 
@@ -35656,6 +35656,11 @@ define('__component__$toolbar@husky',[],function() {
                 if (!!item['class']) {
                     classArray.push(item['class']);
                 }
+
+                if (item.hidden) {
+                    classArray.push('hidden');
+                }
+
                 if (item.disabled) {
                     classArray.push('disabled');
                 }
@@ -43062,7 +43067,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {Boolean} [options.dropzoneEnabled] Should the dropzone be enabled initially
  * @params {Boolean} [options.cancelUploadOnOverlayClick] Cancel the upload process when the user clicks on the overlay background
  */
-define('__component__$dropzone@husky',[], function () {
+define('__component__$dropzone@husky',[], function() {
 
     'use strict';
 
@@ -43104,30 +43109,30 @@ define('__component__$dropzone@husky',[], function () {
         },
 
         /** templates for component */
-            templates = {
+        templates = {
             basic: [
                 '<div class="' + constants.descriptionClass + '">',
-                '<div class="fa-<%= icon %> icon"></div>',
-                '<span class="title"><%= title %></span>',
-                '<span class="addition"><%= description %></span>',
+                    '<div class="fa-<%= icon %> icon"></div>',
+                    '<span class="title"><%= title %></span>',
+                    '<span class="addition"><%= description %></span>',
                 '</div>',
                 '<div class="' + constants.uploadedItemContainerClass + '"></div>'
             ].join(''),
             uploadItem: [
                 '<div class="' + constants.uploadItemClass + '">' +
                     '<div class="loading-content">',
-                '<div class="fa-<%= cancelIcon %> icon" data-dz-remove></div>',
-                '<div class="file-size" data-dz-size></div>',
-                '<div class="progress">',
-                '<div class="bar" data-dz-uploadprogress></div>',
-                '</div>',
-                '</div>',
-                '<div class="success-content">',
-                '<div class="image">',
-                '<img data-dz-thumbnail />',
-                '</div>',
-                '<div class="fa-check tick"></div>',
-                '</div>',
+                        '<div class="fa-<%= cancelIcon %> icon" data-dz-remove></div>',
+                        '<div class="file-size" data-dz-size></div>',
+                        '<div class="progress">',
+                            '<div class="bar" data-dz-uploadprogress></div>',
+                        '</div>',
+                    '</div>',
+                    '<div class="success-content">',
+                        '<div class="image">',
+                            '<img data-dz-thumbnail />',
+                        '</div>',
+                        '<div class="fa-check tick"></div>',
+                    '</div>',
                 '</div>'
             ].join('')
         },
@@ -43142,7 +43147,7 @@ define('__component__$dropzone@husky',[], function () {
          * raised after initialization process
          * @event husky.dropzone.<instance-name>.initialize
          */
-        INITIALIZED = function () {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -43151,7 +43156,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.uploading
          * @param {Object} the file
          */
-        UPLOADING = function () {
+        UPLOADING = function() {
             return createEventName.call(this, 'uploading');
         },
 
@@ -43161,7 +43166,7 @@ define('__component__$dropzone@husky',[], function () {
          * @param {Object} the file
          * @param {Object} the response
          */
-        SUCCESS = function () {
+        SUCCESS = function() {
             return createEventName.call(this, 'success');
         },
 
@@ -43169,7 +43174,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and opens the data-source folder-overlay
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-        OPEN_DATA_SOURCE = function () {
+        OPEN_DATA_SOURCE = function() {
             return createEventName.call(this, 'open-data-source');
         },
 
@@ -43177,7 +43182,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and prevents an overlay with the dropzone from poping up
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-        LOCK_POPUP = function () {
+        LOCK_POPUP = function() {
             return createEventName.call(this, 'lock-popup');
         },
 
@@ -43185,7 +43190,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and enables overlays with the dropzone to pop up
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-        UNLOCK_POPUP = function () {
+        UNLOCK_POPUP = function() {
             return createEventName.call(this, 'unlock-popup');
         },
 
@@ -43194,7 +43199,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
          */
-        FILES_ADDED = function () {
+        FILES_ADDED = function() {
             return createEventName.call(this, 'files-added');
         },
 
@@ -43203,7 +43208,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.change-url
          * @param {String} the new url
          */
-        CHANGE_URL = function () {
+        CHANGE_URL = function() {
             return createEventName.call(this, 'change-url');
         },
 
@@ -43224,7 +43229,7 @@ define('__component__$dropzone@husky',[], function () {
         },
 
         /** returns normalized event names */
-        createEventName = function (postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
@@ -43237,7 +43242,7 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Initialize component
          */
-        initialize: function () {
+        initialize: function() {
             this.sandbox.logger.log('initialize', this);
 
             // merge defaults, type defaults and options
@@ -43261,9 +43266,9 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Binds dom related events
          */
-        bindDomEvents: function () {
+        bindDomEvents: function() {
             // delegate click on elements children to element
-            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function (event) {
+            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
@@ -43287,7 +43292,7 @@ define('__component__$dropzone@husky',[], function () {
             if (this.options.cancelUploadOnOverlayClick) {
                 this.$el.on('click', '.husky-overlay-container.dropzone', function() {
                     if (this.overlayOpened === true) {
-                        this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+                        this.sandbox.emit('husky.overlay.dropzone-' + this.options.instanceName + '.close');
                     }
                     this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                     this.dropzone.removeAllFiles();
@@ -43298,9 +43303,9 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Binds custom-related events
          */
-        bindCustomEvents: function () {
+        bindCustomEvents: function() {
             // opens the data-source folder-overlay
-            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function () {
+            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function() {
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
 
@@ -43333,14 +43338,13 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Opens the dropzone in an overlay
          */
-        openOverlay: function () {
+        openOverlay: function() {
             // open the overlay only if it's not already opened and if the dropzone is not visible
             if (this.overlayOpened === false && this.lockPopUp === false && this.dropzoneEnabled) {
                 // set height of components element to prevent the site from jumping
                 this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
 
-                var $container = this.sandbox.dom.createElement('<div/>'),
-                    coordinates = this.getOverlayCoordinates();
+                var $container = this.sandbox.dom.createElement('<div/>');
                 this.sandbox.dom.append(this.$el, $container);
                 this.sandbox.start([
                     {
@@ -43354,8 +43358,6 @@ define('__component__$dropzone@husky',[], function () {
                             instanceName: 'dropzone-' + this.options.instanceName,
                             skin: 'dropzone',
                             smallHeader: true,
-                            top: coordinates.top,
-                            left: coordinates.left,
                             cancelCallback: function() {
                                 this.sandbox.dom.append(this.$el, this.$dropzone);
                                 this.sandbox.dom.height(this.$el, '');
@@ -43369,21 +43371,9 @@ define('__component__$dropzone@husky',[], function () {
         },
 
         /**
-         * Returns the positon of the element relative to the browser window
-         * @returns {{top: Number|Null, left: Number|Null}}
-         */
-        getOverlayCoordinates: function() {
-            var orientation = this.sandbox.dom.get(this.$el, 0).getBoundingClientRect();
-            return {
-                top: (orientation.top > 0) ? orientation.top : null,
-                left: (orientation.left > 0) ? orientation.left : null
-            };
-        },
-
-        /**
          * Renders the component
          */
-        render: function () {
+        render: function() {
             this.$dropzone = this.sandbox.dom.createElement('<div class="' + constants.contianerClass + '"/>');
             this.sandbox.dom.html(this.$dropzone, this.sandbox.util.template(templates.basic)({
                 description: this.sandbox.translate(this.options.descriptionKey),
@@ -43399,7 +43389,7 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Starts the dropzone component
          */
-        startDropzone: function () {
+        startDropzone: function() {
             var that = this,
                 options = {
                     url: this.options.url,
@@ -43413,7 +43403,7 @@ define('__component__$dropzone@husky',[], function () {
                         cancelIcon: this.options.cancelLoadingIcon
                     }),
                     previewsContainer: this.sandbox.dom.find('.' + constants.uploadedItemContainerClass, this.$dropzone)[0],
-                    init: function () {
+                    init: function() {
                         // store dropzone context
                         that.dropzone = this;
 
@@ -43429,7 +43419,7 @@ define('__component__$dropzone@husky',[], function () {
                         }
 
                         // gets called for each added file (drop or via the upload window)
-                        this.on('addedfile', function (file) {
+                        this.on('addedfile', function(file) {
                             that.sandbox.dom.addClass(that.$dropzone, constants.droppedClass);
 
                             // call the after-drop callback on the last file
@@ -43444,13 +43434,13 @@ define('__component__$dropzone@husky',[], function () {
                             }
 
                             // prevent the the upload window to open on click on the preview item
-                            that.sandbox.dom.on(file.previewElement, 'click', function (event) {
+                            that.sandbox.dom.on(file.previewElement, 'click', function(event) {
                                 this.sandbox.dom.stopPropagation(event);
                             }.bind(that));
                         });
 
                         // gets called before each file is sent
-                        this.on('sending', function (file) {
+                        this.on('sending', function(file) {
                             if (typeof this.options.beforeSendingCallback === 'function') {
                                 this.options.beforeSendingCallback(file);
                             } else {
@@ -43459,7 +43449,7 @@ define('__component__$dropzone@husky',[], function () {
                         }.bind(that));
 
                         // gets called if the file was uploaded successfully
-                        this.on('success', function (file, response) {
+                        this.on('success', function(file, response) {
                             if (this.lastUploadedFile !== file) {
                                 file.response = response;
                                 this.lastUploadedFile = file;
@@ -43473,21 +43463,21 @@ define('__component__$dropzone@husky',[], function () {
                         }.bind(that));
 
                         // gets called if a file gets removed from the zone
-                        this.on('removedfile', function (file) {
+                        this.on('removedfile', function(file) {
                             if (typeof this.options.removeFileCallback === 'function') {
                                 this.options.removeFileCallback(file);
                             }
                         }.bind(that));
 
                         // gets called if all files are removed from the zone
-                        this.on('reset', function () {
+                        this.on('reset', function() {
                             if (this.options.keepFilesAfterSuccess === false) {
                                 this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                             }
                         }.bind(that));
 
                         // enables the to change the url dynamically
-                        this.on('processing', function () {
+                        this.on('processing', function() {
                             this.options.url = that.url;
                         });
                     }
@@ -43513,26 +43503,26 @@ define('__component__$dropzone@husky',[], function () {
          * but only if all dropped files got uploaded
          * @param keepDom {Boolean} true to keep the dom like it is
          */
-        removeAllFiles: function (keepDom) {
+        removeAllFiles: function(keepDom) {
             // if all files got uploaded
             if (this.dropzone.getUploadingFiles.call(this.dropzone).length === 0) {
                 if (keepDom === true) {
                     this.afterFadeOut(true);
                 } else {
                     this.sandbox.util.delay(
-                    function () {
-                        this.sandbox.dom.fadeOut(
-                            this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
-                            this.options.fadeOutDuration,
-                            function () {
-                                if (this.sandbox.dom.find('.' + constants.uploadItemClass + ':animated', this.$dropzone).length === 0) {
-                                    this.afterFadeOut();
-                                }
-                            }.bind(this)
-                        );
-                    }.bind(this),
-                    this.options.fadeOutDelay
-                );
+                        function() {
+                            this.sandbox.dom.fadeOut(
+                                this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
+                                this.options.fadeOutDuration,
+                                function() {
+                                    if (this.sandbox.dom.find('.' + constants.uploadItemClass + ':animated', this.$dropzone).length === 0) {
+                                        this.afterFadeOut();
+                                    }
+                                }.bind(this)
+                            );
+                        }.bind(this),
+                        this.options.fadeOutDelay
+                    );
                 }
             }
         },
@@ -43542,9 +43532,9 @@ define('__component__$dropzone@husky',[], function () {
          * have faded out
          * @param keepDom {Boolean} true to keep the dom like it is
          */
-        afterFadeOut: function (keepDom) {
+        afterFadeOut: function(keepDom) {
             if (this.overlayOpened === true) {
-                this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+                this.sandbox.emit('husky.overlay.dropzone-' + this.options.instanceName + '.close');
             }
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
             this.filesDropped = 0;
@@ -43561,7 +43551,7 @@ define('__component__$dropzone@husky',[], function () {
          * @param files {Array} array of files with response properties
          * @returns {Array} array of responses
          */
-        getResponseArray: function (files) {
+        getResponseArray: function(files) {
             var arrReturn = [], i, length;
             for (i = -1, length = files.length; ++i < length;) {
                 arrReturn.push(files[i].response);
