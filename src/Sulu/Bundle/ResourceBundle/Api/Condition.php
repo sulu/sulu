@@ -56,10 +56,6 @@ class Condition extends ApiWrapper
      */
     public function getValue()
     {
-        // return a proper date if it is a datetime value
-        if($this->getType() === DataTypes::DATETIME_TYPE) {
-            return new \DateTime($this->entity->getValue());
-        }
         return $this->entity->getValue();
     }
 
