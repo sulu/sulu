@@ -117,7 +117,8 @@ class FilterManager implements FilterManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function getListFieldDescriptors($locale){
+    public function getListFieldDescriptors($locale)
+    {
         $fieldDescriptors = $this->getFieldDescriptors($locale);
 
         $fieldDescriptors['context'] = new DoctrineFieldDescriptor(
@@ -217,7 +218,7 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
-        if(array_key_exists('context', $data)) {
+        if (array_key_exists('context', $data)) {
             if ($this->getClassMappingForAlias($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
@@ -309,12 +310,33 @@ class FilterManager implements FilterManagerInterface
                 $conditionEntity->setOperator(
                     $this->getProperty($conditionData, 'operator', $conditionEntity->getOperator())
                 );
-                $conditionEntity->setValue($this->getProperty($conditionData, 'value', $conditionEntity->getValue()));
+
                 $conditionEntity->setType($this->getProperty($conditionData, 'type', $conditionEntity->getType()));
+                $value = $this->getValueForCondition(
+                    $this->getProperty($conditionData, 'value', $conditionEntity->getValue()),
+                    $conditionEntity->getType()
+                );
+                $conditionEntity->setValue($value);
             }
         }
 
         return true;
+    }
+
+    /**
+     * Parses the value for a condition - is mainly used for parsing values with type datetime
+     * but excludes relative values like "-1 week"
+     *
+     * @return mixed
+     */
+    protected function getValueForCondition($value, $type)
+    {
+        // check if date and not a relative value like -1 week
+        if ($type === DataTypes::DATETIME_TYPE && !preg_match('/[A-Za-z]{3,}/', $value)) {
+           return (new \DateTime($value))->format(\DateTime::ISO8601);
+        }
+
+        return $value;
     }
 
     /**
@@ -339,8 +361,12 @@ class FilterManager implements FilterManagerInterface
                     throw new EntityIdAlreadySetException(self::$conditionEntityName, $conditionData['id']);
                 } elseif ($this->isValidConditionData($conditionData)) {
                     $condition = new ConditionEntity();
-                    $condition->setValue($conditionData['value']);
                     $condition->setType($conditionData['type']);
+                    $value = $this->getValueForCondition(
+                        $conditionData['value'],
+                        $conditionData['type']
+                    );
+                    $condition->setValue($value);
                     $condition->setOperator($conditionData['operator']);
                     $condition->setField($conditionData['field']);
                     $condition->setConditionGroup($conditionGroup);
@@ -444,7 +470,7 @@ class FilterManager implements FilterManagerInterface
      */
     public function getClassMappingForAlias($alias)
     {
-        if($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)){
+        if ($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)) {
             return $this->aliasConfiguration[$alias]['class'];
         }
 
@@ -458,7 +484,7 @@ class FilterManager implements FilterManagerInterface
      */
     public function getFeaturesForAlias($alias)
     {
-        if($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)){
+        if ($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)) {
             return $this->aliasConfiguration[$alias]['features'];
         }
 
