@@ -1,24 +1,24 @@
 <operators>
     <!-- number -->
-    <operator type="number" inputType="" operator="gt">
+    <operator type="number" inputType="" operator="&gt;">
         <translations>
             <translation locale="de">größer als</translation>
             <translation locale="en">greater than</translation>
         </translations>
     </operator>
-    <operator type="number" inputType="" operator="lt">
+    <operator type="number" inputType="" operator="&lt;">
         <translations>
             <translation locale="de">kleiner als</translation>
             <translation locale="en">less than</translation>
         </translations>
     </operator>
-    <operator type="number" inputType="" operator="lte">
+    <operator type="number" inputType="" operator="&lt;=">
         <translations>
             <translation locale="de">kleiner gleich</translation>
             <translation locale="en">less than or equal</translation>
         </translations>
     </operator>
-    <operator type="number" inputType="" operator="gte">
+    <operator type="number" inputType="" operator="&gt;=">
         <translations>
             <translation locale="de">größer gleich</translation>
             <translation locale="en">greater than or equal</translation>
@@ -40,11 +40,17 @@
     <!-- string -->
     <operator type="string" inputType="" operator="LIKE">
         <translations>
+            <translation locale="de">enthält</translation>
+            <translation locale="en">contains</translation>
+        </translations>
+    </operator>
+    <operator type="string" inputType="" operator="=">
+        <translations>
             <translation locale="de">gleich</translation>
             <translation locale="en">is</translation>
         </translations>
     </operator>
-    <operator type="string" inputType="" operator="NOT LIKE">
+    <operator type="string" inputType="" operator="!=">
         <translations>
             <translation locale="de">ungleich</translation>
             <translation locale="en">is not</translation>
@@ -52,7 +58,7 @@
     </operator>
 
     <!-- boolean -->
-    <operator type="boolean" inputType="select" operator="IS">
+    <operator type="boolean" inputType="select" operator="=">
         <translations>
             <translation locale="de">ist</translation>
             <translation locale="en">is</translation>
@@ -74,58 +80,58 @@
     </operator>
 
     <!-- date -->
-    <operator type="date" inputType="datepicker" operator="gt">
+    <operator type="date" inputType="datepicker" operator="&gt;">
         <translations>
             <translation locale="de">größer als</translation>
             <translation locale="en">greater than</translation>
         </translations>
     </operator>
-    <operator type="date" inputType="datepicker" operator="lt">
+    <operator type="date" inputType="datepicker" operator="&lt;">
         <translations>
             <translation locale="de">kleiner als</translation>
             <translation locale="en">less than</translation>
         </translations>
     </operator>
-    <operator type="date" inputType="datepicker" operator="lte">
+    <operator type="date" inputType="datepicker" operator="&lt;=">
         <translations>
             <translation locale="de">kleiner gleich</translation>
             <translation locale="en">less than or equal</translation>
         </translations>
     </operator>
-    <operator type="date" inputType="datepicker" operator="gte">
+    <operator type="date" inputType="datepicker" operator="&gt;=">
         <translations>
             <translation locale="de">größer gleich</translation>
             <translation locale="en">greater than or equal</translation>
         </translations>
     </operator>
-    <operator type="date" inputType="datepicker" operator="is">
+    <operator type="date" inputType="datepicker" operator="=">
         <translations>
             <translation locale="de">gleich</translation>
             <translation locale="en">is</translation>
         </translations>
     </operator>
-    <operator type="date" inputType="datepicker" operator="not">
+    <operator type="date" inputType="datepicker" operator="!=">
         <translations>
             <translation locale="de">ungleich</translation>
             <translation locale="en">is not</translation>
         </translations>
     </operator>
-    <operator type="date" inputType="select" operator="within">
+    <operator type="date" inputType="select" operator="between">
         <translations>
-            <translation locale="de">in</translation>
+            <translation locale="de">innerhalb</translation>
             <translation locale="en">within</translation>
         </translations>
         <values>
             <value value="-1 week">
                 <translations>
-                    <translation locale="de">letzter Woche</translation>
-                    <translation locale="en">last week</translation>
+                    <translation locale="de">von 7 Tagen</translation>
+                    <translation locale="en">last 7 days</translation>
                 </translations>
             </value>
-            <value value="-1 month">
+            <value value="first day of this month">
                 <translations>
-                    <translation locale="de">letztem Monat</translation>
-                    <translation locale="en">last month</translation>
+                    <translation locale="de">des aktuelles Monats</translation>
+                    <translation locale="en">current month</translation>
                 </translations>
             </value>
         </values>

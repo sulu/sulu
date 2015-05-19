@@ -264,8 +264,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         foreach ($betweenFields as $betweenField) {
             $conjunction = ' ' . $betweenConjunctions[$betweenField->getName()] . ' ';
 
-            if(!$firstConjunction)  {
-                $firstConjunction = $conjunction;
+            if (!$firstConjunction) {
+                $firstConjunction = $betweenConjunctions[$betweenField->getName()];
             }
 
             $betweenParts[] = $conjunction . $betweenField->getSelect() .
@@ -277,7 +277,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->queryBuilder->setParameter($betweenField->getName() . '2', $values[1]);
         }
 
-        $betweenString = $this->createQueryString($betweenParts, strlen($firstConjunction));
+        $betweenString = $this->createQueryString($betweenParts, strlen($firstConjunction) + 2);
         if (strtoupper($firstConjunction) === self::OR_CONJUNCTION) {
             $this->queryBuilder->orWhere('(' . $betweenString . ')');
         } else {
@@ -321,12 +321,12 @@ class DoctrineListBuilder extends AbstractListBuilder
             $comparator = $whereComparators[$whereField->getName()];
             $whereParts[] = $this->createWherePart($value, $whereField, $conjunction, $comparator);
 
-            if(!$firstConjunction)  {
-                $firstConjunction = $conjunction;
+            if (!$firstConjunction) {
+                $firstConjunction = $whereConjunctions[$whereField->getName()];
             }
         }
 
-        $whereString = $this->createQueryString($whereParts, strlen($firstConjunction));
+        $whereString = $this->createQueryString($whereParts, strlen($firstConjunction) + 2);
         if (strtoupper($firstConjunction) === self::OR_CONJUNCTION) {
             $this->queryBuilder->orWhere('(' . $whereString . ')');
         } else {

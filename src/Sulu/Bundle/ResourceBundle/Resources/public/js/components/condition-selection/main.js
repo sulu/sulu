@@ -25,6 +25,8 @@
  */
 define([], function() {
 
+    // TODO remove already used fields from selects
+
     'use strict';
 
     var UNDEFINED_TYPE = 0,
@@ -109,7 +111,7 @@ define([], function() {
 
         /**
          * raised when all overlay components returned their value
-         * @event sulu.condition-selection.data-changed
+         * @event sulu.condition-selection.[instanceName].data-changed
          */
         DATA_CHANGED = function() {
             return createEventName.call(this, 'data-changed');
@@ -510,13 +512,9 @@ define([], function() {
 
             // listen for select change
             this.sandbox.dom.on(this.$container, 'change', function() {
+                // FIXME Datepicker triggers multiple change events?
                 updateDataAttribute.call(this);
-            }.bind(this), 'select');
-
-            // listen for input change
-            this.sandbox.dom.on(this.$container, 'change', function() {
-                updateDataAttribute.call(this);
-            }.bind(this), 'input');
+            }.bind(this), 'select, input');
 
             // update operator data
             this.sandbox.dom.on(this.$container, 'change', function(event) {
