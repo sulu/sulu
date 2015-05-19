@@ -166,13 +166,17 @@
                 <source>search-overlay.placeholder.media</source>
                 <target>Medien durchsuchen...</target>
             </trans-unit>
+            <trans-unit id="c28342a4fe2011e4a3221697f925ec7b" resname="media-selection.overlay.selected-image-label">
+                <source>media-selection.overlay.selected-image-label</source>
+                <target>Bild ausgewählt</target>
+            </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22456" resname="media-selection.overlay.selected-images-label">
                 <source>media-selection.overlay.selected-images-label</source>
                 <target>Bilder ausgewählt</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22407" resname="media-selection.list-toolbar.upload-info">
                 <source>media-selection.list-toolbar.upload-info</source>
-                <target>Klicken oder per Drag'n'Drop</target>
+                <target>Klick oder Drag'n'Drop</target>
             </trans-unit>
         </body>
     </file>

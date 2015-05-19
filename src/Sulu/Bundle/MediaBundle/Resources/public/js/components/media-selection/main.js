@@ -213,13 +213,17 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         updateSelectedCounter = function(data) {
-            var tpl = '',
+            var tpl = '', label = '',
                 selectedCount = (data.ids || []).length;
 
             if (selectedCount) {
+                label = (selectedCount === 1) ?
+                    this.sandbox.translate('media-selection.overlay.selected-image-label') :
+                    this.sandbox.translate('media-selection.overlay.selected-images-label');
+
                 tpl = templates.mediaSelectedInfo({
                     selectedCounter: selectedCount,
-                    selectedImagesLabel: this.sandbox.translate('media-selection.overlay.selected-images-label')
+                    selectedImagesLabel: label
                 });
             }
 
