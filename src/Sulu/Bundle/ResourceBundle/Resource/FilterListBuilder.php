@@ -115,7 +115,7 @@ class FilterListBuilder implements FilterListBuilderInterface
 
         // relative date for cases like "within a week" or "within this month"
         if($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
-            $this->lb->between($fieldDescriptor, [$value, new \Datetime()],$condition);
+            $this->lb->between($fieldDescriptor, [$value, new \Datetime()], $conjunction);
         } else {
             $this->lb->where($fieldDescriptor, $value, $condition->getOperator(), $conjunction);
         }
@@ -137,23 +137,23 @@ class FilterListBuilder implements FilterListBuilderInterface
             case DataTypes::STRING_TYPE:
                 return $value;
             case DataTypes::NUMBER_TYPE:
-                if (is_float($value)) {
+                if (is_numeric($value)) {
                     return floatval($value);
                 }
-                throw new ConditionTypeMismatchException($condition, $value, $type);
+                throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
             case DataTypes::BOOLEAN_TYPE:
                 if (is_bool($value)) {
                     return boolval($value);
                 }
-                throw new ConditionTypeMismatchException($condition, $value, $type);
+                throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
             case DataTypes::DATETIME_TYPE:
                 try {
                     return new \DateTime($value);
                 } catch (\Exception $ex) {
-                    throw new ConditionTypeMismatchException($condition, $value, $type);
+                    throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
                 }
             default:
-                throw new ConditionTypeMismatchException($condition, $value, $type);
+                throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
         }
     }
 }
