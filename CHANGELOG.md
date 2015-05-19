@@ -6,6 +6,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1088 [ContactBundle]  Moved initialization of field-descriptors before init of list-builder in 
                                          accounts cget action
     * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
+    * ENHANCEMENT #1038 [MediaBundle]    Added counter for selected images; Disabled drag event for links and 
+                                         images inside the overlay; Store media assignement display options in user settings
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
     * BUGFIX      #1089 [Media/Search]   Do not set image URL for non-images in the search results
 
