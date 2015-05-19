@@ -325,9 +325,9 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Parses the value for a condition - is mainly used for parsing values with type datetime
-     * but excludes relative values like "-1 week"
+     * but excludes relative values like "-1 week" or "now"
      *
-     * @return mixed
+     * @return string
      */
     protected function getValueForCondition($value, $type)
     {
