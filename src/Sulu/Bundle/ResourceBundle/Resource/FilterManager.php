@@ -280,6 +280,7 @@ class FilterManager implements FilterManagerInterface
     protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
         if (array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
+            $conditionIds = array();
             foreach ($matchedEntry['conditions'] as $conditionData) {
                 if (array_key_exists('id', $conditionData)) {
                     /** @var ConditionEntity $conditionEntity */
@@ -299,6 +300,9 @@ class FilterManager implements FilterManagerInterface
                             $matchedEntry['id']
                         );
                     }
+
+                    $conditionIds[] = $conditionEntity->getId();
+
                 } else {
                     $conditionEntity = new ConditionEntity();
                     $conditionEntity->setConditionGroup($conditionGroup);
@@ -318,10 +322,14 @@ class FilterManager implements FilterManagerInterface
                 );
                 $conditionEntity->setValue($value);
             }
+
+            $this->removeNonExistentConditions($conditionGroup, $conditionIds);
         }
 
         return true;
     }
+
+
 
     /**
      * Parses the value for a condition - is mainly used for parsing values with type datetime
@@ -489,5 +497,22 @@ class FilterManager implements FilterManagerInterface
         }
 
         return null;
+    }
+
+    /**
+     * Removes conditions from condition groups when they are not in the given array
+     * @param ConditionGroupEntity $conditionGroup
+     * @param array $conditionIds
+     */
+    protected function removeNonExistentConditions(
+        $conditionGroup,
+        $conditionIds
+    ) {
+        foreach ($conditionGroup->getConditions() as $condition) {
+            if ($condition->getId() && array_search($condition->getId(), $conditionIds) === false) {
+                $conditionGroup->removeCondition($condition);
+                $this->em->remove($condition);
+            }
+        }
     }
 }
