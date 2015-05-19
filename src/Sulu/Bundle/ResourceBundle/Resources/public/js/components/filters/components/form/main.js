@@ -14,7 +14,6 @@ define(['filtersutil/header'], function(HeaderUtil) {
     var formSelector = '#filter-form';
 
     return {
-
         name: 'Sulu Filter Form',
 
         view: true,

@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 /**
+ * The interface for the condition group entity repository
  * Interface ConditionGroupRepositoryInterface
  * @package Sulu\Bundle\ResourceBundle\Entity
  */

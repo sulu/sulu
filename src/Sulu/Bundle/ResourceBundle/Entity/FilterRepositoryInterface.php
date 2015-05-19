@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 /**
+ * The interface for the filter entity repository
  * Interface FilterRepositoryInterface
  * @package Sulu\Bundle\ResourceBundle\Entity
  */
