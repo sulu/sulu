@@ -401,7 +401,7 @@ class XmlFileLoader extends FileLoader
             /** @var \DOMNode $urlNode */
             $url = new Url();
 
-            $url->setUrl($urlNode->nodeValue);
+            $url->setUrl(rtrim($urlNode->nodeValue, '/'));
 
             // set optional nodes
             $url->setLanguage($this->getOptionalNodeAttribute($urlNode, 'language'));
