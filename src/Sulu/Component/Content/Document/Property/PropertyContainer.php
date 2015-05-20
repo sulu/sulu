@@ -34,9 +34,7 @@ class PropertyContainer implements PropertyContainerInterface
     protected $stagedData = array();
 
     /**
-     * Get staged data, see documentation for commitStagedData
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function getStagedData() 
     {
@@ -44,9 +42,7 @@ class PropertyContainer implements PropertyContainerInterface
     }
     
     /**
-     * Set staged data, see documentation for commitStagedData
-     *
-     * @param array $stagedData
+     * {@inheritDoc}
      */
     public function setStagedData($stagedData)
     {
@@ -54,21 +50,7 @@ class PropertyContainer implements PropertyContainerInterface
     }
 
     /**
-     * Commit the staged content data
-     *
-     * This is necessary because:
-     *
-     * - We cannot set the content data on a property-by-property basis
-     * - Therefore the form framework needs to get/set to a specific property
-     * - It uses the stagedData property for this purpose
-     * - We then "commit" the staged data after the form has been submitted.
-     *
-     * We should refactor the content types so that they are not involved
-     * in the process of mapping to PHPCR.
-     *
-     * If $clearMissingContent is true, then fields will be set to NULL
-     *
-     * @param boolean $clearMissingContent
+     * {@inheritDoc}
      */
     public function commitStagedData($clearMissingContent)
     {
@@ -77,9 +59,7 @@ class PropertyContainer implements PropertyContainerInterface
     }
 
     /**
-     * Return the named property and evaluate its content
-     *
-     * @param string $name
+     * {@inheritDoc}
      */
     public function getProperty($name)
     {
@@ -93,21 +73,33 @@ class PropertyContainer implements PropertyContainerInterface
         return $property;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function hasProperty($name)
     {
         return $this->offsetExists($name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetExists($offset)
     {
         return isset($this->properties[$offset]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetGet($offset)
     {
         return $this->getProperty($offset);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetSet($offset, $value)
     {
         throw new \BadMethodCallException(
@@ -115,11 +107,17 @@ class PropertyContainer implements PropertyContainerInterface
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetUnset($offset)
     {
         unset($this->properties[$offset]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         $values = array();
@@ -128,6 +126,22 @@ class PropertyContainer implements PropertyContainerInterface
         }
 
         return $values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function bind($data, $clearMissing = false)
+    {
+        foreach ($data as $key => $value) {
+            $property = $this->getProperty($key);
+            $property->setValue($value);
+        }
+    }
+
+    public function __get($name)
+    {
+        return $this->offsetGet($name);
     }
 
     protected function normalize($value)
@@ -146,18 +160,5 @@ class PropertyContainer implements PropertyContainerInterface
         }
 
         return $ret;
-    }
-
-    public function bind($data)
-    {
-        foreach ($data as $key => $value) {
-            $property = $this->getProperty($key);
-            $property->setValue($value);
-        }
-    }
-
-    public function __get($name)
-    {
-        return $this->offsetGet($name);
     }
 }

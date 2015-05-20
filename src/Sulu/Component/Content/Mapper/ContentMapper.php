@@ -201,6 +201,7 @@ class ContentMapper implements ContentMapperInterface
         $shadowBaseLanguage = null,
         $documentAlias = LegacyStructure::TYPE_PAGE
     ) {
+        // map explicit arguments to data
         $data['parent'] = $parentUuid;
         $data['workflowStage'] = $state;
         $data['structureType'] = $structureType;
