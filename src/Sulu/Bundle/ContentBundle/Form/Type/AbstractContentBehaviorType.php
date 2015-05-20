@@ -17,6 +17,10 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Forms extending this class handle documents which implement
+ * the ContentBehavior.
+ */
 abstract class AbstractContentBehaviorType extends AbstractType
 {
     /**
