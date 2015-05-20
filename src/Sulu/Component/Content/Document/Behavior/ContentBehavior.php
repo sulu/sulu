@@ -13,7 +13,16 @@ namespace Sulu\Component\Content\Document\Behavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**
- * The implementing document can have dynamic content assigned to it
+ * Documents implementing this behavior can have structures applied to them.
+ *
+ * Content is set by binding raw data to the PropertyContainerInterface retried
+ * through the getContent method.
+ *
+ * Content is accessed as folows:
+ *
+ * ````
+ * $this->getContent()->getProperty('foo')->getValue();
+ * ````
  */
 interface ContentBehavior extends LocaleBehavior
 {
@@ -32,9 +41,9 @@ interface ContentBehavior extends LocaleBehavior
     public function setStructureType($structureType);
 
     /**
-     * Return the content container
+     * Return the PropertyContainerInterface instance.
      *
-     * @return ContentContainer
+     * @return PropertyContainerInterface
      */
     public function getContent();
 }
