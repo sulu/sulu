@@ -386,6 +386,7 @@ class ContentMapper implements ContentMapperInterface
         if (null === $parent) {
             $parent = $this->getContentDocument($webspaceKey, $languageCode, $options);
         }
+
         $fetchDepth = -1;
 
         if (false === $flat) {
@@ -540,7 +541,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadShallowStructureByNode(NodeInterface $contentNode, $localization, $webspaceKey)
     {
-        $document = $this->documentManager->find($contentNode->getPath());
+        $document = $this->documentManager->find($contentNode->getPath(), $localization);
 
         return $this->documentToStructure($document);
     }
@@ -650,6 +651,7 @@ class ContentMapper implements ContentMapperInterface
         $resourceLocatorType = $this->getResourceLocator();
 
         foreach ($destLocales as $destLocale) {
+            // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
                 $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
                     $parentDocument->getUUid(),
@@ -688,6 +690,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * TODO: Move this logic to the DocumentManager
      * {@inheritDoc}
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $locale)
@@ -730,9 +733,14 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * Copy or move a node by UUID to a detination parent.
+     *
+     * Note that the bulk of this method is about the resource locator and can
+     * be removed if we integrate the RoutingAuto component.
+     *
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool   $move
+     * @param bool $move
      *
      * @return StructureInterface
      */
@@ -766,6 +774,7 @@ class ContentMapper implements ContentMapperInterface
             }
 
             // prepare parent content node
+            // finding the document will update the locale without reloading from PHPCR
             $this->documentManager->find($document->getUuid(), $locale);
             $this->documentManager->find($parentDocument->getUuid(), $locale);
 
@@ -806,26 +815,18 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * Return the resource locator content type.
+     *
      * @return ResourceLocatorInterface
      */
     public function getResourceLocator()
     {
-        return $this->getContentType('resource_locator');
+        return $this->contentTypeManager->get('resource_locator');
     }
 
     /**
-     * returns a type with given name.
+     * Return the content document (aka the home page)
      *
-     * @param $name
-     *
-     * @return ContentTypeInterface
-     */
-    protected function getContentType($name)
-    {
-        return $this->contentTypeManager->get($name);
-    }
-
-    /**
      * @param $webspaceKey
      *
      * @return Document
@@ -840,6 +841,8 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * Return the node in the content repository which contains all of the routes.
+     *
      * @param $webspaceKey
      * @param string $locale
      * @param string $segment
@@ -910,7 +913,6 @@ class ContentMapper implements ContentMapperInterface
      */
     private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
     {
-        static $count;
         // reset cache
         $this->initializeExtensionCache();
         $templateName = $this->encoder->localizedSystemName('template', $locale);
@@ -1113,6 +1115,8 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * TODO: Move this to ResourceLocator repository>
+     *
      * {@inheritdoc}
      */
     public function restoreHistoryPath($path, $userId, $webspaceKey, $locale, $segmentKey = null)
@@ -1190,7 +1194,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * initializes cache for extension data.
+     * Initializes cache of extension data.
      */
     private function initializeExtensionCache()
     {
@@ -1218,6 +1222,13 @@ class ContentMapper implements ContentMapperInterface
         return $structureBridge;
     }
 
+    /**
+     * Return a collection of structures for the given documents, optionally filtering according
+     * to the given options (as defined in optionsShouldExcludeDocument)
+     *
+     * @param object[] $documents
+     * @param array|null $filterOptions
+     */
     private function documentsToStructureCollection($documents, $filterOptions = null)
     {
         $collection = array();
