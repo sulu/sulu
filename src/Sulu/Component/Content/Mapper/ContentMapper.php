@@ -156,11 +156,6 @@ class ContentMapper implements ContentMapperInterface
     private $strategy;
 
     /**
-     * @var DataNormalizer
-     */
-    private $dataNormalizer;
-
-    /**
      * @Var DocumentManager
      */
     private $documentManager;
@@ -182,7 +177,6 @@ class ContentMapper implements ContentMapperInterface
 
     public function __construct(
         DocumentManager $documentManager,
-        DataNormalizer $dataNormalizer,
         WebspaceManagerInterface $webspaceManager,
         FormFactoryInterface $formFactory,
         DocumentInspector $inspector,
@@ -201,7 +195,6 @@ class ContentMapper implements ContentMapperInterface
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
-        $this->dataNormalizer = $dataNormalizer;
         $this->sessionManager = $sessionManager;
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
@@ -258,12 +251,17 @@ class ContentMapper implements ContentMapperInterface
         $shadowBaseLanguage = null,
         $documentAlias = LegacyStructure::TYPE_PAGE
     ) {
-        $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
+        $data['parent'] = $parentUuid;
+        $data['workflowStage'] = $state;
+        $data['structureType'] = $structureType;
 
-        $content = isset($data['content']) ? $data['content'] : null;
-        $extensions = isset($data['extensions']) ? $data['extensions'] : null;
-        unset($data['content']);
-        unset($data['extensions']);
+        if ($isShadow) {
+            $data['shadowLocaleEnabled'] = true;
+        }
+
+        if ($shadowBaseLanguage) {
+            $data['shadowLocale'] = $shadowBaseLanguage;
+        }
 
         if ($uuid) {
             $document = $this->documentManager->find($uuid, $locale, array('type' => $documentAlias));
@@ -278,49 +276,20 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
-        if (!$document instanceof ResourceSegmentBehavior) {
-            unset($data['resourceSegment']);
-        }
+        $options = array(
+            'clear_missing_content' => !$partialUpdate
+        );
 
-        $data['structureType'] = $structureType;
-
-        if ($document instanceof ShadowLocaleBehavior) {
-            if ($isShadow) {
-                $data['shadowLocaleEnabled'] = true;
-            }
-
-            if ($shadowBaseLanguage) {
-                $data['shadowLocale'] = $shadowBaseLanguage;
-            }
-        }
-
-        $options = array();
-
+        // We eventually handle this from the controller, in which case we will not
+        // have to deal with not knowing what sort of form we will have.
         if ($document instanceof WebspaceBehavior) {
-        $options['webspace_key'] = $webspaceKey;
-        }
-
-        if ($document instanceof ContentBehavior) {
-            $data['structureType'] = $structureType;
+            $options['webspace_key'] = $webspaceKey;
         }
 
         $form = $this->formFactory->create($documentAlias, $document, $options);
 
         $clearMissing = false;
         $form->submit($data, $clearMissing);
-
-        if ($document instanceof ContentBehavior) {
-            // TODO: Refactor the content so that conetnt types are agnostic to the node types
-            //       Currently it is not possible to map content with a form as content types
-            //       can do whatever they want in terms of mapping.
-            $clearMissing = !$partialUpdate;
-            $document->getContent()->bind($content, $clearMissing);
-        }
-
-        if ($document instanceof ExtensionBehavior) {
-            // TODO: As with content data, extensions should be set through the form
-            $document->setExtensionsData($extensions);
-        }
 
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
@@ -329,6 +298,7 @@ class ContentMapper implements ContentMapperInterface
         $this->documentManager->persist($document, $locale, array(
             'blame.user' => $userId,
         ));
+
         $this->documentManager->flush();
 
         $structure = $this->documentToStructure($document);
