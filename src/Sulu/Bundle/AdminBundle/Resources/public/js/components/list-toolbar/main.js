@@ -322,7 +322,7 @@ define([], function() {
                     hasSearch: true,
                     data: this.options.template,
                     instanceName: this.options.instanceName,
-                    showTitleAsTooltip: true,
+                    showTitleAsTooltip: this.options.showTitleAsTooltip,
                     searchOptions: {
                         placeholderText: 'public.search'
                     }

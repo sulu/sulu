@@ -129,10 +129,11 @@
 
 /* line 87, ../scss/modules/media-selection.scss */
 .media-selection-overlay-toolbar-container {
+  display: inline-block;
   margin-bottom: 10px;
 }
 
-/* line 91, ../scss/modules/media-selection.scss */
+/* line 92, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content {
   height: 100%;
   padding: 10px 0 10px 20px;
@@ -140,13 +141,13 @@
   position: relative;
 }
 
-/* line 98, ../scss/modules/media-selection.scss */
+/* line 99, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
   height: calc(100% - 40px);
 }
 
-/* line 103, ../scss/modules/media-selection.scss */
+/* line 104, ../scss/modules/media-selection.scss */
 .media-selection-overlay-close {
   position: absolute;
   top: 10px;
@@ -155,37 +156,41 @@
   cursor: pointer;
 }
 
-/* line 112, ../scss/modules/media-selection.scss */
+/* line 113, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .heading {
   width: 100%;
   border-bottom: 2px #ccc solid;
 }
-/* line 116, ../scss/modules/media-selection.scss */
+/* line 117, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add h3 {
   font-size: 16px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-/* line 121, ../scss/modules/media-selection.scss */
+/* line 122, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .overlay-loader {
   margin: 20px 0;
 }
 
 /* line 127, ../scss/modules/media-selection.scss */
+.media-selection-overlay-dropzone-container {
+  padding-right: 20px;
+}
+/* line 130, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 132, ../scss/modules/media-selection.scss */
+/* line 135, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 137, ../scss/modules/media-selection.scss */
+/* line 140, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > div {
   width: 100% !important;
 }
-/* line 141, ../scss/modules/media-selection.scss */
+/* line 144, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container {
   position: absolute !important;
   top: 0 !important;
@@ -196,28 +201,43 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.95);
 }
-/* line 151, ../scss/modules/media-selection.scss */
+/* line 154, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container .slide {
   width: 100% !important;
 }
-/* line 156, ../scss/modules/media-selection.scss */
+/* line 159, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-backdrop {
   display: none !important;
 }
-/* line 160, ../scss/modules/media-selection.scss */
+/* line 163, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .overlay-content {
   height: auto !important;
   background-color: transparent;
 }
 
-/* line 166, ../scss/modules/media-selection.scss */
+/* line 169, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   color: #999;
 }
 
-/* line 170, ../scss/modules/media-selection.scss */
+/* line 173, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+}
+
+/* line 177, ../scss/modules/media-selection.scss */
+.media-selection-overlay-header {
+  white-space: nowrap;
+}
+
+/* line 181, ../scss/modules/media-selection.scss */
+.media-selection-overlay-selected-info {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 /* line 6, ../scss/modules/collection-select.scss */
