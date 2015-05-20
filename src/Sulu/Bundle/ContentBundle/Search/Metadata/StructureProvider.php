@@ -190,7 +190,8 @@ class StructureProvider implements ProviderInterface
 
         $indexMeta->addFieldMapping(self::FIELD_STRUCTURE_TYPE, array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_STORED_INDEXED,
+            'stored' => true,
+            'indexed' => false,
             'field' => $this->factory->createMetadataProperty('structureType'),
         ));
 
