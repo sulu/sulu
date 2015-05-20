@@ -25,7 +25,12 @@ class TemplateController extends RestController
      */
     public function filterFormAction()
     {
-        return $this->render('SuluResourceBundle:Template:filter.form.html.twig');
+        $conjunctions = $this->container->getParameter('sulu_resource.filters.conjunction');
+
+        return $this->render(
+            'SuluResourceBundle:Template:filter.form.html.twig',
+            array('conjunctions' => $conjunctions)
+        );
     }
 
     /**
@@ -35,6 +40,8 @@ class TemplateController extends RestController
      */
     public function filterListAction()
     {
-        return $this->render('SuluResourceBundle:Template:filter.list.html.twig');
+        return $this->render(
+            'SuluResourceBundle:Template:filter.list.html.twig'
+        );
     }
 }

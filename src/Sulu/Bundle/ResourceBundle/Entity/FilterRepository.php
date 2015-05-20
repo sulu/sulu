@@ -60,7 +60,12 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
             ->addSelect('conditionGroups')
             ->addSelect('translations')
             ->addSelect('conditions')
-            ->leftJoin('filter.translations', 'translations', 'WITH', 'translations.locale = :locale')
+            ->leftJoin(
+                'filter.translations',
+                'translations',
+                'WITH',
+                'translations.locale = :locale'
+            )
             ->leftJoin('filter.conditionGroups', 'conditionGroups')
             ->leftJoin('conditionGroups.conditions', 'conditions')
             ->setParameter('locale', $locale);
@@ -82,5 +87,19 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
         } catch (NoResultException $exc) {
             return null;
         }
+    }
+
+    /**
+     * Deletes multiple filters
+     *
+     * @param $ids
+     * @return mixed
+     */
+    public function deleteByIds($ids)
+    {
+        $qb = $this->createQueryBuilder('filter')->delete()->where(
+            'filter.id IN (:ids)'
+        )->setParameter('ids', $ids);
+        $qb->getQuery()->execute();
     }
 }

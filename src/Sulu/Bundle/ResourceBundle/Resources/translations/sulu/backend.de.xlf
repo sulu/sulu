@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="resource.filter.name">
+                <source>resource.filter.name</source>
+                <target>Filtername</target>
+            </trans-unit>
+            <trans-unit id="2" resname="resource.filter">
+                <source>resource.filter</source>
+                <target>Filter</target>
+            </trans-unit>
+            <trans-unit id="3" resname="resource.filter.conjunction">
+                <source>resource.filter.conjunction</source>
+                <target>Filtere Einträge auf die</target>
+            </trans-unit>
+            <trans-unit id="4" resname="resource.filter.context">
+                <source>resource.filter.context</source>
+                <target>Bereich</target>
+            </trans-unit>
+            <trans-unit id="5" resname="resource.filter.conditions">
+                <source>resource.filter.conditions</source>
+                <target>Bedingungen</target>
+            </trans-unit>
+            <trans-unit id="6" resname="resource.filter.delete.warning">
+                <source>resource.filter.delete.warning</source>
+                <target>Wollen Sie wirklich die ausgewählten Filter löschen? Die gespeicherten Daten gehen dabei
+                    verloren.</target>
+            </trans-unit>
+            <trans-unit id="7" resname="resource.filter.conjunction.or">
+                <source>resource.filter.conjunction.or</source>
+                <target>mindestens eine Bedingung zutrifft</target>
+            </trans-unit>
+            <trans-unit id="8" resname="resource.filter.conjunction.and">
+                <source>resource.filter.conjunction.and</source>
+                <target>alle Bedingungen zutreffen</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

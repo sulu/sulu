@@ -11,11 +11,11 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 /**
- * The interface for the condition group entity repository
- * Interface ConditionGroupRepositoryInterface
+ * The interface for the condition entity repository
+ * Interface ConditionRepositoryInterface
  * @package Sulu\Bundle\ResourceBundle\Entity
  */
-interface ConditionGroupRepositoryInterface
+interface ConditionRepositoryInterface
 {
     /**
      * Finds an entity by id

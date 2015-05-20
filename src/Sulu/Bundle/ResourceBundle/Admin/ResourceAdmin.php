@@ -18,8 +18,15 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
  * Class SuluResourceAdmin
  * @package Sulu\Bundle\ResourceBundle\Admin
  */
-class SuluResourceAdmin extends Admin
+class ResourceAdmin extends Admin
 {
+
+    public function __construct($title)
+    {
+        $rootNavigationItem = new NavigationItem($title);
+        $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
     /**
      * {@inheritdoc}
      */

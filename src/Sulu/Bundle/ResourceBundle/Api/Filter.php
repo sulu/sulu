@@ -78,12 +78,12 @@ class Filter extends ApiWrapper
      * Get entity
      *
      * @VirtualProperty
-     * @SerializedName("entityName")
+     * @SerializedName("context")
      * @return string
      */
-    public function getEntityName()
+    public function getContext()
     {
-        return $this->entity->getEntityName();
+        return $this->entity->getContext();
     }
 
     /**
@@ -119,13 +119,13 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Set entity
+     * Set context
      *
      * @param $name
      */
-    public function setEntityName($name)
+    public function setContext($name)
     {
-        $this->entity->setEntityName($name);
+        $this->entity->setContext($name);
     }
 
     /**
@@ -283,4 +283,24 @@ class Filter extends ApiWrapper
         return $this->entity->getCreated();
     }
 
+    /**
+     * Set user
+     *
+     * @param UserInterface $user
+     * @return Filter
+     */
+    public function setUser(UserInterface $user = null)
+    {
+        $this->entity->setUser($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return UserInterface
+     */
+    public function getUser()
+    {
+        return $this->entity->getUser();
+    }
 }
