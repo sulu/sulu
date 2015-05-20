@@ -5,9 +5,11 @@ namespace Sulu\Component\Content\Compat;
 use Sulu\Component\Content\Structure as LegacyStructure;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Symfony\Component\Form\FormEvent;
 
 /**
- * Normalizes the legacy Sulu request data
+ * Normalizes the legacy Sulu request data.
+ * Listens to the form framework on the PRE_SUBMIT event.
  */
 class DataNormalizer
 {
@@ -17,8 +19,10 @@ class DataNormalizer
      * @param mixed $data
      * @param mixed $state Translates to the workflow state
      */
-    public function normalize($data, $state, $parentUuid)
+    public static function normalize(FormEvent $event)
     {
+        $data = $event->getData();
+
         unset(
             $data['type'],
             $data['creator'],
@@ -45,17 +49,20 @@ class DataNormalizer
         );
 
         $normalized = array(
-            'title' => $this->getAndUnsetValue($data, 'title'),
+            'title' => self::getAndUnsetValue($data, 'title'),
             'resourceSegment' => isset($data['url']) ? $data['url'] : null,
-            'redirectType' => $this->getAndUnsetRedirectType($data),
-            'extensions' => $this->getAndUnsetValue($data, 'ext'),
-            'redirectTarget' => $this->getAndUnsetValue($data, 'internal_link'),
-            'redirectExternal' => $this->getAndUnsetValue($data, 'external'),
-            'navigationContexts' => $this->getAndUnsetValue($data, 'navContexts'),
-            'workflowStage' => $state,
-            'shadowLocaleEnabled' => $this->getAndUnsetValue($data, 'shadowOn'),
-            'shadowLocale' => $this->getAndUnsetValue($data, 'shadowBaseLanguage'),
-            'structureType' => $this->getAndUnsetValue($data, 'template'),
+            'redirectType' => self::getAndUnsetRedirectType($data),
+            'extensions' => self::getAndUnsetValue($data, 'ext'),
+            'redirectTarget' => self::getAndUnsetValue($data, 'internal_link'),
+            'redirectExternal' => self::getAndUnsetValue($data, 'external'),
+            'navigationContexts' => self::getAndUnsetValue($data, 'navContexts'),
+            'shadowLocaleEnabled' => self::getAndUnsetValue($data, 'shadowOn'),
+            'shadowLocale' => self::getAndUnsetValue($data, 'shadowBaseLanguage'),
+            'structureType' => self::getAndUnsetValue($data, 'structureType'),
+            'shadowLocaleEnabled' => self::getAndUnsetValue($data, 'shadowLocaleEnabled'),
+            'shadowLocale' => self::getAndUnsetValue($data, 'shadowLocale'),
+            'parent' => self::getAndUnsetValue($data, 'parent'),
+            'workflowStage' => self::getAndUnsetValue($data, 'workflowStage'),
             'content' => $data,
         );
 
@@ -65,14 +72,10 @@ class DataNormalizer
             }
         }
 
-        if ($parentUuid) {
-            $normalized['parent'] = $parentUuid;
-        }
-
-        return $normalized;
+        $event->setData($normalized);
     }
 
-    private function getAndUnsetValue(&$data, $key)
+    private static function getAndUnsetValue(&$data, $key)
     {
         $value = null;
 
@@ -84,7 +87,7 @@ class DataNormalizer
         return $value;
     }
 
-    private function getAndUnsetRedirectType(&$data)
+    private static function getAndUnsetRedirectType(&$data)
     {
         if (!isset($data['nodeType'])) {
             return null;
