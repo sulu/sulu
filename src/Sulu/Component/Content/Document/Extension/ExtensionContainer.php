@@ -6,13 +6,37 @@ use Sulu\Component\Content\Extension\ExtensionManager;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
+/**
+ * Container for extension data.
+ *
+ * See documentation for ManagedExtensionContainer.
+ */
 class ExtensionContainer implements \ArrayAccess, \Iterator
 {
+    /**
+     * @var array
+     */
     protected $data;
 
+    /**
+     * @param array $data
+     */
     public function __construct(array $data = array())
     {
         $this->data = $data;
+    }
+
+    /**
+     * Return an array representation of the data.
+     *
+     * If this is an instance of ManagedExtensionContainer, then
+     * the data will represent the processed extension data.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->data;
     }
 
     public function offsetExists($offset)
@@ -39,11 +63,6 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
         unset($this->data[$extensionName]);
     }
 
-    public function toArray()
-    {
-        return $this->data;
-    }
-
     public function current()
     {
         return current($this->data);
@@ -68,5 +87,4 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
     {
         return isset($this->data) !== null;
     }
-
 }
