@@ -18,7 +18,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Behat\MinkExtension\Context\MinkContext;
 use Symfony\Component\Console\Output\NullOutput;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
