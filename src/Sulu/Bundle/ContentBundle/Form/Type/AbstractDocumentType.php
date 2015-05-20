@@ -17,8 +17,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
-abstract class AbstractDocumentType extends AbstractType
+abstract class AbstractDocumentType extends AbstractContentBehaviorType
 {
     /**
      * @var SessionManagerInterface
@@ -48,6 +49,7 @@ abstract class AbstractDocumentType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
+        parent::setDefaultOptions($options);
         $options->setRequired(array(
             'webspace_key',
         ));
@@ -58,10 +60,12 @@ abstract class AbstractDocumentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text');
+        parent::buildForm($builder, $options);
+
         $builder->add('parent', 'document_object');
-        $builder->add('structureType', 'text');
+        $builder->add('extensions', 'text', array('property_path' => 'extensionsData'));
         $builder->setAttribute('webspace_key', $options['webspace_key']);
+        $builder->setAttribute('clear_missing_content', $options['clear_missing_content']);
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitDocumentParent'));
     }
@@ -79,7 +83,6 @@ abstract class AbstractDocumentType extends AbstractType
         if ($document->getParent()) {
             return;
         }
-
 
         $form = $event->getForm();
         $webspaceKey = $form->getConfig()->getAttribute('webspace_key');
