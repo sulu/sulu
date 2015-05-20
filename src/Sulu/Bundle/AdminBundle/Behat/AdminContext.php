@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Behat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
-use WebDriver\Exception\UnknownError;
+use WebDriver\Exception;
 
 /**
  * Behat context class for the AdminBundle
@@ -425,7 +425,7 @@ EOT;
                 $this->getSession()->executeScript($script);
 
                 return;
-            } catch (UnknownError $e) {
+            } catch (Exception $e) {
                 // catch wrapped javascript exception, could not find element
                 // lets try again..
             }
