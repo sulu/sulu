@@ -6,16 +6,63 @@ use Sulu\Component\Content\Extension\ExtensionManager;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
+/**
+ * The managed extension container lazily loads data from the actual
+ * extension classes. It serves a similar, but not identical, role to
+ * the ManagedPropertyContainer.
+ *
+ * In contrast to the property container, which returns Property instances,
+ * extensions return simple arrays.
+ *
+ * Note that we should remove this class as retrieving the processed data
+ * for extensions should be done externally to the document.
+ */
 class ManagedExtensionContainer extends ExtensionContainer
 {
+    /**
+     * @var ExtensionManagerInterface
+     */
     private $extensionManager;
+
+    /**
+     * @var NodeInterface
+     */
     private $node;
+
+    /**
+     * @var string
+     */
     private $locale;
+
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * @var string
+     */
     private $internalPrefix;
+
+    /**
+     * @var string
+     */
     private $structureType;
+
+    /**
+     * @var string
+     */
     private $webspaceName;
 
+    /**
+     * @param string $structureType
+     * @param ExtensionManagerInterface $extensionManager
+     * @param NodeInterface $node
+     * @param string $locale
+     * @param string $prefix
+     * @param string $internalPrefix
+     * @param string $webspaceName
+     */
     public function __construct(
         $structureType,
         ExtensionManagerInterface $extensionManager,
@@ -35,6 +82,12 @@ class ManagedExtensionContainer extends ExtensionContainer
         $this->webspaceName = $webspaceName;
     }
 
+    /**
+     * Lazily evaluate the value for the given extension.
+     *
+     * @param string $extensionName
+     * @return mixed
+     */
     public function offsetGet($extensionName)
     {
         if (isset($this->data[$extensionName])) {
@@ -57,6 +110,9 @@ class ManagedExtensionContainer extends ExtensionContainer
         return $data;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         $result = array();
