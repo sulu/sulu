@@ -38,9 +38,8 @@ interface PropertyContainerInterface extends \ArrayAccess
      * Bind data to the container
      *
      * @param array $data
-     * @param boolean $clearMissing
      */
-    public function bind($data, $clearMissing);
+    public function bind($data);
 
     /**
      * Return an array representation of the containers property values
