@@ -162,10 +162,10 @@ class StructureProvider implements ProviderInterface
                 $indexMeta->setTitleField($this->factory->createMetadataProperty('title'));
 
                 $indexMeta->addFieldMapping(
-                    $prop->getName(),
+                    'title',
                     array(
                         'type' => 'string',
-                        'field' => $this->factory->createMetadataField($prop->getName()),
+                        'field' => $this->factory->createMetadataField('title'),
                         'aggregated' => true,
                         'indexed' => false,
                     )
@@ -184,7 +184,7 @@ class StructureProvider implements ProviderInterface
         if ($class->isSubclassOf(WorkflowStageBehavior::class)) {
             $indexMeta->addFieldMapping('state', array(
                 'type' => 'string',
-                'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
+                'field' => $this->factory->createMetadataExpression('object.getWorkflowStage() == 1 ? "test" : "published"'),
             ));
         }
 
@@ -241,54 +241,6 @@ class StructureProvider implements ProviderInterface
 
     private function mapProperty(Property $property, $metadata)
     {
-<<<<<<< HEAD
-        if ($property->hasTag('sulu.search.field')) {
-            $tag = $property->getTag('sulu.search.field');
-            $tagAttributes = $tag->getAttributes();
-
-            if ($metadata instanceof IndexMetadata && isset($tagAttributes['role'])) {
-                switch ($tagAttributes['role']) {
-                    case 'title':
-                        $metadata->setTitleField($this->factory->createMetadataField($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->createMetadataField($property->getName()),
-                            'type' => 'string',
-                            'aggregated' => true,
-                            'indexed' => false,
-                        ));
-                        break;
-                    case 'description':
-                        $metadata->setDescriptionField($this->factory->createMetadataField($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->createMetadataField($property->getName()),
-                            'type' => 'string',
-                            'aggregated' => true,
-                            'indexed' => false,
-                        ));
-                        break;
-                    case 'image':
-                        $metadata->setImageUrlField($this->factory->createMetadataField($property->getName()));
-                        break;
-                    default:
-                        throw new \InvalidArgumentException(
-                            sprintf(
-                                'Unknown search field role "%s", role must be one of "%s"',
-                                $tagAttributes['role'],
-                                implode(', ', array('title', 'description', 'image'))
-                            )
-                        );
-                }
-            } elseif (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
-                $metadata->addFieldMapping(
-                    $property->getName(),
-                    array(
-                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                        'field' => $this->factory->createMetadataField($property->getName()),
-                        'aggregated' => true,
-                        'indexed' => false,
-                    )
-                );
-=======
         if (false === $property->hasTag('sulu.search.field')) {
             return;
         }
@@ -303,6 +255,8 @@ class StructureProvider implements ProviderInterface
                     $metadata->addFieldMapping($property->getName(), array(
                         'field' => $this->getContentField($property),
                         'type' => 'string',
+                        'aggregated' => true,
+                        'indexed' => false,
                     ));
                     break;
                 case 'description':
@@ -310,6 +264,8 @@ class StructureProvider implements ProviderInterface
                     $metadata->addFieldMapping($property->getName(), array(
                         'field' => $this->getContentField($property),
                         'type' => 'string',
+                        'aggregated' => true,
+                        'indexed' => false,
                     ));
                     break;
                 case 'image':
@@ -323,7 +279,6 @@ class StructureProvider implements ProviderInterface
                             implode(', ', array('title', 'description', 'image'))
                         )
                     );
->>>>>>> Search integration
             }
 
             return;
@@ -335,6 +290,8 @@ class StructureProvider implements ProviderInterface
                 array(
                     'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                     'field' => $this->getContentField($property),
+                    'aggregated' => true,
+                    'indexed' => false,
                 )
             );
         }
