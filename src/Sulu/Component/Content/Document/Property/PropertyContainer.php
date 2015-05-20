@@ -23,7 +23,58 @@ use Sulu\Component\Content\Document\Property\PropertyContainerInterface;
  */
 class PropertyContainer implements PropertyContainerInterface
 {
+    /**
+     * @var array
+     */
     protected $properties = array();
+
+    /**
+     * @var array
+     */
+    protected $stagedData = array();
+
+    /**
+     * Get staged data, see documentation for commitStagedData
+     *
+     * @return array
+     */
+    public function getStagedData() 
+    {
+        return $this->stagedData;
+    }
+    
+    /**
+     * Set staged data, see documentation for commitStagedData
+     *
+     * @param array $stagedData
+     */
+    public function setStagedData($stagedData)
+    {
+        $this->stagedData = $stagedData;
+    }
+
+    /**
+     * Commit the staged content data
+     *
+     * This is necessary because:
+     *
+     * - We cannot set the content data on a property-by-property basis
+     * - Therefore the form framework needs to get/set to a specific property
+     * - It uses the stagedData property for this purpose
+     * - We then "commit" the staged data after the form has been submitted.
+     *
+     * We should refactor the content types so that they are not involved
+     * in the process of mapping to PHPCR.
+     *
+     * If $clearMissingContent is true, then fields will be set to NULL
+     *
+     * @param boolean $clearMissingContent
+     */
+    public function commitStagedData($clearMissingContent)
+    {
+        $this->bind($this->stagedData, $clearMissingContent);
+        $this->stagedData = array();
+    }
 
     /**
      * Return the named property and evaluate its content
@@ -97,7 +148,7 @@ class PropertyContainer implements PropertyContainerInterface
         return $ret;
     }
 
-    public function bind($data, $clearMissing)
+    public function bind($data)
     {
         foreach ($data as $key => $value) {
             $property = $this->getProperty($key);
