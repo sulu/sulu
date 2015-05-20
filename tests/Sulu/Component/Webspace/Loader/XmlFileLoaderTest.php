@@ -20,7 +20,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', array('locate',));
+        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', array('locate'));
         $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
 
         $this->loader = new XmlFileLoader($locator);
