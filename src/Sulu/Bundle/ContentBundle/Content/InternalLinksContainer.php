@@ -10,56 +10,67 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
+use JMS\Serializer\Annotation\Exclude;
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
-use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Container for InternalLinks, holds the config for a internal links, and lazy loads the structures
+ * Container for InternalLinks, holds the config for a internal links, and lazy loads the structures.
  */
 class InternalLinksContainer implements ArrayableInterface
 {
     /**
-     * The content mapper, which is needed for lazy loading
+     * The content mapper, which is needed for lazy loading.
+     *
      * @Exclude
+     *
      * @var ContentQueryExecutorInterface
      */
     private $contentQueryExecutor;
 
     /**
-     * The content mapper, which is needed for lazy loading
+     * The content mapper, which is needed for lazy loading.
+     *
      * @Exclude
+     *
      * @var ContentQueryBuilderInterface
      */
     private $contentQueryBuilder;
 
     /**
-     * The params to load
+     * The params to load.
+     *
      * @Exclude
+     *
      * @var array
      */
     private $params;
 
     /**
      * @Exclude
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * The key of the webspace
+     * The key of the webspace.
+     *
      * @Exclude
+     *
      * @var string
      */
     private $webspaceKey;
 
     /**
-     * The code of the language
+     * The code of the language.
+     *
      * @Exclude
+     *
      * @var string
      */
     private $languageCode;
@@ -71,6 +82,7 @@ class InternalLinksContainer implements ArrayableInterface
 
     /**
      * @Exclude
+     *
      * @var StructureInterface[]
      */
     private $data;
@@ -94,7 +106,8 @@ class InternalLinksContainer implements ArrayableInterface
     }
 
     /**
-     * Lazy loads the data based on the filter criteria from the config
+     * Lazy loads the data based on the filter criteria from the config.
+     *
      * @return StructureInterface[]
      */
     public function getData()
@@ -107,7 +120,7 @@ class InternalLinksContainer implements ArrayableInterface
     }
 
     /**
-     * lazy load data
+     * lazy load data.
      */
     private function loadData()
     {
@@ -116,7 +129,7 @@ class InternalLinksContainer implements ArrayableInterface
             $this->contentQueryBuilder->init(
                 array(
                     'ids' => $this->ids,
-                    'properties' => (isset($this->params['properties']) ? $this->params['properties']->getValue() : array())
+                    'properties' => (isset($this->params['properties']) ? $this->params['properties']->getValue() : array()),
                 )
             );
             $pages = $this->contentQueryExecutor->execute(
@@ -144,7 +157,7 @@ class InternalLinksContainer implements ArrayableInterface
     }
 
     /**
-     * magic getter
+     * magic getter.
      */
     public function __get($name)
     {
@@ -153,11 +166,11 @@ class InternalLinksContainer implements ArrayableInterface
                 return $this->getData();
         }
 
-        return null;
+        return;
     }
 
     /**
-     * magic isset
+     * magic isset.
      */
     public function __isset($name)
     {

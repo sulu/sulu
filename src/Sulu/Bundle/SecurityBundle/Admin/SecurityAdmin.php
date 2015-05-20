@@ -62,8 +62,8 @@ class SecurityAdmin extends Admin
                     'sulu.security.roles',
                     'sulu.security.groups',
                     'sulu.security.users',
-                )
-            )
+                ),
+            ),
         );
     }
 

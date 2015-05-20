@@ -16,7 +16,6 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 
 /**
@@ -71,14 +70,14 @@ class PreviewMessageHandlerTest extends SuluTestCase
                     array(
                         'type' => 'type1',
                         'title' => 'Block-Title-1',
-                        'article' => array('Block-Article-1-1', 'Block-Article-1-2')
+                        'article' => array('Block-Article-1-1', 'Block-Article-1-2'),
                     ),
                     array(
                         'type' => 'type1',
                         'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2')
-                    )
-                )
+                        'article' => array('Block-Article-2-1', 'Block-Article-2-2'),
+                    ),
+                ),
             ),
             array(
                 'title' => 'Test2',
@@ -88,10 +87,10 @@ class PreviewMessageHandlerTest extends SuluTestCase
                     array(
                         'type' => 'type1',
                         'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2')
-                    )
-                )
-            )
+                        'article' => array('Block-Article-2-1', 'Block-Article-2-2'),
+                    ),
+                ),
+            ),
         );
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
@@ -148,7 +147,7 @@ class PreviewMessageHandlerTest extends SuluTestCase
                 'content' => $data[0]->getUuid(),
                 'locale' => 'de',
                 'webspaceKey' => 'sulu_io',
-                'user' => 1
+                'user' => 1,
             ),
             $this->createContext($client)
         );
@@ -176,7 +175,7 @@ class PreviewMessageHandlerTest extends SuluTestCase
                 'templateKey' => 'overview',
                 'locale' => 'de',
                 'webspaceKey' => 'sulu_io',
-                'user' => 1
+                'user' => 1,
             ),
             $context
         );
@@ -187,8 +186,8 @@ class PreviewMessageHandlerTest extends SuluTestCase
             array(
                 'command' => 'update',
                 'data' => array(
-                    'title' => 'asdf'
-                )
+                    'title' => 'asdf',
+                ),
             ),
             $context
         );
@@ -200,8 +199,8 @@ class PreviewMessageHandlerTest extends SuluTestCase
             array(
                 'command' => 'update',
                 'data' => array(
-                    'content' => 'qwertz'
-                )
+                    'content' => 'qwertz',
+                ),
             ),
             $context
         );

@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 class CategoryContentNavigationProvider implements ContentNavigationProviderInterface
 {
@@ -23,7 +23,7 @@ class CategoryContentNavigationProvider implements ContentNavigationProviderInte
         $details = new ContentNavigationItem('content-navigation.category.details');
         $details->setAction('details');
         $details->setComponent('categories@sulucategory');
-        $details->setComponentOptions(array('display'=>'form'));
+        $details->setComponentOptions(array('display' => 'form'));
 
         return array($details);
     }

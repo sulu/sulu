@@ -15,8 +15,8 @@ use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddJsConfigPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ContentNavigationPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\WidgetsPass;
 use Sulu\Component\Util\SuluVersionPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluAdminBundle extends Bundle
 {

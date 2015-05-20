@@ -11,15 +11,16 @@
 namespace Sulu\Component\Content\Template;
 
 /**
- * Interface for Template resolver
- * @package Sulu\Component\Content\Template
+ * Interface for Template resolver.
  */
 interface TemplateResolverInterface
 {
     /**
-     * Resolves template for different node types
-     * @param integer $nodeType
+     * Resolves template for different node types.
+     *
+     * @param int $nodeType
      * @param string $templateKey
+     *
      * @return string
      */
     public function resolve($nodeType, $templateKey);

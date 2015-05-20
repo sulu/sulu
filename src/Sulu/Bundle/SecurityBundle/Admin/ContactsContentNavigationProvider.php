@@ -2,8 +2,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactsContentNavigationProvider implements ContentNavigationProviderInterface

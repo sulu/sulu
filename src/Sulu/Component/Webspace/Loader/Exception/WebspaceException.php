@@ -15,13 +15,15 @@ use Sulu\Component\Webspace\Webspace;
 class WebspaceException extends \Exception
 {
     /**
-     * The webspace of this exception
+     * The webspace of this exception.
+     *
      * @var Webspace
      */
     protected $webspace;
 
     /**
-     * Returns the webspace of this exception
+     * Returns the webspace of this exception.
+     *
      * @return Webspace
      */
     public function getWebspace()

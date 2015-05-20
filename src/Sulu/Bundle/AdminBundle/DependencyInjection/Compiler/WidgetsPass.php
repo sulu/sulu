@@ -16,8 +16,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Processes given tag and append widgets to given widgets-handler service
- * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
+ * Processes given tag and append widgets to given widgets-handler service.
  */
 class WidgetsPass implements CompilerPassInterface
 {
@@ -35,7 +34,9 @@ class WidgetsPass implements CompilerPassInterface
      * You can modify the container here before it is dumped to PHP code.
      *
      * @param ContainerBuilder $container
+     *
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     *
      * @api
      */
     public function process(ContainerBuilder $container)

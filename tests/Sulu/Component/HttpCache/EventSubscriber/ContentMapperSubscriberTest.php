@@ -10,9 +10,9 @@
 
 namespace Sulu\Component\HttpCache\EventListener;
 
-use Sulu\Component\HttpCache\EventSubscriber\ContentMapperSubscriber;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\HttpCache\EventSubscriber\ContentMapperSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
 
 class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase

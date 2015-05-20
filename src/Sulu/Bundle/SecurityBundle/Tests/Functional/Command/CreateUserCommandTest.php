@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\SecurityBundle\Command;
 
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
 
 class CreateUserCommandTest extends SuluTestCase
 {
@@ -105,7 +105,7 @@ class CreateUserCommandTest extends SuluTestCase
                 'email' => 'sulu.hikaru@startrek.com',
                 'locale' => $locale,
                 'role' => $role,
-                'password' => 'sulu'
+                'password' => 'sulu',
             ),
             array('interactive' => false)
         );

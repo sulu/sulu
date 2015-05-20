@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 
 /**
@@ -69,7 +68,7 @@ class TimestampableSubscriber implements EventSubscriber
     }
 
     /**
-     * Set the timestamps before update
+     * Set the timestamps before update.
      *
      * @param LifecycleEventArgs $events
      */
@@ -79,7 +78,7 @@ class TimestampableSubscriber implements EventSubscriber
     }
 
     /**
-     * Set the timestamps before creation
+     * Set the timestamps before creation.
      *
      * @param LifecycleEventArgs $events
      */

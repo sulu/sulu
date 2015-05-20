@@ -13,8 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Widgets;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * Class WidgetsHandler
- * @package Sulu\Bundle\AdminBundle\Widgets
+ * Class WidgetsHandler.
  */
 class WidgetsHandler implements WidgetsHandlerInterface
 {
@@ -55,10 +54,13 @@ class WidgetsHandler implements WidgetsHandlerInterface
     }
 
     /**
-     * renders a widget group
+     * renders a widget group.
+     *
      * @param string $groupAlias
      * @param array $parameters
+     *
      * @return string
+     *
      * @throws WidgetGroupNotFoundException
      */
     public function renderWidgetGroup($groupAlias, $parameters = array())
@@ -79,9 +81,11 @@ class WidgetsHandler implements WidgetsHandlerInterface
     }
 
     /**
-     * renders widgets for given aliases
+     * renders widgets for given aliases.
+     *
      * @param array $aliases
      * @param array $parameters
+     *
      * @return string
      */
     public function render($aliases, $parameters = array())
@@ -92,7 +96,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
             $widgets[] = array(
                 'name' => $this->widgets[$alias]->getName(),
                 'template' => $this->widgets[$alias]->getTemplate(),
-                'data' => $this->widgets[$alias]->getData($parameters)
+                'data' => $this->widgets[$alias]->getData($parameters),
             );
         }
 
@@ -102,11 +106,11 @@ class WidgetsHandler implements WidgetsHandlerInterface
                 $this->template,
                 array(
                     'widgets' => $widgets,
-                    'parameters' => $parameters
+                    'parameters' => $parameters,
                 )
             );
         }
 
-        return null;
+        return;
     }
 }

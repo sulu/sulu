@@ -13,16 +13,18 @@ namespace Sulu\Component\Security\Authorization;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Interface for checking Sulu specific permissions
- * @package Sulu\Bundle\SecurityBundle\Permission
+ * Interface for checking Sulu specific permissions.
  */
 interface SecurityCheckerInterface
 {
     /**
-     * Checks a Sulu specific permission based on the subject, a permission type and a locale
+     * Checks a Sulu specific permission based on the subject, a permission type and a locale.
+     *
      * @param mixed $subject
      * @param string $permission
-     * @return boolean
+     *
+     * @return bool
+     *
      * @throws AccessDeniedException
      */
     public function checkPermission($subject, $permission);
@@ -30,7 +32,8 @@ interface SecurityCheckerInterface
     /**
      * @param $subject
      * @param $permission
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasPermission($subject, $permission);
-} 
+}

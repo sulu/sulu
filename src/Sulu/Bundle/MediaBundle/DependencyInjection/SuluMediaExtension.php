@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
@@ -58,7 +58,7 @@ class SuluMediaExtension extends Extension
 
         // collections
         $container->setParameter('sulu_media.collection.type.default', array(
-            'id' => 1
+            'id' => 1,
         ));
         $container->setParameter('sulu_media.collection.previews.format', '50x50');
 
@@ -69,7 +69,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
 
         // load services
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         // enable search

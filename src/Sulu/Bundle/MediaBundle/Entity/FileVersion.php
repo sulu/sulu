@@ -14,23 +14,22 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * FileVersion
+ * FileVersion.
  */
 class FileVersion implements AuditableInterface
 {
-
     /**
      * @var string
      */
     private $name;
 
     /**
-     * @var integer
+     * @var int
      */
     private $version;
 
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 
@@ -45,7 +44,7 @@ class FileVersion implements AuditableInterface
     private $storageOptions;
 
     /**
-     * @var integer
+     * @var int
      */
     private $downloadCounter = 0;
 
@@ -60,7 +59,7 @@ class FileVersion implements AuditableInterface
     private $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -106,7 +105,7 @@ class FileVersion implements AuditableInterface
     private $defaultMeta;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -117,9 +116,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return FileVersion
      */
     public function setName($name)
@@ -130,7 +130,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -140,9 +140,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set version
+     * Set version.
      *
-     * @param integer $version
+     * @param int $version
+     *
      * @return FileVersion
      */
     public function setVersion($version)
@@ -153,9 +154,9 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get version
+     * Get version.
      *
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {
@@ -163,9 +164,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set size
+     * Set size.
      *
-     * @param integer $size
+     * @param int $size
+     *
      * @return FileVersion
      */
     public function setSize($size)
@@ -176,9 +178,9 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get size
+     * Get size.
      *
-     * @return integer
+     * @return int
      */
     public function getSize()
     {
@@ -186,9 +188,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set mimeType
+     * Set mimeType.
      *
      * @param string $mimeType
+     *
      * @return FileVersion
      */
     public function setMimeType($mimeType)
@@ -199,7 +202,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get mimeType
+     * Get mimeType.
      *
      * @return string
      */
@@ -209,9 +212,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set storageOptions
+     * Set storageOptions.
      *
      * @param string $storageOptions
+     *
      * @return FileVersion
      */
     public function setStorageOptions($storageOptions)
@@ -222,7 +226,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get storageOptions
+     * Get storageOptions.
      *
      * @return string
      */
@@ -232,9 +236,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set downloadCounter
+     * Set downloadCounter.
      *
-     * @param integer $downloadCounter
+     * @param int $downloadCounter
+     *
      * @return FileVersion
      */
     public function setDownloadCounter($downloadCounter)
@@ -245,9 +250,9 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get downloadCounter
+     * Get downloadCounter.
      *
-     * @return integer
+     * @return int
      */
     public function getDownloadCounter()
     {
@@ -255,7 +260,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -265,7 +270,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -275,9 +280,9 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -285,9 +290,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Add contentLanguages
+     * Add contentLanguages.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     *
      * @return FileVersion
      */
     public function addContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
@@ -298,7 +304,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Remove contentLanguages
+     * Remove contentLanguages.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
      */
@@ -308,7 +314,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get contentLanguages
+     * Get contentLanguages.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -318,9 +324,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Add publishLanguages
+     * Add publishLanguages.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
+     *
      * @return FileVersion
      */
     public function addPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
@@ -331,7 +338,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Remove publishLanguages
+     * Remove publishLanguages.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
      */
@@ -341,7 +348,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get publishLanguages
+     * Get publishLanguages.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -351,9 +358,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Add meta
+     * Add meta.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta
+     *
      * @return FileVersion
      */
     public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
@@ -364,7 +372,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Remove meta
+     * Remove meta.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta
      */
@@ -374,7 +382,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get meta
+     * Get meta.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -384,9 +392,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set file
+     * Set file.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\File $file
+     *
      * @return FileVersion
      */
     public function setFile(\Sulu\Bundle\MediaBundle\Entity\File $file = null)
@@ -397,7 +406,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get file
+     * Get file.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\File
      */
@@ -407,9 +416,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Add tags
+     * Add tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     *
      * @return FileVersion
      */
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
@@ -420,7 +430,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Remove tags
+     * Remove tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
      */
@@ -430,7 +440,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Remove all tags
+     * Remove all tags.
      */
     public function removeTags()
     {
@@ -438,7 +448,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get tags
+     * Get tags.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -448,9 +458,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return FileVersion
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
@@ -461,7 +472,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -471,9 +482,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return FileVersion
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
@@ -484,7 +496,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -494,9 +506,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set defaultMeta
+     * Set defaultMeta.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta
+     *
      * @return FileVersion
      */
     public function setDefaultMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta = null)
@@ -507,7 +520,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get defaultMeta
+     * Get defaultMeta.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
      */
@@ -517,7 +530,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * don't clone id to create a new entities
+     * don't clone id to create a new entities.
      */
     public function __clone()
     {

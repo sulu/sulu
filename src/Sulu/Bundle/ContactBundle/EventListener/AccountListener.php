@@ -14,8 +14,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
- * Class AccountListener
- * @package Sulu\Bundle\ContactBundle\EventListener
+ * Class AccountListener.
  */
 class AccountListener
 {

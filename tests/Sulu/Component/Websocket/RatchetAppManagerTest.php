@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Websocket;
 
-
 class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
@@ -41,8 +40,8 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
                     'app' => $app->reveal(),
                     'name' => 'test',
                     'allowedOrigins' => array('*'),
-                    'httpHost' => 'localhost'
-                )
+                    'httpHost' => 'localhost',
+                ),
             ),
             $manager->getApps()
         );
@@ -64,8 +63,8 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
                     'app' => $app->reveal(),
                     'name' => 'test',
                     'allowedOrigins' => array('test'),
-                    'httpHost' => 'localhost'
-                )
+                    'httpHost' => 'localhost',
+                ),
             ),
             $manager->getApps()
         );
@@ -88,8 +87,8 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
                     'app' => $app->reveal(),
                     'name' => 'test',
                     'allowedOrigins' => array('test'),
-                    'httpHost' => 'sulu.io'
-                )
+                    'httpHost' => 'sulu.io',
+                ),
             ),
             $manager->getApps()
         );

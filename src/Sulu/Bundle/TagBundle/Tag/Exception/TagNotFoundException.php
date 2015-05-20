@@ -13,13 +13,13 @@ namespace Sulu\Bundle\TagBundle\Tag\Exception;
 use Exception;
 
 /**
- * This Exception is thrown when a Tag is not found
- * @package Sulu\Bundle\TagBundle\Tag\Exception
+ * This Exception is thrown when a Tag is not found.
  */
 class TagNotFoundException extends Exception
 {
     /**
-     * The id of the tag, which was not found
+     * The id of the tag, which was not found.
+     *
      * @var int
      */
     protected $id;
@@ -35,7 +35,8 @@ class TagNotFoundException extends Exception
     }
 
     /**
-     * Returns the id of the tag, which was not found
+     * Returns the id of the tag, which was not found.
+     *
      * @return int
      */
     public function getId()

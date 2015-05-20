@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Collects all the content navigations from all bundles using a specific alias
+ * Collects all the content navigations from all bundles using a specific alias.
  */
 class ContentNavigationRegistry extends ContainerAware implements ContentNavigationRegistryInterface
 {

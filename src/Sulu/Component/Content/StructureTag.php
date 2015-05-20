@@ -18,13 +18,15 @@ namespace Sulu\Component\Content;
 class StructureTag
 {
     /**
-     * The name of the structure tag
+     * The name of the structure tag.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * An array of attributes for this specific tag
+     * An array of attributes for this specific tag.
+     *
      * @var array
      */
     protected $attributes;
@@ -40,7 +42,8 @@ class StructureTag
     }
 
     /**
-     * Returns the name of the structure tag
+     * Returns the name of the structure tag.
+     *
      * @return string
      */
     public function getName()
@@ -49,7 +52,8 @@ class StructureTag
     }
 
     /**
-     * Returns the attributes for the specific tags
+     * Returns the attributes for the specific tags.
+     *
      * @return array
      */
     public function getAttributes()

@@ -22,7 +22,7 @@ class WidgetGroupNotFoundException extends WidgetException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'group' => $this->subject
+            'group' => $this->subject,
         );
     }
 }

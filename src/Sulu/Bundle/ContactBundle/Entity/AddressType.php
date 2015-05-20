@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * AddressType
+ * AddressType.
  */
 class AddressType implements \JsonSerializable
 {
@@ -25,7 +25,7 @@ class AddressType implements \JsonSerializable
     private $name;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount","fullContact"})
      */
     private $id;
@@ -37,7 +37,7 @@ class AddressType implements \JsonSerializable
     private $addresses;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -45,7 +45,8 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * To force id = 1 in load fixtures
+     * To force id = 1 in load fixtures.
+     *
      * @param int $id
      */
     public function setId($id)
@@ -54,9 +55,10 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return AddressType
      */
     public function setName($name)
@@ -67,7 +69,7 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -77,9 +79,9 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -87,9 +89,10 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Add addresses
+     * Add addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     *
      * @return AddressType
      */
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
@@ -100,7 +103,7 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Remove addresses
+     * Remove addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
      */
@@ -110,7 +113,7 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Get addresses
+     * Get addresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -121,8 +124,10 @@ class AddressType implements \JsonSerializable
 
     /**
      * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      */
@@ -130,14 +135,15 @@ class AddressType implements \JsonSerializable
     {
         return array(
             'id' => $this->getId(),
-            'name' => $this->getName()
+            'name' => $this->getName(),
         );
     }
 
     /**
-     * Add addresses
+     * Add addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     *
      * @return AddressType
      */
     public function addAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
@@ -148,7 +154,7 @@ class AddressType implements \JsonSerializable
     }
 
     /**
-     * Remove addresses
+     * Remove addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
      */

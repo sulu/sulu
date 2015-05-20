@@ -9,12 +9,12 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\FileValidator;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Defines the operations of the FileValidator.
- * The FileValidator is a interface to validate uploaded files
- * @package Sulu\Bundle\MediaBundle\Media
+ * The FileValidator is a interface to validate uploaded files.
  */
 interface FileValidatorInterface
 {
@@ -24,9 +24,11 @@ interface FileValidatorInterface
     const VALIDATOR_MAX_FILE_SIZE = 'MAX_FILE_SIZE';
 
     /**
-     * Validated a given file
+     * Validated a given file.
+     *
      * @param UploadedFile $file
      * @param array $methods
+     *
      * @return mixed
      */
     public function validate(UploadedFile $file, $methods = array());

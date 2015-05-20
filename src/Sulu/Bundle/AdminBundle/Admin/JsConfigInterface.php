@@ -11,20 +11,20 @@
 namespace Sulu\Bundle\AdminBundle\Admin;
 
 /**
- * Interface of Js Config
- *
- * @package Sulu\Bundle\AdminBundle\Admin
+ * Interface of Js Config.
  */
 interface JsConfigInterface
 {
     /**
-     * returns array of parameters
+     * returns array of parameters.
+     *
      * @return array
      */
     public function getParameters();
 
     /**
-     * returns the identifying name
+     * returns the identifying name.
+     *
      * @return string
      */
     public function getName();

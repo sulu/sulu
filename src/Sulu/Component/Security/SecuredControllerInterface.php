@@ -13,20 +13,22 @@ namespace Sulu\Component\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controllers implementing this interface security will be automatically applied
- * @package Sulu\Component\Security
+ * Controllers implementing this interface security will be automatically applied.
  */
 interface SecuredControllerInterface
 {
     /**
-     * Returns the SecurityContext required for the controller
+     * Returns the SecurityContext required for the controller.
+     *
      * @return mixed
      */
     public function getSecurityContext();
 
     /**
-     * Returns the locale for the given request
+     * Returns the locale for the given request.
+     *
      * @param Request $request
+     *
      * @return string
      */
     public function getLocale(Request $request);

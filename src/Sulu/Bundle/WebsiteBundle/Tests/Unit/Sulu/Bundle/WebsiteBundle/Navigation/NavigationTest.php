@@ -15,10 +15,10 @@ use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -79,7 +79,7 @@ class NavigationTest extends PhpcrTestCase
                 new Navigation(
                     array(
                         new NavigationContext('main', array()),
-                        new NavigationContext('footer', array())
+                        new NavigationContext('footer', array()),
                     )
                 )
             );
@@ -109,7 +109,7 @@ class NavigationTest extends PhpcrTestCase
             return $this->getStructureMock($structureKey, false);
         }
 
-        return null;
+        return;
     }
 
     public function structuresCallback()
@@ -119,7 +119,7 @@ class NavigationTest extends PhpcrTestCase
             $this->getStructureMock('excerpt'),
             $this->getStructureMock('simple'),
             $this->getStructureMock('overview'),
-            $this->getStructureMock('norlp')
+            $this->getStructureMock('norlp'),
         );
     }
 
@@ -143,38 +143,38 @@ class NavigationTest extends PhpcrTestCase
                 'title' => 'News',
                 'url' => '/news',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News')),
-                'navContexts' => array('footer')
+                'navContexts' => array('footer'),
             ),
             'products' => array(
                 'title' => 'Products',
                 'url' => '/products',
                 'ext' => array('excerpt' => array('title' => 'Excerpt Products')),
-                'navContexts' => array('main')
+                'navContexts' => array('main'),
             ),
             'news/news-1' => array(
                 'title' => 'News-1',
                 'url' => '/news/news-1',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News 1')),
-                'navContexts' => array('main', 'footer')
+                'navContexts' => array('main', 'footer'),
             ),
             'news/news-2' => array(
                 'title' => 'News-2',
                 'url' => '/news/news-2',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News 2')),
-                'navContexts' => array('main')
+                'navContexts' => array('main'),
             ),
             'products/products-1' => array(
                 'title' => 'Products-1',
                 'url' => '/products/products-1',
                 'ext' => array('excerpt' => array('title' => 'Excerpt Products 1')),
-                'navContexts' => array('main', 'footer')
+                'navContexts' => array('main', 'footer'),
             ),
             'products/products-2' => array(
                 'title' => 'Products-2',
                 'url' => '/products/products-2',
                 'ext' => array('excerpt' => array('title' => 'Excerpt Products 2')),
-                'navContexts' => array('main')
-            )
+                'navContexts' => array('main'),
+            ),
         );
 
         $this->mapper->saveStartPage(array('title' => 'Startpage', 'url' => '/'), 'simple', 'default', 'en', 1);
@@ -353,7 +353,7 @@ class NavigationTest extends PhpcrTestCase
             array(
                 'title' => 'SubNews',
                 'url' => '/asdf',
-                'navContexts' => array('footer')
+                'navContexts' => array('footer'),
             ),
             'simple',
             'default',
@@ -378,7 +378,7 @@ class NavigationTest extends PhpcrTestCase
             array(
                 'title' => 'SubNews',
                 'url' => '/asdf',
-                'navContexts' => array('footer')
+                'navContexts' => array('footer'),
             ),
             'simple',
             'default',
@@ -531,7 +531,7 @@ class NavigationTest extends PhpcrTestCase
     {
         $data = array(
             'title' => 'Products-3',
-            'url' => '/products/products-3'
+            'url' => '/products/products-3',
         );
 
         $this->data['products/products-3'] = $this->mapper->save(
@@ -577,7 +577,7 @@ class NavigationTest extends PhpcrTestCase
         $data = array(
             'title' => 'Products-3',
             'url' => '/products/products-3',
-            'navContexts' => array('main')
+            'navContexts' => array('main'),
         );
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
@@ -640,7 +640,7 @@ class NavigationTest extends PhpcrTestCase
 class ExcerptStructureExtension extends StructureExtension
 {
     /**
-     * name of structure extension
+     * name of structure extension.
      */
     const EXCERPT_EXTENSION_NAME = 'excerpt';
 
@@ -756,7 +756,7 @@ class ExcerptStructureExtension extends StructureExtension
     }
 
     /**
-     * initiates structure and properties
+     * initiates structure and properties.
      */
     private function initExcerptStructure()
     {

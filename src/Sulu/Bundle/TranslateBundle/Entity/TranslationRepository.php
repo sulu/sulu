@@ -14,15 +14,15 @@ use Doctrine\ORM\EntityRepository;
 
 /**
  * Repository for the Translations, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class TranslationRepository extends EntityRepository
 {
     /**
-     * returns translation with given code and catalogue
+     * returns translation with given code and catalogue.
+     *
      * @param $codeId
      * @param $catalogueId
-     * @return null
      */
     public function getTranslation($codeId, $catalogueId)
     {
@@ -38,7 +38,7 @@ class TranslationRepository extends EntityRepository
             ->setParameters(
                 array(
                     'codeId' => $codeId,
-                    'catalogueId' => $catalogueId
+                    'catalogueId' => $catalogueId,
                 )
             );
 
@@ -46,17 +46,19 @@ class TranslationRepository extends EntityRepository
         if (sizeof($result) == 1) {
             return $result[0];
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * find translation with a few filters
+     * find translation with a few filters.
+     *
      * @param $locale
      * @param null $backend
      * @param null $frontend
      * @param null $location
      * @param null $packageId
+     *
      * @return array
      */
     public function findFiltered($locale, $backend = null, $frontend = null, $location = null, $packageId = null)
@@ -94,7 +96,7 @@ class TranslationRepository extends EntityRepository
             ->createQuery($dql)
             ->setParameters(
                 array(
-                    'locale' => $locale
+                    'locale' => $locale,
                 )
             );
 

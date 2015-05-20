@@ -7,14 +7,14 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Message handler connection context
+ * Message handler connection context.
  *
  * It holds detail information about the upgrade request of the websocket connection, the handler name and the user can
  * put his own session variables into a parameter bag.
@@ -36,7 +36,7 @@ class MessageHandlerContext implements ConnectionContextInterface
      */
     private $parameters;
 
-    function __construct(ConnectionContextInterface $context, $handlerName)
+    public function __construct(ConnectionContextInterface $context, $handlerName)
     {
         $this->context = $context;
         $this->handlerName = $handlerName;
@@ -138,7 +138,7 @@ class MessageHandlerContext implements ConnectionContextInterface
     }
 
     /**
-     * Clear all parameter
+     * Clear all parameter.
      */
     public function clear()
     {

@@ -12,7 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
 
 /**
  * Class ResizeCommandTest
- * Test the resize command service
+ * Test the resize command service.
  */
 class ResizeCommandTest extends AbstractCommandTest
 {
@@ -23,24 +23,22 @@ class ResizeCommandTest extends AbstractCommandTest
         return array(
             array(
                 // Command Options
-                'options' =>
-                    array(
+                'options' => array(
                         'x' => 200,
-                        'y' => 100
+                        'y' => 100,
                     ),
                 'width' => 200,
-                'height' => 100
+                'height' => 100,
             ),
             array(
                 // Command Options
-                'options' =>
-                    array(
+                'options' => array(
                         'x' => 5000,
-                        'y' => 5000
+                        'y' => 5000,
                     ),
                 // Tested Result
                 'width' => 5000,
-                'height' => 5000
+                'height' => 5000,
             ),
         );
     }

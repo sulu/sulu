@@ -27,7 +27,7 @@ class WidgetException extends Exception
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'widget' => $this->subject
+            'widget' => $this->subject,
         );
     }
 }

@@ -117,7 +117,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
                 array(
                     '123-123-123',
                     '123-456-789',
-                    'not existing'
+                    'not existing',
                 )
             )
         );
@@ -126,7 +126,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
             'property',
             array(
                 '123-123-123',
-                '123-456-789'
+                '123-456-789',
             )
         );
 

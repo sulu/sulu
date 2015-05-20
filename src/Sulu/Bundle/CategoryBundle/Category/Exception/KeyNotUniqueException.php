@@ -18,7 +18,7 @@ class KeyNotUniqueException extends RestException
     {
         return array(
             'code' => 1,
-            'message' => 'A category-key has to be unique'
+            'message' => 'A category-key has to be unique',
         );
     }
 }

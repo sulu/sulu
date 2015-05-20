@@ -47,5 +47,4 @@ class UnexpectedPropertyType extends \Exception
     {
         return $this->contentType;
     }
-
 }

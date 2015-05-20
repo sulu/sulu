@@ -20,7 +20,7 @@ use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 /**
- * base class for Resource Locator Path Strategy
+ * base class for Resource Locator Path Strategy.
  */
 abstract class RlpStrategy implements RlpStrategyInterface
 {
@@ -55,7 +55,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $nodeHelper;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         $name,
@@ -74,7 +74,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns name of RLP Strategy (e.g. whole tree)
+     * returns name of RLP Strategy (e.g. whole tree).
+     *
      * @return string
      */
     public function getName()
@@ -83,12 +84,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns whole path for given ContentNode
+     * returns whole path for given ContentNode.
+     *
      * @param string $title title of new node
      * @param string $parentPath parent path of new contentNode
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string whole path
      */
     public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null)
@@ -109,12 +112,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns whole path for given ContentNode
+     * returns whole path for given ContentNode.
+     *
      * @param string $title title of new node
      * @param string $uuid uuid for node to generate rl
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string whole path
      */
     public function generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey = null)
@@ -125,9 +130,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * internal generator
+     * internal generator.
+     *
      * @param $title
      * @param $parentPath
+     *
      * @return string
      */
     abstract protected function generatePath($title, $parentPath = null);
@@ -169,9 +176,10 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * adopts resource locator of children by iteration
+     * adopts resource locator of children by iteration.
+     *
      * @param NodeInterface $contentNode
-     * @param integer $userId
+     * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
      * @param bool $iterate
@@ -243,11 +251,13 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns path for given contentNode
+     * returns path for given contentNode.
+     *
      * @param NodeInterface $contentNode reference node
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string path
      */
     public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
@@ -257,11 +267,13 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns path for given contentNode
+     * returns path for given contentNode.
+     *
      * @param string $uuid uuid of contentNode
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string path
      */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
@@ -279,11 +291,13 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns the uuid of referenced content node
+     * returns the uuid of referenced content node.
+     *
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
@@ -293,11 +307,13 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * checks if path is valid
+     * checks if path is valid.
+     *
      * @param string $path path of route
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return bool
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
@@ -311,7 +327,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * deletes given resource locator node
+     * deletes given resource locator node.
+     *
      * @param string $path of resource locator node
      * @param string $webspaceKey key of portal
      * @param string $languageCode
@@ -323,7 +340,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * restore given resource locator
+     * restore given resource locator.
+     *
      * @param string $path of resource locator
      * @param string $webspaceKey key of portal
      * @param string $languageCode

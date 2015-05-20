@@ -15,13 +15,13 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Renders a xml sitemap
- * @package Sulu\Bundle\WebsiteBundle\Controller
+ * Renders a xml sitemap.
  */
 class SitemapController extends WebsiteController
 {
     /**
-     * Returns a rendered xmlsitemap
+     * Returns a rendered xmlsitemap.
+     *
      * @return Response
      */
     public function indexAction()
@@ -57,7 +57,7 @@ class SitemapController extends WebsiteController
                 'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
                 'locales' => $localizations,
                 'defaultLocale' => $defaultLocale,
-                'webspaceKey' => $webspace->getKey()
+                'webspaceKey' => $webspace->getKey(),
             ),
             $response
         );

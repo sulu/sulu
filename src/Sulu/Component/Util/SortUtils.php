@@ -13,12 +13,12 @@ namespace Sulu\Component\Util;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Sorting utilities
+ * Sorting utilities.
  */
 class SortUtils
 {
     /**
-     * Cannot instantiate this class
+     * Cannot instantiate this class.
      */
     final private function __construct()
     {
@@ -67,7 +67,7 @@ class SortUtils
         $values = (array) $values;
         $paths = (array) $paths;
 
-        usort($values,function ($a, $b) use ($accessor, $paths) {
+        usort($values, function ($a, $b) use ($accessor, $paths) {
             foreach ($paths as $i => $path) {
                 $aOrder = $accessor->getValue($a, $path);
                 $bOrder = $accessor->getValue($b, $path);
@@ -77,7 +77,7 @@ class SortUtils
                     $bOrder = strtolower($bOrder);
                 }
 
-                if($aOrder == $bOrder) {
+                if ($aOrder == $bOrder) {
                     if (count($paths) == ($i + 1)) {
                         return 0;
                     } else {
@@ -94,5 +94,5 @@ class SortUtils
         }
 
         return $values;
-   }
+    }
 }

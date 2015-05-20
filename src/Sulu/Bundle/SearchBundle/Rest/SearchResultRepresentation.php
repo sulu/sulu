@@ -34,6 +34,7 @@ class SearchResultRepresentation extends PaginatedRepresentation
 
     /**
      * {@inheritDoc}
+     *
      * @param array $totals
      */
     public function __construct(

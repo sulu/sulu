@@ -17,20 +17,20 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
  * Repository for the User, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 {
     /**
-     * Finds a role with a specific id
+     * Finds a role with a specific id.
      *
      * @param $id ID of the role
+     *
      * @return role
      */
     public function findRoleById($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
                 ->leftJoin('role.securityType', 'securityType')
@@ -43,21 +43,19 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
             $query->setParameter('roleId', $id);
 
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Searches for all roles
+     * Searches for all roles.
      *
      * @return array
      */
     public function findAllRoles()
     {
         try {
-
             $qb = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
                 ->addSelect('permissions');
@@ -68,14 +66,13 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
             $result = $query->getResult();
 
             return $result;
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Return an array containing the names of all the roles
+     * Return an array containing the names of all the roles.
      *
      * @return array
      */

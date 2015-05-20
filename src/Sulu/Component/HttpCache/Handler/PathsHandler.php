@@ -11,18 +11,17 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use FOS\HttpCache\ProxyClient;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Invalidate all the paths (i.e. old and new) for a Sulu Structure
+ * Invalidate all the paths (i.e. old and new) for a Sulu Structure.
  */
-class PathsHandler implements 
+class PathsHandler implements
     HandlerFlushInterface,
     HandlerInvalidateStructureInterface
 {

@@ -64,7 +64,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             'i18n',
             array(
                 'base' => 'cmf',
-                'snippet' => 'snippets'
+                'snippet' => 'snippets',
             )
         );
     }
@@ -196,7 +196,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->node->expects($this->any())
             ->method('getNodes')
             ->will($this->returnValue(array(
-                $node1, $node2, $node3
+                $node1, $node2, $node3,
             )));
 
         $res = $this->helper->getNextNode($node2);

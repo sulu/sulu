@@ -10,12 +10,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
- * Behat context class for the CategoryBundle
+ * Behat context class for the CategoryBundle.
  */
 class CategoryContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -31,14 +31,14 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
             'meta' => array(
                 array(
                     'key' => 'myKey',
-                    'value' => 'myValue'
+                    'value' => 'myValue',
                 ),
                 array(
                     'key' => 'anotherKey',
                     'value' => 'should not be visible due to locale',
-                    'locale' => 'de-ch'
-                )
-            )
+                    'locale' => 'de-ch',
+                ),
+            ),
         ), $this->getUserId());
     }
 
@@ -69,7 +69,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * Return the category manager
+     * Return the category manager.
      *
      * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface
      */

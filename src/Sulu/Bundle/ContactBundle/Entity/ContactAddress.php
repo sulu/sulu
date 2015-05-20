@@ -3,18 +3,19 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+
 /**
- * ContactAddress
+ * ContactAddress.
  */
 class ContactAddress
 {
     /**
-     * @var boolean
+     * @var bool
      */
     private $main;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -30,9 +31,10 @@ class ContactAddress
     private $contact;
 
     /**
-     * Set main
+     * Set main.
      *
-     * @param boolean $main
+     * @param bool $main
+     *
      * @return ContactAddress
      */
     public function setMain($main)
@@ -43,9 +45,9 @@ class ContactAddress
     }
 
     /**
-     * Get main
+     * Get main.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMain()
     {
@@ -53,9 +55,9 @@ class ContactAddress
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -63,8 +65,10 @@ class ContactAddress
     }
 
     /**
-     * Set address
+     * Set address.
+     *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $address
+     *
      * @return ContactAddress
      */
     public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
@@ -75,7 +79,7 @@ class ContactAddress
     }
 
     /**
-     * Get address
+     * Get address.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Address
      */
@@ -85,9 +89,10 @@ class ContactAddress
     }
 
     /**
-     * Set contact
+     * Set contact.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     *
      * @return ContactAddress
      */
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
@@ -98,7 +103,7 @@ class ContactAddress
     }
 
     /**
-     * Get contact
+     * Get contact.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */

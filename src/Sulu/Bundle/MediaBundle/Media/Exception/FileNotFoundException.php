@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
 /**
- * Exception which is thrown when file is not found in media
+ * Exception which is thrown when file is not found in media.
  */
 class FileNotFoundException extends MediaException
 {

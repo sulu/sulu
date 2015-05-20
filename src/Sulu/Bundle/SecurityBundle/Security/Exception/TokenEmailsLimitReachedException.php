@@ -13,13 +13,12 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
 /**
- * This exception is thrown if a user requests to much resetting-emails
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ * This exception is thrown if a user requests to much resetting-emails.
  */
 class TokenEmailsLimitReachedException extends SecurityException
 {
     /**
-     * @var integer
+     * @var int
      */
     private $limit;
 
@@ -51,7 +50,7 @@ class TokenEmailsLimitReachedException extends SecurityException
             'code' => $this->code,
             'message' => $this->message,
             'limit' => $this->limit,
-            'user' => $this->user->getUsername()
+            'user' => $this->user->getUsername(),
         );
     }
 }

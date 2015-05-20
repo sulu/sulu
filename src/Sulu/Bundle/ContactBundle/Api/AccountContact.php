@@ -10,19 +10,18 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
- * The AccountContact class which will be exported to the API
+ * The AccountContact class which will be exported to the API.
  *
- * @package Sulu\Bundle\ContactBundle\Api
  * @ExclusionPolicy("all")
  */
 class AccountContact extends ApiWrapper
@@ -38,9 +37,10 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Set main
+     * Set main.
      *
-     * @param boolean $main
+     * @param bool $main
+     *
      * @return AccountContact
      */
     public function setMain($main)
@@ -51,9 +51,9 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Get main
+     * Get main.
      *
-     * @return boolean
+     * @return bool
      * @VirtualProperty
      * @SerializedName("main")
      * @Groups({"fullAccount"})
@@ -64,9 +64,9 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("id")
      * @Groups({"fullAccount"})
@@ -77,9 +77,10 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Set contact
+     * Set contact.
      *
      * @param ContactEntity $contact
+     *
      * @return AccountContact
      */
     public function setContact(ContactEntity $contact)
@@ -90,7 +91,7 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Get contact
+     * Get contact.
      *
      * @return ContactEntity
      * @VirtualProperty
@@ -103,14 +104,15 @@ class AccountContact extends ApiWrapper
 
         return array(
             'id' => $contact->getId(),
-            'fullName' => $contact->getFullName()
+            'fullName' => $contact->getFullName(),
         );
     }
 
     /**
-     * Set account
+     * Set account.
      *
      * @param AccountInterface $account
+     *
      * @return AccountContact
      */
     public function setAccount(AccountInterface $account)
@@ -121,7 +123,7 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Get account
+     * Get account.
      *
      * @return Account
      * @VirtualProperty
@@ -134,14 +136,15 @@ class AccountContact extends ApiWrapper
 
         return array(
             'id' => $account->getId(),
-            'name' => $account->getName()
+            'name' => $account->getName(),
         );
     }
 
     /**
-     * Set position
+     * Set position.
      *
      * @param string $position
+     *
      * @return AccountContact
      */
     public function setPosition($position)
@@ -152,7 +155,7 @@ class AccountContact extends ApiWrapper
     }
 
     /**
-     * Get position
+     * Get position.
      *
      * @return string
      * @VirtualProperty

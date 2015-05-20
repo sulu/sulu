@@ -12,8 +12,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+
 /**
- * PhoneType
+ * PhoneType.
  */
 class PhoneType implements \JsonSerializable
 {
@@ -24,7 +25,7 @@ class PhoneType implements \JsonSerializable
     private $name;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
@@ -36,7 +37,7 @@ class PhoneType implements \JsonSerializable
     private $phones;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -44,7 +45,8 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * To force id = 1 in load fixtures
+     * To force id = 1 in load fixtures.
+     *
      * @param int $id
      */
     public function setId($id)
@@ -53,9 +55,10 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return PhoneType
      */
     public function setName($name)
@@ -66,7 +69,7 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -76,9 +79,9 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -86,9 +89,10 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * Add phones
+     * Add phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     *
      * @return PhoneType
      */
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
@@ -99,7 +103,7 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * Remove phones
+     * Remove phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
      */
@@ -109,7 +113,7 @@ class PhoneType implements \JsonSerializable
     }
 
     /**
-     * Get phones
+     * Get phones.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -120,8 +124,10 @@ class PhoneType implements \JsonSerializable
 
     /**
      * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      */
@@ -129,7 +135,7 @@ class PhoneType implements \JsonSerializable
     {
         return array(
             'id' => $this->getId(),
-            'name' => $this->getName()
+            'name' => $this->getName(),
         );
     }
 }

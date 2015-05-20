@@ -32,13 +32,10 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes contacts available through a REST API
- *
- * @package Sulu\Bundle\ContactBundle\Controller
+ * Makes contacts available through a REST API.
  */
 class ContactController extends AbstractContactController implements SecuredControllerInterface
 {
@@ -59,7 +56,7 @@ class ContactController extends AbstractContactController implements SecuredCont
         'partialAccount',
         'partialTag',
         'partialMedia',
-        'partialCategory'
+        'partialCategory',
     );
 
     /**
@@ -105,7 +102,7 @@ class ContactController extends AbstractContactController implements SecuredCont
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
                 new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName),
             ),
             'fullName',
             'public.name',
@@ -171,7 +168,7 @@ class ContactController extends AbstractContactController implements SecuredCont
                 $this->getAccountEntityName() => new DoctrineJoinDescriptor(
                     $this->getAccountEntityName(),
                     self::$accountContactEntityName . '.account'
-                )
+                ),
             ),
             false,
             true
@@ -191,7 +188,7 @@ class ContactController extends AbstractContactController implements SecuredCont
                 self::$addressEntityName => new DoctrineJoinDescriptor(
                     self::$addressEntityName,
                     self::$contactAddressEntityName . '.address'
-                )
+                ),
             ),
             false,
             true
@@ -288,7 +285,7 @@ class ContactController extends AbstractContactController implements SecuredCont
                 self::$titleEntityName => new DoctrineJoinDescriptor(
                     self::$titleEntityName,
                     self::$entityName . '.title'
-                )
+                ),
             ),
             true
         );
@@ -324,7 +321,7 @@ class ContactController extends AbstractContactController implements SecuredCont
                 self::$positionEntityName => new DoctrineJoinDescriptor(
                     self::$positionEntityName,
                     self::$accountContactEntityName . '.position'
-                )
+                ),
             ),
             true
         );
@@ -335,7 +332,7 @@ class ContactController extends AbstractContactController implements SecuredCont
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
                 new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName),
             ),
             'fullName',
             'public.name',
@@ -360,7 +357,7 @@ class ContactController extends AbstractContactController implements SecuredCont
                 self::$positionEntityName => new DoctrineJoinDescriptor(
                     self::$positionEntityName,
                     self::$accountContactEntityName . '.position'
-                )
+                ),
             ),
             false,
             true
@@ -385,9 +382,10 @@ class ContactController extends AbstractContactController implements SecuredCont
     }
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function fieldsAction(Request $request)
@@ -402,9 +400,10 @@ class ContactController extends AbstractContactController implements SecuredCont
 
     /**
      * lists all contacts
-     * optional parameter 'flat' calls listAction
+     * optional parameter 'flat' calls listAction.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -436,7 +435,6 @@ class ContactController extends AbstractContactController implements SecuredCont
             if ($request->get('bySystem') == true) {
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
-
             } else {
                 $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
                 $serializationGroups = array_merge(
@@ -473,9 +471,10 @@ class ContactController extends AbstractContactController implements SecuredCont
     }
 
     /**
-     * Deletes a Contact with the given ID from database
+     * Deletes a Contact with the given ID from database.
      *
      * @param int $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -541,9 +540,10 @@ class ContactController extends AbstractContactController implements SecuredCont
     }
 
     /**
-     * Shows the contact with the given Id
+     * Shows the contact with the given Id.
      *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -572,9 +572,10 @@ class ContactController extends AbstractContactController implements SecuredCont
     }
 
     /**
-     * Creates a new contact
+     * Creates a new contact.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -633,7 +634,6 @@ class ContactController extends AbstractContactController implements SecuredCont
                 $contact->setBirthday(new DateTime($birthday));
             }
 
-
             $contact->setFormOfAddress($formOfAddress['id']);
 
             $contact->setDisabled($disabled);
@@ -687,6 +687,7 @@ class ContactController extends AbstractContactController implements SecuredCont
     /**
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction($id, Request $request)
@@ -702,7 +703,6 @@ class ContactController extends AbstractContactController implements SecuredCont
             if (!$contact) {
                 throw new EntityNotFoundException($contactEntity, $id);
             } else {
-
                 $em = $this->getDoctrine()->getManager();
 
                 // Standard contact fields
@@ -711,7 +711,6 @@ class ContactController extends AbstractContactController implements SecuredCont
 
                 // Set title relation on contact
                 $this->setTitleOnContact($contact, $request->get('title'));
-
 
                 $this->getContactManager()->setMainAccount($contact, $request->request->all());
 
@@ -777,7 +776,7 @@ class ContactController extends AbstractContactController implements SecuredCont
     }
 
     /**
-     * Returns a list of contacts which have a user in the sulu system
+     * Returns a list of contacts which have a user in the sulu system.
      */
     protected function getContactsByUserSystem()
     {

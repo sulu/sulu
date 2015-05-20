@@ -12,15 +12,13 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Finder\Finder;
 
 /**
- * This class is responsible for loading, reading and caching the portal configuration files
- * @package Sulu\Bundle\CoreBundle\Portal
+ * This class is responsible for loading, reading and caching the portal configuration files.
  */
 class WebspaceManager implements WebspaceManagerInterface
 {
@@ -52,8 +50,10 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns the webspace with the given key
+     * Returns the webspace with the given key.
+     *
      * @param $key string The key to search for
+     *
      * @return Webspace
      */
     public function findWebspaceByKey($key)
@@ -62,8 +62,10 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns the portal with the given key
+     * Returns the portal with the given key.
+     *
      * @param string $key The key to search for
+     *
      * @return Portal
      */
     public function findPortalByKey($key)
@@ -72,9 +74,11 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns the portal with the given url (which has not necessarily to be the main url)
+     * Returns the portal with the given url (which has not necessarily to be the main url).
+     *
      * @param string $url The url to search for
      * @param string $environment The environment in which the url should be searched
+     *
      * @return array|null
      */
     public function findPortalInformationByUrl($url, $environment)
@@ -88,15 +92,17 @@ class WebspaceManager implements WebspaceManagerInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns all possible urls for resourcelocator
+     * Returns all possible urls for resourcelocator.
+     *
      * @param string $resourceLocator
      * @param string $environment
      * @param string $languageCode
      * @param null|string $webspaceKey
+     *
      * @return array
      */
     public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null)
@@ -163,7 +169,8 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns all the webspaces managed by this specific instance
+     * Returns all the webspaces managed by this specific instance.
+     *
      * @return WebspaceCollection
      */
     public function getWebspaceCollection()
@@ -187,7 +194,7 @@ class WebspaceManager implements WebspaceManagerInterface
                     $dumper->dump(
                         array(
                             'cache_class' => $class,
-                            'base_class'  => $this->options['base_class']
+                            'base_class'  => $this->options['base_class'],
                         )
                     ),
                     $webspaceCollection->getResources()
@@ -208,7 +215,8 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Sets the options for the manager
+     * Sets the options for the manager.
+     *
      * @param $options
      */
     public function setOptions($options)
@@ -218,7 +226,7 @@ class WebspaceManager implements WebspaceManagerInterface
             'cache_dir'   => null,
             'debug'       => false,
             'cache_class' => 'WebspaceCollectionCache',
-            'base_class'  => 'WebspaceCollection'
+            'base_class'  => 'WebspaceCollection',
         );
 
         // overwrite the default values with the given options

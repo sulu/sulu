@@ -6,9 +6,9 @@ $context = $container->getParameter('sulu.context');
 $bundleName = null;
 
 $phpcr = getenv('SULU_PHPCR');
-$phpcr = $phpcr ? : 'jackrabbit';
+$phpcr = $phpcr ?: 'jackrabbit';
 $orm = getenv('SULU_ORM');
-$orm = $orm ? : 'mysql';
+$orm = $orm ?: 'mysql';
 
 $loader->import('context_' . $context . '.yml');
 $loader->import('phpcr_' . $phpcr . '.yml');

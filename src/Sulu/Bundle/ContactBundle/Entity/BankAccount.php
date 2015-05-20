@@ -5,7 +5,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * BankAccount
+ * BankAccount.
  */
 class BankAccount
 {
@@ -25,12 +25,12 @@ class BankAccount
     private $iban;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $public;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -46,7 +46,7 @@ class BankAccount
     private $contacts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -54,9 +54,10 @@ class BankAccount
     }
 
     /**
-     * Set bic
+     * Set bic.
      *
      * @param string $bic
+     *
      * @return BankAccount
      */
     public function setBic($bic)
@@ -67,7 +68,7 @@ class BankAccount
     }
 
     /**
-     * Get bic
+     * Get bic.
      *
      * @return string
      */
@@ -77,9 +78,10 @@ class BankAccount
     }
 
     /**
-     * Set iban
+     * Set iban.
      *
      * @param string $iban
+     *
      * @return BankAccount
      */
     public function setIban($iban)
@@ -90,7 +92,7 @@ class BankAccount
     }
 
     /**
-     * Get iban
+     * Get iban.
      *
      * @return string
      */
@@ -100,9 +102,10 @@ class BankAccount
     }
 
     /**
-     * Set public
+     * Set public.
      *
-     * @param boolean $public
+     * @param bool $public
+     *
      * @return BankAccount
      */
     public function setPublic($public)
@@ -113,9 +116,9 @@ class BankAccount
     }
 
     /**
-     * Get public
+     * Get public.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPublic()
     {
@@ -123,9 +126,9 @@ class BankAccount
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -133,9 +136,10 @@ class BankAccount
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param AccountInterface $accounts
+     *
      * @return BankAccount
      */
     public function addAccount(AccountInterface $accounts)
@@ -146,7 +150,7 @@ class BankAccount
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param AccountInterface $accounts
      */
@@ -156,7 +160,7 @@ class BankAccount
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -166,9 +170,10 @@ class BankAccount
     }
 
     /**
-     * Set bankName
+     * Set bankName.
      *
      * @param string $bankName
+     *
      * @return BankAccount
      */
     public function setBankName($bankName)
@@ -179,7 +184,7 @@ class BankAccount
     }
 
     /**
-     * Get bankName
+     * Get bankName.
      *
      * @return string
      */
@@ -189,9 +194,10 @@ class BankAccount
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     *
      * @return BankAccount
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
@@ -202,7 +208,7 @@ class BankAccount
     }
 
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
      */
@@ -212,9 +218,9 @@ class BankAccount
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {

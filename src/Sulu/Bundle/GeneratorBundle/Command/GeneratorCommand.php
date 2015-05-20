@@ -10,10 +10,10 @@
 
 namespace Sulu\Bundle\GeneratorBundle\Command;
 
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Sulu\Bundle\GeneratorBundle\Generator\Generator;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Base class for generator commands.
@@ -44,16 +44,16 @@ abstract class GeneratorCommand extends ContainerAwareCommand
     {
         $skeletonDirs = array();
 
-        if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton')) {
+        if (isset($bundle) && is_dir($dir = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton')) {
             $skeletonDirs[] = $dir;
         }
 
-        if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton')) {
+        if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton')) {
             $skeletonDirs[] = $dir;
         }
 
-        $skeletonDirs[] = __DIR__.'/../Resources/skeleton';
-        $skeletonDirs[] = __DIR__.'/../Resources';
+        $skeletonDirs[] = __DIR__ . '/../Resources/skeleton';
+        $skeletonDirs[] = __DIR__ . '/../Resources';
 
         return $skeletonDirs;
     }

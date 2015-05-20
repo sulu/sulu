@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
-
 class AuthenticationEntryPointTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -32,12 +31,12 @@ class AuthenticationEntryPointTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 '/admin/api/test',
-                401
+                401,
             ),
             array(
                 '/admin/template/test',
-                302
-            )
+                302,
+            ),
         );
     }
 

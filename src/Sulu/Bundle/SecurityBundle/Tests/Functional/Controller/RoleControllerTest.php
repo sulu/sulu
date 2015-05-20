@@ -10,12 +10,10 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
-use DateTime;
-
-use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class RoleControllerTest extends SuluTestCase
 {
@@ -148,7 +146,7 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => true,
                             'archive' => false,
                             'live' => true,
-                            'security' => false
+                            'security' => false,
                         ),
                     ),
                     array(
@@ -160,13 +158,13 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => true,
                             'archive' => false,
                             'live' => false,
-                            'security' => false
-                        )
-                    )
+                            'security' => false,
+                        ),
+                    ),
                 ),
                 'securityType' => array(
-                    'id' => $this->securityType2->getId()
-                )
+                    'id' => $this->securityType2->getId(),
+                ),
             )
         );
 
@@ -243,7 +241,7 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => true,
                             'archive' => false,
                             'live' => false,
-                            'security' => false
+                            'security' => false,
                         ),
                     ),
                     array(
@@ -256,8 +254,8 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => false,
                             'archive' => true,
                             'live' => true,
-                            'security' => true
-                        )
+                            'security' => true,
+                        ),
                     ),
                     array(
                         'context' => 'portal3',
@@ -268,13 +266,13 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => false,
                             'archive' => true,
                             'live' => true,
-                            'security' => true
-                        )
-                    )
+                            'security' => true,
+                        ),
+                    ),
                 ),
                 'securityType' => array(
-                    'id' => $this->securityType2
-                )
+                    'id' => $this->securityType2,
+                ),
             )
         );
 
@@ -364,7 +362,7 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => true,
                             'archive' => false,
                             'live' => false,
-                            'security' => false
+                            'security' => false,
                         ),
                     ),
                     array(
@@ -377,8 +375,8 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => false,
                             'archive' => true,
                             'live' => true,
-                            'security' => true
-                        )
+                            'security' => true,
+                        ),
                     ),
                     array(
                         'context' => 'portal3',
@@ -389,10 +387,10 @@ class RoleControllerTest extends SuluTestCase
                             'delete' => false,
                             'archive' => true,
                             'live' => true,
-                            'security' => true
-                        )
-                    )
-                )
+                            'security' => true,
+                        ),
+                    ),
+                ),
             )
         );
 

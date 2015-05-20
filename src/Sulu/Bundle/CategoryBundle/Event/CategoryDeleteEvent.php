@@ -14,8 +14,7 @@ use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * An object of this class is thrown along with the category.delete event
- * @package Sulu\Bundle\CategoryBundle\Event
+ * An object of this class is thrown along with the category.delete event.
  */
 class CategoryDeleteEvent extends Event
 {
@@ -33,7 +32,8 @@ class CategoryDeleteEvent extends Event
     }
 
     /**
-     * Returns the deleted category
+     * Returns the deleted category.
+     *
      * @return Category
      */
     public function getCategory()

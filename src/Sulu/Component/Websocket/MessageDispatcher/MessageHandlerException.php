@@ -11,7 +11,7 @@
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
 /**
- * Class MessageHandlerException
+ * Class MessageHandlerException.
  */
 class MessageHandlerException extends \Exception
 {
@@ -33,7 +33,7 @@ class MessageHandlerException extends \Exception
         return array(
             'code' => $this->getPrevious()->getCode(),
             'message' => $this->getPrevious()->getMessage(),
-            'type' => get_class($this->getPrevious())
+            'type' => get_class($this->getPrevious()),
         );
     }
 }

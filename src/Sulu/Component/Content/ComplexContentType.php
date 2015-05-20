@@ -13,7 +13,7 @@ namespace Sulu\Component\Content;
 use PHPCR\NodeInterface;
 
 /**
- * base class of complex content types
+ * base class of complex content types.
  */
 abstract class ComplexContentType implements ContentTypeInterface
 {
@@ -33,7 +33,7 @@ abstract class ComplexContentType implements ContentTypeInterface
         if (method_exists($this, 'get' . ucfirst($property))) {
             return $this->{'get' . ucfirst($property)}();
         } else {
-            return null;
+            return;
         }
     }
 
@@ -55,7 +55,7 @@ abstract class ComplexContentType implements ContentTypeInterface
      */
     public function getDefaultValue()
     {
-        return null;
+        return;
     }
 
     /**

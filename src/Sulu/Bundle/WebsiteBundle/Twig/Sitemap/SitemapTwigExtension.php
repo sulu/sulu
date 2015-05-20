@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Provides twig functions for sitemap
+ * Provides twig functions for sitemap.
  */
 class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
 {
@@ -58,7 +58,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
     {
         return array(
             new \Twig_SimpleFunction('sitemap_url', array($this, 'sitemapUrlFunction')),
-            new \Twig_SimpleFunction('sitemap', array($this, 'sitemapFunction'))
+            new \Twig_SimpleFunction('sitemap', array($this, 'sitemapFunction')),
         );
     }
 

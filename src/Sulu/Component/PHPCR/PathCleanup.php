@@ -11,12 +11,13 @@
 namespace Sulu\Component\PHPCR;
 
 /**
- * cleans path strings
+ * cleans path strings.
  */
 class PathCleanup implements PathCleanupInterface
 {
     /**
-     * replacers for cleanup
+     * replacers for cleanup.
+     *
      * @var array
      */
     protected $replacers = array(
@@ -35,11 +36,11 @@ class PathCleanup implements PathCleanupInterface
             // TODO should be filled
         ),
         'de' => array(
-            '&' => 'und'
+            '&' => 'und',
         ),
         'en' => array(
-            '&' => 'and'
-        )
+            '&' => 'and',
+        ),
     );
 
     /**
@@ -48,15 +49,18 @@ class PathCleanup implements PathCleanupInterface
      *  + test whole input case insensitive
      *  + trailing slash
      *  + one or more sign (a-z, 0-9, -, _)
-     *  + repeat
+     *  + repeat.
+     *
      * @var string
      */
     private $pattern = '/^(\/[a-z0-9-_]+)+$/i';
 
     /**
-     * returns a clean string
+     * returns a clean string.
+     *
      * @param string $dirty dirty string to cleanup
      * @param  string $languageCode
+     *
      * @return string clean string
      */
     public function cleanup($dirty, $languageCode)
@@ -92,8 +96,10 @@ class PathCleanup implements PathCleanupInterface
     }
 
     /**
-     * returns TRUE if path is valid
+     * returns TRUE if path is valid.
+     *
      * @param string $path
+     *
      * @return bool
      */
     public function validate($path)

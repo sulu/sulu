@@ -14,10 +14,9 @@ use Doctrine\Common\Cache\Cache;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Abstract websocket app
+ * Abstract websocket app.
  */
 abstract class AbstractWebsocketApp implements WebsocketAppInterface
 {
@@ -37,7 +36,8 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     protected $name;
 
     /**
-     * initialize clients container
+     * initialize clients container.
+     *
      * @param Cache $contextsCache
      */
     public function __construct(Cache $contextsCache)
@@ -61,7 +61,7 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     /**
      * {@inheritdoc}
      */
-    function onClose(ConnectionInterface $conn)
+    public function onClose(ConnectionInterface $conn)
     {
         $this->clients->detach($conn);
     }
@@ -69,7 +69,7 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     /**
      * {@inheritdoc}
      */
-    function onError(ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $this->onClose($conn);
     }
@@ -83,8 +83,10 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     }
 
     /**
-     * Returns websocket context for given connection
+     * Returns websocket context for given connection.
+     *
      * @param ConnectionInterface $conn
+     *
      * @return ConnectionContextInterface
      */
     protected function getContext(ConnectionInterface $conn)
@@ -97,9 +99,9 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
         return $this->contexts->fetch($id);
     }
 
-
     /**
-     * Saves websocket context
+     * Saves websocket context.
+     *
      * @param ConnectionContextInterface $context
      */
     protected function saveContext(ConnectionContextInterface $context)
@@ -108,7 +110,8 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     }
 
     /**
-     * Returns new created websocket context object
+     * Returns new created websocket context object.
+     *
      * @return ConnectionContextInterface
      */
     protected function createContext(ConnectionInterface $conn)
@@ -119,7 +122,7 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     /**
      * {@inheritdoc}
      */
-    function __toString()
+    public function __toString()
     {
         return $this->getName();
     }

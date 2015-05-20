@@ -10,13 +10,13 @@
 
 namespace Sulu\Component\Content\Block;
 
+use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\PropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
-use JMS\Serializer\Annotation\Type;
 
 /**
- * representation of a block type node in template xml
+ * representation of a block type node in template xml.
  */
 class BlockPropertyType
 {
@@ -33,7 +33,8 @@ class BlockPropertyType
     private $metadata;
 
     /**
-     * properties managed by this block
+     * properties managed by this block.
+     *
      * @var PropertyInterface[]
      * @Type("array<Sulu\Component\Content\Property>")
      */
@@ -46,7 +47,8 @@ class BlockPropertyType
     }
 
     /**
-     * returns a list of properties managed by this block
+     * returns a list of properties managed by this block.
+     *
      * @return PropertyInterface[]
      */
     public function getChildProperties()
@@ -55,8 +57,10 @@ class BlockPropertyType
     }
 
     /**
-     * returns child property with given name
+     * returns child property with given name.
+     *
      * @param string $name
+     *
      * @return null|PropertyInterface
      */
     public function getProperty($name)
@@ -67,7 +71,7 @@ class BlockPropertyType
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -79,9 +83,12 @@ class BlockPropertyType
     }
 
     /**
-     * returns property with given name
+     * returns property with given name.
+     *
      * @param string $name of property
+     *
      * @throws NoSuchPropertyException
+     *
      * @return PropertyInterface
      */
     public function getChild($name)
@@ -104,6 +111,7 @@ class BlockPropertyType
 
     /**
      * @param string $languageCode
+     *
      * @return string
      */
     public function getTitle($languageCode)

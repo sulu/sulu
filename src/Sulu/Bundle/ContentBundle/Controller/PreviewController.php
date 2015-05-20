@@ -18,23 +18,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * handles preview with ajax calls and renders basic preview
+ * handles preview with ajax calls and renders basic preview.
  */
 class PreviewController extends Controller
 {
     /**
-     * id of preview service
+     * id of preview service.
      */
     const PREVIEW_ID = 'sulu_content.preview';
 
     use RequestParametersTrait;
 
     /**
-     * render content for logged in user with data from FORM
+     * render content for logged in user with data from FORM.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $contentUuid
+     *
      * @throws \Exception
      * @throws \Sulu\Bundle\ContentBundle\Preview\PreviewNotFoundException
+     *
      * @return Response
      */
     public function renderAction(Request $request, $contentUuid)
@@ -80,8 +83,10 @@ class PreviewController extends Controller
     }
 
     /**
-     * returns language code from request
+     * returns language code from request.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return string
      */
     private function getLanguageCode(Request $request)
@@ -90,8 +95,10 @@ class PreviewController extends Controller
     }
 
     /**
-     * returns webspace key from request
+     * returns webspace key from request.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return string
      */
     private function getWebspaceKey(Request $request)

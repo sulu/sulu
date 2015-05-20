@@ -11,10 +11,10 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
-use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\Exclude;
 
 /**
  * The Structure class represenets content structure and is the super type
@@ -25,117 +25,130 @@ use JMS\Serializer\Annotation\Exclude;
 abstract class Structure implements StructureInterface
 {
     /**
-     * indicates that the node is a content node
+     * indicates that the node is a content node.
      */
     const NODE_TYPE_CONTENT = 1;
 
     /**
-     * indicates that the node links to an internal resource
+     * indicates that the node links to an internal resource.
      */
     const NODE_TYPE_INTERNAL_LINK = 2;
 
     /**
-     * indicates that the node links to an external resource
+     * indicates that the node links to an external resource.
      */
     const NODE_TYPE_EXTERNAL_LINK = 4;
 
     /**
-     * Structure type page
+     * Structure type page.
      */
     const TYPE_PAGE = 'page';
 
     /**
-     * Structure type page
+     * Structure type page.
      */
     const TYPE_SNIPPET = 'snippet';
 
     /**
-     * webspaceKey of node
+     * webspaceKey of node.
+     *
      * @var string
      * @Type("string")
      */
     private $webspaceKey;
 
     /**
-     * languageCode of node
+     * languageCode of node.
+     *
      * @var string
      * @Type("string")
      */
     private $languageCode;
 
     /**
-     * unique key of template
+     * unique key of template.
+     *
      * @var string
      * @Type("string")
      */
     private $key;
 
     /**
-     * array of properties
+     * array of properties.
+     *
      * @var array
      * @Type("array<string,Sulu\Component\Content\Property>")
      */
     private $properties = array();
 
     /**
-     * has structure sub structures
+     * has structure sub structures.
+     *
      * @var bool
      * @Type("boolean")
      */
     private $hasChildren = false;
 
     /**
-     * children of node
+     * children of node.
+     *
      * @var StructureInterface[]
      * @Exclude
      */
     private $children = null;
 
     /**
-     * uuid of node in CR
+     * uuid of node in CR.
+     *
      * @var string
      * @Type("string")
      */
     private $uuid;
 
     /**
-     * user id of creator
+     * user id of creator.
+     *
      * @var int
      * @Type("integer")
      */
     private $creator;
 
     /**
-     * user id of changer
+     * user id of changer.
+     *
      * @var int
      * @Type("integer")
      */
     private $changer;
 
     /**
-     * datetime of creation
+     * datetime of creation.
+     *
      * @var DateTime
      * @Type("DateTime")
      */
     private $created;
 
     /**
-     * datetime of last changed
+     * datetime of last changed.
+     *
      * @var DateTime
      * @Type("DateTime")
      */
     private $changed;
 
     /**
-     * first published
+     * first published.
+     *
      * @var DateTime
      * @Type("DateTime")
      */
     private $published;
 
     /**
-     * structure translation is valid
-     * @var boolean
+     * structure translation is valid.
+     *
+     * @var bool
      * @Type("boolean")
      */
     private $hasTranslation;
@@ -153,29 +166,33 @@ abstract class Structure implements StructureInterface
     private $tags = array();
 
     /**
-     * type of node
-     * @var integer
+     * type of node.
+     *
+     * @var int
      * @Type("integer")
      */
     private $nodeType;
 
     /**
-     * indicates internal structure
-     * @var boolean
+     * indicates internal structure.
+     *
+     * @var bool
      * @Type("boolean")
      */
     private $internal;
 
     /**
-     * content node is a shadow for another content
-     * @var boolean
+     * content node is a shadow for another content.
+     *
+     * @var bool
      * @Type("boolean")
      */
     private $isShadow;
 
     /**
      * when shadow is enabled, this node is a shadow for
-     * this language
+     * this language.
+     *
      * @var string
      * @Type("string")
      */
@@ -184,6 +201,7 @@ abstract class Structure implements StructureInterface
     /**
      * the shadows which are activated on this node. Note this is
      * not stored in the phpcr node, it is determined by the content mapper.
+     *
      * @var array
      * @Type("array")
      */
@@ -208,7 +226,8 @@ abstract class Structure implements StructureInterface
     private $structureTags;
 
     /**
-     * path of node
+     * path of node.
+     *
      * @var string
      * @Type("string")
      */
@@ -228,7 +247,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * adds a property to structure
+     * adds a property to structure.
+     *
      * @param PropertyInterface $property
      */
     protected function addChild(PropertyInterface $property)
@@ -245,7 +265,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * add tags of properties
+     * add tags of properties.
      */
     protected function addPropertyTags(PropertyInterface $property)
     {
@@ -255,7 +275,7 @@ abstract class Structure implements StructureInterface
                     'tag' => $tag,
                     'properties' => array($tag->getPriority() => $property),
                     'highest' => $property,
-                    'lowest' => $property
+                    'lowest' => $property,
                 );
             } else {
                 $this->tags[$tag->getName()]['properties'][$tag->getPriority()] = $property;
@@ -284,7 +304,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns language of node
+     * returns language of node.
+     *
      * @return string
      */
     public function getLanguageCode()
@@ -301,7 +322,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns webspace of node
+     * returns webspace of node.
+     *
      * @return string
      */
     public function getWebspaceKey()
@@ -310,7 +332,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * key of template definition
+     * key of template definition.
+     *
      * @return string
      */
     public function getKey()
@@ -319,7 +342,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns uuid of node
+     * returns uuid of node.
+     *
      * @return string
      */
     public function getUuid()
@@ -328,7 +352,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets uuid of node
+     * sets uuid of node.
+     *
      * @param $uuid
      */
     public function setUuid($uuid)
@@ -337,7 +362,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns id of creator
+     * returns id of creator.
+     *
      * @return int
      */
     public function getCreator()
@@ -346,7 +372,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets user id of creator
+     * sets user id of creator.
+     *
      * @param $userId int id of creator
      */
     public function setCreator($userId)
@@ -355,7 +382,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns user id of changer
+     * returns user id of changer.
+     *
      * @return int
      */
     public function getChanger()
@@ -364,7 +392,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets user id of changer
+     * sets user id of changer.
+     *
      * @param $userId int id of changer
      */
     public function setChanger($userId)
@@ -373,7 +402,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * return created datetime
+     * return created datetime.
+     *
      * @return DateTime
      */
     public function getCreated()
@@ -382,8 +412,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets created datetime
+     * sets created datetime.
+     *
      * @param DateTime $created
+     *
      * @return \DateTime
      */
     public function setCreated(DateTime $created)
@@ -392,7 +424,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns changed DateTime
+     * returns changed DateTime.
+     *
      * @return DateTime
      */
     public function getChanged()
@@ -401,7 +434,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets changed datetime
+     * sets changed datetime.
+     *
      * @param \DateTime $changed
      */
     public function setChanged(DateTime $changed)
@@ -410,9 +444,12 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns a property instance with given name
+     * returns a property instance with given name.
+     *
      * @param $name string name of property
+     *
      * @return PropertyInterface
+     *
      * @throws NoSuchPropertyException
      */
     public function getProperty($name)
@@ -429,10 +466,13 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns a property instance with given tag name
+     * returns a property instance with given tag name.
+     *
      * @param string $tagName
-     * @param boolean $highest
+     * @param bool $highest
+     *
      * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     *
      * @return PropertyInterface
      */
     public function getPropertyByTagName($tagName, $highest = true)
@@ -445,9 +485,12 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns properties with given tag name sorted by priority
+     * returns properties with given tag name sorted by priority.
+     *
      * @param string $tagName
+     *
      * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     *
      * @return PropertyInterface
      */
     public function getPropertiesByTagName($tagName)
@@ -460,8 +503,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * return value of property with given name
+     * return value of property with given name.
+     *
      * @param $name string name of property
+     *
      * @return mixed
      */
     public function getPropertyValue($name)
@@ -470,8 +515,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns value of property with given tag name
+     * returns value of property with given tag name.
+     *
      * @param string $tagName
+     *
      * @return mixed
      */
     public function getPropertyValueByTagName($tagName)
@@ -480,9 +527,11 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * checks if a property exists
+     * checks if a property exists.
+     *
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasProperty($name)
     {
@@ -490,8 +539,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * find property in flatten properties
+     * find property in flatten properties.
+     *
      * @param string $name
+     *
      * @return null|PropertyInterface
      */
     private function findProperty($name)
@@ -502,11 +553,11 @@ abstract class Structure implements StructureInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * @param boolean $hasChildren
+     * @param bool $hasChildren
      */
     public function setHasChildren($hasChildren)
     {
@@ -514,7 +565,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasChildren()
     {
@@ -538,8 +589,9 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns true if state of site is "published"
-     * @return boolean
+     * returns true if state of site is "published".
+     *
+     * @return bool
      */
     public function getPublishedState()
     {
@@ -555,7 +607,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns first published date
+     * returns first published date.
+     *
      * @return \DateTime
      */
     public function getPublished()
@@ -564,7 +617,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @param boolean $hasTranslation
+     * @param bool $hasTranslation
      */
     public function setHasTranslation($hasTranslation)
     {
@@ -572,8 +625,9 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * set if this structure should act like a shadow
-     * @return boolean
+     * set if this structure should act like a shadow.
+     *
+     * @return bool
      */
     public function getIsShadow()
     {
@@ -581,8 +635,9 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * set if this node should act like a shadow
-     * @param boolean
+     * set if this node should act like a shadow.
+     *
+     * @param bool
      */
     public function setIsShadow($isShadow)
     {
@@ -590,7 +645,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * return the shadow base language
+     * return the shadow base language.
+     *
      * @return string
      */
     public function getShadowBaseLanguage()
@@ -599,7 +655,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * set the shadow base language
+     * set the shadow base language.
+     *
      * @param string $shadowBaseLanguage
      */
     public function setShadowBaseLanguage($shadowBaseLanguage)
@@ -608,8 +665,9 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * return true if structure translation is valid
-     * @return boolean
+     * return true if structure translation is valid.
+     *
+     * @return bool
      */
     public function getHasTranslation()
     {
@@ -617,8 +675,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns an array of properties
+     * returns an array of properties.
+     *
      * @param bool $flatten
+     *
      * @return PropertyInterface[]
      */
     public function getProperties($flatten = false)
@@ -631,7 +691,6 @@ abstract class Structure implements StructureInterface
                 if ($property instanceof SectionPropertyInterface) {
                     $result = array_merge($result, $property->getChildProperties());
                 } else {
-
                     $result[] = $property;
                 }
             }
@@ -641,7 +700,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns all property names
+     * returns all property names.
+     *
      * @return array
      */
     public function getPropertyNames()
@@ -682,7 +742,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getInternal()
     {
@@ -690,7 +750,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @param boolean $internal
+     * @param bool $internal
      */
     public function setInternal($internal)
     {
@@ -703,7 +763,7 @@ abstract class Structure implements StructureInterface
     public function getNodeName()
     {
         if (
-            $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getNodeType() === self::NODE_TYPE_INTERNAL_LINK &&
             $this->getInternalLinkContent() !== null &&
             $this->getInternalLinkContent()->hasProperty('title')
         ) {
@@ -712,7 +772,7 @@ abstract class Structure implements StructureInterface
             return $this->getPropertyValue('title');
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -737,9 +797,12 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * magic getter
+     * magic getter.
+     *
      * @param $property string name of property
+     *
      * @return mixed
+     *
      * @throws NoSuchPropertyException
      */
     public function __get($property)
@@ -752,10 +815,13 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * magic setter
+     * magic setter.
+     *
      * @param $property string name of property
      * @param $value mixed value
+     *
      * @return mixed
+     *
      * @throws NoSuchPropertyException
      */
     public function __set($property, $value)
@@ -768,8 +834,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * magic isset
+     * magic isset.
+     *
      * @param $property
+     *
      * @return bool
      */
     public function __isset($property)
@@ -782,8 +850,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns an array of property value pairs
+     * returns an array of property value pairs.
+     *
      * @param bool $complete True if result should be representation of full node
+     *
      * @return array
      */
     public function toArray($complete = true)
@@ -796,13 +866,13 @@ abstract class Structure implements StructureInterface
                 'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
                 'concreteLanguages' => $this->getConcreteLanguages(),
                 'shadowOn' => $this->getIsShadow(),
-                'shadowBaseLanguage' => $this->getShadowBaseLanguage() ? : false,
+                'shadowBaseLanguage' => $this->getShadowBaseLanguage() ?: false,
                 'template' => $this->getKey(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
                 'changer' => $this->changer,
                 'created' => $this->created,
-                'changed' => $this->changed
+                'changed' => $this->changed,
             );
 
             if ($this->type !== null) {
@@ -826,7 +896,7 @@ abstract class Structure implements StructureInterface
                 'internal' => $this->internal,
                 'concreteLanguages' => $this->getConcreteLanguages(),
                 'hasSub' => $this->hasChildren,
-                'title' => $this->getProperty('title')->toArray()
+                'title' => $this->getProperty('title')->toArray(),
             );
 
             if ($this->type !== null) {
@@ -857,8 +927,10 @@ abstract class Structure implements StructureInterface
 
     /**
      * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      */
@@ -869,7 +941,8 @@ abstract class Structure implements StructureInterface
 
     /**
      * return available shadow languages on this structure
-     * (determined at runtime)
+     * (determined at runtime).
+     *
      * @return array
      */
     public function getEnabledShadowLanguages()
@@ -878,7 +951,8 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * set the available enabled shadow languages
+     * set the available enabled shadow languages.
+     *
      * @param array
      */
     public function setEnabledShadowLanguages($enabledShadowLanguages)
@@ -888,7 +962,7 @@ abstract class Structure implements StructureInterface
 
     /**
      * Return the available concrete languages (i.e.
-     * the languages which are set and are not shadows)
+     * the languages which are set and are not shadows).
      *
      * @return array
      */
@@ -899,7 +973,7 @@ abstract class Structure implements StructureInterface
 
     /**
      * Set the available concrete languages (note this should
-     * only be done internally)
+     * only be done internally).
      *
      * @param array $concreteLanguages
      */
@@ -909,7 +983,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * Add a tag to this structure
+     * Add a tag to this structure.
      */
     public function addStructureTag(StructureTag $structureTag)
     {
@@ -917,9 +991,9 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * Return true if this structure has the given tag
+     * Return true if this structure has the given tag.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasStructureTag($name)
     {
@@ -927,9 +1001,10 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * Return the tag with the given name
+     * Return the tag with the given name.
      *
      * @param string $name
+     *
      * @throws \InvalidArgumentException
      */
     public function getStructureTag($name)
@@ -943,11 +1018,12 @@ abstract class Structure implements StructureInterface
 
     public function getNodeState()
     {
-        return Structure::STATE_PUBLISHED;
+        return self::STATE_PUBLISHED;
     }
 
     /**
-     * returns absolute path of node
+     * returns absolute path of node.
+     *
      * @return string
      */
     public function getPath()

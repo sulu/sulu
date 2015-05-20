@@ -32,7 +32,7 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                 new Definition('Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData', array(
                         new Reference('security.context'),
                         new Reference('router'),
-                        new Reference('doctrine')
+                        new Reference('doctrine'),
                     )
                 )
             );
@@ -43,7 +43,7 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                     array(
                         new Reference('doctrine'),
-                        new Reference('sulu_security.user_manager.current_user_data')
+                        new Reference('sulu_security.user_manager.current_user_data'),
                     )
                 )
             );
@@ -53,7 +53,7 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                 new Definition(
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                     array(
-                        new Reference('doctrine')
+                        new Reference('doctrine'),
                     )
                 )
             );

@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 class SuluCollector extends DataCollector
 {
@@ -84,7 +84,7 @@ class SuluCollector extends DataCollector
                     'creator' => $structureObject->getCreator(),
                     'changer' => $structureObject->getChanger(),
                     'created' => $structureObject->getCreated(),
-                    'changed' => $structureObject->getChanged()
+                    'changed' => $structureObject->getChanged(),
                 );
             }
         }

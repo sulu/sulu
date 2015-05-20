@@ -23,10 +23,9 @@ use Sulu\Component\Content\StructureInterface;
 interface HandlerInvalidateStructureInterface extends HandlerInterface
 {
     /**
-     * Invalidate the given structure
+     * Invalidate the given structure.
      *
      * @param StructureInterface
      */
     public function invalidateStructure(StructureInterface $structure);
 }
-

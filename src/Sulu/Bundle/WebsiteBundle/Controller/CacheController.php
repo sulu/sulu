@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
- * Handles http cache actions
+ * Handles http cache actions.
  */
 class CacheController extends Controller
 {

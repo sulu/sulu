@@ -2,14 +2,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Fixtures;
 
-use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
+use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 
 /**
- * DefaultStructureCache
+ * DefaultStructureCache.
  */
 class DefaultStructureCache extends \Sulu\Component\Content\Structure
 {
@@ -23,10 +23,8 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'title' =>             array(
                 'de' => 'Titel',
                 'en' => 'Title',
-            )
-,
-            )
-,
+            ),
+            ),
             'text_line',
             true,
             true,
@@ -47,10 +45,8 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'title' =>             array(
                 'de' => 'Adresse',
                 'en' => 'Resourcelocator',
-            )
-,
-            )
-,
+            ),
+            ),
             'resource_locator',
             true,
             true,
@@ -71,10 +67,8 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'title' =>             array(
                 'de' => 'Interne Links',
                 'en' => 'Internal links',
-            )
-,
-            )
-,
+            ),
+            ),
             'internal_links',
             false,
             true,
@@ -94,8 +88,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'title' =>             array(
                 'de' => 'Bilder',
                 'en' => 'Images',
-            )
-,
+            ),
             ),
             'media_selection',
             false,
@@ -118,15 +111,12 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'title' =>             array(
                 'de' => 'Inhalt',
                 'en' => 'Content',
-            )
-,
+            ),
                 'info_text' =>             array(
                 'de' => 'Bereich für den Inhalt',
                 'en' => 'Content Section',
-            )
-,
-            )
-,
+            ),
+            ),
             ''
         );
         $prop1 = new Property(
@@ -135,10 +125,8 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'title' =>             array(
                 'de' => 'Artikel',
                 'en' => 'Article',
-            )
-,
-            )
-,
+            ),
+            ),
             'text_editor',
             false,
             true,

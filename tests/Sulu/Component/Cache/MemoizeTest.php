@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Cache;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 
 class MemoizeTest extends \PHPUnit_Framework_TestCase

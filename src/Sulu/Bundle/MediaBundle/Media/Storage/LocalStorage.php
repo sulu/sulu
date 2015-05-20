@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
-use \stdClass;
+use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 use Symfony\Component\HttpKernel\Tests\Logger;
@@ -46,7 +46,7 @@ class LocalStorage implements StorageInterface
     {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;
-        $this->logger = $logger ? : new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -60,11 +60,11 @@ class LocalStorage implements StorageInterface
             $oldStorageOption = json_decode($storageOption);
             $segment = $oldStorageOption->segment;
         } else {
-            $segment = sprintf('%0'.strlen($this->segments).'d', rand(1, $this->segments));
+            $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
         }
 
         $segmentPath = $this->uploadPath . '/' . $segment;
-        $fileName = $this->getUniqueFileName($segmentPath , $fileName);
+        $fileName = $this->getUniqueFileName($segmentPath, $fileName);
         $filePath = $this->getPathByFolderAndFileName($segmentPath, $fileName);
         $this->logger->debug('Check FilePath: ' . $filePath);
 
@@ -122,10 +122,12 @@ class LocalStorage implements StorageInterface
     }
 
     /**
-     * get a unique filename in path
+     * get a unique filename in path.
+     *
      * @param $folder
      * @param $fileName
      * @param int $counter
+     *
      * @return string
      */
     private function getUniqueFileName($folder, $fileName, $counter = 0)
@@ -153,6 +155,7 @@ class LocalStorage implements StorageInterface
     /**
      * @param $folder
      * @param $fileName
+     *
      * @return string
      */
     private function getPathByFolderAndFileName($folder, $fileName)
@@ -171,6 +174,7 @@ class LocalStorage implements StorageInterface
 
     /**
      * @param $key
+     *
      * @return mixed
      */
     private function getStorageOption($key)

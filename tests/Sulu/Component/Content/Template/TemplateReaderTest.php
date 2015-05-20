@@ -26,15 +26,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'some.random.structure.tag',
                     'attributes' => array(
                         'foo' => 'bar',
-                        'bar' => 'foo'
-                    )
+                        'bar' => 'foo',
+                    ),
                 ),
             ),
             'meta' => array(
                 'title' => array(
                     'de' => 'Das ist das Template 1',
-                    'en' => 'That´s the template 1'
-                )
+                    'en' => 'That´s the template 1',
+                ),
             ),
             'properties' => array(
                 'title' => array(
@@ -59,24 +59,24 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                 'one' => '1',
                                 'two' => '2',
                                 'three' => 'three',
-                            )
-                        )
+                            ),
+                        ),
                     ),
                     'params' => array(),
                     'meta' => array(
                         'title' => array(
                             'de' => 'Titel',
-                            'en' => 'Title'
+                            'en' => 'Title',
                         ),
                         'info_text' => array(
                             'de' => 'Titel-Info-DE',
-                            'en' => 'Title-Info-EN'
+                            'en' => 'Title-Info-EN',
                         ),
                         'placeholder' => array(
                             'de' => 'Platzhalter-Info-DE',
-                            'en' => 'Placeholder-Info-EN'
-                        )
-                    )
+                            'en' => 'Placeholder-Info-EN',
+                        ),
+                    ),
                 ),
                 'url' => array(
                     'name' => 'url',
@@ -95,7 +95,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'article' => array(
                     'name' => 'article',
@@ -111,10 +111,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.node.title',
                             'priority' => 5,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'pages' => array(
                     'name' => 'pages',
@@ -130,10 +130,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.node.title',
                             'priority' => null,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'article_number' => array(
                     'name' => 'article_number',
@@ -146,7 +146,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => false,
                     'tags' => array(),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'images' => array(
                     'name' => 'images',
@@ -163,18 +163,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'minLinks',
                             'value' => 1,
                             'type' => 'string',
-                            'meta' => array()
+                            'meta' => array(),
                         ),
                         array(
                             'name' => 'maxLinks',
                             'value' => 10,
                             'type' => 'string',
-                            'meta' => array()
-                        )
+                            'meta' => array(),
+                        ),
                     ),
-                    'meta' => array()
-                )
-            )
+                    'meta' => array(),
+                ),
+            ),
         );
 
         $templateReader = new TemplateReader();
@@ -212,11 +212,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'multilingual' => true,
                             'tags' => array(),
                             'params' => array(),
-                            'meta' => array()
+                            'meta' => array(),
                         ),
-                    )
+                    ),
                 ),
-            )
+            ),
         );
 
         $templateReader = new TemplateReader();
@@ -247,7 +247,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
-            'properties' => array()
+            'properties' => array(),
         );
 
         $this->setExpectedException(
@@ -292,10 +292,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.node.title',
                             'priority' => 10,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'url' => array(
                     'name' => 'url',
@@ -311,10 +311,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.rlp.part',
                             'priority' => 1,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'article' => array(
                     'name' => 'article',
@@ -327,7 +327,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'block1' => array(
                     'name' => 'block1',
@@ -348,7 +348,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.test.block',
                             'priority' => 1,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
                     'meta' => array(),
@@ -368,7 +368,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
+                                    'meta' => array(),
                                 ),
                                 'article1.1' => array(
                                     'name' => 'article1.1',
@@ -381,7 +381,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
+                                    'meta' => array(),
                                 ),
                                 'block1.1' => array(
                                     'name' => 'block1.1',
@@ -431,10 +431,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                             'name' => 'sulu.node.title',
                                                                             'priority' => 5,
                                                                             'attributes' => array(),
-                                                                        )
+                                                                        ),
                                                                     ),
                                                                     'params' => array(),
-                                                                    'meta' => array()
+                                                                    'meta' => array(),
                                                                 ),
                                                                 'article2.1.2' => array(
                                                                     'name' => 'article2.1.2',
@@ -447,7 +447,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'multilingual' => true,
                                                                     'tags' => array(),
                                                                     'params' => array(),
-                                                                    'meta' => array()
+                                                                    'meta' => array(),
                                                                 ),
                                                                 'block1.1.3' => array(
                                                                     'name' => 'block1.1.3',
@@ -477,15 +477,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                                     'multilingual' => true,
                                                                                     'tags' => array(),
                                                                                     'params' => array(),
-                                                                                    'meta' => array()
-                                                                                )
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                )
-                                                            )
-                                                        )
-                                                    )
+                                                                                    'meta' => array(),
+                                                                                ),
+                                                                            ),
+                                                                        ),
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
                                                 ),
                                                 'block1.1.2' => array(
                                                     'name' => 'block1.1.2',
@@ -515,19 +515,19 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'multilingual' => true,
                                                                     'tags' => array(),
                                                                     'params' => array(),
-                                                                    'meta' => array()
-                                                                )
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
+                                                                    'meta' => array(),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
                 'blog' => array(
                     'name' => 'blog',
@@ -540,9 +540,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
-            )
+            ),
         );
 
         $templateReader = new TemplateReader();
@@ -575,10 +575,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.node.title',
                             'priority' => 10,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'url' => array(
                     'name' => 'url',
@@ -594,10 +594,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.rlp.part',
                             'priority' => 1,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
                 'block1' => array(
                     'name' => 'block1',
@@ -618,7 +618,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.test.block',
                             'priority' => 1,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
                     'meta' => array(),
@@ -638,7 +638,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
+                                    'meta' => array(),
                                 ),
                                 'article' => array(
                                     'name' => 'article',
@@ -651,9 +651,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
-                                )
-                            )
+                                    'meta' => array(),
+                                ),
+                            ),
                         ),
                         'test' => array(
                             'name' => 'test',
@@ -670,7 +670,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
+                                    'meta' => array(),
                                 ),
                                 'name' => array(
                                     'name' => 'name',
@@ -683,7 +683,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
+                                    'meta' => array(),
                                 ),
                                 'article' => array(
                                     'name' => 'article',
@@ -696,11 +696,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
-                                    'meta' => array()
-                                )
-                            )
-                        )
-                    )
+                                    'meta' => array(),
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
                 'blog' => array(
                     'name' => 'blog',
@@ -713,9 +713,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(),
-                    'meta' => array()
-                )
-            )
+                    'meta' => array(),
+                ),
+            ),
         );
 
         $templateReader = new TemplateReader();
@@ -748,23 +748,23 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.node.title',
                             'priority' => 10,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
                     'meta' => array(
                         'title' => array(
                             'de' => 'Titel',
-                            'en' => 'Title'
+                            'en' => 'Title',
                         ),
                         'info_text' => array(
                             'de' => 'Titel-Info-DE',
-                            'en' => 'Title-Info-EN'
+                            'en' => 'Title-Info-EN',
                         ),
                         'placeholder' => array(
                             'de' => 'Platzhalter-Info-DE',
-                            'en' => 'Placeholder-Info-EN'
-                        )
-                    )
+                            'en' => 'Placeholder-Info-EN',
+                        ),
+                    ),
                 ),
                 'test' => array(
                     'name' => 'test',
@@ -775,12 +775,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => array(
                         'title' => array(
                             'de' => 'Test-DE',
-                            'en' => 'Test-EN'
+                            'en' => 'Test-EN',
                         ),
                         'info_text' => array(
                             'de' => 'Info-DE',
-                            'en' => 'Info-EN'
-                        )
+                            'en' => 'Info-EN',
+                        ),
                     ),
                     'properties' => array(
                         'url' => array(
@@ -793,12 +793,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'mandatory' => true,
                             'multilingual' => true,
                             'tags' => array(
-                                '0' => array
-                                (
+                                '0' => array(
                                     'name' => 'sulu.rlp.part',
                                     'priority' => 1,
                                     'attributes' => array(),
-                                )
+                                ),
 
                             ),
                             'params' => array(),
@@ -814,16 +813,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'mandatory' => null,
                             'multilingual' => true,
                             'tags' => array(
-                                '0' => array
-                                (
+                                '0' => array(
                                     'name' => 'sulu.node.title',
                                     'priority' => 5,
                                     'attributes' => array(),
-                                )
+                                ),
 
                             ),
                             'params' => array(),
-                            'meta' => array()
+                            'meta' => array(),
                         ),
                         'block' => array(
                             'name' => 'block',
@@ -839,16 +837,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'meta' => array(
                                 'title' => array(
                                     'de' => 'Block-DE',
-                                    'en' => 'Block-EN'
+                                    'en' => 'Block-EN',
                                 ),
                                 'info_text' => array(
                                     'de' => 'Block-Info-DE',
-                                    'en' => 'Block-Info-EN'
-                                )
+                                    'en' => 'Block-Info-EN',
+                                ),
                             ),
                             'types' => array(
-                                'test' => array
-                                (
+                                'test' => array(
                                     'name' => 'test',
                                     'meta' => array(),
                                     'properties' => array(
@@ -863,13 +860,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                             'multilingual' => true,
                                             'tags' => array(),
                                             'params' => array(),
-                                            'meta' => array()
-                                        )
-                                    )
-                                )
-                            )
+                                            'meta' => array(),
+                                        ),
+                                    ),
+                                ),
+                            ),
                         ),
-                    )
+                    ),
                 ),
                 'pages' => array(
                     'name' => 'pages',
@@ -885,7 +882,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'sulu.node.title',
                             'priority' => null,
                             'attributes' => array(),
-                        )
+                        ),
                     ),
                     'params' => array(),
                     'meta' => array(),
@@ -905,18 +902,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'name' => 'minLinks',
                             'value' => 1,
                             'type' => 'string',
-                            'meta' => array()
+                            'meta' => array(),
                         ),
                         array(
                             'name' => 'maxLinks',
                             'value' => 10,
                             'type' => 'string',
-                            'meta' => array()
-                        )
+                            'meta' => array(),
+                        ),
                     ),
                     'meta' => array(),
-                )
-            )
+                ),
+            ),
         );
 
         $templateReader = new TemplateReader();
@@ -963,15 +960,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                 array('name' => 't1', 'value' => 'v1', 'type' => 'string', 'meta' => array()),
                                 array('name' => 't2', 'value' => 'v2', 'type' => 'string', 'meta' => array()),
                                 array('name' => 't3', 'value' => 'v3', 'type' => 'string', 'meta' => array()),
-                                array('name' => 't4', 'value' => 'v4', 'type' => 'string', 'meta' => array())
+                                array('name' => 't4', 'value' => 'v4', 'type' => 'string', 'meta' => array()),
                             ),
                             'type' => 'collection',
-                            'meta' => array()
-                        )
+                            'meta' => array(),
+                        ),
                     ),
                     'meta' => array(),
-                )
-            )
+                ),
+            ),
         );
 
         $templateReader = new TemplateReader();
@@ -1008,13 +1005,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'value' => '1',
                             'type' => 'string',
                             'meta' => array(
-                                'title' => array('de' => 'Mindestens', 'en' => 'Minimum')
-                            )
+                                'title' => array('de' => 'Mindestens', 'en' => 'Minimum'),
+                            ),
                         ),
                     ),
                     'meta' => array(),
-                )
-            )
+                ),
+            ),
         );
 
         $templateReader = new TemplateReader();

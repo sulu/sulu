@@ -78,8 +78,8 @@ class MediaAdmin extends Admin
                 'Media' => array(
                     'sulu.media.collections',
                     'sulu.media.files',
-                )
-            )
+                ),
+            ),
         );
     }
 }

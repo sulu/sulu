@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content;
 
-use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\HandlerCallback;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Context;
@@ -20,7 +19,7 @@ use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 
 /**
- * Represents a parameter of a property
+ * Represents a parameter of a property.
  */
 class PropertyParameter
 {
@@ -49,13 +48,14 @@ class PropertyParameter
     private $metadata;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param string $name
      * @param string|null $type
      * @param string|bool|array $value
      * @param array $metadata
      */
-    function __construct($name, $value, $type = null, $metadata = array())
+    public function __construct($name, $value, $type = null, $metadata = array())
     {
         $this->name = $name;
         $this->value = $value;
@@ -64,7 +64,8 @@ class PropertyParameter
     }
 
     /**
-     * Returns name of property param
+     * Returns name of property param.
+     *
      * @return string
      */
     public function getName()
@@ -73,7 +74,8 @@ class PropertyParameter
     }
 
     /**
-     * Returns value of property param
+     * Returns value of property param.
+     *
      * @return array|bool|string
      */
     public function getValue()
@@ -82,7 +84,8 @@ class PropertyParameter
     }
 
     /**
-     * Returns type of property param
+     * Returns type of property param.
+     *
      * @return string
      */
     public function getType()
@@ -91,8 +94,10 @@ class PropertyParameter
     }
 
     /**
-     * Returns title of property param
+     * Returns title of property param.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getTitle($languageCode)
@@ -101,8 +106,10 @@ class PropertyParameter
     }
 
     /**
-     * Returns infoText of property param
+     * Returns infoText of property param.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getInfoText($languageCode)
@@ -111,8 +118,10 @@ class PropertyParameter
     }
 
     /**
-     * Returns placeholder of property param
+     * Returns placeholder of property param.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getPlaceholder($languageCode)
@@ -123,7 +132,7 @@ class PropertyParameter
     /**
      * {@inheritdoc}
      */
-    function __toString()
+    public function __toString()
     {
         $value = $this->getValue();
 
@@ -147,8 +156,8 @@ class PropertyParameter
         $data = array();
 
         /**
-         * @var string $propertyName
-         * @var PropertyMetadata $propertyMetadata
+         * @var string
+         * @var PropertyMetadata
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             $context->pushPropertyMetadata($propertyMetadata);
@@ -185,8 +194,8 @@ class PropertyParameter
         $graphNavigator = $context->getNavigator();
 
         /**
-         * @var string $propertyName
-         * @var PropertyMetadata $propertyMetadata
+         * @var string
+         * @var PropertyMetadata
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             if (!($propertyMetadata instanceof StaticPropertyMetadata)) {

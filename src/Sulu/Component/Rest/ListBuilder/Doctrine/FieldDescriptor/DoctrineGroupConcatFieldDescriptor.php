@@ -13,14 +13,15 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
- * This field descriptor can be used to group-concatenate a joined (1:n) field descriptor
- * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
+ * This field descriptor can be used to group-concatenate a joined (1:n) field descriptor.
+ *
  * @ExclusionPolicy("all")
  */
 class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
-     * The field descriptor which will be group concatenated
+     * The field descriptor which will be group concatenated.
+     *
      * @var AbstractDoctrineFieldDescriptor
      */
     private $fieldDescriptor;
@@ -50,7 +51,8 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns the select statement for this field without the alias
+     * Returns the select statement for this field without the alias.
+     *
      * @return string
      */
     public function getSelect()
@@ -59,7 +61,8 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns all the joins required for this field
+     * Returns all the joins required for this field.
+     *
      * @return DoctrineJoinDescriptor[]
      */
     public function getJoins()

@@ -11,27 +11,31 @@
 namespace Sulu\Bundle\AdminBundle\Widgets;
 
 /**
- * represents a single widget
- * @package Sulu\Bundle\AdminBundle\Widgets
+ * represents a single widget.
  */
 interface WidgetInterface
 {
     /**
-     * return name of widget
+     * return name of widget.
+     *
      * @return string
      */
     public function getName();
 
     /**
-     * returns template name of widget
+     * returns template name of widget.
+     *
      * @return string
      */
     public function getTemplate();
 
     /**
-     * returns data to render template
+     * returns data to render template.
+     *
      * @param array $options
+     *
      * @throws WidgetException
+     *
      * @return array
      */
     public function getData($options);

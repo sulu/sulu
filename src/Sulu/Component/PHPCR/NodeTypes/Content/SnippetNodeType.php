@@ -11,7 +11,7 @@
 namespace Sulu\Component\PHPCR\NodeTypes\Content;
 
 /**
- * Node type for representing snippets in the PHPCR
+ * Node type for representing snippets in the PHPCR.
  */
 class SnippetNodeType extends ContentNodeType
 {
@@ -29,7 +29,7 @@ class SnippetNodeType extends ContentNodeType
     public function getDeclaredSupertypeNames()
     {
         return array(
-            'sulu:content'
+            'sulu:content',
         );
     }
 }

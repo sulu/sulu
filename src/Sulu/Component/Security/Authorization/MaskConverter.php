@@ -17,7 +17,8 @@ namespace Sulu\Component\Security\Authorization;
 class MaskConverter implements MaskConverterInterface
 {
     /**
-     * The permissions available, defined by config
+     * The permissions available, defined by config.
+     *
      * @var array
      */
     protected $permissions;

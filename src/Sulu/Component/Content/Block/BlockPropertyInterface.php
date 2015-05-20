@@ -13,53 +13,64 @@ namespace Sulu\Component\Content\Block;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
- * interface definition for block property
+ * interface definition for block property.
  */
 interface BlockPropertyInterface extends PropertyInterface
 {
     /**
-     * returns a list of properties managed by this block
+     * returns a list of properties managed by this block.
+     *
      * @return BlockPropertyType[]
      */
     public function getTypes();
 
     /**
-     * adds a type
+     * adds a type.
+     *
      * @param BlockPropertyType $type
      */
     public function addType(BlockPropertyType $type);
 
     /**
-     * returns property with given name
+     * returns property with given name.
+     *
      * @param string $name of property
+     *
      * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     *
      * @return BlockPropertyType
      */
     public function getType($name);
 
     /**
-     * returns properties for given index
-     * @param integer $index
+     * returns properties for given index.
+     *
+     * @param int $index
+     *
      * @return BlockPropertyType
      */
     public function getProperties($index);
 
     /**
-     * Returns sizeof block
+     * Returns sizeof block.
+     *
      * @return int
      */
     public function getLength();
 
     /**
-     * initiate new child with given type name
-     * @param integer $index
+     * initiate new child with given type name.
+     *
+     * @param int $index
      * @param string $typeName
+     *
      * @return BlockPropertyType
      */
     public function initProperties($index, $typeName);
 
     /**
-     * return default type name
+     * return default type name.
+     *
      * @return string
      */
     public function getDefaultTypeName();

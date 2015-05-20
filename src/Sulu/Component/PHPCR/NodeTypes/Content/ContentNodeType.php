@@ -47,7 +47,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
     public function getDeclaredSupertypeNames()
     {
         return array(
-            'sulu:base'
+            'sulu:base',
         );
     }
 
@@ -63,7 +63,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
      * NodeTypeDefinition object is actually a newly-created empty
      * NodeTypeTemplate, then this method will return false.
      *
-     * @return boolean True, if the current type is abstract, else false.
+     * @return bool True, if the current type is abstract, else false.
      *
      * @api
      */
@@ -80,7 +80,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
      * NodeTypeDefinition object is actually a newly-created empty
      * NodeTypeTemplate, then this method will return false.
      *
-     * @return boolean True if this is a mixin type, else false;
+     * @return bool True if this is a mixin type, else false;
      *
      * @api
      */
@@ -105,7 +105,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
      * NodeTypeDefinitionInterface object is actually a newly-created empty
      * NodeTypeTemplateInterface, then this method will return false.
      *
-     * @return boolean True, if nodes of this type must support orderable child
+     * @return bool True, if nodes of this type must support orderable child
      *      nodes, else false.
      *
      * @api
@@ -125,7 +125,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
      * If a node type is declared non-queryable then these attributes of its
      * property definitions have no effect.
      *
-     * @return boolean True, if the node type is queryable, else false.
+     * @return bool True, if the node type is queryable, else false.
      *
      * @see PropertyDefinition::getAvailableQueryOperators()
      * @see PropertyDefinition::isFullTextSearchable()
@@ -155,7 +155,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
      */
     public function getPrimaryItemName()
     {
-        return null;
+        return;
     }
 
     /**

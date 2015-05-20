@@ -10,12 +10,10 @@
 
 namespace Sulu\Component\Content\Rlp\Strategy;
 
-use Jackalope\Node;
 use ReflectionClass;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
-use Sulu\Component\Util\SuluNodeHelper;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -94,7 +92,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
                 new PathCleanup(),
                 $structureManager,
                 $contentTypeManager,
-                $nodeHelper
+                $nodeHelper,
             ),
             'TestStrategy'
         );
@@ -142,7 +140,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-
     }
 
     private function getMethod($class, $name)

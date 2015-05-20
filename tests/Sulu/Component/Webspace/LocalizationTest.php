@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Localization;
 
-
 class LocalizationTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()

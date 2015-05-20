@@ -14,13 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * handles templates for this bundles
+ * handles templates for this bundles.
  */
 class TemplateController extends Controller
 {
-
     /**
-     * renders template for the collection files-view
+     * renders template for the collection files-view.
+     *
      * @return Response
      */
     public function collectionFilesAction()
@@ -29,7 +29,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders template for the collection settings-view
+     * renders template for the collection settings-view.
+     *
      * @return Response
      */
     public function collectionSettingsAction()
@@ -38,7 +39,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders template for the media info-view
+     * renders template for the media info-view.
+     *
      * @return Response
      */
     public function mediaInfoAction()
@@ -47,7 +49,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders template for the media info-view
+     * renders template for the media info-view.
+     *
      * @return Response
      */
     public function mediaVersionsAction()
@@ -56,7 +59,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders template for the new-collection-form
+     * renders template for the new-collection-form.
+     *
      * @return Response
      */
     public function collectionNewAction()
@@ -65,7 +69,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders template for a media in the multiple-edit form
+     * renders template for a media in the multiple-edit form.
+     *
      * @return Response
      */
     public function multipleEditAction()

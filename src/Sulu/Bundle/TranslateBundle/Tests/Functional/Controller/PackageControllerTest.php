@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class PackageControllerTest extends SuluTestCase
 {
@@ -157,8 +157,8 @@ class PackageControllerTest extends SuluTestCase
                 'catalogues' => array(
                     array('locale' => 'EN'),
                     array('locale' => 'DE'),
-                    array('locale' => 'ES')
-                )
+                    array('locale' => 'ES'),
+                ),
             )
         );
 
@@ -182,7 +182,7 @@ class PackageControllerTest extends SuluTestCase
             'POST',
             '/api/packages',
             array(
-                'name' => 'Portal'
+                'name' => 'Portal',
             )
         );
 
@@ -225,8 +225,8 @@ class PackageControllerTest extends SuluTestCase
                 'catalogues' => array(
                     array('id' => $this->catalogue1->getId(), 'locale' => 'DE'),
                     array('locale' => 'EN'),
-                    array('locale' => 'ES')
-                )
+                    array('locale' => 'ES'),
+                ),
             )
         );
 
@@ -245,8 +245,8 @@ class PackageControllerTest extends SuluTestCase
                 'name' => 'Portal',
                 'catalogues' => array(
                     array('id' => $response->catalogues[1]->id, 'locale' => 'ES'),
-                    array('id' => $response->catalogues[2]->id, 'locale' => 'DE')
-                )
+                    array('id' => $response->catalogues[2]->id, 'locale' => 'DE'),
+                ),
             )
         );
 
@@ -267,7 +267,7 @@ class PackageControllerTest extends SuluTestCase
             'PUT',
             '/api/packages/' . $this->package1->getId(),
             array(
-                'name' => 'ASDF'
+                'name' => 'ASDF',
             )
         );
 
@@ -314,8 +314,8 @@ class PackageControllerTest extends SuluTestCase
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('id' => 123123, 'locale' => 'DE')
-                )
+                    array('id' => 123123, 'locale' => 'DE'),
+                ),
             )
         );
 
@@ -338,12 +338,10 @@ class PackageControllerTest extends SuluTestCase
 
         $client->request('DELETE', '/api/packages/' . $this->package1->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
-
     }
 
     public function testDeleteByIdNotExisting()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/packages/4711');

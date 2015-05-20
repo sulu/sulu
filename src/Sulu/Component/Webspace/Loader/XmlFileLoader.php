@@ -43,16 +43,18 @@ class XmlFileLoader extends FileLoader
     private $xpath;
 
     /**
-     * The webspace which is created by this file loader
+     * The webspace which is created by this file loader.
+     *
      * @var Webspace
      */
     private $webspace;
 
     /**
-     * Loads a webspace from a xml file
+     * Loads a webspace from a xml file.
      *
      * @param mixed $resource The resource
      * @param string $type The resource type
+     *
      * @return Webspace The webspace object for the given resource
      */
     public function load($resource, $type = null)
@@ -79,8 +81,8 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     *
      * @param $file
+     *
      * @return Portal
      */
     private function parseXml($file)
@@ -116,7 +118,7 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Validate result
+     * Validate result.
      */
     private function validate()
     {
@@ -127,6 +129,7 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param $portal Portal
+     *
      * @return bool True when successful, otherwise false
      */
     private function loadPortalLocalizationDefaultFromWebspace($portal)
@@ -168,6 +171,7 @@ class XmlFileLoader extends FileLoader
      * @param \DOMNodeList $localizationNodes
      * @param Portal $portal
      * @param bool $flat
+     *
      * @internal param \DOMXpath $xpath
      */
     private function generateLocalizationsFromNodeList(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
@@ -183,7 +187,9 @@ class XmlFileLoader extends FileLoader
      * @param \DOMElement|\DOMNode $localizationNode
      * @param bool $flat
      * @param null $parent
+     *
      * @internal param \DOMXPath $xpath
+     *
      * @return Localization
      */
     private function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false, $parent = null)
@@ -287,6 +293,7 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @internal param \DOMNode $webspaceNode
+     *
      * @return Theme
      */
     private function generateTheme()
@@ -388,6 +395,7 @@ class XmlFileLoader extends FileLoader
     /**
      * @param \DOMNode $environmentNode
      * @param Environment $environment
+     *
      * @throws Exception\InvalidUrlDefinitionException
      */
     private function generateUrls(\DOMNode $environmentNode, Environment $environment)
@@ -421,12 +429,14 @@ class XmlFileLoader extends FileLoader
             return $attribute->nodeValue;
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Checks if the urlNode is valid for this webspace
+     * Checks if the urlNode is valid for this webspace.
+     *
      * @param \DOMNode $urlNode
+     *
      * @return bool
      */
     private function checkUrlNode(\DOMNode $urlNode)
@@ -448,7 +458,8 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Validate default webspace localization
+     * Validate default webspace localization.
+     *
      * @throws Exception\InvalidWebspaceDefaultLocalizationException
      */
     private function validateWebspaceDefaultLocalization()
@@ -461,7 +472,8 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Validate portal localization
+     * Validate portal localization.
+     *
      * @throws Exception\PortalDefaultLocalizationNotFoundException
      * @throws Exception\InvalidPortalDefaultLocalizationException
      */
@@ -483,7 +495,8 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Validate webspace default segment
+     * Validate webspace default segment.
+     *
      * @throws Exception\WebspaceDefaultSegmentNotFoundException
      * @throws Exception\InvalidWebspaceDefaultSegmentException
      */
@@ -510,9 +523,12 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Returns true if there is one default localization
+     * Returns true if there is one default localization.
+     *
      * @param $localizations
+     *
      * @return bool
+     *
      * @throws Exception\InvalidDefaultLocalizationException
      */
     private function validateDefaultLocalization($localizations)

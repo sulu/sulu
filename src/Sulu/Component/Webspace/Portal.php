@@ -15,37 +15,41 @@ use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
 use Sulu\Component\Webspace\Exception\PortalLocalizationNotFoundException;
 
 /**
- * Container for a portal configuration
- * @package Sulu\Component\Portal
+ * Container for a portal configuration.
  */
 class Portal
 {
     /**
-     * The name of the portal
+     * The name of the portal.
+     *
      * @var string
      */
     private $name;
 
     /**
-     * The key of the portal
+     * The key of the portal.
+     *
      * @var string
      */
     private $key;
 
     /**
-     * The url generation strategy for this portal
+     * The url generation strategy for this portal.
+     *
      * @var string
      */
     private $resourceLocatorStrategy;
 
     /**
-     * An array of localizations
+     * An array of localizations.
+     *
      * @var Localization[]
      */
     private $localizations;
 
     /**
-     * The default localization for this portal
+     * The default localization for this portal.
+     *
      * @var Localization
      */
     private $defaultLocalization;
@@ -61,7 +65,8 @@ class Portal
     private $webspace;
 
     /**
-     * Sets the name of the portal
+     * Sets the name of the portal.
+     *
      * @param string $name The name of the portal
      */
     public function setName($name)
@@ -70,7 +75,8 @@ class Portal
     }
 
     /**
-     * Returns the name of the portal
+     * Returns the name of the portal.
+     *
      * @return string The name of the portal
      */
     public function getName()
@@ -111,7 +117,8 @@ class Portal
     }
 
     /**
-     * Adds the given language to the portal
+     * Adds the given language to the portal.
+     *
      * @param Localization $localization
      */
     public function addLocalization(Localization $localization)
@@ -124,7 +131,8 @@ class Portal
     }
 
     /**
-     * Sets the localizations to this portal
+     * Sets the localizations to this portal.
+     *
      * @param Localization[] $localizations
      */
     public function setLocalizations($localizations)
@@ -133,7 +141,8 @@ class Portal
     }
 
     /**
-     * Returns the languages of this portal
+     * Returns the languages of this portal.
+     *
      * @return Localization[] The languages of this portal
      */
     public function getLocalizations()
@@ -169,7 +178,8 @@ class Portal
     }
 
     /**
-     * Adds an environment to this portal
+     * Adds an environment to this portal.
+     *
      * @param $environment Environment The environment to add
      */
     public function addEnvironment($environment)
@@ -178,7 +188,8 @@ class Portal
     }
 
     /**
-     * Sets the environments for this portal
+     * Sets the environments for this portal.
+     *
      * @param \Sulu\Component\Webspace\Environment[] $environments
      */
     public function setEnvironments(array $environments)
@@ -191,7 +202,8 @@ class Portal
     }
 
     /**
-     * Returns the environment for this portal
+     * Returns the environment for this portal.
+     *
      * @return \Sulu\Component\Webspace\Environment[]
      */
     public function getEnvironments()
@@ -200,9 +212,12 @@ class Portal
     }
 
     /**
-     * Returns the environment with the given type, and throws an exception if the environment does not exist
+     * Returns the environment with the given type, and throws an exception if the environment does not exist.
+     *
      * @param string $type
+     *
      * @throws Exception\EnvironmentNotFoundException
+     *
      * @return \Sulu\Component\Webspace\Environment
      */
     public function getEnvironment($type)

@@ -12,7 +12,6 @@ namespace Sulu\Component\Webspace\Loader;
 
 class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var XmlFileLoader
      */

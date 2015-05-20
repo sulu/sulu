@@ -12,12 +12,11 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
  * This exception is thrown when the username is not unique.
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
 class UsernameNotUniqueException extends SecurityException
 {
     /**
-     * The username which is not unique
+     * The username which is not unique.
      *
      * @var string
      */
@@ -39,7 +38,7 @@ class UsernameNotUniqueException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'username' => $this->username
+            'username' => $this->username,
         );
     }
 }

@@ -10,14 +10,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
-use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * Provides the navigation functions
+ * Provides the navigation functions.
  */
 class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigExtensionInterface
 {
@@ -40,8 +38,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         ContentMapperInterface $contentMapper,
         NavigationMapperInterface $navigationMapper,
         RequestAnalyzerInterface $requestAnalyzer = null
-    )
-    {
+    ) {
         $this->contentMapper = $contentMapper;
         $this->navigationMapper = $navigationMapper;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -57,7 +54,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             new \Twig_SimpleFunction('navigation_root_tree', array($this, 'treeRootNavigationFunction')),
             new \Twig_SimpleFunction('navigation_flat', array($this, 'flatNavigationFunction')),
             new \Twig_SimpleFunction('navigation_tree', array($this, 'treeNavigationFunction')),
-            new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction'))
+            new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction')),
         );
     }
 

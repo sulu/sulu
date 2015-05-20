@@ -17,7 +17,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * Provides Interface to load content
+ * Provides Interface to load content.
  */
 class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
 {
@@ -42,7 +42,7 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     private $sessionManager;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
@@ -63,7 +63,7 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     {
         return array(
             new \Twig_SimpleFunction('content_load', array($this, 'load')),
-            new \Twig_SimpleFunction('content_load_parent', array($this, 'loadParent'))
+            new \Twig_SimpleFunction('content_load_parent', array($this, 'loadParent')),
         );
     }
 

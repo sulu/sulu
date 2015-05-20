@@ -20,7 +20,6 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 /**
  * Called when an AuthenticationException is thrown.
  * Returns a 401 status code for the API, and redirects to the login page for other requests.
- * @package Sulu\Bundle\SecurityBundle\Security
  */
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {

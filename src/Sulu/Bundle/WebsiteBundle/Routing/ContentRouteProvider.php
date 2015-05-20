@@ -24,8 +24,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * The PortalRouteProvider should load the dynamic routes created by Sulu
- * @package Sulu\Bundle\WebsiteBundle\Routing
+ * The PortalRouteProvider should load the dynamic routes created by Sulu.
  */
 class ContentRouteProvider implements RouteProviderInterface
 {
@@ -194,7 +193,8 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * Checks if the resource locator is valid.
      * A resource locator with a slash only is not allowed, the only exception is when it is a single language
-     * website, where the browser automatically adds the slash
+     * website, where the browser automatically adds the slash.
+     *
      * @return bool
      */
     private function checkResourceLocator()
@@ -205,6 +205,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
     /**
      * @param Request $request
+     *
      * @return Route
      */
     protected function getRedirectWebSpaceRoute(Request $request)
@@ -214,7 +215,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $request->getPathInfo(), array(
                 '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
                 'url' => $this->requestAnalyzer->getPortalUrl(),
-                'redirect' => $this->requestAnalyzer->getRedirect()
+                'redirect' => $this->requestAnalyzer->getRedirect(),
             )
         );
     }
@@ -222,6 +223,7 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * @param Request $request
      * @param $url
+     *
      * @return Route
      */
     protected function getRedirectRoute(Request $request, $url)
@@ -230,7 +232,7 @@ class ContentRouteProvider implements RouteProviderInterface
         return new Route(
             $request->getPathInfo(), array(
                 '_controller' => 'SuluWebsiteBundle:Default:redirect',
-                'url' => $url
+                'url' => $url,
             )
         );
     }
@@ -238,6 +240,7 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * @param Request $request
      * @param StructureInterface $content
+     *
      * @return Route
      */
     protected function getStructureRoute(Request $request, $content)
@@ -245,13 +248,14 @@ class ContentRouteProvider implements RouteProviderInterface
         return new Route(
             $request->getPathInfo(), array(
                 '_controller' => $content->getController(),
-                'structure' => $content
+                'structure' => $content,
             )
         );
     }
 
     /**
      * @param $resourceLocator
+     *
      * @return string
      */
     protected function getUrlWithoutEndingTrailingSlash($resourceLocator)
@@ -264,6 +268,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
     /**
      * @param $resourceLocator
+     *
      * @return int
      */
     protected function hasTrailingSlash($resourceLocator)

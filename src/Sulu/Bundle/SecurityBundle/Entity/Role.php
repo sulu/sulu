@@ -11,11 +11,10 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 /**
- * Role
+ * Role.
  */
 class Role extends BaseRole
 {
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -32,7 +31,7 @@ class Role extends BaseRole
     private $groups;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -42,9 +41,10 @@ class Role extends BaseRole
     }
 
     /**
-     * Add permissions
+     * Add permissions.
      *
      * @param Permission $permissions
+     *
      * @return Role
      */
     public function addPermission(Permission $permissions)
@@ -55,7 +55,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Remove permissions
+     * Remove permissions.
      *
      * @param Permission $permissions
      */
@@ -65,7 +65,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Get permissions
+     * Get permissions.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -75,9 +75,10 @@ class Role extends BaseRole
     }
 
     /**
-     * Add userRoles
+     * Add userRoles.
      *
      * @param UserRole $userRoles
+     *
      * @return Role
      */
     public function addUserRole(UserRole $userRoles)
@@ -88,7 +89,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Remove userRoles
+     * Remove userRoles.
      *
      * @param UserRole $userRoles
      */
@@ -98,7 +99,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Get userRoles
+     * Get userRoles.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -108,9 +109,10 @@ class Role extends BaseRole
     }
 
     /**
-     * Add groups
+     * Add groups.
      *
      * @param Group $groups
+     *
      * @return Role
      */
     public function addGroup(Group $groups)
@@ -121,7 +123,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Remove groups
+     * Remove groups.
      *
      * @param Group $groups
      */
@@ -131,7 +133,7 @@ class Role extends BaseRole
     }
 
     /**
-     * Get groups
+     * Get groups.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

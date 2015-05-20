@@ -15,8 +15,7 @@ use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * An instance of this class is thrown along with the sulu.content.node.save event
- * @package Sulu\Component\Content\Event
+ * An instance of this class is thrown along with the sulu.content.node.save event.
  */
 class ContentNodeEvent extends Event
 {

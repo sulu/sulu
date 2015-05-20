@@ -53,9 +53,11 @@ class PreviewRenderer
     }
 
     /**
-     * renders content with the real website controller
+     * renders content with the real website controller.
+     *
      * @param Page $content
      * @param bool $partial
+     *
      * @return string
      */
     public function render(Page $content, $partial = false)

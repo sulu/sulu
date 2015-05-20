@@ -11,25 +11,23 @@
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
 use Doctrine\ORM\EntityManager;
-use Psr\Log\InvalidArgumentException;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException;
-use Symfony\Component\Console\Output\Output;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\Translation\Loader;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\Output;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Symfony\Component\Translation\Loader;
+use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 /**
- * Configures and starts an import from an translation catalogue
- * @package Sulu\Bundle\TranslateBundle\Translate
+ * Configures and starts an import from an translation catalogue.
  */
 class Import
 {
@@ -46,37 +44,43 @@ class Import
     private $kernel;
 
     /**
-     * The format of the file to import
-     * @var integer
+     * The format of the file to import.
+     *
+     * @var int
      */
     private $format;
 
     /**
-     * The path to look for translations in each bundle
+     * The path to look for translations in each bundle.
+     *
      * @var string
      */
     private $path;
 
     /**
-     * The locale to use for the import
+     * The locale to use for the import.
+     *
      * @var string
      */
     private $locale;
 
     /**
-     * The locale for which newly created catalogues get set as default
+     * The locale for which newly created catalogues get set as default.
+     *
      * @var string
      */
     private $defaultLocale;
 
     /**
-     * The domain of frontend translation files
+     * The domain of frontend translation files.
+     *
      * @var string
      */
     private $frontendDomain;
 
     /**
-     * The domain of backend translation files
+     * The domain of backend translation files.
+     *
      * @var string
      */
     private $backendDomain;
@@ -87,13 +91,15 @@ class Import
     private $output;
 
     /**
-     * The path to the file to import
+     * The path to the file to import.
+     *
      * @var string
      */
     private $file;
 
     /**
-     * The name of the package, in which the import will be saved
+     * The name of the package, in which the import will be saved.
+     *
      * @var string
      */
     private $name;
@@ -101,7 +107,8 @@ class Import
     /**
      * The id of the package to override.
      * null if a new package should be created.
-     * @var integer
+     *
+     * @var int
      */
     private $packageId;
 
@@ -113,7 +120,8 @@ class Import
     }
 
     /**
-     * Sets the format of the file to import
+     * Sets the format of the file to import.
+     *
      * @param int $format The format of the file to import
      */
     public function setFormat($format)
@@ -122,7 +130,8 @@ class Import
     }
 
     /**
-     * Sets the path
+     * Sets the path.
+     *
      * @param string $path
      */
     public function setPath($path)
@@ -139,7 +148,8 @@ class Import
     }
 
     /**
-     * Sets the locale
+     * Sets the locale.
+     *
      * @param string $locale
      */
     public function setLocale($locale)
@@ -156,7 +166,8 @@ class Import
     }
 
     /**
-     * Sets the default locale
+     * Sets the default locale.
+     *
      * @param string $defaultLocale
      */
     public function setDefaultLocale($defaultLocale)
@@ -173,7 +184,8 @@ class Import
     }
 
     /**
-     * Sets the frontend domain
+     * Sets the frontend domain.
+     *
      * @param string $frontendDomain
      */
     public function setFrontendDomain($frontendDomain)
@@ -190,7 +202,8 @@ class Import
     }
 
     /**
-     * Sets the backend domain
+     * Sets the backend domain.
+     *
      * @param string $backendDomain
      */
     public function setBackendDomain($backendDomain)
@@ -207,7 +220,8 @@ class Import
     }
 
     /**
-     * Sets the output
+     * Sets the output.
+     *
      * @param Output $output
      */
     public function setOutput($output)
@@ -224,7 +238,8 @@ class Import
     }
 
     /**
-     * Returns the format of the file to import
+     * Returns the format of the file to import.
+     *
      * @return int The format of the file to import
      */
     public function getFormat()
@@ -233,7 +248,8 @@ class Import
     }
 
     /**
-     * Sets the path to the file to import
+     * Sets the path to the file to import.
+     *
      * @param string $file The path to the file to import
      */
     public function setFile($file)
@@ -242,7 +258,8 @@ class Import
     }
 
     /**
-     * Returns the file path of the import
+     * Returns the file path of the import.
+     *
      * @return string The file path of the import
      */
     public function getFile()
@@ -251,7 +268,8 @@ class Import
     }
 
     /**
-     * Sets the name of the package, in which the import will be saved
+     * Sets the name of the package, in which the import will be saved.
+     *
      * @param string $name The name of the package
      */
     public function setName($name)
@@ -260,7 +278,8 @@ class Import
     }
 
     /**
-     * Returns the name of the package, in which the import will be saved
+     * Returns the name of the package, in which the import will be saved.
+     *
      * @return string The name of the package
      */
     public function getName()
@@ -269,7 +288,8 @@ class Import
     }
 
     /**
-     * Sets the id of the package to override
+     * Sets the id of the package to override.
+     *
      * @param int $packageId
      */
     public function setPackageId($packageId)
@@ -278,7 +298,8 @@ class Import
     }
 
     /**
-     * Returns the id of the package to override
+     * Returns the id of the package to override.
+     *
      * @return int
      */
     public function getPackageId()
@@ -287,7 +308,7 @@ class Import
     }
 
     /**
-     * Deletes all translation packages
+     * Deletes all translation packages.
      */
     public function resetPackages()
     {
@@ -300,9 +321,10 @@ class Import
     }
 
     /**
-     * Executes the import. Imports a single file
-     * @param boolean $backend True to make translations available in the backend
-     * @param boolean $frontend True to make translations available in the frontend
+     * Executes the import. Imports a single file.
+     *
+     * @param bool $backend True to make translations available in the backend
+     * @param bool $frontend True to make translations available in the frontend
      */
     public function executeFromFile($backend = true, $frontend = false)
     {
@@ -319,9 +341,10 @@ class Import
     }
 
     /**
-     * Executes the import. All translations found in the bundles get imported
-     * @param boolean $backend True to import the backend file
-     * @param boolean $frontend True to import the frontend file
+     * Executes the import. All translations found in the bundles get imported.
+     *
+     * @param bool $backend True to import the backend file
+     * @param bool $frontend True to import the frontend file
      */
     public function executeFromBundles($backend = true, $frontend = true)
     {
@@ -336,11 +359,12 @@ class Import
     }
 
     /**
-     * Imports the translations file for a bundle
+     * Imports the translations file for a bundle.
+     *
      * @param BundleInterface $bundle
      * @param $path
-     * @param boolean $backend True to import the backend file
-     * @param boolean $frontend True to import the frontend file
+     * @param bool $backend True to import the backend file
+     * @param bool $frontend True to import the frontend file
      */
     private function importBundle($bundle, $path, $backend, $frontend)
     {
@@ -373,9 +397,12 @@ class Import
     }
 
     /**
-     * Returns the package for the file import
+     * Returns the package for the file import.
+     *
      * @param $packageId
+     *
      * @return Package
+     *
      * @throws Exception\PackageNotFoundException
      */
     private function getPackageforFile($packageId)
@@ -419,8 +446,10 @@ class Import
     }
 
     /**
-     * Looks if a package for a bundles exists and returns it. If not creates a new one
+     * Looks if a package for a bundles exists and returns it. If not creates a new one.
+     *
      * @param BundleInterface $bundle
+     *
      * @return Package
      */
     private function getPackageforBundle($bundle)
@@ -438,7 +467,8 @@ class Import
     }
 
     /**
-     * Imports a single file
+     * Imports a single file.
+     *
      * @param Package $package the package to import the file into
      * @param LoaderInterface $loader
      * @param string $path The path to the file
@@ -446,6 +476,7 @@ class Import
      * @param bool $backend True to make the file available in the backend
      * @param bool $frontend True to make the file available in the frontend
      * @param bool $throw If true the methods throws exception if the a file cannot be found
+     *
      * @throws \Exception
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\NotFoundResourceException
@@ -520,7 +551,6 @@ class Import
             }
             $this->em->flush();
             $progress->finish();
-
         } catch (\InvalidArgumentException $e) {
             if ($e instanceof NotFoundResourceException) {
                 if ($throw === true) {

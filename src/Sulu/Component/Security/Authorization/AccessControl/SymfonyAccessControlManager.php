@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;

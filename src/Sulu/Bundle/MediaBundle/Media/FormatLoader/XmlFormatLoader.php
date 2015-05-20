@@ -11,12 +11,11 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use DOMElement;
-use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Util\XmlUtils;
 
 /**
- * Class XmlFormatLoader
- * @package Sulu\Bundle\MediaBundle\Media\FormatLoader
+ * Class XmlFormatLoader.
  */
 class XmlFormatLoader extends FileLoader
 {
@@ -51,10 +50,11 @@ class XmlFormatLoader extends FileLoader
     }
 
     /**
-     * Load formats from a xml file
+     * Load formats from a xml file.
      *
      * @param mixed $resource The resource
      * @param string $type The resource type
+     *
      * @return array The formats array for the given resource
      */
     public function load($resource, $type = null)
@@ -68,6 +68,7 @@ class XmlFormatLoader extends FileLoader
 
     /**
      * @param $file
+     *
      * @return array
      */
     private function parseXml($file)
@@ -81,7 +82,7 @@ class XmlFormatLoader extends FileLoader
         $this->xpath->registerNamespace('x', static::XML_NAMESPACE_URI);
 
         /**
-         * @var DOMElement $formatNode
+         * @var DOMElement
          */
         foreach ($this->xpath->query('/x:formats/x:format') as $formatNode) {
             $name = $this->xpath->query('x:name', $formatNode)->item(0)->nodeValue;
@@ -103,7 +104,7 @@ class XmlFormatLoader extends FileLoader
 
                     $command = array(
                         'action' => $action,
-                        'parameters' => $parameters
+                        'parameters' => $parameters,
                     );
                     $commands[] = $command;
                 }
@@ -117,7 +118,7 @@ class XmlFormatLoader extends FileLoader
                 $formats[$name] = array(
                     'name' => $name,
                     'commands' => $commands,
-                    'options' => array_merge($this->defaultOptions, $options)
+                    'options' => array_merge($this->defaultOptions, $options),
                 );
             }
         }

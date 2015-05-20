@@ -10,16 +10,16 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use Serializable;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * User
+ * User.
  *
  * @ExclusionPolicy("all")
  */
@@ -50,7 +50,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     protected $locale;
 
     /**
-     * @var integer
+     * @var int
      * @Expose
      */
     protected $id;
@@ -72,12 +72,12 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     protected $apiKey;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $locked = false;
 
     /**
-     * @var boolean
+     * @var bool
      * @Expose
      */
     protected $enabled = true;
@@ -103,12 +103,12 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     private $passwordResetTokenExpiresAt;
 
     /**
-     * @var integer
+     * @var int
      */
     private $passwordResetTokenEmailsSent;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -116,9 +116,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
+     *
      * @return User
      */
     public function setUsername($username)
@@ -129,7 +130,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get username
+     * Get username.
      *
      * @return string
      */
@@ -141,6 +142,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * @VirtualProperty
      * @SerializedName("fullName")
+     *
      * @return string
      */
     public function getFullName()
@@ -149,9 +151,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
+     *
      * @return User
      */
     public function setPassword($password)
@@ -162,7 +165,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -172,9 +175,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return User
      */
     public function setLocale($locale)
@@ -185,7 +189,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -195,9 +199,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -205,9 +209,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set salt
+     * Set salt.
      *
      * @param string $salt
+     *
      * @return User
      */
     public function setSalt($salt)
@@ -218,7 +223,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get salt
+     * Get salt.
      *
      * @return string
      */
@@ -228,9 +233,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set privateKey
+     * Set privateKey.
      *
      * @param string $privateKey
+     *
      * @return User
      */
     public function setPrivateKey($privateKey)
@@ -241,7 +247,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get privateKey
+     * Get privateKey.
      *
      * @return string
      */
@@ -251,7 +257,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Returns just the default symfony user role, so that the user get recognized as authenticated by symfony
+     * Returns just the default symfony user role, so that the user get recognized as authenticated by symfony.
      *
      * @return array The user roles
      */
@@ -261,43 +267,45 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Removes the password of the user
-     *
-     * @return void
+     * Removes the password of the user.
      */
     public function eraseCredentials()
     {
     }
 
     /**
-     * Serializes the user just with the id, as it is enough
+     * Serializes the user just with the id, as it is enough.
+     *
      * @link http://php.net/manual/en/serializable.serialize.php
+     *
      * @return string The string representation of the object or null
      */
     public function serialize()
     {
         return serialize(
             array(
-                $this->id
+                $this->id,
             )
         );
     }
 
     /**
-     * Constructs the object
+     * Constructs the object.
+     *
      * @link http://php.net/manual/en/serializable.unserialize.php
+     *
      * @param string $serialized The string representation of the object.
-     * @return void
      */
     public function unserialize($serialized)
     {
-        list ($this->id) = unserialize($serialized);
+        list($this->id) = unserialize($serialized);
     }
 
     /**
-     * Set apiKey
+     * Set apiKey.
      *
      * @param string $apiKey
+     *
      * @return User
      */
     public function setApiKey($apiKey)
@@ -308,7 +316,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get apiKey
+     * Get apiKey.
      *
      * @return string
      */
@@ -318,9 +326,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set locked
+     * Set locked.
      *
-     * @param boolean $locked
+     * @param bool $locked
+     *
      * @return User
      */
     public function setLocked($locked)
@@ -331,9 +340,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get locked
+     * Get locked.
      *
-     * @return boolean
+     * @return bool
      */
     public function getLocked()
     {
@@ -341,9 +350,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set enabled
+     * Set enabled.
      *
-     * @param boolean $enabled
+     * @param bool $enabled
+     *
      * @return User
      */
     public function setEnabled($enabled)
@@ -354,9 +364,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get enabled
+     * Get enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function getEnabled()
     {
@@ -364,9 +374,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set lastLogin
+     * Set lastLogin.
      *
      * @param \DateTime $lastLogin
+     *
      * @return User
      */
     public function setLastLogin($lastLogin)
@@ -377,7 +388,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get lastLogin
+     * Get lastLogin.
      *
      * @return \DateTime
      */
@@ -387,9 +398,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set confirmationKey
+     * Set confirmationKey.
      *
      * @param string $confirmationKey
+     *
      * @return User
      */
     public function setConfirmationKey($confirmationKey)
@@ -400,7 +412,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get confirmationKey
+     * Get confirmationKey.
      *
      * @return string
      */
@@ -410,9 +422,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set passwordResetToken
+     * Set passwordResetToken.
      *
      * @param string $passwordResetToken
+     *
      * @return User
      */
     public function setPasswordResetToken($passwordResetToken)
@@ -423,7 +436,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get passwordResetToken
+     * Get passwordResetToken.
      *
      * @return string
      */
@@ -433,9 +446,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
+     *
      * @return BaseUser
      */
     public function setEmail($email)
@@ -446,9 +460,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get email
+     * Get email.
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -456,9 +470,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set tokenExpiresAt
+     * Set tokenExpiresAt.
      *
      * @param \DateTime $passwordResetTokenExpiresAt
+     *
      * @return BaseUser
      */
     public function setPasswordResetTokenExpiresAt($passwordResetTokenExpiresAt)
@@ -469,9 +484,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get passwordResetTokenExpiresAt
+     * Get passwordResetTokenExpiresAt.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getPasswordResetTokenExpiresAt()
     {
@@ -479,9 +494,10 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Set passwordResetTokenEmailsSent
+     * Set passwordResetTokenEmailsSent.
      *
-     * @param integer $passwordResetTokenEmailsSent
+     * @param int $passwordResetTokenEmailsSent
+     *
      * @return BaseUser
      */
     public function setPasswordResetTokenEmailsSent($passwordResetTokenEmailsSent)
@@ -492,9 +508,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get passwordResetTokenEmailsSent
+     * Get passwordResetTokenEmailsSent.
      *
-     * @return integer 
+     * @return int
      */
     public function getPasswordResetTokenEmailsSent()
     {

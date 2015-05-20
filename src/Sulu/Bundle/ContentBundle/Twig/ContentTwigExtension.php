@@ -16,8 +16,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyParameter;
 
 /**
- * Extension for content form generation
- * @package Sulu\Bundle\ContentBundle\Twig
+ * Extension for content form generation.
  */
 class ContentTwigExtension extends \Twig_Extension
 {
@@ -32,7 +31,8 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns an array of possible function in this extension
+     * Returns an array of possible function in this extension.
+     *
      * @return array
      */
     public function getFunctions()
@@ -42,12 +42,13 @@ class ContentTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('needs_add_button', array($this, 'needsAddButtonFunction')),
             new \Twig_SimpleFunction('get_params', array($this, 'getParamsFunction')),
             new \Twig_SimpleFunction('parameter_to_select', array($this, 'convertParameterToSelect')),
-            new \Twig_SimpleFunction('parameter_to_key_value', array($this, 'convertParameterToKeyValue'))
+            new \Twig_SimpleFunction('parameter_to_key_value', array($this, 'convertParameterToKeyValue')),
         );
     }
 
     /**
      * @param PropertyInterface $property
+     *
      * @return array
      */
     public function getParamsFunction($property)
@@ -63,13 +64,14 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * Better array merge recursive function
-     *  - does not combine to scalar values to a array
+     *  - does not combine to scalar values to a array.
+     *
      * @see http://php.net/manual/de/function.array-merge-recursive.php#106985
+     *
      * @return array
      */
     private function mergeRecursive()
     {
-
         $arrays = func_get_args();
         $base = array_shift($arrays);
 
@@ -88,19 +90,22 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns an array of possible tests in this extension
+     * Returns an array of possible tests in this extension.
+     *
      * @return array
      */
     public function getTests()
     {
         return array(
-            new \Twig_SimpleTest('multiple', array($this, 'isMultipleTest'))
+            new \Twig_SimpleTest('multiple', array($this, 'isMultipleTest')),
         );
     }
 
     /**
-     * Returns content type with given name
+     * Returns content type with given name.
+     *
      * @param $name string
+     *
      * @return ContentTypeInterface
      */
     public function getTypeFunction($name)
@@ -109,8 +114,10 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Return true if property is an array and needs an add button
+     * Return true if property is an array and needs an add button.
+     *
      * @param $property PropertyInterface
+     *
      * @return bool
      */
     public function needsAddButtonFunction(PropertyInterface $property)
@@ -119,8 +126,10 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Return if property is an array
+     * Return if property is an array.
+     *
      * @param $property PropertyInterface
+     *
      * @return bool
      */
     public function isMultipleTest($property)
@@ -131,6 +140,7 @@ class ContentTwigExtension extends \Twig_Extension
     /**
      * @param PropertyParameter[] $parameters
      * @param string $locale
+     *
      * @return array
      */
     public function convertParameterToSelect($parameters, $locale)
@@ -140,7 +150,7 @@ class ContentTwigExtension extends \Twig_Extension
         foreach ($parameters as $parameter) {
             $result[] = array(
                 'id' => $parameter->getName(),
-                'name' => $parameter->getTitle($locale)
+                'name' => $parameter->getTitle($locale),
             );
         }
 
@@ -149,6 +159,7 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * @param PropertyParameter[] $parameters
+     *
      * @return array
      */
     public function convertParameterToKeyValue($parameters)
@@ -158,7 +169,6 @@ class ContentTwigExtension extends \Twig_Extension
         if (is_array($parameters)) {
             foreach ($parameters as $parameter) {
                 $result[$parameter->getName()] = $parameter->getValue();
-
             }
         } else {
             return $parameters;
@@ -169,6 +179,7 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * Returns the name of the extension.
+     *
      * @return string The extension name
      */
     public function getName()

@@ -15,23 +15,24 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use PHPCR\RepositoryException;
 use Sulu\Component\Content\BreadcrumbItem;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
-use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -43,29 +44,25 @@ use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
-use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
+use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\NodeHelper;
+use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Sulu\Component\Util\SuluNodeHelper;
-use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 
 /**
- * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
+ * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
  *
  * Short term todo:
  *
  * - Rename localization, languageCode, language etc. to "locale"
- *
- * @package Sulu\Component\Content\Mapper
  */
 class ContentMapper implements ContentMapperInterface
 {
@@ -95,25 +92,29 @@ class ContentMapper implements ContentMapperInterface
     private $localizationFinder;
 
     /**
-     * namespace of translation
+     * namespace of translation.
+     *
      * @var string
      */
     private $languageNamespace;
 
     /**
-     * prefix for internal properties
+     * prefix for internal properties.
+     *
      * @var string
      */
     private $internalPrefix;
 
     /**
-     * default language of translation
+     * default language of translation.
+     *
      * @var string
      */
     private $defaultLanguage;
 
     /**
-     * default template
+     * default template.
+     *
      * @var string[]
      */
     private $defaultTemplates;
@@ -139,12 +140,13 @@ class ContentMapper implements ContentMapperInterface
     private $templateResolver;
 
     /**
-     * excepted states
+     * excepted states.
+     *
      * @var array
      */
     private $states = array(
         StructureInterface::STATE_PUBLISHED,
-        StructureInterface::STATE_TEST
+        StructureInterface::STATE_TEST,
     );
 
     /**
@@ -153,12 +155,12 @@ class ContentMapper implements ContentMapperInterface
     private $properties;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $ignoreMandatoryFlag = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $noRenamingFlag = false;
 
@@ -214,7 +216,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Create a new property translator
+     * Create a new property translator.
      *
      * @param string $languageCode
      * @param string $structureType
@@ -238,7 +240,7 @@ class ContentMapper implements ContentMapperInterface
                 'navContexts',
                 'shadow-on',
                 'shadow-base',
-                'internal_link'
+                'internal_link',
             ),
             $this->languageNamespace,
             $this->internalPrefix
@@ -507,7 +509,7 @@ class ContentMapper implements ContentMapperInterface
                     if ($type->getType() == ContentTypeInterface::POST_SAVE) {
                         $postSave[] = array(
                             'type' => $type,
-                            'property' => $property
+                            'property' => $property,
                         );
                     } else {
                         $translatedProperty = new TranslatedProperty(
@@ -667,6 +669,7 @@ class ContentMapper implements ContentMapperInterface
      * @param NodeInterface $node
      * @param string $language
      * @param string $shadowBaseLanguage
+     *
      * @throws \RuntimeException
      */
     protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
@@ -696,7 +699,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Return the enabled shadow languages on the given node
+     * Return the enabled shadow languages on the given node.
      *
      * @param NodeInterface $node
      *
@@ -744,11 +747,14 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * validates navigation contexts
+     * validates navigation contexts.
+     *
      * @param string[] $navContexts
      * @param \Sulu\Component\Webspace\Webspace $webspace
+     *
      * @throws \Sulu\Component\Content\Exception\InvalidNavigationContextExtension
-     * @return boolean
+     *
+     * @return bool
      */
     private function validateNavContexts($navContexts, Webspace $webspace)
     {
@@ -1210,7 +1216,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a sql2 query
+     * returns a sql2 query.
      */
     private function createSql2Query($sql2, $limit = null)
     {
@@ -1331,7 +1337,7 @@ class ContentMapper implements ContentMapperInterface
         // END: getAvailableLocalization
 
         if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
-            return null;
+            return;
         }
 
         // now switch the language to the available localization
@@ -1465,7 +1471,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Determites locale for shadow-pages
+     * Determites locale for shadow-pages.
      */
     private function getShadowLocale(NodeInterface $node, $defaultLocale)
     {
@@ -1591,7 +1597,8 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Loads urls for given page for all locales in webspace
+     * Loads urls for given page for all locales in webspace.
+     *
      * @param Page $page
      * @param NodeInterface $node
      * @param string $webspaceKey
@@ -1609,11 +1616,13 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Returns urls for given page for all locales in webspace
+     * Returns urls for given page for all locales in webspace.
+     *
      * @param Page $page
      * @param NodeInterface $node
      * @param string $webspaceKey
      * @param string $segmentKey
+     *
      * @return array
      */
     private function getLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
@@ -1827,7 +1836,9 @@ class ContentMapper implements ContentMapperInterface
      *       should be scoped for each save request.
      *
      * TRUE dont rename pages on save
-     * @param boolean $noRenamingFlag
+     *
+     * @param bool $noRenamingFlag
+     *
      * @return $this
      */
     public function setNoRenamingFlag($noRenamingFlag)
@@ -1838,8 +1849,10 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * TRUE ignores mandatory in save
+     * TRUE ignores mandatory in save.
+     *
      * @param bool $ignoreMandatoryFlag
+     *
      * @return $this
      */
     public function setIgnoreMandatoryFlag($ignoreMandatoryFlag)
@@ -1850,13 +1863,15 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * copies (move = false) or move (move = true) the src (uuid) node to dest (parentUuid) node
+     * copies (move = false) or move (move = true) the src (uuid) node to dest (parentUuid) node.
+     *
      * @param string $uuid
      * @param string $destParentUuid
-     * @param integer $userId
+     * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
      * @param bool $move
+     *
      * @return StructureInterface
      */
     private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $move = true)
@@ -1945,7 +1960,8 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * adopts resource locator for just moved or copied node
+     * adopts resource locator for just moved or copied node.
+     *
      * @param StructureInterface $content
      * @param NodeInterface $node
      * @param string $parentResourceLocator
@@ -1990,11 +2006,11 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Remove node with references (path, history path ...)
+     * Remove node with references (path, history path ...).
      *
      * @param NodeInterface $node
      * @param string Webspace - required by event listeners
-     * @param boolean $dereference Remove REFERENCE properties (or property
+     * @param bool $dereference Remove REFERENCE properties (or property
      *   values in the case of multi-value) from referencing nodes
      */
     private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
@@ -2043,8 +2059,10 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a structure with given key
+     * returns a structure with given key.
+     *
      * @param string $key key of content type
+     *
      * @return StructureInterface
      */
     protected function getStructure($key, $type = Structure::TYPE_PAGE)
@@ -2073,8 +2091,10 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a type with given name
+     * returns a type with given name.
+     *
      * @param $name
+     *
      * @return ContentTypeInterface
      */
     protected function getContentType($name)
@@ -2084,6 +2104,7 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * @param $webspaceKey
+     *
      * @return NodeInterface
      */
     protected function getContentNode($webspaceKey)
@@ -2103,6 +2124,7 @@ class ContentMapper implements ContentMapperInterface
      * @param $webspaceKey
      * @param string $languageCode
      * @param string $segment
+     *
      * @return NodeInterface
      */
     protected function getRouteNode($webspaceKey, $languageCode, $segment)
@@ -2113,6 +2135,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * @param $name
      * @param NodeInterface $parent
+     *
      * @return string
      */
     private function getUniquePath($name, NodeInterface $parent)
@@ -2134,7 +2157,7 @@ class ContentMapper implements ContentMapperInterface
     // =================================
 
     /**
-     * initializes cache for extension data
+     * initializes cache for extension data.
      */
     private function initializeExtensionCache()
     {
@@ -2173,7 +2196,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * converts a query row to an array
+     * converts a query row to an array.
      */
     private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
     {
@@ -2299,7 +2322,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Return extracted data (configured by fields array) from node
+     * Return extracted data (configured by fields array) from node.
      */
     private function getFieldsData(Row $row, NodeInterface $node, $fields, $templateKey, $webspaceKey, $locale)
     {
@@ -2328,7 +2351,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Return data for one field
+     * Return data for one field.
      */
     private function getFieldData($field, Row $row, NodeInterface $node, $templateKey, $webspaceKey, $locale)
     {
@@ -2352,11 +2375,11 @@ class ContentMapper implements ContentMapperInterface
             return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns data for property
+     * Returns data for property.
      */
     private function getPropertyData(NodeInterface $node, PropertyInterface $property, $webspaceKey, $locale)
     {
@@ -2377,7 +2400,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Returns data for extension and property name
+     * Returns data for extension and property name.
      */
     private function getExtensionData(
         NodeInterface $node,
@@ -2407,7 +2430,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * load data from extension
+     * load data from extension.
      */
     private function loadExtensionData(NodeInterface $node, StructureExtension $extension, $webspaceKey, $locale)
     {
@@ -2422,7 +2445,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Returns title of a row
+     * Returns title of a row.
      */
     private function getTitle(NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale)
     {
@@ -2430,7 +2453,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Returns url of a row
+     * Returns url of a row.
      */
     private function getUrl(
         $path,
@@ -2490,7 +2513,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Validate the content mapper request
+     * Validate the content mapper request.
      *
      * TODO: We should be validating the domain object, i.e. the Page or Snippet structure
      *       types. But this requires refactoring the ContentMapper

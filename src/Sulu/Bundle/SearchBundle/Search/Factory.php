@@ -11,11 +11,10 @@
 namespace Sulu\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Factory as BaseFactory;
-use Sulu\Bundle\SearchBundle\Search\Document;
 
 /**
  * Extend the MassiveSearch factory in order to
- * use a custom document type
+ * use a custom document type.
  */
 class Factory extends BaseFactory
 {

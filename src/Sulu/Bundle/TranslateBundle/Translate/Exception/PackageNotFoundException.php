@@ -15,7 +15,6 @@ use Exception;
 /**
  * This exception is thrown when the Import can't find the package that should
  * be overriden.
- * @package Sulu\Bundle\TranslateBundle\Translate
  */
 class PackageNotFoundException extends Exception
 {

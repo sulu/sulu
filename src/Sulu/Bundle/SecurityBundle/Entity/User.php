@@ -3,14 +3,14 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 
 /**
- * User
+ * User.
  *
  * @ExclusionPolicy("all")
  */
@@ -40,7 +40,7 @@ class User extends BaseUser
     private $userSettings;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -50,9 +50,10 @@ class User extends BaseUser
     }
 
     /**
-     * Add userRoles
+     * Add userRoles.
      *
      * @param UserRole $userRoles
+     *
      * @return User
      */
     public function addUserRole(UserRole $userRoles)
@@ -63,7 +64,7 @@ class User extends BaseUser
     }
 
     /**
-     * Remove userRoles
+     * Remove userRoles.
      *
      * @param UserRole $userRoles
      */
@@ -73,7 +74,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get userRoles
+     * Get userRoles.
      *
      * @return ArrayCollection
      */
@@ -98,9 +99,10 @@ class User extends BaseUser
     }
 
     /**
-     * Add userGroups
+     * Add userGroups.
      *
      * @param UserGroup $userGroups
+     *
      * @return User
      */
     public function addUserGroup(UserGroup $userGroups)
@@ -111,7 +113,7 @@ class User extends BaseUser
     }
 
     /**
-     * Remove userGroups
+     * Remove userGroups.
      *
      * @param UserGroup $userGroups
      */
@@ -121,7 +123,8 @@ class User extends BaseUser
     }
 
     /**
-     * Get userGroups
+     * Get userGroups.
+     *
      * @return ArrayCollection
      */
     public function getUserGroups()
@@ -130,9 +133,10 @@ class User extends BaseUser
     }
 
     /**
-     * Add userSettings
+     * Add userSettings.
      *
      * @param UserSetting $userSettings
+     *
      * @return User
      */
     public function addUserSetting(UserSetting $userSettings)
@@ -143,7 +147,7 @@ class User extends BaseUser
     }
 
     /**
-     * Remove userSettings
+     * Remove userSettings.
      *
      * @param UserSetting $userSettings
      */
@@ -153,7 +157,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get userSettings
+     * Get userSettings.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -163,9 +167,10 @@ class User extends BaseUser
     }
 
     /**
-     * Set contact
+     * Set contact.
      *
      * @param Contact $contact
+     *
      * @return User
      */
     public function setContact(Contact $contact = null)
@@ -176,7 +181,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get contact
+     * Get contact.
      *
      * @return Contact
      */
@@ -188,6 +193,7 @@ class User extends BaseUser
     /**
      * @VirtualProperty
      * @SerializedName("fullName")
+     *
      * @return string
      */
     public function getFullName()

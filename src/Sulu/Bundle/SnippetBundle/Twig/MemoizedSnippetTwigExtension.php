@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Twig;
 use Sulu\Component\Cache\MemoizeInterface;
 
 /**
- * Provides memoized Twig functions to handle snippets
+ * Provides memoized Twig functions to handle snippets.
  */
 class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
 {
@@ -33,9 +33,9 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     private $lifeTime;
 
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
+    public function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;

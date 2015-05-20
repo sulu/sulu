@@ -9,11 +9,12 @@
  */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
+
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * Email
+ * Email.
  */
 class Email
 {
@@ -24,7 +25,7 @@ class Email
     private $email;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
@@ -48,7 +49,7 @@ class Email
     private $accounts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -57,9 +58,10 @@ class Email
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
+     *
      * @return Email
      */
     public function setEmail($email)
@@ -70,7 +72,7 @@ class Email
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -80,9 +82,9 @@ class Email
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -90,9 +92,10 @@ class Email
     }
 
     /**
-     * Set emailType
+     * Set emailType.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\EmailType $emailType
+     *
      * @return Email
      */
     public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
@@ -103,7 +106,7 @@ class Email
     }
 
     /**
-     * Get emailType
+     * Get emailType.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\EmailType
      */
@@ -113,9 +116,10 @@ class Email
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     *
      * @return Email
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
@@ -126,7 +130,7 @@ class Email
     }
 
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
      */
@@ -136,7 +140,7 @@ class Email
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -146,9 +150,10 @@ class Email
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param AccountInterface $account
+     *
      * @return Email
      */
     public function addAccount(AccountInterface $account)
@@ -159,7 +164,7 @@ class Email
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param AccountInterface $account
      */
@@ -169,7 +174,7 @@ class Email
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -12,12 +12,11 @@ namespace Sulu\Component\Scheduler;
 
 /**
  * Defines the interface for a scheduled task.
- * @package Sulu\Component\Scheduler
  */
 interface TaskInterface
 {
     /**
-     * Periodically called by the Scheduler
+     * Periodically called by the Scheduler.
      */
     public function execute();
 }

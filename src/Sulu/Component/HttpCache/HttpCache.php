@@ -31,7 +31,7 @@ class HttpCache extends HttpCacheAbstract
         $response = parent::handle($request, $type, $catch);
 
         if (!$this->kernel->isDebug()) {
-            $response->headers->remove(HttpCache::HEADER_REVERSE_PROXY_TTL);
+            $response->headers->remove(self::HEADER_REVERSE_PROXY_TTL);
         }
 
         return $response;
@@ -93,6 +93,6 @@ class HttpCache extends HttpCacheAbstract
             return $maxAge - $response->getAge();
         }
 
-        return null;
+        return;
     }
 }

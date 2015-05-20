@@ -14,12 +14,10 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * ContentTypeManager
+ * ContentTypeManager.
  *
  * Uses an alias => service ID map to fetch content types from
  * the dependency injection container.
- *
- * @package Sulu\Component\Content
  */
 class ContentTypeManager extends ContainerAware implements ContentTypeManagerInterface
 {
@@ -37,7 +35,7 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     }
 
     /**
-     * Map a content type alias to a service ID
+     * Map a content type alias to a service ID.
      *
      * @param string $alias - Alias for content type, e.g. media
      * @param string $serviceId - ID of corresponding service in the DI container

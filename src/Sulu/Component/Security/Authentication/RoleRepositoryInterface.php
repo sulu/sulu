@@ -10,27 +10,26 @@
 
 namespace Sulu\Component\Security\Authentication;
 
-use Sulu\Component\Security\Authentication\RoleInterface;
-
 interface RoleRepositoryInterface
 {
     /**
-     * Finds a role with a specific id
+     * Finds a role with a specific id.
      *
-     * @param integer $id id of the role
+     * @param int $id id of the role
+     *
      * @return RoleInterface
      */
     public function findRoleById($id);
 
     /**
-     * Searches for all roles
+     * Searches for all roles.
      *
      * @return array
      */
     public function findAllRoles();
 
     /**
-     * Return an array containing the names of all the roles
+     * Return an array containing the names of all the roles.
      *
      * @return array
      */

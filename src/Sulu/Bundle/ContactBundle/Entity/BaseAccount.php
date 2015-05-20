@@ -20,7 +20,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     const DISABLED = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -67,7 +67,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $corporation;
 
     /**
-     * @var integer
+     * @var int
      */
     private $disabled = self::ENABLED;
 
@@ -112,7 +112,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $mainContact;
 
     /**
-     * setId
+     * setId.
      *
      * @param int $id
      *
@@ -126,18 +126,17 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -151,7 +150,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -161,7 +160,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set externalId
+     * Set externalId.
      *
      * @param string $externalId
      *
@@ -175,7 +174,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get externalId
+     * Get externalId.
      *
      * @return string
      */
@@ -185,7 +184,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set number
+     * Set number.
      *
      * @param string $number
      *
@@ -199,7 +198,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get number
+     * Get number.
      *
      * @return string
      */
@@ -209,7 +208,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set corporation
+     * Set corporation.
      *
      * @param string $corporation
      *
@@ -223,7 +222,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get corporation
+     * Get corporation.
      *
      * @return string
      */
@@ -233,9 +232,9 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set disabled
+     * Set disabled.
      *
-     * @param integer $disabled
+     * @param int $disabled
      *
      * @return BaseAccount
      */
@@ -247,9 +246,9 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get disabled
+     * Get disabled.
      *
-     * @return integer
+     * @return int
      */
     public function getDisabled()
     {
@@ -257,7 +256,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set uid
+     * Set uid.
      *
      * @param string $uid
      *
@@ -271,7 +270,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get uid
+     * Get uid.
      *
      * @return string
      */
@@ -281,7 +280,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set registerNumber
+     * Set registerNumber.
      *
      * @param string $registerNumber
      *
@@ -295,7 +294,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get registerNumber
+     * Get registerNumber.
      *
      * @return string
      */
@@ -305,7 +304,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set placeOfJurisdiction
+     * Set placeOfJurisdiction.
      *
      * @param string $placeOfJurisdiction
      *
@@ -319,7 +318,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get placeOfJurisdiction
+     * Get placeOfJurisdiction.
      *
      * @return string
      */
@@ -329,7 +328,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set mainEmail
+     * Set mainEmail.
      *
      * @param string $mainEmail
      *
@@ -343,7 +342,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get mainEmail
+     * Get mainEmail.
      *
      * @return string
      */
@@ -353,7 +352,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set mainPhone
+     * Set mainPhone.
      *
      * @param string $mainPhone
      *
@@ -367,7 +366,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get mainPhone
+     * Get mainPhone.
      *
      * @return string
      */
@@ -377,7 +376,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set mainFax
+     * Set mainFax.
      *
      * @param string $mainFax
      *
@@ -391,7 +390,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get mainFax
+     * Get mainFax.
      *
      * @return string
      */
@@ -401,7 +400,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Set mainUrl
+     * Set mainUrl.
      *
      * @param string $mainUrl
      *
@@ -415,7 +414,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * Get mainUrl
+     * Get mainUrl.
      *
      * @return string
      */
@@ -425,10 +424,9 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * getCreated
+     * getCreated.
      *
      * @return DateTime
-     *
      */
     public function getCreated()
     {
@@ -436,7 +434,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * setCreated
+     * setCreated.
      *
      * @param DateTime $created
      *
@@ -450,7 +448,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * getChanged
+     * getChanged.
      *
      * @return DateTime
      */
@@ -460,7 +458,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * setChanged
+     * setChanged.
      *
      * @param DateTime $changed
      *
@@ -474,7 +472,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * getChanger
+     * getChanger.
      *
      * @return UserInterface
      */
@@ -484,7 +482,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * setChanger
+     * setChanger.
      *
      * @param UserInterface $changer
      *
@@ -496,7 +494,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * getCreator
+     * getCreator.
      *
      * @return UserInterface
      */
@@ -506,7 +504,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * setCreator
+     * setCreator.
      *
      * @param UserInterface $creator
      *
@@ -520,7 +518,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * getMainContact
+     * getMainContact.
      *
      * @return Contact
      */
@@ -530,7 +528,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     }
 
     /**
-     * setMainContact
+     * setMainContact.
      *
      * @param Contact $mainContact
      *

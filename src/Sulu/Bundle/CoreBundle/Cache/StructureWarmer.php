@@ -10,12 +10,12 @@
 
 namespace Sulu\Bundle\CoreBundle\Cache;
 
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureManagerInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 /**
- * Generates the Structure cache files
+ * Generates the Structure cache files.
  */
 class StructureWarmer implements CacheWarmerInterface
 {

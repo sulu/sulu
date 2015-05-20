@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Exception;
 
 /**
- * Exception for parent not found
+ * Exception for parent not found.
  */
 class ParentNotFoundException extends \Exception
 {

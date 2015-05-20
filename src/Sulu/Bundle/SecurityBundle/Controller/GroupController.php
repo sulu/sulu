@@ -11,22 +11,21 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
-use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes the groups accessible through a REST-API
- * @package Sulu\Bundle\SecurityBundle\Controller
+ * Makes the groups accessible through a REST-API.
  */
 class GroupController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -53,8 +52,10 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * returns all groups
+     * returns all groups.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -91,8 +92,10 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Returns the group with the given id
+     * Returns the group with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -112,9 +115,12 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Creates a new group with the given data
+     * Creates a new group with the given data.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -128,7 +134,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
             $group->setName($name);
 
             $this->setParent($group);
-
 
             $roles = $request->get('roles');
             if (!empty($roles)) {
@@ -149,9 +154,11 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Updates the group with the given id and the data given by the request
+     * Updates the group with the given id and the data given by the request.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -173,7 +180,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
                 $this->setParent($group);
 
-
                 if (!$this->processRoles($group, $request->get('roles', array()))) {
                     throw new RestException('Could not update dependencies!');
                 }
@@ -191,9 +197,11 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Process all roles from request
+     * Process all roles from request.
+     *
      * @param Group $group The contact on which is worked
      * @param array $roles The roles to process
+     *
      * @return bool True if the processing was successful, otherwise false
      */
     protected function processRoles(Group $group, $roles)
@@ -223,8 +231,10 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Deletes the group with the given id
+     * Deletes the group with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -249,10 +259,13 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Adds the given role to the group
+     * Adds the given role to the group.
+     *
      * @param Group $group
      * @param array $roleData
+     *
      * @return bool
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function addRole(Group $group, $roleData)
@@ -275,9 +288,11 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Updates an already existing role
+     * Updates an already existing role.
+     *
      * @param Role $role
      * @param $roleData
+     *
      * @return bool
      */
     private function updateRole(Role $role, $roleData)
@@ -288,6 +303,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
     /**
      * @param $group
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function setParent($group)
@@ -306,7 +322,8 @@ class GroupController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Returns the SecurityContext required for the controller
+     * Returns the SecurityContext required for the controller.
+     *
      * @return mixed
      */
     public function getSecurityContext()

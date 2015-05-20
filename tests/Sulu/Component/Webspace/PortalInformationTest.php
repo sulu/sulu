@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace;
 
-
 class PortalInformationTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -32,7 +31,7 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
         return array(
             array('sulu.lo', 'sulu.lo', ''),
             array('sulu.io/', 'sulu.io', '/'),
-            array('sulu.com/example', 'sulu.com', '/example')
+            array('sulu.com/example', 'sulu.com', '/example'),
         );
     }
 

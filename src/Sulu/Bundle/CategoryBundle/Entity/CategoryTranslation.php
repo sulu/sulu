@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
 /**
- * CategoryTranslation
+ * CategoryTranslation.
  */
 class CategoryTranslation
 {
@@ -18,7 +18,7 @@ class CategoryTranslation
     private $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -28,9 +28,10 @@ class CategoryTranslation
     private $category;
 
     /**
-     * Set translation
+     * Set translation.
      *
      * @param string $translation
+     *
      * @return CategoryTranslation
      */
     public function setTranslation($translation)
@@ -41,7 +42,7 @@ class CategoryTranslation
     }
 
     /**
-     * Get translation
+     * Get translation.
      *
      * @return string
      */
@@ -51,9 +52,10 @@ class CategoryTranslation
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return CategoryTranslation
      */
     public function setLocale($locale)
@@ -64,7 +66,7 @@ class CategoryTranslation
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -74,9 +76,9 @@ class CategoryTranslation
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -84,9 +86,10 @@ class CategoryTranslation
     }
 
     /**
-     * Set category
+     * Set category.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     *
      * @return CategoryTranslation
      */
     public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
@@ -97,7 +100,7 @@ class CategoryTranslation
     }
 
     /**
-     * Get category
+     * Get category.
      *
      * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */

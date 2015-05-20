@@ -15,43 +15,50 @@ use Sulu\Component\Util\ArrayableInterface;
 class Url implements ArrayableInterface
 {
     /**
-     * The url itself
+     * The url itself.
+     *
      * @var string
      */
     private $url;
 
     /**
-     * The language to which the url leads
+     * The language to which the url leads.
+     *
      * @var string
      */
     private $language;
 
     /**
-     * The country to which the url leads
+     * The country to which the url leads.
+     *
      * @var string
      */
     private $country;
 
     /**
-     * The segment to which the url leads
+     * The segment to which the url leads.
+     *
      * @var string
      */
     private $segment;
 
     /**
-     * The url to which this url redirects
+     * The url to which this url redirects.
+     *
      * @var string
      */
     private $redirect;
 
     /**
-     * The analytics key for the given url
+     * The analytics key for the given url.
+     *
      * @var string
      */
     private $analyticsKey;
 
     /**
-     * Sets the url
+     * Sets the url.
+     *
      * @param string $url
      */
     public function setUrl($url)
@@ -60,7 +67,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns the url
+     * Returns the url.
+     *
      * @return string
      */
     public function getUrl()
@@ -69,7 +77,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Sets the country to which this url leads
+     * Sets the country to which this url leads.
+     *
      * @param string $country
      */
     public function setCountry($country)
@@ -78,7 +87,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns the country to which this url leads
+     * Returns the country to which this url leads.
+     *
      * @return string
      */
     public function getCountry()
@@ -87,7 +97,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Sets the language to which this url leads
+     * Sets the language to which this url leads.
+     *
      * @param string $language
      */
     public function setLanguage($language)
@@ -96,7 +107,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns the language to which this url leads
+     * Returns the language to which this url leads.
+     *
      * @return string
      */
     public function getLanguage()
@@ -105,7 +117,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Sets the segment to which this url leads
+     * Sets the segment to which this url leads.
+     *
      * @param string $segment
      */
     public function setSegment($segment)
@@ -114,7 +127,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns the segment to which this url leads
+     * Returns the segment to which this url leads.
+     *
      * @return string
      */
     public function getSegment()
@@ -123,7 +137,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Sets the redirect for this url
+     * Sets the redirect for this url.
+     *
      * @param string $redirect
      */
     public function setRedirect($redirect)
@@ -132,7 +147,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns the redirect url
+     * Returns the redirect url.
+     *
      * @return string
      */
     public function getRedirect()
@@ -141,7 +157,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Sets the analytics key for this url
+     * Sets the analytics key for this url.
+     *
      * @param string $analyticsKey
      */
     public function setAnalyticsKey($analyticsKey)
@@ -150,7 +167,8 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns the analytics key
+     * Returns the analytics key.
+     *
      * @return string
      */
     public function getAnalyticsKey()
@@ -173,5 +191,4 @@ class Url implements ArrayableInterface
 
         return $res;
     }
-
 }

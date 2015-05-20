@@ -15,21 +15,21 @@ use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 
 /**
  * Interface for the management of localizations, the implementing class will manage the localizations based
- * on LocalizationProviders, which can be registered via the DIC
- * @package Sulu\Component\Localization\Manager
+ * on LocalizationProviders, which can be registered via the DIC.
  */
 interface LocalizationManagerInterface
 {
     /**
-     * Returns all the localizations, which are available in this system
+     * Returns all the localizations, which are available in this system.
+     *
      * @return Localization[]
      */
     public function getLocalizations();
 
     /**
-     * Adds another LocalizationProvider to the manager
+     * Adds another LocalizationProvider to the manager.
+     *
      * @param LocalizationProviderInterface $localizationProvider
-     * @return void
      */
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider);
-} 
+}

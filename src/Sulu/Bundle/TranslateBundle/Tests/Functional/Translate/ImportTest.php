@@ -135,7 +135,7 @@ class ImportTest extends SuluTestCase
             'Sulu ist wirklich toll!',
             'Sulu ist OpenSource!',
             'Sulu ist sehr toll!',
-            'Sulu ist sogar OpenSource!'
+            'Sulu ist sogar OpenSource!',
         );
         $this->assertTrue(in_array($translations[0]->getValue(), $values));
         $values = array_diff($values, array($translations[0]->getValue()));
@@ -170,7 +170,7 @@ class ImportTest extends SuluTestCase
 
         $codes = $this->em->getRepository('SuluTranslateBundle:Code')->findBy(
             array(
-                'package' => $package->getId()
+                'package' => $package->getId(),
             )
         );
         $this->assertEquals(4, count($codes));
@@ -185,7 +185,7 @@ class ImportTest extends SuluTestCase
 
         $translations = $this->em->getRepository('SuluTranslateBundle:Translation')->findBy(
             array(
-                'catalogue' => $catalogue->getId()
+                'catalogue' => $catalogue->getId(),
             )
         );
         $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());

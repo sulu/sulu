@@ -16,7 +16,7 @@ use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use WebDriver\Exception\UnknownError;
 
 /**
- * Behat context class for the AdminBundle
+ * Behat context class for the AdminBundle.
  */
 class AdminContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -110,7 +110,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iClickOnTheCloseIcon($selector = '')
     {
-        $this->clickSelector($selector.' .fa-times');
+        $this->clickSelector($selector . ' .fa-times');
     }
 
     /**
@@ -191,7 +191,7 @@ EOT;
 
         $this->waitForAuraEvents(
             array(
-                'husky.toolbar.header.item.show'
+                'husky.toolbar.header.item.show',
             )
         );
 
@@ -207,7 +207,7 @@ EOT;
 
         $this->waitForAuraEvents(
             array(
-                'husky.toolbar.header.item.show'
+                'husky.toolbar.header.item.show',
             )
         );
 
@@ -223,7 +223,7 @@ EOT;
     }
 
     /**
-     * Select a value from husky select list
+     * Select a value from husky select list.
      *
      * @Given I select :itemValue from the husky :selectListClass
      */
@@ -247,7 +247,8 @@ EOT;
     }
 
     /**
-     * Fill in a husky text field
+     * Fill in a husky text field.
+     *
      * @Given I fill in husky field :name with :value
      */
     public function iFillTheHuskyField($name, $value)
@@ -320,7 +321,8 @@ EOT;
     }
 
     /**
-     * Expect until all of the named events have been fired
+     * Expect until all of the named events have been fired.
+     *
      * @Then I expect the following events:
      */
     public function iExpectTheFollowingEvents(PyStringNode $eventNames)
@@ -408,7 +410,7 @@ EOT;
     {
         foreach (array(
                      'data-aura-instance-name',
-                     'data-mapper-property'
+                     'data-mapper-property',
                  ) as $propertyName) {
             $script = <<<EOT
 var el = $('%s[%s="%s"]').data('element');

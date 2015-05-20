@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
 use Doctrine\Common\Cache\Cache;
@@ -17,7 +18,7 @@ use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Websocket\Exception\MissingParameterException;
 
 /**
- * Class MessageDispatcherApp
+ * Class MessageDispatcherApp.
  */
 class MessageDispatcherApp extends AbstractWebsocketApp implements MessageComponentInterface
 {
@@ -40,12 +41,14 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     }
 
     /**
-     * Triggered when a client sends data through the socket
+     * Triggered when a client sends data through the socket.
+     *
      * @param  \Ratchet\ConnectionInterface $from The socket/connection that sent the message to your application
      * @param  string $msg The message received
+     *
      * @throws \Exception
      */
-    function onMessage(ConnectionInterface $from, $msg)
+    public function onMessage(ConnectionInterface $from, $msg)
     {
         $context = $this->getContext($from);
 
@@ -70,7 +73,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
                         'exception' => get_class($e),
                         'code' => $e->getCode(),
                         'msg' => $e->getMessage(),
-                        'parentMsg' => $msg
+                        'parentMsg' => $msg,
                     )
                 )
             );
@@ -80,10 +83,12 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     }
 
     /**
-     * Dispatches message to handler with dispatcher service
+     * Dispatches message to handler with dispatcher service.
+     *
      * @param ConnectionInterface $conn
      * @param ConnectionContextInterface $context
      * @param array $msg
+     *
      * @throws MissingParameterException
      */
     private function dispatch(ConnectionInterface $conn, ConnectionContextInterface $context, array $msg)
@@ -105,9 +110,11 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     }
 
     /**
-     * Create a message handler context
+     * Create a message handler context.
+     *
      * @param ConnectionContextInterface $context
      * @param string $handlerName
+     *
      * @return MessageHandlerContext
      */
     protected function createMessageHandlerContext(ConnectionContextInterface $context, $handlerName)

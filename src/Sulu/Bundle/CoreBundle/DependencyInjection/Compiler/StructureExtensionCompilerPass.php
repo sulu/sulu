@@ -12,12 +12,10 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * CompilerPass, which adds structure extension to structure manager
- * @package Sulu\Bundle\CoreBundle\DependencyInjection\Compiler
+ * CompilerPass, which adds structure extension to structure manager.
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {

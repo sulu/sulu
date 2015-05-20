@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
 /**
- * CategoryMeta
+ * CategoryMeta.
  */
 class CategoryMeta
 {
@@ -23,7 +23,7 @@ class CategoryMeta
     private $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -33,9 +33,10 @@ class CategoryMeta
     private $category;
 
     /**
-     * Set key
+     * Set key.
      *
      * @param string $key
+     *
      * @return CategoryMeta
      */
     public function setKey($key)
@@ -46,7 +47,7 @@ class CategoryMeta
     }
 
     /**
-     * Get key
+     * Get key.
      *
      * @return string
      */
@@ -56,9 +57,10 @@ class CategoryMeta
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return CategoryMeta
      */
     public function setValue($value)
@@ -69,7 +71,7 @@ class CategoryMeta
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -79,9 +81,10 @@ class CategoryMeta
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return CategoryMeta
      */
     public function setLocale($locale)
@@ -92,7 +95,7 @@ class CategoryMeta
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -102,9 +105,9 @@ class CategoryMeta
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -112,9 +115,10 @@ class CategoryMeta
     }
 
     /**
-     * Set category
+     * Set category.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     *
      * @return CategoryMeta
      */
     public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
@@ -125,7 +129,7 @@ class CategoryMeta
     }
 
     /**
-     * Get category
+     * Get category.
      *
      * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */

@@ -11,15 +11,12 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * UserRole
+ * UserRole.
+ *
  * @ExclusionPolicy("all");
  */
 class UserRole extends BaseUserRole
 {
-
 }

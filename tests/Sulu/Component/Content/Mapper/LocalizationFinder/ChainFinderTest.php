@@ -2,9 +2,8 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-
 /**
- * Chain localization finder
+ * Chain localization finder.
  */
 class ChainFinderTest extends \PHPUnit_Framework_TestCase
 {

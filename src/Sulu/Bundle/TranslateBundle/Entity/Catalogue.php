@@ -15,13 +15,14 @@ use JMS\Serializer\Annotation\Expose;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
- * Catalogue
+ * Catalogue.
+ *
  * @ExclusionPolicy("all")
  */
 class Catalogue extends ApiEntity
 {
     /**
-     * @var integer
+     * @var int
      * @Expose
      */
     private $id;
@@ -43,13 +44,13 @@ class Catalogue extends ApiEntity
     private $locale;
 
     /**
-     * @var boolean
+     * @var bool
      * @Expose
      */
     private $isDefault;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -57,9 +58,9 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -67,9 +68,10 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Set package
+     * Set package.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     *
      * @return Catalogue
      */
     public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package)
@@ -80,7 +82,7 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Get package
+     * Get package.
      *
      * @return \Sulu\Bundle\TranslateBundle\Entity\Package
      */
@@ -90,9 +92,10 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translation
+     *
      * @return Catalogue
      */
     public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
@@ -103,7 +106,7 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translation
      */
@@ -114,8 +117,10 @@ class Catalogue extends ApiEntity
 
     /**
      * Returns the translation with the given key, or null, if there is no
-     * translation with the given key
+     * translation with the given key.
+     *
      * @param $key The key to search a translation for
+     *
      * @return null|Translation
      */
     public function findTranslation($key)
@@ -129,11 +134,11 @@ class Catalogue extends ApiEntity
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -143,9 +148,10 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return Catalogue
      */
     public function setLocale($locale)
@@ -156,7 +162,7 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -166,9 +172,10 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Set isDefault
+     * Set isDefault.
      *
-     * @param boolean $isDefault
+     * @param bool $isDefault
+     *
      * @return Catalogue
      */
     public function setIsDefault($isDefault)
@@ -179,9 +186,9 @@ class Catalogue extends ApiEntity
     }
 
     /**
-     * Get isDefault
+     * Get isDefault.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsDefault()
     {

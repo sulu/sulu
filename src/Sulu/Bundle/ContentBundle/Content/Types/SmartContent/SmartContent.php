@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * ContentType for TextEditor
+ * ContentType for TextEditor.
  */
 class SmartContent extends ComplexContentType
 {
@@ -74,7 +74,8 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()
@@ -84,7 +85,8 @@ class SmartContent extends ComplexContentType
 
     /**
      * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
+     * PRE_SAVE or POST_SAVE.
+     *
      * @return int
      */
     public function getType()
@@ -161,7 +163,8 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * remove property from given node
+     * remove property from given node.
+     *
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @param string $webspaceKey
@@ -264,10 +267,12 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * load data from container
+     * load data from container.
+     *
      * @param SmartContentContainer $container
      * @param PropertyInterface $property
      * @param PropertyParameter[] $params
+     *
      * @return array|\Sulu\Component\Content\StructureInterface[]
      */
     private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
@@ -297,8 +302,10 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * determine current page from current request
+     * determine current page from current request.
+     *
      * @param string $pageParameter
+     *
      * @return int
      */
     private function getCurrentPage($pageParameter)
@@ -313,7 +320,7 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * Returns paged content
+     * Returns paged content.
      */
     private function getPagedContentData(SmartContentContainer $container, $page, $pageSize, $excludeUuid)
     {
@@ -333,6 +340,7 @@ class SmartContent extends ComplexContentType
 
         if ($limit < 0) {
             $container->setHasNextPage(false);
+
             return array();
         }
 
@@ -349,9 +357,11 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * Returns not paged content
+     * Returns not paged content.
+     *
      * @param SmartContentContainer $container
      * @param string $excludeUuid
+     *
      * @return \Sulu\Component\Content\StructureInterface[]
      */
     private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)

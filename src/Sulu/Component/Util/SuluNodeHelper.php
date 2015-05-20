@@ -12,10 +12,10 @@ namespace Sulu\Component\Util;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
-use PHPCR\SessionInterface;
 
 /**
  * Utility class for extracting Sulu-centric properties from nodes.
@@ -51,7 +51,7 @@ class SuluNodeHelper
                 'base' => null,
                 'content' => null,
                 'route' => null,
-                'snippet' => null
+                'snippet' => null,
             ),
             $paths
         );
@@ -63,6 +63,7 @@ class SuluNodeHelper
      * given PHPCR node.
      *
      * @param NodeInterface $node
+     *
      * @return array
      */
     public function getLanguagesForNode(NodeInterface $node)
@@ -81,7 +82,7 @@ class SuluNodeHelper
     }
 
     /**
-     * Return the structure type for the given node
+     * Return the structure type for the given node.
      *
      * @param NodeInterface $node
      *
@@ -99,12 +100,12 @@ class SuluNodeHelper
             return Structure::TYPE_SNIPPET;
         }
 
-        return null;
+        return;
     }
 
     /**
      * Return all the localized values of the localized property indicated
-     * by $name
+     * by $name.
      *
      * @param NodeInterface $node
      * @param string $name  Name of localized property
@@ -142,7 +143,7 @@ class SuluNodeHelper
      */
     public function hasSuluNodeType($node, $suluNodeTypes)
     {
-        foreach ((array)$suluNodeTypes as $suluNodeType) {
+        foreach ((array) $suluNodeTypes as $suluNodeType) {
             if (in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', array()))) {
                 return true;
             }
@@ -152,11 +153,12 @@ class SuluNodeHelper
     }
 
     /**
-     * Extracts webspace key from given path
+     * Extracts webspace key from given path.
      *
      * TODO: We should inject the base path here
      *
      * @param string $path path of node
+     *
      * @return string
      */
     public function extractWebspaceFromPath($path)
@@ -166,16 +168,17 @@ class SuluNodeHelper
         if ($match) {
             return $matches[1];
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * Extract the snippet path from the given path
+     * Extract the snippet path from the given path.
      *
      * @param string $path
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function extractSnippetTypeFromPath($path)
@@ -206,7 +209,7 @@ class SuluNodeHelper
     }
 
     /**
-     * Return the next node of the given node
+     * Return the next node of the given node.
      *
      * @see getSiblingNode
      */
@@ -216,7 +219,7 @@ class SuluNodeHelper
     }
 
     /**
-     * Return the previous node of the given node
+     * Return the previous node of the given node.
      *
      * @see getSiblingNode
      */
@@ -226,10 +229,11 @@ class SuluNodeHelper
     }
 
     /**
-     * Return translated property name
+     * Return translated property name.
      *
      * @param string $propertyName
      * @param string $locale
+     *
      * @return string
      */
     public function getTranslatedPropertyName($propertyName, $locale)
@@ -238,11 +242,12 @@ class SuluNodeHelper
     }
 
     /**
-     * Return translated property
+     * Return translated property.
      *
      * @param \Sulu\Component\Content\PropertyInterface $property
      * @param string $locale
      * @param string $prefix
+     *
      * @return \Sulu\Component\Content\PropertyInterface
      */
     public function getTranslatedProperty($property, $locale, $prefix = null)
@@ -258,6 +263,7 @@ class SuluNodeHelper
      * @param bool $previous
      *
      * @return NodeInterface|null
+     *
      * @throws \RuntimeException
      */
     private function getSiblingNode(NodeInterface $node, $previous = false)
@@ -285,10 +291,12 @@ class SuluNodeHelper
     }
 
     /**
-     * Return the configured named path segment
+     * Return the configured named path segment.
      *
      * @param string $name Name of path segment
+     *
      * @return string The path segment
+     *
      * @throws \InvalidArgumentException
      */
     private function getPath($name)

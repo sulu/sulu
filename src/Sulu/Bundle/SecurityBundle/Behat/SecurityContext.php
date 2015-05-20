@@ -10,14 +10,14 @@
 
 namespace Sulu\Bundle\SecurityBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
- * Behat context class for the SecurityBundle
+ * Behat context class for the SecurityBundle.
  */
 class SecurityContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -80,7 +80,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     {
         $role = $this->getEntityManager()
             ->getRepository('SuluSecurityBundle:Role')->findOneBy(array(
-                'name' => $name, 
+                'name' => $name,
             ));
 
         if ($role) {
@@ -106,7 +106,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
                 'Could not find submit button on login page'
             );
         }
-        
+
         $loginButton->click();
         $this->getSession()->wait(5000, "document.querySelector('.navigation')");
     }

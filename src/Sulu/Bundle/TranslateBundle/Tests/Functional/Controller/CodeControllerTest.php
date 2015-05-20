@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Location;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Symfony\Component\HttpKernel\Client;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CodeControllerTest extends SuluTestCase
 {
@@ -101,7 +101,7 @@ class CodeControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var integer
+     * @var int
      */
     private $limit;
 
@@ -509,15 +509,15 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '12',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => $this->location2->getId()
+                'id' => $this->location2->getId(),
             ),
             'translations' => array(
                 array('value' => 'Translation 1', 'catalogue' => array('id' => $this->catalogue1->getId())),
-                array('value' => 'Translation 2', 'catalogue' => array('id' => $this->catalogue2->getId()))
-            )
+                array('value' => 'Translation 2', 'catalogue' => array('id' => $this->catalogue2->getId())),
+            ),
         );
         $this->client->request(
             'POST',
@@ -532,14 +532,13 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($request['code'], $response->code);
-        $this->assertEquals(($request['backend'] == "0") ? false : true, $response->backend);
-        $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
+        $this->assertEquals(($request['backend'] == '0') ? false : true, $response->backend);
+        $this->assertEquals(($request['frontend'] == '0') ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
         $this->assertEquals(2, sizeof($response->translations));
         $this->assertEquals($request['translations'][0]['value'], $response->translations[0]->value);
         $this->assertEquals($request['translations'][1]['value'], $response->translations[1]->value);
-
     }
 
     public function testPostNullValues()
@@ -549,11 +548,11 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '12',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => $this->location2->getId()
-            )
+                'id' => $this->location2->getId(),
+            ),
         );
         $this->client->request(
             'POST',
@@ -567,11 +566,11 @@ class CodeControllerTest extends SuluTestCase
             'frontend' => '0',
             'length' => '12',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => $this->location2->getId()
-            )
+                'id' => $this->location2->getId(),
+            ),
         );
         $this->client->request(
             'POST',
@@ -587,8 +586,8 @@ class CodeControllerTest extends SuluTestCase
             'frontend' => '0',
             'length' => '12',
             'location' => array(
-                'id' => $this->location2->getId()
-            )
+                'id' => $this->location2->getId(),
+            ),
         );
         $this->client->request(
             'POST',
@@ -604,8 +603,8 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '12',
             'package' => array(
-                'id' => $this->package2->getId()
-            )
+                'id' => $this->package2->getId(),
+            ),
         );
         $this->client->request(
             'POST',
@@ -620,11 +619,11 @@ class CodeControllerTest extends SuluTestCase
             'frontend' => '0',
             'backend' => '0',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => $this->location2->getId()
-            )
+                'id' => $this->location2->getId(),
+            ),
         );
         $this->client->request(
             'POST',
@@ -643,16 +642,16 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => $this->location2->getId()
+                'id' => $this->location2->getId(),
             ),
             'translations' => array(
                 array('value' => 'Test Code 1.1', 'catalogue' => array('id' => $this->catalogue1->getId())),
                 array('value' => 'Test Code 1.2', 'catalogue' => array('id' => $this->catalogue2->getId())),
                 array('value' => 'Test Code 1.3', 'catalogue' => array('id' => $this->catalogue3->getId())),
-            )
+            ),
         );
         $this->client->request(
             'PUT',
@@ -668,15 +667,15 @@ class CodeControllerTest extends SuluTestCase
 
         $this->assertNotNull($response->id);
         $this->assertEquals($request['code'], $response->code);
-        $this->assertEquals(($request['backend'] == "0") ? false : true, $response->backend);
-        $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
+        $this->assertEquals(($request['backend'] == '0') ? false : true, $response->backend);
+        $this->assertEquals(($request['frontend'] == '0') ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
         $this->assertEquals(3, sizeof($response->translations));
         $values = array(
             $request['translations'][0]['value'],
             $request['translations'][1]['value'],
-            $request['translations'][2]['value']
+            $request['translations'][2]['value'],
         );
         $this->assertTrue(in_array($response->translations[0]->value, $values));
         $values = array_diff($values, array($response->translations[0]->value));
@@ -695,11 +694,11 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => $this->location2->getId()
-            )
+                'id' => $this->location2->getId(),
+            ),
         );
         $this->client->request(
             'PUT',
@@ -717,11 +716,11 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                'id' => 512312
+                'id' => 512312,
             ),
             'location' => array(
-                'id' => $this->location2->getId()
-            )
+                'id' => $this->location2->getId(),
+            ),
         );
         $this->client->request(
             'PUT',
@@ -748,11 +747,11 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                'id' => $this->package2->getId()
+                'id' => $this->package2->getId(),
             ),
             'location' => array(
-                'id' => 5123
-            )
+                'id' => 5123,
+            ),
         );
         $this->client->request(
             'PUT',
@@ -773,17 +772,14 @@ class CodeControllerTest extends SuluTestCase
 
     public function testDeleteById()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/codes/' . $this->code1->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
-
     }
 
     public function testDeleteByIdNotExisting()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/codes/4711');
@@ -793,5 +789,4 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(4, $response->total);
     }
-
 }

@@ -3,11 +3,11 @@
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
 use Guzzle\Http\Client;
-use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
-use Guzzle\Plugin\Mock\MockPlugin;
 use Guzzle\Http\Message\Response;
 use Guzzle\Log\ArrayLogAdapter;
 use Guzzle\Plugin\Log\LogPlugin;
+use Guzzle\Plugin\Mock\MockPlugin;
+use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 
 class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +43,7 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
                     'country' => 'France',
                     'longitude' => '2.3897064000000001',
                     'latitude' => '48.852964900000003',
-                )
+                ),
             ),
             array(
                 'Dornbirn',
@@ -57,8 +57,8 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
                     'country' => 'Austria',
                     'longitude' => '9.7437899999999988',
                     'latitude' => '47.412399999999998',
-                )
-            )
+                ),
+            ),
         );
     }
 
@@ -67,7 +67,7 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testLocate($query, $expectedCount, $expectationMap)
     {
-        $fixtureName = __DIR__ . '/google-responses/' . md5($query).'.json';
+        $fixtureName = __DIR__ . '/google-responses/' . md5($query) . '.json';
         $fixture = file_get_contents($fixtureName);
         $this->mockPlugin->addResponse(new Response(200, null, $fixture));
 

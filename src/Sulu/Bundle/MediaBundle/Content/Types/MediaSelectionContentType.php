@@ -19,7 +19,7 @@ use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * content type for image selection
+ * content type for image selection.
  */
 class MediaSelectionContentType extends ComplexContentType
 {
@@ -58,15 +58,16 @@ class MediaSelectionContentType extends ComplexContentType
                     'right' => new PropertyParameter('right', true),
                     'leftBottom' => new PropertyParameter('leftBottom', true),
                     'bottom' => new PropertyParameter('bottom', true),
-                    'rightBottom' => new PropertyParameter('rightBottom', true)
+                    'rightBottom' => new PropertyParameter('rightBottom', true),
                 ),
                 'collection'
-            )
+            ),
         );
     }
 
     /**
      * @param $params
+     *
      * @return PropertyParameter[]
      */
     public function getParams($params)
@@ -114,7 +115,8 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
-     * set data to property
+     * set data to property.
+     *
      * @param string[] $data ids of images
      * @param PropertyInterface $property
      * @param $languageCode

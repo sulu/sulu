@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * Implements an abstraction for the SecurityCheckerInterface, which needs the subclass to implement the
  * hasPermission method. This method will be called for the checkPermission method, which throws an exception,
  * if permission is not granted.
- * @package Sulu\Bundle\SecurityBundle\Permission
  */
 abstract class AbstractSecurityChecker implements SecurityCheckerInterface
 {
@@ -47,5 +46,5 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public abstract function hasPermission($subject, $permission);
+    abstract public function hasPermission($subject, $permission);
 }

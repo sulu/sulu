@@ -11,18 +11,16 @@
 namespace Sulu\Bundle\ContactBundle\Api;
 
 use Doctrine\Entity;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
-use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
-use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Component\Rest\ApiWrapper;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
- * The ContactAddress class which will be exported to the API
+ * The ContactAddress class which will be exported to the API.
  *
- * @package Sulu\Bundle\ContactBundle\Api
  * @ExclusionPolicy("all")
  */
 class ContactAddress extends ApiWrapper
@@ -35,7 +33,7 @@ class ContactAddress extends ApiWrapper
     }
 
     /**
-     * Returns the id of the product
+     * Returns the id of the product.
      *
      * @return int
      * @VirtualProperty
@@ -47,9 +45,10 @@ class ContactAddress extends ApiWrapper
     }
 
     /**
-     * Set main
+     * Set main.
      *
-     * @param boolean $main
+     * @param bool $main
+     *
      * @return ContactAddress
      */
     public function setMain($main)
@@ -60,9 +59,9 @@ class ContactAddress extends ApiWrapper
     }
 
     /**
-     * Get main
+     * Get main.
      *
-     * @return boolean
+     * @return bool
      * @VirtualProperty
      * @SerializedName("main")
      */
@@ -72,9 +71,10 @@ class ContactAddress extends ApiWrapper
     }
 
     /**
-     * Set address
+     * Set address.
      *
      * @param AddressEntity $address
+     *
      * @return ContactAddress
      */
     public function setAddress(AddressEntity $address)
@@ -85,7 +85,7 @@ class ContactAddress extends ApiWrapper
     }
 
     /**
-     * Get address
+     * Get address.
      *
      * @return AddressEntity
      * @VirtualProperty

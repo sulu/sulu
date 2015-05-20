@@ -11,8 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 /**
- * This class describes a doctrine join
- * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
+ * This class describes a doctrine join.
  */
 class DoctrineJoinDescriptor
 {
@@ -23,31 +22,36 @@ class DoctrineJoinDescriptor
     const JOIN_CONDITION_METHOD_WITH = 'WITH';
 
     /**
-     * The name of the entity to join
+     * The name of the entity to join.
+     *
      * @var string
      */
     private $entityName;
 
     /**
-     * The field, which should be joined
+     * The field, which should be joined.
+     *
      * @var string
      */
     private $join;
 
     /**
-     * The additional condition which should apply to the join
+     * The additional condition which should apply to the join.
+     *
      * @var string
      */
     private $joinCondition;
 
     /**
-     * The method for the condition to apply
+     * The method for the condition to apply.
+     *
      * @var string
      */
     private $joinConditionMethod;
 
     /**
-     * Defines the join method (left, right or inner join)
+     * Defines the join method (left, right or inner join).
+     *
      * @var string
      */
     private $joinMethod;
@@ -58,8 +62,7 @@ class DoctrineJoinDescriptor
         $joinCondition = null,
         $joinMethod = self::JOIN_METHOD_LEFT,
         $joinConditionMethod = self::JOIN_CONDITION_METHOD_WITH
-    )
-    {
+    ) {
         $this->entityName = $entityName;
         $this->join = $join;
         $this->joinCondition = $joinCondition;

@@ -16,7 +16,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Executes a query over the content
+ * Executes a query over the content.
  */
 class ContentQueryExecutor implements ContentQueryExecutorInterface
 {
@@ -130,9 +130,9 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
     }
 
     /**
-     * returns a sql2 query
+     * returns a sql2 query.
      */
-    private function createSql2Query($sql2, $limit = null, $offset =null)
+    private function createSql2Query($sql2, $limit = null, $offset = null)
     {
         $queryManager = $this->sessionManager->getSession()->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');

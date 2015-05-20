@@ -10,150 +10,157 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * CollectionInterface
+ * CollectionInterface.
  */
 interface CollectionInterface extends AuditableInterface
 {
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId();
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return CollectionInterface
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null);
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger();
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return CollectionInterface
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null);
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator();
 
     /**
-     * Set style
+     * Set style.
      *
      * @param string $style
+     *
      * @return CollectionInterface
      */
     public function setStyle($style);
 
     /**
-     * Get style
+     * Get style.
      *
      * @return string
      */
     public function getStyle();
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return CollectionInterface
      */
     public function setLft($lft);
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft();
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return CollectionInterface
      */
     public function setRgt($rgt);
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt();
 
     /**
-     * Set depth
+     * Set depth.
      *
-     * @param integer $depth
+     * @param int $depth
+     *
      * @return CollectionInterface
      */
     public function setDepth($depth);
 
     /**
-     * Get depth
+     * Get depth.
      *
-     * @return integer
+     * @return int
      */
     public function getDepth();
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
     public function getCreated();
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
     public function getChanged();
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
+     *
      * @return CollectionInterface
      */
     public function setParent(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null);
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
     public function getParent();
 
     /**
-     * Set type
+     * Set type.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
+     *
      * @return CollectionInterface
      */
     public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type);
 
     /**
-     * Get type
+     * Get type.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */

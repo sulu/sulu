@@ -10,16 +10,16 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
-use Massive\Bundle\BuildBundle\Build\BuilderInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
+use Massive\Bundle\BuildBundle\Build\BuilderInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Abstract builder for ALL sulu builders
+ * Abstract builder for ALL sulu builders.
  */
 abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
 {
@@ -49,7 +49,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
     }
 
     /**
-     * Execute a command
+     * Execute a command.
      */
     protected function execCommand($description, $command, $args = array(''))
     {

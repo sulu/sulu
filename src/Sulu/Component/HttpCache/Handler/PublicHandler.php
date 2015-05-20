@@ -10,37 +10,37 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\HttpCache\HttpCache;
 use Sulu\Component\Content\PageInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Sulu\Component\HttpCache\HttpCache;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Set standard cache settings on the response.
  * Includes the TTL of the structure.
  */
-class PublicHandler implements 
+class PublicHandler implements
     HandlerUpdateResponseInterface
 {
     /**
-     * @var integer
+     * @var int
      */
     private $maxAge;
 
     /**
-     * @var integer
+     * @var int
      */
     private $sharedMaxAge;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $usePageTtl;
 
     /**
-     * @param integer $maxAge Cache max age in seconds
-     * @param integer $sharedMaxAge Cache shared max age in seconds
+     * @param int $maxAge Cache max age in seconds
+     * @param int $sharedMaxAge Cache shared max age in seconds
      */
     public function __construct($maxAge = 240, $sharedMaxAge = 960, $usePageTtl = true)
     {

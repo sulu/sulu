@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Media
+ * Media.
  */
 class Media implements AuditableInterface
 {
@@ -29,7 +29,7 @@ class Media implements AuditableInterface
     private $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -60,7 +60,7 @@ class Media implements AuditableInterface
     private $creator;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -68,7 +68,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -78,7 +78,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -88,9 +88,9 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -98,9 +98,10 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Add files
+     * Add files.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\File $files
+     *
      * @return Media
      */
     public function addFile(\Sulu\Bundle\MediaBundle\Entity\File $files)
@@ -111,7 +112,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Remove files
+     * Remove files.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\File $files
      */
@@ -121,7 +122,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get files
+     * Get files.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -131,9 +132,10 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Set collection
+     * Set collection.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection
+     *
      * @return Media
      */
     public function setCollection(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection)
@@ -144,7 +146,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get collectionInterface
+     * Get collectionInterface.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
@@ -154,9 +156,10 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\MediaType $type
+     *
      * @return Media
      */
     public function setType(\Sulu\Bundle\MediaBundle\Entity\MediaType $type)
@@ -167,7 +170,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\MediaType
      */
@@ -177,9 +180,10 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return Media
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
@@ -190,7 +194,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -200,9 +204,10 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return Media
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
@@ -213,7 +218,7 @@ class Media implements AuditableInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */

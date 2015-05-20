@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\LocationBundle\Map;
 
 /**
- * Simple container for holding map provider informations
+ * Simple container for holding map provider informations.
  */
 class MapManager
 {

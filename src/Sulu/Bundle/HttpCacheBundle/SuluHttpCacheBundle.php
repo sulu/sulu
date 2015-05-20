@@ -7,11 +7,12 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\HttpCacheBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Sulu\Bundle\HttpCacheBundle\DependencyInjection\Compiler\HandlerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluHttpCacheBundle extends Bundle
 {

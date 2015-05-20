@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Block;
 
 use PHPCR\NodeInterface;
-use PHPCR\RepositoryException;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -20,7 +19,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
- * content type for block
+ * content type for block.
  */
 class BlockContentType extends ComplexContentType
 {
@@ -30,7 +29,8 @@ class BlockContentType extends ComplexContentType
     private $contentTypeManager;
 
     /**
-     * template for form generation
+     * template for form generation.
+     *
      * @var string
      */
     private $template;
@@ -264,7 +264,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * write a property to node
+     * write a property to node.
      */
     private function writeProperty(
         PropertyInterface $property,
@@ -308,7 +308,7 @@ class BlockContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        foreach ($node->getProperties($property->getName().'-*')  as $nodeProperty) {
+        foreach ($node->getProperties($property->getName() . '-*')  as $nodeProperty) {
             $node->getProperty($nodeProperty->getName())->remove();
         }
     }
@@ -350,10 +350,12 @@ class BlockContentType extends ComplexContentType
 
     /**
      * Returns prepared data from property
-     * use callback to prepare data foreach property function($contentType, $property)
+     * use callback to prepare data foreach property function($contentType, $property).
+     *
      * @param PropertyInterface $property
      * @param callable $dataCallback
      * @param bool $returnType
+     *
      * @return array
      */
     private function prepareData(PropertyInterface $property, callable $dataCallback, $returnType = true)

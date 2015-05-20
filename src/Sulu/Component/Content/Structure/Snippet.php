@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Structure;
 
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\StructureInterface;
 
 /**
@@ -21,7 +20,8 @@ use Sulu\Component\Content\StructureInterface;
 abstract class Snippet extends Structure
 {
     /**
-     * state of node
+     * state of node.
+     *
      * @var int
      */
     private $nodeState;
@@ -36,6 +36,7 @@ abstract class Snippet extends Structure
 
     /**
      * @param int $state
+     *
      * @return int
      */
     public function setNodeState($state)
@@ -44,7 +45,8 @@ abstract class Snippet extends Structure
     }
 
     /**
-     * returns state of node
+     * returns state of node.
+     *
      * @return int
      */
     public function getNodeState()
@@ -60,7 +62,7 @@ abstract class Snippet extends Structure
         $result = array_merge(
             parent::toArray($complete),
             array(
-                'nodeState' => $this->getNodeState()
+                'nodeState' => $this->getNodeState(),
             )
         );
 

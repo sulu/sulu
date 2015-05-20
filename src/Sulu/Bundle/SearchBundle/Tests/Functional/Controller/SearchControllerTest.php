@@ -11,14 +11,11 @@
 namespace Sulu\Bundle\SearchBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
-use Symfony\Component\BrowserKit\Client;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\BrowserKit\Client;
 
 class SearchControllerTest extends SuluTestCase
 {
@@ -70,8 +67,8 @@ class SearchControllerTest extends SuluTestCase
             ),
             array(
                 array(
-                    'q' => 'Product', 
-                    'indexes' => array('Product'), 
+                    'q' => 'Product',
+                    'indexes' => array('Product'),
                     'locale' => 'fr',
                 ),
                 array(
@@ -115,7 +112,7 @@ class SearchControllerTest extends SuluTestCase
             ),
             array(
                 array(
-                    'q' => 'Xeon', 
+                    'q' => 'Xeon',
                     'limit' => 1,
                     'page' => 2,
                 ),

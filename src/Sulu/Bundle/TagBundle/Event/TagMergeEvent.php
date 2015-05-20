@@ -14,19 +14,20 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * An object of this class is thrown along with the tag.merge event
- * @package Sulu\Bundle\TagBundle\Event
+ * An object of this class is thrown along with the tag.merge event.
  */
 class TagMergeEvent extends Event
 {
     /**
-     * The deleted Tag
+     * The deleted Tag.
+     *
      * @var array
      */
     protected $srcTags;
 
     /**
-     * The Tag the deleted Tag got merged into
+     * The Tag the deleted Tag got merged into.
+     *
      * @var Tag
      */
     protected $destTag;
@@ -42,7 +43,8 @@ class TagMergeEvent extends Event
     }
 
     /**
-     * Returns the Tag which got deleted
+     * Returns the Tag which got deleted.
+     *
      * @return Tag
      */
     public function getSrcTags()
@@ -51,7 +53,8 @@ class TagMergeEvent extends Event
     }
 
     /**
-     * Returns the Tag in which the deleted Tag got merged
+     * Returns the Tag in which the deleted Tag got merged.
+     *
      * @return Tag
      */
     public function getDestTag()

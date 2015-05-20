@@ -40,5 +40,4 @@ class TemplateControllerTest extends SuluTestCase
         // for tags 2
         $this->assertEquals(1, $crawler->filter('div#tags')->count());
     }
-
 }

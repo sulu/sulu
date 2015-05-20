@@ -43,15 +43,15 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
                         'action' => 'resize',
                         'parameters' => array(
                             'x' => 640,
-                            'y' => 480
-                        )
-                    )
+                            'y' => 480,
+                        ),
+                    ),
                 ),
                 'options' => array(
                     'jpeg_quality' => 70,
-                    'png_compression_level' => 6
-                )
-            )
+                    'png_compression_level' => 6,
+                ),
+            ),
         );
 
         $image = $this->prophesize('Imagine\Image\ImageInterface');
@@ -129,15 +129,15 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
                         'action' => 'resize',
                         'parameters' => array(
                             'x' => 640,
-                            'y' => 480
-                        )
-                    )
+                            'y' => 480,
+                        ),
+                    ),
                 ),
                 'options' => array(
                     'jpeg_quality' => 70,
-                    'png_compression_level' => 6
-                )
-            )
+                    'png_compression_level' => 6,
+                ),
+            ),
         );
 
         $formatCache->getMediaUrl(1, 'dummy.gif', array('a' => 'b'), '640x480', 1)->willReturn('/my-url.gif');
@@ -184,15 +184,15 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
                         'action' => 'resize',
                         'parameters' => array(
                             'x' => 640,
-                            'y' => 480
-                        )
-                    )
+                            'y' => 480,
+                        ),
+                    ),
                 ),
                 'options' => array(
                     'jpeg_quality' => 70,
-                    'png_compression_level' => 6
-                )
-            )
+                    'png_compression_level' => 6,
+                ),
+            ),
         );
 
         $formatCache->getMediaUrl(1, 'dummy.mp3', array('a' => 'b'), '640x480', 1)->should(new NoCallsPrediction());
