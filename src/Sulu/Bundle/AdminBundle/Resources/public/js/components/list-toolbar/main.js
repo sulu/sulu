@@ -21,6 +21,7 @@ define([], function() {
             listener: 'default',
             parentListener: null,
             instanceName: 'content',
+            showTitleAsTooltip: true,
             columnOptions: {
                 disabled: false,
                 data: [],
