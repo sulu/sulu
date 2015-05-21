@@ -140,11 +140,13 @@ class AccountController extends AbstractContactController implements SecuredCont
 
             $listBuilder = $factory->create($this->getAccountEntityName());
 
-            $restHelper->initializeListBuilder($listBuilder, $this->getAccountContactFieldDescriptors());
+            $fieldDescriptors = $this->getAccountContactFieldDescriptors();
+            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $listBuilder->where($this->getFieldDescriptors()['id'], $id);
 
-            // FIXME could be removed when field descriptor with expression is implemented and used
+            $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
+
             $values = $listBuilder->execute();
 
             foreach ($values as &$value) {
@@ -942,6 +944,34 @@ class AccountController extends AbstractContactController implements SecuredCont
             false
         );
 
+        $this->accountContactFieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
+            'firstName',
+            'firstName',
+            self::$contactEntityName,
+            'contact.contacts.firstname',
+            $contactJoin,
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
+        $this->accountContactFieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'lastName',
+            self::$contactEntityName,
+            'contact.contacts.lastName',
+            $contactJoin,
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
                 new DoctrineFieldDescriptor(
@@ -982,7 +1012,11 @@ class AccountController extends AbstractContactController implements SecuredCont
                 )
             ),
             false,
-            true
+            true,
+            '',
+            '',
+            '',
+            false
         );
 
         // FIXME use field descriptor with expression when implemented
@@ -1001,7 +1035,10 @@ class AccountController extends AbstractContactController implements SecuredCont
             ),
             false,
             true,
-            'radio'
+            'radio',
+            '',
+            '',
+            false
         );
     }
 
