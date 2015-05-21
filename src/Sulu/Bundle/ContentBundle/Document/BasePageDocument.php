@@ -30,7 +30,11 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 
+/**
+ * Base document for Page-like documents (i.e. Page and Home documents).
+ */
 class BasePageDocument implements
     NodeNameBehavior,
     TimestampBehavior,
@@ -49,29 +53,124 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior
 {
+    /**
+     * @var string
+     */
     protected $nodeName;
+
+    /**
+     * @var \DataTime
+     */
     protected $created;
+
+    /**
+     * @var \DateTime
+     */
     protected $changed;
+
+    /**
+     * @var \DateTime
+     */
     protected $creator;
+    
+    /**
+     * @var int
+     */
     protected $changer;
+
+    /**
+     * @var object
+     */
     protected $parent;
+
+    /**
+     * @var string
+     */
     protected $title;
+
+    /**
+     * @var stringt
+     */
     protected $resourceSegment;
+
+    /**
+     * @var string[]
+     */
     protected $navigationContexts = array();
+
+    /**
+     * @var int
+     */
     protected $redirectType;
+
+    /**
+     * @var object
+     */
     protected $redirectTarget;
+
+    /**
+     * @var string
+     */
     protected $redirectExternal;
+
+    /**
+     * @var int
+     */
     protected $workflowStage;
+
+    /**
+     * @var bool
+     */
     protected $published;
+
+    /**
+     * @var bool
+     */
     protected $shadowLocaleEnabled = false;
+
+    /**
+     * @var string
+     */
     protected $shadowLocale;
+
+    /**
+     * @var string
+     */
     protected $uuid;
+
+    /**
+     * @var string
+     */
     protected $structureType;
+
+    /**
+     * @var PropertyContainerInterface
+     */
     protected $content;
+
+    /**
+     * @var string
+     */
     protected $locale;
+
+    /**
+     * @var ChildrenCollection
+     */
     protected $children;
+
+    /**
+     * @var string
+     */
     protected $path;
+
+    /**
+     * @var ExtensionContainer
+     */
     protected $extensions;
+
+    /**
+     * @var string
+     */
     protected $webspaceName;
 
     public function __construct()
@@ -100,7 +199,7 @@ class BasePageDocument implements
     }
 
     /**
-     * Set the title
+     * {@inheritDoc}
      */
     public function setTitle($title)
     {

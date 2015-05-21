@@ -12,6 +12,9 @@ namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 
+/**
+ * Page documents are children of the Home document.
+ */
 class PageDocument extends BasePageDocument implements
     AutoNameBehavior
 {
