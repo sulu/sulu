@@ -42,6 +42,11 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
      */
     private $eventDispatcher;
 
+    /**
+     * @param MutableAclProviderInterface $aclProvider
+     * @param MaskConverterInterface $maskConverter
+     * @param EventDispatcherInterface $eventDispatcher
+     */
     public function __construct(
         MutableAclProviderInterface $aclProvider,
         MaskConverterInterface $maskConverter,
