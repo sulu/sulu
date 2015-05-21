@@ -3,17 +3,17 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 /**
- * AccountContact
+ * AccountContact.
  */
 class AccountContact
 {
     /**
-     * @var boolean
+     * @var bool
      */
     private $main;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -33,9 +33,10 @@ class AccountContact
     private $position;
 
     /**
-     * Set main
+     * Set main.
      *
-     * @param boolean $main
+     * @param bool $main
+     *
      * @return AccountContact
      */
     public function setMain($main)
@@ -46,9 +47,9 @@ class AccountContact
     }
 
     /**
-     * Get main
+     * Get main.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMain()
     {
@@ -56,9 +57,9 @@ class AccountContact
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -66,9 +67,10 @@ class AccountContact
     }
 
     /**
-     * Set contact
+     * Set contact.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     *
      * @return AccountContact
      */
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
@@ -79,7 +81,7 @@ class AccountContact
     }
 
     /**
-     * Get contact
+     * Get contact.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
@@ -89,9 +91,10 @@ class AccountContact
     }
 
     /**
-     * Set account
+     * Set account.
      *
      * @param AccountInterface $account
+     *
      * @return AccountContact
      */
     public function setAccount(AccountInterface $account)
@@ -102,7 +105,7 @@ class AccountContact
     }
 
     /**
-     * Get account
+     * Get account.
      *
      * @return AccountInterface
      */
@@ -112,9 +115,10 @@ class AccountContact
     }
 
     /**
-     * Set position
+     * Set position.
      *
      * @param string $position
+     *
      * @return AccountContact
      */
     public function setPosition($position)
@@ -125,7 +129,7 @@ class AccountContact
     }
 
     /**
-     * Get position
+     * Get position.
      *
      * @return string
      */

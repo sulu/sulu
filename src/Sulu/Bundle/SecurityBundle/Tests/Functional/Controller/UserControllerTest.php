@@ -10,17 +10,15 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
-use DateTime;
-
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class UserControllerTest extends SuluTestCase
 {
@@ -52,15 +50,15 @@ class UserControllerTest extends SuluTestCase
         $this->em->persist($email);
 
         $contact2 = new Contact();
-        $contact2->setFirstName("Max");
-        $contact2->setLastName("Muster");
+        $contact2->setFirstName('Max');
+        $contact2->setLastName('Muster');
         $contact2->addEmail($email);
         $this->em->persist($contact2);
         $this->contact2 = $contact2;
 
         $contact3 = new Contact();
-        $contact3->setFirstName("Disabled");
-        $contact3->setLastName("User");
+        $contact3->setFirstName('Disabled');
+        $contact3->setLastName('User');
         $contact3->addEmail($email);
         $this->em->persist($contact3);
         $this->contact3 = $contact3;
@@ -125,13 +123,13 @@ class UserControllerTest extends SuluTestCase
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
-        $permission1->setContext("Context 1");
+        $permission1->setContext('Context 1');
         $this->em->persist($permission1);
 
         $permission2 = new Permission();
         $permission2->setPermissions(122);
         $permission2->setRole($role2);
-        $permission2->setContext("Context 2");
+        $permission2->setContext('Context 2');
         $this->em->persist($permission2);
 
         // user groups
@@ -211,36 +209,36 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
                 ),
                 'userGroups' => array(
                     array(
                         'group' => array(
-                            'id' => $this->group1->getId()
+                            'id' => $this->group1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'group' => array(
-                            'id' => $this->group2->getId()
+                            'id' => $this->group2->getId(),
                         ),
-                        'locales' => array('en')
-                    )
-                )
+                        'locales' => array('en'),
+                    ),
+                ),
             )
         );
 
@@ -299,15 +297,15 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => '["de"]'
+                        'locales' => '["de"]',
                     ),
                     array(
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => '["de"]'
+                        'locales' => '["de"]',
                     ),
-                )
+                ),
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -316,8 +314,8 @@ class UserControllerTest extends SuluTestCase
         $this->assertContains('username', $response->message);
     }
 
-    public function testPostWithNotUniqueEmail() {
-
+    public function testPostWithNotUniqueEmail()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -329,16 +327,16 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => '["de"]'
-                    )
-                )
+                        'locales' => '["de"]',
+                    ),
+                ),
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -348,7 +346,8 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(1004, $response->code);
     }
 
-    public function testPostWithContactEmail() {
+    public function testPostWithContactEmail()
+    {
         $client = $this->createAuthenticatedClient();
 
         // no user-email passed, but a unique contact-email
@@ -362,16 +361,16 @@ class UserControllerTest extends SuluTestCase
                 'locale' => 'en',
                 'contact' => array(
                     'id' => $this->contact1->getId(),
-                    'emails' => array(array('email' => $this->contact1->getEmails()[0]->getEmail()))
+                    'emails' => array(array('email' => $this->contact1->getEmails()[0]->getEmail())),
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => '["de"]'
-                    )
-                )
+                        'locales' => '["de"]',
+                    ),
+                ),
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -417,7 +416,7 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
@@ -425,30 +424,30 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
                 ),
                 'userGroups' => array(
                     array(
                         'group' => array(
-                            'id' => $this->group1->getId()
+                            'id' => $this->group1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'group' => array(
-                            'id' => $this->group2->getId()
+                            'id' => $this->group2->getId(),
                         ),
-                        'locales' => array('en')
-                    )
-                )
+                        'locales' => array('en'),
+                    ),
+                ),
             )
         );
 
@@ -506,8 +505,8 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
-                )
+                    'id' => $this->contact1->getId(),
+                ),
             )
         );
 
@@ -530,8 +529,8 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
-                )
+                    'id' => $this->contact1->getId(),
+                ),
             )
         );
 
@@ -543,8 +542,8 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
-                )
+                    'id' => $this->contact1->getId(),
+                ),
             )
         );
 
@@ -563,7 +562,7 @@ class UserControllerTest extends SuluTestCase
             'PATCH',
             '/api/users/' . $this->user1->getId(),
             array(
-                'locale' => 'en'
+                'locale' => 'en',
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -573,7 +572,7 @@ class UserControllerTest extends SuluTestCase
             'PATCH',
             '/api/users/' . $this->user1->getId(),
             array(
-                'username' => 'newusername'
+                'username' => 'newusername',
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -584,8 +583,8 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $this->user1->getId(),
             array(
                 'contact' => array(
-                    'id' => $this->contact1->getId()
-                )
+                    'id' => $this->contact1->getId(),
+                ),
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -614,8 +613,8 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
-                )
+                    'id' => $this->contact1->getId(),
+                ),
             )
         );
 
@@ -623,7 +622,7 @@ class UserControllerTest extends SuluTestCase
             'PATCH',
             '/api/users/' . $this->user2->getId(),
             array(
-                'username' => 'admin'
+                'username' => 'admin',
             )
         );
 
@@ -649,15 +648,15 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
-                )
+                ),
             )
         );
 
@@ -669,7 +668,6 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetUserAndRolesByContact()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -689,12 +687,10 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[0]->role->system);
         $this->assertEquals('Role2', $response->_embedded->users[0]->userRoles[1]->role->name);
         $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[1]->role->system);
-
     }
 
     public function testGetUserAndRolesByContactNotExisting()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -707,7 +703,6 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetUserAndRolesWithoutParam()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -735,7 +730,7 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
@@ -743,16 +738,16 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
-                )
+                ),
             )
         );
 
@@ -775,7 +770,7 @@ class UserControllerTest extends SuluTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
@@ -783,9 +778,9 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
-                    )
-                )
+                        'locales' => array('de', 'en'),
+                    ),
+                ),
             )
         );
 
@@ -812,22 +807,22 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
-                )
+                ),
             )
         );
 
@@ -849,22 +844,22 @@ class UserControllerTest extends SuluTestCase
                 'password' => '',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
-                )
+                ),
             )
         );
 
@@ -885,7 +880,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
@@ -893,16 +888,16 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
-                )
+                ),
             )
         );
 
@@ -910,7 +905,6 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->code);
         $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
-
     }
 
     public function testPutWithEmptyPassword()
@@ -922,10 +916,10 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
-                'password'=> '',
+                'password' => '',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => $this->contact1->getId()
+                    'id' => $this->contact1->getId(),
                 ),
                 'userRoles' => array(
                     array(
@@ -933,16 +927,16 @@ class UserControllerTest extends SuluTestCase
                         'role' => array(
                             'id' => $this->role1->getId(),
                         ),
-                        'locales' => array('de', 'en')
+                        'locales' => array('de', 'en'),
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
                             'id' => $this->role2->getId(),
                         ),
-                        'locales' => array('en')
+                        'locales' => array('en'),
                     ),
-                )
+                ),
             )
         );
 
@@ -975,10 +969,9 @@ class UserControllerTest extends SuluTestCase
 
     public function testUserDataHandler()
     {
-//        $this->createClient();
+        //        $this->createClient();
 //        self::$kernel->getContainer()->get('sulu_admin.user_data_service');
 
         // TODO: implement test cases
-
     }
 }

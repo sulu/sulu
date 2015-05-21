@@ -14,7 +14,6 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
@@ -30,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Makes collections available through a REST API
+ * Makes collections available through a REST API.
  */
 class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -47,8 +46,10 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected static $entityKey = 'collections';
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("collection/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -59,7 +60,8 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * persists a setting
+     * persists a setting.
+     *
      * @Put("collection/fields")
      */
     public function putFieldsAction()
@@ -68,9 +70,11 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Shows a single collection with the given id
+     * Shows a single collection with the given id.
+     *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id, Request $request)
@@ -92,7 +96,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $filter = array(
                 'limit' => $limit,
                 'offset' => $offset,
-                'search' => $search
+                'search' => $search,
             );
 
             $view = $this->responseGetById(
@@ -118,8 +122,10 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * lists all collections
+     * lists all collections.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -182,8 +188,10 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Creates a new collection
+     * Creates a new collection.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -192,10 +200,13 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Edits the existing collection with the given id
-     * @param integer $id The id of the collection to update
+     * Edits the existing collection with the given id.
+     *
+     * @param int $id The id of the collection to update
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function putAction($id, Request $request)
@@ -204,8 +215,10 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Delete a collection with the given id
+     * Delete a collection with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -227,10 +240,13 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Trigger an action for given media. Action is specified over get-action parameter
+     * Trigger an action for given media. Action is specified over get-action parameter.
+     *
      * @Post("collections/{id}")
+     *
      * @param int $id
      * @param Request $request
+     *
      * @return Response
      */
     public function postTriggerAction($id, Request $request)
@@ -253,9 +269,11 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Moves an entity into another one
+     * Moves an entity into another one.
+     *
      * @param int $id
      * @param Request $request
+     *
      * @return Response
      */
     protected function moveEntity($id, Request $request)
@@ -269,6 +287,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * @param Request $request
+     *
      * @return Collection
      */
     protected function getData(Request $request)
@@ -290,6 +309,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function saveEntity($id, Request $request)
@@ -320,7 +340,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     *
      * @return string
      */
     public function getSecurityContext()

@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-
 class ParentChildAnyFinderTest extends \PHPUnit_Framework_TestCase
 {
     private $node;

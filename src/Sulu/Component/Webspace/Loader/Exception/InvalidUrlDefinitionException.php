@@ -15,7 +15,8 @@ use Sulu\Component\Webspace\Webspace;
 class InvalidUrlDefinitionException extends WebspaceException
 {
     /**
-     * The pattern which was invalid
+     * The pattern which was invalid.
+     *
      * @var string
      */
     private $urlPattern;
@@ -34,7 +35,8 @@ class InvalidUrlDefinitionException extends WebspaceException
     }
 
     /**
-     * Returns the url pattern
+     * Returns the url pattern.
+     *
      * @return string
      */
     public function getUrlPattern()

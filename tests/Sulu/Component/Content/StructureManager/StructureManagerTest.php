@@ -79,9 +79,9 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
                         'path' => __DIR__ . '/../../../../Resources/DataFixtures/Page',
                         'internal' => false,
                         'type' => 'page',
-                    )
+                    ),
                 ),
-                'cache_dir' => $this->cacheDir
+                'cache_dir' => $this->cacheDir,
             )
         );
     }
@@ -217,7 +217,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(
                 'minLinks' => '1',
-                'maxLinks' => '10'
+                'maxLinks' => '10',
             ),
             $property->getParams()
         );
@@ -573,11 +573,11 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
                     array(
                         't1' => new PropertyParameter('t1', 'v1'),
                         't2' => new PropertyParameter('t2', 'v2'),
-                        't3' => new PropertyParameter('t3','v3'),
+                        't3' => new PropertyParameter('t3', 'v3'),
                         't4' => new PropertyParameter('t4', 'v4'),
                     ),
                     'collection'
-                )
+                ),
             ),
             $structure->getProperty('title')->getParams()
         );
@@ -594,9 +594,9 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
                     1,
                     null,
                     array(
-                        'title' => array('de' => 'Mindestens', 'en' => 'Minimum')
+                        'title' => array('de' => 'Mindestens', 'en' => 'Minimum'),
                     )
-                )
+                ),
             ),
             $structure->getProperty('title')->getParams()
         );
@@ -620,7 +620,7 @@ class TestExtension extends StructureExtension
 {
     protected $properties = array(
         'a',
-        'b'
+        'b',
     );
 
     public function __construct($name, $additionalPrefix = null)
@@ -646,7 +646,7 @@ class TestExtension extends StructureExtension
     {
         $this->data = array(
             'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
-            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
+            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), ''),
         );
     }
 }

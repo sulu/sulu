@@ -10,20 +10,20 @@
 
 namespace Sulu\Bundle\SearchBundle\Controller;
 
-use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
+use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Sulu search controller
+ * Sulu search controller.
  */
 class SearchController
 {
@@ -49,15 +49,14 @@ class SearchController
         SearchManagerInterface $searchManager,
         ViewHandler $viewHandler,
         ListRestHelper $listRestHelper
-    )
-    {
+    ) {
         $this->searchManager = $searchManager;
         $this->viewHandler = $viewHandler;
         $this->listRestHelper = $listRestHelper;
     }
 
     /**
-     * Perform a search and return a JSON response
+     * Perform a search and return a JSON response.
      *
      * @param Request $request
      *
@@ -128,7 +127,7 @@ class SearchController
     }
 
     /**
-     * Return a JSON encoded scalar array of index names
+     * Return a JSON encoded scalar array of index names.
      *
      * @return JsonResponse
      */
@@ -140,7 +139,7 @@ class SearchController
     }
 
     /**
-     * Return the category totals for the search results
+     * Return the category totals for the search results.
      *
      * @param Hit[]
      *

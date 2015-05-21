@@ -11,13 +11,13 @@
 namespace Sulu\Component\Content\Template\Exception;
 
 /**
- * Thrown when a template does not contain a required property name
- * @package Sulu\Component\Content\Template\Exception
+ * Thrown when a template does not contain a required property name.
  */
 class RequiredPropertyNameNotFoundException extends InvalidXmlException
 {
     /**
-     * The name of the property, which is required, but not found
+     * The name of the property, which is required, but not found.
+     *
      * @var string
      */
     protected $propertyName;

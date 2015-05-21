@@ -14,8 +14,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Adds tagged services to the LocalizationManager
- * @package Sulu\Bundle\CoreBundle\DependencyInjection\Compiler
+ * Adds tagged services to the LocalizationManager.
  */
 class RegisterLocalizationProvidersPass implements CompilerPassInterface
 {

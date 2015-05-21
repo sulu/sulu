@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
@@ -41,8 +41,8 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
                 array(
                     'alias1' => array('service1', 'service2'),
                     'alias2' => array('service3'),
-                )
-            )
+                ),
+            ),
         );
     }
 
@@ -79,8 +79,8 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
                 array(
                     'alias1' => array('tab1', 'tab2', 'tab3'),
                     'alias2' => array('tab4'),
-                )
-            )
+                ),
+            ),
         );
     }
 

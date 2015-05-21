@@ -10,13 +10,13 @@
 
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
-use Symfony\Component\HttpKernel\KernelEvents;
+use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Sulu\Component\HttpCache\HandlerFlushInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Listen to the content mapper and invalidate structures
+ * Listen to the content mapper and invalidate structures.
  */
 class FlushSubscriber implements EventSubscriberInterface
 {
@@ -39,7 +39,7 @@ class FlushSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Flush the cache on kernel terminate
+     * Flush the cache on kernel terminate.
      *
      * @param PostResponseEvent $event
      */

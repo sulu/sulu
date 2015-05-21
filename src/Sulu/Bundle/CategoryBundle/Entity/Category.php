@@ -5,22 +5,22 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Category
+ * Category.
  */
 class Category implements AuditableInterface
 {
     /**
-     * @var integer
+     * @var int
      */
     private $lft;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rgt;
 
     /**
-     * @var integer
+     * @var int
      */
     private $depth;
 
@@ -35,7 +35,7 @@ class Category implements AuditableInterface
     private $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -75,7 +75,7 @@ class Category implements AuditableInterface
     private $changer;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -85,9 +85,9 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set id
+     * Set id.
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return Category
      */
@@ -99,9 +99,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return Category
      */
     public function setLft($lft)
@@ -112,9 +113,9 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft()
     {
@@ -122,9 +123,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return Category
      */
     public function setRgt($rgt)
@@ -135,9 +137,9 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt()
     {
@@ -145,9 +147,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set depth
+     * Set depth.
      *
-     * @param integer $depth
+     * @param int $depth
+     *
      * @return Category
      */
     public function setDepth($depth)
@@ -158,9 +161,9 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get depth
+     * Get depth.
      *
-     * @return integer
+     * @return int
      */
     public function getDepth()
     {
@@ -168,7 +171,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -178,7 +181,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get key
+     * Get key.
      *
      * @return string
      */
@@ -188,9 +191,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set key
+     * Set key.
      *
      * @param string $key
+     *
      * @return Category
      */
     public function setKey($key)
@@ -201,7 +205,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -211,9 +215,9 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -221,9 +225,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Add meta
+     * Add meta.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta
+     *
      * @return Category
      */
     public function addMeta(\Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta)
@@ -234,7 +239,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Remove meta
+     * Remove meta.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta
      */
@@ -244,7 +249,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get meta
+     * Get meta.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -254,9 +259,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations
+     *
      * @return Category
      */
     public function addTranslation(\Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations)
@@ -267,7 +273,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations
      */
@@ -277,7 +283,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -287,9 +293,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Add children
+     * Add children.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $children
+     *
      * @return Category
      */
     public function addChildren(\Sulu\Bundle\CategoryBundle\Entity\Category $children)
@@ -300,7 +307,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $children
      */
@@ -310,7 +317,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get children
+     * Get children.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -320,9 +327,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $parent
+     *
      * @return Category
      */
     public function setParent(\Sulu\Bundle\CategoryBundle\Entity\Category $parent = null)
@@ -333,7 +341,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */
@@ -343,9 +351,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return Category
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
@@ -356,7 +365,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -366,9 +375,10 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return Category
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
@@ -379,7 +389,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */

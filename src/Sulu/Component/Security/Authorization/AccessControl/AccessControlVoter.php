@@ -15,7 +15,6 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
-use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
@@ -24,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
- * Voter deciding on object based security
+ * Voter deciding on object based security.
  */
 class AccessControlVoter extends AclVoter
 {

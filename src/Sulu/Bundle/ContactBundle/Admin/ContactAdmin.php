@@ -46,7 +46,7 @@ class ContactAdmin extends Admin
             $contacts->addChild($companies);
         }
 
-        if($contacts->hasChildren()) {
+        if ($contacts->hasChildren()) {
             $rootNavigationItem->addChild($section);
             $section->addChild($contacts);
         }
@@ -79,9 +79,9 @@ class ContactAdmin extends Admin
             'Sulu' => array(
                 'Contacts' => array(
                     'sulu.contact.people',
-                    'sulu.contact.organizations'
-                )
-            )
+                    'sulu.contact.organizations',
+                ),
+            ),
         );
     }
 }

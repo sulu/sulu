@@ -11,8 +11,7 @@
 namespace Sulu\Component\Content\Template\Exception;
 
 /**
- * Thrown when the xml definition of a template contains an error
- * @package Sulu\Component\Content\Template\Exception
+ * Thrown when the xml definition of a template contains an error.
  */
 class InvalidXmlException extends TemplateException
 {

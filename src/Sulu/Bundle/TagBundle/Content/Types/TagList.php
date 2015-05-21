@@ -17,19 +17,20 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
- * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky
- * @package Sulu\Bundle\TagBundle\Content\Types
+ * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
  */
 class TagList extends ComplexContentType
 {
     /**
-     * Responsible for saving the tags in the database
+     * Responsible for saving the tags in the database.
+     *
      * @var TagManagerInterface
      */
     private $tagManager;
 
     /**
-     * Holds the template for rendering this content type in the admin
+     * Holds the template for rendering this content type in the admin.
+     *
      * @var string
      */
     private $template;
@@ -42,7 +43,8 @@ class TagList extends ComplexContentType
 
     /**
      * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
+     * PRE_SAVE or POST_SAVE.
+     *
      * @return int
      */
     public function getType()
@@ -51,7 +53,8 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * Sets the given array as values on the property
+     * Sets the given array as values on the property.
+     *
      * @param array $data
      * @param PropertyInterface $property
      */
@@ -87,8 +90,7 @@ class TagList extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $tagIds = array();
 
         foreach ($property->getValue() as $tag) {
@@ -109,7 +111,8 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

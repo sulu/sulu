@@ -6,7 +6,6 @@ use Sulu\Component\Localization\Localization;
 
 class WebspaceTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var Webspace
      */
@@ -63,8 +62,8 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
             ),
             'segments' => array(
                 array(
-                    'asd'
-                )
+                    'asd',
+                ),
             ),
             'portals' => array(
                 array('one'),
@@ -73,7 +72,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                 'dsa',
             ),
             'navigation' => array(
-                'contexts' => array()
+                'contexts' => array(),
             ),
         );
 
@@ -87,18 +86,18 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->webspace->setName($expected['name']);
         $this->webspace->setLocalizations(
             array(
-                $this->localization->reveal()
+                $this->localization->reveal(),
             )
         );
         $this->webspace->setSecurity($this->security->reveal());
         $this->webspace->setSegments(
             array(
-                $this->segment->reveal()
+                $this->segment->reveal(),
             )
         );
         $this->webspace->setPortals(
             array(
-                $this->portal->reveal()
+                $this->portal->reveal(),
             )
         );
         $this->webspace->setTheme($this->theme->reveal());

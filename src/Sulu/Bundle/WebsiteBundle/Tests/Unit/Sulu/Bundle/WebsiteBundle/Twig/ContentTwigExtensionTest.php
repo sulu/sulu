@@ -21,9 +21,9 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Webspace;
 
 class TestStructure extends Structure

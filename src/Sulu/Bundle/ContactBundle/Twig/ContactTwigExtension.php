@@ -15,7 +15,7 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 
 /**
- * Extension to handle contacts in frontend
+ * Extension to handle contacts in frontend.
  */
 class ContactTwigExtension extends \Twig_Extension
 {
@@ -41,13 +41,15 @@ class ContactTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('resolve_user', array($this, 'resolveUserFunction'))
+            new \Twig_SimpleFunction('resolve_user', array($this, 'resolveUserFunction')),
         );
     }
 
     /**
-     * resolves user id to user data
-     * @param integer $userId id to resolve
+     * resolves user id to user data.
+     *
+     * @param int $userId id to resolve
+     *
      * @return Contact
      */
     public function resolveUserFunction($userId)
@@ -56,7 +58,7 @@ class ContactTwigExtension extends \Twig_Extension
             $user = $this->userRepository->findUserById($userId);
 
             if ($user === null) {
-                return null;
+                return;
             }
 
             $this->cache->save($userId, $user->getContact());

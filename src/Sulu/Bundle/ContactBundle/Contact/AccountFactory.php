@@ -10,12 +10,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
+use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
- * factory to encapsulate account creation
+ * factory to encapsulate account creation.
  */
 class AccountFactory implements AccountFactoryInterface
 {

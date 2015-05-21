@@ -10,8 +10,8 @@
 
 namespace Sulu\Component\Webspace\Analyzer;
 
-use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -21,87 +21,100 @@ use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
 {
-
     /**
-     * Describes the match
+     * Describes the match.
+     *
      * @var int
      */
     private $matchType;
 
     /**
-     * The WebspaceManager, responsible for loading the required webspaces
+     * The WebspaceManager, responsible for loading the required webspaces.
+     *
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
 
     /**
-     * The environment valid to analyze the request
+     * The environment valid to analyze the request.
+     *
      * @var string
      */
     private $environment;
 
     /**
-     * The current webspace valid for the current request
+     * The current webspace valid for the current request.
+     *
      * @var Webspace
      */
     private $webspace;
 
     /**
-     * The current portal valid for the current request
+     * The current portal valid for the current request.
+     *
      * @var Portal
      */
     private $portal;
 
     /**
-     * The current segment valid for the current request
+     * The current segment valid for the current request.
+     *
      * @var Segment
      */
     private $segment;
 
     /**
-     * The current localization valid for the current request
+     * The current localization valid for the current request.
+     *
      * @var Localization
      */
     private $localization;
 
     /**
-     * The redirect, null if not existent
+     * The redirect, null if not existent.
+     *
      * @var string
      */
     private $redirect;
 
     /**
-     * The url of the current portal
+     * The url of the current portal.
+     *
      * @var string
      */
     private $portalUrl;
 
     /**
-     * The path of the current request
+     * The path of the current request.
+     *
      * @var string
      */
     private $resourceLocator;
 
     /**
-     * The prefix required before the resource locator
+     * The prefix required before the resource locator.
+     *
      * @var string
      */
     private $resourceLocatorPrefix;
 
     /**
-     * Get parameter of request
+     * Get parameter of request.
+     *
      * @var array
      */
     private $getParameter;
 
     /**
-     * Post parameter of request
+     * Post parameter of request.
+     *
      * @var array
      */
     private $postParameter;
 
     /**
-     * Analytics key of request
+     * Analytics key of request.
+     *
      * @var string
      */
     private $analyticsKey;
@@ -113,8 +126,10 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Analyzes the current request, and saves the values for portal, localization and segment for further usage
+     * Analyzes the current request, and saves the values for portal, localization and segment for further usage.
+     *
      * @param Request $request The request to analyze
+     *
      * @throws Exception\UrlMatchNotFoundException
      */
     public function analyze(Request $request)
@@ -139,6 +154,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
             $this->setCurrentPortalUrl($portalInformation->getUrl());
             $this->setCurrentWebspace($portalInformation->getWebspace());
+
             return;
         }
 
@@ -177,7 +193,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the current webspace for this request
+     * Returns the current webspace for this request.
+     *
      * @return Webspace
      */
     public function getWebspace()
@@ -186,7 +203,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the current portal for this request
+     * Returns the current portal for this request.
+     *
      * @return Portal
      */
     public function getPortal()
@@ -195,7 +213,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the current segment for this request
+     * Returns the current segment for this request.
+     *
      * @return Segment
      */
     public function getSegment()
@@ -204,7 +223,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the current localization for this Request
+     * Returns the current localization for this Request.
+     *
      * @return Localization
      */
     public function getCurrentLocalization()
@@ -213,7 +233,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the url of the current Portal
+     * Returns the url of the current Portal.
+     *
      * @return string
      */
     public function getPortalUrl()
@@ -222,7 +243,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the redirect, null if there is no redirect
+     * Returns the redirect, null if there is no redirect.
+     *
      * @return string
      */
     public function getRedirect()
@@ -231,7 +253,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the path of the current request, which is the url without host, language and so on
+     * Returns the path of the current request, which is the url without host, language and so on.
+     *
      * @return string
      */
     public function getResourceLocator()
@@ -240,7 +263,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the prefix required before the resource locator
+     * Returns the prefix required before the resource locator.
+     *
      * @return string
      */
     public function getResourceLocatorPrefix()
@@ -249,7 +273,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the post parameters
+     * Returns the post parameters.
+     *
      * @return array
      */
     public function getPostParameters()
@@ -258,7 +283,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the get parameters
+     * Returns the get parameters.
+     *
      * @return array
      */
     public function getGetParameters()
@@ -267,7 +293,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the current match type
+     * Sets the current match type.
+     *
      * @param int $matchType
      */
     public function setCurrentMatchType($matchType)
@@ -276,7 +303,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the current localization
+     * Sets the current localization.
+     *
      * @param Localization $localization
      */
     protected function setCurrentLocalization($localization)
@@ -285,7 +313,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the current webspace
+     * Sets the current webspace.
+     *
      * @param \Sulu\Component\Webspace\Webspace $webspace
      */
     protected function setCurrentWebspace($webspace)
@@ -294,7 +323,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the current portal
+     * Sets the current portal.
+     *
      * @param \Sulu\Component\Webspace\Portal $portal
      */
     protected function setCurrentPortal($portal)
@@ -303,7 +333,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the current segment
+     * Sets the current segment.
+     *
      * @param \Sulu\Component\Webspace\Segment $segment
      */
     protected function setCurrentSegment($segment)
@@ -312,7 +343,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the redirect
+     * Sets the redirect.
+     *
      * @param string $redirect
      */
     protected function setCurrentRedirect($redirect)
@@ -321,7 +353,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the url of the current portal
+     * Sets the url of the current portal.
+     *
      * @param string $portalUrl
      */
     protected function setCurrentPortalUrl($portalUrl)
@@ -330,7 +363,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the path of the current request
+     * Sets the path of the current request.
+     *
      * @param $path
      */
     protected function setCurrentResourceLocator($path)
@@ -339,7 +373,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Sets the prefix require before the resource locator
+     * Sets the prefix require before the resource locator.
+     *
      * @param string $resourceLocatorPrefix
      */
     protected function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
@@ -348,7 +383,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Retrurns resourcelocator and format of current request
+     * Retrurns resourcelocator and format of current request.
      */
     private function getResourceLocatorFromRequest(
         PortalInformation $portalInformation,
@@ -376,7 +411,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the analytics key
+     * Returns the analytics key.
+     *
      * @return string
      */
     public function getAnalyticsKey()

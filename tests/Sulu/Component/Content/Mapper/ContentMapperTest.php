@@ -76,7 +76,7 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getPageMock(10, false);
         }
 
-        return null;
+        return;
     }
 
     public function getPageMock($type = 1, $url = true)
@@ -92,7 +92,7 @@ class ContentMapperTest extends PhpcrTestCase
             'overview',
             'overview',
             'overview',
-            'overview'
+            'overview',
         );
 
         if ($type == 10) {
@@ -124,7 +124,7 @@ class ContentMapperTest extends PhpcrTestCase
                     1,
                     1,
                     array()
-                ))
+                )),
             )
         );
         $property->setStructure($structureMock);
@@ -135,7 +135,7 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     ($property = new Property(
                         'url', '', 'resource_locator', false, true, 1, 1, array(), array(new PropertyTag('sulu.rlp', 1))
-                    ))
+                    )),
                 )
             );
             $property->setStructure($structureMock);
@@ -145,7 +145,7 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    ($property = new Property('tags', '', 'text_line', false, true, 10, 2))
+                    ($property = new Property('tags', '', 'text_line', false, true, 10, 2)),
                 )
             );
             $property->setStructure($structureMock);
@@ -153,7 +153,7 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    ($property = new Property('article', '', 'text_area', false, true))
+                    ($property = new Property('article', '', 'text_area', false, true)),
                 )
             );
             $property->setStructure($structureMock);
@@ -162,7 +162,7 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    ($property = new Property('blog', '', 'text_area', false, false))
+                    ($property = new Property('blog', '', 'text_area', false, false)),
                 )
             );
             $property->setStructure($structureMock);
@@ -177,14 +177,14 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    $blockProperty
+                    $blockProperty,
                 )
             );
         } elseif ($type == 4) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    ($property = new Property('blog', '', 'text_line', true, true))
+                    ($property = new Property('blog', '', 'text_line', true, true)),
                 )
             );
             $property->setStructure($structureMock);
@@ -207,14 +207,14 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    $section
+                    $section,
                 )
             );
         } elseif ($type == 6) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    ($property = new Property('blog', '', 'text_line', true, true))
+                    ($property = new Property('blog', '', 'text_line', true, true)),
                 )
             );
             $property->setStructure($structureMock);
@@ -233,7 +233,7 @@ class ContentMapperTest extends PhpcrTestCase
                         array(),
                         array(new PropertyTag('sulu.rlp', 1))
                     )
-                    )
+                    ),
                 )
             );
             $property->setStructure($structureMock);
@@ -251,7 +251,7 @@ class ContentMapperTest extends PhpcrTestCase
                         1,
                         array(),
                         array(new PropertyTag('sulu.rlp', 1))
-                    ))
+                    )),
                 )
             );
             $property->setStructure($structureMock);
@@ -263,7 +263,7 @@ class ContentMapperTest extends PhpcrTestCase
                         'internal', // same as internal link to test content type switch
                         '',
                         'snippet'
-                    ))
+                    )),
                 )
             );
             $property->setStructure($structureMock);
@@ -271,7 +271,7 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    ($property = new Property('article', '', 'text_area', false, true))
+                    ($property = new Property('article', '', 'text_area', false, true)),
                 )
             );
             $property->setStructure($structureMock);
@@ -293,7 +293,8 @@ class ContentMapperTest extends PhpcrTestCase
     }
 
     /**
-     * default get extension callback returns null
+     * default get extension callback returns null.
+     *
      * @return array
      */
     public function getExtensionCallback()
@@ -309,7 +310,7 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->extensions[1];
         }
 
-        return null;
+        return;
     }
 
     protected function prepareWebspaceManager()
@@ -356,10 +357,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         $this->eventDispatcher->expects($this->at(0))
@@ -388,7 +389,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             $result->getPropertyValue('tags')
         );
@@ -428,42 +429,42 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     'is_shadow' => true,
                     'language' => 'en',
-                    'shadow_base_language' => 'de_at'
+                    'shadow_base_language' => 'de_at',
                 ),
                 array(
-                    'exception' => 'Attempting to make language "en" a shadow of a non-concrete language "de_at". Concrete languages are "de"'
+                    'exception' => 'Attempting to make language "en" a shadow of a non-concrete language "de_at". Concrete languages are "de"',
                 ),
             ),
             array(
                 array(
                     'is_shadow' => false,
                     'language' => 'de',
-                    'shadow_base_language' => 'fr'
+                    'shadow_base_language' => 'fr',
                 ),
                 null,
-                array()
+                array(),
             ),
             array(
                 array(
                     'is_shadow' => true,
                     'language' => 'de',
-                    'shadow_base_language' => 'de'
+                    'shadow_base_language' => 'de',
                 ),
                 null,
                 array(
                     'exception' => 'shadow of itself',
-                )
+                ),
             ),
             array(
                 array(
                     'is_shadow' => false,
                     'language' => 'de_at',
-                    'shadow_base_language' => 'de'
+                    'shadow_base_language' => 'de',
                 ),
                 array(
                     'is_shadow' => true,
                     'language' => 'en_us',
-                    'shadow_base_language' => 'de_at'
+                    'shadow_base_language' => 'de_at',
                 ),
                 array(),
             ),
@@ -471,20 +472,20 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     'is_shadow' => false,
                     'language' => 'de_at',
-                    'shadow_base_language' => 'en_us'
+                    'shadow_base_language' => 'en_us',
                 ),
                 array(
                     'is_shadow' => true,
                     'language' => 'en_us',
-                    'shadow_base_language' => 'de_at'
+                    'shadow_base_language' => 'de_at',
                 ),
-                array()
+                array(),
             ),
             array(
                 array(
                     'is_shadow' => false,
                     'language' => 'de_at',
-                    'shadow_base_language' => 'en_us'
+                    'shadow_base_language' => 'en_us',
                 ),
                 array(
                     'is_shadow' => true,
@@ -492,7 +493,7 @@ class ContentMapperTest extends PhpcrTestCase
                     'shadow_base_language' => 'de_at',
                     'url' => null,
                 ),
-                array()
+                array(),
             ),
         );
     }
@@ -509,10 +510,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         if (isset($expectations['exception'])) {
@@ -543,7 +544,6 @@ class ContentMapperTest extends PhpcrTestCase
                 $node['is_shadow'],
                 $node['shadow_base_language']
             );
-
         }
 
         $this->assertFalse($structures[0]->getIsShadow());
@@ -565,10 +565,10 @@ class ContentMapperTest extends PhpcrTestCase
                     'title' => 'Testname',
                     'tags' => array(
                         'tag1',
-                        'tag2'
+                        'tag2',
                     ),
                     'url' => '/news/test',
-                    'article' => 'default'
+                    'article' => 'default',
                 )
             )
             ->setWebspaceKey('default')
@@ -599,10 +599,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -623,7 +623,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->sessionManager = null;
         $this->structureValueMap = array(
             'overview' => $this->getPageMock(1),
-            'default' => $this->getPageMock(2)
+            'default' => $this->getPageMock(2),
         );
         $this->prepareMapper();
 
@@ -645,10 +645,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -670,10 +670,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -728,10 +728,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -780,10 +780,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -832,10 +832,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -883,10 +883,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -895,7 +895,7 @@ class ContentMapperTest extends PhpcrTestCase
         // change simple content
         $data = array(
             'title' => 'Testname',
-            'blog' => 'this is a blog test'
+            'blog' => 'this is a blog test',
         );
 
         // update content
@@ -940,10 +940,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -996,10 +996,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -1044,10 +1044,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         // save content
@@ -1113,38 +1113,38 @@ class ContentMapperTest extends PhpcrTestCase
                 'title' => 'News',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news',
-                'article' => 'asdfasdfasdf'
+                'article' => 'asdfasdfasdf',
             ),
             array(
                 'title' => 'Testnews-1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'default'
+                'article' => 'default',
             ),
             array(
                 'title' => 'Testnews-2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-2',
-                'article' => 'default'
+                'article' => 'default',
             ),
             array(
                 'title' => 'Testnews-2-1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'default'
-            )
+                'article' => 'default',
+            ),
         );
 
         // save root content
@@ -1198,38 +1198,38 @@ class ContentMapperTest extends PhpcrTestCase
                 'title' => 'News',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news',
-                'article' => 'asdfasdfasdf'
+                'article' => 'asdfasdfasdf',
             ),
             array(
                 'title' => 'Testnews-1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'default'
+                'article' => 'default',
             ),
             array(
                 'title' => 'Testnews-2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-2',
-                'article' => 'default'
+                'article' => 'default',
             ),
             array(
                 'title' => 'Testnews-2-1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'default'
-            )
+                'article' => 'default',
+            ),
         );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
@@ -1383,10 +1383,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'startpage',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/',
-            'article' => 'article'
+            'article' => 'article',
         );
 
         $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
@@ -1414,10 +1414,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'startpage',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/',
-            'article' => 'article'
+            'article' => 'article',
         );
 
         $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
@@ -1436,38 +1436,38 @@ class ContentMapperTest extends PhpcrTestCase
                 'title' => 'News',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news',
-                'article' => 'asdfasdfasdf'
+                'article' => 'asdfasdfasdf',
             ),
             array(
                 'title' => 'Testnews-1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'default'
+                'article' => 'default',
             ),
             array(
                 'title' => 'Testnews-2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-2',
-                'article' => 'default'
+                'article' => 'default',
             ),
             array(
                 'title' => 'Testnews-2-1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'default'
-            )
+                'article' => 'default',
+            ),
         );
 
         // save root content
@@ -1516,10 +1516,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'ä   ü ö   Ä Ü Ö',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/',
-            'article' => 'article'
+            'article' => 'article',
         );
 
         $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
@@ -1534,7 +1534,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         // default state TEST
         $data1 = array(
-            'title' => 't1'
+            'title' => 't1',
         );
         $data1 = $this->mapper->save($data1, 'overview', 'default', 'de', 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data1->getNodeState());
@@ -1543,7 +1543,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // save with state PUBLISHED
         $data2 = array(
-            'title' => 't2'
+            'title' => 't2',
         );
         $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
@@ -1553,7 +1553,7 @@ class ContentMapperTest extends PhpcrTestCase
         sleep(1);
         // change state from TEST to PUBLISHED
         $data3 = array(
-            'title' => 't1'
+            'title' => 't1',
         );
         $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid(), null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getNodeState());
@@ -1563,7 +1563,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // change state from PUBLISHED to TEST (exception)
         $data4 = array(
-            'title' => 't2'
+            'title' => 't2',
         );
         $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid(), null, 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getNodeState());
@@ -1578,11 +1578,11 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
             'article' => 'default',
-            'navContexts' => $navContexts
+            'navContexts' => $navContexts,
         );
 
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -1650,7 +1650,7 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Test',
             'tags' => array('tag1'),
             'url' => '/test-1',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         $d1 = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -1702,24 +1702,24 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             array(
                 'title' => 'News-EN',
-                'url' => '/news'
+                'url' => '/news',
             ),
             array(
                 'title' => 'News-DE_AT',
-                'url' => '/news'
+                'url' => '/news',
             ),
             array(
                 'title' => 'Products-EN',
-                'url' => '/products'
+                'url' => '/products',
             ),
             array(
                 'title' => 'Products-DE',
-                'url' => '/products'
+                'url' => '/products',
             ),
             array(
                 'title' => 'Team-DE',
-                'url' => '/team-de'
-            )
+                'url' => '/team-de',
+            ),
         );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
@@ -2002,10 +2002,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
         );
         $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
         $content = $this->mapper->load($structure->getUuid(), 'default', 'en');
@@ -2020,7 +2020,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $data = array(
             'title' => 'Testname',
-            'url' => '/neuigkeiten/test'
+            'url' => '/neuigkeiten/test',
         );
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
@@ -2046,14 +2046,14 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     'type' => 'default',
                     'title' => 'Block-name-1',
-                    'article' => 'Block-Article-1'
+                    'article' => 'Block-Article-1',
                 ),
                 array(
                     'type' => 'default',
                     'title' => 'Block-name-2',
-                    'article' => 'Block-Article-2'
-                )
-            )
+                    'article' => 'Block-Article-2',
+                ),
+            ),
         );
 
         // check save
@@ -2064,7 +2064,7 @@ class ContentMapperTest extends PhpcrTestCase
             array(
                 'title' => $result['title'],
                 'url' => $result['url'],
-                'block1' => $result['block1']
+                'block1' => $result['block1'],
             )
         );
 
@@ -2079,7 +2079,7 @@ class ContentMapperTest extends PhpcrTestCase
             array(
                 'title' => $result['title'],
                 'url' => $result['url'],
-                'block1' => $result['block1']
+                'block1' => $result['block1'],
             )
         );
 
@@ -2091,7 +2091,7 @@ class ContentMapperTest extends PhpcrTestCase
             array(
                 'title' => $result['title'],
                 'url' => $result['url'],
-                'block1' => $result['block1']
+                'block1' => $result['block1'],
             )
         );
     }
@@ -2102,7 +2102,7 @@ class ContentMapperTest extends PhpcrTestCase
         $dataDe = array(
             'title' => 'Testname-DE',
             'blog' => 'German',
-            'url' => '/news/test'
+            'url' => '/news/test',
         );
 
         // update content
@@ -2110,7 +2110,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $dataEn = array(
             'title' => 'Testname-EN',
-            'blog' => 'English'
+            'blog' => 'English',
         );
         $structureEn = $this->mapper->save($dataEn, 'default', 'default', 'en', 1, true, $structureDe->getUuid());
         $structureDe = $this->mapper->load($structureDe->getUuid(), 'default', 'de');
@@ -2144,7 +2144,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             'title' => 'Testname',
-            'url' => '/news/test'
+            'url' => '/news/test',
         );
 
         $this->setExpectedException(
@@ -2163,97 +2163,97 @@ class ContentMapperTest extends PhpcrTestCase
             array(
                 'data' => array(
                     'title' => 'Products',
-                    'url' => '/products'
+                    'url' => '/products',
                 ),
                 'children' => array(
                     array(
                         'data' => array(
                             'title' => 'Products1',
-                            'url' => '/products/products-1'
+                            'url' => '/products/products-1',
                         ),
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
             array(
                 'data' => array(
                     'title' => 'News',
-                    'url' => '/news'
+                    'url' => '/news',
                 ),
                 'children' => array(
                     array(
                         'data' => array(
                             'title' => 'News-1',
-                            'url' => '/news/news-1'
+                            'url' => '/news/news-1',
                         ),
                         'children' => array(
                             array(
                                 'data' => array(
                                     'title' => 'SubNews-1',
-                                    'url' => '/news/news-1/subnews-1'
+                                    'url' => '/news/news-1/subnews-1',
                                 ),
-                                'children' => array()
+                                'children' => array(),
                             ),
                             array(
                                 'data' => array(
                                     'title' => 'SubNews-2',
-                                    'url' => '/news/news-1/subnews-2'
+                                    'url' => '/news/news-1/subnews-2',
                                 ),
-                                'children' => array()
+                                'children' => array(),
                             ),
                             array(
                                 'data' => array(
                                     'title' => 'SubNews-3',
-                                    'url' => '/news/news-1/subnews-3'
+                                    'url' => '/news/news-1/subnews-3',
                                 ),
                                 'children' => array(
                                     array(
                                         'data' => array(
                                             'title' => 'SubSubNews-1',
-                                            'url' => '/news/news-1/subnews-3/subsubnews-1'
+                                            'url' => '/news/news-1/subnews-3/subsubnews-1',
                                         ),
-                                        'children' => array()
+                                        'children' => array(),
                                     ),
                                     array(
                                         'data' => array(
                                             'title' => 'SubSubNews-2',
-                                            'url' => '/news/news-1/subnews-3/subsubnews-2'
+                                            'url' => '/news/news-1/subnews-3/subsubnews-2',
                                         ),
-                                        'children' => array()
+                                        'children' => array(),
                                     ),
                                     array(
                                         'data' => array(
                                             'title' => 'SubSubNews-3',
-                                            'url' => '/news/news-1/subnews-3/subsubnews-3'
+                                            'url' => '/news/news-1/subnews-3/subsubnews-3',
                                         ),
-                                        'children' => array()
-                                    )
-                                )
-                            )
-                        )
+                                        'children' => array(),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     array(
                         'data' => array(
                             'title' => 'News-2',
-                            'url' => '/news/news-2'
+                            'url' => '/news/news-2',
                         ),
-                        'children' => array()
+                        'children' => array(),
                     ),
                     array(
                         'data' => array(
                             'title' => 'News-3',
-                            'url' => '/news/news-3'
+                            'url' => '/news/news-3',
                         ),
-                        'children' => array()
+                        'children' => array(),
                     ),
-                )
+                ),
             ),
             array(
                 'data' => array(
                     'title' => 'About Us',
-                    'url' => '/about-us'
+                    'url' => '/about-us',
                 ),
-                'children' => array()
+                'children' => array(),
             ),
         );
 
@@ -2322,12 +2322,12 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             array(
                 'title' => 'test',
-                'url' => '/test'
+                'url' => '/test',
             ),
             array(
                 'title' => 'childtest',
-                'url' => '/test/childtest'
-            )
+                'url' => '/test/childtest',
+            ),
         );
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
@@ -2443,7 +2443,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
+            'blog' => 'Thats a good test',
         );
 
         $structure = $this->mapper->save($data, 'section', 'default', 'en', 1);
@@ -2474,9 +2474,9 @@ class ContentMapperTest extends PhpcrTestCase
             'ext' => array(
                 'test1' => array(
                     'a' => 'That´s a test',
-                    'b' => 'That´s a second test'
-                )
-            )
+                    'b' => 'That´s a second test',
+                ),
+            ),
         );
 
         $structure = $structure = $this->mapper->save($data, 'extension', 'default', 'en', 1);
@@ -2490,7 +2490,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => '',
-                'b' => ''
+                'b' => '',
             ),
             $result['ext']['test2']
         );
@@ -2501,9 +2501,9 @@ class ContentMapperTest extends PhpcrTestCase
             'ext' => array(
                 'test2' => array(
                     'a' => 'a',
-                    'b' => 'b'
-                )
-            )
+                    'b' => 'b',
+                ),
+            ),
         );
 
         $structure = $this->mapper->save(
@@ -2524,14 +2524,14 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => 'That´s a test',
-                'b' => 'That´s a second test'
+                'b' => 'That´s a second test',
             ),
             $result['ext']['test1']
         );
         $this->assertEquals(
             array(
                 'a' => 'a',
-                'b' => 'b'
+                'b' => 'b',
             ),
             $result['ext']['test2']
         );
@@ -2546,14 +2546,14 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => 'That´s a test',
-                'b' => 'That´s a second test'
+                'b' => 'That´s a second test',
             ),
             $result['ext']['test1']
         );
         $this->assertEquals(
             array(
                 'a' => 'a',
-                'b' => 'b'
+                'b' => 'b',
             ),
             $result['ext']['test2']
         );
@@ -2568,13 +2568,13 @@ class ContentMapperTest extends PhpcrTestCase
             'ext' => array(
                 'test1' => array(
                     'a' => 'That´s a test',
-                    'b' => 'That´s a second test'
+                    'b' => 'That´s a second test',
                 ),
                 'test2' => array(
                     'a' => 'That´s a test',
-                    'b' => 'That´s a second test'
-                )
-            )
+                    'b' => 'That´s a second test',
+                ),
+            ),
         );
 
         $structure = $structure = $this->mapper->save($data, 'extension', 'default', 'en', 1);
@@ -2587,14 +2587,14 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => 'That´s a test',
-                'b' => 'That´s a second test'
+                'b' => 'That´s a second test',
             ),
             $result['ext']['test1']
         );
         $this->assertEquals(
             array(
                 'a' => 'That´s a test',
-                'b' => 'That´s a second test'
+                'b' => 'That´s a second test',
             ),
             $result['ext']['test2']
         );
@@ -2606,13 +2606,13 @@ class ContentMapperTest extends PhpcrTestCase
             'ext' => array(
                 'test1' => array(
                     'a' => 'Das ist ein Test',
-                    'b' => 'Das ist ein zweiter Test'
+                    'b' => 'Das ist ein zweiter Test',
                 ),
                 'test2' => array(
                     'a' => 'Das ist ein Test',
-                    'b' => 'Das ist ein zweiter Test'
-                )
-            )
+                    'b' => 'Das ist ein zweiter Test',
+                ),
+            ),
         );
 
         $structure = $structure = $this->mapper->save(
@@ -2633,14 +2633,14 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => 'Das ist ein Test',
-                'b' => 'Das ist ein zweiter Test'
+                'b' => 'Das ist ein zweiter Test',
             ),
             $result['ext']['test1']
         );
         $this->assertEquals(
             array(
                 'a' => 'Das ist ein Test',
-                'b' => 'Das ist ein zweiter Test'
+                'b' => 'Das ist ein zweiter Test',
             ),
             $result['ext']['test2']
         );
@@ -2651,14 +2651,14 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => 'Das ist ein Test',
-                'b' => 'Das ist ein zweiter Test'
+                'b' => 'Das ist ein zweiter Test',
             ),
             $resultDE['ext']['test1']
         );
         $this->assertEquals(
             array(
                 'a' => 'Das ist ein Test',
-                'b' => 'Das ist ein zweiter Test'
+                'b' => 'Das ist ein zweiter Test',
             ),
             $resultDE['ext']['test2']
         );
@@ -2669,14 +2669,14 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             array(
                 'a' => 'That´s a test',
-                'b' => 'That´s a second test'
+                'b' => 'That´s a second test',
             ),
             $resultEN['ext']['test1']
         );
         $this->assertEquals(
             array(
                 'a' => 'That´s a test',
-                'b' => 'That´s a second test'
+                'b' => 'That´s a second test',
             ),
             $resultEN['ext']['test2']
         );
@@ -2687,7 +2687,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
+            'blog' => 'Thats a good test',
         );
 
         $structure = $this->mapper->save($data, 'extension', 'default', 'en', 1);
@@ -2704,7 +2704,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $dataTest1EN = array(
             'a' => 'en test1 a',
-            'b' => 'en test1 b'
+            'b' => 'en test1 b',
         );
 
         $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest1EN, 'test1', 'default', 'en', 1);
@@ -2733,7 +2733,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $dataTest2EN = array(
             'a' => 'en test2 a',
-            'b' => 'en test2 b'
+            'b' => 'en test2 b',
         );
 
         $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest2EN, 'test2', 'default', 'en', 1);
@@ -2763,7 +2763,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Das ist ein guter Test'
+            'blog' => 'Das ist ein guter Test',
         );
 
         $structure = $this->mapper->save($data, 'extension', 'default', 'de', 1, true, $structure->getUuid());
@@ -2780,7 +2780,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $dataTest2DE = array(
             'a' => 'de test2 a',
-            'b' => 'de test2 b'
+            'b' => 'de test2 b',
         );
 
         $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest2DE, 'test2', 'default', 'de', 1);
@@ -2813,13 +2813,13 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
+            'blog' => 'Thats a good test',
         );
 
         $structure = $this->mapper->save($data, 'extension', 'default', 'en', 1);
         $dataTest2DE = array(
             'a' => 'de test2 a',
-            'b' => 'de test2 b'
+            'b' => 'de test2 b',
         );
 
         $this->setExpectedException(
@@ -2835,14 +2835,14 @@ class ContentMapperTest extends PhpcrTestCase
         $data1 = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
+            'blog' => 'Thats a good test',
         );
         $structure1 = $this->mapper->save($data1, 'extension', 'default', 'en', 1);
 
         $data2 = array(
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-            'internal' => $structure1->getUuid()
+            'internal' => $structure1->getUuid(),
         );
         $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
 
@@ -2855,7 +2855,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data3 = array(
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-            'external' => 'www.google.at'
+            'external' => 'www.google.at',
         );
         $structure3 = $this->mapper->save($data3, 'external-link', 'default', 'en', 1);
 
@@ -2872,7 +2872,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $data = array(
             'title' => 'Page-1',
-            'url' => '/page-1'
+            'url' => '/page-1',
         );
 
         $data = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -2888,48 +2888,48 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             array(
                 'title' => 'Page-1',
-                'url' => '/page-1'
+                'url' => '/page-1',
             ),
             array(
                 'title' => 'Sub',
-                'url' => '/page-1/sub'
+                'url' => '/page-1/sub',
             ),
             array(
                 'title' => 'Sub',
-                'url' => '/page-1/sub-1'
+                'url' => '/page-1/sub-1',
             ),
             array(
                 'title' => 'Page-2',
-                'url' => '/page-2'
+                'url' => '/page-2',
             ),
             array(
                 'title' => 'Sub',
-                'url' => '/page-2/sub'
+                'url' => '/page-2/sub',
             ),
             array(
                 'title' => 'Sub',
-                'url' => '/page-2/sub-1'
+                'url' => '/page-2/sub-1',
             ),
             array(
                 'title' => 'SubPage',
-                'url' => '/page-2/subpage'
+                'url' => '/page-2/subpage',
             ),
             array(
                 'title' => 'SubSubPage',
-                'url' => '/page-2/subpage/subpage'
+                'url' => '/page-2/subpage/subpage',
             ),
             array(
                 'title' => 'SubSubSubPage',
-                'url' => '/page-2/subpage/subpage/subpage'
+                'url' => '/page-2/subpage/subpage/subpage',
             ),
             array(
                 'title' => 'SubPage',
-                'url' => '/page-2/sub-1/subpage'
+                'url' => '/page-2/sub-1/subpage',
             ),
             array(
                 'title' => 'SubSubPage',
-                'url' => '/page-2/sub-1/subpage/subpage'
-            )
+                'url' => '/page-2/sub-1/subpage/subpage',
+            ),
         );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
@@ -2958,24 +2958,24 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             array(
                 'title' => 'Page-1',
-                'url' => '/page-1'
+                'url' => '/page-1',
             ),
             array(
                 'title' => 'Page-1-1',
-                'url' => '/page-1/page-1-1'
+                'url' => '/page-1/page-1-1',
             ),
             array(
                 'title' => 'Page-1-2',
-                'url' => '/page-1/page-1-2'
+                'url' => '/page-1/page-1-2',
             ),
             array(
                 'title' => 'Page-1-3',
-                'url' => '/page-1/page-1-3'
+                'url' => '/page-1/page-1-3',
             ),
             array(
                 'title' => 'Page-1-4',
-                'url' => '/page-1/page-1-4'
-            )
+                'url' => '/page-1/page-1-4',
+            ),
         );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
@@ -3045,7 +3045,7 @@ class ContentMapperTest extends PhpcrTestCase
         $uuid = $data[6]->getUuid();
         $data[6] = array(
             'title' => 'SubPage',
-            'url' => '/page-2/test'
+            'url' => '/page-2/test',
         );
         $result = $data[6] = $this->mapper->save($data[6], 'overview', 'default', 'de', 2, true, $uuid);
 
@@ -3291,7 +3291,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'Page-1',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -3315,7 +3315,7 @@ class ContentMapperTest extends PhpcrTestCase
         // prepare a page
         $data = array(
             'title' => 'Page-1',
-            'url' => '/page-1'
+            'url' => '/page-1',
         );
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -3323,7 +3323,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'External',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
         $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
@@ -3345,7 +3345,7 @@ class ContentMapperTest extends PhpcrTestCase
         // back to content type
         $data = array(
             'title' => 'Page-1',
-            'nodeType' => Structure::NODE_TYPE_CONTENT
+            'nodeType' => Structure::NODE_TYPE_CONTENT,
         );
         $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
@@ -3360,7 +3360,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testIgnoreMandatoryFlag()
     {
         $data = array(
-            'title' => 'News'
+            'title' => 'News',
         );
 
         $this->mapper->setIgnoreMandatoryFlag(true)->save($data, 'external-link', 'default', 'en', 1);
@@ -3374,7 +3374,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             'title' => 'News',
-            'external' => 'www.news.world'
+            'external' => 'www.news.world',
         );
 
         $page = $this->mapper->save($data, 'external-link', 'default', 'de', 1);
@@ -3416,10 +3416,10 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 'Testname',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test.xml',
-            'article' => 'default'
+            'article' => 'default',
         );
 
         $this->setExpectedException(
@@ -3533,7 +3533,7 @@ class ContentMapperTest extends PhpcrTestCase
             $internalLinkData = array(
                 'title' => 'Test',
                 'url' => '/test/test',
-                'blog' => 'Thats a good test'
+                'blog' => 'Thats a good test',
             );
             $internalLink = $this->mapper->save($internalLinkData, 'extension', 'default', 'en', 1);
 
@@ -3541,7 +3541,7 @@ class ContentMapperTest extends PhpcrTestCase
             $snippetData = array(
                 'title' => 'Test',
                 'url' => '/test/test',
-                'blog' => 'Thats a good test'
+                'blog' => 'Thats a good test',
             );
             $snippet = $this->mapper->save(
                 $snippetData,
@@ -3558,12 +3558,11 @@ class ContentMapperTest extends PhpcrTestCase
                 Structure::TYPE_SNIPPET
             );
 
-
             // Internal Link with String Type
             $testSiteData = array(
                 'title' => 'Test',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'internal' => $internalLink->getUuid()
+                'internal' => $internalLink->getUuid(),
             );
             $testSiteStructure = $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1);
 
@@ -3572,7 +3571,7 @@ class ContentMapperTest extends PhpcrTestCase
             // Change to Snippet Array
             $testSiteData['internal'] = array(
                 $snippet->getUuid(),
-                $snippet->getUuid()
+                $snippet->getUuid(),
             );
             $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
@@ -3668,8 +3667,8 @@ class ContentMapperTest extends PhpcrTestCase
             array('en'),
             array(
                 'en' => array(
-                    array('name' => 'test', 'property' => $property)
-                )
+                    array('name' => 'test', 'property' => $property),
+                ),
             ),
             1
         );
@@ -3680,7 +3679,7 @@ class TestExtension extends StructureExtension
 {
     protected $properties = array(
         'a',
-        'b'
+        'b',
     );
 
     public function __construct($name, $additionalPrefix = null)
@@ -3705,7 +3704,7 @@ class TestExtension extends StructureExtension
     {
         return array(
             'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
-            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
+            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), ''),
         );
     }
 }

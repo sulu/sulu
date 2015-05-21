@@ -17,19 +17,20 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
- * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky
- * @package Sulu\Bundle\CategoryBundle\Content\Types
+ * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
  */
 class CategoryList extends ComplexContentType
 {
     /**
-     * Responsible for persisting the categories in the database
+     * Responsible for persisting the categories in the database.
+     *
      * @var CategoryManagerInterface
      */
     private $categoryManager;
 
     /**
-     * Holds the template for rendering this content type in the admin
+     * Holds the template for rendering this content type in the admin.
+     *
      * @var string
      */
     private $template;
@@ -42,7 +43,8 @@ class CategoryList extends ComplexContentType
 
     /**
      * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
+     * PRE_SAVE or POST_SAVE.
+     *
      * @return int
      */
     public function getType()
@@ -51,7 +53,8 @@ class CategoryList extends ComplexContentType
     }
 
     /**
-     * Sets the given array as values on the property
+     * Sets the given array as values on the property.
+     *
      * @param array $data
      * @param PropertyInterface $property
      */
@@ -95,8 +98,7 @@ class CategoryList extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $categoryIds = array();
 
         foreach ($property->getValue() as $category) {
@@ -117,14 +119,15 @@ class CategoryList extends ComplexContentType
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        if($node->hasProperty($property->getName())) {
+        if ($node->hasProperty($property->getName())) {
             $property = $node->getProperty($property->getName());
             $property->remove();
         }
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

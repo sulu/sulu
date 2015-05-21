@@ -11,9 +11,9 @@
 namespace Sulu\Component\Content\Structure;
 
 use DateTime;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Sulu\Component\Content\StructureTag;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\StructureTag;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 abstract class StructureTestCase extends \PHPUnit_Framework_TestCase
 {

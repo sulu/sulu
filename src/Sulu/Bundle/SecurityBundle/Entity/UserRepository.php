@@ -12,18 +12,17 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\LockedException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Repository for the User, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
@@ -33,13 +32,14 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     private $requestAnalyzer;
 
     /**
-     * The standard sulu system
+     * The standard sulu system.
+     *
      * @var string
      */
     private $suluSystem;
 
     /**
-     * initializes the UserRepository
+     * initializes the UserRepository.
      */
     public function init($suluSystem, RequestAnalyzerInterface $requestAnalyzer = null)
     {
@@ -75,13 +75,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Searches for a user with a specific contact id
+     * Searches for a user with a specific contact id.
+     *
      * @param $id
+     *
      * @return array
      */
     public function findUserByContact($id)
@@ -109,17 +111,19 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Loads the user for the given username or email
+     * Loads the user for the given username or email.
      *
      * @param string $identifier The username or email of the user to load
+     *
      * @throws LockedException if the User is Locked
      * @throws DisabledException if the User is not active
      * @throws UsernameNotFoundException if the User is not found
+     *
      * @return UserInterface
      */
     public function loadUserByUsername($identifier)
@@ -159,9 +163,10 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * This method throws UsernameNotFoundException if the user is not found.
      *
      * @param string $username The username
-     * @return UserInterface
-     * @throws NoResultException if the user is not found
      *
+     * @return UserInterface
+     *
+     * @throws NoResultException if the user is not found
      */
     public function findUserByUsername($username)
     {
@@ -175,12 +180,13 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Finds a user for a given email
+     * Finds a user for a given email.
      *
      * @param string $email The email-address
-     * @return UserInterface
-     * @throws NoResultException if the user is not found
      *
+     * @return UserInterface
+     *
+     * @throws NoResultException if the user is not found
      */
     public function findUserByEmail($email)
     {
@@ -194,12 +200,13 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Finds a user for a given password-reset-token
+     * Finds a user for a given password-reset-token.
      *
      * @param string $token the reset-token
-     * @return UserInterface
-     * @throws NoResultException if the user is not found
      *
+     * @return UserInterface
+     *
+     * @throws NoResultException if the user is not found
      */
     public function findUserByToken($token)
     {
@@ -213,14 +220,16 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Finds a user for a given email or username
+     * Finds a user for a given email or username.
      *
      * @param string $identifier The email-address or username
-     * @return UserInterface
-     * @throws NoResultException if the user is not found
      *
+     * @return UserInterface
+     *
+     * @throws NoResultException if the user is not found
      */
-    public function findUserByIdentifier($identifier) {
+    public function findUserByIdentifier($identifier)
+    {
         $qb = $this->createQueryBuilder('user')
             ->where('user.email=:email')
             ->orWhere('user.username=:username');
@@ -236,7 +245,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * Refreshes the user for the account interface.
      *
      * @param UserInterface $user
+     *
      * @return UserInterface
+     *
      * @throws UnsupportedUserException if the account is not supported
      */
     public function refreshUser(UserInterface $user)
@@ -255,9 +266,10 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Whether this provider supports the given user class
+     * Whether this provider supports the given user class.
      *
      * @param string $class
+     *
      * @return Boolean
      */
     public function supportsClass($class)
@@ -266,7 +278,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Sets the request analyzer
+     * Sets the request analyzer.
+     *
      * @param \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer
      */
     public function setRequestAnalyzer(RequestAnalyzerInterface $requestAnalyzer)
@@ -275,7 +288,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Returns the security system
+     * Returns the security system.
+     *
      * @return string
      */
     protected function getSystem()
@@ -294,22 +308,24 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * returns username for given apiKey
+     * returns username for given apiKey.
+     *
      * @param string $apiKey userId
+     *
      * @return string
      */
     public function getUsernameByApiKey($apiKey)
     {
         $user = $this->findOneBy(array('apiKey' => $apiKey));
         if (!$user) {
-            return null;
+            return;
         }
 
         return $user->getUsername();
     }
 
     /**
-     * returns all users within the defined system including their contacts
+     * returns all users within the defined system including their contacts.
      */
     public function getUserInSystem()
     {

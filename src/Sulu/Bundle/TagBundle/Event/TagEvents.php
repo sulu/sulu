@@ -15,6 +15,7 @@ final class TagEvents
     /**
      * The tag.delete event is thrown when a Tag is deleted.
      * The event listener receives a TagDeleteEvent instance.
+     *
      * @var string
      */
     const TAG_DELETE = 'sulu.tag.delete';

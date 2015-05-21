@@ -18,7 +18,6 @@ use Sulu\Bundle\TranslateBundle\Command\ImportCommand;
 
 class TranslateAdmin extends Admin
 {
-
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
@@ -45,7 +44,7 @@ class TranslateAdmin extends Admin
     {
         return array(
             new ImportCommand(),
-            new ExportCommand()
+            new ExportCommand(),
         );
     }
 

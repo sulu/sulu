@@ -11,12 +11,10 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * This Exception is thrown if the email for a user is not unique
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ * This Exception is thrown if the email for a user is not unique.
  */
 class EmailNotUniqueException extends SecurityException
 {
-
     private $email;
 
     public function __construct($email)
@@ -25,7 +23,8 @@ class EmailNotUniqueException extends SecurityException
         parent::__construct(sprintf('The email "%s" is not unique!', $email), 1004);
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
@@ -34,7 +33,7 @@ class EmailNotUniqueException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'email' => $this->email
+            'email' => $this->email,
         );
     }
 }

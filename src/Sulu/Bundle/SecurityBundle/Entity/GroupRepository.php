@@ -16,19 +16,20 @@ use Doctrine\ORM\Query;
 
 /**
  * Repository for the User, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class GroupRepository extends EntityRepository
 {
     /**
-     * Searches for a role with a specific id
+     * Searches for a role with a specific id.
+     *
      * @param $id
+     *
      * @return role
      */
     public function findGroupById($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('grp')
                 ->leftJoin('grp.roles', 'roles')
                 ->leftJoin('grp.parent', 'parent')
@@ -41,20 +42,19 @@ class GroupRepository extends EntityRepository
             $query->setParameter('groupId', $id);
 
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Searches for all roles
+     * Searches for all roles.
+     *
      * @return array
      */
     public function findAllGroups()
     {
         try {
-
             $qb = $this->createQueryBuilder('grp');
 
             $query = $qb->getQuery();
@@ -63,9 +63,8 @@ class GroupRepository extends EntityRepository
             $result = $query->getResult();
 
             return $result;
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

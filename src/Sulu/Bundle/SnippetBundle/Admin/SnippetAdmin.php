@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 /**
- * Admin for snippet
+ * Admin for snippet.
  */
 class SnippetAdmin extends Admin
 {
@@ -75,9 +75,9 @@ class SnippetAdmin extends Admin
         return array(
             'Sulu' => array(
                 'Global' => array(
-                    'sulu.global.snippets'
-                )
-            )
+                    'sulu.global.snippets',
+                ),
+            ),
         );
     }
 }

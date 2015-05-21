@@ -37,7 +37,7 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 array('foo_bar' => 'bar_foo'),
-            )
+            ),
         );
     }
 

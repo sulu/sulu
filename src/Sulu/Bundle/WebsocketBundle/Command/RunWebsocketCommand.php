@@ -15,12 +15,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command that starts the websocket server
+ * Command that starts the websocket server.
  */
 class RunWebsocketCommand extends ContainerAwareCommand
 {
     /**
-     * Service id of websocket manager
+     * Service id of websocket manager.
      */
     const MANAGER_ID = 'sulu_websocket.manager';
 

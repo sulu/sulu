@@ -89,20 +89,20 @@ class DoctrineCacheProviderTest extends SuluTestCase
                 'title' => 'Testtitle',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test',
-                'article' => array('Test-1', 'Test-2')
+                'article' => array('Test-1', 'Test-2'),
             ),
             array(
                 'title' => 'Testtitle2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test2',
-                'article' => array('Test-1', 'Test-2')
-            )
+                'article' => array('Test-1', 'Test-2'),
+            ),
         );
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
@@ -300,5 +300,4 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $result = $this->cache->contains(1, $data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertFalse($result);
     }
-
 }

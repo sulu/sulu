@@ -154,7 +154,8 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Sulu\Component\Webspace\Exception\NoValidWebspaceException
      */
-    public function testBuildWithInvalidWebspacesOnly() {
+    public function testBuildWithInvalidWebspacesOnly()
+    {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             $this->logger,

@@ -43,8 +43,7 @@ class CurrentUserData implements CurrentUserDataInterface
      */
     public function isLoggedIn()
     {
-
-        if ( $this->getUser() && $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED') ) {
+        if ($this->getUser() && $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return true;
         } else {
             return false;
@@ -52,7 +51,8 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * returns id
+     * returns id.
+     *
      * @return int
      */
     public function getId()
@@ -69,7 +69,8 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * returns fullName
+     * returns fullName.
+     *
      * @return String
      */
     public function getFullName()
@@ -90,11 +91,12 @@ class CurrentUserData implements CurrentUserDataInterface
      */
     public function getLogoutLink()
     {
-        return "http://".$this->router->getContext()->getHost().'/admin/logout';
+        return 'http://' . $this->router->getContext()->getHost() . '/admin/logout';
     }
 
     /**
-     * returns locale of current user
+     * returns locale of current user.
+     *
      * @return String
      */
     public function getLocale()
@@ -103,7 +105,8 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * returns the settings saved for a user
+     * returns the settings saved for a user.
+     *
      * @return mixed
      */
     public function getUserSettings()
@@ -117,7 +120,8 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * persists the user data to the database
+     * persists the user data to the database.
+     *
      * @param $key
      * @param $value
      */
@@ -132,7 +136,7 @@ class CurrentUserData implements CurrentUserDataInterface
         /** @var UserSetting $setting */
         $setting = $this->registry
             ->getRepository('SuluSecurityBundle:UserSetting')
-            ->findOneBy(array('user'=>$user,'key'=>$key));
+            ->findOneBy(array('user' => $user, 'key' => $key));
 
         // or create new one
         if (!$setting) {
@@ -147,7 +151,7 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * Get a user from the Security Context
+     * Get a user from the Security Context.
      *
      * @return mixed
      *
@@ -162,11 +166,11 @@ class CurrentUserData implements CurrentUserDataInterface
         }
 
         if (null === $token = $this->security->getToken()) {
-            return null;
+            return;
         }
 
         if (!is_object($user = $token->getUser())) {
-            return null;
+            return;
         }
 
         return $user;
@@ -183,8 +187,8 @@ class CurrentUserData implements CurrentUserDataInterface
             'locale' => $this->getLocale(),
             'settings' => json_encode($this->getUserSettings()),
             'contact' => array(
-                'id' => $this->getUser()->getContact()->getId()
-            )
+                'id' => $this->getUser()->getContact()->getId(),
+            ),
         );
     }
 }

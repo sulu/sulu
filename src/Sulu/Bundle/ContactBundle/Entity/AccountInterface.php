@@ -11,194 +11,206 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 /**
- * interface for accounts
+ * interface for accounts.
  */
 interface AccountInterface
 {
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return BaseAccount
      */
     public function setName($name);
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set externalId
+     * Set externalId.
      *
      * @param string $externalId
+     *
      * @return BaseAccount
      */
     public function setExternalId($externalId);
 
     /**
-     * Get externalId
+     * Get externalId.
      *
      * @return string
      */
     public function getExternalId();
 
     /**
-     * Set number
+     * Set number.
      *
      * @param string $number
+     *
      * @return BaseAccount
      */
     public function setNumber($number);
 
     /**
-     * Get number
+     * Get number.
      *
      * @return string
      */
     public function getNumber();
 
     /**
-     * Set corporation
+     * Set corporation.
      *
      * @param string $corporation
+     *
      * @return BaseAccount
      */
     public function setCorporation($corporation);
 
     /**
-     * Get corporation
+     * Get corporation.
      *
      * @return string
      */
     public function getCorporation();
 
     /**
-     * Set disabled
+     * Set disabled.
      *
-     * @param integer $disabled
+     * @param int $disabled
+     *
      * @return BaseAccount
      */
     public function setDisabled($disabled);
 
     /**
-     * Get disabled
+     * Get disabled.
      *
-     * @return integer
+     * @return int
      */
     public function getDisabled();
 
     /**
-     * Set uid
+     * Set uid.
      *
      * @param string $uid
+     *
      * @return BaseAccount
      */
     public function setUid($uid);
 
     /**
-     * Get uid
+     * Get uid.
      *
      * @return string
      */
     public function getUid();
 
     /**
-     * Set registerNumber
+     * Set registerNumber.
      *
      * @param string $registerNumber
+     *
      * @return BaseAccount
      */
     public function setRegisterNumber($registerNumber);
 
     /**
-     * Get registerNumber
+     * Get registerNumber.
      *
      * @return string
      */
     public function getRegisterNumber();
 
     /**
-     * Set placeOfJurisdiction
+     * Set placeOfJurisdiction.
      *
      * @param string $placeOfJurisdiction
+     *
      * @return BaseAccount
      */
     public function setPlaceOfJurisdiction($placeOfJurisdiction);
 
     /**
-     * Get placeOfJurisdiction
+     * Get placeOfJurisdiction.
      *
      * @return string
      */
     public function getPlaceOfJurisdiction();
 
     /**
-     * Set mainEmail
+     * Set mainEmail.
      *
      * @param string $mainEmail
+     *
      * @return BaseAccount
      */
     public function setMainEmail($mainEmail);
 
     /**
-     * Get mainEmail
+     * Get mainEmail.
      *
      * @return string
      */
     public function getMainEmail();
 
     /**
-     * Set mainPhone
+     * Set mainPhone.
      *
      * @param string $mainPhone
+     *
      * @return BaseAccount
      */
     public function setMainPhone($mainPhone);
 
     /**
-     * Get mainPhone
+     * Get mainPhone.
      *
      * @return string
      */
     public function getMainPhone();
 
     /**
-     * Set mainFax
+     * Set mainFax.
      *
      * @param string $mainFax
+     *
      * @return BaseAccount
      */
     public function setMainFax($mainFax);
 
     /**
-     * Get mainFax
+     * Get mainFax.
      *
      * @return string
      */
     public function getMainFax();
 
     /**
-     * Set mainUrl
+     * Set mainUrl.
      *
      * @param string $mainUrl
+     *
      * @return BaseAccount
      */
     public function setMainUrl($mainUrl);
 
     /**
-     * Get mainUrl
+     * Get mainUrl.
      *
      * @return string
      */
     public function getMainUrl();
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId();
 
@@ -253,338 +265,354 @@ interface AccountInterface
     public function setMainContact($mainContact);
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return Account
      */
     public function setLft($lft);
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft();
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return Account
      */
     public function setRgt($rgt);
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt();
 
     /**
-     * Set depth
+     * Set depth.
      *
-     * @param integer $depth
+     * @param int $depth
+     *
      * @return Account
      */
     public function setDepth($depth);
 
     /**
-     * Get depth
+     * Get depth.
      *
-     * @return integer
+     * @return int
      */
     public function getDepth();
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param AccountInterface $parent
+     *
      * @return Account
      */
     public function setParent(AccountInterface $parent = null);
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return AccountInterface
      */
     public function getParent();
 
     /**
-     * Add urls
+     * Add urls.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     *
      * @return Account
      */
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls);
 
     /**
-     * Remove urls
+     * Remove urls.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
      */
     public function removeUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls);
 
     /**
-     * Get urls
+     * Get urls.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getUrls();
 
     /**
-     * Add phones
+     * Add phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     *
      * @return Account
      */
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones);
 
     /**
-     * Remove phones
+     * Remove phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
      */
     public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones);
 
     /**
-     * Get phones
+     * Get phones.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhones();
 
     /**
-     * Add emails
+     * Add emails.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     *
      * @return Account
      */
     public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails);
 
     /**
-     * Remove emails
+     * Remove emails.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
      */
     public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails);
 
     /**
-     * Get emails
+     * Get emails.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getEmails();
 
     /**
-     * Add notes
+     * Add notes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     *
      * @return Account
      */
     public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes);
 
     /**
-     * Remove notes
+     * Remove notes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
      */
     public function removeNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes);
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getNotes();
 
     /**
-     * Get children
+     * Get children.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren();
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return Account
      */
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes);
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
     public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes);
 
     /**
-     * Get faxes
+     * Get faxes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getFaxes();
 
     /**
-     * Add bankAccounts
+     * Add bankAccounts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     *
      * @return Account
      */
     public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts);
 
     /**
-     * Remove bankAccounts
+     * Remove bankAccounts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
      */
     public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts);
 
     /**
-     * Get bankAccounts
+     * Get bankAccounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getBankAccounts();
 
     /**
-     * Add tags
+     * Add tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     *
      * @return Account
      */
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags);
 
     /**
-     * Remove tags
+     * Remove tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
      */
     public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags);
 
     /**
-     * Get tags
+     * Get tags.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getTags();
 
     /**
-     * Add accountContacts
+     * Add accountContacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     *
      * @return Account
      */
     public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts);
 
     /**
-     * Remove accountContacts
+     * Remove accountContacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
      */
     public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts);
 
     /**
-     * Get accountContacts
+     * Get accountContacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccountContacts();
 
     /**
-     * Get accountAddresses
+     * Get accountAddresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccountAddresses();
 
     /**
-     * Returns the main address
+     * Returns the main address.
      *
      * @return mixed
      */
     public function getMainAddress();
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts();
 
     /**
-     * Add medias
+     * Add medias.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     *
      * @return Account
      */
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias);
 
     /**
-     * Remove medias
+     * Remove medias.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
      */
     public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias);
 
     /**
-     * Get medias
+     * Get medias.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedias();
 
     /**
-     * Add accountAddresses
+     * Add accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     *
      * @return Account
      */
     public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses);
 
     /**
-     * Remove accountAddresses
+     * Remove accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
      */
     public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses);
 
     /**
-     * Add children
+     * Add children.
      *
      * @param AccountInterface $child
+     *
      * @return Account
      */
     public function addChild(AccountInterface $child);
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param AccountInterface $child
      */
     public function removeChild(AccountInterface$child);
 
     /**
-     * Add categories
+     * Add categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     *
      * @return Account
      */
     public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category);
 
     /**
-     * Remove categories
+     * Remove categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
      */
     public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category);
 
     /**
-     * Get categories
+     * Get categories.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

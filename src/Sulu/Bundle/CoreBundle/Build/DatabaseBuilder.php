@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\CoreBundle\Build;
 
 /**
- * Builder for initializing the (relational) database
+ * Builder for initializing the (relational) database.
  */
 class DatabaseBuilder extends SuluBuilder
 {
@@ -50,7 +50,7 @@ class DatabaseBuilder extends SuluBuilder
         if ($this->input->getOption('destroy')) {
             if ($databaseExists) {
                 $this->execCommand('Dropping the database', 'doctrine:database:drop', array(
-                    '--force' => true
+                    '--force' => true,
                 ));
             }
             $this->execCommand('Creating the database', 'doctrine:database:create');

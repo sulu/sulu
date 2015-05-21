@@ -12,13 +12,13 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 
 /**
- * This Manager handles general Account and Contact functionality
+ * This Manager handles general Account and Contact functionality.
  */
 abstract class AbstractContactManager implements ContactManagerInterface
 {
@@ -32,7 +32,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected static $phoneTypeEntityName = 'SuluContactBundle:PhoneType';
 
     /**
-     * @var ObjectManager $em
+     * @var ObjectManager
      */
     public $em;
 
@@ -52,9 +52,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * unsets main of all elements of an ArrayCollection | PersistanceCollection
+     * unsets main of all elements of an ArrayCollection | PersistanceCollection.
+     *
      * @param $arrayCollection
-     * @return boolean returns true if a element was unset
+     *
+     * @return bool returns true if a element was unset
      */
     public function unsetMain($arrayCollection)
     {
@@ -74,7 +76,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * sets the first element to main, if none is set
+     * sets the first element to main, if none is set.
+     *
      * @param $arrayCollection
      */
     public function setMainForCollection($arrayCollection)
@@ -85,9 +88,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * checks if a collection for main attribute
+     * checks if a collection for main attribute.
+     *
      * @param $arrayCollection
      * @param $mainEntity will be set, if found
+     *
      * @return mixed
      */
     private function hasMain($arrayCollection, &$mainEntity = null)
@@ -106,7 +111,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * sets Entity's Main-Email
+     * sets Entity's Main-Email.
+     *
      * @param Contact|AccountInterface $entity
      */
     public function setMainEmail($entity)
@@ -120,7 +126,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * sets Entity's Main-Phone
+     * sets Entity's Main-Phone.
+     *
      * @param Contact|AccountInterface $entity
      */
     public function setMainPhone($entity)
@@ -134,7 +141,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * sets Entity's Main-Fax
+     * sets Entity's Main-Fax.
+     *
      * @param Contact|AccountInterface $entity
      */
     public function setMainFax($entity)
@@ -148,7 +156,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * sets Entity's Main-Url
+     * sets Entity's Main-Url.
+     *
      * @param Contact|AccountInterface $entity
      */
     public function setMainUrl($entity)
@@ -162,9 +171,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Returns AccountContact relation if exists
+     * Returns AccountContact relation if exists.
+     *
      * @param AccountInterface $account
      * @param Contact $contact
+     *
      * @return null|AccountContact
      */
     public function getAccounContact(AccountInterface $account, Contact $contact)
@@ -176,13 +187,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * returns the main account-contact relation
+     * returns the main account-contact relation.
      *
      * @param Contact|AccountInterface $contact
+     *
      * @return AccountContact|bool
      */
     public function getMainAccountContact($contact)
@@ -198,11 +210,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * creates a new main Account Contacts relation
+     * creates a new main Account Contacts relation.
      *
      * @param Contact $contact
      * @param AccountInterface $account
      * @param $position
+     *
      * @return AccountContact
      */
     public function createMainAccountContact(Contact $contact, AccountInterface $account, $position = null)
@@ -219,8 +232,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Get a position object
+     * Get a position object.
+     *
      * @param int $id The position id
+     *
      * @return mixed
      */
     public function getPosition($id)
@@ -229,12 +244,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
             return $this->em->getRepository(self::$positionEntityName)->find($id);
         }
 
-        return null;
+        return;
     }
 
     /**
-     * return address type by name
+     * return address type by name.
+     *
      * @param $name
+     *
      * @return mixed
      */
     public function getAddressTypeByName($name)
@@ -245,8 +262,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * return url type by name
+     * return url type by name.
+     *
      * @param $name
+     *
      * @return mixed
      */
     public function getUrlTypeByName($name)
@@ -257,8 +276,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * return phone type by name
+     * return phone type by name.
+     *
      * @param $name
+     *
      * @return mixed
      */
     public function getPhoneTypeByName($name)
@@ -269,8 +290,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * return fax type by name
+     * return fax type by name.
+     *
      * @param $name
+     *
      * @return mixed
      */
     public function getFaxTypeByName($name)
@@ -281,8 +304,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * return email type by name
+     * return email type by name.
+     *
      * @param $name
+     *
      * @return mixed
      */
     public function getEmailTypeByName($name)
@@ -293,7 +318,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * clears all relational data from entity and deletes it
+     * clears all relational data from entity and deletes it.
+     *
      * @param $entity
      */
     public function deleteAllRelations($entity)
@@ -307,7 +333,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * deletes all notes that are assigned to entity
+     * deletes all notes that are assigned to entity.
+     *
      * @param $entity
      */
     public function deleteNotes($entity)
@@ -318,7 +345,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * deletes all phones that are assigned to entity
+     * deletes all phones that are assigned to entity.
+     *
      * @param $entity
      */
     public function deletePhones($entity)
@@ -329,7 +357,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * deletes all faxes that are assigned to entity
+     * deletes all faxes that are assigned to entity.
+     *
      * @param $entity
      */
     public function deleteFaxes($entity)
@@ -340,7 +369,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * deletes all urls that are assigned to entity
+     * deletes all urls that are assigned to entity.
+     *
      * @param $entity
      */
     public function deleteUrls($entity)
@@ -351,7 +381,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * deletes all addresses that are assigned to entity
+     * deletes all addresses that are assigned to entity.
+     *
      * @param $entity
      */
     public function deleteAddresses($entity)
@@ -366,7 +397,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * deletes all emails that are assigned to entity
+     * deletes all emails that are assigned to entity.
+     *
      * @param $entity
      */
     public function deleteEmails($entity)
@@ -387,10 +419,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Returns the billing address of an account/contact
+     * Returns the billing address of an account/contact.
+     *
      * @param AccountInterface|Contact $entity
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
+     *
      * @return mixed
      */
     public function getBillingAddress($entity, $force = false)
@@ -404,10 +438,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Returns the delivery address
+     * Returns the delivery address.
+     *
      * @param AccountInterface|Contact $entity
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
+     *
      * @return mixed
      */
     public function getDeliveryAddress($entity, $force = false)
@@ -421,9 +457,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * checks if an account is employee of a company
+     * checks if an account is employee of a company.
+     *
      * @param $contact
      * @param $account
+     *
      * @return bool
      */
     public function contactIsEmployeeOfAccount($contact, $account)
@@ -440,9 +478,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * returns addresses from account or contact
+     * returns addresses from account or contact.
      *
      * @param AccountInterface|Contact $entity
+     *
      * @return \Doctrine\Common\Collections\Collection|null
      */
     private function getAddresses($entity)
@@ -453,16 +492,17 @@ abstract class AbstractContactManager implements ContactManagerInterface
             return $entity->getContactAddresses();
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns an address by callback-condition
+     * Returns an address by callback-condition.
      *
      * @param AccountInterface|Contact $entity
      * @param callable $conditionCallback
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
+     *
      * @return mixed
      */
     public function getAddressByCondition($entity, callable $conditionCallback, $force = false)

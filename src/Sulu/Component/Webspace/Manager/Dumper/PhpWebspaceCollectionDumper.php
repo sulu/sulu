@@ -25,8 +25,10 @@ class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
     }
 
     /**
-     * Creates a new class with the data from the given collection
+     * Creates a new class with the data from the given collection.
+     *
      * @param array $options
+     *
      * @return string
      */
     public function dump($options = array())

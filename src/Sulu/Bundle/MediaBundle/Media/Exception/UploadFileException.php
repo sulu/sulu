@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
 /**
- * This Exception is thrown when a Uploaded File is not valid
- * @package Sulu\Bundle\MediaBundle\Media\Exception
+ * This Exception is thrown when a Uploaded File is not valid.
  */
 class UploadFileException extends MediaException
 {
@@ -32,7 +31,7 @@ class UploadFileException extends MediaException
     {
         return array(
             'code' => $this->code,
-            'message' => $this->message
+            'message' => $this->message,
         );
     }
 }

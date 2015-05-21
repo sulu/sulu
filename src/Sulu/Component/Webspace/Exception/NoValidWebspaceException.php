@@ -11,14 +11,15 @@
 namespace Sulu\Component\Webspace\Exception;
 
 /**
- * Runtime exception if no valid webspaces are found
+ * Runtime exception if no valid webspaces are found.
  */
 class NoValidWebspaceException extends \RuntimeException
 {
     /**
      * @param string $path Path of webspace files
      */
-    public function __construct($path) {
+    public function __construct($path)
+    {
         parent::__construct(sprintf(
             'No valid webspaces found in "%s".',
             $path

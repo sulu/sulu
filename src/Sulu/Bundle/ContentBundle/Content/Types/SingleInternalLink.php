@@ -11,12 +11,11 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for SingleInternalLink
+ * ContentType for SingleInternalLink.
  */
 class SingleInternalLink extends SimpleContentType
 {
@@ -46,7 +45,7 @@ class SingleInternalLink extends SimpleContentType
             throw new \InvalidArgumentException('Internal link node cannot reference itself');
         }
 
-        parent::write($node, $property, $userId, $webspaceKey, $languageCode,$segmentKey);
+        parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -60,7 +59,8 @@ class SingleInternalLink extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

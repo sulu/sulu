@@ -10,14 +10,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Search\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Psr\Log\LoggerInterface;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This subscriber populates the image URL field
@@ -106,7 +106,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $file = $fileVersion->getFile();
         $media = $file->getMedia();
 
-        // Do not try and get the image URL if the mime type is not in the 
+        // Do not try and get the image URL if the mime type is not in the
         // list of mime types for which thumbnails are generated.
         if (in_array($fileVersion->getMimeType(), $this->thumbnailMimeTypes)) {
             $document->setImageUrl($this->getImageUrl($media, $locale));
@@ -144,11 +144,11 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         if (!isset($formats[$this->searchImageFormat])) {
             $this->logger->warning(sprintf(
                 'Media with ID "%s" does not have thumbnail format "%s". This thumbnail would be used by the search results.',
-                $media->getId(), 
+                $media->getId(),
                 $this->searchImageFormat
             ));
 
-            return null;
+            return;
         }
 
         return $formats[$this->searchImageFormat];

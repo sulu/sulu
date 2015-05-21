@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Types;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for TextLine
+ * ContentType for TextLine.
  */
 class TextLine extends SimpleContentType
 {
@@ -27,7 +27,8 @@ class TextLine extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

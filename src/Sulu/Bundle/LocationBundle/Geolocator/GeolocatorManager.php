@@ -5,7 +5,7 @@ namespace Sulu\Bundle\LocationBundle\Geolocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Container for geolocators
+ * Container for geolocators.
  */
 class GeolocatorManager
 {
@@ -18,7 +18,7 @@ class GeolocatorManager
     }
 
     /**
-     * Register a geolocator with the given name
+     * Register a geolocator with the given name.
      */
     public function register($name, $serviceId)
     {
@@ -26,7 +26,7 @@ class GeolocatorManager
     }
 
     /**
-     * Retrieve the named name
+     * Retrieve the named name.
      */
     public function get($name)
     {

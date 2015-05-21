@@ -67,7 +67,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeValueMap = array(
             array('text_line', new TextLine('not in use')),
             array('text_area', new TextArea('not in use')),
-            array('block', $this->blockContentType)
+            array('block', $this->blockContentType),
         );
 
         $this->contentTypeManager
@@ -132,10 +132,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Sub-Title',
-                        'article' => 'Test-Sub-Article'
-                    )
-                )
-            )
+                        'article' => 'Test-Sub-Article',
+                    ),
+                ),
+            ),
         );
 
         $valueMap = array(
@@ -146,7 +146,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             array('i18n:de-block1-sub-block#0-length', null, 1),
             array('i18n:de-block1-sub-block#0-type#0', null, $data[0]['sub-block'][0]['type']),
             array('i18n:de-block1-sub-block#0-title#0', null, $data[0]['sub-block'][0]['title']),
-            array('i18n:de-block1-sub-block#0-article#0', null, $data[0]['sub-block'][0]['article'])
+            array('i18n:de-block1-sub-block#0-article#0', null, $data[0]['sub-block'][0]['article']),
         );
         $this->node
             ->expects($this->any())
@@ -196,10 +196,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title',
-                        'article' => 'Test-Article'
-                    )
-                )
-            )
+                        'article' => 'Test-Article',
+                    ),
+                ),
+            ),
         );
         $this->blockProperty->setValue($data);
 
@@ -222,7 +222,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-block1-sub-block#0-length' => 1,
                 'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
                 'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
-                'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article']
+                'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
             ),
             $result
         );
@@ -242,15 +242,15 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
-                    'Test-Article-1-2'
+                    'Test-Article-1-2',
                 ),
                 'sub-block' => array(
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1'
-                    )
-                )
+                        'article' => 'Test-Article-Sub-1',
+                    ),
+                ),
             ),
             array(
                 'type' => 'type1',
@@ -260,10 +260,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-2',
-                        'article' => 'Test-Article-Sub-2'
-                    )
-                )
-            )
+                        'article' => 'Test-Article-Sub-2',
+                    ),
+                ),
+            ),
         );
 
         $valueMap = array(
@@ -281,7 +281,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             array('i18n:de-block1-sub-block#1-length', null, 1),
             array('i18n:de-block1-sub-block#1-type#0', null, 'subType1'),
             array('i18n:de-block1-sub-block#1-title#0', null, $data[1]['sub-block'][0]['title']),
-            array('i18n:de-block1-sub-block#1-article#0', null, $data[1]['sub-block'][0]['article'])
+            array('i18n:de-block1-sub-block#1-article#0', null, $data[1]['sub-block'][0]['article']),
         );
 
         $this->node
@@ -329,15 +329,15 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
-                    'Test-Article-1-2'
+                    'Test-Article-1-2',
                 ),
                 'sub-block' => array(
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1'
-                    )
-                )
+                        'article' => 'Test-Article-Sub-1',
+                    ),
+                ),
             ),
             array(
                 'type' => 'type1',
@@ -347,10 +347,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-2',
-                        'article' => 'Test-Article-Sub-2'
-                    )
-                )
-            )
+                        'article' => 'Test-Article-Sub-2',
+                    ),
+                ),
+            ),
         );
         $this->blockProperty->setValue($data);
 
@@ -380,7 +380,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-block1-sub-block#1-length' => 1,
                 'i18n:de-block1-sub-block#1-type#0' => $data[1]['sub-block'][0]['type'],
                 'i18n:de-block1-sub-block#1-title#0' => $data[1]['sub-block'][0]['title'],
-                'i18n:de-block1-sub-block#1-article#0' => $data[1]['sub-block'][0]['article']
+                'i18n:de-block1-sub-block#1-article#0' => $data[1]['sub-block'][0]['article'],
             ),
             $result
         );
@@ -400,20 +400,20 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
-                    'Test-Article-1-2'
+                    'Test-Article-1-2',
                 ),
                 'sub-block' => array(
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1'
-                    )
-                )
+                        'article' => 'Test-Article-Sub-1',
+                    ),
+                ),
             ),
             array(
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-            )
+            ),
         );
 
         $valueMap = array(
@@ -474,20 +474,20 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
-                    'Test-Article-1-2'
+                    'Test-Article-1-2',
                 ),
                 'sub-block' => array(
                     array(
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1'
-                    )
-                )
+                        'article' => 'Test-Article-Sub-1',
+                    ),
+                ),
             ),
             array(
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-            )
+            ),
         );
         $this->blockProperty->setValue($data);
 
@@ -531,18 +531,18 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
-                    'Test-Article-1-2'
+                    'Test-Article-1-2',
                 ),
                 'sub-block' => array(
                     'type' => 'subType1',
                     'title' => 'Test-Title-Sub-1',
-                    'article' => 'Test-Article-Sub-1'
-                )
+                    'article' => 'Test-Article-Sub-1',
+                ),
             ),
             array(
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-            )
+            ),
         );
         $this->blockProperty->setValue($data);
 

@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
@@ -18,15 +19,13 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Sulu\Bundle\SecurityBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
- * Class ResettingController
- * @package Sulu\Bundle\SecurityBundle\Controller
+ * Class ResettingController.
  */
 class ResettingController extends Controller
 {
@@ -36,38 +35,48 @@ class ResettingController extends Controller
     const MAX_NUMBER_EMAILS = 3;
 
     /**
-     * The interval in which the token is valid
+     * The interval in which the token is valid.
+     *
      * @return \DateInterval
      */
-    private static function getResetInterval() {
+    private static function getResetInterval()
+    {
         return new \DateInterval('PT24H');
     }
 
     /**
-     * The interval in which only one token can be generated
+     * The interval in which only one token can be generated.
+     *
      * @return \DateInterval
      */
-    private static function getRequestInterval() {
+    private static function getRequestInterval()
+    {
         return new \DateInterval('PT10M');
     }
 
     /**
-     * Returns the sender's email address
+     * Returns the sender's email address.
+     *
      * @param Request $reqeust
+     *
      * @return string
      */
-    private static function getSenderAddress(Request $reqeust) {
+    private static function getSenderAddress(Request $reqeust)
+    {
         return 'no-reply@' . $reqeust->getHost();
     }
 
     /**
      * Generates a token for a user and sends an email with
-     * a link to the resetting route
+     * a link to the resetting route.
+     *
      * @param Request $request
-     * @param boolean $generateNewKey If true a new token will be generated before sending the mail
+     * @param bool $generateNewKey If true a new token will be generated before sending the mail
+     *
      * @return JsonResponse
      */
-    public function sendEmailAction(Request $request, $generateNewKey = true) {
+    public function sendEmailAction(Request $request, $generateNewKey = true)
+    {
         try {
             /** @var User $user */
             $user = $this->findUser($request->get('user'));
@@ -77,13 +86,13 @@ class ResettingController extends Controller
             $email = $this->getEmail($user);
             $this->sendTokenEmail($user, self::getSenderAddress($request), $email);
             $response = new JsonResponse(array('email' => $email));
-        } catch(EntityNotFoundException $ex) {
+        } catch (EntityNotFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
-        } catch(TokenAlreadyRequestedException $ex) {
+        } catch (TokenAlreadyRequestedException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
-        } catch(NoTokenFoundException $ex) {
+        } catch (NoTokenFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
-        } catch(TokenEmailsLimitReachedException $ex) {
+        } catch (TokenEmailsLimitReachedException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -91,11 +100,14 @@ class ResettingController extends Controller
     }
 
     /**
-     * Resets a users password
+     * Resets a users password.
+     *
      * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function resetAction(Request $request) {
+    public function resetAction(Request $request)
+    {
         try {
             $token = $request->get('token');
             /** @var User $user */
@@ -104,9 +116,9 @@ class ResettingController extends Controller
             $this->deleteToken($user);
             $this->loginUser($user, $request);
             $response = new JsonResponse(array('url' => $this->get('router')->generate('sulu_admin')));
-        } catch(InvalidTokenException $ex) {
+        } catch (InvalidTokenException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
-        } catch(MissingPasswordException $ex) {
+        } catch (MissingPasswordException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -114,24 +126,32 @@ class ResettingController extends Controller
     }
 
     /**
-     * Returns the users email or as a fallback the installation-email-adress
+     * Returns the users email or as a fallback the installation-email-adress.
+     *
      * @param User $user
+     *
      * @return string
      */
-    private function getEmail(User $user) {
+    private function getEmail(User $user)
+    {
         if ($user->getEmail() !== null) {
             return $user->getEmail();
         }
+
         return $this->container->getParameter('sulu_admin.email');
     }
 
     /**
-     * Finds a user with an identifier (username or email)
+     * Finds a user with an identifier (username or email).
+     *
      * @param string $identifier
+     *
      * @return \Symfony\Component\Security\Core\User\UserInterface
+     *
      * @throws EntityNotFoundException
      */
-    private function findUser($identifier) {
+    private function findUser($identifier)
+    {
         try {
             return $this->getDoctrine()->getRepository(static::ENTITY_NAME_USER)->findUserByIdentifier($identifier);
         } catch (NoResultException $exc) {
@@ -140,18 +160,23 @@ class ResettingController extends Controller
     }
 
     /**
-     * Returns a user for a given token and checks if the token is still valid
+     * Returns a user for a given token and checks if the token is still valid.
+     *
      * @param string $token
+     *
      * @return \Symfony\Component\Security\Core\User\UserInterface
+     *
      * @throws InvalidTokenException
      */
-    private function findUserByValidToken($token) {
+    private function findUserByValidToken($token)
+    {
         try {
             /** @var User $user */
             $user = $this->getDoctrine()->getRepository(static::ENTITY_NAME_USER)->findUserByToken($token);
             if (new \DateTime() > $user->getPasswordResetTokenExpiresAt()) {
                 throw new InvalidTokenException($token);
             }
+
             return $user;
         } catch (NoResultException $exc) {
             throw new InvalidTokenException($token);
@@ -161,16 +186,19 @@ class ResettingController extends Controller
     /**
      * @return \Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface
      */
-    private function getTokenGenerator() {
+    private function getTokenGenerator()
+    {
         return $this->get('sulu_security.token_generator');
     }
 
     /**
-     * Gives a user a token, so she's logged in
+     * Gives a user a token, so she's logged in.
+     *
      * @param User $user
      * @param $request
      */
-    private function loginUser(User $user, $request) {
+    private function loginUser(User $user, $request)
+    {
         $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
         $this->get('security.context')->setToken($token); //now the user is logged in
 
@@ -180,10 +208,12 @@ class ResettingController extends Controller
     }
 
     /**
-     * Deletes the user's reset-password-token
+     * Deletes the user's reset-password-token.
+     *
      * @param User $user
      */
-    private function deleteToken(User $user) {
+    private function deleteToken(User $user)
+    {
         $em = $this->getDoctrine()->getManager();
         $user->setPasswordResetToken(null);
         $user->setPasswordResetTokenExpiresAt(null);
@@ -193,14 +223,17 @@ class ResettingController extends Controller
     }
 
     /**
-     * Sends the password-reset-token of a user to an email-adress
+     * Sends the password-reset-token of a user to an email-adress.
+     *
      * @param User $user
      * @param string $from From-Email-Address
      * @param string $to To-Email-Address
+     *
      * @throws NoTokenFoundException
      * @throws TokenEmailsLimitReachedException
      */
-    private function sendTokenEmail(User $user, $from, $to) {
+    private function sendTokenEmail(User $user, $from, $to)
+    {
         if ($user->getPasswordResetToken() === null) {
             throw new NoTokenFoundException($user);
         }
@@ -227,12 +260,15 @@ class ResettingController extends Controller
     }
 
     /**
-     * Changes the password of a user
+     * Changes the password of a user.
+     *
      * @param User $user
      * @param string $password
+     *
      * @throws MissingPasswordException
      */
-    private function changePassword(User $user, $password) {
+    private function changePassword(User $user, $password)
+    {
         if ($password === '') {
             throw new MissingPasswordException();
         }
@@ -243,11 +279,14 @@ class ResettingController extends Controller
     }
 
     /**
-     * Generates a new token for a new user
+     * Generates a new token for a new user.
+     *
      * @param User $user
+     *
      * @throws TokenAlreadyRequestedException
      */
-    private function generateTokenForUser(User $user) {
+    private function generateTokenForUser(User $user)
+    {
         // if a token was already requested within the request interval time frame
         if ($user->getPasswordResetToken() !== null &&
             $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())
@@ -267,44 +306,56 @@ class ResettingController extends Controller
 
     /**
      * Takes a date-time of a reset-token and returns true iff the token associated with the date-time
-     * was requested less then the request-interval before. (So there is not really a need to generate a new token)
+     * was requested less then the request-interval before. (So there is not really a need to generate a new token).
+     *
      * @param \DateTime $date
+     *
      * @return bool
      */
-    private function dateIsInRequestFrame(\DateTime $date) {
+    private function dateIsInRequestFrame(\DateTime $date)
+    {
         if ($date === null) {
             return false;
         }
+
         return (new \DateTime())->add(self::getResetInterval()) < $date->add(self::getRequestInterval());
     }
 
     /**
-     * Returns a unique token
+     * Returns a unique token.
+     *
      * @return string the unique token
      */
-    private function getToken() {
+    private function getToken()
+    {
         return $this->getUniqueToken($this->getTokenGenerator()->generateToken());
     }
 
     /**
-     * If the passed token is unique returns it back otherwise returns a unique token
+     * If the passed token is unique returns it back otherwise returns a unique token.
+     *
      * @param string $startToken The token to start width
+     *
      * @return string a unique token
      */
-    private function getUniqueToken($startToken) {
+    private function getUniqueToken($startToken)
+    {
         try {
             $this->getDoctrine()->getRepository(static::ENTITY_NAME_USER)->findUserByToken($startToken);
-        } catch(NoResultException $ex) {
+        } catch (NoResultException $ex) {
             return $startToken;
         }
+
         return $this->getUniqueToken($this->getTokenGenerator()->generateToken());
     }
 
     /**
-     * Returns an encoded password gor a given one
+     * Returns an encoded password gor a given one.
+     *
      * @param User $user
      * @param string $password
      * @param string $salt
+     *
      * @return mixed
      */
     private function encodePassword(User $user, $password, $salt)

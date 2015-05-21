@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 /**
- * Account
+ * Account.
  */
 class Account extends AbstractAccount
 {

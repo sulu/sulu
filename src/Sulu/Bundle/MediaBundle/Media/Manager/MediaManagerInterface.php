@@ -20,57 +20,69 @@ interface MediaManagerInterface
 {
     /**
      * Returns media with a given collection and/or ids and/or limit
-     * if no arguments passed returns all media
+     * if no arguments passed returns all media.
+     *
      * @param string $locale the locale which the object will be returned
      * @param array $filter collection, ids, types
      * @param int $limit to limit the output
      * @param int $offset to offset the output
+     *
      * @return Media[]
      */
     public function get($locale, $filter = array(), $limit = null, $offset = null);
 
     /**
-     * Return the count of the last get
+     * Return the count of the last get.
+     *
      * @return int
      */
     public function getCount();
 
     /**
-     * Returns a media with a given id
+     * Returns a media with a given id.
+     *
      * @param int $id the id of the category
      * @param string $locale the locale which the object will be returned
+     *
      * @return Media
      */
     public function getById($id, $locale);
 
     /**
-     * Returns the medias with the given ids in the specified order
+     * Returns the medias with the given ids in the specified order.
+     *
      * @param array $ids
      * @param string $locale
+     *
      * @return Media[]
      */
     public function getByIds(array $ids, $locale);
 
     /**
-     * Creates a new media or overrides an existing one
+     * Creates a new media or overrides an existing one.
+     *
      * @param UploadedFile $uploadedFile
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
+     *
      * @return Media
      */
     public function save($uploadedFile, $data, $userId);
 
     /**
-     * Deletes a media with a given id
+     * Deletes a media with a given id.
+     *
      * @param int $id the id of the category to delete
      */
     public function delete($id);
 
     /**
-     * Moves a media to a given collection
+     * Moves a media to a given collection.
+     *
      * @param int $id id of media
      * @param string $locale the locale which the object will be returned
      * @param int $destCollection id of destination collection
+     *
      * @return Media
      *
      * @throws MediaNotFoundException
@@ -79,29 +91,35 @@ interface MediaManagerInterface
     public function move($id, $locale, $destCollection);
 
     /**
-     * Return the FieldDescriptor by name
+     * Return the FieldDescriptor by name.
+     *
      * @param string $key
+     *
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);
 
     /**
-     * Return the FieldDescriptors
+     * Return the FieldDescriptors.
+     *
      * @return array
      */
     public function getFieldDescriptors();
 
     /**
-     * Increase the download counter of a fileVersion
+     * Increase the download counter of a fileVersion.
+     *
      * @param int $fileVersionId
+     *
      * @return mixed
      */
     public function increaseDownloadCounter($fileVersionId);
 
     /**
-     * Adds thumbnails and image urls
+     * Adds thumbnails and image urls.
      *
      * @param Media $media
+     *
      * @return Media
      */
     public function addFormatsAndUrl(Media $media);

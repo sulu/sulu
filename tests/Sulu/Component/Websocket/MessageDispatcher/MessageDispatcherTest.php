@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
-
 class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -58,12 +57,12 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
             array(
                 'handler' => 'test',
                 'message' => array(
-                    'test' => 2
+                    'test' => 2,
                 ),
                 'options' => array(
-                    'id' => 'test'
+                    'id' => 'test',
                 ),
-                'error' => false
+                'error' => false,
             ),
             $result
         );
@@ -88,9 +87,9 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
                 'handler' => 'test',
                 'message' => null,
                 'options' => array(
-                    'id' => 'test'
+                    'id' => 'test',
                 ),
-                'error' => false
+                'error' => false,
             ),
             $result
         );
@@ -118,12 +117,12 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
                 'message' => array(
                     'code' => 4211,
                     'message' => 'Thats my message',
-                    'type' => 'Exception'
+                    'type' => 'Exception',
                 ),
                 'options' => array(
-                    'id' => 'test'
+                    'id' => 'test',
                 ),
-                'error' => true
+                'error' => true,
             ),
             $result
         );

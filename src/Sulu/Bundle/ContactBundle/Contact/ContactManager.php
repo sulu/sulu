@@ -13,13 +13,13 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
-use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
- * This Manager handles Contact functionality
+ * This Manager handles Contact functionality.
  */
 class ContactManager extends AbstractContactManager
 {
@@ -33,12 +33,14 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * adds an address to the entity
+     * adds an address to the entity.
      *
      * @param Contact $contact The entity to add the address to
      * @param AddressEntity $address The address to be added
      * @param Bool $isMain Defines if the address is the main Address of the contact
+     *
      * @return ContactAddressEntity
+     *
      * @throws \Exception
      */
     public function addAddress($contact, AddressEntity $address, $isMain)
@@ -61,11 +63,13 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * removes the address relation from a contact and also deletes the address if it has no more relations
+     * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
      * @param ContactEntity $contact
      * @param ContactAddressEntity $contactAddress
+     *
      * @return mixed|void
+     *
      * @throws \Exception
      */
     public function removeAddressRelation($contact, $contactAddress)
@@ -101,9 +105,10 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Returns a collection of relations to get addresses
+     * Returns a collection of relations to get addresses.
      *
      * @param $entity
+     *
      * @return mixed
      */
     public function getAddressRelations($entity)
@@ -114,23 +119,27 @@ class ContactManager extends AbstractContactManager
     /**
      * @param $id
      * @param $locale
+     *
      * @throws \Doctrine\ORM\EntityNotFoundException
+     *
      * @return mixed
      */
     public function getById($id, $locale)
     {
         $contact = $this->em->getRepository($this->contactEntity)->find($id);
         if (!$contact) {
-            return null;
+            return;
         }
 
         return new Contact($contact, $locale, $this->tagManager);
     }
 
     /**
-     * Returns an api entity for an doctrine entity
+     * Returns an api entity for an doctrine entity.
+     *
      * @param $contact
      * @param $locale
+     *
      * @return null|Contact
      */
     public function getContact($contact, $locale)
@@ -138,13 +147,14 @@ class ContactManager extends AbstractContactManager
         if ($contact) {
             return new Contact($contact, $locale, $this->tagManager);
         } else {
-            return null;
+            return;
         }
     }
 
     /**
      * @param ContactEntity $contact
      * @param $data
+     *
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function setMainAccount(ContactEntity $contact, $data)
@@ -192,7 +202,6 @@ class ContactManager extends AbstractContactManager
                 // else create new one
                 $this->createMainAccountContact($contact, $account, $position);
             }
-
         } else {
             // if a main account exists - remove it
             if ($accountContact = $this->getMainAccountContact($contact)) {

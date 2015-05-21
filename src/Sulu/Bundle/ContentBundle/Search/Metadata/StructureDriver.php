@@ -11,21 +11,20 @@
 namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Metadata\Driver\AdvancedDriverInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Structure;
-use Massive\Bundle\SearchBundle\Search\Field;
+use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Provides a Metadata Driver for massive search-bundle
+ * Provides a Metadata Driver for massive search-bundle.
  */
 class StructureDriver implements AdvancedDriverInterface
 {
@@ -69,9 +68,12 @@ class StructureDriver implements AdvancedDriverInterface
     }
 
     /**
-     * loads metadata for a given class if its derived from StructureInterface
+     * loads metadata for a given class if its derived from StructureInterface.
+     *
      * @param \ReflectionClass $class
+     *
      * @throws \InvalidArgumentException
+     *
      * @return IndexMetadataInterface|null
      */
     public function loadMetadataForClass(\ReflectionClass $class)

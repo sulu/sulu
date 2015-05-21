@@ -10,15 +10,15 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Fixtures;
 
-use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
+use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Structure\Page;
 
 /**
- * This structure cache has more search features than DefaultStructureCache
+ * This structure cache has more search features than DefaultStructureCache.
  */
 class SecondStructureCache extends Page
 {
@@ -32,10 +32,8 @@ class SecondStructureCache extends Page
                 'title' =>             array(
                 'de' => 'Titel',
                 'en' => 'Title',
-            )
-,
-            )
-,
+            ),
+            ),
             'text_line',
             true,
             true,
@@ -57,10 +55,8 @@ class SecondStructureCache extends Page
                 'title' =>             array(
                 'de' => 'Adresse',
                 'en' => 'Resourcelocator',
-            )
-,
-            )
-,
+            ),
+            ),
             'resource_locator',
             true,
             true,
@@ -81,10 +77,8 @@ class SecondStructureCache extends Page
                 'title' =>             array(
                 'de' => 'Interne Links',
                 'en' => 'Internal links',
-            )
-,
-            )
-,
+            ),
+            ),
             'internal_links',
             false,
             true,
@@ -104,10 +98,8 @@ class SecondStructureCache extends Page
                 'title' =>             array(
                 'de' => 'Bilder',
                 'en' => 'Images',
-            )
-,
-            )
-,
+            ),
+            ),
             'media_selection',
             false,
             true,
@@ -125,15 +117,12 @@ class SecondStructureCache extends Page
                 'title' =>             array(
                 'de' => 'Inhalt',
                 'en' => 'Content',
-            )
-,
+            ),
                 'info_text' =>             array(
                 'de' => 'Bereich für den Inhalt',
                 'en' => 'Content Section',
-            )
-,
-            )
-,
+            ),
+            ),
             ''
         );
         $prop1 = new Property(
@@ -142,10 +131,8 @@ class SecondStructureCache extends Page
                 'title' =>             array(
                 'de' => 'Artikel',
                 'en' => 'Article',
-            )
-,
-            )
-,
+            ),
+            ),
             'text_editor',
             false,
             true,
@@ -162,6 +149,5 @@ class SecondStructureCache extends Page
         $section1->addChild($prop1);
 
         $this->addChild($section1);
-
     }
 }

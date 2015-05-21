@@ -11,14 +11,14 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use InvalidArgumentException;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
@@ -66,7 +66,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', array(
-                'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand'
+                'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',
             ));
         }
     }
@@ -142,6 +142,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      * @param $phpcrConfig
      * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
+     *
      * @throws InvalidArgumentException
      */
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)

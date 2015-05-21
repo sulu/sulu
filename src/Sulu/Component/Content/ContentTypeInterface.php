@@ -11,10 +11,9 @@
 namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\PropertyInterface;
 
 /**
- * Content type definition
+ * Content type definition.
  */
 interface ContentTypeInterface
 {
@@ -23,14 +22,14 @@ interface ContentTypeInterface
 
     /**
      * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
+     * PRE_SAVE or POST_SAVE.
      *
      * @return int
      */
     public function getType();
 
     /**
-     * Reads the value for given property from the content repository then sets the value of the Sulu property
+     * Reads the value for given property from the content repository then sets the value of the Sulu property.
      *
      * @param NodeInterface $node
      * @param PropertyInterface $property
@@ -49,7 +48,7 @@ interface ContentTypeInterface
     );
 
     /**
-     * Checks availability of a value
+     * Checks availability of a value.
      *
      * @param NodeInterface $node
      * @param PropertyInterface $property
@@ -68,7 +67,7 @@ interface ContentTypeInterface
     );
 
     /**
-     * Sets the value of the Sulu property with the given data
+     * Sets the value of the Sulu property with the given data.
      *
      * @param mixed $data
      * @param PropertyInterface $property
@@ -87,7 +86,7 @@ interface ContentTypeInterface
     );
 
     /**
-     * Save the value from given property
+     * Save the value from given property.
      *
      * @param NodeInterface $node
      * @param PropertyInterface $property
@@ -108,7 +107,7 @@ interface ContentTypeInterface
     );
 
     /**
-     * Remove the Sulu property from given repository node
+     * Remove the Sulu property from given repository node.
      *
      * @param NodeInterface $node
      * @param PropertyInterface $property
@@ -125,44 +124,50 @@ interface ContentTypeInterface
     );
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate();
 
     /**
-     * returns default parameters
+     * returns default parameters.
+     *
      * @return array
      */
     public function getDefaultParams();
 
     /**
-     * returns default value of content type
+     * returns default value of content type.
+     *
      * @return mixed
      */
     public function getDefaultValue();
 
     /**
-     * Prepare view data (or metadata) for the template
+     * Prepare view data (or metadata) for the template.
      *
      * @param PropertyInterface $property
+     *
      * @return array
      */
     public function getViewData(PropertyInterface $property);
 
     /**
-     * Prepare content data for the template
+     * Prepare content data for the template.
      *
      * @param PropertyInterface $property
+     *
      * @return array
      */
     public function getContentData(PropertyInterface $property);
 
     /**
      * Return the UUIDs that are referenced by this content type for
-     * the given PropertyInterface instance
+     * the given PropertyInterface instance.
      *
      * @param PropertyInterface $property
+     *
      * @return array
      */
     public function getReferencedUuids(PropertyInterface $property);

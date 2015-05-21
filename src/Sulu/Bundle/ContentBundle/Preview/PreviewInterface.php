@@ -15,80 +15,95 @@ use Sulu\Component\Content\StructureInterface;
 interface PreviewInterface
 {
     /**
-     * starts a preview for given user and content
+     * starts a preview for given user and content.
+     *
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @param array $data changes which will be set after warmup
      * @param string|null $template
+     *
      * @return StructureInterface
      */
     public function start($userId, $contentUuid, $webspaceKey, $locale, $data = null, $template = null);
 
     /**
-     * stops a preview
+     * stops a preview.
+     *
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
+     *
      * @return
      */
     public function stop($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * returns if a preview started for user and content
+     * returns if a preview started for user and content.
+     *
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
+     *
      * @return bool
      */
     public function started($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * update properties in changes array
-     * @param integer $userId
+     * update properties in changes array.
+     *
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @param array $changes
      * @param bool $render
+     *
      * @return StructureInterface
      */
     public function updateProperties($userId, $contentUuid, $webspaceKey, $locale, $changes, $render = false);
 
     /**
-     * saves changes for given user and content
+     * saves changes for given user and content.
+     *
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @param string $property propertyName which was changed
      * @param mixed $data new data
+     *
      * @return \Sulu\Component\Content\StructureInterface
      */
     public function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
 
     /**
-     * returns pending changes for given user and content
+     * returns pending changes for given user and content.
+     *
      * @param $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
+     *
      * @throws PreviewNotFoundException
+     *
      * @return array
      */
     public function getChanges($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * renders a content for given user
+     * renders a content for given user.
+     *
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @param bool $partial
      * @param string|null $property
+     *
      * @return string
      */
     public function render(

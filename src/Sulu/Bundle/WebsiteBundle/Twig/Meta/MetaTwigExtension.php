@@ -14,7 +14,7 @@ use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * Provides helper function to generate meta tags
+ * Provides helper function to generate meta tags.
  */
 class MetaTwigExtension extends \Twig_Extension
 {
@@ -29,9 +29,9 @@ class MetaTwigExtension extends \Twig_Extension
     private $contentPath;
 
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct(RequestAnalyzerInterface $requestAnalyzer, ContentPathInterface $contentPath)
+    public function __construct(RequestAnalyzerInterface $requestAnalyzer, ContentPathInterface $contentPath)
     {
         $this->contentPath = $contentPath;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -52,13 +52,15 @@ class MetaTwigExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('meta_alternate', array($this, 'getAlternateLinks')),
-            new \Twig_SimpleFunction('meta_seo', array($this, 'getSeoMetaTags'))
+            new \Twig_SimpleFunction('meta_seo', array($this, 'getSeoMetaTags')),
         );
     }
 
     /**
-     * Returns alternate link HTML tags with href-lang attributes
+     * Returns alternate link HTML tags with href-lang attributes.
+     *
      * @param array $urls
+     *
      * @return string
      */
     public function getAlternateLinks($urls)
@@ -88,9 +90,11 @@ class MetaTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns seo meta tags with fallbacks
+     * Returns seo meta tags with fallbacks.
+     *
      * @param array $extension
      * @param array $content
+     *
      * @return string
      */
     public function getSeoMetaTags($extension, $content)
@@ -135,11 +139,13 @@ class MetaTwigExtension extends \Twig_Extension
 
     /**
      * Returns link-alternate html tag
-     *  - e.g. <link rel="alternate" href="http://sulu.lo/de/test-url" hreflang="de" />
+     *  - e.g. <link rel="alternate" href="http://sulu.lo/de/test-url" hreflang="de" />.
+     *
      * @param string $url
      * @param string $webspaceKey
      * @param string $locale
      * @param bool $default
+     *
      * @return string
      */
     private function getAlternate($url, $webspaceKey, $locale, $default = false)
@@ -151,9 +157,11 @@ class MetaTwigExtension extends \Twig_Extension
 
     /**
      * Returns meta html tag
-     *  - e.g. <meta name="description" content="That's a good example">
+     *  - e.g. <meta name="description" content="That's a good example">.
+     *
      * @param string $name
      * @param string $content
+     *
      * @return string
      */
     private function getMeta($name, $content)

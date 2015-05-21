@@ -10,29 +10,28 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
+use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -117,9 +116,9 @@ class AccountMediaControllerTest extends SuluTestCase
         $address->setBillingAddress(true);
         $address->setPrimaryAddress(true);
         $address->setDeliveryAddress(false);
-        $address->setPostboxCity("Dornbirn");
-        $address->setPostboxPostcode("6850");
-        $address->setPostboxNumber("4711");
+        $address->setPostboxCity('Dornbirn');
+        $address->setPostboxPostcode('6850');
+        $address->setPostboxNumber('4711');
 
         $accountAddress = new AccountAddress();
         $accountAddress->setAddress($address);
@@ -129,9 +128,9 @@ class AccountMediaControllerTest extends SuluTestCase
         $address->addAccountAddresse($accountAddress);
 
         $contact = new Contact();
-        $contact->setFirstName("Vorname");
-        $contact->setLastName("Nachname");
-        $contact->setMiddleName("Mittelname");
+        $contact->setFirstName('Vorname');
+        $contact->setLastName('Nachname');
+        $contact->setMiddleName('Mittelname');
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
@@ -248,11 +247,10 @@ class AccountMediaControllerTest extends SuluTestCase
     {
         $style = array(
             'type' => 'circle',
-            'color' => '#ffcc00'
+            'color' => '#ffcc00',
         );
 
         $collection->setStyle(json_encode($style));
-
 
         // Create Collection Type
         $collectionType = new CollectionType();
@@ -301,7 +299,7 @@ class AccountMediaControllerTest extends SuluTestCase
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             array(
-                'mediaId' => $this->media->getId()
+                'mediaId' => $this->media->getId(),
             )
         );
 
@@ -341,7 +339,7 @@ class AccountMediaControllerTest extends SuluTestCase
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             array(
-                'mediaId' => 99
+                'mediaId' => 99,
             )
         );
 

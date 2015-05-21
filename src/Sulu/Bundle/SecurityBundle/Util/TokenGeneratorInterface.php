@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Util;
 
 /**
- * Interface TokenGeneratorInterface
- * @package FOS\UserBundle\Util
+ * Interface TokenGeneratorInterface.
  */
 interface TokenGeneratorInterface
 {

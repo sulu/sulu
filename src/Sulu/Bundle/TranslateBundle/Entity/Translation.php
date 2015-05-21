@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
- * Translation
+ * Translation.
  */
 class Translation extends ApiEntity
 {
@@ -35,9 +35,10 @@ class Translation extends ApiEntity
     private $catalogue;
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return Translation
      */
     public function setValue($value)
@@ -48,7 +49,7 @@ class Translation extends ApiEntity
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -58,9 +59,10 @@ class Translation extends ApiEntity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Code $code
+     *
      * @return Translation
      */
     public function setCode(\Sulu\Bundle\TranslateBundle\Entity\Code $code = null)
@@ -71,7 +73,7 @@ class Translation extends ApiEntity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return \Sulu\Bundle\TranslateBundle\Entity\Code
      */
@@ -81,9 +83,10 @@ class Translation extends ApiEntity
     }
 
     /**
-     * Set catalogue
+     * Set catalogue.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogue
+     *
      * @return Translation
      */
     public function setCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogue = null)
@@ -94,7 +97,7 @@ class Translation extends ApiEntity
     }
 
     /**
-     * Get catalogue
+     * Get catalogue.
      *
      * @return \Sulu\Bundle\TranslateBundle\Entity\Catalogue
      */

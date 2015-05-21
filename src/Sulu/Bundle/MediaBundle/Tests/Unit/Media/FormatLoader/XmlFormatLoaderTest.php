@@ -10,8 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
-use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader;
-use Symfony\Component\Config\FileLocator;
+
 
 class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,14 +37,14 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                             'parameters' => array(
                                 'x' => 640,
                                 'y' => 480,
-                                'forceRatio' => true
-                            )
-                        )
+                                'forceRatio' => true,
+                            ),
+                        ),
                     ),
                     'options' => array(
                         'jpeg_quality' => 70,
-                        'png_compression_level' => 6
-                    )
+                        'png_compression_level' => 6,
+                    ),
                 ),
                 '300x300' => array(
                     'name' => '300x300',
@@ -54,14 +53,14 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                             'action' => 'resize',
                             'parameters' => array(
                                 'x' => 300,
-                                'y' => 300
-                            )
-                        )
+                                'y' => 300,
+                            ),
+                        ),
                     ),
                     'options' => array(
-                        'png_compression_level' => 3
-                    )
-                )
+                        'png_compression_level' => 3,
+                    ),
+                ),
             ),
             $result
         );
@@ -90,12 +89,12 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                             'parameters' => array(
                                 'x' => 640,
                                 'y' => 480,
-                                'forceRatio' => false
-                            )
-                        )
+                                'forceRatio' => false,
+                            ),
+                        ),
                     ),
-                    'options' => array()
-                )
+                    'options' => array(),
+                ),
             ),
             $result
         );
@@ -121,9 +120,9 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                     'commands' => array(),
                     'options' => array(
                         'jpeg_quality' => 70,
-                        'png_compression_level' => 6
-                    )
-                )
+                        'png_compression_level' => 6,
+                    ),
+                ),
             ),
             $result
         );
@@ -153,15 +152,15 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                             'parameters' => array(
                                 'x' => 640,
                                 'y' => 480,
-                                'forceRatio' => true
-                            )
-                        )
+                                'forceRatio' => true,
+                            ),
+                        ),
                     ),
                     'options' => array(
                         'jpeg_quality' => 70,
                         'png_compression_level' => 6,
-                        'a' => 'test'
-                    )
+                        'a' => 'test',
+                    ),
                 ),
                 '300x300' => array(
                     'name' => '300x300',
@@ -170,16 +169,16 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                             'action' => 'resize',
                             'parameters' => array(
                                 'x' => 300,
-                                'y' => 300
-                            )
-                        )
+                                'y' => 300,
+                            ),
+                        ),
                     ),
                     'options' => array(
                         'png_compression_level' => 3,
                         'jpeg_quality' => 10,
-                        'a' => 'test'
-                    )
-                )
+                        'a' => 'test',
+                    ),
+                ),
             ),
             $result
         );

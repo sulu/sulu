@@ -17,7 +17,8 @@ use Traversable;
 interface RestHelperInterface
 {
     /**
-     * Initializes the given ListBuilder with the standard values from the request
+     * Initializes the given ListBuilder with the standard values from the request.
+     *
      * @param ListBuilderInterface $listBuilder The ListBuilder to initialize
      * @param AbstractFieldDescriptor[] $fieldDescriptors The FieldDescriptors available for this object type
      */
@@ -25,13 +26,15 @@ interface RestHelperInterface
 
     /**
      * This method processes a put request (delete non-existing entities, update existing entities, add new
-     * entries), and let the single actions be modified by callbacks
+     * entries), and let the single actions be modified by callbacks.
+     *
      * @param Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
      * @param callable $get The
      * @param callable $add
      * @param callable $update
      * @param callable $delete
+     *
      * @return bool
      */
     public function processSubEntities(

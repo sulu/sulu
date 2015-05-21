@@ -15,7 +15,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * BaseRole
+ * BaseRole.
  */
 abstract class BaseRole extends Role implements RoleInterface
 {
@@ -40,7 +40,7 @@ abstract class BaseRole extends Role implements RoleInterface
     private $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -59,12 +59,15 @@ abstract class BaseRole extends Role implements RoleInterface
      */
     private $securityType;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return BaseRole
      */
     public function setName($name)
@@ -75,7 +78,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -93,9 +96,10 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Set system
+     * Set system.
      *
      * @param string $system
+     *
      * @return BaseRole
      */
     public function setSystem($system)
@@ -106,7 +110,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get system
+     * Get system.
      *
      * @return string
      */
@@ -116,7 +120,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -126,7 +130,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -136,9 +140,9 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -146,9 +150,10 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param UserInterface $changer
+     *
      * @return BaseRole
      */
     public function setChanger(UserInterface $changer = null)
@@ -159,7 +164,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return UserInterface
      */
@@ -169,9 +174,10 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param UserInterface $creator
+     *
      * @return BaseRole
      */
     public function setCreator(UserInterface $creator = null)
@@ -182,7 +188,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return UserInterface
      */
@@ -192,9 +198,10 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Set securityType
+     * Set securityType.
      *
      * @param SecurityType $securityType
+     *
      * @return BaseRole
      */
     public function setSecurityType(SecurityType $securityType = null)
@@ -205,7 +212,7 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get securityType
+     * Get securityType.
      *
      * @return SecurityType
      */

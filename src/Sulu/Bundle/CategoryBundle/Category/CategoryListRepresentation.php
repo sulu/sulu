@@ -10,14 +10,14 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 
 /**
- * This class represents a list for the categories
- * @package Sulu\Component\Rest\ListBuilder
+ * This class represents a list for the categories.
+ *
  * @ExclusionPolicy("all")
  * @Relation(
  *     "children",

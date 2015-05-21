@@ -17,7 +17,6 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
  * @group functional
@@ -73,14 +72,14 @@ class PreviewTest extends SuluTestCase
                     array(
                         'type' => 'type1',
                         'title' => 'Block-Title-1',
-                        'article' => array('Block-Article-1-1', 'Block-Article-1-2')
+                        'article' => array('Block-Article-1-1', 'Block-Article-1-2'),
                     ),
                     array(
                         'type' => 'type1',
                         'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2')
-                    )
-                )
+                        'article' => array('Block-Article-2-1', 'Block-Article-2-2'),
+                    ),
+                ),
             ),
             array(
                 'title' => 'Test2',
@@ -90,10 +89,10 @@ class PreviewTest extends SuluTestCase
                     array(
                         'type' => 'type1',
                         'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2')
-                    )
-                )
-            )
+                        'article' => array('Block-Article-2-1', 'Block-Article-2-2'),
+                    ),
+                ),
+            ),
         );
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
@@ -251,7 +250,7 @@ class PreviewTest extends SuluTestCase
             "<ul>\n" .
             "<li property=\"article\">New-Block-Article-1-1</li>\n" .
             "<li property=\"article\">New-Block-Article-1-2</li>\n" .
-            "</ul>",
+            '</ul>',
             $changes['block,0'][0]
         );
         $this->assertEquals(1, sizeof($changes['block,1']));
@@ -260,7 +259,7 @@ class PreviewTest extends SuluTestCase
             "<ul>\n" .
             "<li property=\"article\">Block-Article-2-1</li>\n" .
             "<li property=\"article\">Block-Article-2-2</li>\n" .
-            "</ul>",
+            '</ul>',
             $changes['block,1'][0]
         );
 
@@ -274,17 +273,17 @@ class PreviewTest extends SuluTestCase
                     'title' => 'New-Block-Title-1',
                     'article' => array(
                         'New-Block-Article-1-1',
-                        'New-Block-Article-1-2'
-                    )
+                        'New-Block-Article-1-2',
+                    ),
                 ),
                 array(
                     'type' => 'type1',
                     'title' => 'New-Block-Title-2',
                     'article' => array(
                         'Block-Article-2-1',
-                        'Block-Article-2-2'
-                    )
-                )
+                        'Block-Article-2-2',
+                    ),
+                ),
             ),
             $content->getPropertyValue('block')
         );
@@ -310,16 +309,16 @@ class PreviewTest extends SuluTestCase
                     'title' => 'Block-Title-1',
                     'article' => array(
                         'Block-Article-1-1',
-                        'Block-Article-1-2'
-                    )
+                        'Block-Article-1-2',
+                    ),
                 ),
                 array(
                     'title' => 'Block-Title-2',
                     'article' => array(
                         'Block-Article-2-1',
-                        'Block-Article-2-2'
-                    )
-                )
+                        'Block-Article-2-2',
+                    ),
+                ),
             )
         );
         $this->assertEquals($expected, $response);
@@ -344,16 +343,16 @@ class PreviewTest extends SuluTestCase
                     'title' => 'Block-Title-1',
                     'article' => array(
                         'Block-Article-1-1',
-                        'Block-Article-1-2'
-                    )
+                        'Block-Article-1-2',
+                    ),
                 ),
                 array(
                     'title' => 'Block-Title-2',
                     'article' => array(
                         'Block-Article-2-1',
-                        'Block-Article-2-2'
-                    )
-                )
+                        'Block-Article-2-2',
+                    ),
+                ),
             )
         );
         $this->assertEquals($expected, $response);
@@ -368,7 +367,7 @@ class PreviewTest extends SuluTestCase
         $this->assertEquals('asdf', $content->getPropertyValue('article'));
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io','en');
+        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertEquals(2, sizeof($changes));
         $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']);
         $this->assertEquals(['asdf'], $changes['article']);
@@ -387,16 +386,16 @@ class PreviewTest extends SuluTestCase
                     'title' => 'Block-Title-1',
                     'article' => array(
                         'Block-Article-1-1',
-                        'Block-Article-1-2'
-                    )
+                        'Block-Article-1-2',
+                    ),
                 ),
                 array(
                     'title' => 'Block-Title-2',
                     'article' => array(
                         'Block-Article-2-1',
-                        'Block-Article-2-2'
-                    )
-                )
+                        'Block-Article-2-2',
+                    ),
+                ),
             )
         );
         $this->assertEquals($expected, $response);

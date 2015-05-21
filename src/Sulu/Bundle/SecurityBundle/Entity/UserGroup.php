@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * UserGroup
+ * UserGroup.
  */
 class UserGroup extends ApiEntity
 {
@@ -26,7 +26,7 @@ class UserGroup extends ApiEntity
     private $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -41,9 +41,10 @@ class UserGroup extends ApiEntity
     private $group;
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return UserGroup
      */
     public function setLocale($locale)
@@ -54,7 +55,7 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -64,7 +65,8 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Get Locales as array
+     * Get Locales as array.
+     *
      * @return array
      * @VirtualProperty
      * @SerializedName("locales")
@@ -75,9 +77,9 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -85,9 +87,10 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
+     *
      * @return UserGroup
      */
     public function setUser(UserInterface $user = null)
@@ -98,7 +101,7 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface
      */
@@ -108,9 +111,10 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Set group
+     * Set group.
      *
      * @param Group $group
+     *
      * @return UserGroup
      */
     public function setGroup(Group $group = null)
@@ -121,7 +125,7 @@ class UserGroup extends ApiEntity
     }
 
     /**
-     * Get group
+     * Get group.
      *
      * @return Group
      */

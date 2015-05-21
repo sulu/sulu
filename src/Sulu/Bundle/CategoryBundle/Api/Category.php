@@ -2,17 +2,16 @@
 
 namespace Sulu\Bundle\CategoryBundle\Api;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
-use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 
 class Category extends ApiEntityWrapper
 {
-
     public function __construct(Entity $category, $locale)
     {
         $this->entity = $category;
@@ -20,9 +19,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the id of the category
+     * Returns the id of the category.
+     *
      * @VirtualProperty
      * @SerializedName("id")
+     *
      * @return array
      * @Groups({"fullCategory","partialCategory"})
      */
@@ -32,9 +33,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the key of the category
+     * Returns the key of the category.
+     *
      * @VirtualProperty
      * @SerializedName("key")
+     *
      * @return string
      * @Groups({"fullCategory","partialCategory"})
      */
@@ -44,9 +47,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the name of the Category dependent on the locale
+     * Returns the name of the Category dependent on the locale.
+     *
      * @VirtualProperty
      * @SerializedName("name")
+     *
      * @return string
      * @Groups({"fullCategory","partialCategory"})
      */
@@ -56,9 +61,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the name of the Category dependent on the locale
+     * Returns the name of the Category dependent on the locale.
+     *
      * @VirtualProperty
      * @SerializedName("meta")
+     *
      * @return array
      * @Groups({"fullCategory","partialCategory"})
      */
@@ -82,13 +89,15 @@ class Category extends ApiEntityWrapper
             return $arrReturn;
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns the creator of the category
+     * Returns the creator of the category.
+     *
      * @VirtualProperty
      * @SerializedName("creator")
+     *
      * @return string
      */
     public function getCreator()
@@ -103,9 +112,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the changer of the category
+     * Returns the changer of the category.
+     *
      * @VirtualProperty
      * @SerializedName("changer")
+     *
      * @return string
      */
     public function getChanger()
@@ -120,9 +131,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the created date for the category
+     * Returns the created date for the category.
+     *
      * @VirtualProperty
      * @SerializedName("created")
+     *
      * @return string
      * @Groups({"fullCategory"})
      */
@@ -132,9 +145,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the created date for the category
+     * Returns the created date for the category.
+     *
      * @VirtualProperty
      * @SerializedName("created")
+     *
      * @return string
      * @Groups({"fullCategory"})
      */
@@ -144,9 +159,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the children of a category
+     * Returns the children of a category.
+     *
      * @VirtualProperty
      * @SerializedName("children")
+     *
      * @return List
      * @Groups({"fullCategory"})
      */
@@ -155,7 +172,7 @@ class Category extends ApiEntityWrapper
         $children = [];
         if ($this->entity->getChildren()) {
             foreach ($this->entity->getChildren() as $child) {
-                $children[] = new Category($child, $this->locale);
+                $children[] = new self($child, $this->locale);
             }
         }
 
@@ -163,9 +180,10 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes a name as string and sets it to the entity
+     * Takes a name as string and sets it to the entity.
      *
      * @param string $name
+     *
      * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setName($name)
@@ -176,9 +194,10 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes meta as array and sets it to the entity
+     * Takes meta as array and sets it to the entity.
      *
      * @param array $meta
+     *
      * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setMeta($meta)
@@ -207,7 +226,7 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns a parent category if one exists
+     * Returns a parent category if one exists.
      *
      * @return null|Category
      */
@@ -215,16 +234,17 @@ class Category extends ApiEntityWrapper
     {
         $parent = $this->getEntity()->getParent();
         if ($parent) {
-            return new Category($parent, $this->locale);
+            return new self($parent, $this->locale);
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Sets a given category as the parent of the entity
+     * Sets a given category as the parent of the entity.
      *
      * @param Entity $parent
+     *
      * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setParent($parent)
@@ -235,9 +255,10 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Sets the key of the category
+     * Sets the key of the category.
      *
      * @param string $key
+     *
      * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setKey($key)
@@ -248,8 +269,10 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes a user entity and returns the fullname
+     * Takes a user entity and returns the fullname.
+     *
      * @param $user
+     *
      * @return string
      */
     private function getUserFullName($user)
@@ -263,9 +286,11 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes an array of CollectionMeta and returns a single meta for a given id
+     * Takes an array of CollectionMeta and returns a single meta for a given id.
+     *
      * @param $meta
      * @param $id
+     *
      * @return CollectionMeta
      */
     private function getSingleMetaById($meta, $id)
@@ -282,7 +307,8 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns an array representation of the object
+     * Returns an array representation of the object.
+     *
      * @return array
      */
     public function toArray()
@@ -295,13 +321,15 @@ class Category extends ApiEntityWrapper
             'creator' => $this->getCreator(),
             'changer' => $this->getChanger(),
             'created' => $this->getCreated(),
-            'changed' => $this->getChanged()
+            'changed' => $this->getChanged(),
         );
     }
 
     /**
-     * Returns the translation with the given locale
+     * Returns the translation with the given locale.
+     *
      * @param string $locale The locale to return
+     *
      * @return MappingAttributeTranslation
      */
     public function getTranslation()

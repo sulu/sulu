@@ -10,9 +10,9 @@
 
 namespace Sulu\Component\HttpCache\EventListener;
 
+use Sulu\Component\HttpCache\EventSubscriber\FlushSubscriber;
 use Sulu\Component\HttpCache\EventSubscriber\KernelSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
-use Sulu\Component\HttpCache\EventSubscriber\FlushSubscriber;
 
 class FlushSubscriberTest extends \PHPUnit_Framework_TestCase
 {

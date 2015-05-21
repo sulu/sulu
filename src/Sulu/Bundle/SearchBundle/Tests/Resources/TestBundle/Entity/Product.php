@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
+use Sulu\Component\Persistence\Model\UserBlameInterface;
 
 class Product implements TimestampableInterface, UserBlameInterface
 {
@@ -32,17 +32,17 @@ class Product implements TimestampableInterface, UserBlameInterface
         return $this->changed;
     }
 
-    public function getChanger() 
+    public function getChanger()
     {
         return $this->changer;
     }
 
-    public function getCreated() 
+    public function getCreated()
     {
         return $this->created;
     }
 
-    public function getCreator() 
+    public function getCreator()
     {
         return $this->creator;
     }

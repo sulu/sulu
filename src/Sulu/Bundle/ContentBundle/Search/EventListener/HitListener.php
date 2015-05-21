@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * Listen to for new hits. If document instance of structure
- * prefix the current resource locator prefix to the URL
+ * prefix the current resource locator prefix to the URL.
  */
 class HitListener
 {
@@ -30,7 +30,8 @@ class HitListener
     }
 
     /**
-     * Prefix url of document with current resourcelocator prefix
+     * Prefix url of document with current resourcelocator prefix.
+     *
      * @param HitEvent $event
      */
     public function onHit(HitEvent $event)

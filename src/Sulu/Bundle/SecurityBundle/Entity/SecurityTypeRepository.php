@@ -16,19 +16,20 @@ use Doctrine\ORM\Query;
 
 /**
  * Repository for the User, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class SecurityTypeRepository extends EntityRepository
 {
     /**
-     * Searches for a role with a specific id
+     * Searches for a role with a specific id.
+     *
      * @param $id
+     *
      * @return role
      */
     public function findSecurityTypeById($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('securityType')
                 ->where('securityType.id=:securityTypeId');
 
@@ -37,9 +38,8 @@ class SecurityTypeRepository extends EntityRepository
             $query->setParameter('securityTypeId', $id);
 
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

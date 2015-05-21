@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace\Loader\Exception;
 
 /**
- * This error represents a wrong default error template configuration
+ * This error represents a wrong default error template configuration.
  */
 class InvalidDefaultErrorTemplateException extends WebspaceException
 {
@@ -22,6 +22,7 @@ class InvalidDefaultErrorTemplateException extends WebspaceException
 
     /**
      * InvalidErrorTemplateException constructor.
+     *
      * @param string $template
      * @param int $webspace
      */

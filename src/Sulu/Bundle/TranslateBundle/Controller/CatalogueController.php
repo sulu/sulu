@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
@@ -18,11 +19,9 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
- * Make the catalogues available through a REST-API
- * @package Sulu\Bundle\TranslateBundle\Controller
+ * Make the catalogues available through a REST-API.
  */
 class CatalogueController extends RestController
 {
@@ -36,9 +35,12 @@ class CatalogueController extends RestController
     protected $fieldDescriptors = array();
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("catalogues/fields")
+     *
      * @param Request $request
+     *
      * @return mixed
      */
     public function getFieldsAction(Request $request)
@@ -49,8 +51,10 @@ class CatalogueController extends RestController
     }
 
     /**
-     * Returns the catalogue with the given id
+     * Returns the catalogue with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getCatalogueAction($id)
@@ -67,8 +71,10 @@ class CatalogueController extends RestController
     }
 
     /**
-     * Returns a list of catalogues (from a specific package)
+     * Returns a list of catalogues (from a specific package).
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetCataloguesAction(Request $request)
@@ -80,7 +86,7 @@ class CatalogueController extends RestController
             $filter['packageId'] = $packageId;
         }
 
-        if ($request->get('flat')=='true') {
+        if ($request->get('flat') == 'true') {
             /** @var RestHelperInterface $restHelper */
            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -130,6 +136,7 @@ class CatalogueController extends RestController
 
     /**
      * @param $key
+     *
      * @return DoctrineFieldDescriptor
      */
     protected function getFieldDescriptor($key)
@@ -138,8 +145,10 @@ class CatalogueController extends RestController
     }
 
     /**
-     * Deletes the catalogue with the given id
+     * Deletes the catalogue with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteCataloguesAction($id)

@@ -11,14 +11,14 @@ use Sulu\Component\Util\TextUtils;
 class GeolocatorLocation
 {
     /**
-     * ID of this location (according to the geolocation vendor)
+     * ID of this location (according to the geolocation vendor).
      *
      * @var mixed
      */
     protected $id;
 
     /**
-     * Title to display
+     * Title to display.
      *
      * @var string
      */
@@ -50,12 +50,12 @@ class GeolocatorLocation
     protected $country;
 
     /**
-     * @var double
+     * @var float
      */
     protected $longitude;
 
     /**
-     * @var double
+     * @var float
      */
     protected $latitude;
 
@@ -146,7 +146,7 @@ class GeolocatorLocation
 
     /**
      * This is a hack for the husky component which is now
-     * hard coded to use the "name" property
+     * hard coded to use the "name" property.
      */
     public function setName($name)
     {
@@ -164,7 +164,7 @@ class GeolocatorLocation
     }
 
     /**
-     * Serialize the location to an array
+     * Serialize the location to an array.
      *
      * @return array
      */
@@ -180,13 +180,12 @@ class GeolocatorLocation
             'town',
             'country',
             'longitude',
-            'latitude'
-        ) as $propertyName)
-        {
+            'latitude',
+        ) as $propertyName) {
             $res[$propertyName] = $this->{'get' . ucfirst($propertyName)}();
         }
 
-        $res['name'] = TextUtils::truncate($this->getDisplayTitle(), 75);;
+        $res['name'] = TextUtils::truncate($this->getDisplayTitle(), 75);
 
         return $res;
     }

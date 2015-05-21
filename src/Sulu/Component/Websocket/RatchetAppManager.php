@@ -14,42 +14,48 @@ use Ratchet\App;
 use React\EventLoop\LoopInterface;
 
 /**
- * Class manages ratchet websocket apps
+ * Class manages ratchet websocket apps.
  */
 class RatchetAppManager implements AppManagerInterface
 {
     /**
-     * Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843
+     * Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843.
+     *
      * @var int
      */
     private $port;
 
     /**
-     * HTTP hostname clients intend to connect to. MUST match JS `new WebSocket('ws://$httpHost');`
+     * HTTP hostname clients intend to connect to. MUST match JS `new WebSocket('ws://$httpHost');`.
+     *
      * @var string
      */
     private $httpHost;
 
     /**
      * IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
+     *
      * @var string
      */
     private $ipAddress;
 
     /**
      * Specific React\EventLoop to bind the application to. null will create one for you.
+     *
      * @var LoopInterface
      */
     private $loop;
 
     /**
-     * Ratchet app
+     * Ratchet app.
+     *
      * @var App
      */
     private $ratchetApp;
 
     /**
-     * Container for websocket apps
+     * Container for websocket apps.
+     *
      * @var array
      */
     private $apps = array();
@@ -60,7 +66,7 @@ class RatchetAppManager implements AppManagerInterface
      * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
      * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you.
      */
-    function __construct(
+    public function __construct(
         $port,
         $httpHost = 'localhost',
         $ipAddress = '127.0.0.1',
@@ -82,7 +88,7 @@ class RatchetAppManager implements AppManagerInterface
             'app' => $app,
             'name' => $app->getName(),
             'allowedOrigins' => $allowedOrigins,
-            'httpHost' => $httpHost ?: $this->getHttpHost()
+            'httpHost' => $httpHost ?: $this->getHttpHost(),
         );
     }
 
@@ -142,7 +148,8 @@ class RatchetAppManager implements AppManagerInterface
     }
 
     /**
-     * Return used event loop if null default loop will be created
+     * Return used event loop if null default loop will be created.
+     *
      * @return LoopInterface
      */
     public function getLoop()

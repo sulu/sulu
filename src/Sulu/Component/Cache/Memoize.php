@@ -13,7 +13,7 @@ namespace Sulu\Component\Cache;
 use Doctrine\Common\Cache\Cache;
 
 /**
- * Memoizer which uses Doctrine Cache to save data
+ * Memoizer which uses Doctrine Cache to save data.
  */
 class Memoize implements MemoizeInterface
 {
@@ -28,9 +28,9 @@ class Memoize implements MemoizeInterface
     protected $defaultLifeTime;
 
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct(Cache $cache, $defaultLifeTime)
+    public function __construct(Cache $cache, $defaultLifeTime)
     {
         $this->cache = $cache;
         $this->defaultLifeTime = $defaultLifeTime;
@@ -84,4 +84,4 @@ class Memoize implements MemoizeInterface
             return $value;
         }
     }
-} 
+}

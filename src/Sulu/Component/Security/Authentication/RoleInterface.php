@@ -13,168 +13,175 @@ namespace Sulu\Component\Security\Authentication;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Defines the interface for a role
- * @package Sulu\Bundle\SecurityBundle\Entity
+ * Defines the interface for a role.
  */
 interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
 {
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return RoleInterface
      */
     public function setName($name);
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set system
+     * Set system.
      *
      * @param string $system
+     *
      * @return RoleInterface
      */
     public function setSystem($system);
 
     /**
-     * Get system
+     * Get system.
      *
      * @return string
      */
     public function getSystem();
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
     public function getCreated();
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
     public function getChanged();
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId();
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param UserInterface $creator
+     *
      * @return RoleInterface
      */
     public function setCreator(UserInterface $creator = null);
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return UserInterface
      */
     public function getCreator();
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param UserInterface $changer
+     *
      * @return RoleInterface
      */
     public function setChanger(UserInterface $changer = null);
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return UserInterface
      */
     public function getChanger();
 
     /**
-     * Add permissions
+     * Add permissions.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     *
      * @return RoleInterface
      */
     public function addPermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions);
 
     /**
-     * Remove permissions
+     * Remove permissions.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
      */
     public function removePermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions);
 
     /**
-     * Get permissions
+     * Get permissions.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getPermissions();
 
     /**
-     * Add userRoles
+     * Add userRoles.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     *
      * @return UserRole
      */
     public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles);
 
     /**
-     * Remove userRoles
+     * Remove userRoles.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
      */
     public function removeUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles);
 
     /**
-     * Get userRoles
+     * Get userRoles.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getUserRoles();
 
     /**
-     * Add groups
+     * Add groups.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     *
      * @return RoleInterface
      */
     public function addGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups);
 
     /**
-     * Remove groups
+     * Remove groups.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
      */
     public function removeGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups);
 
     /**
-     * Get groups
+     * Get groups.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getGroups();
 
     /**
-     * Set securityType
+     * Set securityType.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType
+     *
      * @return RoleInterface
      */
     public function setSecurityType(\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null);
 
     /**
-     * Get securityType
+     * Get securityType.
      *
      * @return \Sulu\Bundle\SecurityBundle\Entity\SecurityType
      */

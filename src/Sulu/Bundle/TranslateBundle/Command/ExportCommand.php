@@ -10,16 +10,15 @@
 
 namespace Sulu\Bundle\TranslateBundle\Command;
 
+use Sulu\Bundle\TranslateBundle\Translate\Export;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Sulu\Bundle\TranslateBundle\Translate\Export;
 
 /**
- * The command to execute an export on the console
- * @package Sulu\Bundle\TranslateBundle\Command
+ * The command to execute an export on the console.
  */
 class ExportCommand extends ContainerAwareCommand
 {

@@ -11,18 +11,18 @@
 namespace Sulu\Bundle\SnippetBundle\Content;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
+use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
-use PHPCR\PropertyType;
-use Sulu\Component\Content\ContentTypeInterface;
-use PHPCR\Util\UUIDHelper;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Structure\Snippet;
 
 /**
- * ContentType for Snippets
+ * ContentType for Snippets.
  */
 class SnippetContent extends ComplexContentType
 {
@@ -47,7 +47,7 @@ class SnippetContent extends ComplexContentType
     private $snippetCache = array();
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
@@ -76,7 +76,8 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * Set data to given property
+     * Set data to given property.
+     *
      * @param array $data
      * @param PropertyInterface $property
      */
@@ -92,7 +93,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = array();
-        if($node->hasProperty($property->getName())) {
+        if ($node->hasProperty($property->getName())) {
             $refs = $node->getProperty($property->getName())->getString();
         }
         $this->setData($refs, $property);
@@ -212,7 +213,7 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * load snippet and serialize them
+     * load snippet and serialize them.
      *
      * additionally cache it by id in this class
      */
@@ -253,6 +254,7 @@ class SnippetContent extends ComplexContentType
     private function getUuids($data)
     {
         $ids = is_array($data) ? $data : array();
+
         return $ids;
     }
 }

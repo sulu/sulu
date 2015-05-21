@@ -47,11 +47,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                                     array(
                                         'path' => '/a/a/a',
                                         'a' => 1,
-                                        'children' => array()
-                                    )
-                                )
-                            )
-                        )
+                                        'children' => array(),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/b',
@@ -60,21 +60,21 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/b/a',
                                 'a' => 4,
-                                'children' => array()
+                                'children' => array(),
                             ),
                             array(
                                 'path' => '/b/b',
                                 'a' => 6,
-                                'children' => array()
-                            )
-                        )
+                                'children' => array(),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/c',
                         'a' => 7,
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
         );
 
@@ -109,11 +109,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/a/a/a',
                                 'a' => 0,
-                                'children' => array()
-                            )
-                        )
-                    )
-                )
+                                'children' => array(),
+                            ),
+                        ),
+                    ),
+                ),
             ),
             array(
                 'path' => '/b',
@@ -122,20 +122,20 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                     array(
                         'path' => '/b/a',
                         'a' => 3,
-                        'children' => array()
+                        'children' => array(),
                     ),
                     array(
                         'path' => '/b/b',
                         'a' => 5,
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
             array(
                 'path' => '/c',
                 'a' => 6,
-                'children' => array()
-            )
+                'children' => array(),
+            ),
         );
 
         $converter = new ListToTreeConverter();
@@ -162,20 +162,20 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                     array(
                         'path' => '/a/a/a',
                         'a' => 0,
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
             array(
                 'path' => '/b/a',
                 'a' => 2,
-                'children' => array()
+                'children' => array(),
             ),
             array(
                 'path' => '/b/b',
                 'a' => 3,
-                'children' => array()
-            )
+                'children' => array(),
+            ),
         );
 
         $converter = new ListToTreeConverter();
@@ -222,11 +222,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                                     array(
                                         'path' => '/a/a/a',
                                         'a' => 2,
-                                        'children' => array()
-                                    )
-                                )
-                            )
-                        )
+                                        'children' => array(),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/b',
@@ -235,14 +235,14 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/b/a',
                                 'a' => 5,
-                                'children' => array()
+                                'children' => array(),
                             ),
                             array(
                                 'path' => '/b/b',
                                 'a' => 7,
-                                'children' => array()
-                            )
-                        )
+                                'children' => array(),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/c',
@@ -251,11 +251,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/c/a',
                                 'a' => 1,
-                                'children' => array()
-                            )
-                        )
-                    )
-                )
+                                'children' => array(),
+                            ),
+                        ),
+                    ),
+                ),
             ),
         );
 

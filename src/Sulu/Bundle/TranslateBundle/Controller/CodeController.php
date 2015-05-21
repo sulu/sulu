@@ -10,7 +10,11 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\TranslateBundle\Entity\Code;
+use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
+use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
@@ -18,18 +22,12 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
-use Sulu\Component\Rest\Listing\ListRestHelper;
 use Sulu\Component\Rest\RestController;
-use Sulu\Bundle\TranslateBundle\Entity\Code;
-use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
-use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
- * Makes the translation codes accessible trough an REST-API
- * @package Sulu\Bundle\TranslateBundle\Controller
+ * Makes the translation codes accessible trough an REST-API.
  */
 class CodeController extends RestController implements ClassResourceInterface
 {
@@ -47,9 +45,12 @@ class CodeController extends RestController implements ClassResourceInterface
     protected $fieldDescriptors = array();
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("codes/fields")
+     *
      * @param Request $request
+     *
      * @return mixed
      */
     public function getFieldsAction(Request $request)
@@ -60,8 +61,10 @@ class CodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Lists all the codes or filters the codes by parameters
+     * Lists all the codes or filters the codes by parameters.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -109,8 +112,10 @@ class CodeController extends RestController implements ClassResourceInterface
     /**
      * Lists all the codes or filters the codes by parameters
      * Special function for lists
-     * route /codes/list
+     * route /codes/list.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function listAction(Request $request)
@@ -158,8 +163,10 @@ class CodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Shows the code with the given id
+     * Shows the code with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -177,8 +184,10 @@ class CodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Creates a new code
+     * Creates a new code.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -231,9 +240,11 @@ class CodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Updates the code for the given id
+     * Updates the code for the given id.
+     *
      * @param Request $request
-     * @param integer $id The id of the package to update
+     * @param int $id The id of the package to update
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -273,7 +284,7 @@ class CodeController extends RestController implements ClassResourceInterface
                     $translation = $translationRepository->findOneBy(
                         array(
                             'code' => $code->getId(),
-                            'catalogue' => $translationData['catalogue']['id']
+                            'catalogue' => $translationData['catalogue']['id'],
                         )
                     );
 
@@ -301,8 +312,10 @@ class CodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Deletes the code with the given id
+     * Deletes the code with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -328,6 +341,7 @@ class CodeController extends RestController implements ClassResourceInterface
 
     /**
      * @param string $locale
+     *
      * @return DoctrineFieldDescriptor[]
      */
     private function getFieldDescriptors($locale)
@@ -367,7 +381,7 @@ class CodeController extends RestController implements ClassResourceInterface
                 self::$packageEntity => new DoctrineJoinDescriptor(
                         self::$packageEntity,
                         self::$entityName . '.package'
-                    )
+                    ),
             )
         );
         $this->fieldDescriptors['catalogueId'] = new DoctrineFieldDescriptor(
@@ -396,7 +410,7 @@ class CodeController extends RestController implements ClassResourceInterface
                 self::$locationEntity => new DoctrineJoinDescriptor(
                         self::$locationEntity,
                         self::$entityName . '.location'
-                    )
+                    ),
             )
         );
 
@@ -405,6 +419,7 @@ class CodeController extends RestController implements ClassResourceInterface
 
     /**
      * @param $key
+     *
      * @return DoctrineFieldDescriptor
      */
     private function getFieldDescriptor($key)

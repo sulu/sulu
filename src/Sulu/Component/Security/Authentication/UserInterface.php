@@ -11,19 +11,20 @@
 namespace Sulu\Component\Security\Authentication;
 
 /**
- * The UserInterface for Sulu, extends the Symfony UserInterface with an ID
- * @package Sulu\Component\Security
+ * The UserInterface for Sulu, extends the Symfony UserInterface with an ID.
  */
 interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterface
 {
     /**
-     * Returns the ID of the User
+     * Returns the ID of the User.
+     *
      * @return int
      */
     public function getId();
 
     /**
      * Returns the locale of the user.
+     *
      * @return string Users locale
      */
     public function getLocale();

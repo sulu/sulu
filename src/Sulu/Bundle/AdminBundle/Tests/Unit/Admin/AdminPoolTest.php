@@ -75,9 +75,9 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
                             'Assets' => array(
                                 'assets.videos',
                                 'assets.pictures',
-                                'assets.documents'
-                            )
-                        )
+                                'assets.documents',
+                            ),
+                        ),
                     )
                 )
             );
@@ -89,9 +89,9 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
                         'Sulu' => array(
                             'Portal' => array(
                                 'portals.com',
-                                'portals.de'
-                            )
-                        )
+                                'portals.de',
+                            ),
+                        ),
                     )
                 )
             );
@@ -132,14 +132,14 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
             array(
                 'assets.videos',
                 'assets.pictures',
-                'assets.documents'
+                'assets.documents',
             ),
             $contexts['Sulu']['Assets']
         );
         $this->assertEquals(
             array(
                 'portals.com',
-                'portals.de'
+                'portals.de',
             ),
             $contexts['Sulu']['Portal']
         );

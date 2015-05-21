@@ -3,8 +3,8 @@
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Sulu\Bundle\LocationBundle\DependencyInjection\Compiler\GeolocatorPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 class GeolocatorPassTest extends AbstractCompilerPassTestCase

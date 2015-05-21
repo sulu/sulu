@@ -7,10 +7,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Websocket\Exception;
 
 /**
- * Represents a missing Parameter
+ * Represents a missing Parameter.
  */
 class MissingParameterException extends \Exception
 {
@@ -19,7 +20,7 @@ class MissingParameterException extends \Exception
      */
     private $name;
 
-    function __construct($name)
+    public function __construct($name)
     {
         parent::__construct(sprintf('Parameter "%s" missing for preview', $name));
 

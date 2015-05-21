@@ -14,9 +14,8 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
-use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
 

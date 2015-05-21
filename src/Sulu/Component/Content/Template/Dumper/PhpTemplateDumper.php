@@ -13,8 +13,7 @@ namespace Sulu\Component\Content\Template\Dumper;
 use Sulu\Component\Content\Structure;
 
 /**
- * Class PhpTemplateDumper
- * @package Sulu\Component\Content\Template\Dumper
+ * Class PhpTemplateDumper.
  */
 class PhpTemplateDumper
 {
@@ -25,7 +24,7 @@ class PhpTemplateDumper
 
     /**
      * @param string $path path to twig templates
-     * @param boolean $debug
+     * @param bool $debug
      */
     public function __construct($path, $debug)
     {
@@ -48,10 +47,12 @@ class PhpTemplateDumper
     }
 
     /**
-     * Creates a new class with the data from the given collection
+     * Creates a new class with the data from the given collection.
+     *
      * @param array $results
      * @param array $options
      * @param string $type
+     *
      * @return string
      */
     public function dump($results, $options = array(), $type = Structure::TYPE_PAGE)
@@ -61,7 +62,7 @@ class PhpTemplateDumper
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
-                'content' => $results
+                'content' => $results,
             )
         );
     }

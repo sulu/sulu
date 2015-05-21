@@ -30,13 +30,13 @@ class TemplateController extends Controller
         foreach ($securityTypes as $securityType) {
             $securityTypeTitles[] = array(
                 'id' => $securityType->getId(),
-                'name' => $securityType->getName()
+                'name' => $securityType->getName(),
             );
         }
 
         return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array(
                 'systems' => $systems,
-                'security_types' => $securityTypeTitles
+                'security_types' => $securityTypeTitles,
             )
         );
     }

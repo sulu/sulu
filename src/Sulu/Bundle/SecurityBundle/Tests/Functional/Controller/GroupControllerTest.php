@@ -109,12 +109,12 @@ class GroupControllerTest extends SuluTestCase
                 'parent' => array('id' => $this->group1->getId()),
                 'roles' => array(
                     array(
-                        'id' => $this->role1->getId()
+                        'id' => $this->role1->getId(),
                     ),
                     array(
-                        'id' => $this->role2->getId()
-                    )
-                )
+                        'id' => $this->role2->getId(),
+                    ),
+                ),
             )
         );
 
@@ -152,9 +152,9 @@ class GroupControllerTest extends SuluTestCase
                 'parent' => array('id' => $this->group2->getId()),
                 'roles' => array(
                     array(
-                        'id' => $this->role1->getId()
-                    )
-                )
+                        'id' => $this->role1->getId(),
+                    ),
+                ),
             )
         );
 

@@ -14,10 +14,10 @@ namespace Sulu\Component\Persistence\Model;
  * Classes implemting this interface must ensure they keep track
  * of uses that create and update it.
  */
-interface UserBlameInterface 
+interface UserBlameInterface
 {
     /**
-     * Return the ID of the user that created this object
+     * Return the ID of the user that created this object.
      *
      * @return \DateTime
      */
@@ -25,10 +25,9 @@ interface UserBlameInterface
 
     /**
      * Return the ID of the last user to change
-     * this object
+     * this object.
      *
      * @return \DateTime
      */
     public function getChanger();
 }
-

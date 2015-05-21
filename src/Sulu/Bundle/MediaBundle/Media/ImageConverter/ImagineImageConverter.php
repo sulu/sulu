@@ -20,11 +20,10 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
 
 /**
- * Sulu imagine converter for media
+ * Sulu imagine converter for media.
  */
 class ImagineImageConverter implements ImageConverterInterface
 {
-
     /**
      * @var GdImagine|ImagickImagine
      */
@@ -89,7 +88,7 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * set the image palette to RGB
+     * set the image palette to RGB.
      */
     protected function toRGB()
     {
@@ -101,6 +100,7 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * @param $command
      * @param $parameters
+     *
      * @throws ImageProxyInvalidFormatOptionsException
      */
     public function call($command, $parameters)

@@ -17,13 +17,15 @@ use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository for the Codes, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class ContactRepository extends EntityRepository
 {
     /**
-     * find a contact by id
+     * find a contact by id.
+     *
      * @param $id
+     *
      * @return mixed|null
      */
     public function findById($id)
@@ -87,13 +89,15 @@ class ContactRepository extends EntityRepository
 
             return $contact;
         } catch (NoResultException $nre) {
-            return null;
+            return;
         }
     }
 
     /**
-     * find a contact by id and load additional infos to delete referenced entities
+     * find a contact by id and load additional infos to delete referenced entities.
+     *
      * @param $id
+     *
      * @return mixed|null
      */
     public function findByIdAndDelete($id)
@@ -167,16 +171,18 @@ class ContactRepository extends EntityRepository
 
             return $contact;
         } catch (NoResultException $nre) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Searches Entities by where clauses, pagination and sorted
-     * @param integer|null $limit Page size for Pagination
-     * @param integer|null $offset Offset for Pagination
+     * Searches Entities by where clauses, pagination and sorted.
+     *
+     * @param int|null $limit Page size for Pagination
+     * @param int|null $offset Offset for Pagination
      * @param array|null $sorting Columns to sort
      * @param array|null $where Where clauses
+     *
      * @return array Results
      */
     public function findGetAll($limit = null, $offset = null, $sorting = null, $where = array())
@@ -212,12 +218,13 @@ class ContactRepository extends EntityRepository
     }
 
     /**
-     * Searches for contacts with a specific account and the ability to exclude a certain contacts
+     * Searches for contacts with a specific account and the ability to exclude a certain contacts.
      *
      * @param $accountId
      * @param null $excludeContactId
      * @param bool $arrayResult
      * @param bool $onlyFetchMainAccounts Defines if only main relations should be returned
+     *
      * @return array
      */
     public function findByAccountId($accountId, $excludeContactId = null, $arrayResult = true, $onlyFetchMainAccounts = true)
@@ -249,10 +256,12 @@ class ContactRepository extends EntityRepository
     }
 
     /**
-     * Add sorting to querybuilder
+     * Add sorting to querybuilder.
+     *
      * @param QueryBuilder $qb
      * @param array $sorting
      * @param string $prefix
+     *
      * @return QueryBuilder
      */
     private function addSorting($qb, $sorting, $prefix = 'u')
@@ -266,10 +275,12 @@ class ContactRepository extends EntityRepository
     }
 
     /**
-     * add pagination to querybuilder
+     * add pagination to querybuilder.
+     *
      * @param QueryBuilder $qb
-     * @param integer|null $limit Page size for Pagination
-     * @param integer|null $offset Offset for Pagination
+     * @param int|null $limit Page size for Pagination
+     * @param int|null $offset Offset for Pagination
+     *
      * @return QueryBuilder
      */
     private function addPagination($qb, $offset, $limit)
@@ -282,10 +293,12 @@ class ContactRepository extends EntityRepository
     }
 
     /**
-     * add where to querybuilder
+     * add where to querybuilder.
+     *
      * @param QueryBuilder $qb
      * @param array $where
      * @param string $prefix
+     *
      * @return QueryBuilder
      */
     private function addWhere($qb, $where, $prefix = '')
@@ -302,10 +315,12 @@ class ContactRepository extends EntityRepository
 
     /**
      * finds a contact based on criteria and one email and one phone
-     * also joins account
+     * also joins account.
+     *
      * @param $where
      * @param $email
      * @param $phone
+     *
      * @return mixed
      */
     public function findByCriteriaEmailAndPhone($where, $email = null, $phone = null)
@@ -343,15 +358,17 @@ class ContactRepository extends EntityRepository
             $query = $qb->getQuery();
             $result = $query->getSingleResult();
         } catch (NoResultException $nre) {
-            return null;
+            return;
         }
 
         return $result;
     }
 
     /**
-     * find a contact by id
+     * find a contact by id.
+     *
      * @param $id
+     *
      * @return mixed|null
      */
     public function findContactWithAccountsById($id)
@@ -371,10 +388,10 @@ class ContactRepository extends EntityRepository
 
         try {
             $contact = $query->getSingleResult();
+
             return $contact;
         } catch (NoResultException $nre) {
-            return null;
+            return;
         }
     }
-
 }

@@ -16,8 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Dumps all content types to console
- * @package Sulu\Bundle\CoreBundle\Command
+ * Dumps all content types to console.
  */
 class ContentTypesDumpCommand extends ContainerAwareCommand
 {
@@ -45,5 +44,5 @@ class ContentTypesDumpCommand extends ContainerAwareCommand
             $table->addRow(array($alias, $service['id']));
         }
         $table->render($output);
-   }
+    }
 }

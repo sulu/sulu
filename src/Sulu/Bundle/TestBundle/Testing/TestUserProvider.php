@@ -13,16 +13,13 @@ namespace Sulu\Bundle\TestBundle\Testing;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\TestBundle\Entity\TestContact;
-use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * An UserProvider which returns always the same user for testing purposes
- * @package Sulu\Component\Testing
+ * An UserProvider which returns always the same user for testing purposes.
  */
 class TestUserProvider implements UserProviderInterface
 {
@@ -93,7 +90,6 @@ class TestUserProvider implements UserProviderInterface
      * @see UsernameNotFoundException
      *
      * @throws UsernameNotFoundException if the user is not found
-     *
      */
     public function loadUserByUsername($username)
     {
@@ -107,6 +103,7 @@ class TestUserProvider implements UserProviderInterface
      * totally reloaded (e.g. from the database), or if the UserInterface
      * object can just be merged into some internal array of users / identity
      * map.
+     *
      * @param UserInterface $user
      *
      * @return UserInterface
@@ -119,7 +116,7 @@ class TestUserProvider implements UserProviderInterface
     }
 
     /**
-     * Whether this provider supports the given user class
+     * Whether this provider supports the given user class.
      *
      * @param string $class
      *
@@ -131,7 +128,7 @@ class TestUserProvider implements UserProviderInterface
     }
 
     /**
-     * Sets the standard credentials for the user
+     * Sets the standard credentials for the user.
      */
     private function setCredentials(UserInterface $user)
     {

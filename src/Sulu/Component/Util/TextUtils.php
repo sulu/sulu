@@ -11,7 +11,7 @@
 namespace Sulu\Component\Util;
 
 /**
- * Utilties for text manipulation
+ * Utilties for text manipulation.
  */
 class TextUtils
 {
@@ -19,7 +19,7 @@ class TextUtils
      * UTF-8 safe text truncation.
      *
      * @param string $text - Text to truncate
-     * @param integer $length - Length to truncate to
+     * @param int $length - Length to truncate to
      * @param string $suffix - This string will replace the last characters of the text
      *
      * @return string

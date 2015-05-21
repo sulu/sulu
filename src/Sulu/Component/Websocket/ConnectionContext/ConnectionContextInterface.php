@@ -17,83 +17,98 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Represents a client websocket-session
+ * Represents a client websocket-session.
  */
 interface ConnectionContextInterface
 {
     /**
-     * Returns query of the upgrade request
+     * Returns query of the upgrade request.
+     *
      * @return QueryString
      */
     public function getQuery();
 
     /**
-     * Returns upgrade request
+     * Returns upgrade request.
+     *
      * @return RequestInterface
      */
     public function getRequest();
 
     /**
-     * Returns session of the upgrade request
+     * Returns session of the upgrade request.
+     *
      * @return SessionInterface
      */
     public function getSession();
 
     /**
-     * Returns token for given firewall
+     * Returns token for given firewall.
+     *
      * @param string $firewall
+     *
      * @return TokenInterface|null
      */
     public function getToken($firewall);
 
     /**
-     * Returns user for given firewall
+     * Returns user for given firewall.
+     *
      * @param string $firewall
+     *
      * @return UserInterface|null
      */
     public function getUser($firewall);
 
     /**
-     * Returns unique id for session
+     * Returns unique id for session.
+     *
      * @return string
      */
     public function getId();
 
     /**
-     * Indicates that the context is valid
-     * @return boolean
+     * Indicates that the context is valid.
+     *
+     * @return bool
      */
     public function isValid();
 
     /**
-     * Get parameter with given name
+     * Get parameter with given name.
+     *
      * @param string $name
+     *
      * @return mixed
      */
     public function get($name);
 
     /**
-     * Get parameter with given name
+     * Get parameter with given name.
+     *
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     public function has($name);
 
     /**
-     * Returns all parameters
+     * Returns all parameters.
+     *
      * @return array
      */
     public function all();
 
     /**
-     * Set parameter with given name
+     * Set parameter with given name.
+     *
      * @param string $name
      * @param mixed $value
      */
     public function set($name, $value);
 
     /**
-     * Clear all parameter
+     * Clear all parameter.
      */
     public function clear();
 }

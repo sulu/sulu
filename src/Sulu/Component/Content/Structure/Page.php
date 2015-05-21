@@ -10,49 +10,53 @@
 
 namespace Sulu\Component\Content\Structure;
 
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\Metadata;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\PageInterface;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * This structure represents a page in the CMS
+ * This structure represents a page in the CMS.
  */
 abstract class Page extends Structure implements PageInterface
 {
     /**
-     * template to render content
+     * template to render content.
+     *
      * @var string
      * @Type("string")
      */
     private $view;
 
     /**
-     * controller to render content
+     * controller to render content.
+     *
      * @var string
      * @Type("string")
      */
     private $controller;
 
     /**
-     * time to cache content
+     * time to cache content.
+     *
      * @var int
      * @Type("integer")
      */
     private $cacheLifeTime;
 
     /**
-     * defines in which navigation context assigned
+     * defines in which navigation context assigned.
+     *
      * @var string[]
      * @Type("array")
      */
     private $navContexts;
 
     /**
-     * state of node
+     * state of node.
+     *
      * @var int
      * @Type("integer")
      */
@@ -71,7 +75,8 @@ abstract class Page extends Structure implements PageInterface
     private $originTemplate;
 
     /**
-     * content node that holds the internal link
+     * content node that holds the internal link.
+     *
      * @var StructureInterface
      * @Exclude()
      */
@@ -122,7 +127,8 @@ abstract class Page extends Structure implements PageInterface
     }
 
     /**
-     * twig template of template definition
+     * twig template of template definition.
+     *
      * @return string
      */
     public function getView()
@@ -131,7 +137,8 @@ abstract class Page extends Structure implements PageInterface
     }
 
     /**
-     * controller which renders the template definition
+     * controller which renders the template definition.
+     *
      * @return string
      */
     public function getController()
@@ -140,7 +147,8 @@ abstract class Page extends Structure implements PageInterface
     }
 
     /**
-     * cacheLifeTime of template definition
+     * cacheLifeTime of template definition.
+     *
      * @return int
      */
     public function getCacheLifeTime()
@@ -150,6 +158,7 @@ abstract class Page extends Structure implements PageInterface
 
     /**
      * @param int $state
+     *
      * @return int
      */
     public function setNodeState($state)
@@ -158,7 +167,8 @@ abstract class Page extends Structure implements PageInterface
     }
 
     /**
-     * returns state of node
+     * returns state of node.
+     *
      * @return int
      */
     public function getNodeState()
@@ -167,7 +177,8 @@ abstract class Page extends Structure implements PageInterface
     }
 
     /**
-     * returns true if this node is shown in navigation
+     * returns true if this node is shown in navigation.
+     *
      * @return string[]
      */
     public function getNavContexts()
@@ -201,7 +212,7 @@ abstract class Page extends Structure implements PageInterface
             return $this->getPropertyValueByTagName('sulu.rlp');
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -221,8 +232,10 @@ abstract class Page extends Structure implements PageInterface
     }
 
     /**
-     * returns an array of property value pairs
+     * returns an array of property value pairs.
+     *
      * @param bool $complete True if result should be representation of full node
+     *
      * @return array
      */
     public function toArray($complete = true)
@@ -294,7 +307,7 @@ abstract class Page extends Structure implements PageInterface
 
     public function copyFrom(StructureInterface $structure)
     {
-        if ($structure instanceof Page) {
+        if ($structure instanceof self) {
             $this->setNodeState($structure->getNodeState());
             $this->setUrls($structure->getUrls());
             $this->setExt($structure->getExt());

@@ -62,8 +62,8 @@ class PermissionControllerTest extends SuluTestCase
                     'edit' => 'false',
                     'archive' => false,
                     'live' => false,
-                    'security' => false
-                )
+                    'security' => false,
+                ),
             ),
         );
     }
@@ -79,8 +79,8 @@ class PermissionControllerTest extends SuluTestCase
             'id' => $id,
             'type' => $class,
             'permissions' => array(
-                'SULU_ROLE_ADMINISTRATOR' => $permissions
-            )
+                'SULU_ROLE_ADMINISTRATOR' => $permissions,
+            ),
         ));
 
         $client->request('GET', '/api/permissions?id=' . $id . '&type=' . $class);
@@ -97,8 +97,8 @@ class PermissionControllerTest extends SuluTestCase
                 'id' => $id,
                 'type' => $class,
                 'permissions' => array(
-                    'SULU_ROLE_ADMINISTRATOR' => $permissions
-                )
+                    'SULU_ROLE_ADMINISTRATOR' => $permissions,
+                ),
             ),
             $response
         );
@@ -115,8 +115,8 @@ class PermissionControllerTest extends SuluTestCase
             'id' => $id,
             'type' => $class,
             'permissions' => array(
-                'SULU_ROLE_ADMINISTRATOR' => $permissions
-            )
+                'SULU_ROLE_ADMINISTRATOR' => $permissions,
+            ),
         ));
 
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -128,8 +128,8 @@ class PermissionControllerTest extends SuluTestCase
                 'id' => $id,
                 'type' => $class,
                 'permissions' => array(
-                    'SULU_ROLE_ADMINISTRATOR' => $permissions
-                )
+                    'SULU_ROLE_ADMINISTRATOR' => $permissions,
+                ),
             ),
             $response
         );
@@ -173,7 +173,7 @@ class PermissionControllerTest extends SuluTestCase
         $client->request('POST', '/api/permissions', array(
             'id' => $id,
             'type' => $class,
-            'permissions' => $permissions
+            'permissions' => $permissions,
         ));
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());

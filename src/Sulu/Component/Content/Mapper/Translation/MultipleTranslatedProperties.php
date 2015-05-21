@@ -10,14 +10,13 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Structure;
 
 /**
- * enables to translate multiple properties
- * @package Sulu\Component\Content\Mapper\Translation
+ * enables to translate multiple properties.
  */
 class MultipleTranslatedProperties
 {
@@ -55,7 +54,8 @@ class MultipleTranslatedProperties
     }
 
     /**
-     * set language of translated property names
+     * set language of translated property names.
+     *
      * @param string $languageKey
      */
     public function setLanguage($languageKey)
@@ -71,9 +71,12 @@ class MultipleTranslatedProperties
     }
 
     /**
-     * returns translated property name
+     * returns translated property name.
+     *
      * @param string $key
+     *
      * @throws \Sulu\Component\Content\Exception\NoSuchPropertyException
+     *
      * @return string
      */
     public function getName($key)
@@ -93,7 +96,8 @@ class MultipleTranslatedProperties
     }
 
     /**
-     * Set the structure type
+     * Set the structure type.
+     *
      * @param string $structureType
      */
     public function setStructureType($structureType)

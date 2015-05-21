@@ -85,7 +85,7 @@ class NavigationMapper implements NavigationMapperInterface
             array(
                 'context' => $context,
                 'parent' => $parent,
-                'excerpt' => $loadExcerpt
+                'excerpt' => $loadExcerpt,
             )
         );
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
@@ -155,7 +155,7 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * generate navigation items for given contents
+     * generate navigation items for given contents.
      */
     private function generateNavigation(
         $contents,
@@ -206,7 +206,7 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * generate child navigation of given content
+     * generate child navigation of given content.
      */
     private function generateChildNavigation(
         StructureInterface $content,
@@ -230,9 +230,11 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * checks if content should be displayed
+     * checks if content should be displayed.
+     *
      * @param StructureInterface $content
      * @param string|null $context
+     *
      * @return bool
      */
     public function inNavigation(StructureInterface $content, $context = null)

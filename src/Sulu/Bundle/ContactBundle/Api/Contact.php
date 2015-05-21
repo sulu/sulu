@@ -10,8 +10,15 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
+use Hateoas\Configuration\Annotation\Relation;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;
 use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
@@ -19,23 +26,15 @@ use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Hateoas\Configuration\Annotation\Relation;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Groups;
 
 /**
- * The Contact class which will be exported to the API
+ * The Contact class which will be exported to the API.
  *
- * @package Sulu\Bundle\ContactBundle\Api
  * @Relation("self", href="expr('/api/admin/contacts/' ~ object.getId())")
  * @ExclusionPolicy("all")
  */
@@ -52,9 +51,9 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("id")
      * @Groups({"fullContact","partialContact","select"})
@@ -65,9 +64,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set firstName
+     * Set firstName.
      *
      * @param string $firstName
+     *
      * @return Contact
      */
     public function setFirstName($firstName)
@@ -78,7 +78,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get firstName
+     * Get firstName.
      *
      * @return string
      * @VirtualProperty
@@ -91,9 +91,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set middleName
+     * Set middleName.
      *
      * @param string $middleName
+     *
      * @return Contact
      * @Groups({"fullContact","partialContact"})
      */
@@ -105,7 +106,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get middleName
+     * Get middleName.
      *
      * @return string
      * @VirtualProperty
@@ -118,9 +119,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set lastName
+     * Set lastName.
      *
      * @param string $lastName
+     *
      * @return Contact
      */
     public function setLastName($lastName)
@@ -131,7 +133,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get lastName
+     * Get lastName.
      *
      * @return string
      * @VirtualProperty
@@ -146,6 +148,7 @@ class Contact extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("fullName")
+     *
      * @return string
      * @Groups({"fullContact","partialContact","select"})
      */
@@ -155,9 +158,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param object $title
+     *
      * @return Contact
      */
     public function setTitle($title)
@@ -168,7 +172,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      * @VirtualProperty
@@ -181,9 +185,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set position
+     * Set position.
      *
      * @param string $position
+     *
      * @return Contact
      */
     public function setPosition($position)
@@ -194,7 +199,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * sets position variable
+     * sets position variable.
      *
      * @param $position
      */
@@ -204,7 +209,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get position
+     * Get position.
      *
      * @return string
      * @VirtualProperty
@@ -217,9 +222,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set birthday
+     * Set birthday.
      *
      * @param \DateTime $birthday
+     *
      * @return Contact
      */
     public function setBirthday($birthday)
@@ -230,7 +236,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get birthday
+     * Get birthday.
      *
      * @return \DateTime
      * @VirtualProperty
@@ -243,7 +249,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      * @VirtualProperty
@@ -256,7 +262,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      * @VirtualProperty
@@ -269,9 +275,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add locales
+     * Add locales.
      *
      * @param ContactLocaleEntity $locales
+     *
      * @return Contact
      */
     public function addLocale(ContactLocaleEntity $locales)
@@ -282,9 +289,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove locales
+     * Remove locales.
      *
      * @param ContactLocaleEntity $locales
+     *
      * @return Contact
      */
     public function removeLocale(ContactLocaleEntity $locales)
@@ -295,7 +303,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get locales
+     * Get locales.
      *
      * @return array
      * @VirtualProperty
@@ -315,9 +323,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param UserInterface $changer
+     *
      * @return Contact
      */
     public function setChanger(UserInterface $changer = null)
@@ -328,9 +337,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param UserInterface $creator
+     *
      * @return Contact
      */
     public function setCreator(UserInterface $creator = null)
@@ -341,9 +351,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add notes
+     * Add notes.
      *
      * @param NoteEntity $notes
+     *
      * @return Contact
      */
     public function addNote(NoteEntity $notes)
@@ -354,9 +365,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove notes
+     * Remove notes.
      *
      * @param NoteEntity $notes
+     *
      * @return $this
      */
     public function removeNote(NoteEntity $notes)
@@ -367,7 +379,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return array
      * @VirtualProperty
@@ -387,9 +399,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add emails
+     * Add emails.
      *
      * @param EmailEntity $emails
+     *
      * @return Contact
      */
     public function addEmail(EmailEntity $emails)
@@ -400,7 +413,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove emails
+     * Remove emails.
      *
      * @param EmailEntity $emails
      */
@@ -410,7 +423,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get emails
+     * Get emails.
      *
      * @return array
      * @VirtualProperty
@@ -430,9 +443,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add phones
+     * Add phones.
      *
      * @param PhoneEntity $phones
+     *
      * @return Contact
      */
     public function addPhone(PhoneEntity $phones)
@@ -443,7 +457,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove phones
+     * Remove phones.
      *
      * @param PhoneEntity $phones
      */
@@ -453,7 +467,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get phones
+     * Get phones.
      *
      * @return array
      * @VirtualProperty
@@ -483,14 +497,15 @@ class Contact extends ApiWrapper
             'position' => $this->getPosition(),
             'birthday' => $this->getBirthday(),
             'created' => $this->getCreated(),
-            'changed' => $this->getChanged()
+            'changed' => $this->getChanged(),
         );
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param FaxEntity $faxes
+     *
      * @return Contact
      */
     public function addFax(FaxEntity $faxes)
@@ -501,7 +516,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param FaxEntity $faxes
      */
@@ -511,7 +526,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get faxes
+     * Get faxes.
      *
      * @return array
      * @VirtualProperty
@@ -531,9 +546,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add urls
+     * Add urls.
      *
      * @param UrlEntity $urls
+     *
      * @return Contact
      */
     public function addUrl(UrlEntity $urls)
@@ -544,7 +560,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove urls
+     * Remove urls.
      *
      * @param UrlEntity $urls
      */
@@ -554,7 +570,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get urls
+     * Get urls.
      *
      * @return array
      * @VirtualProperty
@@ -574,9 +590,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param FaxEntity $faxes
+     *
      * @return Contact
      */
     public function addFaxe(FaxEntity $faxes)
@@ -587,7 +604,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param FaxEntity $faxes
      */
@@ -597,9 +614,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set formOfAddress
+     * Set formOfAddress.
      *
-     * @param integer $formOfAddress
+     * @param int $formOfAddress
+     *
      * @return Contact
      */
     public function setFormOfAddress($formOfAddress)
@@ -610,9 +628,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add tags
+     * Add tags.
      *
      * @param TagEntity $tags
+     *
      * @return Contact
      */
     public function addTag(TagEntity $tags)
@@ -623,9 +642,9 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get formOfAddress
+     * Get formOfAddress.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("formOfAddress")
      * @Groups({"fullContact"})
@@ -636,9 +655,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set salutation
+     * Set salutation.
      *
      * @param string $salutation
+     *
      * @return Contact
      */
     public function setSalutation($salutation)
@@ -649,7 +669,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get salutation
+     * Get salutation.
      *
      * @return string
      * @VirtualProperty
@@ -662,9 +682,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set disabled
+     * Set disabled.
      *
-     * @param integer $disabled
+     * @param int $disabled
+     *
      * @return Contact
      */
     public function setDisabled($disabled)
@@ -675,9 +696,9 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get disabled
+     * Get disabled.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("disabled")
      * @Groups({"fullContact","partialContact"})
@@ -688,7 +709,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove tags
+     * Remove tags.
      *
      * @param TagEntity $tags
      */
@@ -698,7 +719,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get tags
+     * Get tags.
      *
      * @return array
      * @VirtualProperty
@@ -711,7 +732,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get bank accounts
+     * Get bank accounts.
      *
      * @return array
      * @VirtualProperty
@@ -732,9 +753,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set newsletter
+     * Set newsletter.
      *
-     * @param boolean $newsletter
+     * @param bool $newsletter
+     *
      * @return Contact
      */
     public function setNewsletter($newsletter)
@@ -745,9 +767,9 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get newsletter
+     * Get newsletter.
      *
-     * @return boolean
+     * @return bool
      * @VirtualProperty
      * @SerializedName("newsletter")
      * @Groups({"fullContact"})
@@ -758,9 +780,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set gender
+     * Set gender.
      *
      * @param string $gender
+     *
      * @return Contact
      */
     public function setGender($gender)
@@ -771,7 +794,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get gender
+     * Get gender.
      *
      * @return string
      * @VirtualProperty
@@ -784,7 +807,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * returns main account
+     * returns main account.
      *
      * @VirtualProperty
      * @SerializedName("account")
@@ -797,11 +820,11 @@ class Contact extends ApiWrapper
             return new Account($mainAccount, $this->locale);
         }
 
-        return null;
+        return;
     }
 
     /**
-     * returns main addresses
+     * returns main addresses.
      *
      * @VirtualProperty
      * @SerializedName("addresses")
@@ -825,9 +848,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainEmail
+     * Set mainEmail.
      *
      * @param string $mainEmail
+     *
      * @return Contact
      */
     public function setMainEmail($mainEmail)
@@ -838,7 +862,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainEmail
+     * Get mainEmail.
      *
      * @return string
      * @VirtualProperty
@@ -851,9 +875,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainPhone
+     * Set mainPhone.
      *
      * @param string $mainPhone
+     *
      * @return Contact
      */
     public function setMainPhone($mainPhone)
@@ -864,7 +889,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainPhone
+     * Get mainPhone.
      *
      * @return string
      * @VirtualProperty
@@ -877,9 +902,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainFax
+     * Set mainFax.
      *
      * @param string $mainFax
+     *
      * @return Contact
      */
     public function setMainFax($mainFax)
@@ -890,7 +916,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainFax
+     * Get mainFax.
      *
      * @return string
      * @VirtualProperty
@@ -903,9 +929,10 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainUrl
+     * Set mainUrl.
      *
      * @param string $mainUrl
+     *
      * @return Contact
      */
     public function setMainUrl($mainUrl)
@@ -916,7 +943,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainUrl
+     * Get mainUrl.
      *
      * @return string
      * @VirtualProperty
@@ -929,7 +956,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Returns the main address
+     * Returns the main address.
      *
      * @return mixed
      * @VirtualProperty
@@ -949,13 +976,14 @@ class Contact extends ApiWrapper
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Add medias
+     * Add medias.
      *
      * @param MediaEntity $medias
+     *
      * @return Contact
      */
     public function addMedia(MediaEntity $medias)
@@ -964,8 +992,8 @@ class Contact extends ApiWrapper
     }
 
     /** Add categories
-     *
      * @param CategoryEntity $categories
+     *
      * @return Contact
      */
     public function addCategorie(CategoryEntity $categories)
@@ -976,7 +1004,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove medias
+     * Remove medias.
      *
      * @param MediaEntity $medias
      */
@@ -986,7 +1014,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get medias
+     * Get medias.
      *
      * @return Media[]
      * @VirtualProperty
@@ -1006,7 +1034,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove categories
+     * Remove categories.
      *
      * @param CategoryEntity $categories
      */
@@ -1016,7 +1044,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get categories
+     * Get categories.
      *
      * @return Category[]
      * @VirtualProperty

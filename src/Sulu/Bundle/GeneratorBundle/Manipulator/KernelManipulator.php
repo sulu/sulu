@@ -55,7 +55,7 @@ class KernelManipulator extends Manipulator
             throw new \RuntimeException(sprintf('Bundle "%s" is already defined in "AppKernel::registerBundles()".', $bundle));
         }
 
-        $this->setCode(token_get_all('<?php '.implode('', $lines)), $method->getStartLine());
+        $this->setCode(token_get_all('<?php ' . implode('', $lines)), $method->getStartLine());
         while ($token = $this->next()) {
             // $bundles
             if (T_VARIABLE !== $token[0] || '$bundles' !== $token[1]) {

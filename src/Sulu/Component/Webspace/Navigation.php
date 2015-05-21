@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace;
 
 /**
- * Represents the navigation defined in webspace xml
+ * Represents the navigation defined in webspace xml.
  */
 class Navigation
 {

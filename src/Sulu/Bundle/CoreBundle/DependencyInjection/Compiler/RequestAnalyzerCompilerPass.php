@@ -17,12 +17,10 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * CompilerPass, which adds the request analyzer as a service if required
- * @package Sulu\Bundle\CoreBundle\DependencyInjection\Compiler
+ * CompilerPass, which adds the request analyzer as a service if required.
  */
 class RequestAnalyzerCompilerPass implements CompilerPassInterface
 {
-
     /**
      * {@inheritDoc}
      */
@@ -35,7 +33,7 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
                 'Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer',
                 array(
                     new Reference('sulu_core.webspace.webspace_manager'),
-                    $container->getParameter('kernel.environment')
+                    $container->getParameter('kernel.environment'),
                 )
             )
         );
@@ -46,7 +44,7 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
                 'Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer',
                 array(
                     new Reference('sulu_core.webspace.webspace_manager'),
-                    $container->getParameter('kernel.environment')
+                    $container->getParameter('kernel.environment'),
                 )
             )
         );
@@ -63,7 +61,7 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
             new Definition(
                 'Sulu\Component\Webspace\EventListener\RequestListener',
                 array(
-                    new Reference('sulu_core.webspace.request_analyzer')
+                    new Reference('sulu_core.webspace.request_analyzer'),
                 )
             )
         );
@@ -76,9 +74,9 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
                 'kernel.request',
                 array(
                     'sulu_core.webspace.request_listener',
-                    'onKernelRequest'
+                    'onKernelRequest',
                 ),
-                $container->getParameter('sulu_core.webspace.request_analyzer.priority')
+                $container->getParameter('sulu_core.webspace.request_analyzer.priority'),
             )
         );
     }

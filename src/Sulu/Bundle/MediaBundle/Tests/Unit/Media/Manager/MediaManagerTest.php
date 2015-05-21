@@ -15,7 +15,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 
 class MediaManagerTest extends \PHPUnit_Framework_TestCase
 {

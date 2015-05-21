@@ -4,8 +4,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+
 /**
- * FaxType
+ * FaxType.
  */
 class FaxType implements \JsonSerializable
 {
@@ -16,7 +17,7 @@ class FaxType implements \JsonSerializable
     private $name;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
@@ -28,7 +29,7 @@ class FaxType implements \JsonSerializable
     private $faxes;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -36,7 +37,8 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * To force id = 1 in load fixtures
+     * To force id = 1 in load fixtures.
+     *
      * @param int $id
      */
     public function setId($id)
@@ -45,9 +47,10 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return FaxType
      */
     public function setName($name)
@@ -58,7 +61,7 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -68,9 +71,9 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -78,9 +81,10 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return FaxType
      */
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
@@ -91,7 +95,7 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
@@ -101,7 +105,7 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Get faxes
+     * Get faxes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -112,8 +116,10 @@ class FaxType implements \JsonSerializable
 
     /**
      * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      */
@@ -121,15 +127,15 @@ class FaxType implements \JsonSerializable
     {
         return array(
             'id' => $this->getId(),
-            'name' => $this->getName()
+            'name' => $this->getName(),
         );
     }
 
-
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return FaxType
      */
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
@@ -140,7 +146,7 @@ class FaxType implements \JsonSerializable
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */

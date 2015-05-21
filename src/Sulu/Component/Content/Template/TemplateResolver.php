@@ -13,8 +13,7 @@ namespace Sulu\Component\Content\Template;
 use Sulu\Component\Content\Structure;
 
 /**
- * Resolves template for node types
- * @package Sulu\Component\Content\Template
+ * Resolves template for node types.
  */
 class TemplateResolver implements TemplateResolverInterface
 {

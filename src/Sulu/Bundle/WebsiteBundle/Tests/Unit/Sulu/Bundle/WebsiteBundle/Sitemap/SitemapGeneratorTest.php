@@ -99,7 +99,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             new Navigation(
                 array(
                     new NavigationContext('main', array()),
-                    new NavigationContext('footer', array())
+                    new NavigationContext('footer', array()),
                 )
             )
         );
@@ -130,7 +130,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             case 'internal-link':
                 return $this->getStructureMock($structureKey, false);
             default:
-                return null;
+                return;
         }
     }
 
@@ -142,7 +142,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             $this->getStructureMock('simple', 'title'),
             $this->getStructureMock('overview'),
             $this->getStructureMock('external-link', 'test', false),
-            $this->getStructureMock('internal-link', 'test', false)
+            $this->getStructureMock('internal-link', 'test', false),
         );
     }
 
@@ -158,6 +158,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     /**
      * @param string $locale
+     *
      * @return StructureInterface[]
      */
     private function prepareTestData($locale = 'en')
@@ -167,44 +168,44 @@ class SitemapGeneratorTest extends PhpcrTestCase
                 'title' => 'News ' . $locale,
                 'rl' => '/news',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('footer')
+                'navContexts' => array('footer'),
             ),
             'products' => array(
                 'title' => 'Products ' . $locale,
                 'rl' => '/products',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('main')
+                'navContexts' => array('main'),
             ),
             'news/news-1' => array(
                 'title' => 'News-1 ' . $locale,
                 'rl' => '/news/news-1',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('main', 'footer')
+                'navContexts' => array('main', 'footer'),
             ),
             'news/news-2' => array(
                 'title' => 'News-2 ' . $locale,
                 'rl' => '/news/news-2',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('main')
+                'navContexts' => array('main'),
             ),
             'products/products-1' => array(
                 'title' => 'Products-1 ' . $locale,
                 'external_url' => '123-123-123',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => array('main', 'footer')
+                'navContexts' => array('main', 'footer'),
             ),
             'products/products-2' => array(
                 'title' => 'Products-2 ' . $locale,
                 'external_url' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-                'navContexts' => array('main')
+                'navContexts' => array('main'),
             ),
             'products/products-3' => array(
                 'title' => 'Products-3 ' . $locale,
                 'external_url' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => array('main')
-            )
+                'navContexts' => array('main'),
+            ),
         );
 
         $data['news'] = $this->mapper->save(
@@ -451,7 +452,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 class ExcerptStructureExtension extends StructureExtension
 {
     /**
-     * name of structure extension
+     * name of structure extension.
      */
     const EXCERPT_EXTENSION_NAME = 'excerpt';
 
@@ -567,7 +568,7 @@ class ExcerptStructureExtension extends StructureExtension
     }
 
     /**
-     * initiates structure and properties
+     * initiates structure and properties.
      */
     private function initExcerptStructure()
     {

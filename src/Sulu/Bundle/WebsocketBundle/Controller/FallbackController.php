@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Provides fallback interface for websocket apps
+ * Provides fallback interface for websocket apps.
  */
 class FallbackController
 {
@@ -26,15 +26,17 @@ class FallbackController
      */
     private $appManager;
 
-    function __construct(AppManagerInterface $appManager)
+    public function __construct(AppManagerInterface $appManager)
     {
         $this->appManager = $appManager;
     }
 
     /**
-     * Redirect message to app and returns value as json response
+     * Redirect message to app and returns value as json response.
+     *
      * @param string $appName
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function send($appName, Request $request)

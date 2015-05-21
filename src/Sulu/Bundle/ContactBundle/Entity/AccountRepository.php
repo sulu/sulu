@@ -16,13 +16,15 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 /**
  * Repository for the Codes, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class AccountRepository extends NestedTreeRepository
 {
     /**
-     * Searches for accounts with a specific contact
+     * Searches for accounts with a specific contact.
+     *
      * @param $contactId
+     *
      * @return array
      */
     public function findOneByContactId($contactId)
@@ -52,14 +54,16 @@ class AccountRepository extends NestedTreeRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Get account by id
+     * Get account by id.
+     *
      * @param $id
      * @param $contacts
+     *
      * @return mixed
      */
     public function findAccountById($id, $contacts = false)
@@ -123,7 +127,7 @@ class AccountRepository extends NestedTreeRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
@@ -148,13 +152,15 @@ class AccountRepository extends NestedTreeRepository
 
             return $query->getResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * finds all accounts but only selects given fields
+     * finds all accounts but only selects given fields.
+     *
      * @param array $fields
+     *
      * @return array
      */
     public function findAllSelect($fields = array())
@@ -174,8 +180,10 @@ class AccountRepository extends NestedTreeRepository
     }
 
     /**
-     * Get account by id to delete
+     * Get account by id to delete.
+     *
      * @param $id
+     *
      * @return mixed
      */
     public function findAccountByIdAndDelete($id)
@@ -250,13 +258,15 @@ class AccountRepository extends NestedTreeRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * distinct count account's children and contacts
+     * distinct count account's children and contacts.
+     *
      * @param $id
+     *
      * @return mixed
      */
     public function countDistinctAccountChildrenAndContacts($id)
@@ -276,13 +286,15 @@ class AccountRepository extends NestedTreeRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * distinct count account's children and contacts
+     * distinct count account's children and contacts.
+     *
      * @param $id
+     *
      * @return mixed
      */
     public function findChildrenAndContacts($id)
@@ -304,7 +316,7 @@ class AccountRepository extends NestedTreeRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\HttpCache\Handler\TagsHandler;
 use Prophecy\Argument;
 
 class TagsHandlerTest extends \PHPUnit_Framework_TestCase
@@ -51,7 +50,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->structure->getUuid()->willReturn('this-is-uuid');
 
         $this->proxyCache->ban(array(
-            TagsHandler::TAGS_HEADER => '(structure\-this\-is\-uuid)(,.+)?$'
+            TagsHandler::TAGS_HEADER => '(structure\-this\-is\-uuid)(,.+)?$',
         ))->shouldBeCalled();
         $this->proxyCache->flush()->shouldBeCalled();
 
@@ -63,13 +62,13 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     public function testUpdateResponse()
     {
         $expectedTags = array(
-            'structure-1', 'structure-2', 'structure-3', 'structure-4'
+            'structure-1', 'structure-2', 'structure-3', 'structure-4',
         );
 
         $this->structure->getUuid()->willReturn('1');
         $this->structure->getProperties(true)->willReturn(array(
             $this->property1->reveal(),
-            $this->property2->reveal()
+            $this->property2->reveal(),
         ));
         $this->property1->getContentTypeName()->willReturn('type1');
         $this->property2->getContentTypeName()->willReturn('type2');
@@ -78,7 +77,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeManager->get('type2')->willReturn($this->contentType2);
 
         $this->contentType1->getReferencedUuids(Argument::any())->willReturn(array(
-            '2'
+            '2',
         ));
         $this->contentType2->getReferencedUuids(Argument::any())->willReturn(array(
             '3',

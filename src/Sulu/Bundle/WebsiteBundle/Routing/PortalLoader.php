@@ -12,15 +12,13 @@ namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * This route loader is responsible for loading routes from a routing file, and adjust the routes in a way, so that
- * there will be an own route for every portal registered
- * @package Sulu\Bundle\WebsiteBundle\Routing
+ * there will be an own route for every portal registered.
  */
 class PortalLoader extends Loader
 {

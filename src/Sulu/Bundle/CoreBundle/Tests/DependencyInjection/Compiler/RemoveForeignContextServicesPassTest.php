@@ -24,8 +24,8 @@ class RemoveForeignContextServicesPassTest extends AbstractCompilerPassTestCase
                     array('service' => 'service 1', 'context' => 'website', 'included' => true),
                     array('service' => 'service 2', 'context' => 'website', 'included' => true),
                     array('service' => 'service 3', 'context' => 'admin', 'included' => false),
-                )
-            )
+                ),
+            ),
         );
     }
 

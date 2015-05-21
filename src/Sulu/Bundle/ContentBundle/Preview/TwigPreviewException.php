@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 /**
- * Twig exception in preview
+ * Twig exception in preview.
  */
 class TwigPreviewException extends PreviewException
 {

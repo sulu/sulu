@@ -22,80 +22,96 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 interface CollectionManagerInterface
 {
     /**
-     * Returns a collection with a given id
+     * Returns a collection with a given id.
+     *
      * @param int $id the id of the collection
      * @param int $locale the locale which the collection should be return
      * @param int $depth if depth > 1 children will returned also
      * @param bool $breadcrumb if true breadcrumb will be appended
      * @param array $filter array of cafeteria's
+     *
      * @return Collection
      */
     public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array(), $sortBy = array());
 
     /**
      * Returns collections with a given parent and/or a given depth-level
-     * if no arguments passed returns all collection
+     * if no arguments passed returns all collection.
+     *
      * @param int $locale the locale which the collection should be return
      * @param array $filter for parent or depth
      * @param int $limit limit the output
      * @param int $offset offset the output
      * @param array $sortBy sort by e.g. array('title' => 'ASC')
+     *
      * @return Paginator
      */
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array());
 
     /**
-     * Returns collections from root with given depth
+     * Returns collections from root with given depth.
+     *
      * @param string $locale the locale which the collection should be return
      * @param int $offset
      * @param int $limit
      * @param string $search
      * @param int $depth maximum depth for query
      * @param array $sortBy
+     *
      * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */
     public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array());
 
     /**
-     * Returns a collection count
+     * Returns a collection count.
+     *
      * @return int
      */
     public function getCount();
 
     /**
-     * Creates a new collection or overrides an existing one
+     * Creates a new collection or overrides an existing one.
+     *
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
+     *
      * @return Collection
      */
     public function save($data, $userId);
 
     /**
-     * Deletes a collection with a given id
+     * Deletes a collection with a given id.
+     *
      * @param int $id the id of the category to delete
      */
     public function delete($id);
 
     /**
      * Moves a collection into another collection
-     * If you pass parentId = null i moves to the root
+     * If you pass parentId = null i moves to the root.
+     *
      * @param int $id the id of the category to move
      * @param string $locale the locale which the collection should be return
      * @param int|null $destinationId the parent where the collection should be placed
+     *
      * @return Collection
+     *
      * @throws CollectionNotFoundException
      */
     public function move($id, $locale, $destinationId = null);
 
     /**
-     * Return the FieldDescriptors
+     * Return the FieldDescriptors.
+     *
      * @return DoctrineFieldDescriptor[]
      */
     public function getFieldDescriptors();
 
     /**
-     * Return the FieldDescriptors
+     * Return the FieldDescriptors.
+     *
      * @param string $key
+     *
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);

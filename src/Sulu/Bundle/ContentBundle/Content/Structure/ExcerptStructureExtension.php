@@ -17,16 +17,14 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * extends structure with seo content
- * @package Sulu\Bundle\ContentBundle\Content\Structure
+ * extends structure with seo content.
  */
 class ExcerptStructureExtension extends StructureExtension
 {
     /**
-     * name of structure extension
+     * name of structure extension.
      */
     const EXCERPT_EXTENSION_NAME = 'excerpt';
 
@@ -163,12 +161,13 @@ class ExcerptStructureExtension extends StructureExtension
     }
 
     /**
-     * Returns and caches excerpt-structure
+     * Returns and caches excerpt-structure.
+     *
      * @return StructureInterface
      */
     private function getExcerptStructure()
     {
-        if($this->excerptStructure === null) {
+        if ($this->excerptStructure === null) {
             $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
         }
 
@@ -176,7 +175,7 @@ class ExcerptStructureExtension extends StructureExtension
     }
 
     /**
-     * initiates structure and properties
+     * initiates structure and properties.
      */
     private function initProperties()
     {

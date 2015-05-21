@@ -3,14 +3,14 @@
 namespace Sulu\Bundle\LocationBundle\Geolocator;
 
 /**
- * Container for aggregating geolocations
+ * Container for aggregating geolocations.
  */
 class GeolocatorResponse implements \Countable
 {
     protected $locations = array();
 
     /**
-     * Add a location to the response
+     * Add a location to the response.
      *
      * @param GeolocatorLocation $location
      */
@@ -37,7 +37,7 @@ class GeolocatorResponse implements \Countable
     /**
      * Return the number of locations in the response.
      *
-     * @return integer
+     * @return int
      */
     public function count()
     {

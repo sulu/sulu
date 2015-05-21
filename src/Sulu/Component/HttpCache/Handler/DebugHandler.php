@@ -10,20 +10,16 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use FOS\HttpCache\ProxyClient;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
-use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
 use Sulu\Component\Content\PageInterface;
 use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Adds some debug information
+ * Adds some debug information.
  */
-class DebugHandler implements 
+class DebugHandler implements
     HandlerUpdateResponseInterface
 {
     const HEADER_HANDLERS = 'X-Sulu-Handlers';
@@ -65,7 +61,7 @@ class DebugHandler implements
         $response->headers->set(self::HEADER_STRUCTURE_UUID, $structure->getUuid());
 
         // Structures implementing PageInterface have a TTL
-        if ($structure instanceOf PageInterface) {
+        if ($structure instanceof PageInterface) {
             $response->headers->set(self::HEADER_STRUCTURE_TTL, $structure->getCacheLifeTime());
         }
     }

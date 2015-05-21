@@ -31,7 +31,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         'delete' => 8,
         'archive' => 4,
         'live' => 2,
-        'security' => 1
+        'security' => 1,
     );
 
     /**

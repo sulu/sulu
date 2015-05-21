@@ -15,7 +15,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Generates a sitemap structure for xml or html
+ * Generates a sitemap structure for xml or html.
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {

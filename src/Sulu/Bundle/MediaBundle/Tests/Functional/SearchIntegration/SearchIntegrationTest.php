@@ -2,10 +2,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
-use Sulu\Bundle\MediaBundle\Tests\Fixtures\DefaultStructureCache;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Tests\Fixtures\DefaultStructureCache;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SearchIntegrationTest extends WebTestCase
 {
@@ -47,7 +47,7 @@ class SearchIntegrationTest extends WebTestCase
         }
 
         $this->media->setFormats(array(
-            $format => 'myimage.jpg'
+            $format => 'myimage.jpg',
         ));
 
         $searchManager = $this->container->get('massive_search.search_manager');

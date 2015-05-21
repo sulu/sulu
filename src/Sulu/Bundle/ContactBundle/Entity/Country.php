@@ -12,8 +12,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+
 /**
- * Country
+ * Country.
  */
 class Country implements \JsonSerializable
 {
@@ -30,7 +31,7 @@ class Country implements \JsonSerializable
     private $code;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "partialAccount"})
      */
     private $id;
@@ -42,7 +43,7 @@ class Country implements \JsonSerializable
     private $addresses;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -50,7 +51,8 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * To force id = 1 in load fixtures
+     * To force id = 1 in load fixtures.
+     *
      * @param int $id
      */
     public function setId($id)
@@ -59,9 +61,10 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Country
      */
     public function setName($name)
@@ -72,7 +75,7 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -82,9 +85,10 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
+     *
      * @return Country
      */
     public function setCode($code)
@@ -95,7 +99,7 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */
@@ -105,9 +109,9 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -115,9 +119,10 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Add addresses
+     * Add addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     *
      * @return Country
      */
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
@@ -128,7 +133,7 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Remove addresses
+     * Remove addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
      */
@@ -138,7 +143,7 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Get addresses
+     * Get addresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -149,8 +154,10 @@ class Country implements \JsonSerializable
 
     /**
      * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      */
@@ -158,14 +165,15 @@ class Country implements \JsonSerializable
     {
         return array(
             'id' => $this->getId(),
-            'name' => $this->getName()
+            'name' => $this->getName(),
         );
     }
 
     /**
-     * Add addresses
+     * Add addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     *
      * @return Country
      */
     public function addAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
@@ -176,7 +184,7 @@ class Country implements \JsonSerializable
     }
 
     /**
-     * Remove addresses
+     * Remove addresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
      */

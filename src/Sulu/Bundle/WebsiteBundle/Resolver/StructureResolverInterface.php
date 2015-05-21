@@ -13,14 +13,15 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Content\StructureInterface;
 
 /**
- * Resolves the structure to an array
- * @package Sulu\Component\Content
+ * Resolves the structure to an array.
  */
 interface StructureResolverInterface
 {
     /**
-     * This method receives a structure, and should return an array for the template
+     * This method receives a structure, and should return an array for the template.
+     *
      * @param StructureInterface $structure The structure to resolve
+     *
      * @return array
      */
     public function resolve(StructureInterface $structure);

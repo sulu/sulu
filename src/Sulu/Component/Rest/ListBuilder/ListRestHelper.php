@@ -17,20 +17,20 @@ use Symfony\Component\HttpFoundation\Request;
  * by an REST-API. It contains a few getters, which
  * deliver some values needed by the inheriting controller.
  * These values are calculated from the request paramaters.
- *
- * @package Sulu\Bundle\TranslateBundle\Controller
  */
 class ListRestHelper implements ListRestHelperInterface
 {
     /**
-     * The current request object
+     * The current request object.
+     *
      * @var Request
      */
     protected $request;
 
     /**
      * The constructor takes the request as an argument, which
-     * is injected by the service container
+     * is injected by the service container.
+     *
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -39,7 +39,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns the current Request
+     * Returns the current Request.
+     *
      * @return Request
      */
     protected function getRequest()
@@ -48,7 +49,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns the desired sort column
+     * Returns the desired sort column.
+     *
      * @return string
      */
     public function getSortColumn()
@@ -57,7 +59,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns desired sort order
+     * Returns desired sort order.
+     *
      * @return string
      */
     public function getSortOrder()
@@ -66,8 +69,9 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns the maximum number of elements in a single response
-     * @return integer
+     * Returns the maximum number of elements in a single response.
+     *
+     * @return int
      */
     public function getLimit()
     {
@@ -76,8 +80,9 @@ class ListRestHelper implements ListRestHelperInterface
 
     /**
      * Returns the calculated value for the starting position based
-     * on the page and limit values
-     * @return integer|null
+     * on the page and limit values.
+     *
+     * @return int|null
      */
     public function getOffset()
     {
@@ -88,7 +93,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * returns the current page
+     * returns the current page.
+     *
      * @return mixed
      */
     public function getPage()
@@ -99,6 +105,7 @@ class ListRestHelper implements ListRestHelperInterface
     /**
      * Returns an array with all the fields, which should be contained in the response.
      * If null is returned every field should be contained.
+     *
      * @return array|null
      */
     public function getFields()
@@ -109,7 +116,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns the pattern of the search
+     * Returns the pattern of the search.
+     *
      * @return mixed
      */
     public function getSearchPattern()
@@ -118,7 +126,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns an array with all the fields the search pattern should be executed on
+     * Returns an array with all the fields the search pattern should be executed on.
+     *
      * @return array|null
      */
     public function getSearchFields()

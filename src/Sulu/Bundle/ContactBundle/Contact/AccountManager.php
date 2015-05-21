@@ -20,7 +20,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
- * This Manager handles Account functionality
+ * This Manager handles Account functionality.
  */
 class AccountManager extends AbstractContactManager
 {
@@ -45,12 +45,14 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * adds an address to the entity
+     * adds an address to the entity.
      *
      * @param Account $account The entity to add the address to
      * @param AddressEntity $address The address to be added
      * @param Bool $isMain Defines if the address is the main Address of the contact
+     *
      * @return AccountAddressEntity
+     *
      * @throws \Exception
      */
     public function addAddress($account, AddressEntity $address, $isMain = false)
@@ -73,11 +75,13 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * removes the address relation from a contact and also deletes the address if it has no more relations
+     * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
      * @param AccountInterface $account
      * @param AccountAddressEntity $accountAddress
+     *
      * @return mixed|void
+     *
      * @throws \Exception
      */
     public function removeAddressRelation($account, $accountAddress)
@@ -113,9 +117,10 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * Returns a collection of relations to get addresses
+     * Returns a collection of relations to get addresses.
      *
      * @param $entity
+     *
      * @return mixed
      */
     public function getAddressRelations($entity)
@@ -124,10 +129,13 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * Gets account by id
+     * Gets account by id.
+     *
      * @param $id
      * @param $locale
+     *
      * @throws EntityNotFoundException
+     *
      * @return mixed
      */
     public function getById($id, $locale)
@@ -141,11 +149,14 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * Gets account by id - can include relations
+     * Gets account by id - can include relations.
+     *
      * @param $id
      * @param $locale
      * @param $includes
+     *
      * @return Account
+     *
      * @throws EntityNotFoundException
      */
     public function getByIdAndInclude($id, $locale, $includes)
@@ -162,10 +173,11 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * Returns contacts by account id
+     * Returns contacts by account id.
      *
      * @param $id
      * @param $locale
+     *
      * @return array
      */
     public function findContactsByAccountId($id, $locale, $onlyFetchMainAccounts = false)
@@ -184,15 +196,15 @@ class AccountManager extends AbstractContactManager
 
             return $contacts;
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * Returns all accounts
+     * Returns all accounts.
+     *
      * @param $locale
      * @param $filter
-     * @return null
      */
     public function findAll($locale, $filter = null)
     {
@@ -207,16 +219,18 @@ class AccountManager extends AbstractContactManager
                 $accounts[] = $this->accountFactory->createApiEntity($account, $locale);
             }
         } else {
-            return null;
+            return;
         }
 
         return $accounts;
     }
 
     /**
-     * Returns an api entity for an doctrine entity
+     * Returns an api entity for an doctrine entity.
+     *
      * @param $account
      * @param $locale
+     *
      * @return null|Account
      */
     public function getAccount($account, $locale)
@@ -224,7 +238,7 @@ class AccountManager extends AbstractContactManager
         if ($account) {
             return $this->accountFactory->createApiEntity($account, $locale);
         } else {
-            return null;
+            return;
         }
     }
 
@@ -239,7 +253,8 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * deletes (not just removes) all bank-accounts which are assigned to a contact
+     * deletes (not just removes) all bank-accounts which are assigned to a contact.
+     *
      * @param $entity
      */
     public function deleteBankAccounts($entity)

@@ -12,7 +12,7 @@ namespace Sulu\Component\Persistence\Model;
 
 /**
  * Classes implementing this interface must keep
- * track of when they were created and updated
+ * track of when they were created and updated.
  */
 interface TimestampableInterface
 {
@@ -26,7 +26,7 @@ interface TimestampableInterface
 
     /**
      * Return the date the object implementing this inteface
-     * was changed
+     * was changed.
      *
      * @return \DateTime
      */

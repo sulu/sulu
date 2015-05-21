@@ -17,12 +17,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * handles languages for snippet ui
+ * handles languages for snippet ui.
  */
 class LanguageController extends Controller implements ClassResourceInterface
 {
     /**
-     * Returns all languages in admin
+     * Returns all languages in admin.
+     *
      * @return JsonResponse
      */
     public function cgetAction()
@@ -42,7 +43,7 @@ class LanguageController extends Controller implements ClassResourceInterface
                     $localizations[] = array(
                         'localization' => $localization->getLocalization(),
                         'name' => $localization->getLocalization('-'),
-                        'id' => $i++
+                        'id' => $i++,
                     );
                 }
             }

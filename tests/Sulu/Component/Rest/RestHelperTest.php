@@ -192,7 +192,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->restHelper->processSubEntities(
             array(
-                $mockedObject
+                $mockedObject,
             ),
             array(),
             $get,
@@ -231,12 +231,12 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->restHelper->processSubEntities(
             array(
-                $mockedObject
+                $mockedObject,
             ),
             array(
                 array(
-                    'id' => 1
-                )
+                    'id' => 1,
+                ),
             ),
             $get,
             $add,
@@ -273,8 +273,8 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             array(),
             array(
                 array(
-                    'id' => 1
-                )
+                    'id' => 1,
+                ),
             ),
             $get,
             $add,
@@ -326,19 +326,19 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             array(
                 $mockedObject,
                 $mockedObject2,
-                $mockedObject3
+                $mockedObject3,
             ),
             array(
                 array(
                     'id' => 1,
-                    'value' => 3
+                    'value' => 3,
                 ),
                 array(
                     'id' => 2,
                 ),
                 array(
-                    'value' => 2
-                )
+                    'value' => 2,
+                ),
             ),
             $get,
             $add,

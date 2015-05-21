@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 /**
- * Base class for all preview related exceptions
+ * Base class for all preview related exceptions.
  */
 class PreviewException extends \Exception
 {

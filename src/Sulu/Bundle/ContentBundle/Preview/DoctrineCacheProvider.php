@@ -12,15 +12,13 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\SerializerInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 
 /**
- * provides a cache for preview with phpcr
+ * provides a cache for preview with phpcr.
  */
 class DoctrineCacheProvider implements PreviewCacheProviderInterface
 {
@@ -60,13 +58,14 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     private $cacheLifeTime;
 
     /**
-     * prefix for property names and node name
+     * prefix for property names and node name.
+     *
      * @var string
      */
     private $prefix;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
@@ -87,7 +86,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     }
 
     /**
-     * Returns cache id
+     * Returns cache id.
      */
     private function getId($userId, $contentUuid, $locale, $postFix = null)
     {
@@ -135,7 +134,6 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function fetchStructure($userId, $contentUuid, $webspaceKey, $locale)
     {
-
         $id = $this->getId($userId, $contentUuid, $locale);
         $classId = $this->getId($userId, $contentUuid, $locale, 'class');
 

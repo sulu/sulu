@@ -11,10 +11,9 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * BaseCollection
+ * BaseCollection.
  */
 abstract class BaseCollection implements CollectionInterface
 {
@@ -24,19 +23,19 @@ abstract class BaseCollection implements CollectionInterface
     protected $style;
 
     /**
-     * @var integer
+     * @var int
      * @Exclude
      */
     protected $lft;
 
     /**
-     * @var integer
+     * @var int
      * @Exclude
      */
     protected $rgt;
 
     /**
-     * @var integer
+     * @var int
      * @Exclude
      */
     protected $depth;
@@ -52,7 +51,7 @@ abstract class BaseCollection implements CollectionInterface
     protected $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -74,9 +73,10 @@ abstract class BaseCollection implements CollectionInterface
     protected $creator;
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return CollectionInterface
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
@@ -87,7 +87,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -97,9 +97,10 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return CollectionInterface
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
@@ -110,7 +111,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -120,7 +121,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -130,9 +131,10 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set style
+     * Set style.
      *
      * @param string $style
+     *
      * @return CollectionInterface
      */
     public function setStyle($style)
@@ -143,7 +145,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get style
+     * Get style.
      *
      * @return string
      */
@@ -153,9 +155,10 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return CollectionInterface
      */
     public function setLft($lft)
@@ -166,9 +169,9 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft()
     {
@@ -176,9 +179,10 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return CollectionInterface
      */
     public function setRgt($rgt)
@@ -189,9 +193,9 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt()
     {
@@ -199,9 +203,10 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set depth
+     * Set depth.
      *
-     * @param integer $depth
+     * @param int $depth
+     *
      * @return CollectionInterface
      */
     public function setDepth($depth)
@@ -212,9 +217,9 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get depth
+     * Get depth.
      *
-     * @return integer
+     * @return int
      */
     public function getDepth()
     {
@@ -222,7 +227,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -232,7 +237,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -242,9 +247,9 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -252,9 +257,10 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
+     *
      * @return CollectionInterface
      */
     public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type)
@@ -265,7 +271,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */

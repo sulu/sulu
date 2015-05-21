@@ -14,8 +14,8 @@ use PHPCR\RepositoryException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
@@ -445,8 +445,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $matchType = RequestAnalyzerInterface::MATCH_TYPE_FULL,
         $url = null,
         $redirect = null
-    )
-    {
+    ) {
         $methods = array(
             'getPortal',
             'getCurrentPath',
@@ -454,7 +453,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             'getPortalUrl',
             'getMatchType',
             'getResourceLocator',
-            'getResourceLocatorPrefix'
+            'getResourceLocatorPrefix',
         );
 
         if ($language != null) {
@@ -515,6 +514,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $path
      * @param null $prefix
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getRequestMock($path, $prefix = null)
