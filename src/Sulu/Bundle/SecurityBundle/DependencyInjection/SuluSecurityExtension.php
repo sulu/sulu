@@ -35,5 +35,9 @@ class SuluSecurityExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        if ($config['checker']['enabled']) {
+            $loader->load('checker.xml');
+        }
     }
 }
