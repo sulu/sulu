@@ -326,7 +326,12 @@ class ContactController extends AbstractContactController implements SecuredCont
                     self::$accountContactEntityName . '.position'
                 )
             ),
-            true
+            true,
+            false,
+            '',
+            '',
+            '',
+            false
         );
 
         // field descriptors for the account contact list
@@ -363,7 +368,11 @@ class ContactController extends AbstractContactController implements SecuredCont
                 )
             ),
             false,
-            true
+            true,
+            '',
+            '',
+            '',
+            false
         );
 
         // FIXME use field descriptor with expression when implemented
@@ -380,7 +389,10 @@ class ContactController extends AbstractContactController implements SecuredCont
             ),
             false,
             true,
-            'radio'
+            'radio',
+            '',
+            '',
+            false
         );
     }
 
