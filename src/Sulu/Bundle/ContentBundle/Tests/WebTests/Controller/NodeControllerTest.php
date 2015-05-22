@@ -567,6 +567,40 @@ class NodeControllerTest extends SuluTestCase
         $this->assertFalse($items[0]->hasSub);
     }
 
+    public function testTreeGetTillId()
+    {
+        $client = $this->createAuthenticatedClient();
+        $data = $this->buildTree();
+
+        $client->request(
+            'GET', '/api/nodes/' . $data[2]['id'] . '?tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        // check if tree is correctly loaded till the given id
+        $node1 = $response->_embedded->nodes[0];
+        $this->assertEquals($data[0]['path'], $node1->path);
+        $this->assertFalse($node1->hasSub);
+        $this->assertEmpty($node1->_embedded->nodes);
+
+        $node2 = $response->_embedded->nodes[1];
+        $this->assertEquals($data[1]['path'], $node2->path);
+        $this->assertTrue($node2->hasSub);
+        $this->assertCount(2, $node2->_embedded->nodes);
+
+        $node3 = $node2->_embedded->nodes[0];
+        $this->assertEquals($data[2]['path'], $node3->path);
+        $this->assertFalse($node3->hasSub);
+        $this->assertCount(0, $node3->_embedded->nodes);
+
+        $node4 = $node2->_embedded->nodes[1];
+        $this->assertEquals($data[3]['path'], $node4->path);
+        $this->assertTrue($node4->hasSub);
+        $this->assertCount(0, $node4->_embedded->nodes);
+    }
+
     public function testGetFlat()
     {
         $client = $this->createAuthenticatedClient();
