@@ -69,6 +69,11 @@ interface BlockPropertyInterface extends PropertyInterface
     public function initProperties($index, $typeName);
 
     /**
+     * clears all initialized properties.
+     */
+    public function clearProperties();
+
+    /**
      * return default type name.
      *
      * @return string
