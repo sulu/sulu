@@ -573,7 +573,7 @@ class NodeControllerTest extends SuluTestCase
         $data = $this->buildTree();
 
         $client->request(
-            'GET', '/api/nodes/' . $data[2]['id'] . '?tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
+            'GET', '/api/nodes?id=' . $data[2]['id'] . '&tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
