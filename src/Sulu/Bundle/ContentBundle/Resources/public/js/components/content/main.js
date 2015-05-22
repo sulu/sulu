@@ -282,7 +282,15 @@ define([
                         data.id = this.options.id;
                     }
 
-                    this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                    } else {
+                        this.add(
+                            !!this.options.parent ? {id: this.options.parent} : null,
+                            this.options.webspace,
+                            item.id
+                        );
+                    }
                 } else {
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.id);
                 }
@@ -667,17 +675,19 @@ define([
             );
         },
 
-        add: function(parent) {
+        add: function(parent, webspace, language) {
             if (!!parent) {
                 this.sandbox.emit(
                     'sulu.router.navigate',
-                    'content/contents/' + this.options.webspace +
-                    '/' + this.options.language + '/add:' + parent.id + '/content'
+                    'content/contents/' + (!webspace ? this.options.webspace : webspace) +
+                    '/' + (!language ? this.options.language : language) + '/add:' + parent.id + '/content'
                 );
             } else {
                 this.sandbox.emit(
                     'sulu.router.navigate',
-                    'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content'
+                    'content/contents/' +
+                    (!webspace ? this.options.webspace : webspace) + '/' +
+                    (!language ? this.options.language : language) + '/add/content'
                 );
             }
         },
