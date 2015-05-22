@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -46,9 +45,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * Generates a sitemap over all webspaces and languages for a specific domain
-     * @param bool $flat
-     * @return array
+     * {@inheritDoc}
      */
     public function generateAll($flat = false)
     {
@@ -61,7 +58,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
@@ -74,7 +71,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generate($webspaceKey, $locale, $flat = false)
     {
