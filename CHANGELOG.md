@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
     * BUGFIX      #1123 [ContentBundle]  Fixed block behaviour on template change
     * ENHANCEMENT #1118 [SecurityBundle] Add possibility to enable SecurityChecker and SuluSecurityListener via configuration
     * ENHANCEMENT #1113 [ContactBundle]  Added sorting by last-name in accounts-contact tab

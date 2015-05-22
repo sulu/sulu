@@ -169,6 +169,101 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
+    public function testReadForPreview()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = array(
+            array(
+                'type' => 'type1',
+                'title' => 'Test-Title',
+                'article' => 'Test-Article',
+                'sub-block' => array(
+                    array(
+                        'type' => 'subType1',
+                        'title' => 'Test-Sub-Title',
+                        'article' => 'Test-Sub-Article',
+                    ),
+                ),
+            ),
+        );
+
+        $this->blockContentType->readForPreview(
+            $data,
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals($data, $this->blockProperty->getValue());
+    }
+
+    public function testReadForPreviewPrefilled()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $this->blockContentType->readForPreview(
+            array(
+                array(
+                    'type' => 'type1',
+                    'title' => 'Test-Title 1',
+                    'article' => 'Test-Article 1',
+                    'sub-block' => array(
+                        array(
+                            'type' => 'subType1',
+                            'title' => 'Test-Sub-Title 1',
+                            'article' => 'Test-Sub-Article 1',
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'type1',
+                    'title' => 'Test-Title 2',
+                    'article' => 'Test-Article 2',
+                    'sub-block' => array(
+                        array(
+                            'type' => 'subType1',
+                            'title' => 'Test-Sub-Title 2',
+                            'article' => 'Test-Sub-Article 2',
+                        ),
+                    ),
+                ),
+            ),
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        $data = array(
+            array(
+                'type' => 'type1',
+                'title' => 'Test-Title 3',
+                'article' => 'Test-Article 3',
+                'sub-block' => array(
+                    array(
+                        'type' => 'subType1',
+                        'title' => 'Test-Sub-Title 3',
+                        'article' => 'Test-Sub-Article 3',
+                    ),
+                ),
+            )
+        );
+
+        $this->blockContentType->readForPreview(
+            $data,
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals($data, $this->blockProperty->getValue());
+    }
+
     public function testWrite()
     {
         $this->prepareSingleBlockProperty();

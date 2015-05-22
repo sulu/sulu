@@ -162,6 +162,8 @@ class BlockContentType extends ComplexContentType
                 $blockProperty = $blockProperty->getProperty();
             }
 
+            $blockProperty->clearProperties();
+
             $len = sizeof($data);
 
             for ($i = 0; $i < $len; $i++) {
