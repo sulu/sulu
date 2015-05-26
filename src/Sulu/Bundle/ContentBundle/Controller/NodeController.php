@@ -112,7 +112,13 @@ class NodeController extends RestController
      */
     public function getAction(Request $request, $uuid)
     {
-        $response = $this->getSingleNode($request, $uuid);
+        $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
+
+        if ($tree === false) {
+            $response = $this->getSingleNode($request, $uuid);
+        } else {
+            $response = $this->getTreeForUuid($request, $uuid);
+        }
 
         return $response;
     }
@@ -256,7 +262,7 @@ class NodeController extends RestController
         $ids = $this->getRequestParameter($request, 'ids');
 
         if ($tree === true) {
-            return $this->getTreeForUuid($request, $this->getRequestParameter($request, 'id', false, null));
+            return $this->getTreeForUuid($request, null);
         } elseif ($ids !== null) {
             return $this->getNodesByIds($request, $ids);
         }
