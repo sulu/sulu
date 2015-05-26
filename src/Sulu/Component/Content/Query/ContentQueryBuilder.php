@@ -18,7 +18,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 
 /**
- * Basic class for content query builder
+ * Basic class for content query builder.
  */
 abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 {
@@ -49,7 +49,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         'created',
         'nodeType',
         'state',
-        'shadow-on'
+        'shadow-on',
     );
 
     /**
@@ -58,13 +58,15 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     protected $properties = array();
 
     /**
-     * Only published content
+     * Only published content.
+     *
      * @var bool
      */
     protected $published = true;
 
     /**
-     * Load Excerpt data
+     * Load Excerpt data.
+     *
      * @var bool
      */
     protected $excerpt = true;
@@ -79,7 +81,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
-     * Returns translated property name
+     * Returns translated property name.
      */
     protected function getPropertyName($property)
     {
@@ -87,7 +89,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
-     * Configures translated properties to given locale
+     * Configures translated properties to given locale.
+     *
      * @param string $locale
      */
     protected function setLocale($locale)
@@ -162,17 +165,17 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
-     * Returns custom select statement
+     * Returns custom select statement.
      */
     abstract protected function buildWhere($webspaceKey, $locale);
 
     /**
-     * Returns custom where statement
+     * Returns custom where statement.
      */
     abstract protected function buildSelect($webspaceKey, $locale, &$additionalFields);
 
     /**
-     * Returns custom order statement
+     * Returns custom order statement.
      */
     protected function buildOrder($webspaceKey, $locale)
     {
@@ -180,7 +183,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
-     * Returns select statement with all url and title properties
+     * Returns select statement with all url and title properties.
      */
     private function buildSelectForStructures($locale, $structures, &$names)
     {
@@ -195,7 +198,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
-     * Returns select of a single structure with title and url selector
+     * Returns select of a single structure with title and url selector.
      */
     private function buildSelectForStructure($locale, StructureInterface $structure, &$names)
     {
@@ -222,7 +225,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
-     * Returns a select statement for excerpt data
+     * Returns a select statement for excerpt data.
      */
     private function buildSelectorForExcerpt($locale, &$additionalFields)
     {
@@ -234,21 +237,21 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
                 'extension' => $extension,
                 'target' => 'excerpt',
                 'property' => $property->getName(),
-                'name' => $property->getName()
+                'name' => $property->getName(),
             );
         }
     }
 
     /**
-     * Returns single select statement
+     * Returns single select statement.
      */
     protected function buildSelector($name)
     {
-        return sprintf("page.[%s]", $name);
+        return sprintf('page.[%s]', $name);
     }
 
     /**
-     * Returns a translated property
+     * Returns a translated property.
      */
     protected function getTranslatedProperty(PropertyInterface $property, $locale)
     {

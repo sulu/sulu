@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Util;
 
-use Sulu\Component\Util\SortUtils;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class SortUtilsTest extends \PHPUnit_Framework_TestCase

@@ -13,26 +13,29 @@ namespace Sulu\Component\Content;
 use JMS\Serializer\Annotation\Type;
 
 /**
- * Tag for property
+ * Tag for property.
  */
 class PropertyTag
 {
     /**
-     * name of tag
+     * name of tag.
+     *
      * @var string
      * @Type("string")
      */
     private $name;
 
     /**
-     * priority of tag
+     * priority of tag.
+     *
      * @var int
      * @Type("integer")
      */
     private $priority;
 
     /**
-     * attributes of the tag
+     * attributes of the tag.
+     *
      * @var array
      * @Type("array")
      */
@@ -50,7 +53,8 @@ class PropertyTag
     }
 
     /**
-     * returns name of tag
+     * returns name of tag.
+     *
      * @return string
      */
     public function getName()
@@ -59,7 +63,8 @@ class PropertyTag
     }
 
     /**
-     * returns priority of tag
+     * returns priority of tag.
+     *
      * @return int
      */
     public function getPriority()
@@ -68,7 +73,8 @@ class PropertyTag
     }
 
     /**
-     * returns the attributes of the tag
+     * returns the attributes of the tag.
+     *
      * @return array
      */
     public function getAttributes()

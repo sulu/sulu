@@ -11,19 +11,20 @@
 namespace Sulu\Component\Rest\Exception;
 
 /**
- * This exception should be thrown when an Entity is not found
- * @package Sulu\Bundle\CoreBundle\Controller\Exception
+ * This exception should be thrown when an Entity is not found.
  */
 class EntityNotFoundException extends RestException
 {
     /**
-     * The type of the entity, which was not found
+     * The type of the entity, which was not found.
+     *
      * @var string
      */
     protected $entity;
 
     /**
-     * The id of the entity, which was not found
+     * The id of the entity, which was not found.
+     *
      * @var int
      */
     protected $id;
@@ -41,7 +42,8 @@ class EntityNotFoundException extends RestException
     }
 
     /**
-     * Returns the type of the entity, which was not found
+     * Returns the type of the entity, which was not found.
+     *
      * @return string
      */
     public function getEntity()
@@ -50,7 +52,8 @@ class EntityNotFoundException extends RestException
     }
 
     /**
-     * Returns the id of the entity, which was not found
+     * Returns the id of the entity, which was not found.
+     *
      * @return int
      */
     public function getId()

@@ -11,13 +11,12 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * This exception is thrown if a reset-password email is requested, but a token was already generated shortly before
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ * This exception is thrown if a reset-password email is requested, but a token was already generated shortly before.
  */
 class TokenAlreadyRequestedException extends SecurityException
 {
     /**
-     * The time interval in which only one token can be requested
+     * The time interval in which only one token can be requested.
      *
      * @var \DateInterval
      */
@@ -39,7 +38,7 @@ class TokenAlreadyRequestedException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'interval' => (new \DateTime('@0'))->add($this->interval)->getTimestamp() // interval in seconds
+            'interval' => (new \DateTime('@0'))->add($this->interval)->getTimestamp(), // interval in seconds
         );
     }
 }

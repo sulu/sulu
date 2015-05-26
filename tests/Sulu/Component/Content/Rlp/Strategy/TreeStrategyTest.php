@@ -91,5 +91,4 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
         $result = $this->strategy->generate('asdf', null, 'default', 'de');
         $this->assertEquals('/asdf', $result);
     }
-
 }

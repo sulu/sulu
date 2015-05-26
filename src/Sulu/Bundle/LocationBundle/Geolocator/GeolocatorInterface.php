@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\LocationBundle\Geolocator;
 
 /**
- * Interface for geolocation services
+ * Interface for geolocation services.
  */
 interface GeolocatorInterface
 {

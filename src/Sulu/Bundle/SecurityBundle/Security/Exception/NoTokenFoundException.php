@@ -9,11 +9,11 @@
  */
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
+
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
 /**
- * This exception is thrown when a token-email for user without a token is requested
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ * This exception is thrown when a token-email for user without a token is requested.
  */
 class NoTokenFoundException extends SecurityException
 {
@@ -31,7 +31,7 @@ class NoTokenFoundException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'user' => $this->user->getUsername()
+            'user' => $this->user->getUsername(),
         );
     }
 }

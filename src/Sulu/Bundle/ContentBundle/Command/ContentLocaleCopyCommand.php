@@ -17,17 +17,18 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Copy internationalized properties from one locale to another
+ * Copy internationalized properties from one locale to another.
  */
 class ContentLocaleCopyCommand extends ContainerAwareCommand
 {
     /**
-     * The namespace for languages
+     * The namespace for languages.
+     *
      * @var string
      */
     private $languageNamespace;

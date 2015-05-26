@@ -13,14 +13,13 @@ namespace Sulu\Component\Persistence;
 use Traversable;
 
 /**
- * Offers methods for easier handling of relations
- * @package Sulu\Component\Persistence
+ * Offers methods for easier handling of relations.
  */
 trait RelationTrait
 {
     /**
      * This method processes a put request (delete non-existing entities, update existing entities, add new
-     * entries), and let the single actions be modified by callbacks
+     * entries), and let the single actions be modified by callbacks.
      *
      * @param Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
@@ -28,6 +27,7 @@ trait RelationTrait
      * @param callable $add
      * @param callable $update
      * @param callable $delete
+     *
      * @return bool
      */
     public function processSubEntities(
@@ -37,8 +37,7 @@ trait RelationTrait
         callable $add = null,
         callable $update = null,
         callable $delete = null
-    )
-    {
+    ) {
         // compare id with with $get callback
         $compareFunction = function ($entity, $data) use ($get) {
             return isset($data['id']) && $data['id'] == $get($entity);
@@ -52,7 +51,7 @@ trait RelationTrait
     }
 
     /**
-     * Compares entities with data array and calls the given callbacks
+     * Compares entities with data array and calls the given callbacks.
      *
      * @param Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
@@ -60,6 +59,7 @@ trait RelationTrait
      * @param callable $add
      * @param callable $update
      * @param callable $delete
+     *
      * @return bool
      */
     public function compareEntitiesWithData(
@@ -69,8 +69,7 @@ trait RelationTrait
         callable $add = null,
         callable $update = null,
         callable $delete = null
-    )
-    {
+    ) {
         // define a matching function
         $matchFunction = function ($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
             $this->findMatchByCallback($entity, $requestEntities, $compare, $matchedEntry, $matchedKey);
@@ -105,7 +104,7 @@ trait RelationTrait
     }
 
     /**
-     * function compares entities with data of array and makes callback
+     * function compares entities with data of array and makes callback.
      *
      * @param $entities
      * @param array $requestEntities
@@ -113,6 +112,7 @@ trait RelationTrait
      * @param callable $add
      * @param callable $update
      * @param callable $delete
+     *
      * @return bool
      */
     public function compareData(
@@ -122,8 +122,7 @@ trait RelationTrait
         callable $add = null,
         callable $update = null,
         callable $delete = null
-    )
-    {
+    ) {
         $success = true;
 
         if (!empty($entities)) {

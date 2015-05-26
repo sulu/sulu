@@ -13,12 +13,13 @@ namespace Sulu\Component\Websocket;
 use Ratchet\MessageComponentInterface;
 
 /**
- * Interface for a websocket app
+ * Interface for a websocket app.
  */
 interface WebsocketAppInterface extends MessageComponentInterface
 {
     /**
-     * Returns name of app
+     * Returns name of app.
+     *
      * @return string
      */
     public function getName();

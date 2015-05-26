@@ -11,12 +11,13 @@
 namespace Sulu\Bundle\ContentBundle\Repository;
 
 /**
- * resource locator repository
+ * resource locator repository.
  */
 interface ResourceLocatorRepositoryInterface
 {
     /**
-     * generates a resource locator with given title
+     * generates a resource locator with given title.
+     *
      * @param string[] $parts parts of title
      * @param null|string $parentUuid uuid of parent node (can be null)
      * @param null|string $uuid uuid of node (can be null)
@@ -24,6 +25,7 @@ interface ResourceLocatorRepositoryInterface
      * @param string $languageCode
      * @param string $templateKey
      * @param null|string $segmentKey
+     *
      * @return string
      */
     public function generate($parts, $parentUuid, $uuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null);
@@ -32,27 +34,32 @@ interface ResourceLocatorRepositoryInterface
      * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
+     *
      * @return array
      */
     public function getHistory($uuid, $webspaceKey, $languageCode);
 
     /**
-     * deletes given resource locator
+     * deletes given resource locator.
+     *
      * @param string $path
      * @param string $webspaceKey
      * @param string $languageCode
      * @param null|string $segmentKey
+     *
      * @return mixed
      */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * restores given resource locator
+     * restores given resource locator.
+     *
      * @param string $path
-     * @param integer $userId
+     * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
      * @param null|string $segmentKey
+     *
      * @return mixed
      */
     public function restore($path, $userId,  $webspaceKey, $languageCode, $segmentKey = null);

@@ -31,7 +31,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 array(
                     'service1', 'service2', 'service3',
                 ),
-                'Sulu\Component\HttpCache\HandlerInterface'
+                'Sulu\Component\HttpCache\HandlerInterface',
             ),
             array(
                 array(
@@ -45,7 +45,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 array(
                     'service1', 'service3',
                 ),
-                'Sulu\Component\HttpCache\HandlerInterface'
+                'Sulu\Component\HttpCache\HandlerInterface',
             ),
             array(
                 array(
@@ -78,7 +78,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 ),
                 array(
                 ),
-                'Sulu\Component\HttpCache\HandlerInterface'
+                'Sulu\Component\HttpCache\HandlerInterface',
             ),
             array(
                 array(

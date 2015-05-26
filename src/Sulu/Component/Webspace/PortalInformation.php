@@ -14,49 +14,55 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * This class represents the information for a given URL
- * @package Sulu\Component\Webspace
+ * This class represents the information for a given URL.
  */
 class PortalInformation implements ArrayableInterface
 {
     /**
-     * The type of the match
+     * The type of the match.
+     *
      * @var int
      */
     private $type;
 
     /**
-     * The webspace for this portal information
+     * The webspace for this portal information.
+     *
      * @var Webspace
      */
     private $webspace;
 
     /**
-     * The portal for this portal information
+     * The portal for this portal information.
+     *
      * @var Portal
      */
     private $portal;
 
     /**
-     * The localization for this portal information
+     * The localization for this portal information.
+     *
      * @var Localization
      */
     private $localization;
 
     /**
-     * The segment for this portal information
+     * The segment for this portal information.
+     *
      * @var Segment
      */
     private $segment;
 
     /**
-     * The url for this portal information
+     * The url for this portal information.
+     *
      * @var string
      */
     private $url;
 
     /**
-     * The analyticsKey for this portal information
+     * The analyticsKey for this portal information.
+     *
      * @var string
      */
     private $analyticsKey;
@@ -75,8 +81,7 @@ class PortalInformation implements ArrayableInterface
         Segment $segment = null,
         $redirect = null,
         $analyticsKey = null
-    )
-    {
+    ) {
         $this->setType($type);
         $this->setWebspace($webspace);
         $this->setPortal($portal);
@@ -88,7 +93,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the localization for this PortalInformation
+     * Sets the localization for this PortalInformation.
+     *
      * @param Localization $localization
      */
     public function setLocalization($localization)
@@ -97,7 +103,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the localization for this PortalInformation
+     * Returns the localization for this PortalInformation.
+     *
      * @return Localization
      */
     public function getLocalization()
@@ -106,7 +113,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the portal for this PortalInformation
+     * Sets the portal for this PortalInformation.
+     *
      * @param \Sulu\Component\Webspace\Portal $portal
      */
     public function setPortal($portal)
@@ -115,7 +123,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the portal for this PortalInformation
+     * Returns the portal for this PortalInformation.
+     *
      * @return \Sulu\Component\Webspace\Portal
      */
     public function getPortal()
@@ -124,7 +133,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the redirect for the PortalInformation
+     * Sets the redirect for the PortalInformation.
+     *
      * @param string $redirect
      */
     public function setRedirect($redirect)
@@ -133,7 +143,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the redirect for the PortalInformation
+     * Returns the redirect for the PortalInformation.
+     *
      * @return string
      */
     public function getRedirect()
@@ -142,7 +153,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the segment for the PortalInformation
+     * Sets the segment for the PortalInformation.
+     *
      * @param \Sulu\Component\Webspace\Segment $segment
      */
     public function setSegment($segment)
@@ -151,7 +163,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the segment for the PortalInformation
+     * Returns the segment for the PortalInformation.
+     *
      * @return \Sulu\Component\Webspace\Segment
      */
     public function getSegment()
@@ -160,7 +173,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the match type of this PortalInformation
+     * Sets the match type of this PortalInformation.
+     *
      * @param int $type
      */
     public function setType($type)
@@ -169,7 +183,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the match type of this PortalInformation
+     * Returns the match type of this PortalInformation.
+     *
      * @return int
      */
     public function getType()
@@ -178,7 +193,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the URL of this Portalinformation
+     * Sets the URL of this Portalinformation.
+     *
      * @param string $url
      */
     public function setUrl($url)
@@ -187,7 +203,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the URL of this Portalinformation
+     * Returns the URL of this Portalinformation.
+     *
      * @return string
      */
     public function getUrl()
@@ -196,7 +213,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the analytics key of this Portalinformation
+     * Sets the analytics key of this Portalinformation.
+     *
      * @param string $analyticsKey
      */
     public function setAnalyticsKey($analyticsKey)
@@ -205,7 +223,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the analytics key of this Portalinformation
+     * Returns the analytics key of this Portalinformation.
+     *
      * @return string
      */
     public function getAnalyticsKey()
@@ -214,7 +233,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the host including the domain for the PortalInformation
+     * Returns the host including the domain for the PortalInformation.
+     *
      * @return string
      */
     public function getHost()
@@ -223,7 +243,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the prefix (the url without the host) for this PortalInformation
+     * Returns the prefix (the url without the host) for this PortalInformation.
+     *
      * @return string
      */
     public function getPrefix()
@@ -232,7 +253,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Sets the webspace for this PortalInformation
+     * Sets the webspace for this PortalInformation.
+     *
      * @param \Sulu\Component\Webspace\Webspace $webspace
      */
     public function setWebspace($webspace)
@@ -241,7 +263,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Returns the webspace for this PortalInformation
+     * Returns the webspace for this PortalInformation.
+     *
      * @return \Sulu\Component\Webspace\Webspace
      */
     public function getWebspace()
@@ -250,7 +273,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
-     * Calculate the length of the host part of the URL
+     * Calculate the length of the host part of the URL.
+     *
      * @return int
      */
     private function getHostLength()

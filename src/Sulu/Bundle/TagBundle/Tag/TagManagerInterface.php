@@ -16,49 +16,58 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 /**
  * Defines the operations of the TagManager.
  * The TagManager is responsible for the centralized management of our tags.
- * @package Sulu\Bundle\TagBundle\Tag
  */
 interface TagManagerInterface
 {
     /**
-     * Loads all the tags managed in this system
+     * Loads all the tags managed in this system.
+     *
      * @return Tag[]
      */
     public function findAll();
 
     /**
-     * Loads the tag with the given id
+     * Loads the tag with the given id.
+     *
      * @param $id number The id of the tag
+     *
      * @return Tag
      */
     public function findById($id);
 
     /**
-     * Loads the tag with the given name
+     * Loads the tag with the given name.
+     *
      * @param $name
+     *
      * @return Tag
      */
     public function findByName($name);
 
     /**
-     * Loads the tag with the given name, or creates it, if it does not exist
+     * Loads the tag with the given name, or creates it, if it does not exist.
+     *
      * @param string $name The name to find or create
      * @param int $userId The id of the user who tries to find a tag
+     *
      * @return Tag
      */
     public function findOrCreateByName($name, $userId);
 
     /**
-     * Saves the given Tag
+     * Saves the given Tag.
+     *
      * @param array $data The data of the tag to save
      * @param int $userId The id of the user, who is doing this change
      * @param number|null $id The id for saving the tag (optional)
+     *
      * @return
      */
     public function save($data, $userId, $id = null);
 
     /**
-     * Deletes the given Tag
+     * Deletes the given Tag.
+     *
      * @param number $id The tag to delete
      */
     public function delete($id);
@@ -66,36 +75,46 @@ interface TagManagerInterface
     /**
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
+     *
      * @param array $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
+     *
      * @throws Exception\TagNotFoundException
+     *
      * @return Tag The new Tag, which is valid for both given tags
      */
     public function merge($srcTagIds, $destTagId);
 
     /**
-     * Resolves tag ids to names
+     * Resolves tag ids to names.
+     *
      * @param $tagIds
+     *
      * @return array
      */
     public function resolveTagIds($tagIds);
 
     /**
-     * Resolves tag names to ids
+     * Resolves tag names to ids.
+     *
      * @param $tagNames
+     *
      * @return array
      */
     public function resolveTagNames($tagNames);
 
     /**
-     * Returns the FieldDescriptors for the products
+     * Returns the FieldDescriptors for the products.
+     *
      * @return DoctrineFieldDescriptor[]
      */
     public function getFieldDescriptors();
 
     /**
-     * Returns the FieldDescriptor for the given key
+     * Returns the FieldDescriptor for the given key.
+     *
      * @param string $key The key of the FieldDescriptor to return
+     *
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_security.security_checker.class">Sulu\Component\Security\Authorization\SecurityChecker</parameter>
+        <parameter key="sulu_security.event_listener.security.class">Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="sulu_security.security_checker" class="%sulu_security.security_checker.class%">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authorization_checker"/>
+        </service>
+
+        <service id="sulu_security.event_listener.security" class="%sulu_security.event_listener.security.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+        </service>
+    </services>
+</container>

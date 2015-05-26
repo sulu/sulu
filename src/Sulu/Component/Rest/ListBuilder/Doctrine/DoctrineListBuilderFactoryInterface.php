@@ -11,8 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 /**
- * Defines the interface for the Factory of the DoctrineListBuilde
- * @package Sulu\Component\Rest\ListBuilder\Doctrine
+ * Defines the interface for the Factory of the DoctrineListBuilde.
  */
 interface DoctrineListBuilderFactoryInterface
 {

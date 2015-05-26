@@ -15,7 +15,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * Provides Twig functions to handle snippets
+ * Provides Twig functions to handle snippets.
  */
 class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
 {
@@ -35,7 +35,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
     private $structureResolver;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
@@ -53,7 +53,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('snippet_load', array($this, 'loadSnippet'))
+            new \Twig_SimpleFunction('snippet_load', array($this, 'loadSnippet')),
         );
     }
 

@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\WebsocketBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -14,17 +15,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Combines all message dispatcher and handler
+ * Combines all message dispatcher and handler.
  */
 class AddMessageDispatcherPass implements CompilerPassInterface
 {
     /**
-     * Service id of websocket manager
+     * Service id of websocket manager.
      */
     const DISPATCHER_TAG = 'sulu.websocket.message.dispatcher';
 
     /**
-     * Tag name for websocket apps
+     * Tag name for websocket apps.
      */
     const HANDLER_TAG = 'sulu.websocket.message.handler';
 
@@ -52,6 +53,7 @@ class AddMessageDispatcherPass implements CompilerPassInterface
 
     /**
      * @param ContainerBuilder $container
+     *
      * @return Reference[]
      */
     private function findDispatchers(ContainerBuilder $container)

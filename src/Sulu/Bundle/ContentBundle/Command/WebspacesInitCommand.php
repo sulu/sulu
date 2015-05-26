@@ -19,7 +19,6 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -29,7 +28,7 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Creates default routes in PHPCR for webspaces
+ * Creates default routes in PHPCR for webspaces.
  */
 class WebspacesInitCommand extends ContainerAwareCommand
 {
@@ -72,7 +71,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 'navigation',
                 'published',
                 'nodeType',
-                'title'
+                'title',
             ),
             $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
@@ -105,11 +104,10 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $session->save();
 
             // create routes node
-            $output->writeln("    routes:");
+            $output->writeln('    routes:');
             $route = $this->createRecursive($routesPath, $root);
             $this->createLanguageRoutes($webspace, $route, $content, $output);
             $session->save();
-
         }
 
         $snippetsPath = $base . '/' . $snippets;
@@ -185,9 +183,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
     }
 
     /**
-     * create a node recursivly
+     * create a node recursivly.
+     *
      * @param string $path path to node
      * @param NodeInterface $rootNode base node to begin
+     *
      * @return \PHPCR\NodeInterface
      */
     private function createRecursive($path, $rootNode)

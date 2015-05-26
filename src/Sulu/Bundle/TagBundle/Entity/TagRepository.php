@@ -17,8 +17,10 @@ use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 class TagRepository extends EntityRepository implements TagRepositoryInterface
 {
     /**
-     * Finds the tag with the given ID
+     * Finds the tag with the given ID.
+     *
      * @param $id
+     *
      * @return Tag
      */
     public function findTagById($id)
@@ -34,13 +36,15 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
 
             return $tag;
         } catch (NoResultException $nre) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Finds the tag with the given name
+     * Finds the tag with the given name.
+     *
      * @param string $name
+     *
      * @return mixed
      */
     public function findTagByName($name)
@@ -56,12 +60,13 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
 
             return $tag;
         } catch (NoResultException $nre) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Searches for all roles
+     * Searches for all roles.
+     *
      * @return array
      */
     public function findAllTags()
@@ -74,9 +79,8 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
             $result = $query->getResult();
 
             return $result;
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

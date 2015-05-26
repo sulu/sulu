@@ -11,18 +11,20 @@
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 
 /**
  * Repository for the Packages, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class PackageRepository extends EntityRepository
 {
     /**
-     * returns a package with given ID
+     * returns a package with given ID.
+     *
      * @param $id
+     *
      * @return Package|null
      */
     public function getPackageById($id)
@@ -39,13 +41,15 @@ class PackageRepository extends EntityRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * returns a package for a given name
+     * returns a package for a given name.
+     *
      * @param $name
+     *
      * @return Package|null
      */
     public function getPackageByName($name)
@@ -63,7 +67,7 @@ class PackageRepository extends EntityRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

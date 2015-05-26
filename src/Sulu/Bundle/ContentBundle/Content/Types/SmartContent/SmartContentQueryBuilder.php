@@ -18,36 +18,41 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Query builder to load smart content
+ * Query builder to load smart content.
  */
 class SmartContentQueryBuilder extends ContentQueryBuilder
 {
     /**
-     * disable automatic excerpt loading
+     * disable automatic excerpt loading.
+     *
      * @var bool
      */
     protected $excerpt = false;
 
     /**
-     * configuration which properties should be loaded
+     * configuration which properties should be loaded.
+     *
      * @var array
      */
     private $propertiesConfig = array();
 
     /**
-     * configuration of
+     * configuration of.
+     *
      * @var array
      */
     private $config = array();
 
     /**
-     * array of ids to load
+     * array of ids to load.
+     *
      * @var array
      */
     private $ids = array();
 
     /**
-     * array of excluded pages
+     * array of excluded pages.
+     *
      * @var array
      */
     private $excluded = array();
@@ -162,7 +167,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * build select for properties
+     * build select for properties.
      */
     private function buildPropertiesSelect($locale, &$additionalFields)
     {
@@ -181,7 +186,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * build select for single property
+     * build select for single property.
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
@@ -191,14 +196,14 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
                 $additionalFields[$locale][] = array(
                     'name' => $alias,
                     'property' => $property,
-                    'templateKey' => $structure->getKey()
+                    'templateKey' => $structure->getKey(),
                 );
             }
         }
     }
 
     /**
-     * build select for extension property
+     * build select for extension property.
      */
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
@@ -206,18 +211,18 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         $additionalFields[$locale][] = array(
             'name' => $alias,
             'extension' => $extension,
-            'property' => $propertyName
+            'property' => $propertyName,
         );
     }
 
     /**
-     * build datasource where clause
+     * build datasource where clause.
      */
     private function buildDatasourceWhere()
     {
         $dataSource = $this->getConfig('dataSource');
         $includeSubFolders = $this->getConfig('includeSubFolders', false);
-        $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== "false" ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
+        $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
         if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
             $node = $this->sessionManager->getContentNode($dataSource);
@@ -229,7 +234,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * build tags where clauses
+     * build tags where clauses.
      */
     private function buildTagsWhere($languageCode)
     {
@@ -257,9 +262,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * checks if config has given config name
+     * checks if config has given config name.
+     *
      * @param string $name config name
-     * @return boolean
+     *
+     * @return bool
      */
     private function hasConfig($name)
     {
@@ -267,9 +274,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * returns config value
+     * returns config value.
+     *
      * @param string $name config name
      * @param mixed $default
+     *
      * @return mixed config value
      */
     private function getConfig($name, $default = null)
@@ -282,7 +291,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * build select for uuids
+     * build select for uuids.
      */
     protected function buildPageSelector()
     {
@@ -295,7 +304,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * build sql for exluded Pages
+     * build sql for exluded Pages.
      */
     private function buildPageExclude()
     {

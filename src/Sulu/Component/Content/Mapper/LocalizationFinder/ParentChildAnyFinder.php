@@ -105,18 +105,19 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
     }
 
     /**
-     * Finds the next available parent-localization in which the node has a translation
+     * Finds the next available parent-localization in which the node has a translation.
+     *
      * @param NodeInterface $contentNode The node, which properties will be checked
      * @param Localization $localization The localization to start the search for
      * @param TranslatedProperty $property The property which will be checked for the translation
+     *
      * @return Localization|null
      */
     private function findAvailableParentLocalization(
         NodeInterface $contentNode,
         Localization $localization,
         TranslatedProperty $property
-    )
-    {
+    ) {
         do {
             $property->setLocalization($localization->getLocalization('_'));
             if ($contentNode->hasProperty($property->getName())) {
@@ -127,22 +128,23 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
             $localization = $localization->getParent();
         } while ($localization != null);
 
-        return null;
+        return;
     }
 
     /**
-     * Finds the next available child-localization in which the node has a translation
+     * Finds the next available child-localization in which the node has a translation.
+     *
      * @param NodeInterface $contentNode The node, which properties will be checked
      * @param Localization $localization The localization to start the search for
      * @param TranslatedProperty $property The property which will be checked for the translation
+     *
      * @return null|Localization
      */
     private function findAvailableChildLocalization(
         NodeInterface $contentNode,
         Localization $localization,
         TranslatedProperty $property
-    )
-    {
+    ) {
         $childrenLocalizations = $localization->getChildren();
         if (!empty($childrenLocalizations)) {
             foreach ($childrenLocalizations as $childrenLocalization) {
@@ -158,22 +160,23 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
         }
 
         // return null if nothing was found
-        return null;
+        return;
     }
 
     /**
-     * Finds any localization, in which the node is translated
+     * Finds any localization, in which the node is translated.
+     *
      * @param NodeInterface $contentNode The node, which properties will be checkec
      * @param array $localizations The available localizations
      * @param TranslatedProperty $property The property to check
+     *
      * @return null|Localization
      */
     private function findAvailableLocalization(
         NodeInterface $contentNode,
         array $localizations,
         TranslatedProperty $property
-    )
-    {
+    ) {
         $availableLocalization = null;
 
         foreach ($localizations as $localization) {

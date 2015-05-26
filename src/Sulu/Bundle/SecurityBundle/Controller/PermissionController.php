@@ -21,7 +21,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This controller handles all object based securities
+ * This controller handles all object based securities.
  */
 class PermissionController implements ClassResourceInterface
 {
@@ -77,7 +77,7 @@ class PermissionController implements ClassResourceInterface
                 array(
                     'id' => $identifier,
                     'type' => $type,
-                    'permissions' => $permissions
+                    'permissions' => $permissions,
                 )
             ));
         } catch (RestException $exc) {
@@ -125,7 +125,7 @@ class PermissionController implements ClassResourceInterface
             return $this->viewHandler->handle(View::create(array(
                 'id' => $identifier,
                 'type' => $type,
-                'permissions' => $permissions
+                'permissions' => $permissions,
             )));
         } catch (RestException $exc) {
             return $this->viewHandler->handle(View::create($exc->toArray(), 400));

@@ -16,8 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 class CreateRoleCommand extends ContainerAwareCommand
 {
@@ -31,7 +31,7 @@ class CreateRoleCommand extends ContainerAwareCommand
             ->setDefinition(
                 array(
                     new InputArgument('name', InputArgument::REQUIRED, 'Name of role'),
-                    new InputArgument('system', InputArgument::REQUIRED, 'System where role should be valid')
+                    new InputArgument('system', InputArgument::REQUIRED, 'System where role should be valid'),
                 )
             );
     }

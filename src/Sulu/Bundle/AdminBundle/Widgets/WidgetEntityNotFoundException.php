@@ -26,7 +26,7 @@ class WidgetEntityNotFoundException extends WidgetException
             'code' => $this->code,
             'message' => $this->message,
             'widget' => $this->subject,
-            'id' => $this->id
+            'id' => $this->id,
         );
     }
 }

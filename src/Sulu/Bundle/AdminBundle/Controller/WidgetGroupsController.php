@@ -17,18 +17,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Renders the Widgets
- *
- * @package Sulu\Bundle\AdminBundle\Controller
+ * Renders the Widgets.
  */
 class WidgetGroupsController extends Controller
 {
     protected $widgetsHandler;
 
     /**
-     * renders a widget group
+     * renders a widget group.
+     *
      * @param String $groupAlias
      * @param Request $request
+     *
      * @return Response
      */
     public function groupAction($groupAlias, Request $request)
@@ -53,7 +53,7 @@ class WidgetGroupsController extends Controller
     }
 
     /**
-     * Returns the widget handler service
+     * Returns the widget handler service.
      *
      * @return WidgetsHandlerInterface
      */

@@ -14,13 +14,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Add all admin-services with the tag "sulu.admin" to the AdminPool-Service
- *
- * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
+ * Add all admin-services with the tag "sulu.admin" to the AdminPool-Service.
  */
 class AddJsConfigPass implements CompilerPassInterface
 {
-
     const CONFIG_TAG = 'sulu.js_config';
 
     /**

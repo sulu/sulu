@@ -7,24 +7,24 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\SecurityBundle\Security;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 /**
  * Called after a user gets authenticated at the admin firewall
- * Generates the response (either JSON or a Redirect depending on if the request is a XmlHttpRequest or not)
- * @package Sulu\Bundle\SecurityBundle\Security
+ * Generates the response (either JSON or a Redirect depending on if the request is a XmlHttpRequest or not).
  */
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
@@ -47,8 +47,10 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     /**
      * Handler for AuthenticationSuccess. Returns a JsonResponse if request is an AJAX-request.
      * Returns a RedirectResponse otherwise.
+     *
      * @param Request $request
      * @param TokenInterface $token
+     *
      * @return Response
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -77,8 +79,10 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     /**
      * Handler for AuthenticationFailure. Returns a JsonResponse if request is an AJAX-request.
      * Returns a Redirect-response otherwise.
+     *
      * @param Request $request
      * @param AuthenticationException $exception
+     *
      * @return Response
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

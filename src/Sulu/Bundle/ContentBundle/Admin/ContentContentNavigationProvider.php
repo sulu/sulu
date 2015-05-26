@@ -23,13 +23,13 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
     private $securityChecker;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $enabledSecurity;
 
     /**
      * @param SecurityCheckerInterface $securityChecker
-     * @param boolean $enabledSecurity
+     * @param bool $enabledSecurity
      */
     public function __construct(SecurityCheckerInterface $securityChecker, $enabledSecurity = false)
     {
@@ -78,7 +78,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
                 array(
                     'display' => 'form',
                     'type' => Structure::class,
-                    'securityContext' => $securityContext
+                    'securityContext' => $securityContext,
                 )
             );
 

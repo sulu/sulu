@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Types\Rlp\Mapper;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
@@ -20,11 +21,9 @@ use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use DateTime;
 
 class PhpcrMapper extends RlpMapper
 {
-
     /**
      * @var SessionManagerInterface
      */
@@ -39,7 +38,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * creates a new route for given path
+     * creates a new route for given path.
+     *
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
      * @param string $webspaceKey key of webspace
@@ -76,7 +76,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns path for given contentNode
+     * returns path for given contentNode.
+     *
      * @param NodeInterface $contentNode reference node
      * @param string $webspaceKey key of portal
      * @param string $languageCode
@@ -110,7 +111,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * Iterates over all route nodes assigned by the given node, and executes the callback on it
+     * Iterates over all route nodes assigned by the given node, and executes the callback on it.
+     *
      * @param NodeInterface $node
      * @param callable $callback will be called foreach route node (stops and return value if not false)
      * @param string $webspaceKey
@@ -145,11 +147,12 @@ class PhpcrMapper extends RlpMapper
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * returns path for given contentNode
+     * returns path for given contentNode.
+     *
      * @param string $uuid uuid of contentNode
      * @param string $webspaceKey key of portal
      * @param string $languageCode
@@ -225,7 +228,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns the uuid of referenced content node
+     * returns the uuid of referenced content node.
+     *
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
      * @param string $languageCode
@@ -233,6 +237,7 @@ class PhpcrMapper extends RlpMapper
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     *
      * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
@@ -279,11 +284,13 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * checks if given path is unique
+     * checks if given path is unique.
+     *
      * @param string $path
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return bool
      */
     public function unique($path, $webspaceKey, $languageCode, $segmentKey = null)
@@ -294,11 +301,13 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns a unique path with "-1" if necessary
+     * returns a unique path with "-1" if necessary.
+     *
      * @param string $path
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string
      */
     public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null)
@@ -324,7 +333,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * creates a new resourcelocator and creates the correct history
+     * creates a new resourcelocator and creates the correct history.
+     *
      * @param string $src old resource locator
      * @param string $dest new resource locator
      * @param string $webspaceKey key of portal
@@ -444,11 +454,13 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns resource locator for parent node
+     * returns resource locator for parent node.
+     *
      * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return NodeInterface|null
      */
     public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null)
@@ -461,7 +473,7 @@ class PhpcrMapper extends RlpMapper
             return $this->loadByContent($parentNode, $webspaceKey, $languageCode, $segmentKey);
         } catch (ResourceLocatorNotFoundException $ex) {
             // parent node don´t have a resource locator
-            return null;
+            return;
         }
     }
 
@@ -507,7 +519,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * create a node recursively
+     * create a node recursively.
+     *
      * @param string $path path to node
      * @param NodeInterface $rootNode base node to begin
      */
@@ -526,7 +539,8 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * changes path node to history node
+     * changes path node to history node.
+     *
      * @param NodeInterface $node
      * @param SessionInterface $session
      * @param string $absSrcPath
@@ -551,11 +565,14 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * check resourcelocator is unique and points to given content node
+     * check resourcelocator is unique and points to given content node.
+     *
      * @param NodeInterface $routes
      * @param string $resourceLocator
      * @param $contentNode
+     *
      * @return bool
+     *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
     private function checkResourceLocator(NodeInterface $routes, $resourceLocator, $contentNode)
@@ -576,9 +593,11 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * check if path is unique from given $root node
+     * check if path is unique from given $root node.
+     *
      * @param NodeInterface $root route node
      * @param string $path requested path
+     *
      * @return bool path is unique
      */
     private function isUnique(NodeInterface $root, $path)
@@ -588,10 +607,12 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns base node of routes from phpcr
+     * returns base node of routes from phpcr.
+     *
      * @param string $webspaceKey current session
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return \PHPCR\NodeInterface base node of routes
      */
     private function getRoutes($webspaceKey, $languageCode, $segmentKey)
@@ -601,10 +622,12 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns base path of routes from phpcr
+     * returns base path of routes from phpcr.
+     *
      * @param string $webspaceKey current session
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string
      */
     private function getRoutesBasePath($webspaceKey, $languageCode, $segmentKey)
@@ -613,11 +636,13 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * returns the abspath
+     * returns the abspath.
+     *
      * @param string $relPath
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string
      */
     private function getPath($relPath, $webspaceKey, $languageCode, $segmentKey)
@@ -632,6 +657,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
+     *
      * @return string
      */
     private function getResourceLocator($path, $webspaceKey, $languageCode, $segmentKey)

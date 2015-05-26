@@ -16,20 +16,19 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 
 /**
- * Makes accounts available through a REST API
- *
- * @package Sulu\Bundle\ContactBundle\Controller
+ * Makes accounts available through a REST API.
  */
 abstract class AbstractMediaController extends RestController
 {
     protected static $mediaEntityName = 'SuluMediaBundle:Media';
 
     /**
-     * Adds a relation between a media and the entity
+     * Adds a relation between a media and the entity.
      *
      * @param String $entityName
      * @param String $id
      * @param String $mediaId
+     *
      * @return Media
      */
     protected function addMediaToEntity($entityName, $id, $mediaId)
@@ -74,17 +73,17 @@ abstract class AbstractMediaController extends RestController
     }
 
     /**
-     * Removes a media from the relation with an entity
+     * Removes a media from the relation with an entity.
      *
      * @param String $entityName
      * @param String $id
      * @param String $mediaId
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function removeMediaFromEntity($entityName, $id, $mediaId)
     {
         try {
-
             $delete = function () use ($entityName, $id, $mediaId) {
                 $em = $this->getDoctrine()->getManager();
                 $entity = $em->getRepository($entityName)->find($id);
@@ -110,7 +109,6 @@ abstract class AbstractMediaController extends RestController
             };
 
             $view = $this->responseDelete($id, $delete);
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {

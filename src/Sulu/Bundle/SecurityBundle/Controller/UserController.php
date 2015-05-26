@@ -11,32 +11,31 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
-use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
-use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes the users accessible through a rest api
- * @package Sulu\Bundle\SecurityBundle\Controller
+ * Makes the users accessible through a rest api.
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -50,7 +49,8 @@ class UserController extends RestController implements ClassResourceInterface, S
     const ENTITY_NAME_USER_SETTING = 'SuluSecurityBundle:UserSetting';
 
     /**
-     * Contains the field descriptors used by the list response
+     * Contains the field descriptors used by the list response.
+     *
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
@@ -69,8 +69,10 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the user with the given id
+     * Returns the user with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -87,8 +89,10 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Creates a new user in the system
+     * Creates a new user in the system.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -173,8 +177,10 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * @Post("/users/{id}")
+     *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postEnableUserAction($id, Request $request)
@@ -201,6 +207,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * @param $id
+     *
      * @return User
      */
     private function enableUser($id)
@@ -221,8 +228,10 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Checks if the given password is a valid one
+     * Checks if the given password is a valid one.
+     *
      * @param string $password The password to check
+     *
      * @return bool True if the password is valid, otherwise false
      */
     private function isValidPassword($password)
@@ -231,9 +240,11 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates the given user with the given data
+     * Updates the given user with the given data.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -308,9 +319,10 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Checks if a username is unique
-     * Null and empty will always return false
+     * Null and empty will always return false.
      *
      * @param $username
+     *
      * @return bool
      */
     private function isUsernameUnique($username)
@@ -330,9 +342,10 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Checks if an email-adress is unique
-     * Null and empty will always return false
+     * Null and empty will always return false.
      *
      * @param $email
+     *
      * @return bool
      */
     private function isEmailUnique($email)
@@ -351,9 +364,11 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Partly updates a user entity for a given id
+     * Partly updates a user entity for a given id.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function patchAction(Request $request, $id)
@@ -433,10 +448,12 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Takes a key, value pair and stores it as settings for the user
+     * Takes a key, value pair and stores it as settings for the user.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param Number $id the id of the user
      * @param String $key the settings key
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putSettingsAction(Request $request, $id, $key)
@@ -485,9 +502,11 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the settings for a key for the current user
+     * Returns the settings for a key for the current user.
+     *
      * @param Number $id The id of the user
      * @param String $key The settings key
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getSettingsAction($id, $key)
@@ -512,8 +531,10 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Deletes the user with the given id
+     * Deletes the user with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -538,9 +559,11 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Process all user roles from request
+     * Process all user roles from request.
+     *
      * @param User $user The user on which is worked
      * @param array $userRoles
+     *
      * @return bool True if the processing was successful, otherwise false
      */
     protected function processUserRoles(User $user, $userRoles)
@@ -571,9 +594,11 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Process all user groups from request
+     * Process all user groups from request.
+     *
      * @param User $user The user on which is worked
      * @param $userGroups
+     *
      * @return bool True if the processing was successful, otherwise false
      */
     protected function processUserGroups(User $user, $userGroups)
@@ -604,10 +629,13 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Adds a new UserRole to the given user
+     * Adds a new UserRole to the given user.
+     *
      * @param User $user
      * @param $userRoleData
+     *
      * @return bool
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function addUserRole(User $user, $userRoleData)
@@ -644,10 +672,13 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates an existing UserRole with the given data
+     * Updates an existing UserRole with the given data.
+     *
      * @param UserRole $userRole
      * @param $userRoleData
+     *
      * @return bool
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function updateUserRole(UserRole $userRole, $userRoleData)
@@ -671,10 +702,13 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Adds a new UserGroup to the given user
+     * Adds a new UserGroup to the given user.
+     *
      * @param User $user
      * @param $userGroupData
+     *
      * @return bool
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function addUserGroup(User $user, $userGroupData)
@@ -701,10 +735,13 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates an existing UserGroup with the given data
+     * Updates an existing UserGroup with the given data.
+     *
      * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroup
      * @param $userGroupData
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     *
      * @return bool
      */
     private function updateUserGroup(UserGroup $userGroup, $userGroupData)
@@ -728,7 +765,8 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Checks if all the arguments are given, and throws an exception if one is missing
+     * Checks if all the arguments are given, and throws an exception if one is missing.
+     *
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      */
     private function checkArguments(Request $request)
@@ -759,9 +797,12 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the contact with the given id
+     * Returns the contact with the given id.
+     *
      * @param $id
+     *
      * @return Contact
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function getContact($id)
@@ -778,7 +819,8 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Generates a random salt for the password
+     * Generates a random salt for the password.
+     *
      * @return string
      */
     private function generateSalt()
@@ -787,10 +829,12 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Encodes the given password, for the given passwort, with he given salt and returns the result
+     * Encodes the given password, for the given passwort, with he given salt and returns the result.
+     *
      * @param $user
      * @param $password
      * @param $salt
+     *
      * @return mixed
      */
     private function encodePassword($user, $password, $salt)
@@ -802,8 +846,10 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Returns a user with a specific contact id or all users
-     * optional parameter 'flat' calls listAction
+     * optional parameter 'flat' calls listAction.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)

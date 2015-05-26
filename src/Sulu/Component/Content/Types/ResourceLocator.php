@@ -18,8 +18,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 
 /**
- * Class ResourceLocator
- * @package Sulu\Component\Content\Types
+ * Class ResourceLocator.
  */
 class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
 {
@@ -29,7 +28,8 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     private $strategy;
 
     /**
-     * template for form generation
+     * template for form generation.
+     *
      * @var string
      */
     private $template;

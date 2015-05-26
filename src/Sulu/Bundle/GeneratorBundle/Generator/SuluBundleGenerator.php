@@ -26,7 +26,7 @@ class SuluBundleGenerator extends BundleGenerator
         $this->renderFile('bundle/Configuration.php.twig', $dir . '/DependencyInjection/Configuration.php', $parameters);
 
         /**
-         * Sulu Specific
+         * Sulu Specific.
          */
 
         // Default Api Controller

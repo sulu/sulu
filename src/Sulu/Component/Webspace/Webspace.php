@@ -14,73 +14,83 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Container for a webspace definition
- * @package Sulu\Component\Webspace
+ * Container for a webspace definition.
  */
 class Webspace implements ArrayableInterface
 {
     /**
-     * The name of the webspace
+     * The name of the webspace.
+     *
      * @var string
      */
     private $name;
 
     /**
-     * The key of the webspace
+     * The key of the webspace.
+     *
      * @var string
      */
     private $key;
 
     /**
-     * The localizations defined for this webspace
+     * The localizations defined for this webspace.
+     *
      * @var Localization[]
      */
     private $localizations;
 
     /**
-     * The default localization defined for this webspace
+     * The default localization defined for this webspace.
+     *
      * @var Localization
      */
     private $defaultLocalization;
 
     /**
-     * The segments defined for this webspace
+     * The segments defined for this webspace.
+     *
      * @var Segment[]
      */
     private $segments;
 
     /**
-     * The default segment defined for this webspace
+     * The default segment defined for this webspace.
+     *
      * @var Segment
      */
     private $defaultSegment;
 
     /**
-     * The theme of the webspace
+     * The theme of the webspace.
+     *
      * @var Theme
      */
     private $theme;
 
     /**
-     * The portals defined for this webspace
+     * The portals defined for this webspace.
+     *
      * @var Portal[]
      */
     private $portals;
 
     /**
-     * The security system for this webspace
+     * The security system for this webspace.
+     *
      * @var Security
      */
     private $security;
 
     /**
-     * Navigation for this webspace
+     * Navigation for this webspace.
+     *
      * @var Navigation
      */
     private $navigation;
 
     /**
-     * Sets the key of the webspace
+     * Sets the key of the webspace.
+     *
      * @param string $key
      */
     public function setKey($key)
@@ -89,7 +99,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the key of the webspace
+     * Returns the key of the webspace.
+     *
      * @return string
      */
     public function getKey()
@@ -98,7 +109,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Adds a localization to the webspace
+     * Adds a localization to the webspace.
+     *
      * @param Localization $localization
      */
     public function addLocalization(Localization $localization)
@@ -111,7 +123,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the localizations of this webspace
+     * Returns the localizations of this webspace.
+     *
      * @param Localization[] $localizations
      */
     public function setLocalizations($localizations)
@@ -120,7 +133,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the localizations of this webspace
+     * Returns the localizations of this webspace.
+     *
      * @return Localization[]
      */
     public function getLocalizations()
@@ -129,7 +143,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns a list of all localizations and sublocalizations
+     * Returns a list of all localizations and sublocalizations.
+     *
      * @return Localization[]
      */
     public function getAllLocalizations()
@@ -144,8 +159,10 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the localization object for a given localization string
+     * Returns the localization object for a given localization string.
+     *
      * @param string $localization
+     *
      * @return Localization|null
      */
     public function getLocalization($localization)
@@ -161,11 +178,12 @@ class Webspace implements ArrayableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Sets the default localization for this webspace
+     * Sets the default localization for this webspace.
+     *
      * @param Localization $defaultLocalization
      */
     public function setDefaultLocalization($defaultLocalization)
@@ -174,7 +192,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the default localization for this webspace
+     * Returns the default localization for this webspace.
+     *
      * @return Localization
      */
     public function getDefaultLocalization()
@@ -183,7 +202,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Sets the name of the webspace
+     * Sets the name of the webspace.
+     *
      * @param string $name
      */
     public function setName($name)
@@ -192,7 +212,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the name of the webspace
+     * Returns the name of the webspace.
+     *
      * @return string
      */
     public function getName()
@@ -201,7 +222,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Adds a portal to the webspace
+     * Adds a portal to the webspace.
+     *
      * @param Portal $portal
      */
     public function addPortal(Portal $portal)
@@ -210,7 +232,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Sets the portals of this webspace
+     * Sets the portals of this webspace.
+     *
      * @param \Sulu\Component\Webspace\Portal[] $portals
      */
     public function setPortals($portals)
@@ -219,7 +242,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the portals of this webspace
+     * Returns the portals of this webspace.
+     *
      * @return \Sulu\Component\Webspace\Portal[]
      */
     public function getPortals()
@@ -228,7 +252,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Adds a segment to the webspace
+     * Adds a segment to the webspace.
+     *
      * @param Segment $segment
      */
     public function addSegment(Segment $segment)
@@ -241,7 +266,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Sets the segments of this webspace
+     * Sets the segments of this webspace.
+     *
      * @param \Sulu\Component\Webspace\Segment[] $segments
      */
     public function setSegments($segments)
@@ -250,7 +276,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the segments of this webspace
+     * Returns the segments of this webspace.
+     *
      * @return \Sulu\Component\Webspace\Segment[]
      */
     public function getSegments()
@@ -259,7 +286,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Sets the default segment of this webspace
+     * Sets the default segment of this webspace.
+     *
      * @param \Sulu\Component\Webspace\Segment $defaultSegment
      */
     public function setDefaultSegment($defaultSegment)
@@ -268,7 +296,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the default segment for this webspace
+     * Returns the default segment for this webspace.
+     *
      * @return \Sulu\Component\Webspace\Segment
      */
     public function getDefaultSegment()
@@ -277,7 +306,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Sets the theme for this portal
+     * Sets the theme for this portal.
+     *
      * @param \Sulu\Component\Webspace\Theme $theme
      */
     public function setTheme(Theme $theme)
@@ -286,7 +316,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the theme for this portal
+     * Returns the theme for this portal.
+     *
      * @return \Sulu\Component\Webspace\Theme
      */
     public function getTheme()
@@ -295,7 +326,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Sets the security system
+     * Sets the security system.
+     *
      * @param Security $security
      */
     public function setSecurity($security)
@@ -304,7 +336,8 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Returns the security system
+     * Returns the security system.
+     *
      * @return Security
      */
     public function getSecurity()
@@ -370,7 +403,7 @@ class Webspace implements ArrayableInterface
             foreach ($this->getNavigation()->getContexts() as $context) {
                 $res['navigation']['contexts'][] = array(
                     'key' => $context->getKey(),
-                    'metadata' => $context->getMetadata()
+                    'metadata' => $context->getMetadata(),
                 );
             }
         }

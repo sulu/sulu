@@ -18,7 +18,7 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new SuluWebsiteExtension()
+            new SuluWebsiteExtension(),
         );
     }
 

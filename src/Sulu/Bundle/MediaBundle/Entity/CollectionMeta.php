@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 /**
- * CollectionMeta
+ * CollectionMeta.
  */
 class CollectionMeta
 {
@@ -31,7 +31,7 @@ class CollectionMeta
     private $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -41,9 +41,10 @@ class CollectionMeta
     private $collection;
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
+     *
      * @return CollectionMeta
      */
     public function setTitle($title)
@@ -54,7 +55,7 @@ class CollectionMeta
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -64,9 +65,10 @@ class CollectionMeta
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
+     *
      * @return CollectionMeta
      */
     public function setDescription($description)
@@ -77,7 +79,7 @@ class CollectionMeta
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -87,9 +89,10 @@ class CollectionMeta
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return CollectionMeta
      */
     public function setLocale($locale)
@@ -100,7 +103,7 @@ class CollectionMeta
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -110,9 +113,9 @@ class CollectionMeta
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -120,9 +123,10 @@ class CollectionMeta
     }
 
     /**
-     * Set collection
+     * Set collection.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection
+     *
      * @return CollectionMeta
      */
     public function setCollection(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection)
@@ -133,7 +137,7 @@ class CollectionMeta
     }
 
     /**
-     * Get collection
+     * Get collection.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */

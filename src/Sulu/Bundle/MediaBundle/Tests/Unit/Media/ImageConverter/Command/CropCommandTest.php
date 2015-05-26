@@ -12,7 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
 
 /**
  * Class CropCommandTest
- * Test the crop command service
+ * Test the crop command service.
  */
 class CropCommandTest extends AbstractCommandTest
 {
@@ -23,8 +23,7 @@ class CropCommandTest extends AbstractCommandTest
         return array(
             array(
                 // Command Options
-                'options' =>
-                    array(
+                'options' => array(
                         'x' => 100,
                         'y' => 100,
                         'w' => 150,
@@ -32,7 +31,7 @@ class CropCommandTest extends AbstractCommandTest
                     ),
                 // Tested Result
                 'width' => 150,
-                'height' => 200
+                'height' => 200,
             ),
         );
     }

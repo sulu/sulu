@@ -11,24 +11,25 @@
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 
 /**
  * Repository for the Catalogues, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class CatalogueRepository extends EntityRepository
 {
     /**
-     * returns a catalogue with given ID
+     * returns a catalogue with given ID.
+     *
      * @param $id
+     *
      * @return Catalogue|null
      */
     public function getCatalogueById($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('catalogue')
                 ->leftJoin('catalogue.package', 'package')
                 ->leftJoin('package.catalogues', 'catalogues')
@@ -41,9 +42,8 @@ class CatalogueRepository extends EntityRepository
             $query->setParameter('catalogueId', $id);
 
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

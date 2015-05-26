@@ -11,27 +11,27 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Group
+ * Group.
  */
 class Group extends ApiEntity implements AuditableInterface
 {
     /**
-     * @var integer
+     * @var int
      */
     private $lft;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rgt;
 
     /**
-     * @var integer
+     * @var int
      */
     private $depth;
 
@@ -51,7 +51,7 @@ class Group extends ApiEntity implements AuditableInterface
     private $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -86,7 +86,7 @@ class Group extends ApiEntity implements AuditableInterface
     private $creator;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -96,9 +96,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return Group
      */
     public function setLft($lft)
@@ -109,9 +110,9 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft()
     {
@@ -119,9 +120,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return Group
      */
     public function setRgt($rgt)
@@ -132,9 +134,9 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt()
     {
@@ -142,9 +144,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set depth
+     * Set depth.
      *
-     * @param integer $depth
+     * @param int $depth
+     *
      * @return Group
      */
     public function setDepth($depth)
@@ -155,9 +158,9 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get depth
+     * Get depth.
      *
-     * @return integer
+     * @return int
      */
     public function getDepth()
     {
@@ -165,9 +168,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Group
      */
     public function setName($name)
@@ -178,7 +182,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -188,7 +192,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -198,7 +202,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -208,9 +212,9 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -218,9 +222,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add children
+     * Add children.
      *
      * @param Group $children
+     *
      * @return Group
      */
     public function addChildren(Group $children)
@@ -231,7 +236,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param Group $children
      */
@@ -241,7 +246,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get children
+     * Get children.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -251,9 +256,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add userGroups
+     * Add userGroups.
      *
      * @param UserGroup $userGroups
+     *
      * @return Group
      */
     public function addUserGroup(UserGroup $userGroups)
@@ -264,7 +270,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove userGroups
+     * Remove userGroups.
      *
      * @param UserGroup $userGroups
      */
@@ -274,7 +280,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get userGroups
+     * Get userGroups.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -284,9 +290,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param Group $parent
+     *
      * @return Group
      */
     public function setParent(Group $parent = null)
@@ -297,7 +304,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return Group
      */
@@ -307,9 +314,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add roles
+     * Add roles.
      *
      * @param RoleInterface $roles
+     *
      * @return Group
      */
     public function addRole(RoleInterface $roles)
@@ -320,7 +328,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove roles
+     * Remove roles.
      *
      * @param RoleInterface $roles
      */
@@ -330,7 +338,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get roles
+     * Get roles.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -340,9 +348,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param UserInterface $changer
+     *
      * @return Group
      */
     public function setChanger(UserInterface $changer = null)
@@ -353,7 +362,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return UserInterface
      */
@@ -363,9 +372,10 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param UserInterface $creator
+     *
      * @return Group
      */
     public function setCreator(UserInterface $creator = null)
@@ -376,7 +386,7 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return UserInterface
      */

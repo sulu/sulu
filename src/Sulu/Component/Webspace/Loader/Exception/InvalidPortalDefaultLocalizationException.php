@@ -16,7 +16,8 @@ use Sulu\Component\Webspace\Webspace;
 class InvalidPortalDefaultLocalizationException extends WebspaceException
 {
     /**
-     * The webspace in which the error occured
+     * The webspace in which the error occured.
+     *
      * @var Webspace
      */
     private $portal;
@@ -35,7 +36,8 @@ class InvalidPortalDefaultLocalizationException extends WebspaceException
     }
 
     /**
-     * Returns the webspace in which the error occured
+     * Returns the webspace in which the error occured.
+     *
      * @return Webspace
      */
     public function getPortal()

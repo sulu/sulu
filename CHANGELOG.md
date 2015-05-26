@@ -2,6 +2,35 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
+    * BUGFIX      #1123 [ContentBundle]  Fixed block behaviour on template change
+    * ENHANCEMENT #1118 [SecurityBundle] Add possibility to enable SecurityChecker and SuluSecurityListener via configuration
+    * ENHANCEMENT #1113 [ContactBundle]  Added sorting by last-name in accounts-contact tab
+    * ENHANCEMENT #1100 [ContentBundle]  Replaced the checkboxes with radio buttons in overlay for creating node in new localization
+    * ENHANCEMENT #1088 [ContactBundle]  Moved initialization of field-descriptors before init of list-builder in
+                                         accounts cget action
+    * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
+    * ENHANCEMENT #1038 [MediaBundle]    Added counter for selected images; Disabled drag event for links and 
+                                         images inside the overlay; Store media assignement display options in user settings
+    * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
+    * BUGFIX      #1089 [Media/Search]   Do not set image URL for non-images in the search results
+    * BUGFIX      #996  [ContentBundle]  Fixed change language in add form
+    * BUGFIX      #725  [Webspace]       Fixed trailing slash in defining url in webspace config
+
+* 0.18.2 (2015-05-18)
+    * HOTFIX      #1094 [MediaBundle]    Fixed media overlay version tab appearance
+
+* 0.18.1 (2015-05-09)
+    * HOTFIX      #1079 [SearchBundle]   Fix webspace-key index for content pages
+
+* 0.18.0 (2015-05-08)
+    * ENHANCEMENT #797  [SearchBundle]   Rebuild command removed, now hooks into massive:search:index:rebuild
+    * ENHANCEMENT #797  [SearchBundle]   Unpublished pages are no longer deindexed - a "state" field has been added, see UPGRADE.md
+    * ENHANCEMENT #797  [ContactBundle]  Contacts and Accounts have massive search mappings
+    * ENHANCEMENT #1076 [AdminBundle]    Moved some translations from admin-bundle to their specific bundles
+    * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
+    * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
+    * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
     * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen
     * BUGFIX      #--   [AdminBundle]    Fixed login for IE see [commit](https://github.com/sulu-io/sulu/commit/a50e48aa83d360b93b5db0a63300c2799d3bc8ab)
     * BUGFIX      #1045 [MediaBundle]    Fixed upload new media version
@@ -10,6 +39,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
     * FEATURE     #977  [MediaBundle]    Made Format Cache parameters configurable, prefix ghostscript path parameter with sulu_media.
+    * BUGFIX      #1037 [ContentBundle]  Fixed preview renderer exception handling and removed global error handling
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
     * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay

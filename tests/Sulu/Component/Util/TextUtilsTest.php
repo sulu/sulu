@@ -22,7 +22,7 @@ class TextUtilsTest extends \PHPUnit_Framework_TestCase
                 'Dorn, Oberbergischer Kreis, Regierungsbezirk Köln, Nordrhein-Westfalen, Deutschland, European Union',
                 50,
                 '...',
-                'Dorn, Oberbergischer Kreis, Regierungsbezirk Kö...'
+                'Dorn, Oberbergischer Kreis, Regierungsbezirk Kö...',
             ),
         );
     }

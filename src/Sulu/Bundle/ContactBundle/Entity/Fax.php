@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * Fax
+ * Fax.
  */
 class Fax
 {
@@ -18,7 +18,7 @@ class Fax
     private $fax;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
@@ -42,7 +42,7 @@ class Fax
     private $accounts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -51,9 +51,10 @@ class Fax
     }
 
     /**
-     * Set fax
+     * Set fax.
      *
      * @param string $fax
+     *
      * @return Fax
      */
     public function setFax($fax)
@@ -64,7 +65,7 @@ class Fax
     }
 
     /**
-     * Get fax
+     * Get fax.
      *
      * @return string
      */
@@ -74,9 +75,9 @@ class Fax
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -84,9 +85,10 @@ class Fax
     }
 
     /**
-     * Set faxType
+     * Set faxType.
      *
      * @param FaxType $faxType
+     *
      * @return Fax
      */
     public function setFaxType(FaxType $faxType)
@@ -97,7 +99,7 @@ class Fax
     }
 
     /**
-     * Get faxType
+     * Get faxType.
      *
      * @return FaxType
      */
@@ -107,9 +109,10 @@ class Fax
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     *
      * @return Fax
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
@@ -120,7 +123,7 @@ class Fax
     }
 
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
      */
@@ -130,7 +133,7 @@ class Fax
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return Collection
      */
@@ -140,9 +143,10 @@ class Fax
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param AccountInterface $account
+     *
      * @return Fax
      */
     public function addAccount(AccountInterface $account)
@@ -153,7 +157,7 @@ class Fax
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param AccountInterface $account
      */
@@ -163,7 +167,7 @@ class Fax
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return Collection
      */

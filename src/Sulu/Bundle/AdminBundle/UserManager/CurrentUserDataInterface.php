@@ -12,57 +12,65 @@ namespace Sulu\Bundle\AdminBundle\UserManager;
 
 interface CurrentUserDataInterface
 {
-
     /**
-     * returns if a user is logged in
+     * returns if a user is logged in.
+     *
      * @return Boolean
      */
     public function isLoggedIn();
 
     /**
-     * returns id
+     * returns id.
+     *
      * @return int
      */
     public function getId();
 
     /**
-     * returns username
+     * returns username.
+     *
      * @return String
      */
     public function getUsername();
 
     /**
-     * returns fullName
+     * returns fullName.
+     *
      * @return String
      */
     public function getFullName();
 
     /**
-     * returns UserIcon URL
+     * returns UserIcon URL.
+     *
      * @return String
      */
     public function getUserIcon();
 
     /**
-     * returns Logout URL
+     * returns Logout URL.
+     *
      * @return String
      */
     public function getLogoutLink();
 
     /**
-     * returns locale of current user
+     * returns locale of current user.
+     *
      * @return String
      */
     public function getLocale();
 
     /**
-     * returns the settings saved for a user as key value pair array
+     * returns the settings saved for a user as key value pair array.
+     *
      * @return array
      */
     public function getUserSettings();
 
     /**
-     * persists the user data to the database
+     * persists the user data to the database.
+     *
      * @param $key
      * @param $value
      */

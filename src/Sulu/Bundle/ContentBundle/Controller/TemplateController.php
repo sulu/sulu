@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -23,12 +22,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * handles templates for this bundles
+ * handles templates for this bundles.
  */
 class TemplateController extends Controller
 {
     /**
-     * Return the webspace manager
+     * Return the webspace manager.
      *
      * @return WebspaceManagerInterface
      */
@@ -41,8 +40,10 @@ class TemplateController extends Controller
     }
 
     /**
-     * returns all structures in system
+     * returns all structures in system.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return JsonResponse
      */
     public function getAction(Request $request)
@@ -59,23 +60,25 @@ class TemplateController extends Controller
                 $templates[] = array(
                     'internal' => $structure->getInternal(),
                     'template' => $structure->getKey(),
-                    'title' => $structure->getLocalizedTitle($this->getUser()->getLocale())
+                    'title' => $structure->getLocalizedTitle($this->getUser()->getLocale()),
                 );
             }
         }
 
         $data = array(
             '_embedded' => $templates,
-            'total' => sizeof($templates)
+            'total' => sizeof($templates),
         );
 
         return new JsonResponse($data);
     }
 
     /**
-     * renders one structure as form
+     * renders one structure as form.
+     *
      * @param Request $request
      * @param string $key template key
+     *
      * @return Response
      */
     public function contentAction(Request $request, $key = null)
@@ -105,13 +108,14 @@ class TemplateController extends Controller
                 'languageCode' => $language,
                 'userLocale' => $userLocale,
                 'templateKey' => $key,
-                'fireEvent' => $fireEvent
+                'fireEvent' => $fireEvent,
             )
         );
     }
 
     /**
-     * returns form for seo tab
+     * returns form for seo tab.
+     *
      * @return Response
      */
     public function seoAction()
@@ -122,7 +126,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * returns form for seo tab
+     * returns form for seo tab.
+     *
      * @return Response
      */
     public function excerptAction()
@@ -133,9 +138,11 @@ class TemplateController extends Controller
     }
 
     /**
-     * returns structure for given key
+     * returns structure for given key.
+     *
      * @param string $key template key
      * @param string $type
+     *
      * @return StructureInterface
      */
     private function getTemplateStructure($key, $type)
@@ -147,7 +154,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders list template
+     * renders list template.
+     *
      * @return Response
      */
     public function listAction()
@@ -156,9 +164,11 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders column template
+     * renders column template.
+     *
      * @param string $webspaceKey
      * @param string $languageCode
+     *
      * @return Response
      */
     public function columnAction($webspaceKey, $languageCode)
@@ -174,7 +184,7 @@ class TemplateController extends Controller
             $localizations[] = array(
                 'localization' => $localization->getLocalization(),
                 'name' => $localization->getLocalization('-'),
-                'id' => $i++
+                'id' => $i++,
             );
         }
 
@@ -183,14 +193,16 @@ class TemplateController extends Controller
             array(
                 'localizations' => $localizations,
                 'currentLocalization' => $currentLocalization,
-                'webspace' => $webspace
+                'webspace' => $webspace,
             )
         );
     }
 
     /**
-     * renders template fpr settings
+     * renders template fpr settings.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Response
      */
     public function settingsAction(Request $request)
@@ -203,7 +215,7 @@ class TemplateController extends Controller
         foreach ($webspace->getNavigation()->getContexts() as $context) {
             $navContexts[] = array(
                 'name' => $context->getTitle($languageCode),
-                'id' => $context->getKey()
+                'id' => $context->getKey(),
             );
         }
 

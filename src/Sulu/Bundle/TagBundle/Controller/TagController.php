@@ -10,8 +10,13 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -21,19 +26,12 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\Route;
-
-use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes tag available through
- * @package Sulu\Bundle\TagBundle\Controller
+ * Makes tag available through.
  */
 class TagController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -44,17 +42,17 @@ class TagController extends RestController implements ClassResourceInterface, Se
     protected $unsortable = array();
 
     protected $fieldsDefault = array(
-        'name'
+        'name',
     );
 
     protected $fieldsValidation = array(
         'name' => array(
-            'required' => true
-        )
+            'required' => true,
+        ),
     );
 
     protected $fieldsEditable = array(
-        'name'
+        'name',
     );
 
     protected $fieldsExcluded = array();
@@ -63,20 +61,20 @@ class TagController extends RestController implements ClassResourceInterface, Se
         'created',
         'id',
         'creator_contact_lastName',
-        'changed'
+        'changed',
     );
     protected $fieldsRelations = array(
-        'creator_contact_lastName'
+        'creator_contact_lastName',
     );
     protected $fieldsSortOrder = array(
         '0' => 'name',
         '1' => 'creator_contact_lastName',
-        '2' => 'changed'
+        '2' => 'changed',
     );
 
     protected $fieldsTranslationKeys = array(
         'name' => 'tags.name',
-        'creator_contact_lastName' => 'tags.author'
+        'creator_contact_lastName' => 'tags.author',
     );
 
     protected $bundlePrefix = 'tags.';
@@ -90,8 +88,10 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("tags/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -100,7 +100,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * persists a setting
+     * persists a setting.
+     *
      * @Put("tags/fields")
      */
     public function putFieldsAction()
@@ -109,8 +110,10 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * Returns a single tag with the given id
+     * Returns a single tag with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -126,8 +129,10 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * returns all tags
+     * returns all tags.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -165,11 +170,15 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * Inserts a new tag
+     * Inserts a new tag.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
@@ -200,10 +209,13 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * Updates the tag with the given ID
+     * Updates the tag with the given ID.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
@@ -237,8 +249,10 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * Deletes the tag with the given ID
+     * Deletes the tag with the given ID.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -258,8 +272,11 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     /**
      * POST Route annotation.
+     *
      * @Post("/tags/merge")
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postMergeAction(Request $request)
@@ -281,16 +298,18 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     /**
      * TODO: find out why pluralization does not work for this patch action
-     * ISSUE: https://github.com/sulu-cmf/SuluTagBundle/issues/6
+     * ISSUE: https://github.com/sulu-cmf/SuluTagBundle/issues/6.
+     *
      * @Route("/tags", name="tags")
      * updates an array of tags
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function patchAction(Request $request)
     {
         try {
-
             $tags = array();
 
             $i = 0;
@@ -304,7 +323,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
             }
             $this->getDoctrine()->getManager()->flush();
             $view = $this->view($tags, 200);
-
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',

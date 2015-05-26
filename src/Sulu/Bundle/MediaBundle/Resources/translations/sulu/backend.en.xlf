@@ -158,6 +158,26 @@
                 <source>sulu.media.version.active</source>
                 <target>active</target>
             </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecjsgtf5acb2d39e" resname="search-overlay.category.media.title">
+                <source>search-overlay.category.media.title</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085e2kt45sds5acb2d39e" resname="search-overlay.placeholder.media">
+                <source>search-overlay.placeholder.media</source>
+                <target>Search media...</target>
+            </trans-unit>
+            <trans-unit id="c28342a4fe2011e4a3221697f925ec7b" resname="media-selection.overlay.selected-image-label">
+                <source>media-selection.overlay.selected-image-label</source>
+                <target>image selected</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22456" resname="media-selection.overlay.selected-images-label">
+                <source>media-selection.overlay.selected-images-label</source>
+                <target>images selected</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f27623" resname="media-selection.list-toolbar.upload-info">
+                <source>media-selection.list-toolbar.upload-info</source>
+                <target>Click or Drag'n'Drop</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

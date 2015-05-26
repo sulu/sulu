@@ -15,7 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TemplateController extends Controller
 {
     /**
-     * Returns Template for tag list
+     * Returns Template for tag list.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tagListAction()

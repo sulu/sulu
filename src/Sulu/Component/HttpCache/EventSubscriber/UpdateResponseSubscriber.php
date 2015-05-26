@@ -10,16 +10,14 @@
 
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Update the website response with cache headers
+ * Update the website response with cache headers.
  */
 class UpdateResponseSubscriber implements EventSubscriberInterface
 {
@@ -53,7 +51,7 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
 
     /**
      * If the structure has been picked up from the request, updated
-     * the response using the configured handler
+     * the response using the configured handler.
      *
      * @param FilterResponseEvent
      */

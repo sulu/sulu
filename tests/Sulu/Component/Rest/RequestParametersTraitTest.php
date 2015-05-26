@@ -61,7 +61,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequestMock(
             array(
                 array('test', null, false, 'data'),
-                array('none', 'default', false, 'default')
+                array('none', 'default', false, 'default'),
             )
         );
 
@@ -99,7 +99,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
             array(
                 array('test1', null, false, 'true'),
                 array('test2', null, false, 'false'),
-                array('none', 'default', false, null)
+                array('none', 'default', false, null),
             )
         );
 
@@ -147,7 +147,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
         $request = $this->getRequestMock(
             array(
-                array('test', null, false, 'asdf')
+                array('test', null, false, 'asdf'),
             )
         );
 

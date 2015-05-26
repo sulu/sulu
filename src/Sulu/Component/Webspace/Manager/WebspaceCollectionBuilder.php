@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Exception\NoValidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -36,41 +37,47 @@ class WebspaceCollectionBuilder
         self::REPLACER_LANGUAGE,
         self::REPLACER_COUNTRY,
         self::REPLACER_LOCALIZATION,
-        self::REPLACER_SEGMENT
+        self::REPLACER_SEGMENT,
     );
 
     /**
-     * The loader for the xml config files
+     * The loader for the xml config files.
+     *
      * @var LoaderInterface
      */
     private $loader;
 
     /**
-     * Logger for logging the warnings
+     * Logger for logging the warnings.
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * The path to the xml config files
+     * The path to the xml config files.
+     *
      * @var string
      */
     private $path;
 
     /**
-     * The webspaces for the configured path
+     * The webspaces for the configured path.
+     *
      * @var Webspace[]
      */
     private $webspaces;
 
     /**
-     * The portals for the configured path
+     * The portals for the configured path.
+     *
      * @var Portal[]
      */
     private $portals;
 
     /**
-     * The portal informations for the configured path
+     * The portal informations for the configured path.
+     *
      * @var PortalInformation[][]
      */
     private $portalInformations;
@@ -121,6 +128,10 @@ class WebspaceCollectionBuilder
                     'Error: "' . $iude->getMessage() . '" in "' . $file->getRealPath() . '". File was skipped'
                 );
             }
+        }
+
+        if (0 === count($this->webspaces)) {
+            throw new NoValidWebspaceException($this->path);
         }
 
         $environments = array_keys($this->portalInformations);
@@ -258,7 +269,7 @@ class WebspaceCollectionBuilder
         $replacers = array(
             self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
             self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
-            self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-')
+            self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
         );
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
@@ -284,7 +295,8 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * Builds the URLs for the portal, which are not a redirect
+     * Builds the URLs for the portal, which are not a redirect.
+     *
      * @param Portal $portal
      * @param Environment $environment
      * @param $url
@@ -317,7 +329,7 @@ class WebspaceCollectionBuilder
                 $replacers = array(
                     self::REPLACER_LANGUAGE => $language,
                     self::REPLACER_COUNTRY => $country,
-                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-')
+                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
                 );
 
                 $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization, $urlAnalyticsKey);
@@ -329,6 +341,7 @@ class WebspaceCollectionBuilder
     /**
      * @param $urlResult
      * @param Environment $environment
+     *
      * @return bool
      */
     private function validateUrlPartialMatch($urlResult, Environment $environment)
@@ -341,9 +354,11 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * Replaces the given values in the pattern
+     * Replaces the given values in the pattern.
+     *
      * @param string $pattern
      * @param array $replacers
+     *
      * @return string
      */
     private function generateUrlAddress($pattern, $replacers)
@@ -356,8 +371,10 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * Removes the placesholders from the url address
+     * Removes the placesholders from the url address.
+     *
      * @param $pattern
+     *
      * @return mixed|string
      */
     private function removeUrlPlaceHolders($pattern)

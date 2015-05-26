@@ -2,10 +2,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Guzzle\Http\ClientInterface;
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 
 /**
  * Geolocator which uses the google geocoding API.
@@ -87,9 +87,8 @@ class GoogleGeolocator implements GeolocatorInterface
                 'street_number' => 'setNumber',
                 'postal_code' => 'setCode',
                 'locality' => 'setTown',
-                'country' => 'setCountry'
-            ) as $field => $method)
-            {
+                'country' => 'setCountry',
+            ) as $field => $method) {
                 if (isset($map[$field])) {
                     $parts = array();
                     foreach ($map[$field] as $fieldValue) {

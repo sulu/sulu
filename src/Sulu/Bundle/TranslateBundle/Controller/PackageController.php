@@ -11,9 +11,11 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
+use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -22,14 +24,11 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
-use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
-use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes the translation catalogues accessible trough an REST-API
- * @package Sulu\Bundle\TranslateBundle\Controller
+ * Makes the translation catalogues accessible trough an REST-API.
  */
 class PackageController extends RestController implements ClassResourceInterface
 {
@@ -50,13 +49,15 @@ class PackageController extends RestController implements ClassResourceInterface
     protected $fieldsExcluded = array();
     protected $fieldsHidden = array();
     protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0=>'id');
+    protected $fieldsSortOrder = array(0 => 'id');
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'translate.package.';
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("packages/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -65,7 +66,8 @@ class PackageController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * persists a setting
+     * persists a setting.
+     *
      * @Put("packages/fields")
      */
     public function putFieldsAction()
@@ -74,13 +76,15 @@ class PackageController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Lists all the catalogues or filters the catalogues by parameters
+     * Lists all the catalogues or filters the catalogues by parameters.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('flat')=='true') {
+        if ($request->get('flat') == 'true') {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -112,8 +116,10 @@ class PackageController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Shows the package with the given Id
+     * Shows the package with the given Id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -130,8 +136,10 @@ class PackageController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Creates a new catalogue
+     * Creates a new catalogue.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -174,8 +182,10 @@ class PackageController extends RestController implements ClassResourceInterface
     /**
      * Update the existing package or create a new one with the given id,
      * if the package with the given id is not yet existing.
+     *
      * @param Request $request
-     * @param integer $id The id of the package to update
+     * @param int $id The id of the package to update
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -278,8 +288,10 @@ class PackageController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Deletes the package with the given id
+     * Deletes the package with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -317,6 +329,7 @@ class PackageController extends RestController implements ClassResourceInterface
 
     /**
      * @param $key
+     *
      * @return DoctrineFieldDescriptor
      */
     private function getFieldDescriptor($key)

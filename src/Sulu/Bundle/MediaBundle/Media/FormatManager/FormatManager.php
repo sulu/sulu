@@ -10,11 +10,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
-use DateTime;
 use Imagick;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine;
-use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -31,12 +29,13 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Sulu format manager for media
+ * Sulu format manager for media.
  */
 class FormatManager implements FormatManagerInterface
 {
     /**
-     * The repository for communication with the database
+     * The repository for communication with the database.
+     *
      * @var MediaRepository
      */
     private $mediaRepository;
@@ -213,9 +212,12 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * return the options for the given format
+     * return the options for the given format.
+     *
      * @param $format
+     *
      * @return array
+     *
      * @throws ImageProxyInvalidImageFormat
      */
     protected function getFormat($format)
@@ -231,7 +233,9 @@ class FormatManager implements FormatManagerInterface
      * @param $format
      * @param $fileExtension
      * @param MediaException $e
+     *
      * @return array
+     *
      * @throws ImageProxyInvalidImageFormat
      * @throws MediaException
      */
@@ -254,6 +258,7 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param $mimeType
+     *
      * @return array
      */
     protected function getResponseHeaders($mimeType = '')
@@ -280,6 +285,7 @@ class FormatManager implements FormatManagerInterface
      * @param ImageInterface $image
      * @param string $imageExtension
      * @param array $formatOptions
+     *
      * @return array
      */
     protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
@@ -310,6 +316,7 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param string $path
+     *
      * @throws GhostScriptNotFoundException
      */
     protected function convertPdfToImage($path)
@@ -336,6 +343,7 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param $path
+     *
      * @throws MediaException
      */
     protected function convertPsdToImage($path)
@@ -353,6 +361,7 @@ class FormatManager implements FormatManagerInterface
     /**
      * @param string $filename
      * @param string $newExtension
+     *
      * @return string
      */
     protected function replaceExtension($filename, $newExtension)
@@ -364,6 +373,7 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param string $fileName
+     *
      * @return string
      */
     protected function getImageExtension($fileName)
@@ -388,7 +398,6 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param $fileName
-     * @return null
      */
     protected function getRealFileExtension($fileName)
     {
@@ -397,7 +406,7 @@ class FormatManager implements FormatManagerInterface
             return $pathInfo['extension'];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -409,8 +418,10 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * get file from namespace
+     * get file from namespace.
+     *
      * @param string $uri
+     *
      * @return string
      */
     protected function getFile($uri)
@@ -419,8 +430,10 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * create a local temp file for the original
+     * create a local temp file for the original.
+     *
      * @param $content
+     *
      * @return string
      */
     protected function createTmpFile($content)
@@ -436,7 +449,8 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * delete all created temp files
+     * delete all created temp files.
+     *
      * @return $this
      */
     protected function clearTempFiles()
@@ -448,7 +462,9 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param Media $media
+     *
      * @return array
+     *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException
      */
     protected function getMediaData($media)

@@ -23,8 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Validates pages
- * @package Sulu\Bundle\CoreBundle\Command
+ * Validates pages.
  */
 class ValidatePagesCommand extends ContainerAwareCommand
 {
@@ -94,7 +93,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
             foreach ($headers as $header) {
                 $template = $row->getValue($header);
                 $tableRow[] = $template;
-                if ($template !== "" && !in_array($template, $structures)) {
+                if ($template !== '' && !in_array($template, $structures)) {
                     $tableRow[0] = 'X';
                     $descriptions[] = sprintf('Language %s contains a not existing xml-template', $header);
                     $result++;
@@ -119,7 +118,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
         if ($result > 0) {
             $output->writeln(sprintf("<error>%s Errors found: \r\n  - %s</error>", $result, implode("\r\n  - ", $messages)));
         } else {
-            $output->writeln(sprintf("<ok>%s Errors found</ok>", $result));
+            $output->writeln(sprintf('<ok>%s Errors found</ok>', $result));
         }
     }
 }

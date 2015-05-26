@@ -21,13 +21,11 @@ class ContentMapperRequestTest extends \PHPUnit_Framework_TestCase
             'parentUuid' => '4321',
             'state' => 2,
             'isShadow' => true,
-            'shadowBaseLanguage' => 'de'
-            ) as $key => $value)
-        {
+            'shadowBaseLanguage' => 'de',
+            ) as $key => $value) {
             $request->{'set' . ucfirst($key)}($value);
             $res = $request->{'get' . ucfirst($key)}();
             $this->assertEquals($value, $res);
         }
     }
-
 }

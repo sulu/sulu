@@ -13,7 +13,7 @@ namespace Sulu\Component\Content;
 use JMS\Serializer\Annotation\Type;
 
 /**
- * holds localized metadata
+ * holds localized metadata.
  */
 class Metadata
 {
@@ -35,6 +35,7 @@ class Metadata
      * @param string $name meta data name
      * @param string $languageCode
      * @param string|null $default
+     *
      * @return string|null
      */
     public function get($name, $languageCode, $default = null)

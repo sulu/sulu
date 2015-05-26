@@ -15,8 +15,6 @@
         </parameter>
 
         <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin</parameter>
-        <parameter key="sulu_security.security_checker.class">Sulu\Component\Security\Authorization\SecurityChecker</parameter>
-        <parameter key="sulu_security.event_listener.security.class">Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener</parameter>
         <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
         <parameter key="sulu_security.authentication_handler.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler</parameter>
         <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
@@ -42,18 +40,6 @@
             <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_security.security_checker" class="%sulu_security.security_checker.class%">
-            <argument type="service" id="security.token_storage"/>
-            <argument type="service" id="security.authorization_checker"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_security.event_listener.security" class="%sulu_security.event_listener.security.class%">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu.context" context="admin"/>
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
         </service>
 
         <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
@@ -99,6 +85,7 @@
         <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%">
             <argument type="service" id="security.acl.provider"/>
             <argument type="service" id="sulu_security.mask_converter"/>
+            <argument type="service" id="event_dispatcher"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

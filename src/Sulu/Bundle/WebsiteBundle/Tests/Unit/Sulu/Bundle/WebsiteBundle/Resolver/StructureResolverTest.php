@@ -73,14 +73,14 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
 
         $expected = array(
             'extension' => array(
-                'excerpt' => array('test1' => 'test1')
+                'excerpt' => array('test1' => 'test1'),
             ),
             'uuid' => 'some-uuid',
             'view' => array(
-                'property' => 'view'
+                'property' => 'view',
             ),
             'content' => array(
-                'property' => 'content'
+                'property' => 'content',
             ),
             'creator' => 1,
             'changer' => 1,

@@ -17,12 +17,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * handles snippet template
+ * handles snippet template.
  */
 class SnippetTypesController extends Controller implements ClassResourceInterface
 {
     /**
-     * Returns all snippet types
+     * Returns all snippet types.
+     *
      * @return JsonResponse
      */
     public function cgetAction()
@@ -35,13 +36,13 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         foreach ($types as $type) {
             $templates[] = array(
                 'template' => $type->getKey(),
-                'title' => $type->getLocalizedTitle($this->getUser()->getLocale())
+                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
             );
         }
 
         $data = array(
             '_embedded' => $templates,
-            'total' => sizeof($templates)
+            'total' => sizeof($templates),
         );
 
         return new JsonResponse($data);

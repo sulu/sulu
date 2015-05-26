@@ -459,6 +459,14 @@
                 <source>column-navigation.order-message</source>
                 <target>Sie sind dabei eine Seite neu anzuordnen.</target>
             </trans-unit>
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2dh4b" resname="search-overlay.category.page.title">
+                <source>search-overlay.category.page.title</source>
+                <target>Seiten</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf5acb2dh4b" resname="search-overlay.placeholder.page">
+                <source>search-overlay.placeholder.page</source>
+                <target>Seiten durchsuchen...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

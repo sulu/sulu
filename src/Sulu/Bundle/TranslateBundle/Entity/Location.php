@@ -11,12 +11,12 @@
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
 /**
- * Location
+ * Location.
  */
 class Location
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -36,7 +36,7 @@ class Location
     private $codes;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -44,9 +44,9 @@ class Location
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -54,9 +54,10 @@ class Location
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Location
      */
     public function setName($name)
@@ -67,7 +68,7 @@ class Location
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -77,9 +78,10 @@ class Location
     }
 
     /**
-     * Set package
+     * Set package.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     *
      * @return Location
      */
     public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package)
@@ -90,7 +92,7 @@ class Location
     }
 
     /**
-     * Get package
+     * Get package.
      *
      * @return \Sulu\Bundle\TranslateBundle\Entity\Package
      */
@@ -100,9 +102,10 @@ class Location
     }
 
     /**
-     * Add codes
+     * Add codes.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Code $codes
+     *
      * @return Location
      */
     public function addCode(\Sulu\Bundle\TranslateBundle\Entity\Code $codes)
@@ -113,7 +116,7 @@ class Location
     }
 
     /**
-     * Remove codes
+     * Remove codes.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Code $codes
      */
@@ -123,7 +126,7 @@ class Location
     }
 
     /**
-     * Get codes
+     * Get codes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

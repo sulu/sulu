@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Resolves the request_analyzer to an array
+ * Resolves the request_analyzer to an array.
  */
 class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
 {
@@ -62,7 +62,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
-            )
+            ),
         );
     }
 
@@ -86,7 +86,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => array(),
                 'post' => array(),
                 'analyticsKey' => $this->previewDefaults['analyticsKey'],
-            )
+            ),
         );
     }
 }

@@ -13129,21 +13129,37 @@ define("underscore", (function (global) {
     };
 }(this)));
 
-//     Backbone.js 1.0.0
+//     Backbone.js 1.1.2
 
-//     (c) 2010-2013 Jeremy Ashkenas, DocumentCloud Inc.
+//     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Backbone may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://backbonejs.org
 
-(function(){
+(function(root, factory) {
+
+  // Set up Backbone appropriately for the environment. Start with AMD.
+  if (typeof define === 'function' && define.amd) {
+    define('backbone',['underscore', 'jquery', 'exports'], function(_, $, exports) {
+      // Export global even in AMD case in case this script is loaded with
+      // others that may still expect a global Backbone.
+      root.Backbone = factory(root, exports, _, $);
+    });
+
+  // Next for Node.js or CommonJS. jQuery may not be needed as a module.
+  } else if (typeof exports !== 'undefined') {
+    var _ = require('underscore');
+    factory(root, exports, _);
+
+  // Finally, as a browser global.
+  } else {
+    root.Backbone = factory(root, {}, root._, (root.jQuery || root.Zepto || root.ender || root.$));
+  }
+
+}(this, function(root, Backbone, _, $) {
 
   // Initial Setup
   // -------------
-
-  // Save a reference to the global object (`window` in the browser, `exports`
-  // on the server).
-  var root = this;
 
   // Save the previous value of the `Backbone` variable, so that it can be
   // restored later on, if `noConflict` is used.
@@ -13155,25 +13171,12 @@ define("underscore", (function (global) {
   var slice = array.slice;
   var splice = array.splice;
 
-  // The top-level namespace. All public Backbone classes and modules will
-  // be attached to this. Exported for both the browser and the server.
-  var Backbone;
-  if (typeof exports !== 'undefined') {
-    Backbone = exports;
-  } else {
-    Backbone = root.Backbone = {};
-  }
-
   // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '1.0.0';
-
-  // Require Underscore, if we're on the server, and it's not already present.
-  var _ = root._;
-  if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
+  Backbone.VERSION = '1.1.2';
 
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
-  Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;
+  Backbone.$ = $;
 
   // Runs Backbone.js in *noConflict* mode, returning the `Backbone` variable
   // to its previous owner. Returns a reference to this Backbone object.
@@ -13183,7 +13186,7 @@ define("underscore", (function (global) {
   };
 
   // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
-  // will fake `"PUT"` and `"DELETE"` requests via the `_method` parameter and
+  // will fake `"PATCH"`, `"PUT"` and `"DELETE"` requests via the `_method` parameter and
   // set a `X-Http-Method-Override` header.
   Backbone.emulateHTTP = false;
 
@@ -13239,10 +13242,9 @@ define("underscore", (function (global) {
       var retain, ev, events, names, i, l, j, k;
       if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
       if (!name && !callback && !context) {
-        this._events = {};
+        this._events = void 0;
         return this;
       }
-
       names = name ? [name] : _.keys(this._events);
       for (i = 0, l = names.length; i < l; i++) {
         name = names[i];
@@ -13282,14 +13284,15 @@ define("underscore", (function (global) {
     // Tell this object to stop listening to either specific events ... or
     // to every object it's currently listening to.
     stopListening: function(obj, name, callback) {
-      var listeners = this._listeners;
-      if (!listeners) return this;
-      var deleteListener = !name && !callback;
-      if (typeof name === 'object') callback = this;
-      if (obj) (listeners = {})[obj._listenerId] = obj;
-      for (var id in listeners) {
-        listeners[id].off(name, callback, this);
-        if (deleteListener) delete this._listeners[id];
+      var listeningTo = this._listeningTo;
+      if (!listeningTo) return this;
+      var remove = !name && !callback;
+      if (!callback && typeof name === 'object') callback = this;
+      if (obj) (listeningTo = {})[obj._listenId] = obj;
+      for (var id in listeningTo) {
+        obj = listeningTo[id];
+        obj.off(name, callback, this);
+        if (remove || _.isEmpty(obj._events)) delete this._listeningTo[id];
       }
       return this;
     }
@@ -13335,7 +13338,7 @@ define("underscore", (function (global) {
       case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1); return;
       case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2); return;
       case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
-      default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args);
+      default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args); return;
     }
   };
 
@@ -13346,10 +13349,10 @@ define("underscore", (function (global) {
   // listening to.
   _.each(listenMethods, function(implementation, method) {
     Events[method] = function(obj, name, callback) {
-      var listeners = this._listeners || (this._listeners = {});
-      var id = obj._listenerId || (obj._listenerId = _.uniqueId('l'));
-      listeners[id] = obj;
-      if (typeof name === 'object') callback = this;
+      var listeningTo = this._listeningTo || (this._listeningTo = {});
+      var id = obj._listenId || (obj._listenId = _.uniqueId('l'));
+      listeningTo[id] = obj;
+      if (!callback && typeof name === 'object') callback = this;
       obj[implementation](name, callback, this);
       return this;
     };
@@ -13374,23 +13377,17 @@ define("underscore", (function (global) {
   // Create a new model with the specified attributes. A client id (`cid`)
   // is automatically generated and assigned for you.
   var Model = Backbone.Model = function(attributes, options) {
-    var defaults;
     var attrs = attributes || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
     this.attributes = {};
-    _.extend(this, _.pick(options, modelOptions));
+    if (options.collection) this.collection = options.collection;
     if (options.parse) attrs = this.parse(attrs, options) || {};
-    if (defaults = _.result(this, 'defaults')) {
-      attrs = _.defaults({}, attrs, defaults);
-    }
+    attrs = _.defaults({}, attrs, _.result(this, 'defaults'));
     this.set(attrs, options);
     this.changed = {};
     this.initialize.apply(this, arguments);
   };
-
-  // A list of options to be attached directly to the model, if provided.
-  var modelOptions = ['url', 'urlRoot', 'collection'];
 
   // Attach all inheritable methods to the Model prototype.
   _.extend(Model.prototype, Events, {
@@ -13486,7 +13483,7 @@ define("underscore", (function (global) {
 
       // Trigger all relevant attribute changes.
       if (!silent) {
-        if (changes.length) this._pending = true;
+        if (changes.length) this._pending = options;
         for (var i = 0, l = changes.length; i < l; i++) {
           this.trigger('change:' + changes[i], this, current[changes[i]], options);
         }
@@ -13497,6 +13494,7 @@ define("underscore", (function (global) {
       if (changing) return this;
       if (!silent) {
         while (this._pending) {
+          options = this._pending;
           this._pending = false;
           this.trigger('change', this, options);
         }
@@ -13587,13 +13585,16 @@ define("underscore", (function (global) {
         (attrs = {})[key] = val;
       }
 
-      // If we're not waiting and attributes exist, save acts as `set(attr).save(null, opts)`.
-      if (attrs && (!options || !options.wait) && !this.set(attrs, options)) return false;
-
       options = _.extend({validate: true}, options);
 
-      // Do not persist invalid models.
-      if (!this._validate(attrs, options)) return false;
+      // If we're not waiting and attributes exist, save acts as
+      // `set(attr).save(null, opts)` with validation. Otherwise, check if
+      // the model will be valid when the attributes, if any, are set.
+      if (attrs && !options.wait) {
+        if (!this.set(attrs, options)) return false;
+      } else {
+        if (!this._validate(attrs, options)) return false;
+      }
 
       // Set temporary attributes if `{wait: true}`.
       if (attrs && options.wait) {
@@ -13661,9 +13662,12 @@ define("underscore", (function (global) {
     // using Backbone's restful methods, override this to change the endpoint
     // that will be called.
     url: function() {
-      var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
+      var base =
+        _.result(this, 'urlRoot') ||
+        _.result(this.collection, 'url') ||
+        urlError();
       if (this.isNew()) return base;
-      return base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id);
+      return base.replace(/([^\/])$/, '$1/') + encodeURIComponent(this.id);
     },
 
     // **parse** converts a response into the hash of attributes to be `set` on
@@ -13679,7 +13683,7 @@ define("underscore", (function (global) {
 
     // A model is new if it has never been saved to the server, and lacks an id.
     isNew: function() {
-      return this.id == null;
+      return !this.has(this.idAttribute);
     },
 
     // Check if the model is currently in a valid state.
@@ -13694,7 +13698,7 @@ define("underscore", (function (global) {
       attrs = _.extend({}, this.attributes, attrs);
       var error = this.validationError = this.validate(attrs, options) || null;
       if (!error) return true;
-      this.trigger('invalid', this, error, _.extend(options || {}, {validationError: error}));
+      this.trigger('invalid', this, error, _.extend(options, {validationError: error}));
       return false;
     }
 
@@ -13727,7 +13731,6 @@ define("underscore", (function (global) {
   // its models in sort order, as they're added and removed.
   var Collection = Backbone.Collection = function(models, options) {
     options || (options = {});
-    if (options.url) this.url = options.url;
     if (options.model) this.model = options.model;
     if (options.comparator !== void 0) this.comparator = options.comparator;
     this._reset();
@@ -13737,7 +13740,7 @@ define("underscore", (function (global) {
 
   // Default options for `Collection#set`.
   var setOptions = {add: true, remove: true, merge: true};
-  var addOptions = {add: true, merge: false, remove: false};
+  var addOptions = {add: true, remove: false};
 
   // Define the Collection's inheritable methods.
   _.extend(Collection.prototype, Events, {
@@ -13763,16 +13766,17 @@ define("underscore", (function (global) {
 
     // Add a model, or list of models to the set.
     add: function(models, options) {
-      return this.set(models, _.defaults(options || {}, addOptions));
+      return this.set(models, _.extend({merge: false}, options, addOptions));
     },
 
     // Remove a model, or a list of models from the set.
     remove: function(models, options) {
-      models = _.isArray(models) ? models.slice() : [models];
+      var singular = !_.isArray(models);
+      models = singular ? [models] : _.clone(models);
       options || (options = {});
       var i, l, index, model;
       for (i = 0, l = models.length; i < l; i++) {
-        model = this.get(models[i]);
+        model = models[i] = this.get(models[i]);
         if (!model) continue;
         delete this._byId[model.id];
         delete this._byId[model.cid];
@@ -13783,9 +13787,9 @@ define("underscore", (function (global) {
           options.index = index;
           model.trigger('remove', model, this, options);
         }
-        this._removeReference(model);
+        this._removeReference(model, options);
       }
-      return this;
+      return singular ? models[0] : models;
     },
 
     // Update a collection by `set`-ing a new list of models, adding new ones,
@@ -13793,43 +13797,57 @@ define("underscore", (function (global) {
     // already exist in the collection, as necessary. Similar to **Model#set**,
     // the core operation for updating the data contained by the collection.
     set: function(models, options) {
-      options = _.defaults(options || {}, setOptions);
+      options = _.defaults({}, options, setOptions);
       if (options.parse) models = this.parse(models, options);
-      if (!_.isArray(models)) models = models ? [models] : [];
-      var i, l, model, attrs, existing, sort;
+      var singular = !_.isArray(models);
+      models = singular ? (models ? [models] : []) : _.clone(models);
+      var i, l, id, model, attrs, existing, sort;
       var at = options.at;
+      var targetModel = this.model;
       var sortable = this.comparator && (at == null) && options.sort !== false;
       var sortAttr = _.isString(this.comparator) ? this.comparator : null;
       var toAdd = [], toRemove = [], modelMap = {};
+      var add = options.add, merge = options.merge, remove = options.remove;
+      var order = !sortable && add && remove ? [] : false;
 
       // Turn bare objects into model references, and prevent invalid models
       // from being added.
       for (i = 0, l = models.length; i < l; i++) {
-        if (!(model = this._prepareModel(models[i], options))) continue;
+        attrs = models[i] || {};
+        if (attrs instanceof Model) {
+          id = model = attrs;
+        } else {
+          id = attrs[targetModel.prototype.idAttribute || 'id'];
+        }
 
         // If a duplicate is found, prevent it from being added and
         // optionally merge it into the existing model.
-        if (existing = this.get(model)) {
-          if (options.remove) modelMap[existing.cid] = true;
-          if (options.merge) {
-            existing.set(model.attributes, options);
+        if (existing = this.get(id)) {
+          if (remove) modelMap[existing.cid] = true;
+          if (merge) {
+            attrs = attrs === model ? model.attributes : attrs;
+            if (options.parse) attrs = existing.parse(attrs, options);
+            existing.set(attrs, options);
             if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
           }
+          models[i] = existing;
 
-        // This is a new model, push it to the `toAdd` list.
-        } else if (options.add) {
+        // If this is a new, valid model, push it to the `toAdd` list.
+        } else if (add) {
+          model = models[i] = this._prepareModel(attrs, options);
+          if (!model) continue;
           toAdd.push(model);
-
-          // Listen to added models' events, and index models for lookup by
-          // `id` and by `cid`.
-          model.on('all', this._onModelEvent, this);
-          this._byId[model.cid] = model;
-          if (model.id != null) this._byId[model.id] = model;
+          this._addReference(model, options);
         }
+
+        // Do not add multiple models with the same `id`.
+        model = existing || model;
+        if (order && (model.isNew() || !modelMap[model.id])) order.push(model);
+        modelMap[model.id] = true;
       }
 
       // Remove nonexistent models if appropriate.
-      if (options.remove) {
+      if (remove) {
         for (i = 0, l = this.length; i < l; ++i) {
           if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
         }
@@ -13837,29 +13855,35 @@ define("underscore", (function (global) {
       }
 
       // See if sorting is needed, update `length` and splice in new models.
-      if (toAdd.length) {
+      if (toAdd.length || (order && order.length)) {
         if (sortable) sort = true;
         this.length += toAdd.length;
         if (at != null) {
-          splice.apply(this.models, [at, 0].concat(toAdd));
+          for (i = 0, l = toAdd.length; i < l; i++) {
+            this.models.splice(at + i, 0, toAdd[i]);
+          }
         } else {
-          push.apply(this.models, toAdd);
+          if (order) this.models.length = 0;
+          var orderedModels = order || toAdd;
+          for (i = 0, l = orderedModels.length; i < l; i++) {
+            this.models.push(orderedModels[i]);
+          }
         }
       }
 
       // Silently sort the collection if appropriate.
       if (sort) this.sort({silent: true});
 
-      if (options.silent) return this;
-
-      // Trigger `add` events.
-      for (i = 0, l = toAdd.length; i < l; i++) {
-        (model = toAdd[i]).trigger('add', model, this, options);
+      // Unless silenced, it's time to fire all appropriate add/sort events.
+      if (!options.silent) {
+        for (i = 0, l = toAdd.length; i < l; i++) {
+          (model = toAdd[i]).trigger('add', model, this, options);
+        }
+        if (sort || (order && order.length)) this.trigger('sort', this, options);
       }
 
-      // Trigger `sort` if the collection was sorted.
-      if (sort) this.trigger('sort', this, options);
-      return this;
+      // Return the added (or merged) model (or models).
+      return singular ? models[0] : models;
     },
 
     // When you have more items than you want to add or remove individually,
@@ -13869,20 +13893,18 @@ define("underscore", (function (global) {
     reset: function(models, options) {
       options || (options = {});
       for (var i = 0, l = this.models.length; i < l; i++) {
-        this._removeReference(this.models[i]);
+        this._removeReference(this.models[i], options);
       }
       options.previousModels = this.models;
       this._reset();
-      this.add(models, _.extend({silent: true}, options));
+      models = this.add(models, _.extend({silent: true}, options));
       if (!options.silent) this.trigger('reset', this, options);
-      return this;
+      return models;
     },
 
     // Add a model to the end of the collection.
     push: function(model, options) {
-      model = this._prepareModel(model, options);
-      this.add(model, _.extend({at: this.length}, options));
-      return model;
+      return this.add(model, _.extend({at: this.length}, options));
     },
 
     // Remove a model from the end of the collection.
@@ -13894,9 +13916,7 @@ define("underscore", (function (global) {
 
     // Add a model to the beginning of the collection.
     unshift: function(model, options) {
-      model = this._prepareModel(model, options);
-      this.add(model, _.extend({at: 0}, options));
-      return model;
+      return this.add(model, _.extend({at: 0}, options));
     },
 
     // Remove a model from the beginning of the collection.
@@ -13907,14 +13927,14 @@ define("underscore", (function (global) {
     },
 
     // Slice out a sub-array of models from the collection.
-    slice: function(begin, end) {
-      return this.models.slice(begin, end);
+    slice: function() {
+      return slice.apply(this.models, arguments);
     },
 
     // Get a model from the set by id.
     get: function(obj) {
       if (obj == null) return void 0;
-      return this._byId[obj.id != null ? obj.id : obj.cid || obj];
+      return this._byId[obj] || this._byId[obj.id] || this._byId[obj.cid];
     },
 
     // Get the model at the given index.
@@ -13958,16 +13978,6 @@ define("underscore", (function (global) {
       return this;
     },
 
-    // Figure out the smallest index at which a model should be inserted so as
-    // to maintain order.
-    sortedIndex: function(model, value, context) {
-      value || (value = this.comparator);
-      var iterator = _.isFunction(value) ? value : function(model) {
-        return model.get(value);
-      };
-      return _.sortedIndex(this.models, model, iterator, context);
-    },
-
     // Pluck an attribute from each model in the collection.
     pluck: function(attr) {
       return _.invoke(this.models, 'get', attr);
@@ -14000,7 +14010,7 @@ define("underscore", (function (global) {
       if (!options.wait) this.add(model, options);
       var collection = this;
       var success = options.success;
-      options.success = function(resp) {
+      options.success = function(model, resp) {
         if (options.wait) collection.add(model, options);
         if (success) success(model, resp, options);
       };
@@ -14030,22 +14040,25 @@ define("underscore", (function (global) {
     // Prepare a hash of attributes (or other model) to be added to this
     // collection.
     _prepareModel: function(attrs, options) {
-      if (attrs instanceof Model) {
-        if (!attrs.collection) attrs.collection = this;
-        return attrs;
-      }
-      options || (options = {});
+      if (attrs instanceof Model) return attrs;
+      options = options ? _.clone(options) : {};
       options.collection = this;
       var model = new this.model(attrs, options);
-      if (!model._validate(attrs, options)) {
-        this.trigger('invalid', this, attrs, options);
-        return false;
-      }
-      return model;
+      if (!model.validationError) return model;
+      this.trigger('invalid', this, model.validationError, options);
+      return false;
+    },
+
+    // Internal method to create a model's ties to a collection.
+    _addReference: function(model, options) {
+      this._byId[model.cid] = model;
+      if (model.id != null) this._byId[model.id] = model;
+      if (!model.collection) model.collection = this;
+      model.on('all', this._onModelEvent, this);
     },
 
     // Internal method to sever a model's ties to a collection.
-    _removeReference: function(model) {
+    _removeReference: function(model, options) {
       if (this === model.collection) delete model.collection;
       model.off('all', this._onModelEvent, this);
     },
@@ -14073,8 +14086,8 @@ define("underscore", (function (global) {
     'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
     'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
     'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
-    'tail', 'drop', 'last', 'without', 'indexOf', 'shuffle', 'lastIndexOf',
-    'isEmpty', 'chain'];
+    'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
+    'lastIndexOf', 'isEmpty', 'chain', 'sample'];
 
   // Mix in each Underscore method as a proxy to `Collection#models`.
   _.each(methods, function(method) {
@@ -14086,7 +14099,7 @@ define("underscore", (function (global) {
   });
 
   // Underscore methods that take a property name as an argument.
-  var attributeMethods = ['groupBy', 'countBy', 'sortBy'];
+  var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
 
   // Use attributes instead of properties.
   _.each(attributeMethods, function(method) {
@@ -14113,7 +14126,8 @@ define("underscore", (function (global) {
   // if an existing element is not provided...
   var View = Backbone.View = function(options) {
     this.cid = _.uniqueId('view');
-    this._configure(options || {});
+    options || (options = {});
+    _.extend(this, _.pick(options, viewOptions));
     this._ensureElement();
     this.initialize.apply(this, arguments);
     this.delegateEvents();
@@ -14132,7 +14146,7 @@ define("underscore", (function (global) {
     tagName: 'div',
 
     // jQuery delegate for element lookup, scoped to DOM elements within the
-    // current view. This should be prefered to global lookups where possible.
+    // current view. This should be preferred to global lookups where possible.
     $: function(selector) {
       return this.$el.find(selector);
     },
@@ -14172,7 +14186,7 @@ define("underscore", (function (global) {
     //
     //     {
     //       'mousedown .title':  'edit',
-    //       'click .button':     'save'
+    //       'click .button':     'save',
     //       'click .open':       function(e) { ... }
     //     }
     //
@@ -14208,16 +14222,6 @@ define("underscore", (function (global) {
     undelegateEvents: function() {
       this.$el.off('.delegateEvents' + this.cid);
       return this;
-    },
-
-    // Performs the initial configuration of a View with a set of options.
-    // Keys with special meaning *(e.g. model, collection, id, className)* are
-    // attached directly to the view.  See `viewOptions` for an exhaustive
-    // list.
-    _configure: function(options) {
-      if (this.options) options = _.extend({}, _.result(this, 'options'), options);
-      _.extend(this, _.pick(options, viewOptions));
-      this.options = options;
     },
 
     // Ensure that the View has a DOM element to render into.
@@ -14305,8 +14309,7 @@ define("underscore", (function (global) {
     // If we're sending a `PATCH` request, and we're in an old Internet Explorer
     // that still has ActiveX enabled by default, override jQuery to use that
     // for XHR instead. Remove this line when jQuery supports `PATCH` on IE8.
-    if (params.type === 'PATCH' && window.ActiveXObject &&
-          !(window.external && window.external.msActiveXFilteringEnabled)) {
+    if (params.type === 'PATCH' && noXhrPatch) {
       params.xhr = function() {
         return new ActiveXObject("Microsoft.XMLHTTP");
       };
@@ -14317,6 +14320,10 @@ define("underscore", (function (global) {
     model.trigger('request', model, xhr, options);
     return xhr;
   };
+
+  var noXhrPatch =
+    typeof window !== 'undefined' && !!window.ActiveXObject &&
+      !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
 
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
   var methodMap = {
@@ -14375,12 +14382,18 @@ define("underscore", (function (global) {
       var router = this;
       Backbone.history.route(route, function(fragment) {
         var args = router._extractParameters(route, fragment);
-        callback && callback.apply(router, args);
+        router.execute(callback, args);
         router.trigger.apply(router, ['route:' + name].concat(args));
         router.trigger('route', name, args);
         Backbone.history.trigger('route', router, name, args);
       });
       return this;
+    },
+
+    // Execute a route handler with the provided parameters.  This is an
+    // excellent place to do pre-route setup or post-route cleanup.
+    execute: function(callback, args) {
+      if (callback) callback.apply(this, args);
     },
 
     // Simple proxy to `Backbone.history` to save a fragment into the history.
@@ -14406,11 +14419,11 @@ define("underscore", (function (global) {
     _routeToRegExp: function(route) {
       route = route.replace(escapeRegExp, '\\$&')
                    .replace(optionalParam, '(?:$1)?')
-                   .replace(namedParam, function(match, optional){
-                     return optional ? match : '([^\/]+)';
+                   .replace(namedParam, function(match, optional) {
+                     return optional ? match : '([^/?]+)';
                    })
-                   .replace(splatParam, '(.*?)');
-      return new RegExp('^' + route + '$');
+                   .replace(splatParam, '([^?]*?)');
+      return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
     },
 
     // Given a route, and a URL fragment that it matches, return the array of
@@ -14418,7 +14431,9 @@ define("underscore", (function (global) {
     // treated as `null` to normalize cross-browser behavior.
     _extractParameters: function(route, fragment) {
       var params = route.exec(fragment).slice(1);
-      return _.map(params, function(param) {
+      return _.map(params, function(param, i) {
+        // Don't decode the search params.
+        if (i === params.length - 1) return param || null;
         return param ? decodeURIComponent(param) : null;
       });
     }
@@ -14456,6 +14471,9 @@ define("underscore", (function (global) {
   // Cached regex for removing a trailing slash.
   var trailingSlash = /\/$/;
 
+  // Cached regex for stripping urls of hash.
+  var pathStripper = /#.*$/;
+
   // Has the history handling already been started?
   History.started = false;
 
@@ -14465,6 +14483,11 @@ define("underscore", (function (global) {
     // The default interval to poll for hash changes, if necessary, is
     // twenty times a second.
     interval: 50,
+
+    // Are we at the app root?
+    atRoot: function() {
+      return this.location.pathname.replace(/[^\/]$/, '$&/') === this.root;
+    },
 
     // Gets the true hash value. Cannot use location.hash directly due to bug
     // in Firefox where location.hash will always be decoded.
@@ -14478,9 +14501,9 @@ define("underscore", (function (global) {
     getFragment: function(fragment, forcePushState) {
       if (fragment == null) {
         if (this._hasPushState || !this._wantsHashChange || forcePushState) {
-          fragment = this.location.pathname;
+          fragment = decodeURI(this.location.pathname + this.location.search);
           var root = this.root.replace(trailingSlash, '');
-          if (!fragment.indexOf(root)) fragment = fragment.substr(root.length);
+          if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
         } else {
           fragment = this.getHash();
         }
@@ -14496,7 +14519,7 @@ define("underscore", (function (global) {
 
       // Figure out the initial configuration. Do we need an iframe?
       // Is pushState desired ... is it available?
-      this.options          = _.extend({}, {root: '/'}, this.options, options);
+      this.options          = _.extend({root: '/'}, this.options, options);
       this.root             = this.options.root;
       this._wantsHashChange = this.options.hashChange !== false;
       this._wantsPushState  = !!this.options.pushState;
@@ -14509,7 +14532,8 @@ define("underscore", (function (global) {
       this.root = ('/' + this.root + '/').replace(rootStripper, '/');
 
       if (oldIE && this._wantsHashChange) {
-        this.iframe = Backbone.$('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo('body')[0].contentWindow;
+        var frame = Backbone.$('<iframe src="javascript:0" tabindex="-1">');
+        this.iframe = frame.hide().appendTo('body')[0].contentWindow;
         this.navigate(fragment);
       }
 
@@ -14527,21 +14551,26 @@ define("underscore", (function (global) {
       // opened by a non-pushState browser.
       this.fragment = fragment;
       var loc = this.location;
-      var atRoot = loc.pathname.replace(/[^\/]$/, '$&/') === this.root;
 
-      // If we've started off with a route from a `pushState`-enabled browser,
-      // but we're currently in a browser that doesn't support it...
-      if (this._wantsHashChange && this._wantsPushState && !this._hasPushState && !atRoot) {
-        this.fragment = this.getFragment(null, true);
-        this.location.replace(this.root + this.location.search + '#' + this.fragment);
-        // Return immediately as browser will do redirect to new url
-        return true;
+      // Transition from hashChange to pushState or vice versa if both are
+      // requested.
+      if (this._wantsHashChange && this._wantsPushState) {
 
-      // Or if we've started out with a hash-based route, but we're currently
-      // in a browser where it could be `pushState`-based instead...
-      } else if (this._wantsPushState && this._hasPushState && atRoot && loc.hash) {
-        this.fragment = this.getHash().replace(routeStripper, '');
-        this.history.replaceState({}, document.title, this.root + this.fragment + loc.search);
+        // If we've started off with a route from a `pushState`-enabled
+        // browser, but we're currently in a browser that doesn't support it...
+        if (!this._hasPushState && !this.atRoot()) {
+          this.fragment = this.getFragment(null, true);
+          this.location.replace(this.root + '#' + this.fragment);
+          // Return immediately as browser will do redirect to new url
+          return true;
+
+        // Or if we've started out with a hash-based route, but we're currently
+        // in a browser where it could be `pushState`-based instead...
+        } else if (this._hasPushState && this.atRoot() && loc.hash) {
+          this.fragment = this.getHash().replace(routeStripper, '');
+          this.history.replaceState({}, document.title, this.root + this.fragment);
+        }
+
       }
 
       if (!this.options.silent) return this.loadUrl();
@@ -14551,7 +14580,7 @@ define("underscore", (function (global) {
     // but possibly useful for unit testing Routers.
     stop: function() {
       Backbone.$(window).off('popstate', this.checkUrl).off('hashchange', this.checkUrl);
-      clearInterval(this._checkUrlInterval);
+      if (this._checkUrlInterval) clearInterval(this._checkUrlInterval);
       History.started = false;
     },
 
@@ -14570,21 +14599,20 @@ define("underscore", (function (global) {
       }
       if (current === this.fragment) return false;
       if (this.iframe) this.navigate(current);
-      this.loadUrl() || this.loadUrl(this.getHash());
+      this.loadUrl();
     },
 
     // Attempt to load the current URL fragment. If a route succeeds with a
     // match, returns `true`. If no defined routes matches the fragment,
     // returns `false`.
-    loadUrl: function(fragmentOverride) {
-      var fragment = this.fragment = this.getFragment(fragmentOverride);
-      var matched = _.any(this.handlers, function(handler) {
+    loadUrl: function(fragment) {
+      fragment = this.fragment = this.getFragment(fragment);
+      return _.any(this.handlers, function(handler) {
         if (handler.route.test(fragment)) {
           handler.callback(fragment);
           return true;
         }
       });
-      return matched;
     },
 
     // Save a fragment into the hash history, or replace the URL state if the
@@ -14596,11 +14624,18 @@ define("underscore", (function (global) {
     // you wish to modify the current URL without adding an entry to the history.
     navigate: function(fragment, options) {
       if (!History.started) return false;
-      if (!options || options === true) options = {trigger: options};
-      fragment = this.getFragment(fragment || '');
+      if (!options || options === true) options = {trigger: !!options};
+
+      var url = this.root + (fragment = this.getFragment(fragment || ''));
+
+      // Strip the hash for matching.
+      fragment = fragment.replace(pathStripper, '');
+
       if (this.fragment === fragment) return;
       this.fragment = fragment;
-      var url = this.root + fragment;
+
+      // Don't include a trailing slash on the root.
+      if (fragment === '' && url !== '/') url = url.slice(0, -1);
 
       // If pushState is available, we use it to set the fragment as a real URL.
       if (this._hasPushState) {
@@ -14623,7 +14658,7 @@ define("underscore", (function (global) {
       } else {
         return this.location.assign(url);
       }
-      if (options.trigger) this.loadUrl(fragment);
+      if (options.trigger) return this.loadUrl(fragment);
     },
 
     // Update the hash location, either replacing the current entry, or adding
@@ -14691,7 +14726,7 @@ define("underscore", (function (global) {
   };
 
   // Wrap an optional error callback with a fallback error event.
-  var wrapError = function (model, options) {
+  var wrapError = function(model, options) {
     var error = options.error;
     options.error = function(resp) {
       if (error) error(model, resp, options);
@@ -14699,14 +14734,9 @@ define("underscore", (function (global) {
     };
   };
 
-}).call(this);
+  return Backbone;
 
-define("backbone", ["underscore","jquery"], (function (global) {
-    return function () {
-        var ret, fn;
-        return ret || global.Backbone;
-    };
-}(this)));
+}));
 
 /**
  * @license RequireJS text 2.0.14 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
@@ -34551,7 +34581,7 @@ define('__component__$tabs@husky',[],function() {
                         this.sandbox.logger.log('data could not be loaded:', data);
                     }.bind(this));
             } else if (!!this.options.data) {
-                this.render((this.options.data));
+                this.render(this.options.data);
             } else {
                 this.sandbox.logger.log('no data provided for tabs!');
             }
@@ -34732,7 +34762,7 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /** templates container */
-            templates = {
+        templates = {
             skeleton: [
                 '<div class="husky-toolbar">',
                 '</div>'
@@ -34807,9 +34837,9 @@ define('__component__$toolbar@husky',[],function() {
          * @event husky.toolbar.[INSTANCE_NAME.]item.hide
          * @param {string} button The id of the button
          */
-         ITEM_HIDE = function() {
+        ITEM_HIDE = function() {
             return createEventName.call(this, 'item.hide');
-         },
+        },
 
         /**
          * event to show a button
@@ -34817,9 +34847,9 @@ define('__component__$toolbar@husky',[],function() {
          * @event husky.toolbar.[INSTANCE_NAME.]item.show
          * @param {string} button The id of the button
          */
-         ITEM_SHOW = function() {
+        ITEM_SHOW = function() {
             return createEventName.call(this, 'item.show');
-         },
+        },
 
         /**
          * event to mark a subitem
@@ -34827,9 +34857,9 @@ define('__component__$toolbar@husky',[],function() {
          * @event husky.toolbar.[INSTANCE_NAME.]item.mark
          * @param {string} button The id of the button
          */
-         ITEM_MARK = function() {
+        ITEM_MARK = function() {
             return createEventName.call(this, 'item.mark');
-         },
+        },
 
         /**
          * event to change a buttons default title and default icon
@@ -34838,7 +34868,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param {string} button The id of the button
          * @param {object} object with a icon and title
          */
-         BUTTON_SET = function() {
+        BUTTON_SET = function() {
             return createEventName.call(this, 'button.set');
         },
 
@@ -34850,7 +34880,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param {array} items The items to set
          * @param {integer} itemId The id or the index of the item to set selected - optional
          */
-         ITEMS_SET = function() {
+        ITEMS_SET = function() {
             return createEventName.call(this, 'items.set');
         },
 
@@ -34922,7 +34952,7 @@ define('__component__$toolbar@husky',[],function() {
 
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
                 if (!!this.items[button]) {
-                    this.items[button].initialized.then(function () {
+                    this.items[button].initialized.then(function() {
                         var index = getItemIndexById.call(this, id, this.items[button]);
                         changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
                         this.sandbox.emit(ITEM_MARK.call(this), this.items[button].items[index].id);
@@ -34994,7 +35024,7 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.addClass($item, 'highlight-animation');
 
                 // remove class after effect has finished
-                this.sandbox.dom.on($item,'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function(ev) {
+                this.sandbox.dom.on($item, 'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function(ev) {
                     this.sandbox.dom.removeClass(ev.currentTarget, 'highlight-animation');
                 }.bind(this));
             }
@@ -35022,9 +35052,9 @@ define('__component__$toolbar@husky',[],function() {
          * Shows a button
          * @param $button
          */
-         showItem = function($button) {
+        showItem = function($button) {
             this.sandbox.dom.removeClass($button, 'hidden');
-         },
+        },
 
         /**
          * Sets a button into loading state
@@ -35140,8 +35170,8 @@ define('__component__$toolbar@husky',[],function() {
                 return;
             }
             hideDropdowns.call(this);
-            if (!!item.parentId && !!this.items[item.parentId].itemsOption
-                && this.items[item.parentId].itemsOption.markable === true) {
+            if (!!item.parentId && !!this.items[item.parentId].itemsOption &&
+                this.items[item.parentId].itemsOption.markable === true) {
                 uniqueMarkItem.call(this, item.id);
             }
             if (!item.disabled) {
@@ -35303,7 +35333,7 @@ define('__component__$toolbar@husky',[],function() {
         setButtonWidth = function(listItem, parent) {
             var maxwidth = 0, i, length;
             if (parent.type === 'select') {
-                for(i = -1, length = parent.items.length; ++i < length;) {
+                for (i = -1, length = parent.items.length; ++i < length;) {
                     changeMainListItem.call(this, listItem, parent.items[i]);
                     if (this.sandbox.dom.width(listItem) > maxwidth) {
                         maxwidth = this.sandbox.dom.width(listItem);
@@ -35441,7 +35471,7 @@ define('__component__$toolbar@husky',[],function() {
                     data[i].position = 9000;
                 }
             }
-            data = data.sort(function(a, b){
+            data = data.sort(function(a, b) {
                 return a.position - b.position;
             });
 
@@ -35626,6 +35656,11 @@ define('__component__$toolbar@husky',[],function() {
                 if (!!item['class']) {
                     classArray.push(item['class']);
                 }
+
+                if (item.hidden) {
+                    classArray.push('hidden');
+                }
+
                 if (item.disabled) {
                     classArray.push('disabled');
                 }
@@ -37455,6 +37490,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {String} [options.resultKey] key in result set - default is empty and the _embedded property of the result set will be taken
  * @param {String} [options.url] url to load data from
  * @param {Boolean} [options.isNative] should use native select
+ * @param {Boolean} [options.showToolTip] Show tool-tip on hover - only works for single-selects
  */
 
 define('__component__$select@husky',[], function() {
@@ -37488,6 +37524,7 @@ define('__component__$select@husky',[], function() {
             editable: false,
             direction: 'auto',
             resultKey: '',
+            showToolTip: false,
             translations: translations,
             isNative: false
         },
@@ -37507,7 +37544,8 @@ define('__component__$select@husky',[], function() {
             typeRowSelector: '.type-row',
             contentInnerSelector: '.content-inner',
             toggleClass: '.toggle-icon',
-            formElementSelector: '.form-element'
+            formElementSelector: '.form-element',
+            selectContainerSelector: '.husky-select-container'
         },
 
         templates = {
@@ -37740,7 +37778,6 @@ define('__component__$select@husky',[], function() {
         },
 
         render: function() {
-
             // add husky-select class to component
             this.sandbox.dom.addClass(this.$el, constants.selectClass);
 
@@ -37843,7 +37880,9 @@ define('__component__$select@husky',[], function() {
                 idString = (id !== null && typeof id !== 'undefined') ? id.toString() : this.sandbox.util.uniqueId();
 
             if (this.options.preSelectedElements.indexOf(idString) >= 0 ||
-                this.options.preSelectedElements.indexOf(value) >= 0) {
+                this.options.preSelectedElements.indexOf(value) >= 0
+            ) {
+                this.setToolTip(value);
                 $item = this.sandbox.dom.createElement(this.sandbox.util.template(
                     template.call(
                         this,
@@ -37995,7 +38034,7 @@ define('__component__$select@husky',[], function() {
             if (!this.selectedElements.length) {
                 this.triggerDeselect(selectedId);
             } else {
-                this.triggerSelect(selectedId);
+                this.triggerSelect(selectedId, selectedValue);
             }
         },
 
@@ -38338,6 +38377,21 @@ define('__component__$select@husky',[], function() {
         },
 
         /**
+         * Sets tooltip (the title attribute of container)
+         * if options.showToolTip is true and multipleSelect is false
+         *
+         * @param string value
+         */
+        setToolTip: function(value) {
+            if (this.options.showToolTip === true &&
+                this.options.multipleSelect === false
+            ) {
+                var $container = this.$find(constants.selectContainerSelector);
+                this.sandbox.dom.attr($container, 'title', value);
+            }
+        },
+
+        /**
          * Callback for close of overlay with cancel button
          */
         onCloseWithCancel: function() {
@@ -38473,13 +38527,15 @@ define('__component__$select@husky',[], function() {
             if (index >= 0) {
                 this.triggerDeselect(key);
             } else {
-                this.triggerSelect(key);
+                this.triggerSelect(key, value);
             }
             this.sandbox.dom.trigger(this.$el, 'change');
         },
 
         // triggers select callback or emits event
-        triggerSelect: function(key) {
+        triggerSelect: function(key, selectedValue) {
+            this.setToolTip(selectedValue);
+
             // callback, if defined
             if (!!this.options.selectCallback) {
                 this.options.selectCallback.call(this, key);
@@ -40356,7 +40412,7 @@ define('__component__$ckeditor@husky',[], function() {
             pasteFromWord: true,
             height: null,
             maxHeight: null,
-            enterMode: null
+            enterMode: 'p'
         },
 
         /**
@@ -40446,7 +40502,6 @@ define('__component__$ckeditor@husky',[], function() {
             if (!!this.options.enterMode) {
                 config.enterMode = CKEDITOR['ENTER_' + this.options.enterMode.toUpperCase()];
             }
-
 
             // extra allowed
             var extraAllowedContent = '';
@@ -41391,7 +41446,8 @@ define('__component__$overlay@husky',[], function() {
 
             for (var i = -1, length = this.slides[slide].tabs.length; ++i < length;) {
                 this.overlay.slides[slide].tabs.push({
-                    title: this.slides[slide].tabs[i].title,
+                    id: i,
+                    name: this.slides[slide].tabs[i].title,
                     $el: this.sandbox.dom.createElement(this.slides[slide].tabs[i].data)
                 });
                 this.sandbox.dom.hide(this.overlay.slides[slide].tabs[i].$el);
@@ -41414,7 +41470,7 @@ define('__component__$overlay@husky',[], function() {
                     name: 'tabs@husky',
                     options: {
                         el: $element,
-                        data: {items: this.overlay.slides[slide].tabs},
+                        data: this.overlay.slides[slide].tabs,
                         instanceName: 'overlay' + this.options.instanceName,
                         skin: 'overlay'
                     }
@@ -43032,7 +43088,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {Boolean} [options.dropzoneEnabled] Should the dropzone be enabled initially
  * @params {Boolean} [options.cancelUploadOnOverlayClick] Cancel the upload process when the user clicks on the overlay background
  */
-define('__component__$dropzone@husky',[], function () {
+define('__component__$dropzone@husky',[], function() {
 
     'use strict';
 
@@ -43074,30 +43130,30 @@ define('__component__$dropzone@husky',[], function () {
         },
 
         /** templates for component */
-            templates = {
+        templates = {
             basic: [
                 '<div class="' + constants.descriptionClass + '">',
-                '<div class="fa-<%= icon %> icon"></div>',
-                '<span class="title"><%= title %></span>',
-                '<span class="addition"><%= description %></span>',
+                    '<div class="fa-<%= icon %> icon"></div>',
+                    '<span class="title"><%= title %></span>',
+                    '<span class="addition"><%= description %></span>',
                 '</div>',
                 '<div class="' + constants.uploadedItemContainerClass + '"></div>'
             ].join(''),
             uploadItem: [
                 '<div class="' + constants.uploadItemClass + '">' +
                     '<div class="loading-content">',
-                '<div class="fa-<%= cancelIcon %> icon" data-dz-remove></div>',
-                '<div class="file-size" data-dz-size></div>',
-                '<div class="progress">',
-                '<div class="bar" data-dz-uploadprogress></div>',
-                '</div>',
-                '</div>',
-                '<div class="success-content">',
-                '<div class="image">',
-                '<img data-dz-thumbnail />',
-                '</div>',
-                '<div class="fa-check tick"></div>',
-                '</div>',
+                        '<div class="fa-<%= cancelIcon %> icon" data-dz-remove></div>',
+                        '<div class="file-size" data-dz-size></div>',
+                        '<div class="progress">',
+                            '<div class="bar" data-dz-uploadprogress></div>',
+                        '</div>',
+                    '</div>',
+                    '<div class="success-content">',
+                        '<div class="image">',
+                            '<img data-dz-thumbnail />',
+                        '</div>',
+                        '<div class="fa-check tick"></div>',
+                    '</div>',
                 '</div>'
             ].join('')
         },
@@ -43112,7 +43168,7 @@ define('__component__$dropzone@husky',[], function () {
          * raised after initialization process
          * @event husky.dropzone.<instance-name>.initialize
          */
-        INITIALIZED = function () {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -43121,7 +43177,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.uploading
          * @param {Object} the file
          */
-        UPLOADING = function () {
+        UPLOADING = function() {
             return createEventName.call(this, 'uploading');
         },
 
@@ -43131,7 +43187,7 @@ define('__component__$dropzone@husky',[], function () {
          * @param {Object} the file
          * @param {Object} the response
          */
-        SUCCESS = function () {
+        SUCCESS = function() {
             return createEventName.call(this, 'success');
         },
 
@@ -43139,7 +43195,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and opens the data-source folder-overlay
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-        OPEN_DATA_SOURCE = function () {
+        OPEN_DATA_SOURCE = function() {
             return createEventName.call(this, 'open-data-source');
         },
 
@@ -43147,7 +43203,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and prevents an overlay with the dropzone from poping up
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-        LOCK_POPUP = function () {
+        LOCK_POPUP = function() {
             return createEventName.call(this, 'lock-popup');
         },
 
@@ -43155,7 +43211,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and enables overlays with the dropzone to pop up
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-        UNLOCK_POPUP = function () {
+        UNLOCK_POPUP = function() {
             return createEventName.call(this, 'unlock-popup');
         },
 
@@ -43164,7 +43220,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
          */
-        FILES_ADDED = function () {
+        FILES_ADDED = function() {
             return createEventName.call(this, 'files-added');
         },
 
@@ -43173,7 +43229,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.change-url
          * @param {String} the new url
          */
-        CHANGE_URL = function () {
+        CHANGE_URL = function() {
             return createEventName.call(this, 'change-url');
         },
 
@@ -43194,7 +43250,7 @@ define('__component__$dropzone@husky',[], function () {
         },
 
         /** returns normalized event names */
-        createEventName = function (postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
@@ -43207,7 +43263,7 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Initialize component
          */
-        initialize: function () {
+        initialize: function() {
             this.sandbox.logger.log('initialize', this);
 
             // merge defaults, type defaults and options
@@ -43231,9 +43287,9 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Binds dom related events
          */
-        bindDomEvents: function () {
+        bindDomEvents: function() {
             // delegate click on elements children to element
-            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function (event) {
+            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
@@ -43257,7 +43313,7 @@ define('__component__$dropzone@husky',[], function () {
             if (this.options.cancelUploadOnOverlayClick) {
                 this.$el.on('click', '.husky-overlay-container.dropzone', function() {
                     if (this.overlayOpened === true) {
-                        this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+                        this.sandbox.emit('husky.overlay.dropzone-' + this.options.instanceName + '.close');
                     }
                     this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                     this.dropzone.removeAllFiles();
@@ -43268,9 +43324,9 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Binds custom-related events
          */
-        bindCustomEvents: function () {
+        bindCustomEvents: function() {
             // opens the data-source folder-overlay
-            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function () {
+            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function() {
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
 
@@ -43303,14 +43359,13 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Opens the dropzone in an overlay
          */
-        openOverlay: function () {
+        openOverlay: function() {
             // open the overlay only if it's not already opened and if the dropzone is not visible
             if (this.overlayOpened === false && this.lockPopUp === false && this.dropzoneEnabled) {
                 // set height of components element to prevent the site from jumping
                 this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
 
-                var $container = this.sandbox.dom.createElement('<div/>'),
-                    coordinates = this.getOverlayCoordinates();
+                var $container = this.sandbox.dom.createElement('<div/>');
                 this.sandbox.dom.append(this.$el, $container);
                 this.sandbox.start([
                     {
@@ -43324,8 +43379,6 @@ define('__component__$dropzone@husky',[], function () {
                             instanceName: 'dropzone-' + this.options.instanceName,
                             skin: 'dropzone',
                             smallHeader: true,
-                            top: coordinates.top,
-                            left: coordinates.left,
                             cancelCallback: function() {
                                 this.sandbox.dom.append(this.$el, this.$dropzone);
                                 this.sandbox.dom.height(this.$el, '');
@@ -43339,21 +43392,9 @@ define('__component__$dropzone@husky',[], function () {
         },
 
         /**
-         * Returns the positon of the element relative to the browser window
-         * @returns {{top: Number|Null, left: Number|Null}}
-         */
-        getOverlayCoordinates: function() {
-            var orientation = this.sandbox.dom.get(this.$el, 0).getBoundingClientRect();
-            return {
-                top: (orientation.top > 0) ? orientation.top : null,
-                left: (orientation.left > 0) ? orientation.left : null
-            };
-        },
-
-        /**
          * Renders the component
          */
-        render: function () {
+        render: function() {
             this.$dropzone = this.sandbox.dom.createElement('<div class="' + constants.contianerClass + '"/>');
             this.sandbox.dom.html(this.$dropzone, this.sandbox.util.template(templates.basic)({
                 description: this.sandbox.translate(this.options.descriptionKey),
@@ -43369,7 +43410,7 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Starts the dropzone component
          */
-        startDropzone: function () {
+        startDropzone: function() {
             var that = this,
                 options = {
                     url: this.options.url,
@@ -43383,7 +43424,7 @@ define('__component__$dropzone@husky',[], function () {
                         cancelIcon: this.options.cancelLoadingIcon
                     }),
                     previewsContainer: this.sandbox.dom.find('.' + constants.uploadedItemContainerClass, this.$dropzone)[0],
-                    init: function () {
+                    init: function() {
                         // store dropzone context
                         that.dropzone = this;
 
@@ -43399,7 +43440,7 @@ define('__component__$dropzone@husky',[], function () {
                         }
 
                         // gets called for each added file (drop or via the upload window)
-                        this.on('addedfile', function (file) {
+                        this.on('addedfile', function(file) {
                             that.sandbox.dom.addClass(that.$dropzone, constants.droppedClass);
 
                             // call the after-drop callback on the last file
@@ -43414,13 +43455,13 @@ define('__component__$dropzone@husky',[], function () {
                             }
 
                             // prevent the the upload window to open on click on the preview item
-                            that.sandbox.dom.on(file.previewElement, 'click', function (event) {
+                            that.sandbox.dom.on(file.previewElement, 'click', function(event) {
                                 this.sandbox.dom.stopPropagation(event);
                             }.bind(that));
                         });
 
                         // gets called before each file is sent
-                        this.on('sending', function (file) {
+                        this.on('sending', function(file) {
                             if (typeof this.options.beforeSendingCallback === 'function') {
                                 this.options.beforeSendingCallback(file);
                             } else {
@@ -43429,7 +43470,7 @@ define('__component__$dropzone@husky',[], function () {
                         }.bind(that));
 
                         // gets called if the file was uploaded successfully
-                        this.on('success', function (file, response) {
+                        this.on('success', function(file, response) {
                             if (this.lastUploadedFile !== file) {
                                 file.response = response;
                                 this.lastUploadedFile = file;
@@ -43443,21 +43484,21 @@ define('__component__$dropzone@husky',[], function () {
                         }.bind(that));
 
                         // gets called if a file gets removed from the zone
-                        this.on('removedfile', function (file) {
+                        this.on('removedfile', function(file) {
                             if (typeof this.options.removeFileCallback === 'function') {
                                 this.options.removeFileCallback(file);
                             }
                         }.bind(that));
 
                         // gets called if all files are removed from the zone
-                        this.on('reset', function () {
+                        this.on('reset', function() {
                             if (this.options.keepFilesAfterSuccess === false) {
                                 this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                             }
                         }.bind(that));
 
                         // enables the to change the url dynamically
-                        this.on('processing', function () {
+                        this.on('processing', function() {
                             this.options.url = that.url;
                         });
                     }
@@ -43483,26 +43524,26 @@ define('__component__$dropzone@husky',[], function () {
          * but only if all dropped files got uploaded
          * @param keepDom {Boolean} true to keep the dom like it is
          */
-        removeAllFiles: function (keepDom) {
+        removeAllFiles: function(keepDom) {
             // if all files got uploaded
             if (this.dropzone.getUploadingFiles.call(this.dropzone).length === 0) {
                 if (keepDom === true) {
                     this.afterFadeOut(true);
                 } else {
                     this.sandbox.util.delay(
-                    function () {
-                        this.sandbox.dom.fadeOut(
-                            this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
-                            this.options.fadeOutDuration,
-                            function () {
-                                if (this.sandbox.dom.find('.' + constants.uploadItemClass + ':animated', this.$dropzone).length === 0) {
-                                    this.afterFadeOut();
-                                }
-                            }.bind(this)
-                        );
-                    }.bind(this),
-                    this.options.fadeOutDelay
-                );
+                        function() {
+                            this.sandbox.dom.fadeOut(
+                                this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
+                                this.options.fadeOutDuration,
+                                function() {
+                                    if (this.sandbox.dom.find('.' + constants.uploadItemClass + ':animated', this.$dropzone).length === 0) {
+                                        this.afterFadeOut();
+                                    }
+                                }.bind(this)
+                            );
+                        }.bind(this),
+                        this.options.fadeOutDelay
+                    );
                 }
             }
         },
@@ -43512,9 +43553,9 @@ define('__component__$dropzone@husky',[], function () {
          * have faded out
          * @param keepDom {Boolean} true to keep the dom like it is
          */
-        afterFadeOut: function (keepDom) {
+        afterFadeOut: function(keepDom) {
             if (this.overlayOpened === true) {
-                this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+                this.sandbox.emit('husky.overlay.dropzone-' + this.options.instanceName + '.close');
             }
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
             this.filesDropped = 0;
@@ -43531,7 +43572,7 @@ define('__component__$dropzone@husky',[], function () {
          * @param files {Array} array of files with response properties
          * @returns {Array} array of responses
          */
-        getResponseArray: function (files) {
+        getResponseArray: function(files) {
             var arrReturn = [], i, length;
             for (i = -1, length = files.length; ++i < length;) {
                 arrReturn.push(files[i].response);

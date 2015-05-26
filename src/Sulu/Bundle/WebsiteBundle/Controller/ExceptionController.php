@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
- * Custom exception controller
+ * Custom exception controller.
  */
 class ExceptionController extends BaseExceptionController
 {
@@ -75,7 +75,7 @@ class ExceptionController extends BaseExceptionController
             'status_code' => $code,
             'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
             'exception' => $exception,
-            'currentContent' => $currentContent
+            'currentContent' => $currentContent,
         );
         $data = $this->parameterResolver->resolve(
             $parameter,

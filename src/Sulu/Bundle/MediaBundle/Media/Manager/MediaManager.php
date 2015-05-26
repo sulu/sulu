@@ -38,7 +38,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Default implementation of media manager
+ * Default implementation of media manager.
  */
 class MediaManager implements MediaManagerInterface
 {
@@ -54,13 +54,15 @@ class MediaManager implements MediaManagerInterface
     const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
 
     /**
-     * The repository for communication with the database
+     * The repository for communication with the database.
+     *
      * @var MediaRepositoryInterface
      */
     protected $mediaRepository;
 
     /**
-     * The repository for communication with the database
+     * The repository for communication with the database.
+     *
      * @var CollectionRepository
      */
     protected $collectionRepository;
@@ -80,11 +82,10 @@ class MediaManager implements MediaManagerInterface
      */
     private $formatManager;
 
-
     /**
      * @var TypeManagerInterface
      */
-    private $typeManager;
+    protected $typeManager;
 
     /**
      * @var StorageInterface
@@ -163,7 +164,8 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * TODO
+     * TODO.
+     *
      * @return array
      */
     private function initializeFieldDescriptors()
@@ -206,7 +208,7 @@ class MediaManager implements MediaManagerInterface
                     self::ENTITY_NAME_FILEVERSION,
                     self::ENTITY_NAME_FILE . '.fileVersion',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
+                ),
             )
         );
         $fieldDescriptors['size'] = new DoctrineFieldDescriptor(
@@ -223,7 +225,7 @@ class MediaManager implements MediaManagerInterface
                     self::ENTITY_NAME_FILEVERSION,
                     self::ENTITY_NAME_FILE . '.fileVersion',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
+                ),
             ),
             false,
             true,
@@ -244,7 +246,7 @@ class MediaManager implements MediaManagerInterface
                     self::ENTITY_NAME_FILEVERSION,
                     self::ENTITY_NAME_FILE . '.fileVersion',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
+                ),
             ),
             true,
             false,
@@ -265,7 +267,7 @@ class MediaManager implements MediaManagerInterface
                     self::ENTITY_NAME_FILEVERSION,
                     self::ENTITY_NAME_FILE . '.fileVersion',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
+                ),
             ),
             true,
             false,
@@ -290,7 +292,7 @@ class MediaManager implements MediaManagerInterface
                 self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSIONMETA,
                     self::ENTITY_NAME_FILEVERSION . '.meta'
-                )
+                ),
             ),
             false,
             true,
@@ -315,7 +317,7 @@ class MediaManager implements MediaManagerInterface
                 self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSIONMETA,
                     self::ENTITY_NAME_FILEVERSION . '.meta'
-                )
+                ),
             )
         );
 
@@ -410,14 +412,17 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Modified an exists media
+     * Modifies an existing media.
+     *
      * @param UploadedFile $uploadedFile
      * @param $data
      * @param UserInterface $user
-     * @return Media
+     *
      * @throws MediaNotFoundException
      * @throws FileVersionNotFoundException
      * @throws FileNotFoundException
+     *
+     * @return Media
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
@@ -434,7 +439,7 @@ class MediaManager implements MediaManagerInterface
         }
 
         /**
-         * @var File $file
+         * @var File
          */
         $file = $files[0]; // currently a media can only have one file
 
@@ -445,7 +450,7 @@ class MediaManager implements MediaManagerInterface
         $currentFileVersion = null;
 
         /**
-         * @var FileVersion $fileVersion
+         * @var FileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {
             if ($version == $fileVersion->getVersion()) {
@@ -473,7 +478,7 @@ class MediaManager implements MediaManagerInterface
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['type'] = array(
-                'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType())
+                'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
             );
             $data['version'] = $version;
 
@@ -521,17 +526,20 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Prepares data
+     * Prepares data.
+     *
      * @param UploadedFile $uploadedFile
      * @param array $data
      * @param UserInterface $user
+     *
      * @return Media
+     *
      * @throws InvalidFileException
      */
     private function buildData($uploadedFile, $data, $user)
     {
         if (!($uploadedFile instanceof UploadedFile)) {
-            throw new InvalidFileException('given uploadfile is not of instance UploadFile');
+            throw new InvalidFileException('Given uploaded file is not of instance UploadedFile');
         }
 
         $this->validator->validate($uploadedFile);
@@ -545,16 +553,18 @@ class MediaManager implements MediaManagerInterface
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['type'] = array(
-            'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType())
+            'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
         );
 
         return $this->createMedia($data, $user);
     }
 
     /**
-     * Create a new media
+     * Create a new media.
+     *
      * @param $data
      * @param $user
+     *
      * @return Media
      */
     protected function createMedia($data, $user)
@@ -596,10 +606,12 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Data can be set over by array
+     * Data can be set over by array.
+     *
      * @param $media
      * @param $data
      * @param UserInterface $user
+     *
      * @return Media
      */
     protected function setDataToMedia(Media $media, $data, $user)
@@ -688,7 +700,9 @@ class MediaManager implements MediaManagerInterface
 
     /**
      * @param $collectionId
+     *
      * @return object
+     *
      * @throws CollectionNotFoundException
      */
     public function getCollectionById($collectionId)
@@ -766,6 +780,7 @@ class MediaManager implements MediaManagerInterface
 
     /**
      * @param Media $media
+     *
      * @return Media
      */
     public function addFormatsAndUrl(Media $media)
@@ -805,8 +820,10 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Returns a user for a given user-id
+     * Returns a user for a given user-id.
+     *
      * @param $userId
+     *
      * @return UserInterface
      */
     protected function getUser($userId)
@@ -818,6 +835,7 @@ class MediaManager implements MediaManagerInterface
      * @param $id
      * @param $fileName
      * @param $version
+     *
      * @return string
      */
     protected function getUrl($id, $fileName, $version)
@@ -825,11 +843,11 @@ class MediaManager implements MediaManagerInterface
         return str_replace(
             array(
                 '{id}',
-                '{slug}'
+                '{slug}',
             ),
             array(
                 $id,
-                $fileName
+                $fileName,
             ),
             $this->downloadPath
         ) . '?v=' . $version;

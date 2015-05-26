@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
 use Doctrine\Common\Cache\Cache;
@@ -15,7 +16,7 @@ use Sulu\Component\Websocket\ConnectionContext\AuthenticatedConnectionContext;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 
 /**
- * Extends the message dispatcher app with authentication
+ * Extends the message dispatcher app with authentication.
  */
 class AuthenticatedMessageDispatcherApp extends MessageDispatcherApp
 {

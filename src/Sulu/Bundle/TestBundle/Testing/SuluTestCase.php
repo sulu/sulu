@@ -2,27 +2,27 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Sulu\Component\Content\Structure;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Sulu\Component\Content\Structure;
-use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
- * Base test case for functional tests in Sulu
+ * Base test case for functional tests in Sulu.
  *
  * NOTE: This class deprecates both PhpcrTestCase and DatabaseTestCase
  */
 abstract class SuluTestCase extends BaseTestCase
 {
-    static protected $kernels = array();
-    static protected $currentKernel = 'admin';
+    protected static $kernels = array();
+    protected static $currentKernel = 'admin';
 
     /**
      * Create a new SuluTestKernel and pass the sulu.context to it.
@@ -55,7 +55,7 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Close the database connection after the tests finish
+     * Close the database connection after the tests finish.
      */
     public function tearDown()
     {
@@ -64,7 +64,7 @@ abstract class SuluTestCase extends BaseTestCase
 
     /**
      * Return the test user (which is provided / created
-     * by the test_user_provider in this Bundle at runtime)
+     * by the test_user_provider in this Bundle at runtime).
      *
      * @return TestUser
      */
@@ -78,7 +78,7 @@ abstract class SuluTestCase extends BaseTestCase
 
     /**
      * Return the ID of the test user (which is provided / created
-     * by the test_user_provider in this Bundle at runtime)
+     * by the test_user_provider in this Bundle at runtime).
      *
      * @return int
      */
@@ -88,7 +88,7 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Create an authenticated client
+     * Create an authenticated client.
      *
      * @return Client
      */
@@ -106,7 +106,7 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Create client for tests on the "website" context
+     * Create client for tests on the "website" context.
      *
      * @return Client
      */
@@ -120,7 +120,7 @@ abstract class SuluTestCase extends BaseTestCase
 
     /**
      * Initialize / reset the Sulu PHPCR environment
-     * NOTE: This should use initializers when we implement that feature
+     * NOTE: This should use initializers when we implement that feature.
      */
     protected function initPhpcr()
     {
@@ -165,7 +165,7 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Purge the Doctrine ORM database
+     * Purge the Doctrine ORM database.
      */
     protected function purgeDatabase()
     {
@@ -174,7 +174,7 @@ abstract class SuluTestCase extends BaseTestCase
         $connection = $em->getConnection();
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
-            $connection->executeUpdate("SET foreign_key_checks = 0;");
+            $connection->executeUpdate('SET foreign_key_checks = 0;');
         }
 
         $purger = new ORMPurger();
@@ -184,7 +184,7 @@ abstract class SuluTestCase extends BaseTestCase
         $executor->purge();
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
-            $em->getConnection()->executeUpdate("SET foreign_key_checks = 1;");
+            $em->getConnection()->executeUpdate('SET foreign_key_checks = 1;');
         }
     }
 }

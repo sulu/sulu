@@ -30,13 +30,13 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
         $propertyIndex = 1;
         foreach (array(
-            'i18n:fr-title' => 'One title',
+            'i18n:fr-changer' => 'One title',
             'bas:barfoo' => 'Two title',
             'i18n:it-barfoo' => 'Three title',
-            'i18n:de-title' => 'Four title',
+            'i18n:de-changer' => 'Four title',
             'i18n:de-bbbaaaa' => 'Five title',
-            'i18n:de-seo-title' => 'Six title',
-            'i18n:de-de-title' => 'Seven title',
+            'i18n:de-seo-changer' => 'Six title',
+            'i18n:de-de-changer' => 'Seven title',
         ) as $propertyName => $propertyValue) {
             $this->{'property' . $propertyIndex}->expects($this->any())
                 ->method('getName')
@@ -64,7 +64,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             'i18n',
             array(
                 'base' => 'cmf',
-                'snippet' => 'snippets'
+                'snippet' => 'snippets',
             )
         );
     }
@@ -79,7 +79,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testLocalizedPropertyValues()
     {
-        $localizedValues = $this->helper->getLocalizedPropertyValues($this->node, 'title');
+        $localizedValues = $this->helper->getLocalizedPropertyValues($this->node, 'changer');
 
         // languages are only counted if they are on the "template" property
         $this->assertEquals(array(
@@ -196,7 +196,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->node->expects($this->any())
             ->method('getNodes')
             ->will($this->returnValue(array(
-                $node1, $node2, $node3
+                $node1, $node2, $node3,
             )));
 
         $res = $this->helper->getNextNode($node2);

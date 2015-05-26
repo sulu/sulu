@@ -14,5 +14,4 @@ use Exception;
 
 class ResourceLocatorAlreadyExistsException extends Exception
 {
-
 }

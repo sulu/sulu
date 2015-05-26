@@ -141,12 +141,13 @@ define([
                         index = this.getChildren().length;
                     }
 
+                    if (!this.templates.hasOwnProperty(type)) {
+                        type = this.options.default;
+                    }
+
                     if (this.canAdd()) {
                         // remove index
                         App.dom.remove(App.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
-
-                        //remove type -> default from template
-                        delete data.type;
 
                         // render block
                         options = $.extend({}, {index: index, translate: App.translate, type: type}, data);

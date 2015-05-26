@@ -69,9 +69,9 @@ class CategoryAdmin extends Admin
         return array(
             'Sulu' => array(
                 'Settings' => array(
-                    'sulu.settings.categories'
-                )
-            )
+                    'sulu.settings.categories',
+                ),
+            ),
         );
     }
 }

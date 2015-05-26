@@ -55,7 +55,7 @@ class CreateRoleCommandTest extends SuluTestCase
         $this->tester->execute(
             array(
                 'name' => $name,
-                'system' => 'Sulu'
+                'system' => 'Sulu',
             ),
             array('interactive' => false)
         );

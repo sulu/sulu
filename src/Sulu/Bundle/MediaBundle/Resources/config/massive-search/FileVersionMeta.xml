@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<massive-search-mapping xmlns="http://massiveart.io/schema/dic/massive-search-mapping">
+
+    <mapping class="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
+        <id property="id" />
+        <title property="title" />
+        <description property="description" />
+        <index name="file_version_meta" />
+        <category name="media" />
+        <locale property="locale" />
+
+        <fields>
+            <field name="title" type="string" />
+            <field name="description" type="string" />
+        </fields>
+
+    </mapping>
+
+</massive-search-mapping>

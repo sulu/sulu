@@ -19,7 +19,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Command
  */
 class MediaTypeUpdateCommand extends ContainerAwareCommand
 {

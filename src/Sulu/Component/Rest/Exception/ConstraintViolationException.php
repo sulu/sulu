@@ -11,7 +11,7 @@
 namespace Sulu\Component\Rest\Exception;
 
 /**
- * This exception should be thrown when a constraint violation for a enitity occures
+ * This exception should be thrown when a constraint violation for a enitity occures.
  */
 class ConstraintViolationException extends RestException
 {
@@ -57,7 +57,7 @@ class ConstraintViolationException extends RestException
             'message' => $this->message,
             'type' => $this->type,
             'field' => $this->field,
-            'entity' => $this->entity
+            'entity' => $this->entity,
         );
     }
 }

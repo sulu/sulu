@@ -11,16 +11,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Behat\Gherkin\Node\TableNode;
+use Sulu\Component\Content\StructureInterface;
 
 /**
- * Base context class for Structure based feature contexts
+ * Base context class for Structure based feature contexts.
  */
 class BaseStructureContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -30,7 +27,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     protected $templatePaths = array();
 
     /**
-     * Remove the generated templates after the scenario has completed
+     * Remove the generated templates after the scenario has completed.
      *
      * @AfterScenario
      */
@@ -48,7 +45,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     }
 
     /**
-     * Create structures of the given type using the given data
+     * Create structures of the given type using the given data.
      *
      * Data should be of the form:
      *
@@ -118,7 +115,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     }
 
     /**
-     * Return the content mapper
+     * Return the content mapper.
      *
      * @return Sulu\Component\Content\Mapper\ContentMapperInterface
      */

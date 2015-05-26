@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Exception;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
- * data for mandatory exception not found
+ * data for mandatory exception not found.
  */
 class MandatoryPropertyException extends \Exception
 {

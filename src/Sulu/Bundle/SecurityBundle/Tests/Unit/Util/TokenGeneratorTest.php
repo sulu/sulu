@@ -10,11 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Util;
 
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
-use Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-
 class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateToken()

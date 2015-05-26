@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
@@ -49,7 +49,7 @@ class SuluHttpCacheExtension extends Extension
     }
 
     /**
-     * Configure the proxy client services
+     * Configure the proxy client services.
      *
      * @param array $config
      * @param ContainerBuilder $container
@@ -85,7 +85,7 @@ class SuluHttpCacheExtension extends Extension
     }
 
     /**
-     * Configure the varnish services
+     * Configure the varnish services.
      *
      * @param array $config
      * @param ContainerBuilder $container
@@ -101,7 +101,7 @@ class SuluHttpCacheExtension extends Extension
     }
 
     /**
-     * Configure the structure cache handler services
+     * Configure the structure cache handler services.
      *
      * @param array $config
      * @param ContainerBuilder $container

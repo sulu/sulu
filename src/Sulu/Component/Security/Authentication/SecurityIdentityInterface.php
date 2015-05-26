@@ -16,7 +16,8 @@ namespace Sulu\Component\Security\Authentication;
 interface SecurityIdentityInterface
 {
     /**
-     * Returns the identifier for a SecurityIdentity
+     * Returns the identifier for a SecurityIdentity.
+     *
      * @return string
      */
     public function getIdentifier();

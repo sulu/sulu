@@ -14,8 +14,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * This listener sets the current portal on the portal manager
- * @package Sulu\Bundle\CoreBundle\EventListener
+ * This listener sets the current portal on the portal manager.
  */
 class RequestListener
 {

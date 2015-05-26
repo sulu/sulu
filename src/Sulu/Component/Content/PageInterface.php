@@ -13,24 +13,27 @@ namespace Sulu\Component\Content;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 
 /**
- * Structure for template
+ * Structure for template.
  */
 interface PageInterface extends StructureInterface
 {
     /**
-     * twig template of template definition
+     * twig template of template definition.
+     *
      * @return string
      */
     public function getView();
 
     /**
-     * controller which renders the template definition
+     * controller which renders the template definition.
+     *
      * @return string
      */
     public function getController();
 
     /**
-     * cacheLifeTime of template definition
+     * cacheLifeTime of template definition.
+     *
      * @return int
      */
     public function getCacheLifeTime();
@@ -46,7 +49,8 @@ interface PageInterface extends StructureInterface
     public function setOriginTemplate($originTemplate);
 
     /**
-     * returns true if this node is shown in navigation
+     * returns true if this node is shown in navigation.
+     *
      * @return string[]
      */
     public function getNavContexts();
@@ -63,40 +67,45 @@ interface PageInterface extends StructureInterface
 
     /**
      * @param $data
+     *
      * @return array
      */
     public function setExt($data);
 
     /**
-     * returns content node that holds the internal link
+     * returns content node that holds the internal link.
+     *
      * @return StructureInterface
      */
     public function getInternalLinkContent();
 
     /**
-     * set content node that holds the internal link
+     * set content node that holds the internal link.
+     *
      * @param StructureInterface $internalLinkContent
      */
     public function setInternalLinkContent($internalLinkContent);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getInternal();
 
     /**
-     * @param boolean $internal
+     * @param bool $internal
      */
     public function setInternal($internal);
 
     /**
-     * returns state of node
+     * returns state of node.
+     *
      * @return int
      */
     public function getNodeState();
 
     /**
      * @param int $state
+     *
      * @return int
      */
     public function setNodeState($state);

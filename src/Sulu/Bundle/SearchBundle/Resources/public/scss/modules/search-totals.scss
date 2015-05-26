@@ -1,0 +1,36 @@
+.search-totals-wrapper {
+    background-color: $grayLighter;
+    padding: 20px;
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+
+    h2 {
+        color: $gray;
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .name {
+        color: $gray;
+    }
+
+    a {
+        text-decoration: none;
+        color: $black;
+        padding-left: 5px;
+        padding-right: 5px;
+
+        &.active {
+            font-weight: bold;
+        }
+    }
+
+    table {
+        td {
+            width: 33%;
+            font-size: 14px;
+        }
+    }
+}

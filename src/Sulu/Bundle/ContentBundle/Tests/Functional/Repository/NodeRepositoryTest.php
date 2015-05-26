@@ -72,10 +72,10 @@ class NodeRepositoryTest extends PhpcrTestCase
             'title' => 'Testtitle',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'Test',
         );
 
         return $this->mapper->save($data, 'overview', 'default', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
@@ -107,7 +107,7 @@ class NodeRepositoryTest extends PhpcrTestCase
 
         $this->nodeRepository->saveNode(
             array(
-                'title' => 'asdf'
+                'title' => 'asdf',
             ),
             'overview',
             'default',
@@ -141,10 +141,10 @@ class NodeRepositoryTest extends PhpcrTestCase
                 'title' => 'asdf',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test/asdf',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             'overview',
             'default',
@@ -164,10 +164,10 @@ class NodeRepositoryTest extends PhpcrTestCase
                 'title' => 'asdf',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/asdf',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             'overview',
             'default',
@@ -282,7 +282,7 @@ class NodeRepositoryTest extends PhpcrTestCase
 
         $result = $this->nodeRepository->getNodesByIds(
             array(
-                $data->getUuid()
+                $data->getUuid(),
             ),
             'default',
             'en'
@@ -304,7 +304,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $result = $this->nodeRepository->getNodesByIds(
             array(
                 $data->getUuid(),
-                '556ce63c-97a3-4a03-81a9-719bc01234e6'
+                '556ce63c-97a3-4a03-81a9-719bc01234e6',
             ),
             'default',
             'en'
@@ -322,19 +322,19 @@ class NodeRepositoryTest extends PhpcrTestCase
                 'title' => 'Testtitle1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test1',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'Testtitle2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test2',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
         );
 
@@ -379,28 +379,28 @@ class NodeRepositoryTest extends PhpcrTestCase
                 'title' => 'hello you',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test1',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'Hello me',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test2',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'Test',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test3',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
         );
 
@@ -450,19 +450,19 @@ class NodeRepositoryTest extends PhpcrTestCase
                 'title' => 'Testtitle1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test1',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'Testtitle2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test2',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
         );
 
@@ -539,7 +539,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
         );
 
         $data[0] = $this->mapper->save(
@@ -590,7 +590,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $data[0] = $this->mapper->save(
@@ -689,7 +689,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
         );
 
         $data[0] = $this->mapper->save(
@@ -741,7 +741,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $data[0] = $this->mapper->save(
@@ -794,19 +794,19 @@ class NodeRepositoryTest extends PhpcrTestCase
         $data = array(
             array(
                 'title' => 'Test1',
-                'url' => '/news/test1'
+                'url' => '/news/test1',
             ),
             array(
                 'title' => 'Test2',
-                'url' => '/news/test2'
+                'url' => '/news/test2',
             ),
             array(
                 'title' => 'Test3',
-                'url' => '/news/test3'
+                'url' => '/news/test3',
             ),
             array(
                 'title' => 'Test4',
-                'url' => '/news/test4'
+                'url' => '/news/test4',
             ),
         );
 
@@ -902,7 +902,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Test4',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $data[3] = $this->mapper->save(
@@ -920,7 +920,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Test3',
             'internal_link' => $data[0]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
         );
 
         $data[2] = $this->mapper->save(
@@ -966,8 +966,8 @@ class NodeRepositoryTest extends PhpcrTestCase
         $data = array(
             'en' => array(
                 'title' => 'Example',
-                'url' => '/example'
-            )
+                'url' => '/example',
+            ),
         );
 
         $data['en'] = $this->mapper->save(
@@ -997,8 +997,8 @@ class NodeRepositoryTest extends PhpcrTestCase
         $data = array(
             'en' => array(
                 'title' => 'Example',
-                'url' => '/example'
-            )
+                'url' => '/example',
+            ),
         );
 
         $data['en'] = $this->mapper->save(
@@ -1137,7 +1137,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             return $this->getStructureMockExternal();
         }
 
-        return null;
+        return;
     }
 
     public function getStructureMockInternal()
@@ -1170,7 +1170,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                     1,
                     array(),
                     array(new PropertyTag('sulu.rlp', 1))
-                )
+                ),
             )
         );
 
@@ -1192,7 +1192,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'title', 'text_line', false, false, 1, 1, array())
+                new Property('title', 'title', 'text_line', false, false, 1, 1, array()),
             )
         );
 
@@ -1209,7 +1209,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                     1,
                     array(),
                     array(new PropertyTag('sulu.rlp', 1))
-                )
+                ),
             )
         );
 
@@ -1276,7 +1276,7 @@ class TestExtension extends StructureExtension
 {
     protected $properties = array(
         'a',
-        'b'
+        'b',
     );
 
     public function __construct($name, $additionalPrefix = null)
@@ -1301,7 +1301,7 @@ class TestExtension extends StructureExtension
     {
         return array(
             'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
-            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
+            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), ''),
         );
     }
 }

@@ -14,25 +14,28 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
- * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
+ *
  * @ExclusionPolicy("all")
  */
 class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
-     * The name of the field in the database
+     * The name of the field in the database.
+     *
      * @var string
      */
     private $fieldName;
 
     /**
-     * The name of the entity
+     * The name of the entity.
+     *
      * @var string
      */
     private $entityName;
 
     /**
-     * The joins, which have to be made to get to the result
+     * The joins, which have to be made to get to the result.
+     *
      * @var DoctrineJoinDescriptor[]
      */
     private $joins;
@@ -51,8 +54,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $sortable = true,
         $editable = false,
         $cssClass = ''
-    )
-    {
+    ) {
         parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $sortable, $editable, $cssClass);
 
         $this->fieldName = $fieldName;
@@ -61,7 +63,8 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns the full name of the field, including the entity
+     * Returns the full name of the field, including the entity.
+     *
      * @return string
      */
     public function getSelect()
@@ -70,7 +73,8 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns the alias for the field in the database
+     * Returns the alias for the field in the database.
+     *
      * @return string
      */
     public function getFieldName()
@@ -79,7 +83,8 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns the name of the entity this field is contained in
+     * Returns the name of the entity this field is contained in.
+     *
      * @return string
      */
     public function getEntityName()
@@ -88,7 +93,8 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns all the joins which are necessary to access this field
+     * Returns all the joins which are necessary to access this field.
+     *
      * @return array
      */
     public function getJoins()

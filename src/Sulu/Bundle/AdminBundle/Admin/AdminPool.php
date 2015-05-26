@@ -13,20 +13,20 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
- * The AdminPool is a container for all the registered admin-objects
- *
- * @package Sulu\Bundle\AdminBundle\Admin
+ * The AdminPool is a container for all the registered admin-objects.
  */
 class AdminPool
 {
     /**
-     * The array for all the admin-objects
+     * The array for all the admin-objects.
+     *
      * @var array
      */
     private $pool = array();
 
     /**
-     * Returns all the registered admins
+     * Returns all the registered admins.
+     *
      * @return Admin[]
      */
     public function getAdmins()
@@ -35,7 +35,8 @@ class AdminPool
     }
 
     /**
-     * Adds a new admin
+     * Adds a new admin.
+     *
      * @param $admin
      */
     public function addAdmin($admin)
@@ -44,7 +45,8 @@ class AdminPool
     }
 
     /**
-     * Returns the navigation combined from all admin-objects
+     * Returns the navigation combined from all admin-objects.
+     *
      * @return Navigation
      */
     public function getNavigation()
@@ -64,7 +66,7 @@ class AdminPool
     }
 
     /**
-     * Returns all the commands of all admins for registration in app/console
+     * Returns all the commands of all admins for registration in app/console.
      */
     public function getCommands()
     {

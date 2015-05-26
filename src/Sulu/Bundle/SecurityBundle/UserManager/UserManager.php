@@ -34,8 +34,10 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * returns user for given id
-     * @param integer $id userId
+     * returns user for given id.
+     *
+     * @param int $id userId
+     *
      * @return User
      */
     public function getUserById($id)
@@ -47,8 +49,10 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * returns username for given id
-     * @param integer $id userId
+     * returns username for given id.
+     *
+     * @param int $id userId
+     *
      * @return string
      */
     public function getUsernameByUserId($id)
@@ -57,8 +61,10 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * returns fullName for given id
-     * @param integer $id userId
+     * returns fullName for given id.
+     *
+     * @param int $id userId
+     *
      * @return string
      */
     public function getFullNameByUserId($id)
@@ -67,7 +73,8 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * returns user data of current user
+     * returns user data of current user.
+     *
      * @return CurrentUserDataInterface
      */
     public function getCurrentUserData()

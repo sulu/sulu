@@ -20,14 +20,14 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
-use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SecurityContextVoter implements VoterInterface
 {
     /**
-     * The permissions available, defined by config
+     * The permissions available, defined by config.
+     *
      * @var array
      */
     private $permissions;
@@ -60,8 +60,10 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Tests if there is an access control list for the given object
+     * Tests if there is an access control list for the given object.
+     *
      * @param string $objectId The object to lookup in the access control system
+     *
      * @return bool Returns true if an access control list exists for the given object, otherwise false
      */
     public function existsAcl($objectId, $objectType)
@@ -138,11 +140,13 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Checks if the given group has the permission to execute the desired task
+     * Checks if the given group has the permission to execute the desired task.
+     *
      * @param SecurityCondition $object
-     * @param integer $attribute
+     * @param int $attribute
      * @param Group $group
      * @param array $locales
+     *
      * @return bool
      */
     public function checkUserGroup($object, $attribute, Group $group, $locales)
@@ -169,11 +173,13 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Checks if the given set of permissions grants to execute the desired task
+     * Checks if the given set of permissions grants to execute the desired task.
+     *
      * @param SecurityCondition $object
-     * @param integer $attribute
+     * @param int $attribute
      * @param Collection $permissions
      * @param array $locales
+     *
      * @return bool True if the desired access is valid, otherwise false
      */
     private function checkPermissions($object, $attribute, $permissions, $locales)
@@ -189,11 +195,13 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Checks if the combination of permission and userrole is allowed for the given attributes
+     * Checks if the combination of permission and userrole is allowed for the given attributes.
+     *
      * @param SecurityCondition $object
-     * @param integer $attribute
+     * @param int $attribute
      * @param Permission $permission
      * @param array|null $locales
+     *
      * @return bool
      */
     private function isGranted($object, $attribute, Permission $permission, $locales)

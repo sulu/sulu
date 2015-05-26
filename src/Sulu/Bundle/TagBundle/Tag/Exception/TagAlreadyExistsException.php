@@ -13,13 +13,13 @@ namespace Sulu\Bundle\TagBundle\Tag\Exception;
 use Exception;
 
 /**
- * This Exception is thrown when a Tag already exists
- * @package Sulu\Bundle\TagBundle\Tag\Exception
+ * This Exception is thrown when a Tag already exists.
  */
 class TagAlreadyExistsException extends Exception
 {
     /**
-     * The id of the tag, which was not found
+     * The id of the tag, which was not found.
+     *
      * @var int
      */
     protected $name;
@@ -35,7 +35,8 @@ class TagAlreadyExistsException extends Exception
     }
 
     /**
-     * Returns the name of the tag, which already exists
+     * Returns the name of the tag, which already exists.
+     *
      * @return int
      */
     public function getName()

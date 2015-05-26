@@ -15,11 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * @package Sulu\Component\Util
  */
 class SuluVersionPass implements CompilerPassInterface
 {
-
     /**
      * {@inheritDoc}
      */

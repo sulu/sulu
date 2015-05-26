@@ -16,7 +16,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Generates a sitemap structure for xml or html
+ * Generates a sitemap structure for xml or html.
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {
@@ -46,9 +46,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * Generates a sitemap over all webspaces and languages for a specific domain
-     * @param bool $flat
-     * @return array
+     * {@inheritDoc}
      */
     public function generateAll($flat = false)
     {
@@ -61,7 +59,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
@@ -74,7 +72,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generate($webspaceKey, $locale, $flat = false)
     {

@@ -1,3 +1,7 @@
-sulu_search.query:
-    path: /{locale}/search
-    defaults: { _controller: SuluSearchBundle:Search:query }
+sulu_search_categories:
+    pattern: /categories
+    defaults: { _controller: "sulu_search.controller.search:categoriesAction", _format: json }
+
+sulu_search_search:
+    pattern: /query
+    defaults: { _controller: "sulu_search.controller.search:searchAction", _format: json }

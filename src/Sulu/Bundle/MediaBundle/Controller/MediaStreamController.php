@@ -19,10 +19,8 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
@@ -91,6 +89,7 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
+     *
      * @return StreamedResponse
      */
     protected function getFileResponse($fileVersion)
@@ -125,13 +124,15 @@ class MediaStreamController extends Controller
     /**
      * @param int $id
      * @param int $version
+     *
      * @return null|FileVersion
+     *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
     protected function getFileVersion($id, $version)
     {
         /**
-         * @var Media $mediaEntity
+         * @var Media
          */
         $mediaEntity = $this->getDoctrine()
             ->getRepository('SuluMediaBundle:Media')
@@ -143,7 +144,7 @@ class MediaStreamController extends Controller
         $file = $mediaEntity->getFiles()[0];
 
         /**
-         * @var FileVersion $fileVersion
+         * @var FileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {
             if ($fileVersion->getVersion() == $version) {
@@ -159,7 +160,8 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * getMediaManager
+     * getMediaManager.
+     *
      * @return FormatManagerInterface
      */
     protected function getCacheManager()
@@ -172,7 +174,8 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * getMediaManager
+     * getMediaManager.
+     *
      * @return MediaManagerInterface
      */
     protected function getMediaManager()
@@ -185,7 +188,8 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * getStorage
+     * getStorage.
+     *
      * @return StorageInterface
      */
     protected function getStorage()

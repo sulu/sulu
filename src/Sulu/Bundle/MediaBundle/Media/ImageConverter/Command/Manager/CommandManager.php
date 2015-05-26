@@ -14,7 +14,7 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Default implementation of command manager
+ * Default implementation of command manager.
  */
 class CommandManager extends ContainerAware implements ManagerInterface
 {
@@ -33,6 +33,7 @@ class CommandManager extends ContainerAware implements ManagerInterface
 
     /**
      * @param string $imageCommandName A String with the name of the image command to load
+     *
      * @return CommandInterface
      */
     public function get($imageCommandName = '')

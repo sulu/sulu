@@ -14,8 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
- * A voter which allows
- * @package Sulu\Component\Testing
+ * A voter which allows.
  */
 class TestVoter implements VoterInterface
 {
@@ -53,7 +52,7 @@ class TestVoter implements VoterInterface
      * @param object $object     The object to secure
      * @param array $attributes An array of attributes associated with the method being invoked
      *
-     * @return integer either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
+     * @return int either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {

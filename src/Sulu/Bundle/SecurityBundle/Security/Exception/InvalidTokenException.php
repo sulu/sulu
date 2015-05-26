@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * This Exception is thrown if a request with a not existing token tries to reset a password
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ * This Exception is thrown if a request with a not existing token tries to reset a password.
  */
 class InvalidTokenException extends SecurityException
 {
@@ -25,7 +24,8 @@ class InvalidTokenException extends SecurityException
         parent::__construct(sprintf('The token "%s" does not exist!', $token), 1005);
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
@@ -34,7 +34,7 @@ class InvalidTokenException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'token' => $this->token
+            'token' => $this->token,
         );
     }
 }

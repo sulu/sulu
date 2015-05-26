@@ -10,14 +10,14 @@
 
 namespace Sulu\Bundle\TagBundle\Entity;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Tag
+ * Tag.
  */
 class Tag extends ApiEntity implements AuditableInterface
 {
@@ -28,7 +28,7 @@ class Tag extends ApiEntity implements AuditableInterface
     private $name;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"partialTag"})
      */
     private $id;
@@ -56,9 +56,10 @@ class Tag extends ApiEntity implements AuditableInterface
     private $creator;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Tag
      */
     public function setName($name)
@@ -69,7 +70,7 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -79,9 +80,9 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -89,8 +90,10 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set id
+     * Set id.
+     *
      * @param int $id
+     *
      * @return Tag
      */
     public function setId($id)
@@ -101,7 +104,7 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -111,7 +114,7 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -121,9 +124,10 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return Tag
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
@@ -134,7 +138,7 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -144,9 +148,10 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return Tag
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
@@ -157,7 +162,7 @@ class Tag extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */

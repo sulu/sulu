@@ -16,12 +16,13 @@ use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 
 /**
- * Controller which returns the localizations for the entire system
+ * Controller which returns the localizations for the entire system.
  */
 class LocalizationController extends FOSRestController implements ClassResourceInterface
 {
     /**
-     * Returns all the localizations available in this system
+     * Returns all the localizations available in this system.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction()
@@ -39,4 +40,4 @@ class LocalizationController extends FOSRestController implements ClassResourceI
             200
         );
     }
-} 
+}

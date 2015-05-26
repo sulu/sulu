@@ -11,7 +11,7 @@
 namespace Sulu\Component\Rest\Exception;
 
 /**
- * This exception should be thrown when a unique constraint violation for a enitity occures
+ * This exception should be thrown when a unique constraint violation for a enitity occures.
  */
 class UniqueConstraintViolationException extends ConstraintViolationException
 {

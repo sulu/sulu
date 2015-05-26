@@ -11,19 +11,20 @@
 namespace Sulu\Component\Rest\Exception;
 
 /**
- * This exception should be thrown when an Entity id already has been set
- * @package Sulu\Bundle\CoreBundle\Controller\Exception
+ * This exception should be thrown when an Entity id already has been set.
  */
 class MissingArgumentException extends RestException
 {
     /**
-     * The type of the entity, which was concerned
+     * The type of the entity, which was concerned.
+     *
      * @var string
      */
     protected $entity;
 
     /**
-     * The argument of the entity, which was not passed
+     * The argument of the entity, which was not passed.
+     *
      * @var string
      */
     protected $argument;
@@ -41,7 +42,8 @@ class MissingArgumentException extends RestException
     }
 
     /**
-     * Returns the argument of the entity, which was not passed
+     * Returns the argument of the entity, which was not passed.
+     *
      * @return string
      */
     public function getArgument()
@@ -50,7 +52,8 @@ class MissingArgumentException extends RestException
     }
 
     /**
-     * Returns the type of the entity, which was concerned
+     * Returns the type of the entity, which was concerned.
+     *
      * @return string
      */
     public function getEntity()

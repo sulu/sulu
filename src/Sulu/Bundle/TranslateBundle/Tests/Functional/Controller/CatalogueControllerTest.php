@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CatalogueControllerTest extends SuluTestCase
 {
@@ -32,7 +32,7 @@ class CatalogueControllerTest extends SuluTestCase
         $this->purgeDatabase();
 
         $package = new Package();
-        $package->setName("Sulu");
+        $package->setName('Sulu');
         $this->em->persist($package);
         $this->package = $package;
 
@@ -86,7 +86,6 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testDeleteByIdNotExisting()
     {
-
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/catalogues/4711');
@@ -107,7 +106,6 @@ class CatalogueControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($this->catalogue->getId(), $response->_embedded->catalogues[0]->id);
         $this->assertEquals('EN', $response->_embedded->catalogues[0]->locale);
-
     }
 
     public function testListCataloguesNotExisting()
@@ -118,7 +116,6 @@ class CatalogueControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $this->assertEquals('0', $response->total);
-
     }
 
     // TODO more list tests

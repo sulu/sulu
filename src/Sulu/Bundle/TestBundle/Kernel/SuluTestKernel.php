@@ -2,9 +2,9 @@
 
 namespace Sulu\Bundle\TestBundle\Kernel;
 
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class SuluTestKernel extends SuluKernel
 {
@@ -54,4 +54,3 @@ class SuluTestKernel extends SuluKernel
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;
     }
 }
-

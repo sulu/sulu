@@ -132,14 +132,6 @@ define(function() {
                             ''
                         );
                         break;
-                    default:
-                        this.sandbox.emit(
-                            'sulu.labels.error.show',
-                            this.extractErrorMessage(request),
-                            'public.server_error',
-                            ''
-                        );
-                        break;
                 }
             }.bind(this));
         },

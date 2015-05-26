@@ -11,7 +11,7 @@
 namespace Sulu\Component\Persistence\Model;
 
 /**
- * Composite interface of TimestampableInterface and UserBlameInterface
+ * Composite interface of TimestampableInterface and UserBlameInterface.
  */
 interface AuditableInterface extends TimestampableInterface, UserBlameInterface
 {

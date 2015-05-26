@@ -15,7 +15,6 @@ use FOS\RestBundle\Controller\FOSRestController;
 /**
  * This controller is responsible for delivering the first static part of the navigation.
  * Therefore it uses the Navigation combined by the admin pool.
- * @package Sulu\Bundle\AdminBundle\Controller
  */
 class NavigationsController extends FOSRestController
 {

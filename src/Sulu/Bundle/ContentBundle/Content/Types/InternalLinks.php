@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
-use PHPCR\Util\UUIDHelper;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\ComplexContentType;
@@ -23,8 +22,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * content type for internal links selection
- * @package Sulu\Bundle\ContentBundle\Content\Types
+ * content type for internal links selection.
  */
 class InternalLinks extends ComplexContentType
 {
@@ -52,8 +50,7 @@ class InternalLinks extends ComplexContentType
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
         $template
-    )
-    {
+    ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
@@ -78,9 +75,11 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = $node->getPropertyValueWithDefault($property->getName(), array());
-
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $data = array();
+        if ($node->hasProperty($property->getName())) {
+            $data = $node->getProperty($property->getName())->getString();
+        }
+        $this->setData($data, $property);
     }
 
     /**
@@ -97,7 +96,7 @@ class InternalLinks extends ComplexContentType
             $data = $data->toArray();
         }
 
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $this->setData($data, $property);
     }
 
     /**
@@ -112,26 +111,15 @@ class InternalLinks extends ComplexContentType
     }
 
     /**
-     * set data to property
+     * set data to property.
+     *
      * @param string[] $data ids of images
      * @param PropertyInterface $property
      */
     private function setData($data, PropertyInterface $property)
     {
         $refs = isset($data) ? $data : array();
-        $ids = array();
-        if (is_array($refs)) {
-            foreach ($refs as $i => $ref) {
-                // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($i)) {
-                    $ref = $i;
-                }
-
-                $ids[] = $ref;
-            }
-        }
-
-        $property->setValue($ids);
+        $property->setValue($refs);
     }
 
     /**

@@ -15,7 +15,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * Implements logic to resolve parameters for website rendering
+ * Implements logic to resolve parameters for website rendering.
  */
 class ParameterResolver implements ParameterResolverInterface
 {
@@ -31,6 +31,7 @@ class ParameterResolver implements ParameterResolverInterface
 
     /**
      * ParameterResolver constructor.
+     *
      * @param StructureResolverInterface $structureResolver
      * @param RequestAnalyzerResolverInterface $requestAnalyzerResolver
      */

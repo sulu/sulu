@@ -18,17 +18,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class AdminController extends Controller
 {
     /**
-     * ID of user data sevice
+     * ID of user data sevice.
      */
     const USER_DATA_ID = 'sulu_admin.user_data_service';
 
     /**
-     * ID of js config service
+     * ID of js config service.
      */
     const JS_CONFIG_ID = 'sulu_admin.jsconfig_pool';
 
     /**
-     * Renders admin ui
+     * Renders admin ui.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
@@ -64,7 +65,7 @@ class AdminController extends Controller
                         'locales' => $this->container->getParameter('sulu_core.locales'),
                         'suluVersion' => $this->container->getParameter('sulu.version'),
                         'user' => $user,
-                        'config' => $jsconfig
+                        'config' => $jsconfig,
                     )
                 );
             } else {
@@ -74,7 +75,8 @@ class AdminController extends Controller
     }
 
     /**
-     * Returns a array of all bundles
+     * Returns a array of all bundles.
+     *
      * @return JsonResponse
      */
     public function bundlesAction()
@@ -95,7 +97,8 @@ class AdminController extends Controller
     }
 
     /**
-     * Returns contexts of admin
+     * Returns contexts of admin.
+     *
      * @return JsonResponse
      */
     public function contextsAction()
@@ -109,7 +112,8 @@ class AdminController extends Controller
     }
 
     /**
-     * Returns config for admin
+     * Returns config for admin.
+     *
      * @return JsonResponse
      */
     public function configAction()

@@ -10,20 +10,20 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\Content\StructureInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
-use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This cache handler aggregates and delegates to other
  * handlers. This is the default sulu cache handler.
  */
-class AggregateHandler implements 
+class AggregateHandler implements
     HandlerFlushInterface,
     HandlerUpdateResponseInterface,
     HandlerInvalidateStructureInterface
@@ -44,7 +44,7 @@ class AggregateHandler implements
     public function __construct($handlers = array(), LoggerInterface $logger = null)
     {
         $this->handlers = $handlers;
-        $this->logger = $logger ? : new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

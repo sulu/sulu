@@ -14,8 +14,7 @@ use Exception;
 
 /**
  * This exception is a general security exception.
- * Exceptions related with the security bundle should inherit form this exception and use it's exception codes
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ * Exceptions related with the security bundle should inherit form this exception and use it's exception codes.
  */
 class SecurityException extends Exception
 {
@@ -23,7 +22,7 @@ class SecurityException extends Exception
     {
         return array(
             'code' => $this->code,
-            'message' => $this->message
+            'message' => $this->message,
         );
     }
 }

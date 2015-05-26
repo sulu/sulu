@@ -78,7 +78,7 @@ class Validators
     public static function validateTargetDir($dir, $bundle, $namespace)
     {
         // add trailing / if necessary
-        return '/' === substr($dir, -1, 1) ? $dir : $dir.'/';
+        return '/' === substr($dir, -1, 1) ? $dir : $dir . '/';
     }
 
     public static function validateFormat($format)

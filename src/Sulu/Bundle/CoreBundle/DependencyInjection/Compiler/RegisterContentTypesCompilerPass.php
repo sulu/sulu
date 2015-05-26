@@ -14,8 +14,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Add tagged content types to the content manager
- * @package Sulu\Bundle\CoreBundle\Compiler
+ * Add tagged content types to the content manager.
  */
 class RegisterContentTypesCompilerPass implements CompilerPassInterface
 {

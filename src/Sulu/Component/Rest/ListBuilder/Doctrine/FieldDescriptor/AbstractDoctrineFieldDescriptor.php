@@ -13,19 +13,20 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 
 /**
- * The abstract class for the different types of DoctrineFieldDescriptors
- * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
+ * The abstract class for the different types of DoctrineFieldDescriptors.
  */
 abstract class AbstractDoctrineFieldDescriptor extends AbstractFieldDescriptor
 {
     /**
-     * Returns the select statement for this field without the alias
+     * Returns the select statement for this field without the alias.
+     *
      * @return string
      */
     abstract public function getSelect();
 
     /**
-     * Returns all the joins required for this field
+     * Returns all the joins required for this field.
+     *
      * @return DoctrineJoinDescriptor[]
      */
     abstract public function getJoins();

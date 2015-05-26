@@ -10,10 +10,10 @@
 
 namespace Sulu\Bundle\LocationBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluLocationExtension extends Extension
 {
@@ -25,7 +25,7 @@ class SuluLocationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('geolocator.xml');
 
@@ -36,7 +36,7 @@ class SuluLocationExtension extends Extension
     }
 
     /**
-     * Configure the sulu content types
+     * Configure the sulu content types.
      *
      * @param array $config - Resolved configuration
      * @param ContainerBuilder
@@ -64,7 +64,7 @@ class SuluLocationExtension extends Extension
             $providerConfig = $config['providers'][$enabledProviderName];
             $mapManager->addMethodCall('registerProvider', array(
                 $enabledProviderName,
-                $providerConfig
+                $providerConfig,
             ));
         }
 

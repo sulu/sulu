@@ -17,8 +17,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * CompilerPass, which instantiates the route provider only when the required dependencies exist
- * @package Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler
+ * CompilerPass, which instantiates the route provider only when the required dependencies exist.
  */
 class RouteProviderCompilerPass implements CompilerPassInterface
 {
@@ -43,7 +42,7 @@ class RouteProviderCompilerPass implements CompilerPassInterface
 
             $setThemeListenerDefinition->addTag('kernel.event_listener', array(
                 'event' => 'kernel.request',
-                'method'=> 'onKernelRequest',
+                'method' => 'onKernelRequest',
             ));
 
             $container->setDefinition(

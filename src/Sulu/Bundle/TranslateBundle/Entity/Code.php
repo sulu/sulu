@@ -14,12 +14,12 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
- * Code
+ * Code.
  */
 class Code extends ApiEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,17 +29,17 @@ class Code extends ApiEntity
     private $code;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $backend;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $frontend;
 
     /**
-     * @var integer
+     * @var int
      */
     private $length;
 
@@ -60,7 +60,7 @@ class Code extends ApiEntity
     private $translations;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -68,9 +68,9 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -78,9 +78,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
+     *
      * @return Code
      */
     public function setCode($code)
@@ -91,7 +92,7 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */
@@ -101,9 +102,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Set backend
+     * Set backend.
      *
-     * @param boolean $backend
+     * @param bool $backend
+     *
      * @return Code
      */
     public function setBackend($backend)
@@ -114,9 +116,9 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get backend
+     * Get backend.
      *
-     * @return boolean
+     * @return bool
      */
     public function getBackend()
     {
@@ -124,9 +126,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Set frontend
+     * Set frontend.
      *
-     * @param boolean $frontend
+     * @param bool $frontend
+     *
      * @return Code
      */
     public function setFrontend($frontend)
@@ -137,9 +140,9 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get frontend
+     * Get frontend.
      *
-     * @return boolean
+     * @return bool
      */
     public function getFrontend()
     {
@@ -147,9 +150,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Set length
+     * Set length.
      *
-     * @param integer $length
+     * @param int $length
+     *
      * @return Code
      */
     public function setLength($length)
@@ -160,9 +164,9 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get length
+     * Get length.
      *
-     * @return integer
+     * @return int
      */
     public function getLength()
     {
@@ -170,9 +174,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Set package
+     * Set package.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     *
      * @return Code
      */
     public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package = null)
@@ -183,7 +188,7 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get package
+     * Get package.
      *
      * @return \Sulu\Bundle\TranslateBundle\Entity\Package
      */
@@ -193,9 +198,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Set location
+     * Set location.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Location $location
+     *
      * @return Code
      */
     public function setLocation(\Sulu\Bundle\TranslateBundle\Entity\Location $location = null)
@@ -206,7 +212,7 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get location
+     * Get location.
      *
      * @return \Sulu\Bundle\TranslateBundle\Entity\Location
      */
@@ -216,9 +222,10 @@ class Code extends ApiEntity
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     *
      * @return Code
      */
     public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translations)
@@ -229,7 +236,7 @@ class Code extends ApiEntity
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
      */
@@ -239,7 +246,7 @@ class Code extends ApiEntity
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

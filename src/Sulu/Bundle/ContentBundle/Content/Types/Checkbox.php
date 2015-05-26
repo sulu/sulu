@@ -15,12 +15,13 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for Checkbox
+ * ContentType for Checkbox.
  */
 class Checkbox extends SimpleContentType
 {
     /**
-     * form template for content type
+     * form template for content type.
+     *
      * @var string
      */
     private $template;
@@ -65,7 +66,8 @@ class Checkbox extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

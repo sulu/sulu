@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
 /**
- * This exception is thrown when a content navigation alias is requested, which does not exist
+ * This exception is thrown when a content navigation alias is requested, which does not exist.
  */
 class ContentNavigationAliasNotFoundException extends \Exception
 {
@@ -39,7 +39,8 @@ class ContentNavigationAliasNotFoundException extends \Exception
     }
 
     /**
-     * The not existent alias, which has been requested
+     * The not existent alias, which has been requested.
+     *
      * @return string
      */
     public function getAlias()
@@ -48,7 +49,8 @@ class ContentNavigationAliasNotFoundException extends \Exception
     }
 
     /**
-     * Returns the available aliases in this syste
+     * Returns the available aliases in this syste.
+     *
      * @return string[]
      */
     public function getAvailableAliases()

@@ -10,15 +10,14 @@
 
 namespace Sulu\Bundle\GeneratorBundle\Command;
 
+use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Sulu\Bundle\GeneratorBundle\Generator\SuluBundleGenerator;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\Output;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Sulu\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 use Sulu\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
-use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Generates sulu bundles.
@@ -281,9 +280,14 @@ EOT
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
             if ($auto) {
-                $this->route = $dialog->askAndValidate($output, "Route [length > 3]: ", function ($x) {
-                    if (strlen($x) < 3) return false;
-                    if ($x[0] != '/') $x = $x = '/' . $x;
+                $this->route = $dialog->askAndValidate($output, 'Route [length > 3]: ', function ($x) {
+                    if (strlen($x) < 3) {
+                        return false;
+                    }
+                    if ($x[0] != '/') {
+                        $x = $x = '/' . $x;
+                    }
+
                     return $x;
                 });
             }

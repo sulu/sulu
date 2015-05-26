@@ -10,12 +10,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Security\Authentication\RoleInterface;
 
 /**
- * Permission
+ * Permission.
+ *
  * @ExclusionPolicy("all");
  */
 class Permission
@@ -27,13 +28,13 @@ class Permission
     private $context;
 
     /**
-     * @var integer
+     * @var int
      * @Expose
      */
     private $permissions;
 
     /**
-     * @var integer
+     * @var int
      * @Expose
      */
     private $id;
@@ -50,9 +51,10 @@ class Permission
     private $module;
 
     /**
-     * Set context
+     * Set context.
      *
      * @param string $context
+     *
      * @return Permission
      */
     public function setContext($context)
@@ -63,7 +65,7 @@ class Permission
     }
 
     /**
-     * Get context
+     * Get context.
      *
      * @return string
      */
@@ -73,9 +75,10 @@ class Permission
     }
 
     /**
-     * Set permissions
+     * Set permissions.
      *
-     * @param integer $permissions
+     * @param int $permissions
+     *
      * @return Permission
      */
     public function setPermissions($permissions)
@@ -86,9 +89,9 @@ class Permission
     }
 
     /**
-     * Get permissions
+     * Get permissions.
      *
-     * @return integer
+     * @return int
      */
     public function getPermissions()
     {
@@ -96,9 +99,9 @@ class Permission
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -106,9 +109,10 @@ class Permission
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param RoleInterface $role
+     *
      * @return Permission
      */
     public function setRole(RoleInterface $role = null)
@@ -119,7 +123,7 @@ class Permission
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return RoleInterface
      */
@@ -129,9 +133,10 @@ class Permission
     }
 
     /**
-     * Set module
+     * Set module.
      *
      * @param string $module
+     *
      * @return Permission
      */
     public function setModule($module)
@@ -142,7 +147,7 @@ class Permission
     }
 
     /**
-     * Get module
+     * Get module.
      *
      * @return string
      */

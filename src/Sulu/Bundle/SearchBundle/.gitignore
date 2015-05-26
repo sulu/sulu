@@ -4,9 +4,18 @@ Tests/app/data
 composer.lock
 vendor
 
+/node_modules/
+/composer.phar
+/composer.lock
+/.sass-cache/
+
 # IDEs
 .idea/*
 *.iml
+*~
+
+#npm
+npm-debug.log
 
 # System files
 .DS_Store

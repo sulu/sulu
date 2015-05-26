@@ -41,16 +41,15 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Sulu\Component\Util\SuluNodeHelper;
 
 /**
- * prepares repository and basic classes for phpcr test cases
- * @package Sulu\Bundle\TestBundle\Testing
+ * prepares repository and basic classes for phpcr test cases.
  */
 abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -140,31 +139,35 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $nodeHelper;
 
     /**
-     * The default language for the content mapper
+     * The default language for the content mapper.
+     *
      * @var string
      */
     protected $language = 'de';
 
     /**
-     * The default template for the content mapper
+     * The default template for the content mapper.
+     *
      * @var string
      */
     protected $defaultTemplates = array('page' => 'default', 'snippet' => 'default');
 
     /**
-     * The language namespace
+     * The language namespace.
+     *
      * @var string
      */
     protected $languageNamespace = 'i18n';
 
     /**
-     * The language namespace
+     * The language namespace.
+     *
      * @var string
      */
     protected $internalPrefix = '';
 
     /**
-     * purge webspace at tear down
+     * purge webspace at tear down.
      */
     public function tearDown()
     {
@@ -175,7 +178,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares a content mapper
+     * prepares a content mapper.
      */
     protected function prepareMapper()
     {
@@ -196,7 +199,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->templateResolver = new TemplateResolver();
             $this->nodeHelper = new SuluNodeHelper(
                 $this->sessionManager->getSession(),
-                'i18n', 
+                'i18n',
                 array(
                     'base' => 'cmf',
                     'content' => 'contents',
@@ -253,7 +256,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                             'not in use',
                             $this->languageNamespace
                         ),
-                    'security.context' => $this->securityContext
+                    'security.context' => $this->securityContext,
                 )
             );
         }
@@ -272,7 +275,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares event dispatcher manager
+     * prepares event dispatcher manager.
      */
     protected function prepareEventDispatcher()
     {
@@ -293,7 +296,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares webspace manager
+     * prepares webspace manager.
      */
     protected function prepareWebspaceManager()
     {
@@ -303,7 +306,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares a structure manager
+     * prepares a structure manager.
      */
     protected function prepareStructureManager()
     {
@@ -325,7 +328,8 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * default get extension callback returns a empty array
+     * default get extension callback returns a empty array.
+     *
      * @return array
      */
     public function getExtensionsCallback()
@@ -334,17 +338,20 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * default get extension callback returns null
+     * default get extension callback returns null.
+     *
      * @return array
      */
     public function getExtensionCallback()
     {
-        return null;
+        return;
     }
 
     /**
-     * provides a callback for structure manager mock: function getStructure
+     * provides a callback for structure manager mock: function getStructure.
+     *
      * @return mixed
+     *
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function structureCallback()
@@ -354,12 +361,12 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if (isset($this->structureValueMap[$id])) {
             return $this->structureValueMap[$id];
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * prepares a security context
+     * prepares a security context.
      */
     protected function prepareSecurityContext()
     {
@@ -382,7 +389,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares a session manager
+     * prepares a session manager.
      */
     protected function prepareSessionManager()
     {
@@ -400,7 +407,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares a container
+     * prepares a container.
      */
     protected function prepareContainer()
     {
@@ -415,8 +422,10 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * provides a callback for container mock: function get
+     * provides a callback for container mock: function get.
+     *
      * @return mixed
+     *
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function containerCallback()
@@ -431,7 +440,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares a session
+     * prepares a session.
      */
     protected function prepareSession()
     {
@@ -447,7 +456,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * prepares the repository
+     * prepares the repository.
      */
     protected function prepareRepository()
     {

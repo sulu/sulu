@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 
 /**
- * Creates query for a minimum content pages (title and url)
+ * Creates query for a minimum content pages (title and url).
  */
 class SitemapContentQueryBuilder extends ContentQueryBuilder
 {

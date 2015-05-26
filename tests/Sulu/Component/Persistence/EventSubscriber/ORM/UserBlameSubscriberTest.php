@@ -113,7 +113,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $entity = $this->userBlameObject->reveal();
 
         $this->unitOfWork->getScheduledEntityInsertions()->willReturn(array(
-            $entity
+            $entity,
         ));
         $this->unitOfWork->getScheduledEntityUpdates()->willReturn(array());
 

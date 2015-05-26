@@ -4,8 +4,6 @@ namespace Sulu\Component\Rest\DQL;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Lexer;
-use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\ORM\Query\Parser;
 
 class Cast extends FunctionNode
 {

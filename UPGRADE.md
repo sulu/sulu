@@ -1,6 +1,48 @@
 # Upgrade
 
-## dev-develop
+## 0.18.0
+
+## Search index rebuild
+
+Old data in search index can cause problems. You should clear the folder `app/data` and rebuild the index.
+ 
+```bash
+rm -rf app/data/*
+app/console massive:search:index:rebuild
+```
+
+### Search adapter name changed
+
+Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
+configuration.
+
+### Search index name changed
+
+Pages and snippets are now indexed in separate indexes for pages and snippets.
+Replace all instances of `->index('content')` with `->indexes(array('page',
+'snippet')`.
+
+### Search searches non-published pages by default
+
+Pages which are "Test" are no longer indexed. If you require only
+"published" pages modify your search query to start with: `state:published AND `
+and escape the quotes:
+
+```php
+$hits = $searchManager
+    ->createSearch(sprintf('state:published AND "%s"', str_replace('"', '\\"', $query)))
+    ->locale($locale)
+    ->index('page')
+    ->execute();
+```
+
+### PHPCR: Doctrine-Dbal
+
+The structure of data has changed. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
+```
 
 ### Smart content tag operator
 
@@ -114,6 +156,10 @@ urls = array(
     'es' => '/'
 );
 ```
+
+### Util
+
+The `Sulu\Component\Util\UuidUtils` has been removed. Use the `Phpcr\Utils\UuidHelper` instead.
 
 ## 0.17.0
 

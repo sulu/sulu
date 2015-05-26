@@ -10,12 +10,12 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use Sulu\Component\Content\Structure;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\StructureInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureInterface;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -201,7 +201,7 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         return array(
             array(true),
-            array(false)
+            array(false),
         );
     }
 
@@ -218,7 +218,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         if ($multiple) {
             $node->setProperty('sulu:content', array(
                 $this->snippet1->getUuid(),
-                $this->snippet2->getUuid()
+                $this->snippet2->getUuid(),
             ), PropertyType::REFERENCE);
         } else {
             $node->setProperty('sulu:content', $this->snippet1->getUuid(), PropertyType::REFERENCE);
@@ -300,9 +300,9 @@ class ContentMapperSnippetTest extends SuluTestCase
     }
 
     /**
-     * Return the position of the node within the set of its siblings
+     * Return the position of the node within the set of its siblings.
      *
-     * @return integer
+     * @return int
      */
     private function getNodePosition($node)
     {

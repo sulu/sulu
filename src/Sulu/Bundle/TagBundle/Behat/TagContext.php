@@ -10,14 +10,13 @@
 
 namespace Sulu\Bundle\TagBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
- * Behat context class for the TagBundle
+ * Behat context class for the TagBundle.
  */
 class TagContext extends BaseContext implements SnippetAcceptingContext
 {

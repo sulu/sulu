@@ -13,20 +13,18 @@ namespace Sulu\Bundle\ContentBundle\Command;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use PHPCR\WorkspaceInterface;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 
 /**
- * initiate phpcr repository (namespaces, nodetypes)
- *
- * @package Sulu\Bundle\CoreBundle\Command
+ * initiate phpcr repository (namespaces, nodetypes).
  */
 class PHPCRInitCommand extends ContainerAwareCommand
 {
@@ -58,7 +56,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
             new PathNodeType(),
             new ContentNodeType(),
             new SnippetNodeType(),
-            new PageNodeType()
+            new PageNodeType(),
         ) as $nodeType) {
             $output->writeln('  - ' . $nodeType->getName());
             $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);

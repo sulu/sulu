@@ -11,27 +11,27 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Account
+ * Account.
  */
 class AbstractAccount extends BaseAccount implements AuditableInterface, AccountInterface
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $lft;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $rgt;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $depth;
 
@@ -47,8 +47,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     protected $parent;
 
     /**
-     * main account
+     * main account.
+     *
      * @Accessor(getter="getAddresses")
+     *
      * @var string
      */
     protected $addresses;
@@ -111,7 +113,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     protected $categories;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -128,9 +130,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return Account
      */
     public function setLft($lft)
@@ -141,9 +144,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft()
     {
@@ -151,9 +154,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return Account
      */
     public function setRgt($rgt)
@@ -164,9 +168,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt()
     {
@@ -174,9 +178,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Set depth
+     * Set depth.
      *
-     * @param integer $depth
+     * @param int $depth
+     *
      * @return Account
      */
     public function setDepth($depth)
@@ -187,9 +192,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get depth
+     * Get depth.
      *
-     * @return integer
+     * @return int
      */
     public function getDepth()
     {
@@ -197,9 +202,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param AccountInterface $parent
+     *
      * @return Account
      */
     public function setParent(AccountInterface $parent = null)
@@ -210,7 +216,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return AccountInterface
      */
@@ -220,9 +226,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add urls
+     * Add urls.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     *
      * @return Account
      */
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
@@ -233,7 +240,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove urls
+     * Remove urls.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
      */
@@ -243,7 +250,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get urls
+     * Get urls.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -253,9 +260,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add phones
+     * Add phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     *
      * @return Account
      */
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
@@ -266,7 +274,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove phones
+     * Remove phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
      */
@@ -276,7 +284,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get phones
+     * Get phones.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -286,9 +294,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add emails
+     * Add emails.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     *
      * @return Account
      */
     public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
@@ -299,7 +308,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove emails
+     * Remove emails.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
      */
@@ -309,7 +318,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get emails
+     * Get emails.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -319,9 +328,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add notes
+     * Add notes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     *
      * @return Account
      */
     public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
@@ -332,7 +342,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove notes
+     * Remove notes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
      */
@@ -342,7 +352,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -352,9 +362,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add children
+     * Add children.
      *
      * @param AccountInterface $children
+     *
      * @return Account
      */
     public function addChildren(AccountInterface $children)
@@ -365,7 +376,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param AccountInterface $children
      */
@@ -375,7 +386,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get children
+     * Get children.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -385,9 +396,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return Account
      */
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
@@ -398,7 +410,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
@@ -408,7 +420,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get faxes
+     * Get faxes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -418,9 +430,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return Account
      */
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
@@ -431,7 +444,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
@@ -441,9 +454,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add bankAccounts
+     * Add bankAccounts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     *
      * @return Account
      */
     public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
@@ -454,7 +468,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove bankAccounts
+     * Remove bankAccounts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
      */
@@ -464,7 +478,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get bankAccounts
+     * Get bankAccounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -474,9 +488,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add tags
+     * Add tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     *
      * @return Account
      */
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
@@ -487,7 +502,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove tags
+     * Remove tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
      */
@@ -497,7 +512,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get tags
+     * Get tags.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -507,7 +522,8 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * parses tags to array containing tag names
+     * parses tags to array containing tag names.
+     *
      * @return array
      */
     public function getTagNameArray()
@@ -523,9 +539,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add accountContacts
+     * Add accountContacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     *
      * @return Account
      */
     public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
@@ -536,7 +553,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove accountContacts
+     * Remove accountContacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
      */
@@ -546,7 +563,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get accountContacts
+     * Get accountContacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -556,9 +573,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add accountAddresses
+     * Add accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     *
      * @return Account
      */
     public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
@@ -569,7 +587,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove accountAddresses
+     * Remove accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
      */
@@ -579,7 +597,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get accountAddresses
+     * Get accountAddresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -589,7 +607,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * returns main account
+     * returns main account.
      */
     public function getAddresses()
     {
@@ -609,7 +627,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Returns the main address
+     * Returns the main address.
      *
      * @return mixed
      */
@@ -626,11 +644,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -650,9 +668,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add medias
+     * Add medias.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     *
      * @return Account
      */
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
@@ -663,7 +682,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove medias
+     * Remove medias.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
      */
@@ -673,7 +692,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get medias
+     * Get medias.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -683,9 +702,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add accountAddresses
+     * Add accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     *
      * @return Account
      */
     public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
@@ -696,7 +716,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove accountAddresses
+     * Remove accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
      */
@@ -706,9 +726,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add children
+     * Add children.
      *
      * @param AccountInterface $children
+     *
      * @return Account
      */
     public function addChild(AccountInterface $children)
@@ -719,7 +740,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param AccountInterface $children
      */
@@ -728,11 +749,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
         $this->children->removeElement($children);
     }
 
-
     /**
-     * Add categories
+     * Add categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     *
      * @return Account
      */
     public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
@@ -743,9 +764,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add categories
+     * Add categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     *
      * @return Account
      *
      * FIXME someone needs this ugly methods .... (restcontroller)
@@ -758,7 +780,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove categories
+     * Remove categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
      */
@@ -768,7 +790,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove categories
+     * Remove categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
      *
@@ -780,7 +802,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Get categories
+     * Get categories.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

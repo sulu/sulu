@@ -13,12 +13,12 @@ namespace Sulu\Bundle\SearchBundle\Build;
 use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
- * Builder for index
+ * Builder for index.
  */
 class IndexBuilder extends SuluBuilder
 {
     /**
-     * Return the name for this builder
+     * Return the name for this builder.
      *
      * @return string
      */
@@ -28,7 +28,7 @@ class IndexBuilder extends SuluBuilder
     }
 
     /**
-     * Return the dependencies for this builder
+     * Return the dependencies for this builder.
      *
      * @return array
      */
@@ -38,7 +38,7 @@ class IndexBuilder extends SuluBuilder
     }
 
     /**
-     * Execute the build logic
+     * Execute the build logic.
      */
     public function build()
     {

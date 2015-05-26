@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 use Sulu\Component\Cache\MemoizeInterface;
 
 /**
- * Provides memoized Interface to load content
+ * Provides memoized Interface to load content.
  */
 class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
 {
@@ -33,9 +33,9 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     private $lifeTime;
 
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
+    public function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;
@@ -56,7 +56,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     public function load($uuid)
     {
         return $this->memoizeCache->memoize(array($this->extension, 'load'), $this->lifeTime);
-   }
+    }
 
     /**
      * {@inheritdoc}

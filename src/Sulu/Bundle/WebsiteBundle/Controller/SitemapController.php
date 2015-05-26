@@ -18,13 +18,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Renders a xml sitemap
- * @package Sulu\Bundle\WebsiteBundle\Controller
+ * Renders a xml sitemap.
  */
 class SitemapController extends WebsiteController
 {
     /**
-     * Returns a rendered xmlsitemap
+     * Returns a rendered xmlsitemap.
+     *
      * @return Response
      */
     public function indexAction(Request $request)

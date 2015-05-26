@@ -85,6 +85,7 @@
 }
 
 .media-selection-overlay-toolbar-container {
+  display: inline-block;
   margin-bottom: 10px;
 }
 
@@ -124,6 +125,8 @@
 }
 
 .media-selection-overlay-dropzone-container {
+  padding-right: 20px;
+
   & > .husky-dropzone {
     display: none;
     margin-top: 30px;
@@ -169,4 +172,17 @@
 
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+}
+
+.media-selection-overlay-header {
+  white-space: nowrap;
+}
+
+.media-selection-overlay-selected-info {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }

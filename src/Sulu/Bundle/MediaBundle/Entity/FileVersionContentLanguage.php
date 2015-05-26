@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 /**
- * FileVersionContentLanguage
+ * FileVersionContentLanguage.
  */
 class FileVersionContentLanguage
 {
@@ -21,7 +21,7 @@ class FileVersionContentLanguage
     private $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -31,9 +31,10 @@ class FileVersionContentLanguage
     private $fileVersion;
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return FileVersionContentLanguage
      */
     public function setLocale($locale)
@@ -44,7 +45,7 @@ class FileVersionContentLanguage
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -54,9 +55,9 @@ class FileVersionContentLanguage
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -64,10 +65,11 @@ class FileVersionContentLanguage
     }
 
     /**
-     * Set id
+     * Set id.
      *
-     * @param integer
-     * @return integer
+     * @param int
+     *
+     * @return int
      */
     public function setId($id)
     {
@@ -77,9 +79,10 @@ class FileVersionContentLanguage
     }
 
     /**
-     * Set fileVersion
+     * Set fileVersion.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion
+     *
      * @return FileVersionContentLanguage
      */
     public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null)
@@ -90,7 +93,7 @@ class FileVersionContentLanguage
     }
 
     /**
-     * Get fileVersion
+     * Get fileVersion.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion
      */
@@ -100,7 +103,7 @@ class FileVersionContentLanguage
     }
 
     /**
-     * don't clone id
+     * don't clone id.
      */
     public function __clone()
     {

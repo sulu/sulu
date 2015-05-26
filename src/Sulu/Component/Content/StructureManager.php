@@ -17,14 +17,14 @@ use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  * generates subclasses of structure to match template definitions.
- * this classes will be cached in Symfony cache
+ * this classes will be cached in Symfony cache.
  */
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
@@ -49,7 +49,8 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $options;
 
     /**
-     * contains all extension
+     * contains all extension.
+     *
      * @var array
      */
     private $extensions = array();
@@ -59,6 +60,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @param PhpTemplateDumper $dumper
      * @param LoggerInterface $logger
      * @param array $options
+     *
      * @internal param string $defaultPath array with paths to search for templates
      */
     public function __construct(
@@ -74,7 +76,8 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Sets the options for the manager
+     * Sets the options for the manager.
+     *
      * @param $options
      */
     public function setOptions($options)
@@ -86,7 +89,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             'page_cache_class_suffix' => 'PageCache',
             'page_base_class' => 'Sulu\Component\Content\Structure\Page',
             'snippet_cache_class_suffix' => 'SnippetCache',
-            'snippet_base_class' => 'Sulu\Component\Content\Structure\Snippet'
+            'snippet_base_class' => 'Sulu\Component\Content\Structure\Snippet',
         );
 
         // overwrite the default values with the given options
@@ -179,12 +182,15 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Returns structure for given template key and file
+     * Returns structure for given template key and file.
+     *
      * @param string $key
      * @param string $templateConfig
      * @param string $type
+     *
      * @throws Template\Exception\TemplateNotFoundException
      * @throws \InvalidArgumentException
+     *
      * @return StructureInterface
      */
     private function getStructureByFile($key, $templateConfig, $type)
@@ -221,7 +227,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                         $result,
                         array(
                             'cache_class' => $class,
-                            'base_class' => $this->options[$type . '_base_class']
+                            'base_class' => $this->options[$type . '_base_class'],
                         ),
                         $type
                     ),
@@ -255,8 +261,10 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Returns path to template
+     * Returns path to template.
+     *
      * @param $key
+     *
      * @return bool|string
      */
     private function getTemplate($key, $type)
@@ -273,7 +281,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             if (file_exists($path)) {
                 return array(
                     'path' => $path,
-                    'internal' => $templateDir['internal']
+                    'internal' => $templateDir['internal'],
                 );
             }
 
@@ -300,7 +308,8 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Returns a list of existing templates
+     * Returns a list of existing templates.
+     *
      * @return string[]
      */
     private function getTemplates($type)
@@ -314,7 +323,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             foreach (glob($templateDir['path'] . '/*.xml', GLOB_BRACE) as $path) {
                 $result[] = array(
                     'path' => $path,
-                    'internal' => $templateDir['internal']
+                    'internal' => $templateDir['internal'],
                 );
             }
         }

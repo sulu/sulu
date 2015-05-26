@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace\Loader\Exception;
 
 /**
- * This error represents a wrong number of default error templates
+ * This error represents a wrong number of default error templates.
  */
 class InvalidAmountOfDefaultErrorTemplateException extends WebspaceException
 {

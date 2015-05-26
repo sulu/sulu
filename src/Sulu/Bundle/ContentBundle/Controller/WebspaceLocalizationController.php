@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\Exception\RestException;
@@ -19,14 +18,15 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controller for getting localizations
- * @package Sulu\Bundle\ContentBundle\Controller
+ * Controller for getting localizations.
  */
 class WebspaceLocalizationController extends RestController implements ClassResourceInterface
 {
     /**
-     * Returns the localizations for the given webspace
+     * Returns the localizations for the given webspace.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
