@@ -1,5 +1,22 @@
 # Upgrade
 
+## dev-develop
+
+### Texteditor
+
+The params for the texteditor content type where changed.
+
+| Before                                        | Now                                                                                                         |
+|-----------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `<param name="tables" value="true" />`        | `<param name="table" value="true" />`                                                                       |
+| `<param name="links" value="true" />`         | `<param name="link" value="true" />`                                                                        |
+| `<param name="pasteFromWord" value="true" />` | `<param name="paste_from_word" value="true" />`                                                             |
+| `<param name="maxHeight" value="500" />`      | `<param name="max_height" value="500" />`                                                                   |
+|                                               |                                                                                                             |
+| `<param name="iframes" value="true" />`       | iframes and scripts tags can activated by an ckeditor parameter:                                            |
+| `<param name="scripts" value="true" />`       | `<param name="extraAllowedContent" value="img(*)[*]; span(*)[*]; div(*)[*]; iframe(*)[*]; script(*)[*]" />` |
+
+
 ## 0.18.0
 
 ## Search index rebuild
@@ -156,22 +173,6 @@ urls = array(
     'es' => '/'
 );
 ```
-
-### Texteditor
-
-The params for the texteditor content type where changed.
-
-| Before                                        | Now                                                                                 |
-|-----------------------------------------------|-------------------------------------------------------------------------------------|
-| `<param name="tables" value="true" />`        | `<param name="table" value="true" />`                                               |
-| `<param name="links" value="true" />`         | `<param name="link" value="true" />`                                                |
-| `<param name="pasteFromWord" value="true" />` | `<param name="paste_from_word" value="true" />`                                     |
-| `<param name="maxHeight" value="500" />`      | `<param name="max_height" value="500" />`                                           |
-|                                               |                                                                                     |
-| `<param name="iframes" value="true" />`       | iframes and scripts tags are available now in default config                        |
-| `<param name="scripts" value="true" />`       | its overwriteable with `<param name="extraAllowedContent" value="..." />`           |
-
-
 
 ### Util
 
