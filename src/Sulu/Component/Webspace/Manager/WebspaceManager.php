@@ -102,19 +102,21 @@ class WebspaceManager implements WebspaceManagerInterface
      * @param string $environment
      * @param string $languageCode
      * @param null|string $webspaceKey
+     * @param null|string $domain
      *
      * @return array
      */
-    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null)
+    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null, $domain = null)
     {
         $urls = array();
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            if ($sameLocalization && $sameWebspace) {
-                // TODO protocol
-                $urls[] = rtrim('http://' . $url . $resourceLocator, '/');
+            // TODO protocol
+            $url = rtrim('http://' . $url . $resourceLocator, '/');
+            if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
+                $urls[] = $url;
             }
         }
 
@@ -231,5 +233,32 @@ class WebspaceManager implements WebspaceManagerInterface
 
         // overwrite the default values with the given options
         $this->options = array_merge($this->options, $options);
+    }
+
+    /**
+     * Url is from domain
+     * @param $url
+     * @param $domain
+     * @return array
+     */
+    protected function isFromDomain($url, $domain)
+    {
+        if (!$domain) {
+            return true;
+        }
+
+        $parsedUrl = parse_url($url);
+        // if domain or subdomain
+        if (
+            isset($parsedUrl['host'])
+            && (
+                $parsedUrl['host'] == $domain
+                || fnmatch('*.' . $domain, $parsedUrl['host'])
+            )
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

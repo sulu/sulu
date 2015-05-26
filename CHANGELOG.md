@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1075 [WebsiteBundle]  Fixed sitemap add validation for requested domain
     * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
     * BUGFIX      #1123 [ContentBundle]  Fixed block behaviour on template change
     * ENHANCEMENT #1118 [SecurityBundle] Add possibility to enable SecurityChecker and SuluSecurityListener via configuration

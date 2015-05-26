@@ -18,18 +18,18 @@ interface SitemapGeneratorInterface
      * @param string $webspaceKey
      * @param bool $flat
      *
-     * @return array
+     * @return WebspaceSitemap
      */
     public function generateAllLocals($webspaceKey, $flat = false);
 
     /**
-     * Generates a sitemap for given webspace.
+     * Generates a sitemap for given webspace
      *
      * @param string $webspaceKey
      * @param string $locale
      * @param bool $flat
      *
-     * @return array
+     * @return WebspaceSitemap
      */
     public function generate($webspaceKey, $locale, $flat = false);
 }
