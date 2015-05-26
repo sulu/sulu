@@ -576,6 +576,7 @@ class NodeControllerTest extends SuluTestCase
             'GET', '/api/nodes?id=' . $data[2]['id'] . '&tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
         );
 
+        $response = $client->getResponse()->getContent();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 

@@ -296,6 +296,11 @@ class StructureBridge implements StructureInterface
         return $children;
     }
 
+    public function getParent()
+    {
+        return $this->documentToStructure($this->documentInspector->getParent($this->document));
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -425,9 +430,14 @@ class StructureBridge implements StructureInterface
             $result['publishedState'] = $document->getWorkflowStage() === WorkflowStage::PUBLISHED;
             $result['published'] = $document->getPublished();
         }
+
         $result['navContexts'] = array();
         if ($document instanceof NavigationContextBehavior) {
             $result['navContexts'] = $document->getNavigationContexts();
+        }
+
+        if (null !== $this->getType()) {
+            $result['type'] = $this->getType()->toArray();
         }
 
         if ($complete) {
@@ -461,10 +471,6 @@ class StructureBridge implements StructureInterface
             $result = array_merge($this->getDocument()->getContent()->toArray(), $result);
 
             return $result;
-        }
-
-        if (null !== $this->getType()) {
-            $result['type'] = $this->getType()->toArray();
         }
 
         return $result;
