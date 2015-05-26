@@ -17,7 +17,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
 {
     /**
-     * @var string
+     * @var \Twig_Environment
      */
     private $twig;
 
@@ -27,7 +27,7 @@ class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
     private $renderFile;
 
     public function __construct(
-        $twig,
+        \Twig_Environment $twig,
         $renderFile = 'SuluWebsiteBundle:Sitemap:sitemap.xml.twig'
     ) {
         $this->twig = $twig;
@@ -44,8 +44,8 @@ class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
         return $this->twig->render(
             $renderFile,
             array(
-                'webspaceSitemapInformations' => $webspaceSitemaps,
-                'domain'                      => $domain
+                'webspaceSitemaps' => $webspaceSitemaps,
+                'domain'           => $domain
             )
         );
     }

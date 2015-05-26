@@ -31,6 +31,7 @@ class SitemapController extends WebsiteController
     {
         /** @var RequestAnalyzerInterface $requestAnalyzer */
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
+
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->get('sulu_website.sitemap');
 
@@ -39,11 +40,11 @@ class SitemapController extends WebsiteController
 
         $flatSitemap = true;
 
-        $webspaceSitemapInformations = array(
+        $webspaceSitemaps = array(
             $sitemapGenerator->generateAllLocals(
                 $requestAnalyzer->getWebspace()->getKey(),
                 $flatSitemap
-            )
+            ),
         );
         $preferredDomain = $request->getHttpHost();
 
@@ -58,7 +59,7 @@ class SitemapController extends WebsiteController
         );
 
         $response->headers->set('Content-Type', 'text/xml');
-        $response->setContent($sitemapXMLGenerator->generate($webspaceSitemapInformations, $preferredDomain));
+        $response->setContent($sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain));
 
         // Generate XML
         return $response;

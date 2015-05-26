@@ -3,30 +3,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 {# ALL WEBSPACES #}
-{% for webspaceSitemapInformation in webspaceSitemapInformations %}
-{# ALL SITES #}
-{% for site in webspaceSitemapInformation.sitemap %}
-    {% set url = content_path(site.url, site.webspaceKey, site.locale, domain) %}
-    {# IF URL EXISTS IN LOCALE #}
-    {% if url is not empty and url != site.url %}
+{% for webspaceSitemap in webspaceSitemaps %}
+    {# ALL SITES #}
+    {% for site in webspaceSitemap.sitemap %}
+        {% set url = content_path(site.url, site.webspaceKey, site.locale, domain) %}
+        {# IF URL EXISTS IN LOCALE #}
+        {% if url is not empty and url != site.url %}
     <url>
         <loc>{{ url }}</loc>
         <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
-    {# OTHER LOCALIZATIONS #}
-    {% for locale, siteUrl in site.urls if locale in webspaceSitemapInformation.getLocalizations() %}
-        {% set url = content_path(siteUrl, site.webspaceKey, locale, domain) %}
-        {# IF URL EXISTS IN LOCALE #}
-        {% if url is not empty and url != siteUrl %}
+        {# OTHER LOCALIZATIONS #}
+        {% for locale, siteUrl in site.urls if locale in webspaceSitemap.getLocalizations() %}
+            {% set url = content_path(siteUrl, site.webspaceKey, locale, domain) %}
+            {# IF URL EXISTS IN LOCALE #}
+            {% if url is not empty and url != siteUrl %}
         <xhtml:link rel="alternate" hreflang="{{ locale|replace('_', '-') }}" href="{{ url }}"/>
-        {# DEFAULT LOCALIZATION #}
-        {% if webspaceSitemapInformation.getDefaultLocalization() == locale %}
+                {# DEFAULT LOCALIZATION #}
+                {% if webspaceSitemap.getDefaultLocalization() == locale %}
         <xhtml:link rel="alternate" hreflang="x-default" href="{{ url }}"/>
-        {% endif %} {# DEFAULT LOCALIZATION #}
-        {% endif %} {# IF URL EXISTS IN LOCALE #}
-    {% endfor %} {# OTHER LOCALIZATIONS #}
+                {% endif %} {# DEFAULT LOCALIZATION #}
+            {% endif %} {# IF URL EXISTS IN LOCALE #}
+        {% endfor %} {# OTHER LOCALIZATIONS #}
     </url>
-    {% endif %} {# IF URL EXISTS IN LOCALE #}
-{% endfor %} {# ALL SITES #}
+        {% endif %} {# IF URL EXISTS IN LOCALE #}
+    {% endfor %} {# ALL SITES #}
 {% endfor %} {# ALL WEBSPACES #}
 </urlset>
 {% endspaceless %}
