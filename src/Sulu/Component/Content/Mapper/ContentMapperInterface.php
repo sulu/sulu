@@ -208,44 +208,6 @@ interface ContentMapperInterface
     public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey, $excludeGhost = true, $loadGhostContent = false);
 
     /**
-     * load tree from root to given path.
-     *
-     * @param string $uuid
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     *
-     * @return StructureInterface[]
-     */
-    public function loadTreeByUuid(
-        $uuid,
-        $languageCode,
-        $webspaceKey,
-        $excludeGhost = true,
-        $loadGhostContent = false
-    );
-
-    /**
-     * load tree from root to given path.
-     *
-     * @param string $path
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     *
-     * @return StructureInterface[]
-     */
-    public function loadTreeByPath(
-        $path,
-        $languageCode,
-        $webspaceKey,
-        $excludeGhost = true,
-        $loadGhostContent = false
-    );
-
-    /**
      * load breadcrumb for given uuid in given language.
      *
      * @param $uuid
