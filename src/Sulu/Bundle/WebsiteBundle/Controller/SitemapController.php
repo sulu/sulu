@@ -40,10 +40,11 @@ class SitemapController extends WebsiteController
 
         $flatSitemap = true;
 
-
-        // MULTI WEBSPACE SUPPORT NOT IMPLEMENTED YET
-        if ($request->getHttpHost() == $requestAnalyzer->getLowestLevelDomain()) {
-            $webspaceSitemaps = $sitemapGenerator->generateAll($flatSitemap);
+        if (
+            $this->container->getParameter('sulu_website.sitemap.multi_webspace') &&
+            $request->getHttpHost() == $requestAnalyzer->getLowestLevelDomain()
+        ) {
+             $webspaceSitemaps = $sitemapGenerator->generateAll($flatSitemap);
              $preferredDomain = $requestAnalyzer->getLowestLevelDomain();
         } else {
             $webspaceSitemaps = array(

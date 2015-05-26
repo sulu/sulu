@@ -35,6 +35,10 @@ class SuluWebsiteExtension extends Extension
             'sulu_website.preview_defaults.analytics_key',
             $config['preview_defaults']['analytics_key']
         );
+        $container->setParameter(
+            'sulu_website.sitemap.multi_webspace',
+            $config['sitemap']['multi_webspace']
+        );
 
         $container->setParameter(
             'sulu_website.navigation.cache.lifetime',
