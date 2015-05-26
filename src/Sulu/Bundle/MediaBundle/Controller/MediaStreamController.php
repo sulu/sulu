@@ -73,13 +73,18 @@ class MediaStreamController extends Controller
             $version = $request->get('v', null);
             $noCount = $request->get('no-count', false);
 
+            $dispositionType = 'attachment';
+            if ($request->get('inline', false)) {
+                $dispositionType = 'inline';
+            }
+
             $fileVersion = $this->getFileVersion($id, $version);
 
             if (!$noCount) {
                 $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
             }
 
-            $response = $this->getFileResponse($fileVersion);
+            $response = $this->getFileResponse($fileVersion, $dispositionType);
 
             return $response;
         } catch (MediaException $e) {
@@ -89,10 +94,11 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
+     * @param string $dispositionType
      *
      * @return StreamedResponse
      */
-    protected function getFileResponse($fileVersion)
+    protected function getFileResponse($fileVersion, $dispositionType = 'attachment')
     {
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
@@ -115,7 +121,7 @@ class MediaStreamController extends Controller
 
         // Set headers
         $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
+        $response->headers->set('Content-Disposition', $dispositionType . '; filename="' . basename($fileName) . '";');
         $response->headers->set('Content-length', $fileSize);
 
         return $response;
