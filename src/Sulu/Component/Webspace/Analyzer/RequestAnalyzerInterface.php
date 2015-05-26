@@ -136,7 +136,6 @@ interface RequestAnalyzerInterface
      */
     public function getAnalyticsKey();
 
-
     /**
      * Returns the lowest matching domain
      * @return string

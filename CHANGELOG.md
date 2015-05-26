@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #1126 [WebsiteBundle]  Added sitemap multi webspace support
+    * FEATURE     #1128 [WebsiteBundle]  Added sitemap multi webspace support
     * BUGFIX      #1075 [WebsiteBundle]  Fixed sitemap add validation for requested domain
     * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
     * BUGFIX      #1123 [ContentBundle]  Fixed block behaviour on template change
