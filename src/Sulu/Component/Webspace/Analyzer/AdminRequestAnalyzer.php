@@ -211,15 +211,4 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     {
         return '';
     }
-
-    /**
-     * Returns the lowest matching domain
-     * @return string
-     */
-    public function getLowestLevelDomain()
-    {
-        return '';
-    }
-
-
 }

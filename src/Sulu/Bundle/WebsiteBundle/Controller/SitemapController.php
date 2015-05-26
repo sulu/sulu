@@ -39,20 +39,13 @@ class SitemapController extends WebsiteController
 
         $flatSitemap = true;
 
-        // MULTI WEBSPACE SUPPORT NOT IMPLEMENTED YET
-        //
-        // if ($request->getHttpHost() == $requestAnalyzer->getLowestLevelDomain()) {
-        //     $webspaceSitemapInformations = $sitemapGenerator->generateAll($flatSitemap);
-        //     $preferredDomain = $requestAnalyzer->getLowestLevelDomain();
-        // } else {
-            $webspaceSitemapInformations = array(
-                $sitemapGenerator->generateAllLocals(
-                    $requestAnalyzer->getWebspace()->getKey(),
-                    $flatSitemap
-                )
-            );
-            $preferredDomain = $request->getHttpHost();
-        // }
+        $webspaceSitemapInformations = array(
+            $sitemapGenerator->generateAllLocals(
+                $requestAnalyzer->getWebspace()->getKey(),
+                $flatSitemap
+            )
+        );
+        $preferredDomain = $request->getHttpHost();
 
         // XML Response
         $response = new Response();

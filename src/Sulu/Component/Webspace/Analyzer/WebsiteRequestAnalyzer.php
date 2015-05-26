@@ -170,8 +170,6 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         $this->setCurrentWebspace($portalInformation->getWebspace());
         $this->setCurrentSegment($portalInformation->getSegment());
 
-        $this->setLowestLevelDomain($this->getLowestLevelDomainByDomain($request->getHost()));
-
         $request->setLocale($portalInformation->getLocalization()->getLocalization());
 
         list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
@@ -434,43 +432,5 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     public function getLowestLevelDomain()
     {
         return $this->lowestLevelDomain;
-    }
-
-    /**
-     * @param string $lowestLevelDomain
-     * @return $this
-     */
-    public function setLowestLevelDomain($lowestLevelDomain)
-    {
-        $this->lowestLevelDomain = $lowestLevelDomain;
-        return $this;
-    }
-
-    /**
-     * Get Shortest available Domain match
-     * e.g.:
-     *     de.sulu.lo      -> sulu.lo
-     *     test.sulu.co.uk -> sulu.co.uk
-     * @param $domain
-     */
-    private function getLowestLevelDomainByDomain($domain)
-    {
-        $urls = $this->webspaceManager->getUrls($this->environment);
-        if ($urls) {
-            foreach ($this->webspaceManager->getUrls($this->environment) as $url) {
-                $parsedUrl = parse_url('http://' . $url);
-                if (isset($parsedUrl['host'])) {
-                    // Get Shortest available Domain match
-                    // e.g.:
-                    //     de.sulu.lo      -> sulu.lo
-                    //     test.sulu.co.uk -> sulu.co.uk
-                    if (fnmatch('*.' . $parsedUrl['host'], $domain)) {
-                        $domain = $parsedUrl['host'];
-                    }
-                }
-            }
-        }
-
-        return $domain;
     }
 }
