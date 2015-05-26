@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1134 [MediaBundle]    Add parameter to view pdf in browser instead of downloading it immediately
     * BUGFIX      #1075 [WebsiteBundle]  Fixed sitemap add validation for requested domain
     * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
     * BUGFIX      #1123 [ContentBundle]  Fixed block behaviour on template change
