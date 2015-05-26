@@ -65,7 +65,6 @@
             <argument type="service" id="sulu_resource.operator_repository"/>
         </service>
 
-
         <!-- JS config -->
         <service id="sulu_resource.jsconfig.aliases" class="%sulu_content.jsconfig.preview.class%">
             <argument type="string">sulu.resource.aliases</argument>

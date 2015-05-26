@@ -16,8 +16,10 @@ use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchExceptio
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFeatureException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\UnknownContextException;
 use Sulu\Bundle\ResourceBundle\Resource\FilterManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
@@ -70,14 +72,18 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        // check if context exists and filters are enabled for the given context
-        $context = $request->get('context');
-        $features = $this->getManager()->getFeaturesForAlias($context);
+        try {
+            // check if context exists and filters are enabled for the given context
+            $context = $request->get('context');
 
-        if ($context && (!$features || array_search('filters', $features) === false)) {
-            $exc = new RestException('Context unknown or filters not enabled for context!');
-            $view = $this->view($exc->toArray(), 400);
-        } else {
+            if (!$this->getManager()->hasContext($context)) {
+                throw new UnknownContextException($context);
+            }
+
+            if (!$this->getManager()->isFeatureEnabled($context, 'filters')) {
+                throw new MissingFeatureException($context, 'filters');
+            }
+
             if ($request->get('flat') == 'true') {
                 $list = $this->getListRepresentation($request);
             } else {
@@ -87,6 +93,13 @@ class FilterController extends RestController implements ClassResourceInterface
                 );
             }
             $view = $this->view($list, 200);
+
+        } catch (UnknownContextException $exc) {
+            $exception = new RestException($exc->getMessage());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (MissingFeatureException $exc) {
+            $exception = new RestException($exc->getMessage());
+            $view = $this->view($exception->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -160,8 +173,8 @@ class FilterController extends RestController implements ClassResourceInterface
         } catch (ConditionGroupMismatchException $exc) {
             $exception = new InvalidArgumentException(self::$groupConditionEntityName, $exc->getId());
             $view = $this->view($exception->toArray(), 400);
-        } catch (FilterContextNotFoundException $exc) {
-            $exception = new InvalidArgumentException(self::$entityKey, $exc->getName());
+        } catch (UnknownContextException $exc) {
+            $exception = new RestException($exc->getMessage());
             $view = $this->view($exception->toArray(), 400);
         }
 
@@ -197,8 +210,8 @@ class FilterController extends RestController implements ClassResourceInterface
         } catch (ConditionGroupMismatchException $exc) {
             $exception = new InvalidArgumentException(self::$groupConditionEntityName, $exc->getId());
             $view = $this->view($exception->toArray(), 400);
-        } catch (FilterContextNotFoundException $exc) {
-            $exception = new InvalidArgumentException(self::$entityKey, $exc->getName());
+        } catch (UnknownContextException $exc) {
+            $exception = new RestException($exc->getMessage());
             $view = $this->view($exception->toArray(), 400);
         }
 
