@@ -13,6 +13,15 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 interface SitemapGeneratorInterface
 {
     /**
+     * Generates a sitemap over all webspaces and languages
+     *
+     * @param bool $flat
+     *
+     * @return WebspaceSitemap[]
+     */
+    public function generateAll($flat = false);
+
+    /**
      * Generates a sitemap over all languages in webspace.
      *
      * @param string $webspaceKey

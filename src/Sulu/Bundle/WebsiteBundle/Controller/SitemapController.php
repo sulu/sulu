@@ -40,13 +40,20 @@ class SitemapController extends WebsiteController
 
         $flatSitemap = true;
 
-        $webspaceSitemaps = array(
-            $sitemapGenerator->generateAllLocals(
-                $requestAnalyzer->getWebspace()->getKey(),
-                $flatSitemap
-            ),
-        );
-        $preferredDomain = $request->getHttpHost();
+
+        // MULTI WEBSPACE SUPPORT NOT IMPLEMENTED YET
+        if ($request->getHttpHost() == $requestAnalyzer->getLowestLevelDomain()) {
+            $webspaceSitemaps = $sitemapGenerator->generateAll($flatSitemap);
+             $preferredDomain = $requestAnalyzer->getLowestLevelDomain();
+        } else {
+            $webspaceSitemaps = array(
+                $sitemapGenerator->generateAllLocals(
+                    $requestAnalyzer->getWebspace()->getKey(),
+                    $flatSitemap
+                )
+            );
+            $preferredDomain = $request->getHttpHost();
+        }
 
         // XML Response
         $response = new Response();
