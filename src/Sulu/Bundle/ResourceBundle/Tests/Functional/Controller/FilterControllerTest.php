@@ -42,6 +42,11 @@ class FilterControllerTest extends SuluTestCase
      */
     protected $filter2;
 
+    /**
+     * @var Filter
+     */
+    protected $filter3;
+
     protected function setUp()
     {
         parent::setUp();
@@ -53,8 +58,9 @@ class FilterControllerTest extends SuluTestCase
 
     protected function setUpFilter()
     {
-        $this->filter1 = $this->createFilter('filter1', 'and', 'Contact');
+        $this->filter1 = $this->createFilter('filter1', 'and', 'contact');
         $this->filter2 = $this->createFilter('filter2', 'or', 'Product');
+        $this->filter3 = $this->createFilter('filter3', 'and', 'contact');
 
         $this->em->flush();
     }
@@ -180,7 +186,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $this->client->request(
             'GET',
-            '/api/filters?flat=true'
+            '/api/filters?flat=true&context=contact'
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -474,10 +480,13 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testCDeleteByIds()
     {
-        $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId(). ','.$this->filter2->getId());
+        $this->client->request('DELETE',
+            '/api/filters?ids=' . $this->filter1->getId() . ',' . $this->filter2->getId() . ',' . $this->filter3->getId(
+            )
+        );
         $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/filters');
+        $this->client->request('GET', '/api/filters?context=contact');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEmpty($response->_embedded->filters);
@@ -491,10 +500,10 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('DELETE', '/api/filters?ids=666,999');
         $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/filters');
+        $this->client->request('GET', '/api/filters?context=contact');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->_embedded->filters));
+        $this->assertEquals(3, count($response->_embedded->filters));
     }
 
     /**
@@ -502,13 +511,13 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testCDeleteByIdsPartialExistent()
     {
-        $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId(). ',666');
+        $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId() . ',666');
         $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/filters');
+        $this->client->request('GET', '/api/filters?context=contact');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->_embedded->filters));
+        $this->assertEquals(2, count($response->_embedded->filters));
     }
 
     /**

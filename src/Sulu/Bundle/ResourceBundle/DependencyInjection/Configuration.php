@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                         ->prototype('array')
                             ->addDefaultsIfNotSet()
                             ->children()
+                                ->scalarNode('fields')->end()
                                 ->scalarNode('class')->end()
                                 ->arrayNode('features')
                                     ->prototype('scalar')->end()

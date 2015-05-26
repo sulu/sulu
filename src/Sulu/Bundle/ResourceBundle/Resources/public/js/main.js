@@ -10,7 +10,8 @@
 require.config({
     paths: {
         suluresource: '../../suluresource/js',
-        'filtersutil/header': '../../suluresource/js/components/filters/util/header'
+        'filtersutil/header': '../../suluresource/js/components/filters/util/header',
+        'type/conditionSelection': '../../suluresource/js/components/condition-selection/condition-selection-type'
     }
 });
 

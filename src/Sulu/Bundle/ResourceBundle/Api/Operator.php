@@ -225,7 +225,7 @@ class Operator extends ApiWrapper
                 $result[] = new OperatorValue($value, $this->locale);
             }
 
-            return $values;
+            return $result;
         }
 
         return null;

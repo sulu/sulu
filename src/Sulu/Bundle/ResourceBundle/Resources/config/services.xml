@@ -14,6 +14,9 @@
         <!-- Operators -->
         <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Resource\OperatorManager</parameter>
         <parameter key="sulu_resource.operator_repository.class">Sulu\Bundle\ResourceBundle\Entity\OperatorRepository</parameter>
+
+        <!-- JS config -->
+        <parameter key="sulu_resource.jsconfig.preview.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
     <services>
@@ -53,6 +56,15 @@
         <service id="sulu_resource.operator_manager" class="%sulu_resource.operator_manager.class%">
             <argument type="service" id="sulu_resource.operator_repository"/>
         </service>
-    </services>
 
+        <!-- js config -->
+        <service id="sulu_resource.jsconfig.aliases" class="%sulu_content.jsconfig.preview.class%">
+            <argument type="string">sulu.resource.aliases</argument>
+            <argument type="collection">
+                <argument key="aliases" type="string">%sulu_resource.filters.aliases%</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+        </service>
+    </services>
 </container>

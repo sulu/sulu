@@ -18,11 +18,11 @@ use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\UnknownContextException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -67,20 +67,20 @@ class FilterManager implements FilterManagerInterface
     /**
      * @var array
      */
-    protected $aliasConfiguration;
+    protected $contextConfiguration;
 
     public function __construct(
         EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
         ConditionRepositoryInterface $conditionRepository,
-        array $aliasConfiguration
+        array $contextConfig
     ) {
         $this->em = $em;
         $this->filterRepository = $filterRepo;
         $this->userRepository = $userRepository;
         $this->conditionRepository = $conditionRepository;
-        $this->aliasConfiguration = $aliasConfiguration;
+        $this->contextConfiguration = $contextConfig;
     }
 
     /**
@@ -117,7 +117,8 @@ class FilterManager implements FilterManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function getListFieldDescriptors($locale){
+    public function getListFieldDescriptors($locale)
+    {
         $fieldDescriptors = $this->getFieldDescriptors($locale);
 
         $fieldDescriptors['context'] = new DoctrineFieldDescriptor(
@@ -217,11 +218,11 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
-        if(array_key_exists('context', $data)) {
-            if ($this->getClassMappingForKey($data['context'])) {
+        if (array_key_exists('context', $data)) {
+            if ($this->getClassMappingForAlias($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
-                throw new FilterContextNotFoundException(static::$filterEntityName, $data['context']);
+                throw new UnknownContextException($data['context']);
             }
         }
 
@@ -301,6 +302,7 @@ class FilterManager implements FilterManagerInterface
                 } else {
                     $conditionEntity = new ConditionEntity();
                     $conditionEntity->setConditionGroup($conditionGroup);
+                    $conditionGroup->addCondition($conditionEntity);
                     $this->em->persist($conditionEntity);
                 }
 
@@ -310,7 +312,6 @@ class FilterManager implements FilterManagerInterface
                 );
                 $conditionEntity->setValue($this->getProperty($conditionData, 'value', $conditionEntity->getValue()));
                 $conditionEntity->setType($this->getProperty($conditionData, 'type', $conditionEntity->getType()));
-                $conditionGroup->addCondition($conditionEntity);
             }
         }
 
@@ -439,15 +440,60 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Returns the configured class for a key
-     * @param string $key
+     * @param string $alias
      * @return string|null
      */
-    public function getClassMappingForKey($key)
+    public function getClassMappingForAlias($alias)
     {
-        if($this->aliasConfiguration && array_key_exists($key, $this->aliasConfiguration)){
-            return $this->aliasConfiguration[$key]['class'];
+        if ($this->contextConfiguration && array_key_exists($alias, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$alias]['class'];
         }
 
         return null;
+    }
+
+    /**
+     * Returns the configured features for a context
+     * @param $context
+     * @return array|null
+     */
+    public function getFeaturesForContext($context)
+    {
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$context]['features'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if the context exists
+     * @param $context
+     * @return boolean
+     */
+    public function hasContext($context)
+    {
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a feature is enabled for a context
+     * @param $context
+     * @param $feature
+     * @return boolean
+     */
+    public function isFeatureEnabled($context, $feature)
+    {
+        if ($this->hasContext($context) &&
+            array_search($feature, $this->getFeaturesForContext($context)) !== false
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

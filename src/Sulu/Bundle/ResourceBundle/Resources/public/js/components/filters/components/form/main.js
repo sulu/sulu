@@ -7,11 +7,16 @@
  * with this source code in the file LICENSE.
  */
 
-define(['filtersutil/header'], function(HeaderUtil) {
+define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
     'use strict';
 
-    var formSelector = '#filter-form';
+    var formSelector = '#filter-form',
+
+        constants = {
+            conditionSelector: '#conditions',
+            operatorsUrl: '/admin/api/operators'
+        };
 
     return {
         name: 'Sulu Filter Form',
@@ -56,6 +61,8 @@ define(['filtersutil/header'], function(HeaderUtil) {
 
         initialize: function() {
             this.saved = true;
+            this.config = Config.get('sulu.resource.aliases').aliases;
+
             this.initializeValidation();
             this.bindCustomEvents();
             this.setHeaderBar(true);
@@ -77,6 +84,7 @@ define(['filtersutil/header'], function(HeaderUtil) {
             // filter saved
             this.sandbox.on('sulu.resource.filters.saved', function(model) {
                 this.options.data = model;
+                this.sandbox.form.setData(formSelector, model);
                 this.setHeaderBar(true);
                 this.setHeaderInformation();
             }, this);
@@ -113,8 +121,39 @@ define(['filtersutil/header'], function(HeaderUtil) {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/form'));
 
             this.setHeaderInformation();
+            this.startOperatorSelection();
 
             this.initForm(this.options.data);
+        },
+
+        /**
+         * Starts the condition selection component
+         */
+        startOperatorSelection: function(){
+            var $element = this.sandbox.dom.find(constants.conditionSelector),
+                typeConfig = this.getConfigForType(this.options.type);
+
+            this.sandbox.start([
+                {
+                    name: 'condition-selection@suluresource',
+                    options: {
+                        el: $element,
+                        fieldsUrl: typeConfig.fields,
+                        operatorsUrl: constants.operatorsUrl,
+                        data: this.options.data.conditionGroups,
+                        validationSelector: formSelector
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Returns the config for a type or null if it does not exist
+         * @param type
+         * @returns {*}
+         */
+        getConfigForType: function(type){
+            return this.config[type] ? this.config[type] : null;
         },
 
         /**
@@ -175,6 +214,9 @@ define(['filtersutil/header'], function(HeaderUtil) {
                 this.setHeaderBar(false);
             }.bind(this), 'input, textarea');
             this.sandbox.on('husky.select.conjunction.selected.item', function() {
+                this.setHeaderBar(false);
+            }.bind(this));
+            this.sandbox.on('sulu.condition-selection.condition.data-changed', function() {
                 this.setHeaderBar(false);
             }.bind(this));
         }
