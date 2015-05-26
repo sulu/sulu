@@ -557,7 +557,7 @@ class NodeRepository implements NodeRepositoryInterface
         $excludeGhosts = false,
         $appendWebspaceNode = false
     ) {
-        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, true);
+        $nodes = $this->loadDescendantsInclusive($uuid, $webspaceKey, $languageCode, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
@@ -571,13 +571,7 @@ class NodeRepository implements NodeRepositoryInterface
                             'publishedState' => true,
                             'hasSub' => true,
                             '_embedded' => array(
-                                'nodes' => $this->prepareNodesTree(
-                                    $nodes,
-                                    $webspaceKey,
-                                    $languageCode,
-                                    false,
-                                    $excludeGhosts
-                                ),
+                                'nodes' => $nodes,
                             ),
                             '_links' => array(
                                 'children' => array(
@@ -592,7 +586,7 @@ class NodeRepository implements NodeRepositoryInterface
         } else {
             $result = array(
                 '_embedded' => array(
-                    'nodes' => $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false, $excludeGhosts),
+                    'nodes' => $nodes,
                 ),
             );
         }
@@ -607,6 +601,37 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $result;
+    }
+
+    private function loadDescendantsInclusive($uuid, $webspaceKey, $locale, $excludeGhost, $complete)
+    {
+        $descendants = $this->getMapper()->loadDescendantsInclusive($uuid, $locale, $webspaceKey, $excludeGhost);
+        $descendants = array_reverse($descendants);
+
+        $children = array();
+        foreach ($descendants as $descendant) {
+            foreach ($descendant->getChildren() as $child) {
+                if (!isset($children[$descendant->getUuid()])) {
+                    $children[$descendant->getUuid()] = array();
+                }
+                $children[$descendant->getUuid()][] = $this->prepareNode($child, $webspaceKey, $locale, 1, $complete, $excludeGhost);
+            }
+        }
+
+        $results = array_shift($children);
+
+        while (count($children)) {
+            foreach ($children as $uuid => $childrenList) {
+                foreach ($results as &$result) {
+                    if ($result['id'] === $uuid) {
+                        $result['_embedded']['nodes'] = $childrenList;
+                        unset($children[$uuid]);
+                    }
+                }
+            }
+        }
+
+        return $results;
     }
 
     /**
