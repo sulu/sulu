@@ -557,7 +557,7 @@ class NodeRepository implements NodeRepositoryInterface
         $excludeGhosts = false,
         $appendWebspaceNode = false
     ) {
-        $nodes = $this->loadDescendantsInclusive($uuid, $webspaceKey, $languageCode, $excludeGhosts, true);
+        $nodes = $this->loadNodeAndAncestors($uuid, $webspaceKey, $languageCode, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
@@ -603,9 +603,19 @@ class NodeRepository implements NodeRepositoryInterface
         return $result;
     }
 
-    private function loadDescendantsInclusive($uuid, $webspaceKey, $locale, $excludeGhost, $complete)
+
+    /**
+     * Load the node and its ancestors and convert them into a HATEOAS representation
+     *
+     * @param mixed $uuid
+     * @param mixed $webspaceKey
+     * @param mixed $locale
+     * @param mixed $excludeGhost
+     * @param mixed $complete
+     */
+    private function loadNodeAndAncestors($uuid, $webspaceKey, $locale, $excludeGhost, $complete)
     {
-        $descendants = $this->getMapper()->loadDescendantsInclusive($uuid, $locale, $webspaceKey, $excludeGhost);
+        $descendants = $this->getMapper()->loadNodeAndAncestors($uuid, $locale, $webspaceKey, $excludeGhost);
         $descendants = array_reverse($descendants);
 
         $children = array();
