@@ -18,11 +18,11 @@ use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\UnknownContextException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -67,20 +67,20 @@ class FilterManager implements FilterManagerInterface
     /**
      * @var array
      */
-    protected $aliasConfiguration;
+    protected $contextConfiguration;
 
     public function __construct(
         EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
         ConditionRepositoryInterface $conditionRepository,
-        array $aliasConfiguration
+        array $contextConfig
     ) {
         $this->em = $em;
         $this->filterRepository = $filterRepo;
         $this->userRepository = $userRepository;
         $this->conditionRepository = $conditionRepository;
-        $this->aliasConfiguration = $aliasConfiguration;
+        $this->contextConfiguration = $contextConfig;
     }
 
     /**
@@ -222,7 +222,7 @@ class FilterManager implements FilterManagerInterface
             if ($this->getClassMappingForAlias($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
-                throw new FilterContextNotFoundException(static::$filterEntityName, $data['context']);
+                throw new UnknownContextException($data['context']);
             }
         }
 
@@ -478,22 +478,22 @@ class FilterManager implements FilterManagerInterface
      */
     public function getClassMappingForAlias($alias)
     {
-        if ($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)) {
-            return $this->aliasConfiguration[$alias]['class'];
+        if ($this->contextConfiguration && array_key_exists($alias, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$alias]['class'];
         }
 
         return null;
     }
 
     /**
-     * Returns the configured features for an alias
-     * @param $alias
+     * Returns the configured features for a context
+     * @param $context
      * @return array|null
      */
-    public function getFeaturesForAlias($alias)
+    public function getFeaturesForContext($context)
     {
-        if ($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)) {
-            return $this->aliasConfiguration[$alias]['features'];
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$context]['features'];
         }
 
         return null;
@@ -507,12 +507,44 @@ class FilterManager implements FilterManagerInterface
     protected function removeNonExistentConditions(
         $conditionGroup,
         $conditionIds
-    ) {
+    )
+    {
         foreach ($conditionGroup->getConditions() as $condition) {
             if ($condition->getId() && array_search($condition->getId(), $conditionIds) === false) {
                 $conditionGroup->removeCondition($condition);
                 $this->em->remove($condition);
             }
         }
+    }
+
+    /**
+     * Checks if the context exists
+     * @param $context
+     * @return boolean
+     */
+    public function hasContext($context)
+    {
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a feature is enabled for a context
+     * @param $context
+     * @param $feature
+     * @return boolean
+     */
+    public function isFeatureEnabled($context, $feature)
+    {
+        if ($this->hasContext($context) &&
+            array_search($feature, $this->getFeaturesForContext($context)) !== false
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
