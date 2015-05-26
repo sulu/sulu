@@ -62,6 +62,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
@@ -496,27 +497,40 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function loadTreeByUuid(
+    public function loadDescendantsInclusive(
         $uuid,
         $locale,
         $webspaceKey = null,
-        $excludeGhost = true,
-        $loadGhostContent = false
+        $excludeGhost = true
     ) {
-        $webspaceChildren = $this->getContentDocument($webspaceKey, $locale, array(
-            'hydrate.load_ghost_content' => $loadGhostContent,
-        ))->getChildren();
-
-        $documents = $this->filterDocuments($webspaceChildren, array(
+        $document = $this->loadDocument($uuid, $locale, $options = array(
+            'load_ghost_content' => true,
             'exclude_ghost' => $excludeGhost,
         ));
 
-        return $this->documentsToStructureCollection($documents, array(
-            'exclude_ghost' => $excludeGhost,
+        $structures = array($this->documentToStructure($document));
+
+        if ($document instanceof HomeDocument) {
+            return $structures;
+        }
+
+        $descendants = array();
+        while ($parentDocument = $this->inspector->getParent($document)) {
+            $descendants[] = $parentDocument;
+            if ($parentDocument instanceof HomeDocument) {
+                return $this->documentsToStructureCollection($descendants, $options);
+            }
+            $document = $parentDocument;
+        }
+
+        throw new \RuntimeException(sprintf(
+            'Did not traverse an instance of HomeDocument when searching for desendants of document "%s"',
+            $uuid
         ));
     }
 
     /**
+     * NOT USED
      * {@inheritdoc}
      */
     public function loadTreeByPath(
@@ -765,6 +779,8 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->refresh($parentDocument);
         }
 
+        $originalLocale = $locale;
+
         // modifiy the resource locators -- note this can be removed once the routing auto
         // system is implemented.
         foreach ($localizations as $locale) {
@@ -811,6 +827,9 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $this->documentManager->flush();
+
+        // reload the original locale
+        $this->documentManager->find($document->getUuid(), $originalLocale);
 
         return $this->documentToStructure($document);
     }
