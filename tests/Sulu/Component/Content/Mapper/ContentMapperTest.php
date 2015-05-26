@@ -1968,16 +1968,24 @@ class ContentMapperTest extends SuluTestCase
         return $result;
     }
 
-    public function testLoadTree()
+    public function testLoadNodeAndAncestors()
     {
         $data = $this->prepareBigTreeTestData();
         $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
 
-        $result = $this->mapper->loadTreeByPath($child->getPath(), 'de', 'sulu_io');
-        $this->checkTreeResult($result);
+        $ancestors = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'de', 'sulu_io');
 
-        $result = $this->mapper->loadTreeByUuid($child->getUuid(), 'de', 'sulu_io');
-        $this->checkTreeResult($result);
+        $documentNames = array();
+        foreach ($ancestors as $ancestor) {
+            $documentNames[] = $ancestor->getNodeName();
+        }
+
+        $this->assertEquals(array(
+            'SubSubNews-2',
+            'SubNews-3',
+            'News-1',
+            'News',
+        ), $documentNames);
     }
 
     public function testLanguageCopy()
@@ -2062,73 +2070,12 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/test-en/childtest', $result->getPropertyValue('url'));
     }
 
-    private function checkTreeResult($result)
-    {
-        // layer 0
-        $this->assertEquals(3, sizeof($result));
-
-        // layer 1
-        $layer1 = $result[1]->getChildren();
-        $this->assertEquals(1, sizeof($result[0]->getChildren()));
-        $this->assertEquals('Products', $result[0]->title);
-        $this->assertTrue($result[0]->getHasChildren());
-
-        $this->assertEquals(3, sizeof($result[1]->getChildren()));
-        $this->assertEquals('News', $result[1]->title);
-        $this->assertTrue($result[1]->getHasChildren());
-
-        $this->assertEquals(0, sizeof($result[2]->getChildren()));
-        $this->assertEquals('About Us', $result[2]->title);
-        $this->assertFalse($result[2]->getHasChildren());
-
-        // layer 2
-        $layer2 = $layer1[0]->getChildren();
-        $this->assertEquals(3, sizeof($layer1[0]->getChildren()));
-        $this->assertEquals('News-1', $layer1[0]->title);
-        $this->assertTrue($layer1[0]->getHasChildren());
-
-        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
-        $this->assertEquals('News-2', $layer1[1]->title);
-        $this->assertFalse($layer1[1]->getHasChildren());
-
-        $this->assertEquals(0, sizeof($layer1[2]->getChildren()));
-        $this->assertEquals('News-3', $layer1[2]->title);
-        $this->assertFalse($layer1[2]->getHasChildren());
-
-        // layer 3
-        $layer3 = $layer2[2]->getChildren();
-        $this->assertEquals(0, sizeof($layer2[0]->getChildren()));
-        $this->assertEquals('SubNews-1', $layer2[0]->title);
-        $this->assertFalse($layer2[0]->getHasChildren());
-
-        $this->assertEquals(0, sizeof($layer2[1]->getChildren()));
-        $this->assertEquals('SubNews-2', $layer2[1]->title);
-        $this->assertFalse($layer2[1]->getHasChildren());
-
-        $this->assertEquals(3, sizeof($layer2[2]->getChildren()));
-        $this->assertEquals('SubNews-3', $layer2[2]->title);
-        $this->assertTrue($layer2[2]->getHasChildren());
-
-        // layer 4
-        $this->assertEquals(0, sizeof($layer3[0]->getChildren()));
-        $this->assertEquals('SubSubNews-1', $layer3[0]->title);
-        $this->assertFalse($layer3[0]->getHasChildren());
-
-        $this->assertEquals(0, sizeof($layer3[1]->getChildren()));
-        $this->assertEquals('SubSubNews-2', $layer3[1]->title);
-        $this->assertFalse($layer3[1]->getHasChildren());
-
-        $this->assertEquals(0, sizeof($layer3[2]->getChildren()));
-        $this->assertEquals('SubSubNews-3', $layer3[2]->title);
-        $this->assertFalse($layer3[2]->getHasChildren());
-    }
-
-    public function testLoadEmptyTreeExcludedGhosts()
+    public function testNodeAndAncestorsExcludedGhosts()
     {
         $data = $this->prepareBigTreeTestData();
         $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
 
-        $result = $this->mapper->loadTreeByUuid($child->getUuid(), 'en', 'sulu_io', true, true);
+        $result = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'en', 'sulu_io', true);
 
         $this->assertCount(0, $result);
     }
