@@ -49,9 +49,10 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      * @param string $environment
      * @param string $languageCode
      * @param null|string $webspaceKey
+     * @param null|string $domain
      * @return array
      */
-    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null);
+    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null, $domain = null);
 
     /**
      * Returns all portals managed by this webspace manager

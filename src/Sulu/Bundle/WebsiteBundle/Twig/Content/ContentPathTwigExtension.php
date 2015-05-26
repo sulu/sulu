@@ -75,26 +75,11 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
                 $url,
                 $this->environment,
                 $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
-                $webspaceKey
+                $webspaceKey,
+                $domain
             );
             if (sizeof($portalUrls) > 0) {
-                if ($domain) {
-                    foreach ($portalUrls as $portalUrl) {
-                        $parsedUrl = parse_url($portalUrl);
-                        // if domain or subdomain
-                        if (
-                            isset($parsedUrl['host'])
-                            && (
-                                $parsedUrl['host'] == $domain
-                                || fnmatch('*.' . $domain, $parsedUrl['host'])
-                            )
-                        ) {
-                            return rtrim($portalUrl, '/');
-                        }
-                    }
-                } else {
-                    return rtrim($portalUrls[0], '/');
-                }
+                return rtrim($portalUrls[0], '/');
             }
         } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
             return rtrim($this->requestAnalyzer->getResourceLocatorPrefix() . $url, '/');
