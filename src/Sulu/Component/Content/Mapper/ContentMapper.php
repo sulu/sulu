@@ -497,7 +497,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function loadDescendantsInclusive(
+    public function loadNodeAndAncestors(
         $uuid,
         $locale,
         $webspaceKey = null,
@@ -508,17 +508,21 @@ class ContentMapper implements ContentMapperInterface
             'exclude_ghost' => $excludeGhost,
         ));
 
-        $structures = array($this->documentToStructure($document));
-
-        if ($document instanceof HomeDocument) {
-            return $structures;
+        if (null === $document) {
+            return array();
         }
 
-        $descendants = array();
-        while ($parentDocument = $this->inspector->getParent($document)) {
-            $descendants[] = $parentDocument;
+        $documents = array($document);
+
+        if ($document instanceof HomeDocument) {
+            return $this->documentsToStructureCollection($documents, $options);
+        }
+
+        while ($document) {
+            $parentDocument = $this->inspector->getParent($document);
+            $documents[] = $parentDocument;
             if ($parentDocument instanceof HomeDocument) {
-                return $this->documentsToStructureCollection($descendants, $options);
+                return $this->documentsToStructureCollection($documents, $options);
             }
             $document = $parentDocument;
         }
@@ -527,20 +531,6 @@ class ContentMapper implements ContentMapperInterface
             'Did not traverse an instance of HomeDocument when searching for desendants of document "%s"',
             $uuid
         ));
-    }
-
-    /**
-     * NOT USED
-     * {@inheritdoc}
-     */
-    public function loadTreeByPath(
-        $path,
-        $locale,
-        $webspaceKey,
-        $excludeGhost = true,
-        $loadGhostContent = false
-    ) {
-        return $this->loadTreeByUuid($path, $locale, $webspaceKey, $excludeGhost, $loadGhostContent);
     }
 
     /**
@@ -828,7 +818,7 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->flush();
 
-        // reload the original locale
+        // 
         $this->documentManager->find($document->getUuid(), $originalLocale);
 
         return $this->documentToStructure($document);
