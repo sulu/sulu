@@ -964,7 +964,6 @@ class ContentMapper implements ContentMapperInterface
 
         return array_merge(
             array(
-                'uuid' => $document->getUuid(),
                 'nodeType' => $redirectType,
                 'path' => $shortPath,
                 'changed' => $document->getChanged(),

@@ -15,6 +15,7 @@ use Sulu\Component\Content\Structure\Block;
 use Sulu\Component\Content\Structure\Component;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\Content\Compat\PropertyParameter;
 
 class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +47,20 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $localized = true;
         $maxOccurs = 1;
         $minOccurs = 1;
-        $parameters = array('foo', 'bar');
+        $parameters = array(
+            array(
+                'name' => 'prop',
+                'type' => 'type',
+                'value' => 'value',
+                'meta' => array(),
+            ),
+            array(
+                'name' => 'propfoo',
+                'type' => 'type',
+                'value' => 'value',
+                'meta' => array(),
+            ),
+        );
         $colSpan = 6;
 
         $this->property->getType()->willReturn($type);
@@ -70,9 +84,8 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($legacyProperty->getMultilingual(), $localized);
         $this->assertEquals($legacyProperty->getMaxOccurs(), $maxOccurs);
         $this->assertEquals($legacyProperty->getMinOccurs(), $minOccurs);
-        $this->assertEquals($legacyProperty->getParams(), $parameters);
         $this->assertEquals($legacyProperty->getColspan(), $colSpan);
-        $this->assertEquals($legacyProperty->getParams(), $parameters);
+        $this->assertContainsOnlyInstancesOf(PropertyParameter::class, $legacyProperty->getParams());
         $this->assertEquals($title['de'], $legacyProperty->getTitle('de'));
         $this->assertEquals($description['de'], $legacyProperty->getInfoText('de'));
         $this->assertEquals($placeholder['de'], $legacyProperty->getPlaceholder('de'));
@@ -164,7 +177,20 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $localized = true;
         $maxOccurs = 1;
         $minOccurs = 1;
-        $parameters = array('foo', 'bar');
+        $parameters = array(
+            array(
+                'name' => 'prop',
+                'type' => 'type',
+                'value' => 'value',
+                'meta' => array(),
+            ),
+            array(
+                'name' => 'propfoo',
+                'type' => 'type',
+                'value' => 'value',
+                'meta' => array(),
+            ),
+        );
         $colSpan = 6;
 
         $property->getType()->willReturn($type);

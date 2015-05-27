@@ -120,6 +120,7 @@ class XmlLoader extends XmlLegacyLoader
         $property->tags = $data['tags'];
         $property->minOccurs = $data['minOccurs'] ? : 1;
         $property->maxOccurs = $data['maxOccurs'] ? : 999;
+        $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }
 
