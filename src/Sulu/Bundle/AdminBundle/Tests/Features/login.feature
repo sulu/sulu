@@ -5,4 +5,4 @@ Feature: Login
 
     Scenario: Login
         Given I am logged in as an administrator
-        Then I expect to see "SULU 2"
+        Then I expect to see "Sulu"
