@@ -62,21 +62,17 @@
             <argument type="service" id="sulu_media.image.command_manager" />
         </service>
 
-        <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%">
-            <argument>%sulu_media.image.command.prefix%</argument>
+        <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%" />
 
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
+        <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%">
+            <tag name="sulu_media.image.command" alias="resize" />
         </service>
-
-        <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%" />
-        <service id="sulu_media.image.command.scale" class="%sulu_media.image.command.scale.class%" />
-        <service id="sulu_media.image.command.crop" class="%sulu_media.image.command.crop.class%" />
-
-        <service id="%sulu_media.image.command.prefix%scale" alias="sulu_media.image.command.scale" />
-        <service id="%sulu_media.image.command.prefix%resize" alias="sulu_media.image.command.resize" />
-        <service id="%sulu_media.image.command.prefix%crop" alias="sulu_media.image.command.crop" />
+        <service id="sulu_media.image.command.scale" class="%sulu_media.image.command.scale.class%">
+            <tag name="sulu_media.image.command" alias="scale" />
+        </service>
+        <service id="sulu_media.image.command.crop" class="%sulu_media.image.command.crop.class%">
+            <tag name="sulu_media.image.command" alias="crop" />
+        </service>
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
             <argument type="service" id="sulu_media.media_repository" />

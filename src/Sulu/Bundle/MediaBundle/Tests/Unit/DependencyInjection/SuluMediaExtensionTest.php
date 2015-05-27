@@ -40,7 +40,6 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         ));
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.save_image', true);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
-        $this->assertContainerBuilderHasParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', array('file/exe'));
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types',  array(
