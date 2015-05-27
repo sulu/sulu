@@ -246,6 +246,38 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
     }
 
+    public function testDownloadHeaderAttachment()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        ob_start();
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg'
+        );
+        ob_end_clean();
+
+        $this->assertEquals('attachment; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
+    }
+
+    public function testDownloadHeaderInline()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        ob_start();
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg?inline=1'
+        );
+        ob_end_clean();
+
+        $this->assertEquals('inline; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
+    }
+
     /**
      * Test Media GET by ID.
      */
@@ -866,9 +898,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
     }
 
-    /**
-     * @description Test move action
-     */
     public function testMove()
     {
         $destCollection = new Collection();
@@ -898,9 +927,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultTitle, $response['title']);
     }
 
-    /**
-     * @description Test move to non existing collection
-     */
     public function testMoveNonExistingCollection()
     {
         $media = $this->createMedia('photo');
@@ -911,9 +937,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @description Test move to non existing media
-     */
     public function testMoveNonExistingMedia()
     {
         $client = $this->createAuthenticatedClient();
@@ -922,9 +945,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @description Test non existing action
-     */
     public function testMoveNonExistingAction()
     {
         $media = $this->createMedia('photo');
