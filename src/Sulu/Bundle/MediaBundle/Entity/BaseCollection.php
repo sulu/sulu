@@ -25,6 +25,11 @@ abstract class BaseCollection implements CollectionInterface
     protected $style;
 
     /**
+     * @var string
+     */
+    private $defaultStorageType;
+
+    /**
      * @var int
      * @Exclude
      */
@@ -149,6 +154,29 @@ abstract class BaseCollection implements CollectionInterface
     public function getStyle()
     {
         return $this->style;
+    }
+
+    /**
+     * Set defaultStorageType
+     *
+     * @param string $defaultStorageType
+     * @return Collection
+     */
+    public function setDefaultStorageType($defaultStorageType)
+    {
+        $this->defaultStorageType = $defaultStorageType;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultStorageType
+     *
+     * @return string
+     */
+    public function getDefaultStorageType()
+    {
+        return $this->defaultStorageType;
     }
 
     /**

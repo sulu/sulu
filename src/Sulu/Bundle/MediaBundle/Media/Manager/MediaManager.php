@@ -831,7 +831,6 @@ class MediaManager implements MediaManagerInterface
                     $fileVersion->getName(),
                     $fileVersion->getStorageOptions()
                 );
-
                 $this->storage->remove($fileVersion->getStorageOptions());
             }
         }

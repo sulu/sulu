@@ -20,6 +20,11 @@
             </options>
         </field>
         <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
+        <field name="storageType" type="string" column="storageType" length="255" nullable="true">
+            <options>
+                <option name="default">local</option>
+            </options>
+        </field>
         <field name="mimeType" type="string" column="mimeType" length="255" nullable="true" />
         <field name="properties" type="string" column="properties" length="1000" nullable="true" />
 

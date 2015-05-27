@@ -99,6 +99,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             'sulu_media.media.blocked_file_types',
             $config['format_manager']['blocked_file_types']
         );
+        $container->setParameter('sulu_media.storage.default', $config['storage']['default']);
 
         // local storage
         $container->setParameter('sulu_media.media.storage.local.path', $config['storage']['local']['path']);
