@@ -75,6 +75,11 @@ class Property extends Item
      */
     public $structure;
 
+    /**
+     * @var array
+     */
+    public $parameters;
+
     public function getMinOccurs()
     {
         return $this->minOccurs;
