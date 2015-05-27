@@ -4,46 +4,23 @@
         data-type="textEditor"
         data-type-instance-name="{{ id|raw }}"
         data-aura-component="ckeditor@husky"
-{% if params.height.value is defined and params.height.value is not empty %}
-        data-aura-height="{{ params.height.value }}"
-{% endif %}
-    {% if params.maxHeight.value is defined and params.maxHeight.value is not empty %}
-        data-aura-max-height="{{ params.maxHeight.value }}"
-    {% endif %}
-{% if params.enterMode.value is defined and params.enterMode.value is not empty %}
-        data-aura-enter-mode="{{ params.enterMode.value }}"
-{% endif %}
-{% if params.tables.value is defined and params.tables.value == true %}
-        data-aura-table-enabled="true"
-{% else %}
-        data-aura-table-enabled="false"
-{% endif %}
-{% if params.iframes.value is defined and params.iframes.value == true %}
-        data-aura-iframe-enabled="true"
-{% else %}
-        data-aura-iframe-enabled="false"
-{% endif %}
-{% if params.scripts.value is defined and params.scripts.value == true %}
-        data-aura-script-enabled="true"
-{% else %}
-        data-aura-script-enabled="false"
-{% endif %}
-{% if params.links.value is defined and params.links.value == true %}
-        data-aura-links-enabled="true"
-{% else %}
-        data-aura-links-enabled="false"
-{% endif %}
-{% if params.pasteFromWord.value is defined and params.pasteFromWord.value == true %}
-        data-aura-paste-from-word="true"
-{% else %}
-        data-aura-paste-from-word="false"
-{% endif %}
+        {% for key, param in params %}
+            {% if param.value is defined %}
+                {% set value = param.value %}
+                {% if value is same as(true) %}
+                    {% set value = 'true' %}
+                {%  elseif value is same as(false) %}
+                    {% set value = 'false' %}
+                {% endif %}
+        data-aura-{{ key|replace('_', '-') }}="{{ value }}"
+            {% endif %}
+        {% endfor %}
         data-mapper-property="{{ property.name }}"
         data-aura-instance-name="{{ id|raw }}"
         placeholder="{{ property.getPlaceholder(userLocale) }}"
-{% if property.mandatory %}
-        data-validation-required="true"
-{% endif %}
-        ></textarea>
+        {% if property.mandatory %}
+            data-validation-required="true"
+        {% endif %}
+></textarea>
 
 <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>

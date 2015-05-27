@@ -45,14 +45,11 @@ class TextEditor extends SimpleContentType
     public function getDefaultParams()
     {
         return array(
-            'tables' => new PropertyParameter('tables', true),
-            'links' => new PropertyParameter('links', true),
-            'scripts' => new PropertyParameter('scripts', true),
-            'iframes' => new PropertyParameter('iframes', true),
+            'table' => new PropertyParameter('table', true),
+            'link' => new PropertyParameter('link', true),
             'height' => new PropertyParameter('height', 300),
-            'maxHeight' => new PropertyParameter('maxHeight', 500),
-            'enterMode' => new PropertyParameter('enterMode', null),
-            'pasteFromWord' => new PropertyParameter('pasteFromWord', true),
+            'max_height' => new PropertyParameter('max_height', 500),
+            'paste_from_word' => new PropertyParameter('paste_from_word', true)
         );
     }
 }
