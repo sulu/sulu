@@ -23,12 +23,43 @@ use Sulu\Component\Content\Document\Property\PropertyContainerInterface;
  */
 class PropertyContainer implements PropertyContainerInterface
 {
+    /**
+     * @var array
+     */
     protected $properties = array();
 
     /**
-     * Return the named property and evaluate its content
-     *
-     * @param string $name
+     * @var array
+     */
+    protected $stagedData = array();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStagedData() 
+    {
+        return $this->stagedData;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setStagedData($stagedData)
+    {
+        $this->stagedData = $stagedData;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function commitStagedData($clearMissingContent)
+    {
+        $this->bind($this->stagedData, $clearMissingContent);
+        $this->stagedData = array();
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function getProperty($name)
     {
@@ -42,21 +73,33 @@ class PropertyContainer implements PropertyContainerInterface
         return $property;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function hasProperty($name)
     {
         return $this->offsetExists($name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetExists($offset)
     {
         return isset($this->properties[$offset]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetGet($offset)
     {
         return $this->getProperty($offset);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetSet($offset, $value)
     {
         throw new \BadMethodCallException(
@@ -64,11 +107,17 @@ class PropertyContainer implements PropertyContainerInterface
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetUnset($offset)
     {
         unset($this->properties[$offset]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         $values = array();
@@ -77,6 +126,22 @@ class PropertyContainer implements PropertyContainerInterface
         }
 
         return $values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function bind($data, $clearMissing = false)
+    {
+        foreach ($data as $key => $value) {
+            $property = $this->getProperty($key);
+            $property->setValue($value);
+        }
+    }
+
+    public function __get($name)
+    {
+        return $this->offsetGet($name);
     }
 
     protected function normalize($value)
@@ -95,18 +160,5 @@ class PropertyContainer implements PropertyContainerInterface
         }
 
         return $ret;
-    }
-
-    public function bind($data, $clearMissing)
-    {
-        foreach ($data as $key => $value) {
-            $property = $this->getProperty($key);
-            $property->setValue($value);
-        }
-    }
-
-    public function __get($name)
-    {
-        return $this->offsetGet($name);
     }
 }

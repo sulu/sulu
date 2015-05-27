@@ -37,10 +37,13 @@ interface PropertyContainerInterface extends \ArrayAccess
     /**
      * Bind data to the container
      *
+     * If $clearMissing is true then any missing fields will be
+     * set to NULL.
+     *
      * @param array $data
      * @param boolean $clearMissing
      */
-    public function bind($data, $clearMissing);
+    public function bind($data, $clearMissing = false);
 
     /**
      * Return an array representation of the containers property values
