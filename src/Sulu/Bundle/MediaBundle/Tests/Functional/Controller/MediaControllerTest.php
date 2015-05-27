@@ -262,7 +262,7 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
 
-        $this->assertEquals('attachment; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals('attachment; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
     }
 
     /**
@@ -281,7 +281,7 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
 
-        $this->assertEquals('inline; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals('inline; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
     }
 
     /**

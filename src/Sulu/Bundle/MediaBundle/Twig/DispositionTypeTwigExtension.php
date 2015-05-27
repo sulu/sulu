@@ -61,7 +61,13 @@ class DispositionTypeTwigExtension extends \Twig_Extension
             $dispositionType = $this->default;
         }
 
-        return $media->getUrl() . ($dispositionType === ResponseHeaderBag::DISPOSITION_INLINE ? '&inline=1' : '');
+        $url = $media->getUrl();
+
+        if ($dispositionType === ResponseHeaderBag::DISPOSITION_INLINE) {
+            $url .= (false === strpos($url, '?') ? '?inline=1' : '&inline=1');
+        }
+
+        return $url;
     }
 
     private function getDispositionTypeByMimeType($mimeType)
