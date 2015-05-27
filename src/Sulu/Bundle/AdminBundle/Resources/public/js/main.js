@@ -20,7 +20,7 @@ require.config({
         'cultures': 'vendor/globalize/cultures',
         'husky': 'vendor/husky/husky',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
-        'aura_extensions/sulu-content-tabs': 'aura_extensions/sulu-content-tabs',
+        'aura_extensions/sulu-content': 'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
 
