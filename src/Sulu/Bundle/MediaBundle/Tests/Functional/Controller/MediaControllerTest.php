@@ -247,6 +247,44 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
+     * Test Header dispositionType attachment
+     */
+    public function testDownloadHeaderAttachment()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        ob_start();
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg'
+        );
+        ob_end_clean();
+
+        $this->assertEquals('attachment; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
+    }
+
+    /**
+     * Test Header dispositionType inline
+     */
+    public function testDownloadHeaderInline()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        ob_start();
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg?inline=1'
+        );
+        ob_end_clean();
+
+        $this->assertEquals('inline; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
+    }
+
+    /**
      * Test Media GET by ID.
      */
     public function testGetById()
@@ -867,7 +905,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test move action
+     * Test move action
      */
     public function testMove()
     {
@@ -899,7 +937,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test move to non existing collection
+     * Test move to non existing collection
      */
     public function testMoveNonExistingCollection()
     {
@@ -912,7 +950,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test move to non existing media
+     * Test move to non existing media
      */
     public function testMoveNonExistingMedia()
     {
@@ -923,7 +961,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test non existing action
+     * Test non existing action
      */
     public function testMoveNonExistingAction()
     {

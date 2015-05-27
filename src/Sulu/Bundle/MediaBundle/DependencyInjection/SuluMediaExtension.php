@@ -67,6 +67,11 @@ class SuluMediaExtension extends Extension
         // search
         $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
 
+        // disposition type
+        $container->setParameter('sulu_media.disposition_type.default', $config['disposition_type']['default']);
+        $container->setParameter('sulu_media.disposition_type.mime_types_inline', $config['disposition_type']['mime_types_inline']);
+        $container->setParameter('sulu_media.disposition_type.mime_types_attachment', $config['disposition_type']['mime_types_attachment']);
+
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
