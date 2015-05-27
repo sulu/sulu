@@ -83,5 +83,5 @@ interface PropertyContainerInterface extends \ArrayAccess
      *
      * @param boolean $clearMissingContent
      */
-    public function commitStagedData(bool $clearMissingContent);
+    public function commitStagedData($clearMissingContent);
 }
