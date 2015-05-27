@@ -44,7 +44,7 @@ class PropertyContainer implements PropertyContainerInterface
     /**
      * {@inheritDoc}
      */
-    public function setStagedData($stagedData)
+    public function setStagedData(array $stagedData)
     {
         $this->stagedData = $stagedData;
     }
