@@ -1968,23 +1968,29 @@ class ContentMapperTest extends SuluTestCase
         return $result;
     }
 
+    /**
+     * It shoud load the node with the give UUID/path and all of its ancestors up to
+     * and including the content root.
+     */
     public function testLoadNodeAndAncestors()
     {
         $data = $this->prepareBigTreeTestData();
         $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
 
-        $ancestors = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'de', 'sulu_io');
+        $ancestors = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'de', 'sulu_io', false);
 
         $documentNames = array();
         foreach ($ancestors as $ancestor) {
-            $documentNames[] = $ancestor->getNodeName();
+            $documentNames[] = $ancestor->getPath();
         }
 
+
         $this->assertEquals(array(
-            'SubSubNews-2',
-            'SubNews-3',
-            'News-1',
-            'News',
+            '/news/news-1/subnews-3/subsubnews-2',
+            '/news/news-1/subnews-3',
+            '/news/news-1',
+            '/news',
+            '',
         ), $documentNames);
     }
 

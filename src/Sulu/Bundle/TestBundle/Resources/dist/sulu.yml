@@ -90,6 +90,7 @@ sulu_test:
     enable_test_user_provider: true
 
 sulu_document_manager:
+    debug: false
     mapping:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument
