@@ -21,6 +21,7 @@
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
         <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
+        <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -125,5 +126,12 @@
             <argument type="string">%sulu_media.collection.previews.format%</argument>
         </service>
 
+        <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">
+            <argument>%sulu_media.disposition_type.default%</argument>
+            <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
+            <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>
+
+            <tag name="twig.extension"/>
+        </service>
     </services>
 </container>
