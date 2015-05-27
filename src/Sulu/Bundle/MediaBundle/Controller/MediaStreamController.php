@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
@@ -73,13 +74,18 @@ class MediaStreamController extends Controller
             $version = $request->get('v', null);
             $noCount = $request->get('no-count', false);
 
+            $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
+            if ($request->get('inline', false)) {
+                $dispositionType = ResponseHeaderBag::DISPOSITION_INLINE;
+            }
+
             $fileVersion = $this->getFileVersion($id, $version);
 
             if (!$noCount) {
                 $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
             }
 
-            $response = $this->getFileResponse($fileVersion);
+            $response = $this->getFileResponse($fileVersion, $dispositionType);
 
             return $response;
         } catch (MediaException $e) {
@@ -89,10 +95,11 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
+     * @param string $dispositionType
      *
      * @return StreamedResponse
      */
-    protected function getFileResponse($fileVersion)
+    protected function getFileResponse($fileVersion, $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT)
     {
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
@@ -113,9 +120,15 @@ class MediaStreamController extends Controller
             fclose($handle);
         });
 
+        // Prepare headers
+        $disposition = $response->headers->makeDisposition(
+            $dispositionType,
+            basename($fileName)
+        );
+
         // Set headers
         $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
+        $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-length', $fileSize);
 
         return $response;
