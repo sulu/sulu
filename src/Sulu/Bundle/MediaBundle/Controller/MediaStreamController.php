@@ -26,9 +26,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
 {
-    const DISPOSITION_TYPE_ATTACHMENT = 'attachment';
-    const DISPOSITION_TYPE_INLINE = 'inline';
-
     /**
      * @var FormatManagerInterface
      */
