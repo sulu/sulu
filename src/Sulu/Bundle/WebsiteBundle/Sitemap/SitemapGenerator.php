@@ -48,6 +48,19 @@ class SitemapGenerator implements SitemapGeneratorInterface
     /**
      * {@inheritDoc}
      */
+    public function generateAll($flat = false)
+    {
+        $webspaceSitemaps = array();
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            $webspaceSitemaps[] = $this->generateAllLocals($webspace->getKey(), $flat);
+        }
+
+        return $webspaceSitemaps;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
         $webSpaceSitemap = $this->getWebspaceSitemap($webspaceKey);
