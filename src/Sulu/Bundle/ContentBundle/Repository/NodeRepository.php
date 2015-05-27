@@ -618,30 +618,53 @@ class NodeRepository implements NodeRepositoryInterface
         $descendants = $this->getMapper()->loadNodeAndAncestors($uuid, $locale, $webspaceKey, $excludeGhost);
         $descendants = array_reverse($descendants);
 
-        $children = array();
+        $childTiers = array();
         foreach ($descendants as $descendant) {
             foreach ($descendant->getChildren() as $child) {
-                if (!isset($children[$descendant->getUuid()])) {
-                    $children[$descendant->getUuid()] = array();
+                if (!isset($childTiers[$descendant->getUuid()])) {
+                    $childTiers[$descendant->getUuid()] = array();
                 }
-                $children[$descendant->getUuid()][] = $this->prepareNode($child, $webspaceKey, $locale, 1, $complete, $excludeGhost);
+                $childTiers[$descendant->getUuid()][] = $this->prepareNode($child, $webspaceKey, $locale, 1, $complete, $excludeGhost);
             }
         }
 
-        $results = array_shift($children);
+        $result = array_shift($childTiers);
 
-        while (count($children)) {
-            foreach ($children as $uuid => $childrenList) {
-                foreach ($results as &$result) {
-                    if ($result['id'] === $uuid) {
-                        $result['_embedded']['nodes'] = $childrenList;
-                        unset($children[$uuid]);
-                    }
-                }
+        $this->iterateTiers($childTiers, $result);
+
+        return $result;
+    }
+
+    /**
+     * Iterate over the ancestor tiers and build up the result
+     *
+     * @param array $tiers
+     * @param array $result (by rereference)
+     */
+    private function iterateTiers($tiers, &$result)
+    {
+        reset($tiers);
+        $uuid = key($tiers);
+        $tier = array_shift($tiers);
+
+        $found = false;
+        foreach ($result as &$node) {
+            if ($node['id'] === $uuid) {
+                $node['_embedded']['nodes'] = $tier;
+                $found = true;
+                break;
             }
         }
 
-        return $results;
+        if (!$tiers) {
+            return;
+        }
+
+        if (!$found) {
+            throw new \Exception('fyck');
+        }
+
+        $this->iterateTiers($tiers, $node['_embedded']['nodes']);
     }
 
     /**
