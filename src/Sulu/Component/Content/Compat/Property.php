@@ -24,6 +24,7 @@ use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Document\Property\PropertyValue;
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
@@ -111,16 +112,14 @@ class Property implements PropertyInterface, \JsonSerializable
     private $structure;
 
     /**
-<<<<<<< HEAD:src/Sulu/Component/Content/Property.php
      * Constructor.
-=======
+     *
      * @var PropertyValue
      */
     protected $propertyValue;
 
     /**
      * Constructor
->>>>>>> Moving stuff:src/Sulu/Component/Content/Compat/Property.php
      */
     public function __construct(
         $name,
