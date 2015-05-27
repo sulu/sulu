@@ -16,6 +16,7 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 
 /**
  * Creates legacy properties from "new" properties.
@@ -75,6 +76,7 @@ class LegacyPropertyFactory
             ));
         }
 
+        $parameters = $this->arrayToParameters($property->getParameters());
         $propertyBridge = new LegacyProperty(
             $property->getName(),
             array(
@@ -87,7 +89,7 @@ class LegacyPropertyFactory
             $property->isLocalized(),
             $property->getMaxOccurs(),
             $property->getMinOccurs(),
-            $property->getParameters(),
+            $parameters,
             array(),
             $property->getColspan()
         );
@@ -99,6 +101,22 @@ class LegacyPropertyFactory
         $propertyBridge->setStructure($structure);
 
         return $propertyBridge;
+    }
+
+    private function arrayToParameters($arrayParams)
+    {
+        $parameters = array();
+        foreach ($arrayParams as $arrayParam) {
+            $value = $arrayParam['value'];
+
+            if (is_array($value)) {
+                $value = $this->arrayToParameters($value);
+            }
+
+            $parameters[] = new PropertyParameter($arrayParam['name'], $value, $arrayParam['type'], $arrayParam['meta']);
+        }
+
+        return $parameters;
     }
 
     private function createSectionProperty(Section $property, StructureInterface $structure = null)
