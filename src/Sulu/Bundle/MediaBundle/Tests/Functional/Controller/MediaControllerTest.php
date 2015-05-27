@@ -246,6 +246,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
     }
 
+    /**
+     * Test Header dispositionType attachment
+     */
     public function testDownloadHeaderAttachment()
     {
         $media = $this->createMedia('photo');
@@ -262,6 +265,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('attachment; filename="photo.jpeg";', $client->getResponse()->headers->get('Content-Disposition'));
     }
 
+    /**
+     * Test Header dispositionType inline
+     */
     public function testDownloadHeaderInline()
     {
         $media = $this->createMedia('photo');
@@ -898,6 +904,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
     }
 
+    /**
+     * Test move action
+     */
     public function testMove()
     {
         $destCollection = new Collection();
@@ -927,6 +936,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultTitle, $response['title']);
     }
 
+    /**
+     * Test move to non existing collection
+     */
     public function testMoveNonExistingCollection()
     {
         $media = $this->createMedia('photo');
@@ -937,6 +949,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test move to non existing media
+     */
     public function testMoveNonExistingMedia()
     {
         $client = $this->createAuthenticatedClient();
@@ -945,6 +960,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test non existing action
+     */
     public function testMoveNonExistingAction()
     {
         $media = $this->createMedia('photo');
