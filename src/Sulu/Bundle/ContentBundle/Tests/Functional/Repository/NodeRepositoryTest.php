@@ -203,45 +203,103 @@ class NodeRepositoryTest extends SuluTestCase
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][0]['title']);
-        // TODO add more webspaces when changed to SuluTestCase
     }
 
-    public function testGetNodesTree()
+    /**
+     * It should load the node tree tiers up until the tier containing the given UUID
+     */
+    public function testGetNodesTreeUntilGivenUuid()
     {
-        $data = $this->prepareGetTestData();
+        $structures = $this->prepareGetTreeTestData();
+        $structure = $structures[2];
+        $this->assertEquals('Child 1', $structure->getTitle());
 
-        // without webspace
-        $result = $this->nodeRepository->getNodesTree($data->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
+        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+    }
+
+    /**
+     * It should load the node tree tiers up until the tier containing the given UUID
+     * Without a webspte
+     */
+    public function testGetNodesTreeWithoutWebspace()
+    {
+        $structures = $this->prepareGetTreeTestData();
+        $structure = $structures[0];
+
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
+        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
-        $this->assertFalse($result['_embedded']['nodes'][0]['hasSub']);
-
-        // with webspace
-        $result = $this->nodeRepository->getNodesTree($data->getUuid(), 'sulu_io', 'en', false, true);
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
-        $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/', $result['_embedded']['nodes'][0]['path']);
         $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
-
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes'][0]['_embedded']));
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['path']);
-        $this->assertFalse($result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['hasSub']);
     }
 
+    /**
+     * With a webspace
+     */
+    public function testGetNodesTreeWithWebspace()
+    {
+        $structures = $this->prepareGetTreeTestData();
+        $structure = $structures[0];
+
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, true);
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $webspace = $result['_embedded']['nodes'][0];
+        $this->assertEquals('Sulu CMF', $webspace['title']);
+        $this->assertEquals('/', $webspace['path']);
+        $this->assertTrue($webspace['hasSub']);
+
+        $this->assertEquals(2, sizeof($webspace['_embedded']['nodes']));
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['path']);
+        $this->assertTrue($result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['hasSub']);
+    }
+
+    /**
+     * It should get the node tree tiers with ghosts
+     */
     public function testGetNodesTreeWithGhosts()
     {
-        $data = $this->prepareGetTestData();
+        $structures = $this->prepareGetTreeTestData();
+        $structure = $structures[0];
 
-        $result = $this->nodeRepository->getNodesTree($data->getUuid(), 'sulu_io', 'de', false, false);
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false);
+        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
         $this->assertEquals('ghost', $result['_embedded']['nodes'][0]['type']['name']);
         $this->assertEquals('en', $result['_embedded']['nodes'][0]['type']['value']);
-        $this->assertFalse($result['_embedded']['nodes'][0]['hasSub']);
+        $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
     }
+
+    private function prepareGetTreeTestData()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2',
+            ),
+            'url' => '/news/test',
+            'article' => 'Test',
+        );
+
+        $structures = array();
+        $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
+
+        $data['title'] = 'Other title';
+        $data['url'] = '/other';
+
+        $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
+
+        $data['title'] = 'Child 1';
+        $data['url'] = '/other/child1';
+
+        $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, $structures[0]->getUuid(), Structure::STATE_PUBLISHED);
+
+        return $structures;
+    }
+
 
     public function testExtensionData()
     {
