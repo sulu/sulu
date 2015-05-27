@@ -3,6 +3,8 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #1134 [MediaBundle]    Add parameter to view pdf in browser instead of downloading it immediately
+    * ENHANCEMENT #1055 [MediaBundle]    Use tagged services instead of prefix for image converter commands
+    * ENHANCEMENT #1144 [CacheBundle]    Changed dependencies from guzzle and HTTPCacheBundle
     * BUGFIX      #1141 [WebsiteBundle]  Added smaller version of logo and fixed twig syntax errors for profiler
     * BUGFIX      #1075 [WebsiteBundle]  Fixed sitemap add validation for requested domain
     * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
