@@ -86,6 +86,19 @@ class File implements AuditableInterface
     }
 
     /**
+     * Set changed.
+     *
+     * @param \DateTime $changed
+     *
+     * @return $this
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
+        return $this;
+    }
+
+    /**
      * Set version.
      *
      * @param int $version
