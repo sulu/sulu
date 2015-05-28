@@ -21,10 +21,11 @@ interface ContentPathInterface
      * @param string $url
      * @param string $webspaceKey
      * @param string $locale
+     * @param string $domain
      *
      * @return string
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null);
+    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null);
 
     /**
      * Generates real root url.

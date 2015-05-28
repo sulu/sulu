@@ -65,7 +65,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null)
+    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null)
     {
         if (
             $webspaceKey !== null &&
@@ -74,10 +74,10 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
             $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
                 $url,
                 $this->environment,
-                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
-                $webspaceKey
+                $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $webspaceKey,
+                $domain
             );
-
             if (sizeof($portalUrls) > 0) {
                 return rtrim($portalUrls[0], '/');
             }

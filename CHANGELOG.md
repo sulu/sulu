@@ -3,6 +3,13 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #-- [SecurityBundle]   Moved user specific code from UserController to UserManager
+    * ENHANCEMENT #1134 [MediaBundle]    Add parameter to view pdf in browser instead of downloading it immediately
+    * ENHANCEMENT #1055 [MediaBundle]    Use tagged services instead of prefix for image converter commands
+    * ENHANCEMENT #1144 [CacheBundle]    Changed dependencies from guzzle and HTTPCacheBundle
+    * BUGFIX      #1141 [WebsiteBundle]  Added smaller version of logo and fixed twig syntax errors for profiler
+    * BUGFIX      #1075 [WebsiteBundle]  Fixed sitemap add validation for requested domain
+    * BUGFIX      #1124 [ContentBundle]  Fixed preview with multiple blocks
+    * BUGFIX      #1123 [ContentBundle]  Fixed block behaviour on template change
     * ENHANCEMENT #1118 [SecurityBundle] Add possibility to enable SecurityChecker and SuluSecurityListener via configuration
     * ENHANCEMENT #1113 [ContactBundle]  Added sorting by last-name in accounts-contact tab
     * ENHANCEMENT #1100 [ContentBundle]  Replaced the checkboxes with radio buttons in overlay for creating node in new localization
@@ -13,6 +20,7 @@ CHANGELOG for Sulu
                                          images inside the overlay; Store media assignement display options in user settings
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
     * BUGFIX      #1089 [Media/Search]   Do not set image URL for non-images in the search results
+    * BUGFIX      #996  [ContentBundle]  Fixed change language in add form
     * BUGFIX      #725  [Webspace]       Fixed trailing slash in defining url in webspace config
 
 * 0.18.2 (2015-05-18)
@@ -44,6 +52,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests 
     * BUGFIX      #1030 [WebsiteBundle]  Fixed exception-controller to resolve parameters like website-controller
     * FEATURE     #1030 [WebsiteBundle]  Added configuration for error templates to webspace-config
+    * BUGFIX      #1044 [ContentBundle]  Update CKEditor parameters to snake_case and allow dynamic override of ckeditor config
 
 * 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug

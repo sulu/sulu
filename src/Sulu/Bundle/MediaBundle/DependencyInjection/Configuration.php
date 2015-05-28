@@ -113,6 +113,18 @@ class Configuration implements ConfigurationInterface
                     ->booleanNode('save_image')->defaultValue(true)->end()
                     ->scalarNode('segments')->defaultValue(10)->end()
                 ->end()
+            ->end()
+            ->arrayNode('disposition_type')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->enumNode('default')->values(array('inline', 'attachment'))->defaultValue('attachment')->end()
+                    ->arrayNode('mime_types_inline')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('mime_types_attachment')
+                        ->prototype('scalar')->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

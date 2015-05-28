@@ -18,6 +18,7 @@ Feature: Role management
 
     Scenario: Edit a role
         Given I am on "/admin/#settings/roles"
+        And I wait to see "1" "#roles-list tbody .row" elements
         And I click the row containing "Sulu"
         And I expect the "husky.select.system.preselected.item" event
         And I fill in "name" with "Goat"

@@ -45,7 +45,6 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.segments', $config['format_cache']['segments']);
 
         // converter
-        $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.ghost_script.path', $config['ghost_script']['path']);
 
         // storage
@@ -67,6 +66,11 @@ class SuluMediaExtension extends Extension
 
         // search
         $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
+
+        // disposition type
+        $container->setParameter('sulu_media.disposition_type.default', $config['disposition_type']['default']);
+        $container->setParameter('sulu_media.disposition_type.mime_types_inline', $config['disposition_type']['mime_types_inline']);
+        $container->setParameter('sulu_media.disposition_type.mime_types_attachment', $config['disposition_type']['mime_types_attachment']);
 
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

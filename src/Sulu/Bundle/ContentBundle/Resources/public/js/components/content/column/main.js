@@ -44,14 +44,14 @@ define(function() {
             ].join(''),
 
             columnNavigation: function() {
-                return[
+                return [
                     '<div id="child-column-navigation"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
             },
 
             table: function() {
-                return[
+                return [
                     '<div id="child-table"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
@@ -62,7 +62,7 @@ define(function() {
                     '<div class="copy-locale-overlay-content grid">',
                     '   <div class="grid-row">',
                     '       <p class="info">',
-                                this.sandbox.translate('content.contents.settings.copy-locale.info'),
+                    this.sandbox.translate('content.contents.settings.copy-locale.info'),
                     '       </p>',
                     '   </div>',
                     '   <div class="grid-row">',
@@ -269,10 +269,10 @@ define(function() {
                 if (items.hasOwnProperty(id) && id !== exclude) {
                     item = items[id];
                     html.push(
-                            '<li data-id="' + item.id + '" data-path="' + item.path + '">' +
-                            '   <span class="node-name">' + this.sandbox.util.cropMiddle(item.title, 35) + '</span>' +
-                            '   <span class="options-select"><i class="fa fa-arrow-up pointer"></i></span>' +
-                            '</li>'
+                        '<li data-id="' + item.id + '" data-path="' + item.path + '">' +
+                        '   <span class="node-name">' + this.sandbox.util.cropMiddle(item.title, 35) + '</span>' +
+                        '   <span class="options-select"><i class="fa fa-arrow-up pointer"></i></span>' +
+                        '</li>'
                     );
                 }
             }
@@ -341,8 +341,17 @@ define(function() {
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
-            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace +
-                '&language=' + this.options.language + '&webspace-node=true';
+            var url = '/admin/api/nodes',
+                urlParams = [
+                    'tree=true',
+                    'webspace=' + this.options.webspace,
+                    'language=' + this.options.language,
+                    'webspace-node=true'
+                ];
+
+            if (!!id) {
+                urlParams.push('id=' + id);
+            }
 
             this.sandbox.start(
                 [
@@ -351,7 +360,7 @@ define(function() {
                         options: {
                             el: '#child-column-navigation',
                             selected: id,
-                            url: url.replace('{/id}', (!!id ? '/' + id : '')),
+                            url: url + '?' + urlParams.join('&'),
                             instanceName: 'overlay',
                             actionIcon: 'fa-check-circle',
                             resultKey: this.options.resultKey,
@@ -516,7 +525,7 @@ define(function() {
          */
         getUrl: function() {
             if (this.getLastSelected() !== null) {
-                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace +
+                return '/admin/api/nodes?id=' + this.getLastSelected() + '&tree=true&webspace=' + this.options.webspace +
                     '&language=' + this.options.language +
                     '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             } else {
