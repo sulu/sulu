@@ -95,6 +95,7 @@ class File implements AuditableInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
+
         return $this;
     }
 

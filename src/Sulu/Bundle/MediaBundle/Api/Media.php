@@ -632,6 +632,7 @@ class Media extends ApiWrapper
             $changed = new \DateTime($changed);
         }
         $this->getFileVersion()->setChanged($changed);
+
         return $this;
     }
 

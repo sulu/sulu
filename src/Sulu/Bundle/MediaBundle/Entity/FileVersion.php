@@ -284,6 +284,7 @@ class FileVersion implements AuditableInterface
     public function setCreated($created)
     {
         $this->created = $created;
+
         return $this;
     }
 
@@ -307,6 +308,7 @@ class FileVersion implements AuditableInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
+        
         return $this;
     }
 
