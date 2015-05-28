@@ -44,6 +44,11 @@ class FileVersion implements AuditableInterface
     private $storageOptions;
 
     /**
+     * @var string
+     */
+    private $storageType;
+
+    /**
      * @var int
      */
     private $downloadCounter = 0;
@@ -270,6 +275,19 @@ class FileVersion implements AuditableInterface
     }
 
     /**
+     * Get created.
+     *
+     * @param \DateTime $created
+     *
+     * @return $this
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+        return $this;
+    }
+
+    /**
      * Get changed.
      *
      * @return \DateTime
@@ -277,6 +295,19 @@ class FileVersion implements AuditableInterface
     public function getChanged()
     {
         return $this->changed;
+    }
+
+    /**
+     * Set changed.
+     *
+     * @param \DateTime $changed
+     *
+     * @return $this
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
+        return $this;
     }
 
     /**
@@ -583,5 +614,28 @@ class FileVersion implements AuditableInterface
                 $this->addPublishLanguage($newPublishLanguage);
             }
         }
+    }
+
+    /**
+     * Set storageType
+     *
+     * @param string $storageType
+     * @return FileVersion
+     */
+    public function setStorageType($storageType)
+    {
+        $this->storageType = $storageType;
+
+        return $this;
+    }
+
+    /**
+     * Get storageType
+     *
+     * @return string 
+     */
+    public function getStorageType()
+    {
+        return $this->storageType;
     }
 }

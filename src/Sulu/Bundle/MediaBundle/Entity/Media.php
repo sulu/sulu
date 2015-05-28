@@ -78,6 +78,19 @@ class Media implements AuditableInterface
     }
 
     /**
+     * Set changed.
+     *
+     * @param \DateTime $changed
+     *
+     * @return $this
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
+        return $this;
+    }
+
+    /**
      * Get changed.
      *
      * @return \DateTime
