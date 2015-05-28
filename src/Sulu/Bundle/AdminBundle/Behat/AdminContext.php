@@ -134,7 +134,7 @@ var f = function () {
     for (var i = 0; i < items.length; i++) {
         if (items[i].textContent == '%s') {
             items[i].click();
-            return;
+            break;
         }
     };
 }
