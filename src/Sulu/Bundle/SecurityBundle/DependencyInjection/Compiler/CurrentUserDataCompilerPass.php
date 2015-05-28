@@ -29,9 +29,10 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
         if ($container->hasDefinition('security.context')) {
             $container->setDefinition(
                 'sulu_security.user_manager.current_user_data',
-                new Definition('Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData',
-                array(
-                    new Reference('security.context'),
+                new Definition(
+                    'Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData',
+                    array(
+                        new Reference('security.context'),
                         new Reference('router'),
                         new Reference('doctrine'),
                     )

@@ -11,8 +11,6 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 
 /**
  * Repository for the UserSettings, implementing some additional functions

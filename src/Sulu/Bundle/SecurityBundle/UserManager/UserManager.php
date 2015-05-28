@@ -29,16 +29,16 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserManager implements UserManagerInterface
 {
     use RelationTrait;
 
     protected static $entityName = 'SuluSecurityBundle:User';
-
-    const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
-    const ENTITY_NAME_GROUP = 'SuluSecurityBundle:Group';
-    const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
+    protected static $entityNameRole = 'SuluSecurityBundle:Role';
+    protected static $entityNameGroup = 'SuluSecurityBundle:Group';
+    protected static $entityNameContact = 'SuluContactBundle:Contact';
 
     /**
      * @var CurrentUserDataInterface
@@ -154,7 +154,8 @@ class UserManager implements UserManagerInterface
         $data,
         $locale,
         $id = null,
-        $patch = false
+        $patch = false,
+        $flush = true
     ) {
         $username = $this->getProperty($data, 'username');
         $contact = $this->getProperty($data, 'contact');
@@ -171,6 +172,9 @@ class UserManager implements UserManagerInterface
                 $this->processEmail($user, $email);
             } else {
                 // POST
+                if (!$this->isValidPassword($password)) {
+                    throw new MissingPasswordException();
+                }
                 $user = new User();
                 $this->processEmail($user, $email, $contact);
             }
@@ -180,6 +184,7 @@ class UserManager implements UserManagerInterface
                     !$this->isUsernameUnique($username)) {
                     throw new UsernameNotUniqueException($username);
                 }
+                $user->setUsername($username);
             }
             // check if password is valid
             if (!$patch || $password !== null) {
@@ -188,18 +193,12 @@ class UserManager implements UserManagerInterface
                     $user->setPassword(
                         $this->encodePassword($user, $password, $user->getSalt())
                     );
-                } elseif (!$id) {
-                    throw new MissingPasswordException();
                 }
             }
             if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', array())) ||
                 !$this->processUserGroups($user, $this->getProperty($data, 'userGroups', array()))
             ) {
                 throw new RestException('Could not update dependencies!');
-            }
-
-            if (!$patch || $username !== null) {
-                $user->setUsername($username);
             }
             if (!$patch || $contact !== null) {
                 $user->setContact($this->getContact($contact['id']));
@@ -216,7 +215,9 @@ class UserManager implements UserManagerInterface
         }
 
         $this->em->persist($user);
-        $this->em->flush();
+        if ($flush) {
+            $this->em->flush();
+        }
 
         return $user;
     }
@@ -328,16 +329,15 @@ class UserManager implements UserManagerInterface
     /**
      * Process all user roles from request
      *
-     * @param User $user The user on which is worked
+     * @param User $user
      * @param array $userRoles
      *
      * @return bool True if the processing was successful, otherwise false
      */
-    public function processUserRoles(User $user, $userRoles)
+    public function processUserRoles(UserInterface $user, $userRoles)
     {
         $get = function ($entity) {
-            /** @var User $entity */
-
+            /** @var UserInterface $entity */
             return $entity->getId();
         };
 
@@ -353,7 +353,9 @@ class UserManager implements UserManagerInterface
         $add = function ($userRole) use ($user) {
             return $this->addUserRole($user, $userRole);
         };
+
         $entities = $user->getUserRoles();
+
         $result = $this->processSubEntities(
             $entities,
             $userRoles,
@@ -371,16 +373,15 @@ class UserManager implements UserManagerInterface
     /**
      * Process all user groups from request
      *
-     * @param User $user The user on which is worked
+     * @param User $user
      * @param $userGroups
      *
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processUserGroups(User $user, $userGroups)
+    protected function processUserGroups(UserInterface $user, $userGroups)
     {
         $get = function ($entity) {
-            /** @var User $entity */
-
+            /** @var UserInterface $entity */
             return $entity->getId();
         };
 
@@ -428,7 +429,7 @@ class UserManager implements UserManagerInterface
         $role = $this->roleRepository->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException(static::ENTITY_NAME_ROLE, $userRole['role']['id']);
+            throw new EntityNotFoundException(static::$entityNameRole, $userRole['role']['id']);
         }
 
         $userRole->setRole($role);
@@ -458,7 +459,7 @@ class UserManager implements UserManagerInterface
         $role = $this->roleRepository->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException(static::ENTITY_NAME_ROLE, $userRoleData['role']['id']);
+            throw new EntityNotFoundException(static::$entityNameRole, $userRoleData['role']['id']);
         }
 
         if ($user->getUserRoles()) {
@@ -496,7 +497,7 @@ class UserManager implements UserManagerInterface
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
         if (!$group) {
-            throw new EntityNotFoundException(static::ENTITY_NAME_GROUP, $userGroupData['group']['id']);
+            throw new EntityNotFoundException(static::$entityNameGroup, $userGroupData['group']['id']);
         }
 
         $userGroup = new UserGroup();
@@ -525,7 +526,7 @@ class UserManager implements UserManagerInterface
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
         if (!$group) {
-            throw new EntityNotFoundException(static::ENTITY_NAME_GROUP, $userGroup['group']['id']);
+            throw new EntityNotFoundException(static::$entityNameGroup, $userGroup['group']['id']);
         }
 
         $userGroup->setGroup($group);
@@ -552,7 +553,7 @@ class UserManager implements UserManagerInterface
         $contact = $this->contactRepository->findById($id);
 
         if (!$contact) {
-            throw new EntityNotFoundException(static::ENTITY_NAME_CONTACT, $id);
+            throw new EntityNotFoundException(static::$entityNameContact, $id);
         }
 
         return $contact;

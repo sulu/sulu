@@ -35,7 +35,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    const ENTITY_NAME_USER_SETTING = 'SuluSecurityBundle:UserSetting';
+    protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
 
     protected static $entityName = 'SuluSecurityBundle:User';
 
@@ -43,6 +43,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Contains the field descriptors used by the list response
+     *
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
@@ -222,7 +223,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             // get setting
             /** @var UserSetting $setting */
             $setting = $this->getDoctrine()
-                ->getRepository(static::ENTITY_NAME_USER_SETTING)
+                ->getRepository(static::$entityNameUserSetting)
                 ->findOneBy(array('user' => $user, 'key' => $key));
 
             // or create new one
@@ -263,7 +264,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             }
 
             $setting = $this->getDoctrine()
-                ->getRepository(static::ENTITY_NAME_USER_SETTING)
+                ->getRepository(static::$entityNameUserSetting)
                 ->findOneBy(array('user' => $user, 'key' => $key));
 
             $view = $this->view($setting, 200);
