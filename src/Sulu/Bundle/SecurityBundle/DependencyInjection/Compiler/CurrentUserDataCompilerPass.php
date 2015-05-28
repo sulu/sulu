@@ -29,8 +29,9 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
         if ($container->hasDefinition('security.context')) {
             $container->setDefinition(
                 'sulu_security.user_manager.current_user_data',
-                new Definition('Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData', array(
-                        new Reference('security.context'),
+                new Definition('Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData',
+                array(
+                    new Reference('security.context'),
                         new Reference('router'),
                         new Reference('doctrine'),
                     )
@@ -40,10 +41,16 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
             $container->setDefinition(
                 'sulu_security.user_manager',
                 new Definition(
-                    'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+                   'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                     array(
-                        new Reference('doctrine'),
+                        new Reference('doctrine.orm.entity_manager'),
+                        new Reference('security.encoder_factory'),
+                        new Reference('sulu_security.role_repository'),
+                        new Reference('sulu_security.group_repository'),
+                        new Reference('sulu_contact.contact_repository'),
+                        new Reference('sulu_security.salt_generator'),
                         new Reference('sulu_security.user_manager.current_user_data'),
+                        new Reference('sulu_security.user_repository'),
                     )
                 )
             );
@@ -53,7 +60,8 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                 new Definition(
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                     array(
-                        new Reference('doctrine'),
+                        new Reference('doctrine.orm.entity_manager'),
+                        new Reference('security.encoder_factory'),
                     )
                 )
             );

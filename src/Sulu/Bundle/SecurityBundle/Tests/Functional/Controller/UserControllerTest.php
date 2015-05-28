@@ -966,12 +966,4 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals(true, $response->enabled);
     }
-
-    public function testUserDataHandler()
-    {
-        //        $this->createClient();
-//        self::$kernel->getContainer()->get('sulu_admin.user_data_service');
-
-        // TODO: implement test cases
-    }
 }
