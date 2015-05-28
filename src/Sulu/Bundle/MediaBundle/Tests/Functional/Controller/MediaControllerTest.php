@@ -695,8 +695,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->version);
         $versions = (array) $response->versions;
         $this->assertCount(2, $versions);
-        $this->assertNotEquals($versions[2]['created'], $versions[1]['created']);
-        $this->assertNotEquals($versions[2]['changed'], $versions[1]['changed']);
+        $this->assertNotEquals($versions['2']->created, $versions['1']->created);
+        $this->assertNotEquals($versions['2']->changed, $versions['1']->changed);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
