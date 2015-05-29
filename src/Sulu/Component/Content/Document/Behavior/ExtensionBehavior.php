@@ -6,7 +6,7 @@ namespace Sulu\Component\Content\Document\Behavior;
  * Documents implementing this behavior can have extensions applied to their
  * content.
  */
-interface ExtensionBehavior extends ContentBehavior
+interface ExtensionBehavior extends StructureBehavior
 {
     /**
      * Reutrn all extension data.

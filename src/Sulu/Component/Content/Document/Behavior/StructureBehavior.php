@@ -24,7 +24,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
  * $this->getContent()->getProperty('foo')->getValue();
  * ````
  */
-interface ContentBehavior extends LocaleBehavior
+interface StructureBehavior extends LocaleBehavior
 {
     /**
      * Return the type of the structure used for the content

@@ -16,6 +16,7 @@ use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Property\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 
 class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +25,7 @@ class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->structure = $this->prophesize(StructureMetadata::class);
-        $this->document = $this->prophesize(ContentBehavior::class);
+        $this->document = $this->prophesize(StructureBehavior::class);
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->structureProperty = $this->prophesize(PropertyMetadata::class);

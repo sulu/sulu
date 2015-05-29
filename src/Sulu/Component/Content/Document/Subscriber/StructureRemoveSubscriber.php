@@ -8,7 +8,7 @@ use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 /**
  * Remove routes and references associated with content
  */
-class ContentRemoveSubscriber implements EventSubscriberInterface
+class StructureRemoveSubscriber implements EventSubscriberInterface
 {
     private $inspector;
     private $documentManager;
@@ -44,7 +44,7 @@ class ContentRemoveSubscriber implements EventSubscriberInterface
         $document = $event->getDocument();
 
         // TODO: This is not a good indicator. There should be a RoutableBehavior here.
-        if (!$document instanceof ContentBehavior) {
+        if (!$document instanceof StructureBehavior) {
             return;
         }
 
