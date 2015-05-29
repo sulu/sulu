@@ -35,12 +35,9 @@
 
         <!-- Rebuild structure index on massive:search:index:rebuild -->
         <service id="sulu_content.search.event_listener.search" class="%sulu_content.search.event_listener.reindex.class%">
-            <argument type="service" id="sulu.phpcr.session" />
-            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="massive_search.search_manager" />
-            <argument type="service" id="sulu_core.webspace.webspace_manager" />
-            <argument type="service" id="sulu.content.structure_manager" />
-            <argument type="service" id="sulu.util.node_helper" />
             <argument>%sulu_content.search.mapping%</argument>
             <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
         </service>
