@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Component\Webspace\DocumentManager;
+namespace Sulu\Component\Webspace\Document\Initializer;
 
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

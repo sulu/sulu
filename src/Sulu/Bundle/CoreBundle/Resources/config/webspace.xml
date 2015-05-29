@@ -8,7 +8,7 @@
 
         <parameter key="sulu_core.webspace.cache_class">WebspaceCollectionCache</parameter>
         <parameter key="sulu_core.webspace.base_class">WebspaceCollection</parameter>
-        <parameter key="sulu_core.webspace.document_manager.webspace_initializer.class">Sulu\Component\Webspace\DocumentManager\WebspaceInitializer</parameter>
+        <parameter key="sulu_core.webspace.document_manager.webspace_initializer.class">Sulu\Component\Webspace\Document\Initializer\WebspaceInitializer</parameter>
     </parameters>
 
     <services>
