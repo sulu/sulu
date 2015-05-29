@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### Security Roles
+The identifiers in the acl_security_identities should be rename from SULU_ROLE_* to ROLE_SULU_*. This SQL snippet should 
+do the job for you, you should adapt it to fit your needs:
+
+UPDATE `acl_security_identities` SET `identifier` = REPLACE(`identifier`, 'SULU_ROLE_', 'ROLE_SULU_');
+
 ### Texteditor
 
 The params for the texteditor content type where changed.
