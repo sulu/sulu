@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure\Loader\Exception;
+namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
-use Sulu\Component\Content\Structure\Loader\Exception\InvalidXmlException;
+use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 
 /**
  * Thrown when a template does not contain a required property name

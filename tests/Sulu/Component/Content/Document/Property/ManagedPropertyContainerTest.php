@@ -3,12 +3,12 @@
 namespace Sulu\Component\Content\Document\Property;
 
 use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Metadata\Structure;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Metadata\Property;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;

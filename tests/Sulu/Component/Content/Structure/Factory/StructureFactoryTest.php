@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure\Factory;
+namespace Sulu\Component\Content\Metadata\Factory;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Sulu\Component\Content\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureFactory;
 
 class StructureFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,7 +59,7 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if a non existing document alias is given
      *
-     * @expectedException Sulu\Component\Content\Structure\Factory\Exception\DocumentTypeNotFoundException
+     * @expectedException Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException
      * @expectedExceptionMessage Structure path for document type "non_existing" is not mapped. Mapped structure types: "page
      */
     public function testGetStructureBadType()
@@ -70,7 +70,7 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if a non existing structure type is given
      *
-     * @expectedException Sulu\Component\Content\Structure\Factory\Exception\StructureTypeNotFoundException
+     * @expectedException Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException
      * @expectedExceptionMessage Could not load structure type "overview_not_existing" for document type "page", looked in "
      */
     public function testGetStructureNonExisting()

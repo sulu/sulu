@@ -14,9 +14,6 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
@@ -24,9 +21,9 @@ use Massive\Bundle\SearchBundle\Search\Field;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
-use Sulu\Component\Content\Structure\Factory\StructureFactory;
-use Sulu\Component\Content\Structure\Block;
-use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
@@ -36,7 +33,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Massive\Bundle\SearchBundle\Search\Document;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -126,7 +123,7 @@ class StructureProvider implements ProviderInterface
         $indexMeta->setIndexName($indexName);
 
         foreach ($structure->getModelProperties() as $property) {
-            if ($property instanceof Block) {
+            if ($property instanceof BlockMetadata) {
                 $propertyMapping = new ComplexMetadata();
                 foreach ($property->getComponents() as $component) {
                     foreach ($component->getChildren() as $componentProperty) {
@@ -240,7 +237,7 @@ class StructureProvider implements ProviderInterface
         return $this->getMetadata($documentMetadata, $structure);
     }
 
-    private function mapProperty(Property $property, $metadata)
+    private function mapProperty(PropertyMetadata $property, $metadata)
     {
         if (false === $property->hasTag('sulu.search.field')) {
             return;
@@ -299,7 +296,7 @@ class StructureProvider implements ProviderInterface
     }
 
 
-    private function getContentField(Property $property)
+    private function getContentField(PropertyMetadata $property)
     {
         $field = $this->factory->createMetadataExpression(sprintf(
             'object.getContent().%s.getValue()', $property->getName()

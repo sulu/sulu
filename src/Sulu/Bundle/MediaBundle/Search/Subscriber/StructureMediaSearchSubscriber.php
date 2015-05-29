@@ -15,7 +15,7 @@ use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\MetadataInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

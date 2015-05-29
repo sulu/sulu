@@ -7,13 +7,12 @@ use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\Metadata;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\DocumentManager\PropertyEncoder as BasePropertyEncoder;
-use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 /**
  * This class infers information about documents, for example
@@ -29,7 +28,7 @@ class PropertyEncoder extends BasePropertyEncoder
         parent::__construct($namespaceRegistry);
     }
 
-    public function fromProperty(Property $property, $locale = null)
+    public function fromProperty(PropertyMetadata $property, $locale = null)
     {
         if (true === $property->isLocalized()) {
             return $this->localizedContentName($property->getName(), $locale);
