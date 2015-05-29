@@ -21,8 +21,8 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Metadata\Driver\AdvancedDriverInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
@@ -30,6 +30,9 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Structure\Block;
+use Sulu\Component\Content\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
@@ -88,7 +91,7 @@ class StructureProvider implements ProviderInterface
      */
     public function getMetadataForObject($object)
     {
-        if (!$object instanceof ContentBehavior) {
+        if (!$object instanceof StructureBehavior) {
             return;
         }
 
