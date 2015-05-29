@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Metadata;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContentContentNavigationProvider implements ContentNavigationProviderInterface
@@ -70,6 +70,11 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $securityContext = 'sulu.webspaces.' . $options['webspace'];
 
         if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, 'security')) {
+
+            throw new \RuntimeException('Migrate this');
+
+            // Structure as used below no longer exists.
+
             $permissions = new ContentNavigationItem('Permissions');
             $permissions->setAction('permissions');
             $permissions->setDisplay(array('edit'));

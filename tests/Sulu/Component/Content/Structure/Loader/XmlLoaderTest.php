@@ -1,8 +1,8 @@
 <?php
 
-namespace Sulu\Component\Content\Structure\Loader;
+namespace Sulu\Component\Content\Metadata\Loader;
 
-use Sulu\Component\Content\Structure\Loader\XmlLoader;
+use Sulu\Component\Content\Metadata\Loader\XmlLoader;
 
 class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 {

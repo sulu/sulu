@@ -8,12 +8,12 @@
 * with this source code in the file LICENSE.
 */
 
-namespace Sulu\Component\Content\Structure\Loader;
+namespace Sulu\Component\Content\Metadata\Loader;
 
 use Exception;
-use Sulu\Component\Content\Structure\Loader\Exception\InvalidXmlException;
-use Sulu\Component\Content\Structure\Loader\Exception\RequiredPropertyNameNotFoundException;
-use Sulu\Component\Content\Structure\Loader\Exception\ReservedPropertyNameException;
+use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
+use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;

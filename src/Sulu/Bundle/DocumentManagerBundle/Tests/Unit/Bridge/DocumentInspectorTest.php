@@ -17,7 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Metadata\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use PHPCR\PropertyInterface;

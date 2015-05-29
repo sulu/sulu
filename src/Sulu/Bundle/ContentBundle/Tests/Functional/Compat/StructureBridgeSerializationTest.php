@@ -4,7 +4,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Compat;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\StructureInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Tests\Integration\BaseTestCase;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
