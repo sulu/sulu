@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure\Loader;
+namespace Sulu\Component\Content\Metadata\Loader;
 
 use InvalidArgumentException;
 
@@ -243,7 +243,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(
-            '\Sulu\Component\Content\Structure\Loader\Exception\RequiredPropertyNameNotFoundException',
+            '\Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException',
             'The property with the name "title" is required, but was not found in the template "template"'
         );
         $result = $this->loadFixture('template_missing_properties.xml');
@@ -251,7 +251,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Sulu\Component\Content\Structure\Loader\Exception\InvalidXmlException
+     * @expectedException \Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException
      */
     public function testReadTypesMissingMandatory()
     {
@@ -908,7 +908,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     public function testReservedName()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Structure\Loader\Exception\ReservedPropertyNameException'
+            '\Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException'
         );
 
         $result = $this->loadFixture('template_reserved.xml');
@@ -1000,7 +1000,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     public function testWithoutTitle()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Structure\Loader\Exception\RequiredPropertyNameNotFoundException',
+            '\Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException',
             'The property with the name "title" is required, but was not found in the template "template"'
         );
 

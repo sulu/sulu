@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
 /**
  * Represents only a collection of properties

@@ -17,7 +17,6 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
