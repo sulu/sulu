@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\UserManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
@@ -46,7 +47,7 @@ class UserManager implements UserManagerInterface
     private $currentUserData;
 
     /**
-     * @var UserRepository
+     * @var UserRepositoryInterface
      */
     private $userRepository;
 
@@ -82,7 +83,7 @@ class UserManager implements UserManagerInterface
 
     public function __construct(
         ObjectManager $em,
-        EncoderFactory $encoderFactory,
+        EncoderFactory $encoderFactory = null,
         RoleRepository $roleRepository = null,
         GroupRepository $groupRepository = null,
         ContactRepository $contactRepository = null,
@@ -109,16 +110,15 @@ class UserManager implements UserManagerInterface
      */
     public function getUserById($id)
     {
-        /** @var ObjectRepository $repository */
         return $this->userRepository->find($id);
     }
 
     /**
      * Deletes a user with the given id
      *
-     * @param int $id
+     * @return \Closure
      */
-    public function delete($id)
+    public function delete()
     {
         $delete = function ($id) {
             $user = $this->userRepository->findUserById($id);
@@ -147,8 +147,14 @@ class UserManager implements UserManagerInterface
      * Creates a new user with the given data
      *
      * @param array $data
+     * @param string $locale
+     * @param null|int $id
+     * @param bool $patch
+     * @param bool $flush
      *
-     * @return User
+     * @return null|UserInterface
+     *
+     * @throws \Exception
      */
     public function save(
         $data,
@@ -162,22 +168,24 @@ class UserManager implements UserManagerInterface
         $email = $this->getProperty($data, 'email');
         $password = $this->getProperty($data, 'password');
         $user = null;
+
         try {
             if ($id) {
-                // PATCH & PUT
+                // update user
                 $user = $this->userRepository->findUserById($id);
                 if (!$user) {
                     throw new EntityNotFoundException(static::$entityName, $id);
                 }
                 $this->processEmail($user, $email);
             } else {
-                // POST
+                // add user
                 if (!$this->isValidPassword($password)) {
                     throw new MissingPasswordException();
                 }
                 $user = new User();
                 $this->processEmail($user, $email, $contact);
             }
+
             // check if username is already in database and the current user is not the user with this username
             if (!$patch || $username !== null) {
                 if ($user->getUsername() != $username &&
@@ -186,6 +194,7 @@ class UserManager implements UserManagerInterface
                 }
                 $user->setUsername($username);
             }
+
             // check if password is valid
             if (!$patch || $password !== null) {
                 $user->setSalt($this->generateSalt());
@@ -198,7 +207,7 @@ class UserManager implements UserManagerInterface
             if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', array())) ||
                 !$this->processUserGroups($user, $this->getProperty($data, 'userGroups', array()))
             ) {
-                throw new RestException('Could not update dependencies!');
+                throw new \Exception('Could not update dependencies!');
             }
             if (!$patch || $contact !== null) {
                 $user->setContact($this->getContact($contact['id']));
@@ -207,7 +216,7 @@ class UserManager implements UserManagerInterface
                 $user->setLocale($locale);
             }
 
-        } catch (RestException $re) {
+        } catch (\Exception $re) {
             if (isset($user)) {
                 $this->em->remove($user);
             }
@@ -329,7 +338,7 @@ class UserManager implements UserManagerInterface
     /**
      * Process all user roles from request
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param array $userRoles
      *
      * @return bool True if the processing was successful, otherwise false
@@ -373,7 +382,7 @@ class UserManager implements UserManagerInterface
     /**
      * Process all user groups from request
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param $userGroups
      *
      * @return bool True if the processing was successful, otherwise false
@@ -608,12 +617,13 @@ class UserManager implements UserManagerInterface
      *
      * @param User $user
      * @param string $email
-     * @param string $method
+     * @param null|array $contact
+     *
+     * @throws EmailNotUniqueException
      */
-    private function processEmail($user, $email, $contact = null)
+    private function processEmail(User $user, $email, $contact = null)
     {
         if ($contact) {
-            // POST
             // if no email passed try to use the contact's first email
             if ($email === null &&
                 array_key_exists('emails', $contact) && count($contact['emails']) > 0 &&
@@ -646,6 +656,8 @@ class UserManager implements UserManagerInterface
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities
      * @param mixed $entities
+     *
+     * @return mixed
      */
     private function resetIndexOfSubentites($entities)
     {

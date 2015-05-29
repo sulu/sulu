@@ -62,7 +62,6 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                     array(
                         new Reference('doctrine.orm.entity_manager'),
-                        new Reference('security.encoder_factory'),
                     )
                 )
             );
