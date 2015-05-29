@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.0.0-RC1 (2015-05-29)
     * ENHANCEMENT #1148 [SecurityBundle] Moved user specific code from UserController to UserManager
     * BUGFIX      #1147 [MediaBUndle]    Fixes fileVersion created date
     * ENHANCEMENT #1134 [MediaBundle]    Add parameter to view pdf in browser instead of downloading it immediately

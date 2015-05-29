@@ -284,7 +284,7 @@ class UserController extends RestController implements ClassResourceInterface, S
      */
     public function deleteAction($id)
     {
-        $delete = $this->getUserManager()->delete($id);
+        $delete = $this->getUserManager()->delete();
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
