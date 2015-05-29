@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Structure\Section;
+use Sulu\Component\Content\Metadata\Property;
+use Sulu\Component\Content\Metadata\Section;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 class StructureMetadata extends Item

@@ -72,7 +72,7 @@ class ContentNodeDeleteEvent extends Event
     /**
      * Return all structures (i.e. for for each language).
      *
-     * @return Sulu\Component\Content\StructureInterface[]
+     * @return Sulu\Component\Content\MetadataInterface[]
      */
     public function getStructures()
     {

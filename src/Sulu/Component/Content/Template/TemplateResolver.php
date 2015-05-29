@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Template;
 
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Metadata;
 
 /**
  * Resolves template for node types.
