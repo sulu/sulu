@@ -7,6 +7,6 @@ namespace Sulu\Component\Content\Metadata;
  *
  * Used in blocks
  */
-class ComponentMetadata extends Item
+class ComponentMetadata extends ItemMetadata
 {
 }

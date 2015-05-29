@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Document\Property;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Metadata\Structure;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -33,8 +33,8 @@ class ManagedPropertyContainer extends PropertyContainer
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param NodeInterface $node
-     * @param Structure $structure
+     * @param LegacyPropertyFactory $legacyPropertyFactory
+     * @param DocumentInspector $inspector
      * @param object $document
      */
     public function __construct(
@@ -99,9 +99,9 @@ class ManagedPropertyContainer extends PropertyContainer
     /**
      * Update the structure
      *
-     * @param Structure $structure
+     * @param StructureMetadata $structure
      */
-    public function setStructure(Structure $structure) 
+    public function setStructure(StructureMetadata $structure) 
     {
         $this->structure = $structure;
     }

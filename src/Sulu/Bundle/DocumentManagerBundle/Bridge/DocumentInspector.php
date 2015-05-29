@@ -42,7 +42,7 @@ class DocumentInspector extends BaseDocumentInspector
         NamespaceRegistry $namespaceRegistry,
         ProxyFactory $proxyFactory,
         MetadataFactoryInterface $metadataFactory,
-        StructureFactoryMetadataInterface $structureFactory,
+        StructureMetadataFactoryInterface $structureFactory,
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager
     )
@@ -97,7 +97,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param ContentBehavior $document
      *
-     * @return Structure
+     * @return StructureMetadata
      */
     public function getStructure(ContentBehavior $document)
     {
