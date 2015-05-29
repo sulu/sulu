@@ -79,7 +79,7 @@ class PermissionControllerTest extends SuluTestCase
             'id' => $id,
             'type' => $class,
             'permissions' => array(
-                'SULU_ROLE_ADMINISTRATOR' => $permissions,
+                'ROLE_SULU_ADMINISTRATOR' => $permissions,
             ),
         ));
 
@@ -97,7 +97,7 @@ class PermissionControllerTest extends SuluTestCase
                 'id' => $id,
                 'type' => $class,
                 'permissions' => array(
-                    'SULU_ROLE_ADMINISTRATOR' => $permissions,
+                    'ROLE_SULU_ADMINISTRATOR' => $permissions,
                 ),
             ),
             $response
@@ -115,7 +115,7 @@ class PermissionControllerTest extends SuluTestCase
             'id' => $id,
             'type' => $class,
             'permissions' => array(
-                'SULU_ROLE_ADMINISTRATOR' => $permissions,
+                'ROLE_SULU_ADMINISTRATOR' => $permissions,
             ),
         ));
 
@@ -128,14 +128,14 @@ class PermissionControllerTest extends SuluTestCase
                 'id' => $id,
                 'type' => $class,
                 'permissions' => array(
-                    'SULU_ROLE_ADMINISTRATOR' => $permissions,
+                    'ROLE_SULU_ADMINISTRATOR' => $permissions,
                 ),
             ),
             $response
         );
 
         $acl = $this->aclProvider->findAcl(new ObjectIdentity($id, $class));
-        $sid = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');
+        $sid = new RoleSecurityIdentity('ROLE_SULU_ADMINISTRATOR');
 
         array_walk($permissions, function (&$permissionLine) {
             $permissionLine = $permissionLine === 'true' || $permissionLine === true;
