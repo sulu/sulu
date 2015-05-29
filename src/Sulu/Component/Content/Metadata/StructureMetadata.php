@@ -15,7 +15,7 @@ use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\Content\Structure\Section;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
-class Structure extends Item
+class StructureMetadata extends Item
 {
     /**
      * The resource from which this structure was loaded
