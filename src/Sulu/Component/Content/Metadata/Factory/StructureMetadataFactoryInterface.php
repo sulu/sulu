@@ -17,7 +17,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\FileLocator;
 use Doctrine\Common\Inflector\Inflector;
 
-interface StructureFactoryInterface
+interface StructureMetadataFactoryInterface
 {
     /**
      * Return the structure of the given $type and $structureType
