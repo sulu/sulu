@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1148 [SecurityBundle] Moved user specific code from UserController to UserManager
     * BUGFIX      #1147 [MediaBUndle]    Fixes fileVersion created date
     * ENHANCEMENT #1134 [MediaBundle]    Add parameter to view pdf in browser instead of downloading it immediately
     * ENHANCEMENT #1055 [MediaBundle]    Use tagged services instead of prefix for image converter commands
