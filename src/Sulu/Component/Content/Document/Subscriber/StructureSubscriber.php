@@ -14,7 +14,7 @@ use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface as DocumentMetadataFactory;
@@ -26,13 +26,13 @@ use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
-use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
-class ContentSubscriber extends AbstractMappingSubscriber
+class StructureSubscriber extends AbstractMappingSubscriber
 {
     const STRUCTURE_TYPE_FIELD = 'template';
 
@@ -95,7 +95,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
      */
     protected function supports($document)
     {
-        return $document instanceof ContentBehavior;
+        return $document instanceof StructureBehavior;
     }
 
     /**
@@ -178,7 +178,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
     private function getStructureTypePropertyName($document, $locale)
     {
-        if ($document instanceof LocalizedContentBehavior) {
+        if ($document instanceof LocalizedStructureBehavior) {
             return $this->encoder->localizedSystemName(self::STRUCTURE_TYPE_FIELD, $locale);
         }
 

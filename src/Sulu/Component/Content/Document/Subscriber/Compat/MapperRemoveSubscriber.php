@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber\Compat;
 
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -114,7 +114,7 @@ class MapperRemoveSubscriber implements EventSubscriberInterface
 
     private function supports($document)
     {
-        return $document instanceof ContentBehavior;
+        return $document instanceof StructureBehavior;
     }
 
     private function getEvent($document)
