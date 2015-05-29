@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Component\Content\Metadata\Item;
-
 /**
  * Base class for all structure related metadata classes.
  */
@@ -118,7 +116,7 @@ abstract class ItemMetadata
      *
      * @param Item $child
      */
-    public function addChild(Item $child)
+    public function addChild(ItemMetadata $child)
     {
         if (isset($this->children[$child->name])) {
             throw new \InvalidArgumentException(sprintf(

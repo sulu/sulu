@@ -12,9 +12,9 @@ namespace Sulu\Component\Content\Compat;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Metadata\Factory\StructureFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Extension\ExtensionManager;
-use Sulu\Component\Content\Metadata\Structure as NewStructure;
+use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -37,12 +37,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     );
 
     /**
-     * @param StructureFactory  $structureFactory
+     * @param StructureMetadataFactory  $structureFactory
      * @param ExtensionManager  $extensionManager
      * @param DocumentInspector $inspector
      */
     public function __construct(
-        StructureFactory $structureFactory,
+        StructureMetadataFactory $structureFactory,
         ExtensionManager $extensionManager,
         DocumentInspector $inspector,
         LegacyPropertyFactory $propertyFactory

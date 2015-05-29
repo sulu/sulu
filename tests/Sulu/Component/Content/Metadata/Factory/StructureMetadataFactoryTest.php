@@ -12,9 +12,9 @@
 namespace Sulu\Component\Content\Metadata\Factory;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Sulu\Component\Content\Metadata\Factory\StructureFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 
-class StructureFactoryTest extends \PHPUnit_Framework_TestCase
+class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $cacheDir;
 
@@ -26,7 +26,7 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure');
         $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
-        $this->factory = new StructureFactory(
+        $this->factory = new StructureMetadataFactory(
             $this->loader->reveal(),
             array(
                 'page' => array(
