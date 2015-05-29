@@ -23,10 +23,11 @@ interface StorageInterface
      * @param $tempPath
      * @param $fileName
      * @param $version
+     * @param $storageOption
      *
      * @return mixed
      */
-    public function save($tempPath, $fileName, $version);
+    public function save($tempPath, $fileName, $version, $storageOption = null);
 
     /**
      * Give back the path to the document.

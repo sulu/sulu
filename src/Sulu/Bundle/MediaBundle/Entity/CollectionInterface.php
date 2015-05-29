@@ -90,19 +90,19 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     public function getStyle();
 
     /**
-     * Set defaultStorageType
+     * Set setDefaultStorageName
      *
-     * @param string $defaultStorageType
+     * @param string $defaultStorageName
      * @return Collection
      */
-    public function setDefaultStorageType($defaultStorageType);
+    public function setDefaultStorageName($defaultStorageName);
 
     /**
-     * Get defaultStorageType
+     * Get defaultStorageName
      *
      * @return string
      */
-    public function getDefaultStorageType();
+    public function getDefaultStorageName();
 
     /**
      * Set lft.

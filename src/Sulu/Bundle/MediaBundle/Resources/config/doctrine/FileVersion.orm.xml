@@ -20,7 +20,7 @@
             </options>
         </field>
         <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
-        <field name="storageType" type="string" column="storageType" length="255" nullable="true">
+        <field name="storageName" type="string" column="storageName" length="255" nullable="true">
             <options>
                 <option name="default">local</option>
             </options>

@@ -90,6 +90,11 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $permissions;
 
+    /**
+     * @var string
+     */
+    private $defaultStorageName;
+
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -98,7 +103,8 @@ class CollectionManager implements CollectionManagerInterface
         EntityManager $em,
         TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
-        $permissions
+        $permissions,
+        $defaultStorageName
     ) {
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
@@ -108,6 +114,7 @@ class CollectionManager implements CollectionManagerInterface
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
         $this->permissions = $permissions;
+        $this->defaultStorageName = $defaultStorageName;
     }
 
     /**
@@ -421,6 +428,7 @@ class CollectionManager implements CollectionManagerInterface
         $data['created'] = new \DateTime();
 
         $collectionEntity = new CollectionEntity();
+        $collectionEntity->setDefaultStorageName($this->defaultStorageName);
         $collection = $this->getApiEntity($collectionEntity, $data['locale']);
 
         $collection = $this->setDataToCollection($collection, $data);
@@ -474,6 +482,9 @@ class CollectionManager implements CollectionManagerInterface
                         }
                         $type = $this->getTypeById($value['id']);
                         $collection->setType($type);
+                        break;
+                    case 'defaultStorageName':
+                        $collection->setDefaultStorageName($value);
                         break;
                     case 'changer':
                         $collection->setChanger($value);

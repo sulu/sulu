@@ -15,8 +15,8 @@ use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Log\NullLogger;
-use Symfony\Component\HttpKernel\Tests\Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class LocalStorage implements StorageInterface
 {
@@ -41,7 +41,7 @@ class LocalStorage implements StorageInterface
     private $filesystem;
 
     /**
-     * @var NullLogger|Logger
+     * @var NullLogger|LoggerInterface
      */
     protected $logger;
 

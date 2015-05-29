@@ -13,7 +13,7 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="style" type="string" column="style" length="255" nullable="true"/>
-        <field name="defaultStorageType" type="string" column="defaultStorageType" length="255" nullable="true">
+        <field name="defaultStorageName" type="string" column="defaultStorageName" length="255" nullable="true">
             <options>
                 <option name="default">local</option>
             </options>

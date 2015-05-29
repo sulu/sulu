@@ -284,6 +284,28 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @param $defaultStorageName
+     * @return $this
+     */
+    public function setDefaultStorageName($defaultStorageName)
+    {
+        $this->entity->setDefaultStorageType($defaultStorageName);
+
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("defaultStorageType")
+     *
+     * @return string
+     */
+    public function getDefaultStorageName()
+    {
+        return $this->entity->getDefaultStorageName();
+    }
+
+    /**
      * @param array $properties
      *
      * @return $this

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle;
 
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageCommandCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageFormatCompilerPass;
+use Sulu\Bundle\MediaBundle\DependencyInjection\StorageCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,5 +25,6 @@ class SuluMediaBundle extends Bundle
 
         $container->addCompilerPass(new ImageFormatCompilerPass());
         $container->addCompilerPass(new ImageCommandCompilerPass());
+        $container->addCompilerPass(new StorageCompilerPass());
     }
 }
