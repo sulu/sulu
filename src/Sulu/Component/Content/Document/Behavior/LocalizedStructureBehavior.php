@@ -17,6 +17,6 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
  * content documents implementing this behavior can change the 
  * structure type for each localization.
  */
-interface LocalizedContentBehavior
+interface LocalizedStructureBehavior
 {
 }

@@ -18,7 +18,8 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use PHPCR\PropertyInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -79,12 +80,12 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the Structure for a document implementing ContentBehavior
+     * It should return the Structure for a document implementing StructureBehavior
      */
     public function testGetStructure()
     {
         $structure = new \stdClass;
-        $document = $this->prophesize(ContentBehavior::class);
+        $document = $this->prophesize(StructureBehavior::class);
         $document->getStructureType()->willReturn('foo');
 
         $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($this->metadata->reveal());
@@ -116,7 +117,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             $properties[] = $property;
         }
 
-        $document = $this->prophesize(ContentBehavior::class);
+        $document = $this->prophesize(StructureBehavior::class);
         $this->documentRegistry->getNodeForDocument($document)->willReturn($this->node->reveal());
         $this->namespaceRegistry->getPrefix('system_localized')->willReturn('foo');
         $this->node->getProperties()->willReturn($properties);
