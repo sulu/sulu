@@ -17,7 +17,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
@@ -96,7 +95,7 @@ class XmlLoader extends XmlLegacyLoader
             $component = new ComponentMetadata();
             $component->name = $name;
             foreach ($type['properties'] as $propertyName => $propertyData) {
-                $property = new Property();
+                $property = new PropertyMetadata();
                 $property->name = $propertyName;
                 $this->mapProperty($property, $propertyData);
                 $component->addChild($property);
@@ -107,7 +106,7 @@ class XmlLoader extends XmlLegacyLoader
         return $blockProperty;
     }
 
-    private function mapProperty(Property $property, $data)
+    private function mapProperty(PropertyMetadata $property, $data)
     {
         $data = $this->normalizePropertyData($data);
         $property->type = $data['type'];

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-class PropertyMetadata extends Item
+class PropertyMetadata extends ItemMetadata
 {
     /**
      * Type of this property (e.g. "text_line", "smart_content")
