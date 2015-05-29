@@ -8258,21 +8258,22 @@ a.btn-black, a.btn-highlight {
   border-width: 1px 1px 1px 0;
 }
 /* line 75, ../scss/modules/toolbar.scss */
-.group .toolbar-item:first-child {
+.group .toolbar-item:first-child, .group .toolbar-item:first-child.hidden + .toolbar-item {
   border-radius: 3px 0 0 3px;
   border-width: 1px;
 }
-/* line 79, ../scss/modules/toolbar.scss */
+/* line 80, ../scss/modules/toolbar.scss */
 .group .toolbar-item:last-child {
-  border-radius: 0 3px 3px 0;
+  border-top-right-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
 }
-/* line 82, ../scss/modules/toolbar.scss */
+/* line 84, ../scss/modules/toolbar.scss */
 .group .toolbar-item:only-child {
   border-radius: 3px;
 }
 
 /** styles for the toolbar-items **/
-/* line 89, ../scss/modules/toolbar.scss */
+/* line 91, ../scss/modules/toolbar.scss */
 .toolbar-item {
   min-width: 50px;
   float: left;
@@ -8284,103 +8285,103 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   /** link styling **/
 }
-/* line 99, ../scss/modules/toolbar.scss */
+/* line 101, ../scss/modules/toolbar.scss */
 .toolbar-item.dropdown {
   position: relative;
   display: block;
   list-style: none;
   float: left;
 }
-/* line 106, ../scss/modules/toolbar.scss */
+/* line 108, ../scss/modules/toolbar.scss */
 .toolbar-item .dropdown-toggle::after {
   top: -3px;
 }
-/* line 110, ../scss/modules/toolbar.scss */
+/* line 112, ../scss/modules/toolbar.scss */
 .toolbar-item .item-loader {
   display: inline-block;
   height: 20px;
   margin-top: 4px;
 }
-/* line 116, ../scss/modules/toolbar.scss */
+/* line 118, ../scss/modules/toolbar.scss */
 .toolbar-item.disabled:hover, .toolbar-item.disabled {
   background-color: inherit;
   cursor: default;
 }
-/* line 120, ../scss/modules/toolbar.scss */
+/* line 122, ../scss/modules/toolbar.scss */
 .toolbar-item.disabled:hover a, .toolbar-item.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 126, ../scss/modules/toolbar.scss */
+/* line 128, ../scss/modules/toolbar.scss */
 .toolbar-item.hidden {
   display: none;
 }
-/* line 130, ../scss/modules/toolbar.scss */
+/* line 132, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight {
   background-color: #52B6CA;
   border-color: transparent;
 }
-/* line 134, ../scss/modules/toolbar.scss */
+/* line 136, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight.disabled:hover, .toolbar-item.highlight.disabled {
   background-color: #ccc;
   border-color: transparent;
   cursor: default;
 }
-/* line 139, ../scss/modules/toolbar.scss */
+/* line 141, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight.disabled:hover a, .toolbar-item.highlight.disabled a {
   cursor: default;
   color: #1e1e1e;
 }
-/* line 145, ../scss/modules/toolbar.scss */
+/* line 147, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight:hover {
   background-color: #5ebbce;
 }
-/* line 148, ../scss/modules/toolbar.scss */
+/* line 150, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight:active {
   background-color: #66bed0;
 }
-/* line 152, ../scss/modules/toolbar.scss */
+/* line 154, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight > a {
   color: #fff;
 }
-/* line 155, ../scss/modules/toolbar.scss */
+/* line 157, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight > a.dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 160, ../scss/modules/toolbar.scss */
+/* line 162, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight.is-expanded {
   background-color: #52B6CA;
 }
-/* line 165, ../scss/modules/toolbar.scss */
+/* line 167, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight-gray {
   background-color: #ccc;
   border-color: transparent;
 }
-/* line 169, ../scss/modules/toolbar.scss */
+/* line 171, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight-gray:hover {
   background-color: #ccc;
 }
-/* line 172, ../scss/modules/toolbar.scss */
+/* line 174, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight-gray:active {
   background-color: #ccc;
 }
-/* line 178, ../scss/modules/toolbar.scss */
+/* line 180, ../scss/modules/toolbar.scss */
 .toolbar-item.is-expanded {
   background-color: #ccc;
 }
-/* line 181, ../scss/modules/toolbar.scss */
+/* line 183, ../scss/modules/toolbar.scss */
 .toolbar-item.is-expanded ul.toolbar-dropdown-menu {
   display: block;
 }
-/* line 186, ../scss/modules/toolbar.scss */
+/* line 188, ../scss/modules/toolbar.scss */
 .toolbar-item:hover {
   background-color: #ccc;
 }
-/* line 189, ../scss/modules/toolbar.scss */
+/* line 191, ../scss/modules/toolbar.scss */
 .toolbar-item:active {
   background-color: #c4c4c4;
 }
-/* line 194, ../scss/modules/toolbar.scss */
+/* line 196, ../scss/modules/toolbar.scss */
 .toolbar-item a {
   text-align: center;
   color: black;
@@ -8393,26 +8394,26 @@ a.btn-black, a.btn-highlight {
   width: 100%;
   min-width: 50px;
 }
-/* line 206, ../scss/modules/toolbar.scss */
+/* line 208, ../scss/modules/toolbar.scss */
 .toolbar-item a .icon, .toolbar-item a.icon {
   font-size: 16px;
   padding-right: 0px;
   display: inline-block;
 }
-/* line 212, ../scss/modules/toolbar.scss */
+/* line 214, ../scss/modules/toolbar.scss */
 .toolbar-item a .title {
   font-size: 12px;
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 221, ../scss/modules/toolbar.scss */
+/* line 223, ../scss/modules/toolbar.scss */
 .toolbar-item .icon + .title:not(:empty) {
   padding-left: 10px;
 }
 
 /**  dropdown styles **/
-/* line 226, ../scss/modules/toolbar.scss */
+/* line 228, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu {
   background-color: white;
   border: 1px solid #ccc;
@@ -8433,12 +8434,12 @@ a.btn-black, a.btn-highlight {
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
-/* line 247, ../scss/modules/toolbar.scss */
+/* line 249, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 252, ../scss/modules/toolbar.scss */
+/* line 254, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li {
   display: list-item;
   float: none;
@@ -8451,22 +8452,22 @@ a.btn-black, a.btn-highlight {
   left: 0;
   padding: 0 20px;
 }
-/* line 265, ../scss/modules/toolbar.scss */
+/* line 267, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li a {
   color: black;
   text-decoration: none;
   padding: 0;
 }
-/* line 271, ../scss/modules/toolbar.scss */
+/* line 273, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.is-selected, .toolbar-dropdown-menu li:hover {
   background-color: #52B6CA;
   color: #fff;
 }
-/* line 275, ../scss/modules/toolbar.scss */
+/* line 277, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.is-selected a, .toolbar-dropdown-menu li:hover a {
   color: #fff;
 }
-/* line 281, ../scss/modules/toolbar.scss */
+/* line 283, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.marked::before {
   content: "";
   display: block;
@@ -8475,64 +8476,64 @@ a.btn-black, a.btn-highlight {
   left: 7px;
   font-size: 12px;
 }
-/* line 292, ../scss/modules/toolbar.scss */
+/* line 294, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.disabled:hover, .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 296, ../scss/modules/toolbar.scss */
+/* line 298, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.disabled:hover a, .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 302, ../scss/modules/toolbar.scss */
+/* line 304, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li:active {
   background-color: #66bed0;
 }
-/* line 306, ../scss/modules/toolbar.scss */
+/* line 308, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #ddd;
 }
-/* line 313, ../scss/modules/toolbar.scss */
+/* line 315, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 327, ../scss/modules/toolbar.scss */
+/* line 329, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item {
   background-color: #b4dfe8;
   border-color: #52B6CA;
 }
-/* line 331, ../scss/modules/toolbar.scss */
+/* line 333, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight {
   background-color: #E8CE33;
 }
-/* line 333, ../scss/modules/toolbar.scss */
+/* line 335, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight > a {
   color: #000;
 }
-/* line 338, ../scss/modules/toolbar.scss */
+/* line 340, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight-white {
   background-color: #fff;
 }
-/* line 340, ../scss/modules/toolbar.scss */
+/* line 342, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight-white .title {
   text-align: left;
 }
-/* line 345, ../scss/modules/toolbar.scss */
+/* line 347, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled, .blueish .toolbar-item.disabled:hover {
   background-color: #b4dfe8;
   border-color: #52B6CA;
 }
-/* line 349, ../scss/modules/toolbar.scss */
+/* line 351, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a, .blueish .toolbar-item.disabled:hover a {
   color: #fff;
 }
-/* line 351, ../scss/modules/toolbar.scss */
+/* line 353, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a.dropdown-toggle::after, .blueish .toolbar-item.disabled:hover a.dropdown-toggle::after {
   border-top-color: #fff;
 }
@@ -11190,17 +11191,17 @@ a.btn-black, a.btn-highlight {
   display: block;
 }
 
-/* line 23, ../scss/modules/data-navigation.scss */
+/* line 22, ../scss/modules/data-navigation.scss */
 .data-navigation-search {
   margin: 20px 40px;
 }
 
-/* line 27, ../scss/modules/data-navigation.scss */
+/* line 26, ../scss/modules/data-navigation.scss */
 .data-navigation-list-scroll {
   position: relative;
 }
 
-/* line 31, ../scss/modules/data-navigation.scss */
+/* line 30, ../scss/modules/data-navigation.scss */
 .data-navigation-header {
   position: relative;
   height: 50px;
@@ -11209,25 +11210,25 @@ a.btn-black, a.btn-highlight {
   font-size: 16px;
   color: #999;
 }
-/* line 39, ../scss/modules/data-navigation.scss */
+/* line 38, ../scss/modules/data-navigation.scss */
 .data-navigation-header .root-text {
   padding-left: 20px;
 }
 
-/* line 44, ../scss/modules/data-navigation.scss */
+/* line 43, ../scss/modules/data-navigation.scss */
 .data-navigation-list-container {
   height: calc(100% - 50px);
-  overflow: scroll;
+  overflow: auto;
   position: relative;
 }
 
-/* line 50, ../scss/modules/data-navigation.scss */
+/* line 49, ../scss/modules/data-navigation.scss */
 .data-navigation-list {
   width: 100%;
   height: 100%;
   background-color: #111417;
 }
-/* line 55, ../scss/modules/data-navigation.scss */
+/* line 54, ../scss/modules/data-navigation.scss */
 .data-navigation-list.is-animated {
   position: absolute;
   top: 0;
@@ -11235,14 +11236,14 @@ a.btn-black, a.btn-highlight {
   z-index: 5;
 }
 
-/* line 63, ../scss/modules/data-navigation.scss */
+/* line 62, ../scss/modules/data-navigation.scss */
 .data-navigation-list-footer {
   display: none;
   padding: 10px 0;
   text-align: center;
 }
 
-/* line 69, ../scss/modules/data-navigation.scss */
+/* line 68, ../scss/modules/data-navigation.scss */
 .data-navigation-items {
   height: 100%;
   min-height: calc(100% - 150px);
@@ -11251,7 +11252,7 @@ a.btn-black, a.btn-highlight {
   list-style: none;
   overflow: auto;
 }
-/* line 77, ../scss/modules/data-navigation.scss */
+/* line 76, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li {
   position: relative;
   height: 50px;
@@ -11262,24 +11263,24 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
   cursor: pointer;
 }
-/* line 87, ../scss/modules/data-navigation.scss */
+/* line 86, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li:hover {
   background-color: #21272E;
 }
-/* line 91, ../scss/modules/data-navigation.scss */
+/* line 90, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li:focus {
   outline: 0;
 }
-/* line 95, ../scss/modules/data-navigation.scss */
+/* line 94, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li.not-selectable {
   cursor: default;
 }
-/* line 98, ../scss/modules/data-navigation.scss */
+/* line 97, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li.not-selectable:hover {
   background-color: initial;
 }
 
-/* line 105, ../scss/modules/data-navigation.scss */
+/* line 104, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name {
   display: inline-block;
   width: calc(100% - 45px);
@@ -11287,7 +11288,7 @@ a.btn-black, a.btn-highlight {
   overflow: hidden;
   padding-left: 5px;
 }
-/* line 112, ../scss/modules/data-navigation.scss */
+/* line 111, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name .fa-chevron-right {
   position: absolute;
   right: 10px;
@@ -11296,7 +11297,7 @@ a.btn-black, a.btn-highlight {
   color: #999;
 }
 
-/* line 121, ../scss/modules/data-navigation.scss */
+/* line 120, ../scss/modules/data-navigation.scss */
 .data-navigation-item-thumb {
   position: relative;
   top: 6px;
@@ -11311,15 +11312,15 @@ a.btn-black, a.btn-highlight {
   background-repeat: no-repeat;
 }
 
-/* line 135, ../scss/modules/data-navigation.scss */
+/* line 134, ../scss/modules/data-navigation.scss */
 .data-navigation-back {
   height: 50px;
 }
-/* line 138, ../scss/modules/data-navigation.scss */
+/* line 137, ../scss/modules/data-navigation.scss */
 .data-navigation-back:focus {
   outline: 0;
 }
-/* line 142, ../scss/modules/data-navigation.scss */
+/* line 141, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back {
   position: absolute;
   font-size: 14px;
@@ -11330,12 +11331,12 @@ a.btn-black, a.btn-highlight {
   padding-top: 17px;
   padding-left: 22px;
 }
-/* line 153, ../scss/modules/data-navigation.scss */
+/* line 152, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back:hover {
   background-color: #21272E;
   padding-bottom: 5px;
 }
-/* line 159, ../scss/modules/data-navigation.scss */
+/* line 158, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-text {
   margin-left: 60px;
   padding-right: 20px;
@@ -11344,14 +11345,14 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
 }
 
-/* line 170, ../scss/modules/data-navigation.scss */
+/* line 169, ../scss/modules/data-navigation.scss */
 .data-navigation-add .fa-plus-circle {
   margin-right: 5px;
   float: left;
   font-size: 16px;
 }
 
-/* line 177, ../scss/modules/data-navigation.scss */
+/* line 176, ../scss/modules/data-navigation.scss */
 .data-navigation-loader-container {
   position: absolute;
   width: 100%;
@@ -11361,14 +11362,14 @@ a.btn-black, a.btn-highlight {
   padding: 4px 0;
 }
 
-/* line 186, ../scss/modules/data-navigation.scss */
+/* line 185, ../scss/modules/data-navigation.scss */
 .data-navigation-info {
   text-align: center;
   line-height: 50px;
   height: calc(100% - 150px);
 }
 
-/* line 192, ../scss/modules/data-navigation.scss */
+/* line 191, ../scss/modules/data-navigation.scss */
 .data-navigation-info-empty {
   color: #999;
   font-size: 14px;
