@@ -14,9 +14,9 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Event\ContentNodeEvent;
-use Sulu\Component\Content\Structure;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * Listen to sulu node save event and index the structure.
