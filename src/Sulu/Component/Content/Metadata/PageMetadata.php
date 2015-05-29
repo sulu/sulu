@@ -20,7 +20,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * This structure represents a page in the CMS.
  */
-abstract class Page extends Structure implements PageInterface
+abstract class PageMetadata extends Structure implements PageInterface
 {
     /**
      * template to render content.
