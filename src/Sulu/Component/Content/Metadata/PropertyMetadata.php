@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Structure;
 
-class Property extends Item
+class PropertyMetadata extends Item
 {
     /**
      * Type of this property (e.g. "text_line", "smart_content")
