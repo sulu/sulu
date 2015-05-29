@@ -6,7 +6,7 @@
     <services>
 
         <!-- Subscribers -->
-        <service id="sulu_content.document.subscriber.content" class="Sulu\Component\Content\Document\Subscriber\ContentSubscriber">
+        <service id="sulu_content.document.subscriber.content" class="Sulu\Component\Content\Document\Subscriber\StructureSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
@@ -98,7 +98,7 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.behavior.remove_content" class="Sulu\Component\Content\Document\Subscriber\ContentRemoveSubscriber">
+        <service id="sulu_document_manager.subscriber.behavior.remove_content" class="Sulu\Component\Content\Document\Subscriber\StructureRemoveSubscriber">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />

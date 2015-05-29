@@ -31,7 +31,7 @@ use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -217,9 +217,9 @@ class ContentMapper implements ContentMapperInterface
             $document = $this->documentManager->create($documentAlias);
         }
 
-        if (!$document instanceof ContentBehavior) {
+        if (!$document instanceof StructureBehavior) {
             throw new \RuntimeException(sprintf(
-                'The content mapper can only be used to save documents implementing the ContentBehavior interface, got: "%s"',
+                'The content mapper can only be used to save documents implementing the StructureBehavior interface, got: "%s"',
                 get_class($document)
             ));
         }
@@ -556,7 +556,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->inspector->getParent($document);
         $documentDepth = $this->inspector->getDepth($document);
 
-        while ($document instanceof ContentBehavior && $documentDepth >= $contentDepth) {
+        while ($document instanceof StructureBehavior && $documentDepth >= $contentDepth) {
             $documents[] = $document;
 
             $document = $this->inspector->getParent($document);
@@ -1211,7 +1211,7 @@ class ContentMapper implements ContentMapperInterface
     {
         $collection = array();
         foreach ($documents as $document) {
-            if (!$document instanceof ContentBehavior) {
+            if (!$document instanceof StructureBehavior) {
                 continue;
             }
 

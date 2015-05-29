@@ -5,9 +5,9 @@ namespace Sulu\Bundle\SnippetBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sulu\Bundle\ContentBundle\Form\Type\AbstractContentBehaviorType;
+use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
 
-class SnippetType extends AbstractContentBehaviorType
+class SnippetType extends AbstractStructureBehaviorType
 {
     /**
      * {@inheritDoc}

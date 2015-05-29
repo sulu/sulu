@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -73,7 +73,7 @@ class ContentSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof ContentBehavior) {
+        if (!$document instanceof StructureBehavior) {
             return;
         }
 
@@ -89,7 +89,7 @@ class ContentSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof ContentBehavior) {
+        if (!$document instanceof StructureBehavior) {
             return;
         }
 
