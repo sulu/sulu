@@ -10,30 +10,30 @@
 
 namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 
+use DTL\DecoratorGenerator\DecoratorFactory;
+use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Metadata\Driver\AdvancedDriverInterface;
-use Massive\Bundle\SearchBundle\Search\Field;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
-use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
-use Sulu\Component\Content\Document\ContentInstanceFactory;
-use DTL\DecoratorGenerator\DecoratorFactory;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
-use Sulu\Component\DocumentManager\Metadata;
-use Massive\Bundle\SearchBundle\Search\Document;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\ContentInstanceFactory;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -65,13 +65,13 @@ class StructureProvider implements ProviderInterface
     /**
      * @param Factory $factory
      * @param MetadataFactory $metadataFactory
-     * @param StructureFactory $structureFactory
+     * @param StructureMetadataFactory $structureFactory
      * @param array $mapping
      */
     public function __construct(
         Factory $factory,
         MetadataFactory $metadataFactory,
-        StructureFactory $structureFactory,
+        StructureMetadataFactory $structureFactory,
         array $mapping = array()
     ) {
         $this->factory = $factory;
@@ -98,7 +98,7 @@ class StructureProvider implements ProviderInterface
         return $this->getMetadata($documentMetadata, $structure);
     }
 
-    public function getMetadata(Metadata $documentMetadata, Structure $structure)
+    public function getMetadata(Metadata $documentMetadata, StructureMetadata $structure)
     {
         $classMetadata = $this->factory->createClassMetadata($documentMetadata->getClass());
         $class = new \ReflectionClass($documentMetadata->getClass());
