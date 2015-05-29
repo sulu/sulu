@@ -13,7 +13,10 @@ namespace Sulu\Component\Content\Structure;
 
 use Sulu\Component\Content\Structure\Item;
 
-class Item
+/**
+ * Base class for all structure related metadata classes.
+ */
+abstract class ItemMetadata
 {
     /**
      * Name of this item

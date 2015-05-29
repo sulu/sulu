@@ -15,7 +15,7 @@ namespace Sulu\Component\Content\Structure;
  *
  * TODO: Components are basically Snippets, but Snippets are loaded as Structures
  */
-class Block extends Property
+class BlockMetadata extends Property
 {
     public $components = array();
     public $defaultComponentName;
