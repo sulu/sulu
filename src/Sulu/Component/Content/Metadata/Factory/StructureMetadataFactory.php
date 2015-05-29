@@ -20,7 +20,7 @@ use Doctrine\Common\Inflector\Inflector;
 /**
  * Create new (mapped) structures using the provided loader.
  */
-class StructureFactory implements StructureMetadataFactoryInterface
+class StructureMetadataFactory implements StructureMetadataFactoryInterface
 {
     /**
      * @var array
