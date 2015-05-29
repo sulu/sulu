@@ -18,7 +18,7 @@ use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-abstract class BasePageDocumentType extends AbstractContentBehaviorType
+abstract class BasePageDocumentType extends AbstractStructureBehaviorType
 {
     /**
      * @var SessionManagerInterface

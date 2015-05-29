@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -24,7 +24,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->registry = $this->prophesize(DocumentRegistry::class);
 
-        $this->document = $this->prophesize(ContentBehavior::class)->willImplement(WebspaceBehavior::class);
+        $this->document = $this->prophesize(StructureBehavior::class)->willImplement(WebspaceBehavior::class);
         $this->webspace = $this->prophesize(Webspace::class);
         $this->localization1 = $this->prophesize(Localization::class);
         $this->localization2 = $this->prophesize(Localization::class);
@@ -47,7 +47,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early if not implementing ContentBehavior
+     * It should return early if not implementing StructureBehavior
      */
     public function testReturnEarly()
     {

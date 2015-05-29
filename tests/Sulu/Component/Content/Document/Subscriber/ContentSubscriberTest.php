@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
@@ -175,7 +175,7 @@ class ContentSubscriberTest extends SubscriberTestCase
 
 }
 
-class TestContentDocument implements ContentBehavior
+class TestContentDocument implements StructureBehavior
 {
     private $structureType;
     private $content;
