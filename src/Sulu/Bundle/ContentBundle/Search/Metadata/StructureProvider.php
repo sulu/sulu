@@ -166,7 +166,7 @@ class StructureProvider implements ProviderInterface
                     array(
                         'type' => 'string',
                         'field' => $this->factory->createMetadataField('title'),
-                        'aggregated' => true,
+                        'aggregate' => true,
                         'indexed' => false,
                     )
                 );
@@ -256,7 +256,7 @@ class StructureProvider implements ProviderInterface
                     $metadata->addFieldMapping($property->getName(), array(
                         'field' => $this->getContentField($property),
                         'type' => 'string',
-                        'aggregated' => true,
+                        'aggregate' => true,
                         'indexed' => false,
                     ));
                     break;
@@ -265,7 +265,7 @@ class StructureProvider implements ProviderInterface
                     $metadata->addFieldMapping($property->getName(), array(
                         'field' => $this->getContentField($property),
                         'type' => 'string',
-                        'aggregated' => true,
+                        'aggregate' => true,
                         'indexed' => false,
                     ));
                     break;
@@ -291,7 +291,7 @@ class StructureProvider implements ProviderInterface
                 array(
                     'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                     'field' => $this->getContentField($property),
-                    'aggregated' => true,
+                    'aggregate' => true,
                     'indexed' => false,
                 )
             );
