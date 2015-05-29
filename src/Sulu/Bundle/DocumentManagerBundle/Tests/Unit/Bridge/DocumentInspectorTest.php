@@ -17,7 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use PHPCR\PropertyInterface;
@@ -34,7 +34,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->document = new \stdClass;
         $this->node = $this->prophesize(NodeInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
-        $this->structureFactory = $this->prophesize(StructureFactoryInterface::class);
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
         $this->metadata = $this->prophesize(Metadata::class);
         $this->proxyFactory = $this->prophesize(ProxyFactory::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);

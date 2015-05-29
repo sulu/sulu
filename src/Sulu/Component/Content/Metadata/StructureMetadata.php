@@ -9,13 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Structure\Section;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
-class Structure extends Item
+class StructureMetadata extends ItemMetadata
 {
     /**
      * The resource from which this structure was loaded
@@ -52,7 +52,7 @@ class Structure extends Item
      * Return all direct child properties of this structure, ignoring
      * Sections
      *
-     * @return Property[]
+     * @return PropertyMetadata[]
      */
     public function getProperties($flatten = false)
     {
@@ -62,7 +62,7 @@ class Structure extends Item
 
         $properties = array();
         foreach ($this->children as $child) {
-            if ($child instanceof Section) {
+            if ($child instanceof SectionMetadata) {
                 $properties = array_merge($properties, $child->getChildren());
                 continue;
             }

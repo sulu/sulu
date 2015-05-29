@@ -2,10 +2,10 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -14,10 +14,10 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->factory = $this->prophesize(StructureFactory::class);
+        $this->factory = $this->prophesize(StructureMetadataFactory::class);
         $this->extensionManager = $this->prophesize(ExtensionManager::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
-        $this->structure = $this->prophesize(Structure::class);
+        $this->structure = $this->prophesize(StructureMetadata::class);
         $this->extension = $this->prophesize(ExtensionInterface::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
 

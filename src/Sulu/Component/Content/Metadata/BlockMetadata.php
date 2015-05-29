@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
 /**
- * Block -- dynamic set of properties
+ * Blocks represents a choice of sub structures
  *
  * TODO: Components are basically Snippets, but Snippets are loaded as Structures
  */
-class Block extends Property
+class BlockMetadata extends PropertyMetadata
 {
     public $components = array();
     public $defaultComponentName;
@@ -43,7 +43,7 @@ class Block extends Property
         return $this->components;
     }
 
-    public function addComponent(Component $item)
+    public function addComponent(ComponentMetadata $item)
     {
         $this->components[] = $item;
     }

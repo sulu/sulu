@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
-class Property extends Item
+class PropertyMetadata extends ItemMetadata
 {
     /**
      * Type of this property (e.g. "text_line", "smart_content")

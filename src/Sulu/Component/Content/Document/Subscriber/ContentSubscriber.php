@@ -18,7 +18,7 @@ use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface as DocumentMetadataFactory;
-use Sulu\Component\Content\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
@@ -43,7 +43,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
     /**
      * @param PropertyEncoder $encoder<
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureFactory $structureFactory
+     * @param StructureMetadataFactory $structureFactory
      */
     public function __construct(
         PropertyEncoder $encoder,

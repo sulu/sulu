@@ -9,20 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure\Loader;
+namespace Sulu\Component\Content\Metadata\Loader;
 
 use Exception;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
-use Sulu\Component\Content\Structure\Structure;
-use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Structure\Item;
-use Sulu\Component\Content\Structure\Section;
-use Sulu\Component\Content\Structure\Block\BlockProperty;
-use Sulu\Component\Content\Structure\Block\BlockPropertyType;
-use Sulu\Component\Content\Structure\Block;
-use Sulu\Component\Content\Structure\Component;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ComponentMetadata;
 
 /**
  * Load structure structure from an XML file
@@ -39,7 +36,7 @@ class XmlLoader extends XmlLegacyLoader
         $data = parent::load($resource, $type);
         $data = $this->normalizeStructureData($data);
 
-        $structure = new Structure();
+        $structure = new StructureMetadata();
         $structure->name = $data['key'];
         $structure->cacheLifetime = $data['cacheLifetime'];
         $structure->controller = $data['controller'];
@@ -68,7 +65,7 @@ class XmlLoader extends XmlLegacyLoader
             return $this->createSection($propertyName, $propertyData);
         }
 
-        $property = new Property();
+        $property = new PropertyMetadata();
         $property->name = $propertyName;
         $this->mapProperty($property, $propertyData);
 
@@ -77,7 +74,7 @@ class XmlLoader extends XmlLegacyLoader
 
     private function createSection($propertyName, $data)
     {
-        $section = new Section();
+        $section = new SectionMetadata();
         $section->name = $propertyName;
 
         foreach ($data['properties'] as $name => $property) {
@@ -89,16 +86,16 @@ class XmlLoader extends XmlLegacyLoader
 
     private function createBlock($propertyName, $data)
     {
-        $blockProperty = new Block();
+        $blockProperty = new BlockMetadata();
         $blockProperty->name = $propertyName;
         $blockProperty->defaultComponentName = $data['default-type'];
         $this->mapProperty($blockProperty, $data);
 
         foreach ($data['types'] as $name => $type) {
-            $component = new Component();
+            $component = new ComponentMetadata();
             $component->name = $name;
             foreach ($type['properties'] as $propertyName => $propertyData) {
-                $property = new Property();
+                $property = new PropertyMetadata();
                 $property->name = $propertyName;
                 $this->mapProperty($property, $propertyData);
                 $component->addChild($property);
@@ -109,7 +106,7 @@ class XmlLoader extends XmlLegacyLoader
         return $blockProperty;
     }
 
-    private function mapProperty(Property $property, $data)
+    private function mapProperty(PropertyMetadata $property, $data)
     {
         $data = $this->normalizePropertyData($data);
         $property->type = $data['type'];

@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Structure as LegacyStructure;
+use Sulu\Component\Content\Metadata as LegacyStructure;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Component\Form\FormEvent;

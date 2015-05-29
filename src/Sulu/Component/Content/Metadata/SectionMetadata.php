@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
-class Section extends Item
+class SectionMetadata extends ItemMetadata
 {
     /**
      * The number of grid columns the property should use in the admin interface

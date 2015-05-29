@@ -5,12 +5,12 @@ namespace Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Section\SectionProperty;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
-use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Metadata\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Structure\Section;
-use Sulu\Component\Content\Structure\Item;
-use Sulu\Component\Content\Structure\Block;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -59,13 +59,13 @@ class LegacyPropertyFactory
      * @param Item $item
      * @return PropertyInterface $property
      */
-    public function createProperty(Item $property, StructureInterface $structure = null)
+    public function createProperty(ItemMetadata $property, StructureInterface $structure = null)
     {
-        if ($property instanceof Section) {
+        if ($property instanceof SectionMetadata) {
             return $this->createSectionProperty($property, $structure);
         }
 
-        if ($property instanceof Block) {
+        if ($property instanceof BlockMetadata) {
             return $this->createBlockProperty($property, $structure);
         }
 
@@ -119,7 +119,7 @@ class LegacyPropertyFactory
         return $parameters;
     }
 
-    private function createSectionProperty(Section $property, StructureInterface $structure = null)
+    private function createSectionProperty(SectionMetadata $property, StructureInterface $structure = null)
     {
         $sectionProperty = new SectionProperty(
             $property->getName(),
@@ -137,7 +137,7 @@ class LegacyPropertyFactory
         return $sectionProperty;
     }
 
-    private function createBlockProperty(Block $property, StructureInterface $structure = null)
+    private function createBlockProperty(BlockMetadata $property, StructureInterface $structure = null)
     {
         $blockProperty = new BlockProperty(
             $property->getName(),

@@ -7,7 +7,7 @@ use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\Metadata;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
@@ -42,7 +42,7 @@ class DocumentInspector extends BaseDocumentInspector
         NamespaceRegistry $namespaceRegistry,
         ProxyFactory $proxyFactory,
         MetadataFactoryInterface $metadataFactory,
-        StructureFactoryInterface $structureFactory,
+        StructureMetadataFactoryInterface $structureFactory,
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager
     )
@@ -97,7 +97,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param ContentBehavior $document
      *
-     * @return Structure
+     * @return StructureMetadata
      */
     public function getStructure(ContentBehavior $document)
     {

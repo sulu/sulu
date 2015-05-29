@@ -2,20 +2,20 @@
 
 namespace Sulu\Component\Content\Document\Property;
 
-use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Structure\Structure;
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Structure\Property;
 use Prophecy\Argument;
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
+use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,11 +23,11 @@ class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
     {
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
-        $this->structure = $this->prophesize(Structure::class);
+        $this->structure = $this->prophesize(StructureMetadata::class);
         $this->document = $this->prophesize(ContentBehavior::class);
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);
-        $this->structureProperty = $this->prophesize(Property::class);
+        $this->structureProperty = $this->prophesize(PropertyMetadata::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->legacyProperty = $this->prophesize(PropertyInterface::class);

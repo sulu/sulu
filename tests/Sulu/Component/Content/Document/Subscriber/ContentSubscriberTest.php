@@ -17,9 +17,9 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
-use Sulu\Component\Content\Structure\Factory\StructureFactory;
-use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -37,11 +37,11 @@ class ContentSubscriberTest extends SubscriberTestCase
         parent::setUp();
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
 
-        $this->structureProperty = $this->prophesize(Property::class);
+        $this->structureProperty = $this->prophesize(PropertyMetadata::class);
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->propertyValue = $this->prophesize(PropertyValue::class);
         $this->legacyProperty = $this->prophesize(TranslatedProperty::class);
-        $this->structure = $this->prophesize(Structure::class);
+        $this->structure = $this->prophesize(StructureMetadata::class);
         $this->propertyContainer = $this->prophesize(PropertyContainer::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);

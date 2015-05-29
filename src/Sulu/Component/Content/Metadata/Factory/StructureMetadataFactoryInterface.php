@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Structure\Factory;
+namespace Sulu\Component\Content\Metadata\Factory;
 
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
@@ -17,7 +17,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\FileLocator;
 use Doctrine\Common\Inflector\Inflector;
 
-interface StructureFactoryInterface
+interface StructureMetadataFactoryInterface
 {
     /**
      * Return the structure of the given $type and $structureType

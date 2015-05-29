@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Component\Content\Structure\Item;
-
-class Item
+/**
+ * Base class for all structure related metadata classes.
+ */
+abstract class ItemMetadata
 {
     /**
      * Name of this item
@@ -115,7 +116,7 @@ class Item
      *
      * @param Item $child
      */
-    public function addChild(Item $child)
+    public function addChild(ItemMetadata $child)
     {
         if (isset($this->children[$child->name])) {
             throw new \InvalidArgumentException(sprintf(

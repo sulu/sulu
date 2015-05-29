@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Structure\Factory;
+namespace Sulu\Component\Content\Metadata\Factory;
 
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
@@ -20,7 +20,7 @@ use Doctrine\Common\Inflector\Inflector;
 /**
  * Create new (mapped) structures using the provided loader.
  */
-class StructureFactory implements StructureFactoryInterface
+class StructureMetadataFactory implements StructureMetadataFactoryInterface
 {
     /**
      * @var array
