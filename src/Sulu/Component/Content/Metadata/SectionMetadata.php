@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-class SectionMetadata extends Item
+class SectionMetadata extends ItemMetadata
 {
     /**
      * The number of grid columns the property should use in the admin interface

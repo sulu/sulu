@@ -2,20 +2,20 @@
 
 namespace Sulu\Component\Content\Compat\Block\Structure;
 
-use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Metadata\Property;
-use Sulu\Component\Content\Compat\PropertyInterface as LegacyPropertyInterface;
-use Sulu\Component\Content\Metadata\Section;
-use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
-use Sulu\Component\Content\Metadata\Block;
-use Sulu\Component\Content\Metadata\Component;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\Content\Compat\Metadata;
+use Sulu\Component\Content\Compat\PropertyInterface as LegacyPropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,11 +26,11 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
             $this->namespaceRegistry->reveal()
         );
 
-        $this->property = $this->prophesize(Property::class);
-        $this->property1 = $this->prophesize(Property::class);
-        $this->section = $this->prophesize(Section::class);
-        $this->block = $this->prophesize(Block::class);
-        $this->component = $this->prophesize(Component::class);
+        $this->property = $this->prophesize(PropertyMetadata::class);
+        $this->property1 = $this->prophesize(PropertyMetadata::class);
+        $this->section = $this->prophesize(SectionMetadata::class);
+        $this->block = $this->prophesize(BlockMetadata::class);
+        $this->component = $this->prophesize(ComponentMetadata::class);
     }
 
     /**

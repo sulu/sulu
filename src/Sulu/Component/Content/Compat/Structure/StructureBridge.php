@@ -18,14 +18,14 @@ use Sulu\Component\Content\Document\ContentDocumentInterface;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Metadata\Factory\StructureFactory;
-use Sulu\Component\Content\Metadata\Item;
-use Sulu\Component\Content\Metadata\Property as NewProperty;
-use Sulu\Component\Content\Metadata\Section;
-use Sulu\Component\Content\Metadata\Structure;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata as NewProperty;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
-use Sulu\Component\Content\Metadata\Block;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
@@ -33,7 +33,7 @@ use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 class StructureBridge implements StructureInterface
 {
     /**
-     * @var Structure
+     * @var StructureMetadata
      */
     protected $structure;
 
@@ -65,12 +65,12 @@ class StructureBridge implements StructureInterface
     private $locale;
 
     /**
-     * @param Structure         $structure
+     * @param StructureMetadata $structure
      * @param object $document
-     * @param PageUrlGenerator  $urlGenerator
+     * @param PageUrlGenerator $urlGenerator
      */
     public function __construct(
-        Structure $structure,
+        StructureMetadata $structure,
         DocumentInspector $inspector,
         LegacyPropertyFactory $propertyFactory,
         $document = null
