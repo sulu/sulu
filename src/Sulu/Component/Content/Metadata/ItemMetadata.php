@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Component\Content\Structure\Item;
+use Sulu\Component\Content\Metadata\Item;
 
 /**
  * Base class for all structure related metadata classes.

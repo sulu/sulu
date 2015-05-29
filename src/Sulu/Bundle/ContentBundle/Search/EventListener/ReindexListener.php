@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -28,11 +26,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
  */
 class ReindexListener
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
     /**
      * @var SearchManagerInterface
      */

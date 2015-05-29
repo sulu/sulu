@@ -9,18 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure\Loader;
+namespace Sulu\Component\Content\Metadata\Loader;
 
 use Exception;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
-use Sulu\Component\Content\Structure\StructureMetadata;
-use Sulu\Component\Content\Structure\PropertyMetadata;
-use Sulu\Component\Content\Structure\ItemMetadata;
-use Sulu\Component\Content\Structure\SectionMetadata;
-use Sulu\Component\Content\Structure\BlockMetadata;
-use Sulu\Component\Content\Structure\ComponentMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ComponentMetadata;
 
 /**
  * Load structure structure from an XML file

@@ -8,7 +8,7 @@
 * with this source code in the file LICENSE.
 */
 
-namespace Sulu\Component\Content\Structure\Loader\Exception;
+namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
 /**
  * Thrown when the xml definition of a template contains an error

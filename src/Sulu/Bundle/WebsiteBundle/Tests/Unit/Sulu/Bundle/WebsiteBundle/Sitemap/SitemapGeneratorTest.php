@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\MetadataExtension\StructureExtension;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Localization\Localization;
