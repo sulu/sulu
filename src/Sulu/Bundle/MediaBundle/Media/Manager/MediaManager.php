@@ -432,27 +432,25 @@ class MediaManager implements MediaManagerInterface
         }
 
         $mediaEntity->setChanger($user);
+        $mediaEntity->setChanged(new \DateTime());
 
         $files = $mediaEntity->getFiles();
         if (!isset($files[0])) {
             throw new FileNotFoundException('File was not found in media entity with the id . ' . $data['id']);
         }
 
-        /**
-         * @var File
-         */
+        /** @var File $file */
         $file = $files[0]; // currently a media can only have one file
 
         $file->setChanger($user);
+        $file->setChanged(new \DateTime());
 
         $version = $file->getVersion();
 
         $currentFileVersion = null;
 
-        /**
-         * @var FileVersion
-         */
         foreach ($file->getFileVersions() as $fileVersion) {
+            /**  @var FileVersion $fileVersion */
             if ($version == $fileVersion->getVersion()) {
                 $currentFileVersion = $fileVersion;
                 break;
@@ -485,7 +483,9 @@ class MediaManager implements MediaManagerInterface
             $fileVersion = clone($currentFileVersion);
             $this->em->persist($fileVersion);
 
+            $fileVersion->setChanged(new \DateTime());
             $fileVersion->setChanger($user);
+            $fileVersion->setCreated(new \DateTime());
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
 
@@ -508,6 +508,7 @@ class MediaManager implements MediaManagerInterface
             $data['version'] = null;
             $data['mimeType'] = null;
             $data['storageOptions'] = null;
+            $data['changed'] = date('Y-m-d H:i:s');
         }
 
         $media = new Media($mediaEntity, $data['locale'], null);
@@ -637,9 +638,6 @@ class MediaManager implements MediaManagerInterface
                     case 'url':
                         $media->setUrl($value);
                         break;
-                    case 'versionUrls':
-                        $media->setVersionUrls($value);
-                        break;
                     case 'formats':
                         $media->setFormats($value);
                         break;
@@ -665,6 +663,7 @@ class MediaManager implements MediaManagerInterface
                         $media->setProperties($value);
                         break;
                     case 'changed':
+                        $media->setChanged($value);
                         break;
                     case 'created':
                         break;

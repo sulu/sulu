@@ -622,6 +622,21 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param \DateTime|string $changed
+     *
+     * @return $this
+     */
+    public function setChanged($changed)
+    {
+        if (is_string($changed)) {
+            $changed = new \DateTime($changed);
+        }
+        $this->getFileVersion()->setChanged($changed);
+
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @SerializedName("changed")
      *
@@ -668,7 +683,7 @@ class Media extends ApiWrapper
      */
     public function getCreated()
     {
-        return $this->getFileVersion()->getCreated();
+        return $this->entity->getCreated();
     }
 
     /**
