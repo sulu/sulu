@@ -15,7 +15,6 @@ use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Api\Contact as ApiContact;
-use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -33,11 +32,14 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\RestController;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 
 /**
  * Makes contacts available through a REST API.
  */
-class ContactController extends AbstractContactController implements SecuredControllerInterface
+class ContactController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
@@ -76,6 +78,14 @@ class ContactController extends AbstractContactController implements SecuredCont
     protected $fieldDescriptors;
 
     protected $accountContactFieldDescriptors;
+
+    /**
+     * @return RestHelperInterface
+     */
+    protected function getRestHelper()
+    {
+        return $this->get('sulu_core.doctrine_rest_helper');
+    }
 
     protected function getFieldDescriptors()
     {
@@ -163,7 +173,8 @@ class ContactController extends AbstractContactController implements SecuredCont
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     self::$entityName . '.accountContacts',
-                    self::$accountContactEntityName . '.main = true', 'LEFT'
+                    self::$accountContactEntityName . '.main = true',
+                    'LEFT'
                 ),
                 $this->getAccountEntityName() => new DoctrineJoinDescriptor(
                     $this->getAccountEntityName(),
@@ -183,7 +194,8 @@ class ContactController extends AbstractContactController implements SecuredCont
                 self::$contactAddressEntityName => new DoctrineJoinDescriptor(
                     self::$contactAddressEntityName,
                     self::$entityName . '.contactAddresses',
-                    self::$contactAddressEntityName . '.main = true', 'LEFT'
+                    self::$contactAddressEntityName . '.main = true',
+                    'LEFT'
                 ),
                 self::$addressEntityName => new DoctrineJoinDescriptor(
                     self::$addressEntityName,
@@ -592,108 +604,31 @@ class ContactController extends AbstractContactController implements SecuredCont
      */
     public function postAction(Request $request)
     {
-        $firstName = $request->get('firstName');
-        $lastName = $request->get('lastName');
-        $disabled = $request->get('disabled');
-        $formOfAddress = $request->get('formOfAddress');
-
         try {
-            if ($firstName == null) {
-                throw new RestException('There is no first name for the contact');
-            }
-            if ($lastName == null) {
-                throw new RestException('There is no last name for the contact');
-            }
-            if (is_null($disabled)) {
-                throw new RestException('There is no disabled flag for the contact');
-            }
-            if (is_null($formOfAddress) || !array_key_exists('id', $formOfAddress)) {
-                throw new RestException('There is no form of address for the contact');
-            }
-
-            $em = $this->getDoctrine()->getManager();
-
-            // Standard contact fields
-            $contact = new Contact();
-            $contact->setFirstName($firstName);
-            $contact->setLastName($lastName);
-
-            $this->setTitleOnContact($contact, $request->get('title'));
-
-            $parentData = $request->get('account');
-            if ($parentData != null &&
-                $parentData['id'] != null &&
-                $parentData['id'] != 'null' &&
-                $parentData['id'] != ''
-            ) {
-                /** @var AccountInterface $parent */
-                $parent = $this->getDoctrine()
-                    ->getRepository($this->getAccountEntityName())
-                    ->findAccountById($parentData['id']);
-
-                if (!$parent) {
-                    throw new EntityNotFoundException($this->getAccountEntityName(), $parentData['id']);
-                }
-
-                // Set position on contact
-                $position = $this->getContactManager()->getPosition($request->get('position'));
-
-                // create new account-contact relation
-                $this->getContactManager()->createMainAccountContact($contact, $parent, $position);
-            }
-            $birthday = $request->get('birthday');
-            if (!empty($birthday)) {
-                $contact->setBirthday(new DateTime($birthday));
-            }
-
-            $contact->setFormOfAddress($formOfAddress['id']);
-
-            $contact->setDisabled($disabled);
-
-            $salutation = $request->get('salutation');
-            if (!empty($salutation)) {
-                $contact->setSalutation($salutation);
-            }
-
-            // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-            $this->addNewContactRelations($contact, $request);
-            $this->processCategories($contact, $request->get('categories', array()));
-
-            $em->persist($contact);
-            $em->flush();
-
-            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $this->checkArguments($request);
+            $contact = $this->getContactManager()->save(
+                $request->request->all()
+            );
+            $apiContact = $this->getContactManager()->getContact(
+                $contact,
+                $this->getLocale($request)
+            );
             $view = $this->view($apiContact, 200);
             $view->setSerializationContext(
                 SerializationContext::create()->setGroups(
                     static::$contactSerializationGroups
                 )
             );
+
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
+        } catch (MissingArgumentException $maex) {
+            $view = $this->view($maex->toArray(), 400);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * @param $contact
-     * @param $titleId
-     */
-    private function setTitleOnContact($contact, $titleId)
-    {
-        if ($titleId && is_numeric($titleId)) {
-            $title = $this->getDoctrine()->getRepository(
-                self::$titleEntityName
-            )->find($titleId);
-            if ($title) {
-                $contact->setTitle($title);
-            }
-        } else {
-            $contact->setTitle(null);
-        }
     }
 
     /**
@@ -707,6 +642,7 @@ class ContactController extends AbstractContactController implements SecuredCont
         $contactEntity = 'SuluContactBundle:Contact';
 
         try {
+            $contactManager = $this->getContactManager();
             /** @var Contact $contact */
             $contact = $this->getDoctrine()
                 ->getRepository($contactEntity)
@@ -722,20 +658,20 @@ class ContactController extends AbstractContactController implements SecuredCont
                 $contact->setLastName($request->get('lastName'));
 
                 // Set title relation on contact
-                $this->setTitleOnContact($contact, $request->get('title'));
+                $contactManager->setTitleOnContact($contact, $request->get('title'));
 
                 $this->getContactManager()->setMainAccount($contact, $request->request->all());
 
                 // process details
-                if (!($this->processEmails($contact, $request->get('emails', array()))
-                    && $this->processPhones($contact, $request->get('phones', array()))
-                    && $this->processAddresses($contact, $request->get('addresses', array()))
-                    && $this->processNotes($contact, $request->get('notes', array()))
-                    && $this->processFaxes($contact, $request->get('faxes', array()))
-                    && $this->processTags($contact, $request->get('tags', array()))
-                    && $this->processUrls($contact, $request->get('urls', array()))
-                    && $this->processCategories($contact, $request->get('categories', array()))
-                    && $this->processBankAccounts($contact, $request->get('bankAccounts', array())))
+                if (!($contactManager->processEmails($contact, $request->get('emails', array()))
+                    && $contactManager->processPhones($contact, $request->get('phones', array()))
+                    && $contactManager->processAddresses($contact, $request->get('addresses', array()))
+                    && $contactManager->processNotes($contact, $request->get('notes', array()))
+                    && $contactManager->processFaxes($contact, $request->get('faxes', array()))
+                    && $contactManager->processTags($contact, $request->get('tags', array()))
+                    && $contactManager->processUrls($contact, $request->get('urls', array()))
+                    && $contactManager->processCategories($contact, $request->get('categories', array()))
+                    && $contactManager->processBankAccounts($contact, $request->get('bankAccounts', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -814,5 +750,23 @@ class ContactController extends AbstractContactController implements SecuredCont
     public function getSecurityContext()
     {
         return 'sulu.contact.people';
+    }
+
+    // TODO: Use schema validation see:
+    // https://github.com/sulu-io/sulu/issues/1136
+    private function checkArguments(Request $request)
+    {
+        if ($request->get('firstName') == null) {
+            throw new MissingArgumentException(static::$entityName, 'username');
+        }
+        if ($request->get('lastName') === null) {
+            throw new MissingArgumentException(static::$entityName, 'password');
+        }
+        if (is_null($request->get('disabled'))) {
+            throw new MissingArgumentException(static::$entityName, 'disabled');
+        }
+        if ($request->get('formOfAddress') == null) {
+            throw new MissingArgumentException(static::$entityName, 'contact');
+        }
     }
 }

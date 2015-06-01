@@ -668,7 +668,10 @@ class ContactControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('There is no disabled flag for the contact', $response->message);
+        $this->assertEquals(
+            'The "SuluContactBundle:Contact"-entity requires a "disabled"-argument',
+            $response->message
+        );
     }
 
     public function testPostWithoutFormOfAddress()
@@ -691,7 +694,7 @@ class ContactControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('There is no form of address for the contact', $response->message);
+        $this->assertEquals('The "SuluContactBundle:Contact"-entity requires a "contact"-argument', $response->message);
     }
 
     public function testPostWithEmptyAdditionalData()
