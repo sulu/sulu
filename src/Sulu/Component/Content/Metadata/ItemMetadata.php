@@ -38,7 +38,13 @@ abstract class ItemMetadata
     public $description = array();
 
     /**
-     * Tags, e.g. [['name' => 'sulu_search.field', 'type' => 'string']]
+     * Tags, e.g. 
+     *
+     * ````
+     * array(
+     *     array('name' => 'sulu_search.field', 'type' => 'string')
+     * )
+     * ````
      *
      * @var array
      */
@@ -47,11 +53,11 @@ abstract class ItemMetadata
     /**
      * Parameters applying to the property
      *
-     * e.g.
-     *
-     * {
-     *     placeholder: Enter some text
+     * ````
+     * array(
+     *     'placeholder' => 'Enter some text',
      * }
+     * ````
      *
      * @var array
      */
@@ -86,7 +92,8 @@ abstract class ItemMetadata
     /**
      * Return the named property
      *
-     * @return string $name
+     * @param string $name
+     * @return ItemMetadata
      */
     public function getChild($name)
     {
@@ -105,6 +112,7 @@ abstract class ItemMetadata
      * if it does not.
      *
      * @param string $name
+     * @return bool
      */
     public function hasChild($name)
     {
@@ -114,7 +122,7 @@ abstract class ItemMetadata
     /**
      * Adds a child item
      *
-     * @param Item $child
+     * @param ItemMetadata $child
      */
     public function addChild(ItemMetadata $child)
     {
@@ -139,14 +147,14 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the localized name of this Item or
+     * Return the localized name of this ItemMetadata or
      * default to the name.
      *
      * @param string $locale Localization
      *
      * @return string
      */
-    public function getLocalizedTitle($locale)
+    public function getTitle($locale)
     {
         if (isset($this->title[$locale])) {
             return $this->title[$locale];
@@ -155,6 +163,12 @@ abstract class ItemMetadata
         return ucfirst($this->name);
     }
 
+    /**
+     * Return the paramter with the given name.
+     *
+     * @param string $name
+     * @return mixed
+     */
     public function getParameter($name)
     {
         if (!isset($this->parameters[$name])) {
@@ -168,17 +182,9 @@ abstract class ItemMetadata
     }
 
     /**
-     * TODO: Rename to getParameters
+     * Return the name of this item
      *
-     * {@inheritDoc}
-     */
-    public function getParams() 
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * {@inheritDoc}
+     * @return string
      */
     public function getName()
     {
@@ -186,7 +192,9 @@ abstract class ItemMetadata
     }
 
     /**
-     * {@inheritDoc}
+     * Return the tags of this item.
+     *
+     * @return array
      */
     public function getTags() 
     {
@@ -194,7 +202,11 @@ abstract class ItemMetadata
     }
 
     /**
-     * {@inheritDoc}
+     * Return the named tag
+     *
+     * @param string $tagName
+     * @throws \InvalidArgumentException
+     * @return array
      */
     public function getTag($tagName)
     {
@@ -203,8 +215,18 @@ abstract class ItemMetadata
                 return $tag;
             }
         }
+
+        throw new \InvalidArgumentException(sprintf(
+            'Unknown tag "%s"', $tagName
+        ));
     }
 
+    /**
+     * Return true if this item has the named tag.
+     *
+     * @param string $name
+     * @return bool
+     */
     public function hasTag($name)
     {
         foreach ($this->tags as $tag) {
@@ -217,24 +239,20 @@ abstract class ItemMetadata
     }
 
     /**
-     * TODO: This is duplicated
-     * @deprecated
-     *
-     * {@inheritDoc}
-     */
-    public function getTitle($locale) 
-    {
-        return $this->getLocalizedTitle($locale);
-    }
-
-    /**
      * Return the parameters for this property
+     *
+     * @return array
      */
     public function getParameters() 
     {
         return $this->parameters;
     }
 
+    /**
+     * Return the decsription of this property
+     *
+     * @return string
+     */
     public function getDescription() 
     {
         return $this->description;
