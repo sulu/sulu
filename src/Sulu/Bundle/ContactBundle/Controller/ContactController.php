@@ -503,62 +503,12 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
-            /** @var Contact $contact */
-            $contact = $this->getDoctrine()
-                ->getRepository(self::$entityName)
-                ->findByIdAndDelete($id);
-
-            if (!$contact) {
-                throw new EntityNotFoundException(self::$entityName, $id);
-            }
-
-            $em = $this->getDoctrine()->getManager();
-
-            $addresses = $contact->getAddresses();
-            /** @var Address $address */
-            foreach ($addresses as $address) {
-                if (!$address->hasRelations()) {
-                    $em->remove($address);
-                }
-            }
-
-            $phones = $contact->getPhones()->toArray();
-            /** @var Phone $phone */
-            foreach ($phones as $phone) {
-                if ($phone->getAccounts()->count() == 0 && $phone->getContacts()->count() == 1) {
-                    $em->remove($phone);
-                }
-            }
-            $emails = $contact->getEmails()->toArray();
-            /** @var Email $email */
-            foreach ($emails as $email) {
-                if ($email->getAccounts()->count() == 0 && $email->getContacts()->count() == 1) {
-                    $em->remove($email);
-                }
-            }
-
-            $urls = $contact->getUrls()->toArray();
-            /** @var Url $url */
-            foreach ($urls as $url) {
-                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
-                    $em->remove($url);
-                }
-            }
-
-            $faxes = $contact->getFaxes()->toArray();
-            /** @var Fax $fax */
-            foreach ($faxes as $fax) {
-                if ($fax->getAccounts()->count() == 0 && $fax->getContacts()->count() == 1) {
-                    $em->remove($fax);
-                }
-            }
-
-            $em->remove($contact);
-            $em->flush();
-        };
-
-        $view = $this->responseDelete($id, $delete);
+        try {
+            $delete = $this->getContactManager()->delete($id);
+            $view = $this->responseDelete($id, $delete);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
 
         return $this->handleView($view);
     }
@@ -642,70 +592,18 @@ class ContactController extends RestController implements ClassResourceInterface
         $contactEntity = 'SuluContactBundle:Contact';
 
         try {
-            $contactManager = $this->getContactManager();
-            /** @var Contact $contact */
-            $contact = $this->getDoctrine()
-                ->getRepository($contactEntity)
-                ->findById($id);
+            $contact = $this->getContactManager()->save(
+                $request->request->all(),
+                $id
+            );
 
-            if (!$contact) {
-                throw new EntityNotFoundException($contactEntity, $id);
-            } else {
-                $em = $this->getDoctrine()->getManager();
-
-                // Standard contact fields
-                $contact->setFirstName($request->get('firstName'));
-                $contact->setLastName($request->get('lastName'));
-
-                // Set title relation on contact
-                $contactManager->setTitleOnContact($contact, $request->get('title'));
-
-                $this->getContactManager()->setMainAccount($contact, $request->request->all());
-
-                // process details
-                if (!($contactManager->processEmails($contact, $request->get('emails', array()))
-                    && $contactManager->processPhones($contact, $request->get('phones', array()))
-                    && $contactManager->processAddresses($contact, $request->get('addresses', array()))
-                    && $contactManager->processNotes($contact, $request->get('notes', array()))
-                    && $contactManager->processFaxes($contact, $request->get('faxes', array()))
-                    && $contactManager->processTags($contact, $request->get('tags', array()))
-                    && $contactManager->processUrls($contact, $request->get('urls', array()))
-                    && $contactManager->processCategories($contact, $request->get('categories', array()))
-                    && $contactManager->processBankAccounts($contact, $request->get('bankAccounts', array())))
-                ) {
-                    throw new RestException('Updating dependencies is not possible', 0);
-                }
-
-                $formOfAddress = $request->get('formOfAddress');
-                if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
-                    $contact->setFormOfAddress($formOfAddress['id']);
-                }
-
-                $disabled = $request->get('disabled');
-                if (!is_null($disabled)) {
-                    $contact->setDisabled($disabled);
-                }
-
-                $salutation = $request->get('salutation');
-                if (!empty($salutation)) {
-                    $contact->setSalutation($salutation);
-                }
-
-                $birthday = $request->get('birthday');
-                if (!empty($birthday)) {
-                    $contact->setBirthday(new DateTime($birthday));
-                }
-
-                $em->flush();
-
-                $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
-                $view = $this->view($apiContact, 200);
-                $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(
-                        static::$contactSerializationGroups
-                    )
-                );
-            }
+            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $view = $this->view($apiContact, 200);
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(
+                    static::$contactSerializationGroups
+                )
+            );
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {

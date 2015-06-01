@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -19,6 +18,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class ContactManager extends AbstractContactManager
 {
@@ -39,7 +39,7 @@ class ContactManager extends AbstractContactManager
 
     public function __construct(
         ObjectManager $em,
-        TagmanagerInterface $tagManager,
+        TagManagerInterface $tagManager,
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
         $accountEntityName
@@ -50,69 +50,173 @@ class ContactManager extends AbstractContactManager
         $this->contactTitleRepository = $contactTitleRepository;
     }
 
+    public function delete($id)
+    {
+        /**
+        * TODO: This method needs to be refactored since in the first
+        * iteration the logic was just moved from the Controller to this class due
+        * to better reusability.
+        */
+        $delete = function ($id) {
+            /** @var Contact $contact */
+            $contact = $this->em->getRepository(
+                self::$contactEntityName
+            )->findByIdAndDelete($id);
+
+            if (!$contact) {
+                throw new EntityNotFoundException(self::$contactEntityName, $id);
+            }
+
+            $addresses = $contact->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $address) {
+                if (!$address->hasRelations()) {
+                    $this->em->remove($address);
+                }
+            }
+
+            $phones = $contact->getPhones()->toArray();
+            /** @var Phone $phone */
+            foreach ($phones as $phone) {
+                if ($phone->getAccounts()->count() == 0 && $phone->getContacts()->count() == 1) {
+                    $this->em->remove($phone);
+                }
+            }
+            $emails = $contact->getEmails()->toArray();
+            /** @var Email $email */
+            foreach ($emails as $email) {
+                if ($email->getAccounts()->count() == 0 && $email->getContacts()->count() == 1) {
+                    $this->em->remove($email);
+                }
+            }
+
+            $urls = $contact->getUrls()->toArray();
+            /** @var Url $url */
+            foreach ($urls as $url) {
+                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+                    $this->em->remove($url);
+                }
+            }
+
+            $faxes = $contact->getFaxes()->toArray();
+            /** @var Fax $fax */
+            foreach ($faxes as $fax) {
+                if ($fax->getAccounts()->count() == 0 && $fax->getContacts()->count() == 1) {
+                    $this->em->remove($fax);
+                }
+            }
+
+            $this->em->remove($contact);
+            $this->em->flush();
+        };
+
+        return $delete;
+    }
+
     /**
      * Creates a new contact for the given data
      *
      * @param array $data
+     * @param int $id
      * @param bool $flush
      *
      * @return Contact
      */
-    public function save($data, $flush = true)
+    public function save($data, $id = null, $flush = true)
     {
-        $firstName = $data['firstName'];
-        $lastName = $data['lastName'];
-        $disabled = $data['disabled'];
-        $formOfAddress = $data['formOfAddress'];
+        /**
+        * TODO: This method needs to be refactored since in the first
+        * iteration the logic was just moved from the Controller to this class due
+        * to better reusability.
+        */
+        $firstName = $this->getProperty($data, 'firstName');
+        $lastName = $this->getProperty($data, 'lastName');
+
+        if ($id) {
+            /** @var Contact $contact */
+            $contact = $this->em
+                ->getRepository(self::$contactEntityName)
+                ->findById($id);
+
+            if (!$contact) {
+                throw new EntityNotFoundException(self::$contactEntityName, $id);
+            }
+            $this->setMainAccount($contact, $data);
+
+            // process details
+            if (!($this->processEmails($contact, $this->getProperty($data, 'emails', array()))
+                && $this->processPhones($contact, $this->getProperty($data, 'phones', array()))
+                && $this->processAddresses($contact, $this->getProperty($data, 'addresses', array()))
+                && $this->processNotes($contact, $this->getProperty($data, 'notes', array()))
+                && $this->processFaxes($contact, $this->getProperty($data, 'faxes', array()))
+                && $this->processTags($contact, $this->getProperty($data, 'tags', array()))
+                && $this->processUrls($contact, $this->getProperty($data, 'urls', array()))
+                && $this->processCategories($contact, $this->getProperty($data, 'categories', array()))
+                && $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', array())))
+            ) {
+                throw new Exception('Updating dependencies is not possible', 0);
+            }
+
+        } else {
+            $contact = new Contact();
+        }
 
         // Standard contact fields
-        $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
 
-        $this->setTitleOnContact($contact, $data['title']);
-
-        $parentData = $this->getProperty($data, 'account');
-        if ($parentData != null &&
-            $parentData['id'] != null &&
-            $parentData['id'] != 'null' &&
-            $parentData['id'] != ''
-        ) {
-            /** @var AccountInterface $parent */
-            $parent = $this->accountRepository->findAccountById($parentData['id']);
-            if (!$parent) {
-                throw new EntityNotFoundException(
-                    $this->getAccountEntityName(),
-                    $parentData['id']
-                );
-            }
-
-            // Set position on contact
-            $position = $this->getPosition($data['position']);
-
-            // create new account-contact relation
-            $this->createMainAccountContact(
-                $contact,
-                $parent,
-                $position
-            );
-        }
-        $birthday = $this->getProperty($data, 'birthday');
-        if ($birthday) {
-            $contact->setBirthday(new DateTime($birthday));
+        // Set title relation on contact
+        $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
+        $formOfAddress = $this->getProperty($data, 'formOfAddress');
+        if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
+            $contact->setFormOfAddress($formOfAddress['id']);
         }
 
-        $contact->setFormOfAddress($formOfAddress['id']);
-        $contact->setDisabled($disabled);
+        $disabled = $this->getProperty($data, 'disabled');
+        if (!is_null($disabled)) {
+            $contact->setDisabled($disabled);
+        }
 
         $salutation = $this->getProperty($data, 'salutation');
-        if ($salutation) {
+        if (!empty($salutation)) {
             $contact->setSalutation($salutation);
         }
 
-        // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-        $this->addNewContactRelations($contact, $data);
-        $this->processCategories($contact, $this->getProperty($data, 'categories', array()));
+        $birthday = $this->getProperty($data, 'birthday');
+        if (!empty($birthday)) {
+            $contact->setBirthday(new DateTime($birthday));
+        }
+
+        if (!$id) {
+            $parentData = $this->getProperty($data, 'account');
+            if ($parentData != null &&
+                $parentData['id'] != null &&
+                $parentData['id'] != 'null' &&
+                $parentData['id'] != ''
+            ) {
+                /** @var AccountInterface $parent */
+                $parent = $this->accountRepository->findAccountById($parentData['id']);
+                if (!$parent) {
+                    throw new EntityNotFoundException(
+                        $this->getAccountEntityName(),
+                        $parentData['id']
+                    );
+                }
+
+                // Set position on contact
+                $position = $this->getPosition($data['position']);
+
+                // create new account-contact relation
+                $this->createMainAccountContact(
+                    $contact,
+                    $parent,
+                    $position
+                );
+            }
+            // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
+            $this->addNewContactRelations($contact, $data);
+            $this->processCategories($contact, $this->getProperty($data, 'categories', array()));
+        }
 
         $this->em->persist($contact);
         $this->em->flush();
@@ -208,7 +312,7 @@ class ContactManager extends AbstractContactManager
      * @param $id
      * @param $locale
      *
-     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return mixed
      */
@@ -243,7 +347,7 @@ class ContactManager extends AbstractContactManager
      * @param Contact $contact
      * @param $data
      *
-     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
     public function setMainAccount(Contact $contact, $data)
     {
