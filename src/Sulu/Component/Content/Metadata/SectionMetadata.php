@@ -11,6 +11,10 @@
 
 namespace Sulu\Component\Content\Metadata;
 
+/**
+ * Metadata for a section. A section is a UI component which
+ * groups a bunch of properties.
+ */
 class SectionMetadata extends ItemMetadata
 {
     /**
@@ -20,6 +24,11 @@ class SectionMetadata extends ItemMetadata
      */
     public $colSpan = null;
 
+    /**
+     * Return the colspan.
+     *
+     * @return integer
+     */
     public function getColSpan() 
     {
         return $this->colSpan;

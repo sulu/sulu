@@ -89,7 +89,7 @@ class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
     private function doGetProperty($name, $contentTypeName, $locale)
     {
         $this->structureProperty->getType()->willReturn($contentTypeName);
-        $this->structure->getModelProperty($name)->willReturn($this->structureProperty);
+        $this->structure->getProperty($name)->willReturn($this->structureProperty);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
 
         if ($locale) {

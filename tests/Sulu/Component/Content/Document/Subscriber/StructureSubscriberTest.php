@@ -92,7 +92,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structure->getModelProperties()->willReturn(array(
+        $this->structure->getProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
         $this->structureProperty->isRequired()->willReturn(true);
@@ -131,7 +131,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structure->getModelProperties()->willReturn(array(
+        $this->structure->getProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
         $this->structureProperty->isRequired()->willReturn(true);
