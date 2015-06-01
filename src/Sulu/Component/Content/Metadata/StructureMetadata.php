@@ -15,51 +15,86 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
+/**
+ * Represents metadata for a structure.
+ *
+ * TODO: resource, cacheLifetime and view should be removed. They
+ *       should instead be options.
+ */
 class StructureMetadata extends ItemMetadata
 {
     /**
      * The resource from which this structure was loaded
      * (useful for debugging)
-     *
      * @var string
      */
     public $resource;
 
     /**
-     * TODO: This should be an option as it is implementation specific
      * @var string
      */
     public $cacheLifetime;
 
     /**
-     * TODO: This should be an option as it is implementation specific
      * @var string
      */
     public $controller;
 
     /**
-     * TODO: This should be an option as it is implementation specific
      * @var string
      */
     public $view;
 
     /**
-     * Same as $items but without Sections
+     * Same as ItemMetadata::$children but without Sections
+     * @see StructureMetadata::burnModelRepresentation()
+     * @var array
      */
-    public $modelProperties;
+    public $properties;
 
     /**
-     * Return all direct child properties of this structure, ignoring
-     * Sections
+     * Return a model property.
+     *
+     * @see StructureMetadata::getProperties()
+     *
+     * @param string $name
+     * @return PropertyMetadata
+     */
+    public function getProperty($name)
+    {
+        if (!isset($this->properties[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
+                $name, $this->getName(), implode('", "', array_keys($this->properties)),
+                $this->resource
+            ));
+        }
+
+        return $this->properties[$name];
+    }
+
+    /**
+     * Return all model properties
+     *
+     * The "model" set of properties does not include UI elements 
+     * such as sections.
      *
      * @return PropertyMetadata[]
      */
-    public function getProperties($flatten = false)
+    public function getProperties()
     {
-        if (false === $flatten) {
-            return $this->children;
-        }
+        return $this->properties;
+    }
 
+    /**
+     * Populate the $modelProperties property with only those propertires
+     * which are not related to the UI (i.e. the sections).
+     *
+     * This should be called once after creating the structure and (therefore
+     * before writing to the cache
+     */
+    public function burnModelRepresentation()
+    {
         $properties = array();
         foreach ($this->children as $child) {
             if ($child instanceof SectionMetadata) {
@@ -70,65 +105,25 @@ class StructureMetadata extends ItemMetadata
             $properties[$child->name] = $child;
         }
 
-        return $properties;
+        $this->properties = $properties;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getProperty($name)
-    {
-        return $this->getChild($name);
-    }
-
-    /**
-     * Return a model property
+     * Return true if a property with the given name exists.
      *
-     * We keep two representations of the property data, one with
-     * Sections and one without.
-     */
-    public function getModelProperty($name)
-    {
-        if (!isset($this->modelProperties[$name])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
-                $name, $this->getName(), implode('", "', array_keys($this->modelProperties)),
-                $this->resource
-            ));
-        }
-
-        return $this->modelProperties[$name];
-    }
-
-    public function getModelProperties()
-    {
-        return $this->modelProperties;
-    }
-
-    /**
-     * Create a copy of the properties excluding the section's
-     *
-     * Should only be called before writing to the cache.
-     *
-     * TODO: Do not use get|setProperties, use get|setChildren
-     */
-    public function burnModelRepresentation()
-    {
-        $this->modelProperties = $this->getProperties(true);
-    }
-
-    /**
-     * {@inheritDoc}
+     * @return bool
      */
     public function hasProperty($name)
     {
-        return $this->hasChild($name);
+        return array_key_exists($name, $this->properties);
     }
 
     /**
-     * TODO: Implement highest
+     * Return true if the structure contains a property with the given
+     * tag name.
      *
-     * {@inheritDoc}
+     * @param string $tagName
+     * @return bool
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
@@ -144,19 +139,29 @@ class StructureMetadata extends ItemMetadata
         return reset($properties);
     }
 
+    /**
+     * Return true if the structure contains a property with the given
+     * tag name.
+     *
+     * @param string $tagName
+     * @return bool
+     */
     public function hasPropertyWithTagName($tagName)
     {
         return (boolean) count($this->getPropertiesByTagName($tagName));
     }
 
     /**
-     * {@inheritDoc}
+     * Return all properties with the given tag name
+     *
+     * @param string $tagName
+     * @return bool
      */
     public function getPropertiesByTagName($tagName)
     {
         $properties = array();
 
-        foreach ($this->getProperties() as $property) {
+        foreach ($this->properties as $property) {
             foreach ($property->tags as $tag) {
                 if ($tag['name'] == $tagName){
                     $properties[$property->name] = $property;
