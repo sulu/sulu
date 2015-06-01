@@ -9,7 +9,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
+use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\DocumentManager\PropertyEncoder as BasePropertyEncoder;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
