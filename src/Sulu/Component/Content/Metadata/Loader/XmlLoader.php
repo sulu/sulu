@@ -50,7 +50,7 @@ class XmlLoader extends XmlLegacyLoader
             $structure->children[$propertyName] = $this->createProperty($propertyName, $dataProperty);
         }
 
-        $structure->burnModelRepresentation();
+        $structure->burnProperties();
 
         return $structure;
     }
