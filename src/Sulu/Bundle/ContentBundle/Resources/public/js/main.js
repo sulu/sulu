@@ -56,7 +56,7 @@ define(['config'], function(Config) {
             );
 
             function getContentLanguage() {
-                return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;
+                return sandbox.sulu.getUserSetting('contentLanguage') || Object.keys(Config.get('sulu-content').locales)[0];
             }
 
             // redirects to list with specific language
