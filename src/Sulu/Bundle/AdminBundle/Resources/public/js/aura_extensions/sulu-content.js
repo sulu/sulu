@@ -203,7 +203,7 @@ define([], function () {
          * Generates defaults, handles tabs data if tabs are configured, starts the header-component
          *
          * @param {Object|Function} [header] the header property found in the started component. If it's function it must return an object
-         * @param {String} [header.title] title in the headehr
+         * @param {String} [header.title] title in the header
          * @param {Array} [header.breadcrumb] breadcrumb object which gets passed to the header-component
          * @param {Object} [header.toolbar] object that contains configurations for the toolbar - if not set no toolbar will be displayed
          * @param {Object} [header.tabs] object that contains configurations for the tabs - if not set no tabs will be displayed

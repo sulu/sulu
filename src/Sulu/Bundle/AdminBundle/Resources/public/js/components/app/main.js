@@ -177,6 +177,15 @@ define(function() {
             });
             router = new AppRouter();
 
+            // add dashboard route
+            this.sandbox.mvc.routes.push({
+                route: '',
+                callback: function() {
+                    console.log('dashboard');
+                    this.html('<div data-aura-component="dashboard@suluadmin"/>');
+                }
+            });
+
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
                     this.sandbox.mvc.Store.reset();
@@ -291,6 +300,10 @@ define(function() {
                 } else if (!!event.title) {
                     this.setTitlePostfix(this.sandbox.translate(event.title));
                 }
+            }.bind(this));
+
+            this.sandbox.on('husky.navigation.header.clicked', function(){
+                this.navigate('', true, false, false);
             }.bind(this));
 
             this.sandbox.on('husky.data-navigation.select', function(item) {
