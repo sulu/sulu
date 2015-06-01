@@ -16,10 +16,10 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -30,7 +30,7 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Document\Property\PropertyValue;
 
-class ContentSubscriberTest extends SubscriberTestCase
+class StructureSubscriberTest extends SubscriberTestCase
 {
     public function setUp()
     {
@@ -46,7 +46,7 @@ class ContentSubscriberTest extends SubscriberTestCase
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
 
-        $this->subscriber = new ContentSubscriber(
+        $this->subscriber = new StructureSubscriber(
             $this->encoder->reveal(),
             $this->contentTypeManager->reveal(),
             $this->inspector->reveal(),

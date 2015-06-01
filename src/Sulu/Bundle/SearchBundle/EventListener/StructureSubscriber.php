@@ -25,7 +25,7 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 /**
  * Listen to sulu node save event and index the document
  */
-class ContentSubscriber implements EventSubscriberInterface
+class StructureSubscriber implements EventSubscriberInterface
 {
     /**
      * @var SearchManagerInterface
