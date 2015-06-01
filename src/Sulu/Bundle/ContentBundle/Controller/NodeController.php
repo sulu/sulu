@@ -12,9 +12,11 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -612,7 +614,7 @@ class NodeController extends RestController
      */
     public function getSecuredClass()
     {
-        return Structure::class;
+        return WebspaceBehavior::class;
     }
 
     /**
