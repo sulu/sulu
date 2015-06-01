@@ -115,8 +115,8 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->em = $this->prophesize(EntityManager::class);
         $this->storageManager = $this->prophesize(StorageManagerInterface::class);
-        $this->storage = $this->prophesize(StorageInterface::class);
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);

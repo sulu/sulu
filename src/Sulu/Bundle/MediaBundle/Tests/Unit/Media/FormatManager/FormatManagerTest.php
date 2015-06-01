@@ -28,7 +28,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
     public function testReturnImage()
     {
         $mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepository');
-        $storageManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageManagerInterface');
+        $storageManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManagerInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
         $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
