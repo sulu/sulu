@@ -221,7 +221,10 @@ class ContactManager extends AbstractContactManager
         }
 
         $this->em->persist($contact);
-        $this->em->flush();
+
+        if ($flush) {
+            $this->em->flush();
+        }
 
         return $contact;
     }

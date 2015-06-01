@@ -1312,7 +1312,20 @@ abstract class AbstractContactManager implements ContactManagerInterface
             return $this->addNote($contact, $note);
         };
 
-        return $this->processSubEntities($contact->getNotes(), $notes, $get, $add, $update, $delete);
+        $entities = $contact->getNotes();
+
+        $result = $this->processSubEntities(
+            $entities,
+            $notes,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
+
+        $this->resetIndexOfSubentites($entities);
+
+        return $result;
     }
 
     /**
@@ -1385,7 +1398,20 @@ abstract class AbstractContactManager implements ContactManagerInterface
             return $this->addTag($contact, $tag);
         };
 
-        return $this->processSubEntities($contact->getTags(), $tags, $get, $add, $update, $delete);
+        $entities = $contact->getTags();
+
+        $result = $this->processSubEntities(
+            $entities,
+            $tags,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
+
+        $this->resetIndexOfSubentites($entities);
+
+        return $result;
     }
 
     /**
