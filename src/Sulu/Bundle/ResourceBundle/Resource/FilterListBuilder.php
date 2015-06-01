@@ -46,7 +46,7 @@ class FilterListBuilder implements FilterListBuilderInterface
 
     /**
      * @param FilterManagerInterface $manager
-     * @param RequestStack $requestStack
+     * @param RequestStack           $requestStack
      */
     public function __construct(FilterManagerInterface $manager, RequestStack $requestStack)
     {
@@ -81,8 +81,10 @@ class FilterListBuilder implements FilterListBuilderInterface
 
     /**
      * Creates a conditions for a condition group
+     *
      * @param ConditionGroup $conditionGroup
-     * @param string $conjunction
+     * @param string         $conjunction
+     *
      * @throws ConditionFieldNotFound
      * @throws FeatureNotImplementedException
      */
@@ -105,16 +107,17 @@ class FilterListBuilder implements FilterListBuilderInterface
 
     /**
      * Creates and adds a simple where condition to the listbuilder
-     * @param Condition $condition
+     *
+     * @param Condition               $condition
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string $conjunction
+     * @param string                  $conjunction
      */
     protected function createCondition(Condition $condition, $fieldDescriptor, $conjunction)
     {
         $value = $this->getValue($condition);
 
         // relative date for cases like "within a week" or "within this month"
-        if($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
+        if ($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
             $this->lb->between($fieldDescriptor, [$value, new \Datetime()], $conjunction);
         } else {
             $this->lb->where($fieldDescriptor, $value, $condition->getOperator(), $conjunction);
@@ -123,7 +126,9 @@ class FilterListBuilder implements FilterListBuilderInterface
 
     /**
      * Parses and returns the value of a condition
+     *
      * @param Condition $condition
+     *
      * @return mixed
      * @throws ConditionTypeMismatchException
      */
@@ -142,10 +147,7 @@ class FilterListBuilder implements FilterListBuilderInterface
                 }
                 throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
             case DataTypes::BOOLEAN_TYPE:
-                if (is_bool($value)) {
-                    return boolval($value);
-                }
-                throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
+                return $this->getBoolean($value);
             case DataTypes::DATETIME_TYPE:
                 try {
                     return new \DateTime($value);
@@ -155,5 +157,17 @@ class FilterListBuilder implements FilterListBuilderInterface
             default:
                 throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
         }
+    }
+
+    /**
+     * Returns boolean value if value is 1, true or "true" otherwise false is returned
+     *
+     * @param $value
+     *
+     * @return boolean
+     */
+    protected function getBoolean($value)
+    {
+        return $value === 'true' || $value === 1 || $value === true ? true : false;
     }
 }
