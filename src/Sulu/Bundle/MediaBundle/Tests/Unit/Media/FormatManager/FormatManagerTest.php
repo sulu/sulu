@@ -80,7 +80,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
 
         $mediaRepository->findMediaById(1)->willReturn($media);
 
-        $storageManager->load(['a' => 'b'])->willReturn(
+        $storageManager->load(['a' => 'b'], null)->willReturn(
             dirname(__DIR__) . '/../../Fixtures/image/data/dummy.gif'
         );
 
