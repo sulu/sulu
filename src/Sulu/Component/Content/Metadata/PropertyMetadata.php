@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Content\Metadata;
 
+/**
+ * Metadata for a property. Contains both UI and model metadata.
+ */
 class PropertyMetadata extends ItemMetadata
 {
     /**
