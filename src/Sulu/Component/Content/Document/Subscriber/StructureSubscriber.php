@@ -212,7 +212,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
         $webspaceName = $this->inspector->getWebspace($document);
         $structure = $this->inspector->getStructure($document);
 
-        foreach ($structure->getModelProperties() as $propertyName => $structureProperty) {
+        foreach ($structure->getProperties() as $propertyName => $structureProperty) {
             $realProperty = $propertyContainer->getProperty($propertyName);
             $value = $realProperty->getValue();
 
