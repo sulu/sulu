@@ -130,7 +130,7 @@
             </value>
             <value value="first day of this month">
                 <translations>
-                    <translation locale="de">des aktuelles Monats</translation>
+                    <translation locale="de">des aktuellen Monats</translation>
                     <translation locale="en">current month</translation>
                 </translations>
             </value>
