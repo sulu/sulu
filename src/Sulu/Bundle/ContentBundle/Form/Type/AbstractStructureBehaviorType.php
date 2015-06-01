@@ -19,9 +19,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Forms extending this class handle documents which implement
- * the ContentBehavior.
+ * the StructureBehavior.
  */
-abstract class AbstractContentBehaviorType extends AbstractType
+abstract class AbstractStructureBehaviorType extends AbstractType
 {
     /**
      * {@inheritDoc}

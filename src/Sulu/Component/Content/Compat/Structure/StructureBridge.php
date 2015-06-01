@@ -2,33 +2,33 @@
 
 namespace Sulu\Component\Content\Compat\Structure;
 
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\Structure as LegacyStructure;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\Structure as LegacyStructure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;
-
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\ContentDocumentInterface;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as NewProperty;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
+use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -84,7 +84,7 @@ class StructureBridge implements StructureInterface
     /**
      * @param ContentDocumentInterface $document
      */
-    public function setDocument(ContentBehavior $document)
+    public function setDocument(StructureBehavior $document)
     {
         $this->document = $document;
     }
@@ -652,7 +652,7 @@ class StructureBridge implements StructureInterface
         return $this->document;
     }
 
-    protected function documentToStructure(ContentBehavior $document)
+    protected function documentToStructure(StructureBehavior $document)
     {
         return new $this($this->inspector->getStructure($document), $this->inspector, $this->propertyFactory, $document);
     }

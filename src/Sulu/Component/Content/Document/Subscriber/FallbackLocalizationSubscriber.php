@@ -15,7 +15,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\Structure\Property;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -85,9 +85,9 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        // we currently only support fallback on ContentBehavior implementors
+        // we currently only support fallback on StructureBehavior implementors
         // because we use the template key to determine localization status
-        if (!$document instanceof ContentBehavior) {
+        if (!$document instanceof StructureBehavior) {
             return;
         }
 
@@ -118,7 +118,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     public function getAvailableLocalization(NodeInterface $node, $document, $locale)
     {
-        $structureTypeName = $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, $locale);
+        $structureTypeName = $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, $locale);
 
         // check if it already is the correct localization
         if ($node->hasProperty($structureTypeName)) {
@@ -277,6 +277,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
     private function getPropertyName($locale)
     {
-        return $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, $locale);
+        return $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, $locale);
     }
 }

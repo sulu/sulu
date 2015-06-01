@@ -5,13 +5,13 @@ namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
+use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
@@ -75,7 +75,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @return string
      */
-    public function getContentPath(ContentBehavior $document)
+    public function getContentPath(StructureBehavior $document)
     {
         $path = $this->getPath($document);
         $webspaceKey = $this->getWebspace($document);
@@ -93,13 +93,13 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the structure for the given ContentBehavior implementing document
+     * Return the structure for the given StructureBehavior implementing document
      *
-     * @param ContentBehavior $document
+     * @param StructureBehavior $document
      *
      * @return StructureMetadata
      */
-    public function getStructure(ContentBehavior $document)
+    public function getStructure(StructureBehavior $document)
     {
         return $this->structureFactory->getStructure(
             $this->getMetadata($document)->getAlias(),
@@ -157,11 +157,11 @@ class DocumentInspector extends BaseDocumentInspector
     /**
      * Return the concrete localizations for the given document
      *
-     * @param ContentBehavior $document
+     * @param StructureBehavior $document
      *
      * @return array
      */
-    public function getLocales(ContentBehavior $document)
+    public function getLocales(StructureBehavior $document)
     {
         $locales = array();
         $node = $this->getNode($document);

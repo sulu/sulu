@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
-use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -40,7 +40,7 @@ class BasePageDocument implements
     TimestampBehavior,
     BlameBehavior,
     ParentBehavior,
-    LocalizedContentBehavior,
+    LocalizedStructureBehavior,
     ResourceSegmentBehavior,
     NavigationContextBehavior,
     RedirectTypeBehavior,
