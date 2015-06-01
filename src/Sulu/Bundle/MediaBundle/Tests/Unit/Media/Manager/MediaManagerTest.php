@@ -24,6 +24,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -65,7 +66,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ObjectProphecy
      */
-    private $storage;
+    private $storageManager;
 
     /**
      * @var ObjectProphecy
@@ -114,7 +115,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
-        $this->em = $this->prophesize(EntityManager::class);
+        $this->storageManager = $this->prophesize(StorageManagerInterface::class);
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
@@ -130,7 +131,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),
             $this->em->reveal(),
-            $this->storage->reveal(),
+            $this->storageManager->reveal(),
             $this->validator->reveal(),
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),

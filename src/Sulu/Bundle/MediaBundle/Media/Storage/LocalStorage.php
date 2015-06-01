@@ -56,7 +56,7 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function save($tempPath, $fileName, $version, $storageOption = null)
+    public function save($tempPath, $fileName, $storageOption = null)
     {
         $this->storageOption = new stdClass();
 
@@ -92,7 +92,7 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function load($fileName, $version, $storageOption)
+    public function load($storageOption)
     {
         $this->storageOption = json_decode($storageOption);
 
@@ -104,6 +104,14 @@ class LocalStorage implements StorageInterface
         }
 
         return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDownloadUrl($storageOption)
+    {
+        return null;
     }
 
     /**

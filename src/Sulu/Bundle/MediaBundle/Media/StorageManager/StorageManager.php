@@ -43,24 +43,24 @@ class StorageManager implements StorageManagerInterface
         $defaultStorageName,
         $logger = null
     ) {
-        $this->$defaultStorageName = $defaultStorageName;
+        $this->defaultStorageName = $defaultStorageName;
         $this->logger = $logger ?: new NullLogger();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save($tempPath, $fileName, $version, $storageOption = null, $storageName = null)
+    public function save($tempPath, $fileName, $storageOption = null, $storageName = null)
     {
-        return $this->get($storageName)->save($tempPath, $fileName, $version, $storageOption);
+        return $this->get($storageName)->save($tempPath, $fileName, $storageOption);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($fileName, $version, $storageOption, $storageName = null)
+    public function load($storageOption, $storageName = null)
     {
-        return $this->get($storageName)->load($fileName, $version, $storageOption);
+        return $this->get($storageName)->load($storageOption);
     }
 
     /**
@@ -80,12 +80,26 @@ class StorageManager implements StorageManagerInterface
     }
 
     /**
+     * Give back the public download url for a file
+     *
+     * @param $storageOption
+     * @param string $storageName
+     *
+     * @return string
+     */
+    public function getDownloadUrl($storageOption, $storageName = null)
+    {
+        return $this->get($storageName)->getDownloadUrl($storageOption);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function add(StorageInterface $command, $name)
     {
         $this->storages[$name] = $command;
     }
+
 
     /**
      * {@inheritdoc}

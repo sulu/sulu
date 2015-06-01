@@ -545,7 +545,6 @@ class MediaManager implements MediaManagerInterface
             $data['storageOptions'] = $this->storageManager->save(
                 $uploadedFile->getPathname(),
                 $fileName,
-                $version,
                 $currentFileVersion->getStorageOptions(),
                 $currentFileVersion->getStorageName()
             );
@@ -627,7 +626,6 @@ class MediaManager implements MediaManagerInterface
         $data['storageOptions'] = $this->storageManager->save(
             $uploadedFile->getPathname(),
             $fileName,
-            1,
             null,
             $this->getCollectionDefaultStorageName($data['collection'])
         );
@@ -945,13 +943,18 @@ class MediaManager implements MediaManagerInterface
 
         // Set Version Urls
         $versionData = [];
+        /** @var FileVersion $fileVersion */
         foreach ($media->getFile()->getFileVersions() as $fileVersion) {
             $versionData[$fileVersion->getVersion()] = [];
-            $versionData[$fileVersion->getVersion()]['url'] = $this->getUrl(
-                $media->getId(),
-                $fileVersion->getName(),
-                $fileVersion->getVersion()
-            );
+            $versionData[$fileVersion->getVersion()]['url'] =
+                $this->storageManager->getDownloadUrl(
+                    $fileVersion->getStorageOptions(),
+                    $fileVersion->getStorageName()
+                ) ?: $this->getUrl(
+                    $media->getId(),
+                    $fileVersion->getName(),
+                    $fileVersion->getVersion()
+                );
         }
 
         $media->setAdditionalVersionData($versionData);
