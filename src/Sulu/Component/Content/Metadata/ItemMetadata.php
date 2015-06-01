@@ -56,7 +56,7 @@ abstract class ItemMetadata
      * ````
      * array(
      *     'placeholder' => 'Enter some text',
-     * }
+     * )
      * ````
      *
      * @var array
