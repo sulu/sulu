@@ -125,7 +125,7 @@ class StructureProvider implements ProviderInterface
         $indexMeta->setCategoryName($categoryName);
         $indexMeta->setIndexName($indexName);
 
-        foreach ($structure->getModelProperties() as $property) {
+        foreach ($structure->getProperties() as $property) {
             if ($property instanceof BlockMetadata) {
                 $propertyMapping = new ComplexMetadata();
                 foreach ($property->getComponents() as $component) {

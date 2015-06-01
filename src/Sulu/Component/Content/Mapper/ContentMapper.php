@@ -64,9 +64,7 @@ use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
  *
- * Short term todo:
- *
- * - Rename localization, languageCode, language etc. to "locale"
+ * @deprecated since 1.0-? use the DocumentManager instead.
  */
 class ContentMapper implements ContentMapperInterface
 {

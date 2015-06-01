@@ -245,7 +245,7 @@ class StructureBridge implements StructureInterface
     public function getProperties($flatten = false)
     {
         if ($flatten) {
-            $items = $this->structure->getModelProperties();
+            $items = $this->structure->getProperties();
         } else {
             $items = $this->structure->getChildren();
         }
