@@ -42,7 +42,7 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
             $container->setDefinition(
                 'sulu_security.user_manager',
                 new Definition(
-                   'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+                    'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                     array(
                         new Reference('doctrine.orm.entity_manager'),
                         new Reference('security.encoder_factory'),

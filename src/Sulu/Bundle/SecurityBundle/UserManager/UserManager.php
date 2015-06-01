@@ -204,18 +204,20 @@ class UserManager implements UserManagerInterface
                     );
                 }
             }
+
             if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', array())) ||
                 !$this->processUserGroups($user, $this->getProperty($data, 'userGroups', array()))
             ) {
                 throw new \Exception('Could not update dependencies!');
             }
+
             if (!$patch || $contact !== null) {
                 $user->setContact($this->getContact($contact['id']));
             }
+
             if (!$patch || $locale !== null) {
                 $user->setLocale($locale);
             }
-
         } catch (\Exception $re) {
             if (isset($user)) {
                 $this->em->remove($user);
@@ -478,6 +480,7 @@ class UserManager implements UserManagerInterface
                 }
             }
         }
+
         if ($alreadyContains === false) {
             $userRole = new UserRole();
             $userRole->setUser($user);

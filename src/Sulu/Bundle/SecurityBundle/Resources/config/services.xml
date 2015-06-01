@@ -134,7 +134,7 @@
 
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"
                  factory-service="sulu_security.user_repository_factory" factory-method="getRepository">
-             </service>
+        </service>
 
         <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
             <tag name="massive_build.builder" />
