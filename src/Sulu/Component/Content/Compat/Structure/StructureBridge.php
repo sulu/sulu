@@ -553,7 +553,7 @@ class StructureBridge implements StructureInterface
      */
     public function getLocalizedTitle($languageCode)
     {
-        return $this->structure->getLocalizedTitle($languageCode);
+        return $this->structure->getTitle($languageCode);
     }
 
     /**

@@ -20,13 +20,8 @@ class BlockMetadata extends PropertyMetadata
     public $components = array();
     public $defaultComponentName;
 
-    public function getType() 
-    {
-        return 'block';
-    }
-
     /**
-     * Return the default type name
+     * Return the default component name
      *
      * @return string
      */
@@ -37,14 +32,21 @@ class BlockMetadata extends PropertyMetadata
 
     /**
      * Return the components
+     *
+     * @return ComponentMetadata[]
      */
     public function getComponents() 
     {
         return $this->components;
     }
 
-    public function addComponent(ComponentMetadata $item)
+    /**
+     * Add a new component
+     *
+     * @param ComponentMetadata $component
+     */
+    public function addComponent(ComponentMetadata $component)
     {
-        $this->components[] = $item;
+        $this->components[] = $component;
     }
 }
