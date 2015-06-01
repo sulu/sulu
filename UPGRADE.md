@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 1.0.0-RC1
 
 ### Security Roles
 The identifiers in the acl_security_identities should be rename from SULU_ROLE_* to ROLE_SULU_*. This SQL snippet should 
