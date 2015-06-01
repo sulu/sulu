@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #1159 [SecurityBundle] Change role naming to keep symfony2 conventions.
     * BUGFIX      #1156 [MediaBundle]    Fix mimetype check for ghostscript
+    * BUGFIX      #1163 [ContentBundle]  Set existing default for content language
 
 * 1.0.0-RC1 (2015-05-29)
     * ENHANCEMENT #1148 [SecurityBundle] Moved user specific code from UserController to UserManager
