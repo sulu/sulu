@@ -28,6 +28,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata as NewProperty;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 
 class StructureBridge implements StructureInterface
 {
