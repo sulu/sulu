@@ -11,7 +11,7 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
+use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;

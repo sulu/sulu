@@ -118,7 +118,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     public function getAvailableLocalization(NodeInterface $node, $document, $locale)
     {
-        $structureTypeName = $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, $locale);
+        $structureTypeName = $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, $locale);
 
         // check if it already is the correct localization
         if ($node->hasProperty($structureTypeName)) {
@@ -277,6 +277,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
     private function getPropertyName($locale)
     {
-        return $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, $locale);
+        return $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, $locale);
     }
 }
