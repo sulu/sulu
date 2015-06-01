@@ -67,7 +67,7 @@ class ManagedPropertyContainer extends PropertyContainer
             $this->node = $this->inspector->getNode($this->document);
         }
 
-        $structureProperty = $this->structure->getModelProperty($name);
+        $structureProperty = $this->structure->getProperty($name);
 
         $contentTypeName = $structureProperty->getType();
 
@@ -115,7 +115,7 @@ class ManagedPropertyContainer extends PropertyContainer
     {
         $this->init();
         $values = array();
-        foreach (array_keys($this->structure->getModelProperties()) as $childName) {
+        foreach (array_keys($this->structure->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
 
@@ -133,7 +133,7 @@ class ManagedPropertyContainer extends PropertyContainer
 
     public function bind($data, $clearMissing = true)
     {
-        foreach ($this->structure->getModelProperties() as $childName => $child) {
+        foreach ($this->structure->getProperties() as $childName => $child) {
             if (false === $clearMissing && !isset($data[$childName])) {
                 continue;
             }
