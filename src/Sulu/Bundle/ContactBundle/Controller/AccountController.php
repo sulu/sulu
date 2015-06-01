@@ -44,10 +44,6 @@ class AccountController extends RestController implements ClassResourceInterface
     protected static $contactEntityKey = 'contacts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected static $emailEntityName = 'SuluContactBundle:Email';
-    protected static $phoneEntityName = 'SuluContactBundle:Phone';
-    protected static $urlEntityName = 'SuluContactBundle:Url';
-    protected static $faxEntityName = 'SuluContactBundle:Fax';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
     protected static $countryEntityName = 'SuluContactBundle:Country';

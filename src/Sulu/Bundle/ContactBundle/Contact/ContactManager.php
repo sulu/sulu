@@ -53,9 +53,10 @@ class ContactManager extends AbstractContactManager
     public function delete($id)
     {
         /**
-        * TODO: This method needs to be refactored since in the first
-        * iteration the logic was just moved from the Controller to this class due
-        * to better reusability.
+         * TODO: https://github.com/sulu-io/sulu/pull/1171
+         * This method needs to be refactored since in the first
+         * iteration the logic was just moved from the Controller
+         * to this class due to better reusability.
         */
         $delete = function ($id) {
             /** @var Contact $contact */
@@ -125,9 +126,10 @@ class ContactManager extends AbstractContactManager
     public function save($data, $id = null, $flush = true)
     {
         /**
-        * TODO: This method needs to be refactored since in the first
-        * iteration the logic was just moved from the Controller to this class due
-        * to better reusability.
+         * TODO: https://github.com/sulu-io/sulu/pull/1171
+         * This method needs to be refactored since in the first
+         * iteration the logic was just moved from the Controller to this class due
+         * to better reusability.
         */
         $firstName = $this->getProperty($data, 'firstName');
         $lastName = $this->getProperty($data, 'lastName');
