@@ -59,7 +59,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
         $property = $this->getResourceSegmentProperty($document);
-        $segment = $document->getContent()->getProperty($property->getName())->getValue();
+        $segment = $document->getPropertyContainer()->getProperty($property->getName())->getValue();
 
         $document->setResourceSegment($segment);
     }
@@ -72,7 +72,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
         $document = $event->getDocument();
         $property = $this->getResourceSegmentProperty($document);
 
-        $document->getContent()->getProperty(
+        $document->getPropertyContainer()->getProperty(
             $property->getName()
         )->setValue($document->getResourceSegment());
     }

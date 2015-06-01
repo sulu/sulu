@@ -146,7 +146,7 @@ class BasePageDocument implements
     /**
      * @var PropertyContainerInterface
      */
-    protected $content;
+    protected $propertyContainer;
 
     /**
      * @var string
@@ -177,7 +177,7 @@ class BasePageDocument implements
     {
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
-        $this->content = new PropertyContainer();
+        $this->propertyContainer = new PropertyContainer();
         $this->extensions =  new ExtensionContainer();
         $this->children = new \ArrayIterator();
     }
@@ -409,9 +409,9 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getContent()
+    public function getPropertyContainer()
     {
-        return $this->content;
+        return $this->propertyContainer;
     }
     
     /**

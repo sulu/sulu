@@ -719,7 +719,7 @@ class StructureBridge implements StructureInterface
         $propertyBridge = $this->propertyFactory->createProperty($item, $this);
 
         if ($this->document) {
-            $property = $this->document->getContent()->getProperty($name);
+            $property = $this->document->getPropertyContainer()->getProperty($name);
             $propertyBridge->setPropertyValue($property);
         }
 

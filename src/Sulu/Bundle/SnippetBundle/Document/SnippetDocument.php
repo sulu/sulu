@@ -38,7 +38,7 @@ class SnippetDocument implements
     private $published;
     private $uuid;
     private $structureType;
-    private $content;
+    private $propertyContainer;
     private $locale;
     private $path;
     private $nodeName;
@@ -46,7 +46,7 @@ class SnippetDocument implements
     public function __construct()
     {
         $this->workflowStage = WorkflowStage::TEST;
-        $this->content = new PropertyContainer();
+        $this->propertyContainer = new PropertyContainer();
     }
 
     /**
@@ -164,9 +164,9 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getContent()
+    public function getPropertyContainer()
     {
-        return $this->content;
+        return $this->propertyContainer;
     }
     
     /**

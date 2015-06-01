@@ -178,12 +178,12 @@ class StructureSubscriberTest extends SubscriberTestCase
 class TestContentDocument implements StructureBehavior
 {
     private $structureType;
-    private $content;
+    private $propertyContainer;
     private $locale;
 
-    public function __construct(PropertyContainer $content = null)
+    public function __construct(PropertyContainer $propertyContainer = null)
     {
-        $this->content = $content;
+        $this->propertyContainer = $propertyContainer;
     }
 
     public function getStructureType() 
@@ -196,9 +196,9 @@ class TestContentDocument implements StructureBehavior
         $this->structureType = $structureType;
     }
 
-    public function getContent() 
+    public function getPropertyContainer() 
     {
-        return $this->content;
+        return $this->propertyContainer;
     }
 
     public function getLocale() 

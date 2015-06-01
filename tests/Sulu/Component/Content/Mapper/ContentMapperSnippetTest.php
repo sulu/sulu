@@ -171,7 +171,7 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $document = $this->documentManager->create('page');
         $document->setTitle('Hello');
-        $document->getContent()->bind(array(
+        $document->getPropertyContainer()->bind(array(
             'animals' => array($this->snippet1->getUuid()),
         ), false);
         $document->setParent($this->parent);
@@ -208,11 +208,11 @@ class ContentMapperSnippetTest extends SuluTestCase
         $document->setResourceSegment('/url/foo');
 
         if ($multiple) {
-            $document->getContent()->bind(array(
+            $document->getPropertyContainer()->bind(array(
                 'animals' => array($this->snippet1->getUuid(), $this->snippet2->getUuid()),
             ), false);
         } else {
-            $document->getContent()->bind(array(
+            $document->getPropertyContainer()->bind(array(
                 'animals' => $this->snippet1->getUuid(),
             ), false);
         }
@@ -235,12 +235,12 @@ class ContentMapperSnippetTest extends SuluTestCase
         $referrer = $this->documentManager->find('/cmf/sulu_io/contents/test', 'de');
 
         if ($multiple) {
-            $contents = $referrer->getContent()->getProperty('animals')->getValue();
+            $contents = $referrer->getPropertyContainer()->getProperty('animals')->getValue();
             $this->assertCount(1, $contents);
             $content = reset($contents);
             $this->assertEquals($this->snippet2->getUuid(), $content);
         } else {
-            $contents = $referrer->getContent()->getProperty('animals')->getValue();
+            $contents = $referrer->getPropertyContainer()->getProperty('animals')->getValue();
             $this->assertCount(0, $contents);
         }
     }
