@@ -47,7 +47,7 @@ class StructureMetadata extends ItemMetadata
 
     /**
      * Same as ItemMetadata::$children but without Sections
-     * @see StructureMetadata::burnModelRepresentation()
+     * @see StructureMetadata::burnProperties()
      * @var array
      */
     public $properties;
@@ -87,13 +87,16 @@ class StructureMetadata extends ItemMetadata
     }
 
     /**
-     * Populate the $modelProperties property with only those propertires
+     * Populate the $properties property with only those propertires
      * which are not related to the UI (i.e. the sections).
      *
+     * The data is therefore duplicated, but this does not matter as we
+     * only create this data once.
+     *
      * This should be called once after creating the structure and (therefore
-     * before writing to the cache
+     * before writing to the cache).
      */
-    public function burnModelRepresentation()
+    public function burnProperties()
     {
         $properties = array();
         foreach ($this->children as $child) {
