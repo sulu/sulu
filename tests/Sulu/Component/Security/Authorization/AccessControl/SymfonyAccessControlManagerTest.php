@@ -62,7 +62,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->aclProvider = $this->prophesize(MutableAclProviderInterface::class);
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
-        $this->securityIdentity = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');
+        $this->securityIdentity = new RoleSecurityIdentity('ROLE_SULU_ADMINISTRATOR');
         $this->acl = $this->prophesize(MutableAclInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
@@ -99,7 +99,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
 
-        $this->assertEquals(true, $permissions['SULU_ROLE_ADMINISTRATOR']['view']);
+        $this->assertEquals(true, $permissions['ROLE_SULU_ADMINISTRATOR']['view']);
     }
 
     /**
