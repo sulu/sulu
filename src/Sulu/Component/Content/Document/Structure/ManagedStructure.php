@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Document\Property;
+namespace Sulu\Component\Content\Document\Structure;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -22,36 +22,61 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 /**
  * Lazy loading container for content properties.
  */
-class ManagedPropertyContainer extends PropertyContainer
+class ManagedStructure extends Structure
 {
+    /**
+     * @var ContentTypeManagerInterface
+     */
     private $contentTypeManager;
+
+    /**
+     * @var object
+     */
     private $document;
-    private $legacyPropertyFactory;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
+    private $propertyFactory;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
-    private $structure;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structureMetadata;
+
+    /**
+     * @var NodeInterface
+     */
     private $node;
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param LegacyPropertyFactory $legacyPropertyFactory
+     * @param LegacyPropertyFactory $propertyFactory
      * @param DocumentInspector $inspector
      * @param object $document
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
-        LegacyPropertyFactory $legacyPropertyFactory,
+        LegacyPropertyFactory $propertyFactory,
         DocumentInspector $inspector,
         $document
     )
     {
         $this->contentTypeManager = $contentTypeManager;
         $this->document = $document;
-        $this->legacyPropertyFactory = $legacyPropertyFactory;
+        $this->propertyFactory = $propertyFactory;
         $this->inspector = $inspector;
     }
 
     /**
      * Return the named property and evaluate its content
+     *
+     * Lazy loads from the Compat system.
      *
      * @param string $name
      */
@@ -68,17 +93,16 @@ class ManagedPropertyContainer extends PropertyContainer
         }
 
         $structureProperty = $this->structure->getProperty($name);
-
         $contentTypeName = $structureProperty->getType();
 
         if ($structureProperty->isLocalized()) {
             $locale = $this->inspector->getLocale($this->document);
-            $property = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
+            $property = $this->propertyFactory->createTranslatedProperty($structureProperty, $locale);
         } else {
-            $property = $this->legacyPropertyFactory->createProperty($structureProperty);
+            $property = $this->propertyFactory->createProperty($structureProperty);
         }
 
-        $bridge = new StructureBridge($this->structure, $this->inspector, $this->legacyPropertyFactory, $this->document);
+        $bridge = new StructureBridge($this->structure, $this->inspector, $this->propertyFactory, $this->document);
         $property->setStructure($bridge);
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
@@ -90,7 +114,7 @@ class ManagedPropertyContainer extends PropertyContainer
             null
         );
 
-        $valueProperty = new PropertyValue($name, $property->getValue());
+        $valueProperty = new Property($name, $property->getValue());
         $this->properties[$name] = $valueProperty;
 
         return $valueProperty;
@@ -101,9 +125,9 @@ class ManagedPropertyContainer extends PropertyContainer
      *
      * @param StructureMetadata $structure
      */
-    public function setStructure(StructureMetadata $structure) 
+    public function setStructure(StructureMetadata $structureMetadata)
     {
-        $this->structure = $structure;
+        $this->structureMetadata = $structureMetadata;
     }
 
     /**
@@ -131,9 +155,12 @@ class ManagedPropertyContainer extends PropertyContainer
         return $this->structure->hasProperty($offset);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function bind($data, $clearMissing = true)
     {
-        foreach ($this->structure->getProperties() as $childName => $child) {
+        foreach (array_keys($this->structure->getProperties()) as $childName) {
             if (false === $clearMissing && !isset($data[$childName])) {
                 continue;
             }
@@ -147,8 +174,10 @@ class ManagedPropertyContainer extends PropertyContainer
 
     private function init()
     {
-        if (!$this->structure) {
-            $this->structure = $this->inspector->getStructure($this->document);
+        if ($this->structure) {
+            return;
         }
+
+        $this->structure = $this->inspector->getStructure($this->document);
     }
 }

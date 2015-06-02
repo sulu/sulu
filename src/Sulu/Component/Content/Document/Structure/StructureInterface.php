@@ -13,12 +13,12 @@ namespace Sulu\Component\Content\Document\Property;
 use Sulu\Component\Content\Types\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Compat\Structure\Structure;
 
 /**
- * Container for content properties.
+ * Structures are used to represent dynamic Sulu content.
+ * They are essentially contains for Property instances.
  */
-interface PropertyContainerInterface extends \ArrayAccess
+interface StructureInterface extends \ArrayAccess
 {
     /**
      * Return the named property
