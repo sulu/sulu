@@ -67,6 +67,10 @@
             </argument>
         </service>
 
+        <service id="sulu_document_manager.path_builder" class="Sulu\Component\DocumentManager\PathBuilder" public="false">
+            <argument type="service" id="sulu_document_manager.path_segment_registry" />
+        </service>
+
         <service id="sulu_document_manager.document_inspector" class="Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.path_segment_registry" />
