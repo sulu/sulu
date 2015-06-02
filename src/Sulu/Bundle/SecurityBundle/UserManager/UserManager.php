@@ -21,7 +21,6 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
@@ -31,6 +30,7 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 
 class UserManager implements UserManagerInterface
 {
@@ -49,12 +49,12 @@ class UserManager implements UserManagerInterface
     /**
      * @var UserRepositoryInterface
      */
-    private $userRepository;
+    protected $userRepository;
 
     /**
      * @var ObjectManager
      */
-    private $em;
+    protected $em;
 
     /**
      * @var RoleRepository
@@ -67,9 +67,9 @@ class UserManager implements UserManagerInterface
     private $groupRepository;
 
     /**
-     * @var ContactRepository
+     * @var ContactManager
      */
-    private $contactRepository;
+    protected $contactManager;
 
     /**
      * @var SaltGenerator
@@ -86,7 +86,7 @@ class UserManager implements UserManagerInterface
         EncoderFactory $encoderFactory = null,
         RoleRepository $roleRepository = null,
         GroupRepository $groupRepository = null,
-        ContactRepository $contactRepository = null,
+        ContactManager $contactManager = null,
         SaltGenerator $saltGenerator = null,
         CurrentUserDataInterface $currentUserData = null,
         UserRepositoryInterface $userRepository = null
@@ -95,7 +95,7 @@ class UserManager implements UserManagerInterface
         $this->encoderFactory = $encoderFactory;
         $this->roleRepository = $roleRepository;
         $this->groupRepository = $groupRepository;
-        $this->contactRepository = $contactRepository;
+        $this->contactManager = $contactManager;
         $this->saltGenerator = $saltGenerator;
         $this->currentUserData = $currentUserData;
         $this->userRepository = $userRepository;
@@ -562,7 +562,7 @@ class UserManager implements UserManagerInterface
      */
     private function getContact($id)
     {
-        $contact = $this->contactRepository->findById($id);
+        $contact = $this->contactManager->findById($id);
 
         if (!$contact) {
             throw new EntityNotFoundException(static::$entityNameContact, $id);
