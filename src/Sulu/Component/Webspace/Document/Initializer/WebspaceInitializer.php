@@ -6,7 +6,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
@@ -17,7 +17,7 @@ class WebspaceInitializer implements InitializerInterface
 {
     private $webspaceManager;
     private $documentManager;
-    private $pathSegmentRegistry;
+    private $pathBuilder;
     private $inspector;
     private $nodeManager;
 
@@ -25,22 +25,19 @@ class WebspaceInitializer implements InitializerInterface
         WebspaceManagerInterface $webspaceManager,
         DocumentManager $documentManager,
         DocumentInspector $inspector,
-        PathSegmentRegistry $pathSegmentRegistry,
+        PathBuilder $pathBuilder,
         NodeManager $nodeManager
     )
     {
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
-        $this->pathSegmentRegistry = $pathSegmentRegistry;
+        $this->pathBuilder = $pathBuilder;
         $this->inspector = $inspector;
         $this->nodeManager = $nodeManager;
     }
 
     public function initialize(OutputInterface $output)
     {
-        $this->start = microtime(true);
-        $this->initializeBase($output);
-
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $this->initializeWebspace($output, $webspace);
         }
@@ -48,46 +45,21 @@ class WebspaceInitializer implements InitializerInterface
         $this->documentManager->flush();
     }
 
-    private function initializeBase(OutputInterface $output)
-    {
-        $basePath = '/' . $this->pathSegmentRegistry->getPathSegment('base');
-
-        $output->writeln(sprintf('<info>Base</info>: %s', $basePath));
-
-        if (!$this->nodeManager->has($basePath)) {
-            $this->nodeManager->createPath($basePath);
-        }
-    }
-
     private function initializeWebspace(OutputInterface $output, Webspace $webspace)
     {
-        $webspacePath = '/' . $this->pathSegmentRegistry->getPathSegment('base') . '/' . $webspace->getKey();
-        $output->writeln(sprintf('<info>Webspace</info>: %s', $webspacePath));
+        $homePath = $this->pathBuilder->build(array('%base%', $webspace->getKey(), '%content%'));
+        $routesPath = $this->pathBuilder->build(array('%base%', $webspace->getKey(), '%route%'));
 
         $webspaceLocales = array();
-
         foreach ($webspace->getAllLocalizations() as $localization) {
             $webspaceLocales[] = $localization->getLocalization();
         }
 
-        if (!$this->nodeManager->has($webspacePath)) { 
-            $this->nodeManager->createPath($webspacePath);
-        }
-
-        $webspaceDocument = $this->documentManager->find($webspacePath);
-
-        $routesPath = $webspacePath . '/' . $this->pathSegmentRegistry->getPathSegment('route');
-
-        if (!$this->nodeManager->has($routesPath)) {
-            $this->nodeManager->createPath($routesPath);
-        }
-
-        $homePath = $webspacePath . '/' . $this->pathSegmentRegistry->getPathSegment('content');
-
         if ($this->nodeManager->has($homePath)) {
             $homeDocument = $this->documentManager->find($homePath, 'fr', array(
-                'locale' => 'fr',
                 'load_ghost_content' => false,
+                'auto_create' => true,
+                'path' => $homePath
             ));
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
@@ -95,7 +67,6 @@ class WebspaceInitializer implements InitializerInterface
             $homeDocument->setTitle('Homepage');
             $homeDocument->setStructureType('overview');
             $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
-            $homeDocument->setParent($webspaceDocument);
             $existingLocales = array();
         }
 
