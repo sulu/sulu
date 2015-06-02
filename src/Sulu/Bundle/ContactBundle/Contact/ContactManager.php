@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
+use \DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -50,6 +51,21 @@ class ContactManager extends AbstractContactManager
         $this->contactTitleRepository = $contactTitleRepository;
     }
 
+    /**
+     * Returns the tag manager
+     *
+     * @return TagManagerInterface
+     */
+    public function getTagManager()
+    {
+        return $this->tagManager;
+    }
+
+    /**
+     * Deletes the contact for the given id
+     *
+     * @param int $id
+     */
     public function delete($id)
     {
         /**

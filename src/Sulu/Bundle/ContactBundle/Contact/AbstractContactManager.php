@@ -51,6 +51,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected static $emailEntityName = 'SuluContactBundle:Email';
     protected static $urlEntityName = 'SuluContactBundle:Url';
     protected static $phoneEntityName = 'SuluContactBundle:Phone';
+    protected static $categoryEntityName = 'SuluCategoryBundle:Category';
 
     /**
      * @var ObjectManager
@@ -838,14 +839,13 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected function addCategories($contact, $data)
     {
         $success = true;
-        $categoryEntity = 'SuluCategoryBundle:Category';
 
-        $category = $this->em
-            ->getRepository($categoryEntity)
-            ->find($data['id']);
+        $category = $this->em->getRepository(
+            self::$categoryEntityName
+        )->find($data['id']);
 
         if (!$category) {
-            throw new EntityNotFoundException($categoryEntity, $data['id']);
+            throw new EntityNotFoundException(self::$categoryEntityName, $data['id']);
         } else {
             $contact->addCategorie($category);
         }
@@ -866,9 +866,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $success = true;
 
         /** @var UrlType $urlType */
-        $urlType = $this->em
-            ->getRepository(self::$urlTypeEntityName)
-            ->find($entry['urlType']['id']);
+        $urlType = $this->em->getRepository(
+            self::$urlTypeEntityName
+        )->find($entry['urlType']['id']);
 
         if (!$urlType) {
             throw new EntityNotFoundException(self::$urlTypeEntityName, $entry['urlType']['id']);
@@ -1425,7 +1425,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected function addTag($contact, $data)
     {
         $success = true;
-        $resolvedTag = $this->tagManager->findByName($data);
+        $resolvedTag = $this->getTagManager()->findByName($data);
         $contact->addTag($resolvedTag);
 
         return $success;
