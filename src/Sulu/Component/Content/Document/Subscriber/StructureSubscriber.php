@@ -83,10 +83,10 @@ class StructureSubscriber extends AbstractMappingSubscriber
     {
         $options = $event->getOptions();
         $options->setDefaults(array(
-            'hydrate.load_ghost_content' => true
+            'load_ghost_content' => true
         ));
         $options->setAllowedTypes(array(
-            'hydrate.load_ghost_content' => 'bool',
+            'load_ghost_content' => 'bool',
         ));
     }
 
@@ -134,7 +134,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
         $document->setStructureType($value);
 
 
-        if (false === $event->getOption('hydrate.load_ghost_content', false)) {
+        if (false === $event->getOption('load_ghost_content', false)) {
             if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
                 $value = null;
             }
