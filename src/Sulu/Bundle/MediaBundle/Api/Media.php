@@ -789,6 +789,17 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("storageName")
+     *
+     * @return string
+     */
+    public function getStorageName()
+    {
+        return $this->getFileVersion()->getStorageName();
+    }
+
+    /**
      * Returns array representation of media.
      *
      * @return array
@@ -805,6 +816,7 @@ class Media extends ApiWrapper
             'description' => $this->getDescription(),
             'version' => $this->getVersion(),
             'name' => $this->getName(),
+            'storageName' => $this->getStorageName(),
             'storageOptions' => $this->getStorageOptions(),
             'publishLanguages' => $this->getPublishLanguages(),
             'tags' => $this->getTags(),

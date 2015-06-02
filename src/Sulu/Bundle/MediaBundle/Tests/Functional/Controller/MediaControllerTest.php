@@ -157,6 +157,7 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
+        $fileVersion->setStorageName('local');
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.jpeg"}');
@@ -199,6 +200,7 @@ class MediaControllerTest extends SuluTestCase
         ];
 
         $this->collection->setStyle(json_encode($style));
+        $this->collection->setDefaultStorageName('local');
 
         // Create Collection Type
         $this->collectionType = new CollectionType();
@@ -356,6 +358,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals('2', $response->downloadCounter);
+        $this->assertEquals('local', $response->storageName);
+        $this->assertNotEmpty($response->storageOptions);
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);

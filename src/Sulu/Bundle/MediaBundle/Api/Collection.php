@@ -289,7 +289,7 @@ class Collection extends ApiWrapper
      */
     public function setDefaultStorageName($defaultStorageName)
     {
-        $this->entity->setDefaultStorageType($defaultStorageName);
+        $this->entity->setDefaultStorageName($defaultStorageName);
 
         return $this;
     }
