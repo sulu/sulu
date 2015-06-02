@@ -15,12 +15,12 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
  * Handle serializeation and deserialization of document content
  */
-class PropertyContainerHandler implements SubscribingHandlerInterface
+class StructureHandler implements SubscribingHandlerInterface
 {
     public static function getSubscribingMethods()
     {
@@ -28,13 +28,13 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
-                'type' => PropertyContainer::class,
+                'type' => Structure::class,
                 'method' => 'doSerialize',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
-                'type' => PropertyContainer::class,
+                'type' => Structure::class,
                 'method' => 'doDeserialize',
             ),
         );
@@ -48,7 +48,7 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
-        PropertyContainer $container,
+        Structure $container,
         array $type,
         Context $context
     ) {
@@ -69,13 +69,13 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $container = new PropertyContainer();
+        $structure = new Structure();
 
         foreach ($data as $key => $value) {
-            $container->getProperty($key)->setValue($value);
+            $structure->getProperty($key)->setValue($value);
         }
 
-        return $container;
+        return $structure;
     }
 
 }

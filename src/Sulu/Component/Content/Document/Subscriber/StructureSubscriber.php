@@ -20,8 +20,8 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface as DocumentMetadataFactory;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -112,11 +112,11 @@ class StructureSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $structure = $this->inspector->getStructure($document);
+        $structureMetadata = $this->inspector->getStructure($document);
 
-        $propertyContainer = $document->getContent();
-        if ($propertyContainer instanceof ManagedPropertyContainer) {
-            $propertyContainer->setStructure($structure);
+        $structure = $document->getStructure();
+        if ($structure instanceof ManagedStructure) {
+            $structure->setStructure($structureMetadata);
         }
     }
 
@@ -141,14 +141,14 @@ class StructureSubscriber extends AbstractMappingSubscriber
         }
 
         if ($value) {
-            $container = $this->createPropertyContainer($document);
+            $container = $this->createStructure($document);
         } else {
-            $container = new PropertyContainer();
+            $container = new Structure();
         }
 
         // Set the property container
         $event->getAccessor()->set(
-            'content',
+            'structure',
             $container
         );
     }
@@ -190,9 +190,9 @@ class StructureSubscriber extends AbstractMappingSubscriber
      * @param mixed $document
      * @param NodeInterface $node
      */
-    private function createPropertyContainer($document)
+    private function createStructure($document)
     {
-        return new ManagedPropertyContainer(
+        return new ManagedStructure(
             $this->contentTypeManager,
             $this->legacyPropertyFactory,
             $this->inspector,
@@ -208,20 +208,20 @@ class StructureSubscriber extends AbstractMappingSubscriber
      */
     private function mapContentToNode($document, NodeInterface $node, $locale)
     {
-        $propertyContainer = $document->getContent();
+        $structure = $document->getStructure();
         $webspaceName = $this->inspector->getWebspace($document);
-        $structure = $this->inspector->getStructure($document);
+        $structureMetadata = $this->inspector->getStructure($document);
 
-        foreach ($structure->getProperties() as $propertyName => $structureProperty) {
-            $realProperty = $propertyContainer->getProperty($propertyName);
+        foreach ($structureMetadata->getProperties() as $propertyName => $structureProperty) {
+            $realProperty = $structure->getProperty($propertyName);
             $value = $realProperty->getValue();
 
             if ($structureProperty->isRequired() && null === $value) {
                 throw new MandatoryPropertyException(sprintf(
                     'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
                     $propertyName,
-                    $structure->getName(),
-                    $structure->resource
+                    $structureMetadata->getName(),
+                    $structureMetadata->resource
                 ));
             }
 

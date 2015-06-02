@@ -8,20 +8,17 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Document\Property;
+namespace Sulu\Component\Content\Document\Structure;
 
 use Sulu\Component\Content\Types\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Compat\Structure\Structure;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Document\Property\PropertyValue;
-use Sulu\Component\Content\Document\Property\PropertyContainerInterface;
+use Sulu\Component\Content\Document\Structure\Property;
 
 /**
  * Lazy loading container for content properties.
  */
-class PropertyContainer implements PropertyContainerInterface
+class Structure implements StructureInterface
 {
     /**
      * @var array
@@ -67,7 +64,7 @@ class PropertyContainer implements PropertyContainerInterface
             return $this->properties[$name];
         }
 
-        $property = new PropertyValue($name);
+        $property = new Property($name);
         $this->properties[$name] = $property;
 
         return $property;

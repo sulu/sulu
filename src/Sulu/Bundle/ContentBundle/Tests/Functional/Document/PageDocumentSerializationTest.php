@@ -21,7 +21,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\PhpcrOdm\ContentContainer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ContentBundle\Document\Route;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 
 class PageDocumentSerializationTest extends SuluTestCase
 {
@@ -71,12 +71,12 @@ class PageDocumentSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(PageDocument::class, $page);
         $this->assertEquals('/foo', $page->getResourceSegment()); $this->assertEquals('Hello', $page->getTitle());
-        $content = $page->getContent();
+        $structure = $page->getStructure();
 
-        $this->assertInternalType('integer', $content->getProperty('integer')->getValue());
+        $this->assertInternalType('integer', $structure->getProperty('integer')->getValue());
 
-        $this->assertInstanceOf(PropertyContainer::class, $content);
-        $this->assertCount(2, $content->getProperty('arrayOfObjects')->getValue());
+        $this->assertInstanceOf(Structure::class, $structure);
+        $this->assertCount(2, $structure->getProperty('arrayOfObjects')->getValue());
     }
 
     /**
@@ -105,7 +105,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page = $this->serializer->deserialize($data, PageDocument::class, 'json');
 
         $this->assertInstanceOf(PageDocument::class, $page);
-        $this->assertEquals('Hello', $page->getContent()->getProperty('title')->getValue());
+        $this->assertEquals('Hello', $page->getStructure()->getProperty('title')->getValue());
     }
 
     private function createPage($data)
@@ -115,7 +115,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page->setParent($this->parent);
         $page->setStructureType('contact');
         $page->setResourceSegment('/foo');
-        $page->getContent()->bind($data, true);
+        $page->getStructure()->bind($data, true);
 
         return $page;
     }

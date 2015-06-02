@@ -19,7 +19,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
@@ -144,9 +144,9 @@ class BasePageDocument implements
     protected $structureType;
 
     /**
-     * @var PropertyContainerInterface
+     * @var StructureInterface
      */
-    protected $content;
+    protected $structure;
 
     /**
      * @var string
@@ -177,7 +177,7 @@ class BasePageDocument implements
     {
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
-        $this->content = new PropertyContainer();
+        $this->structure = new Structure();
         $this->extensions =  new ExtensionContainer();
         $this->children = new \ArrayIterator();
     }
@@ -409,9 +409,9 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getContent()
+    public function getStructure()
     {
-        return $this->content;
+        return $this->structure;
     }
     
     /**
