@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Property\PropertyContainerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
@@ -59,7 +60,7 @@ class BasePageDocument implements
     protected $nodeName;
 
     /**
-     * @var \DataTime
+     * @var \DateTime
      */
     protected $created;
 
@@ -89,7 +90,7 @@ class BasePageDocument implements
     protected $title;
 
     /**
-     * @var stringt
+     * @var string
      */
     protected $resourceSegment;
 
