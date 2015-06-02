@@ -63,7 +63,7 @@ class DataNormalizer
             'shadowLocale' => self::getAndUnsetValue($data, 'shadowLocale'),
             'parent' => self::getAndUnsetValue($data, 'parent'),
             'workflowStage' => self::getAndUnsetValue($data, 'workflowStage'),
-            'propertyContainer' => $data,
+            'structure' => $data,
         );
 
         foreach ($normalized as $key => $value) {

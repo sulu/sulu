@@ -92,7 +92,7 @@ class ManagedStructure extends Structure
             $this->node = $this->inspector->getNode($this->document);
         }
 
-        $structureProperty = $this->structure->getProperty($name);
+        $structureProperty = $this->structureMetadata->getProperty($name);
         $contentTypeName = $structureProperty->getType();
 
         if ($structureProperty->isLocalized()) {
@@ -102,7 +102,7 @@ class ManagedStructure extends Structure
             $property = $this->propertyFactory->createProperty($structureProperty);
         }
 
-        $bridge = new StructureBridge($this->structure, $this->inspector, $this->propertyFactory, $this->document);
+        $bridge = new StructureBridge($this->structureMetadata, $this->inspector, $this->propertyFactory, $this->document);
         $property->setStructure($bridge);
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
@@ -139,7 +139,7 @@ class ManagedStructure extends Structure
     {
         $this->init();
         $values = array();
-        foreach (array_keys($this->structure->getProperties()) as $childName) {
+        foreach (array_keys($this->structureMetadata->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
 
@@ -152,7 +152,7 @@ class ManagedStructure extends Structure
     public function offsetExists($offset)
     {
         $this->init();
-        return $this->structure->hasProperty($offset);
+        return $this->structureMetadata->hasProperty($offset);
     }
 
     /**
@@ -160,7 +160,7 @@ class ManagedStructure extends Structure
      */
     public function bind($data, $clearMissing = true)
     {
-        foreach (array_keys($this->structure->getProperties()) as $childName) {
+        foreach (array_keys($this->structureMetadata->getProperties()) as $childName) {
             if (false === $clearMissing && !isset($data[$childName])) {
                 continue;
             }
@@ -174,10 +174,10 @@ class ManagedStructure extends Structure
 
     private function init()
     {
-        if ($this->structure) {
+        if ($this->structureMetadata) {
             return;
         }
 
-        $this->structure = $this->inspector->getStructure($this->document);
+        $this->structureMetadata = $this->inspector->getStructure($this->document);
     }
 }

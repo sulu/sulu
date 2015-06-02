@@ -63,7 +63,7 @@ class SearchIntegrationTest extends SuluTestCase
         $document->setResourceSegment('/hallo/fo');
         $document->setStructureType('images');
         $document->setParent($this->webspaceDocument);
-        $document->getPropertyContainer()->bind(array(
+        $document->getStructure()->bind(array(
             'images' => $this->mediaSelectionContainer->reveal()
         ), false);
         $this->documentManager->persist($document, 'de');

@@ -45,7 +45,7 @@ class SaveStructureTest extends BaseTestCase
         $document->setStructureType('blocks');
         $document->setResourceSegment('/places');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $document->getPropertyContainer()->bind(array(
+        $document->getStructure()->bind(array(
             'block' => array(
                 array(
                     'type' => 'article',

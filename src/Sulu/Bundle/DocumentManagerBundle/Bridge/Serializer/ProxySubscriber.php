@@ -13,7 +13,6 @@ namespace Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Component\DocumentManager\ClassNameInflector;
 

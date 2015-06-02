@@ -302,7 +302,7 @@ class StructureProvider implements ProviderInterface
     private function getContentField(PropertyMetadata $property)
     {
         $field = $this->factory->createMetadataExpression(sprintf(
-            'object.getPropertyContainer().%s.getValue()', $property->getName()
+            'object.getStructure().%s.getValue()', $property->getName()
         ));
 
         return $field;

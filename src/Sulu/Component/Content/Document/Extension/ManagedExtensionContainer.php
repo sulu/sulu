@@ -9,7 +9,7 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 /**
  * The managed extension container lazily loads data from the actual
  * extension classes. It serves a similar, but not identical, role to
- * the ManagedPropertyContainer.
+ * the ManagedStructure.
  *
  * In contrast to the property container, which returns Property instances,
  * extensions return simple arrays.

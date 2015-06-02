@@ -107,8 +107,8 @@ class ContentMapperTest extends SuluTestCase
         $page = $route->getTargetDocument();
 
         $this->assertEquals('Testname', $page->getTitle());
-        $this->assertEquals('sulu_io', $page->getPropertyContainer()->getProperty('article')->getValue());
-        $this->assertEquals(array('tag1', 'tag2'), $page->getPropertyContainer()->getProperty('tags')->getValue());
+        $this->assertEquals('sulu_io', $page->getStructure()->getProperty('article')->getValue());
+        $this->assertEquals(array('tag1', 'tag2'), $page->getStructure()->getProperty('tags')->getValue());
         $this->assertEquals('overview', $page->getStructureType());
         $this->assertEquals(
             WorkflowStage::TEST,
@@ -116,7 +116,7 @@ class ContentMapperTest extends SuluTestCase
         );
 
         // no navigationContext saved
-        $this->assertEquals(false, $page->getPropertyContainer()->hasProperty('navContexts'));
+        $this->assertEquals(false, $page->getStructure()->hasProperty('navContexts'));
     }
 
     public function provideSaveShadow()

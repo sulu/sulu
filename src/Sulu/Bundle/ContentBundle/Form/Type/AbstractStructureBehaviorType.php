@@ -40,7 +40,7 @@ abstract class AbstractStructureBehaviorType extends AbstractType
     {
         $builder->add('title', 'text');
         $builder->add('structureType', 'text');
-        $builder->add('propertyContainer', 'text', array('property_path' => 'propertyContainer.stagedData'));
+        $builder->add('structure', 'text', array('property_path' => 'structure.stagedData'));
         $builder->setAttribute('clear_missing_content', $options['clear_missing_content']);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array('Sulu\Component\Content\Compat\DataNormalizer', 'normalize'));
@@ -51,6 +51,6 @@ abstract class AbstractStructureBehaviorType extends AbstractType
     {
         $document = $event->getData();
         $clearMissingContent = $event->getForm()->getConfig()->getAttribute('clear_missing_content');
-        $document->getPropertyContainer()->commitStagedData($clearMissingContent);
+        $document->getStructure()->commitStagedData($clearMissingContent);
     }
 }

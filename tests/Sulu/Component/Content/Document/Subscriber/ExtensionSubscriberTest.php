@@ -141,7 +141,7 @@ class TestExtensionDocument implements ExtensionBehavior
     {
     }
 
-    public function getPropertyContainer() 
+    public function getStructure() 
     {
     }
 
