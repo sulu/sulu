@@ -45,7 +45,7 @@ class StructureSubscriber implements EventSubscriberInterface
     {
         return array(
             Events::PERSIST => array('handlePersist', -10),
-            Events::REMOVE => array('handlePreRemove',  600),
+            Events::REMOVE => array('handlePreRemove', 600),
         );
     }
 

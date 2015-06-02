@@ -105,7 +105,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($event->getOption('hydrate.load_ghost_content', true) === true) {
+        if ($event->getOption('load_ghost_content', true) === true) {
             $this->documentRegistry->updateLocale($document, $newLocale, $locale);
             return;
         }
