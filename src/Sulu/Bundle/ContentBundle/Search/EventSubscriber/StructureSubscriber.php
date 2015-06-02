@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\EventListener;
+namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Compat\Content;
@@ -33,33 +33,19 @@ class StructureSubscriber implements EventSubscriberInterface
     protected $searchManager;
 
     /**
-     * @var ContentInterface[]
-     */
-    private $documentsToDeindex = array();
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
      * @param SearchManagerInterface $searchManager
      */
     public function __construct(
-        SearchManagerInterface $searchManager,
-        MetadataFactoryInterface $metadataFactory
+        SearchManagerInterface $searchManager
     ) {
         $this->searchManager = $searchManager;
-        $this->metadataFactory = $metadataFactory;
     }
 
     public static function getSubscribedEvents()
     {
         return array(
-            Events::PERSIST => 'handlePersist',
-            Events::REMOVE => array(
-                array('handlePreRemove', 600),
-            ),
+            Events::PERSIST => array('handlePersist', -10),
+            Events::REMOVE => array('handlePreRemove',  600),
         );
     }
 
