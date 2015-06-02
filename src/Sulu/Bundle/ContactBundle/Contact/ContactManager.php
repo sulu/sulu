@@ -70,6 +70,7 @@ class ContactManager extends AbstractContactManager
         if (!$contact) {
             return null;
         }
+
         return $contact;
     }
 
