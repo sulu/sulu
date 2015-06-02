@@ -11,26 +11,26 @@
 namespace Sulu\Bundle\SnippetBundle\Document;
 
 use Sulu\Component\DocumentManager\NodeManager;
-use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SnippetInitializer
 {
     private $nodeManager;
-    private $pathSegmentRegistry;
+    private $pathBuilder;
 
     public function __construct(
         NodeManager $nodeManager,
-        PathSegmentRegistry $pathSegmentRegistry
+        PathBuilder $pathBuilder
     )
     {
         $this->nodeManager = $nodeManager;
-        $this->pathSegmentRegistry = $pathSegmentRegistry;
+        $this->pathBuilder = $pathBuilder;
     }
 
     public function initialize(OutputInterface $output)
     {
-        $snippetPath = '/' . $this->pathSegmentRegistry->getPathSegment('base') . '/' . $this->pathSegmentRegistry->getPathSegment('snippet');
+        $snippetPath = $this->pathBuilder->build(array('%base%', '%snippet%'));
         $output->writeln(sprintf('<info>Snippets</info>: %s ', $snippetPath));
 
         if (true === $this->nodeManager->has($snippetPath)) {
