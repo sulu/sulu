@@ -47,6 +47,37 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
+    public function findUsersByAccount($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('user')
+                ->leftJoin('user.userRoles', 'userRoles')
+                ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.userGroups', 'userGroups')
+                ->leftJoin('user.userSettings', 'settings')
+                ->leftJoin('userGroups.group', 'grp')
+                ->leftJoin('user.contact', 'contact')
+                ->leftJoin('contact.emails', 'emails')
+                ->leftJoin('contact.accountContacts', 'accountContacts')
+                ->leftJoin('accountContacts.account', 'account')
+                ->addSelect('userRoles')
+                ->addSelect('role')
+                ->addSelect('userGroups')
+                ->addSelect('grp')
+                ->addSelect('settings')
+                ->addSelect('contact')
+                ->addSelect('emails')
+                ->where('account.id=:accountId');
+
+            $query = $qb->getQuery();
+            $query->setParameter('accountId', $id);
+
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

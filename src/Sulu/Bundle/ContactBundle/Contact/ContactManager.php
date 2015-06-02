@@ -20,6 +20,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 
 class ContactManager extends AbstractContactManager
 {
@@ -34,21 +35,43 @@ class ContactManager extends AbstractContactManager
     private $accountRepository;
 
     /**
-     * @var contactTitleRepository
+     * @var ContactTitleRepository
      */
     private $contactTitleRepository;
+
+    /**
+     * @var ContactRepository
+     */
+    private $contactRepository;
 
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
+        ContactRepository $contactRepository,
         $accountEntityName
     ) {
         parent::__construct($em, $accountEntityName);
         $this->tagManager = $tagManager;
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
+        $this->contactRepository = $contactRepository;
+    }
+
+    /**
+     * Find a contact by it's id
+     *
+     * @param int $id
+     */
+    public function findById($id)
+    {
+        $contact = $this->contactRepository->findById($id);
+        if (!$contact) {
+            return null;
+        }
+
+        return $contact;
     }
 
     /**
@@ -159,6 +182,7 @@ class ContactManager extends AbstractContactManager
             if (!$contact) {
                 throw new EntityNotFoundException(self::$contactEntityName, $id);
             }
+
             $this->setMainAccount($contact, $data);
 
             // process details
@@ -222,7 +246,7 @@ class ContactManager extends AbstractContactManager
                 }
 
                 // Set position on contact
-                $position = $this->getPosition($data['position']);
+                $position = $this->getPosition($this->getProperty($data, 'position'));
 
                 // create new account-contact relation
                 $this->createMainAccountContact(
