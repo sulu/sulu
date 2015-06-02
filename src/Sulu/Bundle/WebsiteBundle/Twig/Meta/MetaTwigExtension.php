@@ -67,7 +67,6 @@ class MetaTwigExtension extends \Twig_Extension
     {
         // determine default and current values
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $currentLocale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         $currentPortal = $this->requestAnalyzer->getPortal();
         $defaultLocale = null;
         if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
@@ -78,11 +77,9 @@ class MetaTwigExtension extends \Twig_Extension
         foreach ($urls as $locale => $url) {
             if ($url !== null) {
                 if ($locale === $defaultLocale) {
-                    $result[] = $this->getAlternate($url, $webspaceKey, $locale);
                     $result[] = $this->getAlternate($url, $webspaceKey, $locale, true);
-                } elseif ($locale !== $currentLocale) {
-                    $result[] = $this->getAlternate($url, $webspaceKey, $locale);
                 }
+                $result[] = $this->getAlternate($url, $webspaceKey, $locale);
             }
         }
 
@@ -129,7 +126,6 @@ class MetaTwigExtension extends \Twig_Extension
 
         // build meta tags
         $result = array();
-        $result[] = $this->getMeta('title', $seo['title']);
         $result[] = $this->getMeta('description', $seo['description']);
         $result[] = $this->getMeta('keywords', $seo['keywords']);
         $result[] = $this->getMeta('robots', strtoupper(implode(', ', $robots)));
