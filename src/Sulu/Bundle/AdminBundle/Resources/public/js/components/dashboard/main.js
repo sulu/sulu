@@ -18,6 +18,21 @@ define(function() {
 
     return {
 
+        layout: {
+            navigation: {
+                collapsed: false
+            },
+            content: {
+                width: 'max',
+                topSpace: false,
+                leftSpace: false,
+                rightSpace: false
+            },
+            sidebar: false
+        },
+
+        header: false,
+
         /**
          * Initialize the component
          */

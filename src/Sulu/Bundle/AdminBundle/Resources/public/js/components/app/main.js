@@ -167,24 +167,22 @@ define(function() {
         initializeRouter: function() {
             var AppRouter = this.sandbox.mvc.Router({
                 routes: {
+                    // Dashboard
+                    '': 'dashboard',
+
                     // Default
-                    '*actions': 'defaultAction'
+                    '*actions': 'default'
                 },
 
-                defaultAction: function() {
+                dashboard: function() {
+                    this.html('<div data-aura-component="dashboard@suluadmin"/>');
+                }.bind(this),
+
+                default: function() {
                     // We have no matching route
                 }
             });
             router = new AppRouter();
-
-            // add dashboard route
-            this.sandbox.mvc.routes.push({
-                route: '',
-                callback: function() {
-                    console.log('dashboard');
-                    this.html('<div data-aura-component="dashboard@suluadmin"/>');
-                }
-            });
 
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
@@ -321,11 +319,6 @@ define(function() {
             this.sandbox.on('husky.tabs.header.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
-
-            // return current url
-            this.sandbox.on('navigation.url', function(callbackFunction) {
-                callbackFunction(this.sandbox.mvc.history.fragment);
-            }, this);
 
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
