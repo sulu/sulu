@@ -242,7 +242,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $this->documentManager->persist($document, $locale, array(
-            'blame.user' => $userId,
+            'user' => $userId,
         ));
 
         $this->documentManager->flush();
@@ -346,7 +346,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhosts = false
     ) {
         $parent = null;
-        $options = array('hydrate.load_ghost_content' => true);
+        $options = array('load_ghost_content' => true);
         if ($uuid) {
             $parent = $this->documentManager->find($uuid, $languageCode, $options);
         }
@@ -392,7 +392,7 @@ class ContentMapper implements ContentMapperInterface
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
         $document = $this->documentManager->find($uuid, $locale, array(
-            'hydrate.load_ghost_content' => $loadGhostContent,
+            'load_ghost_content' => $loadGhostContent,
         ));
 
         return $this->documentToStructure($document);
@@ -654,7 +654,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->documentManager->find($uuid, $locale);
         $this->documentManager->reorder($document, $beforeUuid);
         $this->documentManager->persist($document, $locale, array(
-            'blame.user' => $userId,
+            'user' => $userId,
         ));
 
         return $this->documentToStructure($document);
@@ -778,7 +778,7 @@ class ContentMapper implements ContentMapperInterface
             $document->setResourceSegment($newResourceLocator);
 
             $this->documentManager->persist($document, $locale, array(
-                'blame.user' => $userId,
+                'user' => $userId,
             ));
         }
 
@@ -1121,7 +1121,7 @@ class ContentMapper implements ContentMapperInterface
     private function loadDocument($pathOrUuid, $locale, $options)
     {
         $document = $this->documentManager->find($pathOrUuid, $locale, array(
-            'hydrate.load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
+            'load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
         ));
 
         if ($this->optionsShouldExcludeDocument($document, $options)) {

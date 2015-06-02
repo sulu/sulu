@@ -87,7 +87,7 @@ class WebspaceInitializer implements InitializerInterface
         if ($this->nodeManager->has($homePath)) {
             $homeDocument = $this->documentManager->find($homePath, 'fr', array(
                 'locale' => 'fr',
-                'hydrate.load_ghost_content' => false,
+                'load_ghost_content' => false,
             ));
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
