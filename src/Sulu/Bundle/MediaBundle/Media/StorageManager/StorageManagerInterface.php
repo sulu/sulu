@@ -65,7 +65,14 @@ interface StorageManagerInterface
      *
      * @return string
      */
-    public function getDefaultStorageName();
+    public function getDefaultName();
+
+    /**
+     * Give back a list of available storage services
+     *
+     * @return array
+     */
+    public function getNames();
 
     /**
      * Adds a new Storage to the managers

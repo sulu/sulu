@@ -29,7 +29,7 @@ class StorageManager implements StorageManagerInterface
     /**
      * @var string
      */
-    protected $defaultStorageName;
+    protected $defaultName;
 
     /**
      * @var LoggerInterface
@@ -37,13 +37,14 @@ class StorageManager implements StorageManagerInterface
     protected $logger;
 
     /**
-     * @param string $defaultStorageName
+     * @param string $defaultName
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        $defaultStorageName,
+        $defaultName,
         $logger = null
     ) {
-        $this->defaultStorageName = $defaultStorageName;
+        $this->defaultName = $defaultName;
         $this->logger = $logger ?: new NullLogger();
     }
 
@@ -74,18 +75,13 @@ class StorageManager implements StorageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultStorageName()
+    public function getDefaultName()
     {
-        return $this->defaultStorageName;
+        return $this->defaultName;
     }
 
     /**
-     * Give back the public download url for a file
-     *
-     * @param $storageOption
-     * @param string $storageName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getDownloadUrl($storageOption, $storageName = null)
     {
@@ -100,14 +96,13 @@ class StorageManager implements StorageManagerInterface
         $this->storages[$name] = $command;
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function get($name = null)
     {
         if (!$name) {
-            $name = $this->getDefaultStorageName();
+            $name = $this->getDefaultName();
         }
 
         if (!isset($this->storages[$name])) {
@@ -115,5 +110,13 @@ class StorageManager implements StorageManagerInterface
         }
 
         return $this->storages[$name];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNames()
+    {
+        return array_keys($this->storages);
     }
 }
