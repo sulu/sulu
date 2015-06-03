@@ -19,6 +19,9 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Symfony\Component\Console\Output\OutputInterface;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 
 /**
  * Listen to for new hits. If document instance of structure
@@ -46,16 +49,30 @@ class ReindexListener
      */
     private $documentManager;
 
+    /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
+     * @var StructureMetadataFactory
+     */
+    private $sturctureFactory;
+
     public function __construct(
         DocumentManager $documentManager,
         DocumentInspector $inspector,
         SearchManagerInterface $searchManager,
+        MetadataFactoryInterface $metadataFactory,
+        StructureMetadataFactory $structureFactory,
         array $mapping = array()
     ) {
         $this->searchManager = $searchManager;
         $this->mapping = $mapping;
         $this->documentManager = $documentManager;
         $this->inspector = $inspector;
+        $this->metadataFactory = $metadataFactory;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -69,23 +86,49 @@ class ReindexListener
         $purge = $event->getPurge();
         $filter = $event->getFilter();
 
-        $output->writeln('<info>Rebuilding content index</info>');
-
-        // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
-        $query = $this->documentManager->createQuery(
-            'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"'
-        );
-
         $count = array();
 
         if ($purge) {
             $this->purgeContentIndexes($output);
         }
 
-        $documents = $query->execute();
-        $progress = new ProgressHelper();
-        $progress->start($output, count($documents));
+        foreach ($this->metadataFactory->getAliases() as $documentAlias) {
+            if (!$this->structureFactory->hasStructuresFor($documentAlias)) {
+                continue;
+            }
 
+            $output->writeln(sprintf('<comment>Rebuilding structures for document alias "</comment>%s<comment>"</comment>', $documentAlias));
+            $query = $this->documentManager->createQueryBuilder();
+            $query->from()->document($documentAlias, 'd');
+            $documents = $query->getQuery()->execute();
+            if (!count($documents)) {
+                $output->writeln(' >> No documents found');
+                $output->writeln('');
+                continue;
+            }
+            $progress = new ProgressHelper();
+            $progress->start($output, count($documents));
+
+            $this->buildIndex($output, $progress, $documents, $filter);
+            $output->writeln('');
+            $output->writeln('');
+        }
+
+        foreach ($count as $className => $count) {
+            if ($count == 0) {
+                continue;
+            }
+
+            $output->writeln(sprintf(
+                '<comment>Content</comment>: %s <info>%s</info> indexed',
+                $className,
+                $count
+            ));
+        }
+    }
+
+    private function buildIndex(OutputInterface $output, ProgressHelper $progress, $documents, $filter)
+    {
         foreach ($documents as $document) {
             $locales = $this->inspector->getLocales($document);
 
@@ -114,20 +157,6 @@ class ReindexListener
             }
 
             $progress->advance();
-        }
-
-        $output->writeln('');
-
-        foreach ($count as $className => $count) {
-            if ($count == 0) {
-                continue;
-            }
-
-            $output->writeln(sprintf(
-                '<comment>Content</comment>: %s <info>%s</info> indexed',
-                $className,
-                $count
-            ));
         }
     }
 
