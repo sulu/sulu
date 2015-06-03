@@ -77,15 +77,15 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
     public static function provideObjectIdentifiers()
     {
         return [
-            ['1', 'Acme\Example', null, '1'],
-            ['1', 'Acme\Example', 'de', '1'],
+            ['1', 'Acme\Example', '1'],
+            ['1', 'Acme\Example', '1'],
         ];
     }
 
     /**
      * @dataProvider provideObjectIdentifiers
      */
-    public function testGetPermissions($objectId, $objectType, $locale, $objectIdentifier)
+    public function testGetPermissions($objectId, $objectType, $objectIdentifier)
     {
         $ace1 = $this->prophesize(EntryInterface::class);
         $ace1->getSecurityIdentity()->willReturn($this->securityIdentity);
@@ -98,7 +98,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
             ->willReturn($this->acl->reveal());
 
-        $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
+        $permissions = $this->accessControlManager->getPermissions($objectType, $objectId);
 
         $this->assertEquals(true, $permissions['ROLE_SULU_ADMINISTRATOR']['view']);
     }
@@ -106,12 +106,12 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideObjectIdentifiers
      */
-    public function testGetPermissionsNotAvailable($objectId, $objectType, $locale, $objectIdentifier)
+    public function testGetPermissionsNotAvailable($objectId, $objectType, $objectIdentifier)
     {
         $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
             ->willThrow(AclNotFoundException::class);
 
-        $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
+        $permissions = $this->accessControlManager->getPermissions($objectType, $objectId);
 
         $this->assertEquals([], $permissions);
     }
@@ -119,7 +119,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideObjectIdentifiers
      */
-    public function testSetPermissionsWithExistingAcl($objectId, $objectType, $locale, $objectIdentifier)
+    public function testSetPermissionsWithExistingAcl($objectId, $objectType, $objectIdentifier)
     {
         $symfonySecurityIdentity = $this->prophesize(SymfonySecurityIdentityInterface::class);
         $symfonySecurityIdentity->equals(Argument::any())->willReturn(true);
@@ -140,16 +140,14 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            ['view'],
-            $locale
+            [$this->securityIdentity->getRole() => ['view']]
         );
     }
 
     /**
      * @dataProvider provideObjectIdentifiers
      */
-    public function testSetPermissionsWithExistingAclWithoutAce($objectId, $objectType, $locale, $objectIdentifier)
+    public function testSetPermissionsWithExistingAclWithoutAce($objectId, $objectType, $objectIdentifier)
     {
         $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
             ->willReturn($this->acl->reveal())->shouldBeCalled();
@@ -163,16 +161,14 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            ['view'],
-            $locale
+            [$this->securityIdentity->getRole() => ['view']]
         );
     }
 
     /**
      * @dataProvider provideObjectIdentifiers
      */
-    public function testSetPermissionsWithoutExistingAcl($objectId, $objectType, $locale, $objectIdentifier)
+    public function testSetPermissionsWithoutExistingAcl($objectId, $objectType, $objectIdentifier)
     {
         $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))->willThrow(
             AclNotFoundException::class
@@ -188,16 +184,14 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            ['view'],
-            $locale
+            [$this->securityIdentity->getRole() => array('view')]
         );
     }
 
     /**
      * @dataProvider provideObjectIdentifiers
      */
-    public function testPermissionUpdateEvent($objectId, $objectType, $locale, $objectIdentifier)
+    public function testPermissionUpdateEvent($objectId, $objectType, $objectIdentifier)
     {
         $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))->willThrow(
             AclNotFoundException::class
@@ -212,15 +206,17 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->dispatch(
             'sulu.security.permission.update',
-            new PermissionUpdateEvent($objectType, $objectIdentifier, $this->securityIdentity, ['view'])
+            new PermissionUpdateEvent(
+                $objectType,
+                $objectIdentifier,
+                [$this->securityIdentity->getRole() => ['view']]
+            )
         )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            ['view'],
-            $locale
+            [$this->securityIdentity->getRole() => array('view')]
         );
     }
 }
