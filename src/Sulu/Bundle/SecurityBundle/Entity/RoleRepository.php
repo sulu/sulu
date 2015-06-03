@@ -49,6 +49,35 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
     }
 
     /**
+     * Finds a role with a specific name.
+     *
+     * @param $name name of the role
+     *
+     * @return role
+     */
+    public function findRoleByNameAndSystem($name, $system)
+    {
+        try {
+            $qb = $this->createQueryBuilder('role')
+                ->leftJoin('role.permissions', 'permissions')
+                ->leftJoin('role.securityType', 'securityType')
+                ->addSelect('permissions')
+                ->addSelect('securityType')
+                ->where('role.name=:roleName')
+                ->andWhere('role.system=:roleSystem');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('roleName', $name);
+            $query->setParameter('roleSystem', $system);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return;
+        }
+    }
+
+    /**
      * Searches for all roles.
      *
      * @return array

@@ -47,7 +47,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function findUsersByAccount($id)
+    public function findUsersByAccount($accountId)
     {
         try {
             $qb = $this->createQueryBuilder('user')
@@ -70,7 +70,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->where('account.id=:accountId');
 
             $query = $qb->getQuery();
-            $query->setParameter('accountId', $id);
+            $query->setParameter('accountId', $accountId);
 
             return $query->getResult();
         } catch (NoResultException $ex) {

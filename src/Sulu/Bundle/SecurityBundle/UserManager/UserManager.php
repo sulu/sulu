@@ -167,6 +167,7 @@ class UserManager implements UserManagerInterface
         $contact = $this->getProperty($data, 'contact');
         $email = $this->getProperty($data, 'email');
         $password = $this->getProperty($data, 'password');
+        $disabled = $this->getProperty($data, 'disabled');
         $user = null;
 
         try {
@@ -205,14 +206,24 @@ class UserManager implements UserManagerInterface
                 }
             }
 
-            if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', array())) ||
-                !$this->processUserGroups($user, $this->getProperty($data, 'userGroups', array()))
-            ) {
-                throw new \Exception('Could not update dependencies!');
+            if (!$patch || $this->getProperty($data, 'userRoles') !== null) {
+                if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', array()))) {
+                    throw new \Exception('Could not update dependencies!');
+                }
+            }
+
+            if (!$patch || $this->getProperty($data, 'userGroups') !== null) {
+                if (!$this->processUserGroups($user, $this->getProperty($data, 'userGroups', array()))) {
+                    throw new \Exception('Could not update dependencies!');
+                }
             }
 
             if (!$patch || $contact !== null) {
                 $user->setContact($this->getContact($contact['id']));
+            }
+
+            if (!$patch || $disabled !== null) {
+                $user->setEnabled(!$disabled);
             }
 
             if (!$patch || $locale !== null) {
@@ -652,6 +663,16 @@ class UserManager implements UserManagerInterface
                 $user->setEmail(null);
             }
         }
+    }
+
+    /**
+     * Finds all users for the given account
+     *
+     * @param int $accountId
+     */
+    public function findUsersByAccount($accountId)
+    {
+        return $this->userRepository->findUsersByAccount($accountId);
     }
 
     /**
