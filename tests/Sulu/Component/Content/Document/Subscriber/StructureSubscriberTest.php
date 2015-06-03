@@ -161,7 +161,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getDocument()->willReturn($document);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
-        $this->hydrateEvent->getOption('hydrate.load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
