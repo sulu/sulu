@@ -24,9 +24,9 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
     /**
      * Finds a role with a specific id.
      *
-     * @param $id ID of the role
+     * @param int $id ID of the role
      *
-     * @return role
+     * @return Role
      */
     public function findRoleById($id)
     {
@@ -45,6 +45,36 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
             return;
+        }
+    }
+
+    /**
+     * Finds a role with a specific name.
+     *
+     * @param string $name
+     * @param string $system
+     *
+     * @return Role|null
+     */
+    public function findRoleByNameAndSystem($name, $system)
+    {
+        try {
+            $qb = $this->createQueryBuilder('role')
+                ->leftJoin('role.permissions', 'permissions')
+                ->leftJoin('role.securityType', 'securityType')
+                ->addSelect('permissions')
+                ->addSelect('securityType')
+                ->where('role.name=:roleName')
+                ->andWhere('role.system=:roleSystem');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('roleName', $name);
+            $query->setParameter('roleSystem', $system);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
         }
     }
 
