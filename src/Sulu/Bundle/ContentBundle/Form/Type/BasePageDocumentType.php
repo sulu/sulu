@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Form\Type;
 
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -26,17 +27,17 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     private $sessionManager;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
     /**
      * @param SessionManagerInterface $sessionManager
-     * @param DocumentManager $documentManager
+     * @param DocumentManagerInterface $documentManager
      */
     public function __construct(
         SessionManagerInterface $sessionManager,
-        DocumentManager $documentManager
+        DocumentManagerInterface $documentManager
     )
     {
         $this->sessionManager = $sessionManager;
