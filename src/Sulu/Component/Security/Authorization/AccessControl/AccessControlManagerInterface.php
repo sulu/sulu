@@ -20,10 +20,9 @@ interface AccessControlManagerInterface
      *
      * @param string $type The name of the class to protect
      * @param string $identifier
-     * @param string $securityIdentity
      * @param $permissions
      */
-    public function setPermissions($type, $identifier, $securityIdentity, $permissions);
+    public function setPermissions($type, $identifier, $permissions);
 
     /**
      * Returns the permissions for all security identities.

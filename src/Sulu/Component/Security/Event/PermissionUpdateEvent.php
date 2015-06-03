@@ -43,14 +43,12 @@ class PermissionUpdateEvent extends Event
     /**
      * @param string $type
      * @param string $identifier
-     * @param string $securityIdentity
      * @param array $permissions
      */
-    public function __construct($type, $identifier, $securityIdentity, $permissions)
+    public function __construct($type, $identifier, $permissions)
     {
         $this->type = $type;
         $this->identifier = $identifier;
-        $this->securityIdentity = $securityIdentity;
         $this->permissions = $permissions;
     }
 

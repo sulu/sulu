@@ -139,9 +139,9 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            array('view'),
-            $locale
+            array(
+                $this->securityIdentity->getRole() => array('view')
+            )
         );
     }
 
@@ -162,9 +162,9 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            array('view'),
-            $locale
+            array(
+                $this->securityIdentity->getRole() => array('view')
+            )
         );
     }
 
@@ -187,9 +187,9 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            array('view'),
-            $locale
+            array(
+                $this->securityIdentity->getRole() => array('view')
+            )
         );
     }
 
@@ -211,15 +211,21 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->dispatch(
             'sulu.security.permission.update',
-            new PermissionUpdateEvent($objectType, $objectIdentifier, $this->securityIdentity, array('view'))
+            new PermissionUpdateEvent(
+                $objectType,
+                $objectIdentifier,
+                array(
+                    $this->securityIdentity->getRole() => array('view')
+                )
+            )
         )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            $this->securityIdentity,
-            array('view'),
-            $locale
+            array(
+                $this->securityIdentity->getRole() => array('view')
+            )
         );
     }
 }

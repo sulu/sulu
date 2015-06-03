@@ -109,18 +109,18 @@ class PermissionController implements ClassResourceInterface
                 $this->securityChecker->checkPermission($securityContext, 'security');
             }
 
-            foreach ($permissions as $securityIdentity => $permission) {
+            // transfer all permission strings to booleans
+            foreach ($permissions as &$permission) {
                 array_walk($permission, function (&$permissionLine) {
                     $permissionLine = $permissionLine === 'true' || $permissionLine === true;
                 });
-
-                $this->accessControlManager->setPermissions(
-                    $type,
-                    $identifier,
-                    $securityIdentity,
-                    $permission
-                );
             }
+
+            $this->accessControlManager->setPermissions(
+                $type,
+                $identifier,
+                $permissions
+            );
 
             return $this->viewHandler->handle(View::create(array(
                 'id' => $identifier,

@@ -123,6 +123,11 @@ class PermissionControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
+
+        array_walk($permissions, function (&$permissionLine) {
+            $permissionLine = $permissionLine === 'true' || $permissionLine === true;
+        });
+
         $this->assertEquals(
             array(
                 'id' => $id,
@@ -136,10 +141,6 @@ class PermissionControllerTest extends SuluTestCase
 
         $acl = $this->aclProvider->findAcl(new ObjectIdentity($id, $class));
         $sid = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');
-
-        array_walk($permissions, function (&$permissionLine) {
-            $permissionLine = $permissionLine === 'true' || $permissionLine === true;
-        });
 
         foreach ($acl->getObjectAces() as $ace) {
             if ($ace->getSecurityIdentity()->equals($sid)) {
