@@ -24,9 +24,9 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
     /**
      * Finds a role with a specific id.
      *
-     * @param $id ID of the role
+     * @param int $id ID of the role
      *
-     * @return role
+     * @return Role
      */
     public function findRoleById($id)
     {
@@ -51,9 +51,10 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
     /**
      * Finds a role with a specific name.
      *
-     * @param $name name of the role
+     * @param string $name
+     * @param string $system
      *
-     * @return role
+     * @return Role|null
      */
     public function findRoleByNameAndSystem($name, $system)
     {
@@ -73,7 +74,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 

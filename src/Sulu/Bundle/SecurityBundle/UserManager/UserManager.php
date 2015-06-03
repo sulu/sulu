@@ -669,6 +669,8 @@ class UserManager implements UserManagerInterface
      * Finds all users for the given account
      *
      * @param int $accountId
+     *
+     * @return array
      */
     public function findUsersByAccount($accountId)
     {
