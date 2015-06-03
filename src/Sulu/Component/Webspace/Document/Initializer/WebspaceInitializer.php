@@ -3,6 +3,7 @@
 namespace Sulu\Component\Webspace\Document\Initializer;
 
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -23,7 +24,7 @@ class WebspaceInitializer implements InitializerInterface
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $inspector,
         PathBuilder $pathBuilder,
         NodeManager $nodeManager

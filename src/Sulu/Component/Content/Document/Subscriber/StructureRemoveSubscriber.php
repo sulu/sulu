@@ -3,6 +3,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -23,7 +24,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $inspector,
         MetadataFactoryInterface $metadataFactory
     ) {
