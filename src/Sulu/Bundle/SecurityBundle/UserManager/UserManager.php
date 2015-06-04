@@ -167,7 +167,8 @@ class UserManager implements UserManagerInterface
         $contact = $this->getProperty($data, 'contact');
         $email = $this->getProperty($data, 'email');
         $password = $this->getProperty($data, 'password');
-        $disabled = $this->getProperty($data, 'disabled');
+        $enabled = $this->getProperty($data, 'enabled');
+        $locked = $this->getProperty($data, 'locked');
         $user = null;
 
         try {
@@ -222,13 +223,18 @@ class UserManager implements UserManagerInterface
                 $user->setContact($this->getContact($contact['id']));
             }
 
-            if (!$patch || $disabled !== null) {
-                $user->setEnabled(!$disabled);
-            }
-
             if (!$patch || $locale !== null) {
                 $user->setLocale($locale);
             }
+
+            if ($enabled !== null) {
+                $user->setEnabled($enabled);
+            }
+
+            if ($locked !== null) {
+                $user->setLocked($locked);
+            }
+
         } catch (\Exception $re) {
             if (isset($user)) {
                 $this->em->remove($user);
