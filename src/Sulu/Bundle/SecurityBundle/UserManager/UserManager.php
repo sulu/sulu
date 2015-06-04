@@ -223,17 +223,18 @@ class UserManager implements UserManagerInterface
                 $user->setContact($this->getContact($contact['id']));
             }
 
-            if (!$patch || $enabled !== null) {
-                $user->setEnabled($enabled);
-            }
-
-            if (!$patch || $locked !== null) {
-                $user->setLocked($locked);
-            }
-
             if (!$patch || $locale !== null) {
                 $user->setLocale($locale);
             }
+
+            if ($enabled !== null) {
+                $user->setEnabled($enabled);
+            }
+
+            if ($locked !== null) {
+                $user->setLocked($locked);
+            }
+
         } catch (\Exception $re) {
             if (isset($user)) {
                 $this->em->remove($user);
