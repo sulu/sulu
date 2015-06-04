@@ -66,12 +66,18 @@ class Configuration implements ConfigurationInterface
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->scalarNode('default')->defaultValue('local')->end()
-                    ->arrayNode('local')
-                        ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('path')->defaultValue('%kernel.root_dir%/../uploads/media')->end()
-                            ->scalarNode('segments')->defaultValue(10)->end()
-                        ->end()
+                    ->arrayNode('adapters')
+                        ->useAttributeAsKey('name')
+                        ->prototype('array')
+                            ->prototype('scalar')->end()
+                        ->end()->defaultValue(
+                            array(
+                                'local' => array(
+                                    'type' => 'local',
+                                    'segments' => '10',
+                                    'uploadPath' => '%kernel.root_dir%/../uploads/media',
+                                )
+                            ))
                     ->end()
                 ->end()
             ->end()

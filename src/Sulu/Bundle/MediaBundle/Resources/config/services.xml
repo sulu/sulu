@@ -6,7 +6,6 @@
         <parameter key="sulu_media.admin.content_navigation_provider.class">Sulu\Bundle\MediaBundle\Admin\MediaContentNavigationProvider</parameter>
         <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
-        <parameter key="sulu_media.storage_local.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.storage_manager.class">Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManager</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator</parameter>
         <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager</parameter>
@@ -60,17 +59,9 @@
                  factory-method="getRepository">
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
-        <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
         <service id="sulu_media.storage_manager" class="%sulu_media.storage_manager.class%">
             <argument>%sulu_media.storage.default%</argument>
             <argument type="service" id="logger"/>
-        </service>
-        <service id="sulu_media.storage_local" class="%sulu_media.storage_local.class%">
-            <argument>%sulu_media.media.storage.local.path%</argument>
-            <argument>%sulu_media.media.storage.local.segments%</argument>
-            <argument type="service" id="sulu_media.storage.file_system"/>
-            <argument type="service" id="logger"/>
-            <tag name="sulu_media.storage" alias="local" />
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">

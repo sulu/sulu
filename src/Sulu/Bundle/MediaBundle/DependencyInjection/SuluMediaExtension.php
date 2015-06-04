@@ -100,10 +100,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $config['format_manager']['blocked_file_types']
         );
         $container->setParameter('sulu_media.storage.default', $config['storage']['default']);
-
-        // local storage
-        $container->setParameter('sulu_media.media.storage.local.path', $config['storage']['local']['path']);
-        $container->setParameter('sulu_media.media.storage.local.segments', $config['storage']['local']['segments']);
+        $container->setParameter('sulu_media.storage.adapters', $config['storage']['adapters']);
 
         // collections
         $container->setParameter('sulu_media.collection.type.default', ['id' => 1]);
@@ -136,6 +133,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('storages.xml');
 
         // enable search
         if (true === $config['search']['enabled']) {
