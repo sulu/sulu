@@ -37,9 +37,17 @@ class StorageCompilerPassTest extends AbstractCompilerPassTestCase
         $commandManager = new Definition();
         $this->setDefinition('sulu_media.storage_manager', $commandManager);
 
+        $this->setParameter('sulu_media.storage.adapters', array(
+            'test' => array(
+                'type' => 'local',
+                'segments' => '10',
+                'uploadPath' => '%kernel.root_dir%/../uploads/media',
+            )
+        ));
+
         $command = new Definition();
-        $command->addTag('sulu_media.storage', array('alias' => 'local'));
-        $this->setDefinition('sulu_media.storage_local', $command);
+        $command->addTag('sulu_media.storage_adapter', array('alias' => 'local'));
+        $this->setDefinition('sulu_media.storage.adapter.local', $command);
 
         $this->compile();
 
@@ -47,8 +55,8 @@ class StorageCompilerPassTest extends AbstractCompilerPassTestCase
             'sulu_media.storage_manager',
             'add',
             array(
-                new Reference('sulu_media.storage_local'),
-                'local'
+                new Reference('sulu_media.test_storage'),
+                'test'
             )
         );
     }

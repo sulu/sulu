@@ -85,7 +85,7 @@ class MediaControllerTest extends SuluTestCase
     protected function cleanImage()
     {
         if (self::$kernel->getContainer()) { //
-            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
+            $configPath = '%kernel.root_dir%/../uploads/media';
             $this->recursiveRemoveDirectory($configPath);
 
             $cachePath = self::$kernel->getContainer()->getParameter('sulu_media.format_cache.path');
