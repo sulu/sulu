@@ -457,8 +457,8 @@ define(function() {
          */
         startDropzone: function() {
             // replace the current media with the new one if a fileversion got uploaded
-            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this));
-            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this), this);
+            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler);
+            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler, this);
 
             this.sandbox.start([
                 {
