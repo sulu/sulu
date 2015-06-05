@@ -84,10 +84,22 @@ class StorageCompilerPass implements CompilerPassInterface
         // create definition by abstract adapters
         $storageDefinition = $container->setDefinition($id, new DefinitionDecorator($adapterName));
 
-        // get reflection class to set constructor correct
-        $class = new \ReflectionClass($container->getParameterBag()->resolveValue(
+
+        // get adapter classname
+        $className = $container->getParameterBag()->resolveValue(
             $container->getDefinition($adapterName)->getClass()
-        ));
+        );
+
+        // get reflection class to set constructor correct
+        try {
+            $class = new \ReflectionClass($className);
+        } catch (\ReflectionException $e) {
+            throw new StorageAdapterNotFoundException(
+                sprintf(
+                    'Class Reflection error for "%s": ' . $e->getMessage() . PHP_EOL .
+                    $e->getTraceAsString(), $className
+                ));
+        }
 
         // set constructor
         foreach ($config as $name => $value) {
