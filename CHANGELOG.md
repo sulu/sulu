@@ -90,6 +90,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1203 [AdminBundle]    Fixed routes for tabs
     * BUGFIX      #1199 [ContentBundle]  URL of shadow pages are not delivered in the urls array
     * BUGFIX      #1207 [ContentBundle]  Added additional query before generate new url
+=======
+    * BUGFIX      #1188 [MediaBundle]    Fixed new fileversion thumbnail update
+>>>>>>> add changelog
     * BUGFIX      #1169 [AdminBundle]    Fixed sidebar issue (prepending div instead of appending)
     * ENHANCEMENT #1159 [SecurityBundle] Change role naming to keep symfony2 conventions.
     * BUGFIX      #1156 [MediaBundle]    Fix mimetype check for ghostscript
