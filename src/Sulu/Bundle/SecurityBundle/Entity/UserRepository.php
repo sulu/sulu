@@ -214,6 +214,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * Finds all users for the role with the given id
      *
      * @param int $roleId
+     *
+     * @return array
      */
     public function findAllUsersByRoleId($roleId)
     {
@@ -344,8 +346,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     protected function getSystem()
     {
         $system = $this->suluSystem;
-        if (
-            $this->requestAnalyzer != null &&
+        if ($this->requestAnalyzer != null &&
             $this->requestAnalyzer->getWebspace() !== null &&
             $this->requestAnalyzer->getWebspace()->getSecurity() !== null
         ) {
