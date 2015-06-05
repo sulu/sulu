@@ -15,6 +15,7 @@ use Sulu\Bundle\MediaBundle\DependencyInjection\StorageCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage;
 
 /**
  * Test the image command compiler pass
@@ -34,20 +35,26 @@ class StorageCompilerPassTest extends AbstractCompilerPassTestCase
      */
     public function if_compiler_pass_collects_services_by_adding_method_calls_these_will_exist()
     {
-        $commandManager = new Definition();
-        $this->setDefinition('sulu_media.storage_manager', $commandManager);
+        $storageManager = new Definition();
+        $this->setDefinition('sulu_media.storage_manager', $storageManager);
 
         $this->setParameter('sulu_media.storage.adapters', array(
             'test' => array(
-                'type' => 'local',
+                'type' => 'local_test',
                 'segments' => '10',
-                'uploadPath' => '%kernel.root_dir%/../uploads/media',
+                'uploadPath' => '/uploads/media',
             )
         ));
 
-        $command = new Definition();
-        $command->addTag('sulu_media.storage_adapter', array('alias' => 'local'));
-        $this->setDefinition('sulu_media.storage.adapter.local', $command);
+        $this->setParameter(
+            'sulu_media.storage.adapter.local_test.class',
+            'Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage'
+        );
+
+        $adapter = new Definition();
+        $adapter->addTag('sulu_media.storage_adapter', array('alias' => 'local_test'));
+        $adapter->setClass('%sulu_media.storage.adapter.local_test.class%');
+        $this->setDefinition('sulu_media.storage.adapter.local_test', $adapter);
 
         $this->compile();
 
