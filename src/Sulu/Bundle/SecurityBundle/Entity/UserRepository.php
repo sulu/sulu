@@ -211,6 +211,24 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
+     * Finds all users for the role with the given id
+     *
+     * @param int $roleId
+     */
+    public function findAllUsersByRoleId($roleId)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->leftJoin('user.userRoles', 'userRole')
+            ->leftJoin('userRole.role', 'role')
+            ->where('role=:roleId');
+
+        $query = $qb->getQuery();
+        $query->setParameter('roleId', $roleId);
+
+        return $query->getResult();
+    }
+
+    /**
      * Finds a user for a given email.
      *
      * @param string $email The email-address
