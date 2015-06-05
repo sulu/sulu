@@ -457,8 +457,8 @@ define(function() {
          */
         startDropzone: function() {
             // replace the current media with the new one if a fileversion got uploaded
-            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler);
-            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler, this);
+            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this));
+            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this), this);
 
             this.sandbox.start([
                 {
@@ -479,9 +479,12 @@ define(function() {
         },
 
         filesAddedHandler: function(newMedia) {
-            this.media = newMedia[0];
-            this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
-            this.savedCallback();
+            if (!!newMedia[0]) {
+                this.media = this.sandbox.util.extend(false, {}, this.media, newMedia[0]);
+                this.sandbox.emit('husky.overlay.media-edit.close');
+                this.editSingleMedia(this.media);
+                this.sandbox.emit('sulu.media.collections.save-media', this.media, this.savedCallback.bind(this), true);
+            }
         },
 
         /**
