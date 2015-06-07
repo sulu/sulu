@@ -22,37 +22,37 @@ interface StorageInterface
      *
      * @param $tempPath
      * @param $fileName
-     * @param $storageOption
+     * @param $preferredStorageOptions
      *
      * @return mixed
      */
-    public function save($tempPath, $fileName, $storageOption = null);
+    public function save($tempPath, $fileName, $preferredStorageOptions = null);
 
     /**
-     * Give back the path to the document.
+     * Will return a file resource.
      *
-     * @param $storageOption
+     * @param $storageOptions
      *
-     * @return mixed
+     * @return resource|string
      */
-    public function load($storageOption);
+    public function load($storageOptions);
 
     /**
      * Removes the file from storage.
      *
-     * @param $storageOption
+     * @param $storageOptions
      *
      * @return mixed
      */
-    public function remove($storageOption);
+    public function remove($storageOptions);
 
     /**
      * Give back the url where the file can be downloaded
      * Null when the storage have no specific url
      *
-     * @param $storageOption
+     * @param $storageOptions
      *
      * @return null|string
      */
-    public function getDownloadUrl($storageOption);
+    public function getDownloadUrl($storageOptions);
 }

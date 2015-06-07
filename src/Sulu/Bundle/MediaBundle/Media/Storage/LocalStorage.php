@@ -11,20 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
-use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class LocalStorage implements StorageInterface
+class LocalStorage extends AbstractStorage
 {
-    /**
-     * @var string
-     */
-    private $storageOption = null;
-
     /**
      * @var string
      */
@@ -56,13 +50,15 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function save($tempPath, $fileName, $storageOption = null)
+    public function save($tempPath, $fileName, $preferredStorageOptions = null)
     {
-        $this->storageOption = new stdClass();
+        $this->storageOptions = new \stdClass();
 
-        if ($storageOption) {
-            $oldStorageOption = json_decode($storageOption);
-            $segment = $oldStorageOption->segment;
+        if ($preferredStorageOptions) {
+            $preferredStorageOptions = json_decode($preferredStorageOptions);
+            if (!empty($preferredStorageOptions->segment)) {
+                $segment = $preferredStorageOptions->segment;
+            }
         } else {
             $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
         }
@@ -72,13 +68,14 @@ class LocalStorage implements StorageInterface
         $filePath = $this->getPathByFolderAndFileName($segmentPath, $fileName);
         $this->logger->debug('Check FilePath: ' . $filePath);
 
-        if (!$this->filesystem->exists($segmentPath)) {
+        if (!$this->exists($segmentPath)) {
             $this->logger->debug('Try Create Folder: ' . $segmentPath);
             $this->filesystem->mkdir($segmentPath, 0777);
         }
 
         $this->logger->debug('Try to copy File "' . $tempPath . '" to "' . $filePath . '"');
-        if ($this->filesystem->exists($filePath)) {
+
+        if ($this->exists($filePath)) {
             throw new FilenameAlreadyExistsException($filePath);
         }
         $this->filesystem->copy($tempPath, $filePath);
@@ -92,9 +89,9 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function load($storageOption)
+    public function load($storageOptions)
     {
-        $this->storageOption = json_decode($storageOption);
+        $this->storageOptions = json_decode($storageOptions);
 
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
@@ -109,7 +106,7 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getDownloadUrl($storageOption)
+    public function getDownloadUrl($storageOptions)
     {
         return null;
     }
@@ -117,9 +114,9 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($storageOption)
+    public function remove($storageOptions)
     {
-        $this->storageOption = json_decode($storageOption);
+        $this->storageOptions = json_decode($storageOptions);
 
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
@@ -138,63 +135,10 @@ class LocalStorage implements StorageInterface
     }
 
     /**
-     * get a unique filename in path.
-     *
-     * @param $folder
-     * @param $fileName
-     * @param int $counter
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    private function getUniqueFileName($folder, $fileName, $counter = 0)
+    protected function exists($filePath)
     {
-        $newFileName = $fileName;
-
-        if ($counter > 0) {
-            $fileNameParts = explode('.', $fileName, 2);
-            $newFileName = $fileNameParts[0] . '-' . $counter . '.' . $fileNameParts[1];
-        }
-
-        $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);
-
-        $this->logger->debug('Check FilePath: ' . $filePath);
-
-        if (!$this->filesystem->exists($filePath)) {
-            return $newFileName;
-        }
-
-        ++$counter;
-
-        return $this->getUniqueFileName($folder, $fileName, $counter);
-    }
-
-    /**
-     * @param $folder
-     * @param $fileName
-     *
-     * @return string
-     */
-    private function getPathByFolderAndFileName($folder, $fileName)
-    {
-        return rtrim($folder, '/') . '/' . ltrim($fileName, '/');
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    private function addStorageOption($key, $value)
-    {
-        $this->storageOption->$key = $value;
-    }
-
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    private function getStorageOption($key)
-    {
-        return isset($this->storageOption->$key) ? $this->storageOption->$key : null;
+        return $this->filesystem->exists($filePath);
     }
 }

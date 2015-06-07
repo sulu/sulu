@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
+        <parameter key="sulu_media.storage_manager.class">Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManager</parameter>
         <parameter key="sulu_media.storage.adapter.local.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
-        <parameter key="sulu_media.storage.adapter.gaufrette.class">Sulu\Bundle\MediaBundle\Media\Storage\GaufretteStorage</parameter>
-        <parameter key="sulu_media.storage.adapter.flysystem.class">Sulu\Bundle\MediaBundle\Media\Storage\FlysystemStorage</parameter>
     </parameters>
     <services>
         <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
+        <!-- Manager -->
+        <service id="sulu_media.storage_manager" class="%sulu_media.storage_manager.class%">
+            <argument>%sulu_media.storage.default%</argument>
+            <argument type="service" id="logger"/>
+        </service>
+
+        <!-- Local Storage -->
         <service id="sulu_media.storage.adapter.local" class="%sulu_media.storage.adapter.local.class%" abstract="true" public="false">
             <argument /><!-- uploadPath -->
-            <argument /><!-- segments -->
+            <argument>10</argument><!-- segments -->
             <argument type="service" id="sulu_media.storage.file_system" />
-            <argument type="service" id="logger" />
+            <argument type="service" id="logger"/>
             <tag name="sulu_media.storage_adapter" alias="local" />
         </service>
-        <service id="sulu_media.storage.adapter.gaufrette" class="%sulu_media.storage.adapter.gaufrette.class%" abstract="true" public="false">
-            <argument /><!-- filesystem -->
-            <argument type="service" id="knp_gaufrette.filesystem_map" />
-            <tag name="sulu_media.storage_adapter" alias="gaufrette" />
-        </service>
-        <service id="sulu_media.storage.adapter.flysystem" class="%sulu_media.storage.adapter.flysystem.class%" abstract="true" public="false">
-            <argument /><!-- filesystem -->
-            <argument type="service" id="oneup_flysystem.mount_manager" />
-            <tag name="sulu_media.storage_adapter" alias="flysystem" />
-        </service>
+
+        <!-- Flysystem / Gaufrette Storage are added in StorageCompilerPass -->
     </services>
 </container>

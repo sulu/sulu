@@ -165,8 +165,9 @@ class FormatManager implements FormatManagerInterface
                 $formatOptions = $format['options'];
 
                 // load Original
-                $uri = $this->storageManager->load($storageOptions, $storageName);
-                $original = $this->createTmpFile($this->getFile($uri, $mimeType));
+                $original = $this->createTmpFile(
+                    $this->storageManager->load($storageOptions, $storageName)
+                );
 
                 // prepare Media
                 $this->prepareMedia($mimeType, $original);
@@ -427,6 +428,7 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param $fileName
+     * @return string
      */
     protected function getRealFileExtension($fileName)
     {
@@ -476,16 +478,19 @@ class FormatManager implements FormatManagerInterface
     /**
      * create a local temp file for the original.
      *
-     * @param $content
+     * @param resource $resource
      *
      * @return string
      */
-    protected function createTmpFile($content)
+    protected function createTmpFile($resource)
     {
-        $tempFile = tempnam(sys_get_temp_dir(), 'media_original');
-        $handle = fopen($tempFile, 'w');
-        fwrite($handle, $content);
-        fclose($handle);
+        $tempFile = tempnam(null, 'media_original');
+        if (is_resource ($resource)) {
+            $handle = fopen($tempFile, 'w');
+            stream_copy_to_stream($resource, $handle);
+        } else {
+            file_put_contents($tempFile, $resource);
+        }
 
         $this->tempFiles[] = $tempFile;
 

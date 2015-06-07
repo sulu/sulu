@@ -548,7 +548,8 @@ class MediaManager implements MediaManagerInterface
                 $currentFileVersion->getStorageOptions(),
                 $currentFileVersion->getStorageName()
             );
-            $data['name'] = $fileName;
+            $data['storageName'] = $currentFileVersion->getStorageName();
+            $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
@@ -585,6 +586,7 @@ class MediaManager implements MediaManagerInterface
             $data['version'] = null;
             $data['mimeType'] = null;
             $data['storageOptions'] = null;
+            $data['storageName'] = null;
             $data['changed'] = date('Y-m-d H:i:s');
         }
 
@@ -630,7 +632,8 @@ class MediaManager implements MediaManagerInterface
             $this->getCollectionDefaultStorageName($data['collection'])
         );
 
-        $data['name'] = $fileName;
+        $data['storageOptions'] = $this->storageManager->getDefaultName();
+        $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['properties'] = $this->getProperties($uploadedFile);
@@ -732,6 +735,9 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'storageOptions':
                         $media->setStorageOptions($value);
+                        break;
+                    case 'storageName':
+                        $media->getStorageName($value);
                         break;
                     case 'publishLanguages':
                         $media->setPublishLanguages($value);

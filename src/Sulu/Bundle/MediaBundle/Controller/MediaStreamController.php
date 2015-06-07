@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
 {
@@ -117,12 +118,24 @@ class MediaStreamController extends Controller
         $storageOptions = $fileVersion->getStorageOptions();
         $mimeType = $fileVersion->getMimeType();
         $storageName = $fileVersion->getStorageName();
-
-        $path = $this->getStorageManager()->load($storageOptions, $storageName);
-
-        $response = new BinaryFileResponse($path);
-
         $pathInfo = pathinfo($fileName);
+
+        $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
+
+        if (is_string($resourcePath)) {
+            $response = new BinaryFileResponse($resourcePath);
+        } else {
+            $handle = $resourcePath;
+            $response = new StreamedResponse(function () use ($handle) {
+                flush(); // send headers
+                while (!feof($handle)) {
+                    $buffer = fread($handle, 1024);
+                    echo $buffer;
+                    flush(); // buffered output
+                }
+                fclose($handle);
+            });
+        }
 
         // Prepare headers
         $disposition = $response->headers->makeDisposition(

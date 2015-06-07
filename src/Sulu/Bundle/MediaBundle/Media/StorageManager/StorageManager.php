@@ -51,17 +51,17 @@ class StorageManager implements StorageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save($tempPath, $fileName, $storageOption = null, $storageName = null)
+    public function save($tempPath, $fileName, $preferredStorageOptions = null, $storageName = null)
     {
-        return $this->get($storageName)->save($tempPath, $fileName, $storageOption);
+        return $this->get($storageName)->save($tempPath, $fileName, $preferredStorageOptions);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($storageOption, $storageName = null)
+    public function load($storageOptions, $storageName = null)
     {
-        return $this->get($storageName)->load($storageOption);
+        return $this->get($storageName)->load($storageOptions);
     }
 
     /**

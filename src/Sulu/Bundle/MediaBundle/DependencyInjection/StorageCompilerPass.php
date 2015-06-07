@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 use Sulu\Bundle\MediaBundle\Media\Exception\StorageAdapterNotFoundException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
@@ -35,6 +36,21 @@ class StorageCompilerPass implements CompilerPassInterface
         if (!$container->hasDefinition('sulu_media.storage_manager')) {
             return;
         }
+
+        // Flysystem
+        $this->addStorageAdapter(
+            $container,
+            'flysystem',
+            'League\Flysystem\MountManager',
+            'oneup_flysystem.mount_manager'
+        );
+
+        // Gaufrette
+        $this->addStorageAdapter($container,
+            'gaufrette',
+            'Knp\Bundle\GaufretteBundle\FilesystemMap',
+            'knp_gaufrette.filesystem_map'
+        );
 
         $storageManagerDefinition = $container->getDefinition('sulu_media.storage_manager');
         $taggedServices = $container->findTaggedServiceIds('sulu_media.storage_adapter');
@@ -126,5 +142,32 @@ class StorageCompilerPass implements CompilerPassInterface
         }
 
         return $this->adapters[$type];
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $key
+     * @param string $managerClass
+     * @param string $managerService
+     */
+    protected function addStorageAdapter(
+        ContainerBuilder $container,
+        $key,
+        $managerClass,
+        $managerService
+    ) {
+        if (class_exists($managerClass)) {
+            $adapterClass = 'sulu_media.storage.adapter.' . $key . '.class';
+            $container->setParameter($adapterClass, 'Sulu\Bundle\MediaBundle\Media\Storage\\' . ucfirst($key) . 'Storage');
+            $storage = new Definition('%' . $adapterClass . '%');
+            $storage->addArgument(''); // type
+            $storage->addArgument(new Reference($managerService));
+            $storage->addArgument(new Reference('logger'));
+            $storage->setAbstract(true);
+            $storage->setPublic(false);
+            $storage->addTag('sulu_media.storage_adapter', array('alias' => 'flysystem'));
+
+            $container->setDefinition('sulu_media.storage.adapter.' . $key, $storage);
+        }
     }
 }
