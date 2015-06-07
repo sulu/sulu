@@ -35,15 +35,23 @@ class InitCommand extends ContainerAwareCommand
 
         $output->writeln('Create media dirs in ' . $baseDir);
 
-        $uploadDir = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
+        $adapters = $this->getContainer()->getParameter('sulu_media.storage.adapters');
 
-        $output->writeln('Create Upload dir in ' . $uploadDir);
+        foreach ($adapters as $config) {
+            if (isset($config['type']) && $config['type'] == 'local' && isset($config['uploadPath'])) {
+                $uploadDir = $config['uploadPath'];
+                $output->writeln('Create Upload dir in ' . $uploadDir);
 
-        if (!is_dir($uploadDir)) {
-            $filesystem->mkdir($uploadDir);
-        } else {
-            $output->writeLn('Directory ' . $uploadDir . ' already exists');
+                if (!is_dir($uploadDir)) {
+                    $filesystem->mkdir($uploadDir);
+                } else {
+                    $output->writeLn('Directory ' . $uploadDir . ' already exists');
+                }
+            }
         }
+
+
+
 
         $mediaCacheDir = $this->getContainer()->getParameter('sulu_media.format_cache.path');
 
