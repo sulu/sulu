@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.0.14 (2015-11-13)
+    * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
+
 * 1.0.13 (2015-11-12)
     * HOTFIX      #1771 [AdminBundle]    Fixed login translations if browser-locale is not translated
 
