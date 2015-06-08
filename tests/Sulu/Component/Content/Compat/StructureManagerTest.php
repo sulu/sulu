@@ -36,7 +36,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     {
         $structureType = 'content';
         $documentType = 'page';
-        $this->factory->getStructure($documentType, $structureType)->willReturn($this->structure->reveal());
+        $this->factory->getStructureMetadata($documentType, $structureType)->willReturn($this->structure->reveal());
         $bridge = $this->structureManager->getStructure($structureType, $documentType);
 
         $this->assertInstanceOf(StructureBridge::class, $bridge);
