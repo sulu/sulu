@@ -18,7 +18,7 @@ use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
  * Representation of a block node in template xml

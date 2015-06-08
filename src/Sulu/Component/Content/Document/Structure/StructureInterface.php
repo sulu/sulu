@@ -8,17 +8,16 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Document\Property;
+namespace Sulu\Component\Content\Document\Structure;
 
 use Sulu\Component\Content\Types\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Compat\Structure\Structure;
 
 /**
  * Container for content properties.
  */
-interface PropertyContainerInterface extends \ArrayAccess
+interface StructureInterface extends \ArrayAccess
 {
     /**
      * Return the named property

@@ -15,7 +15,7 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
  * Handle serializeation and deserialization of document content
