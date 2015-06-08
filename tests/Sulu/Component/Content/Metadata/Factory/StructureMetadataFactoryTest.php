@@ -64,7 +64,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructureBadType()
     {
-        $this->factory->getStructure('non_existing', 'foo');
+        $this->factory->getStructureMetadata('non_existing', 'foo');
     }
 
     /**
@@ -75,7 +75,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructureNonExisting()
     {
-        $this->factory->getStructure('page', 'overview_not_existing');
+        $this->factory->getStructureMetadata('page', 'overview_not_existing');
     }
 
     /**
@@ -86,7 +86,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
         $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
 
-        $this->factory->getStructure('page');
+        $this->factory->getStructureMetadata('page');
     }
 
     /**
@@ -97,9 +97,9 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
         $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
 
-        $this->factory->getStructure('page');
-        $this->factory->getStructure('page');
-        $this->factory->getStructure('page');
+        $this->factory->getStructureMetadata('page');
+        $this->factory->getStructureMetadata('page');
+        $this->factory->getStructureMetadata('page');
     }
 
     /**
@@ -109,7 +109,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructureDefaultNoSet()
     {
-        $this->factory->getStructure('snoopet');
+        $this->factory->getStructureMetadata('snoopet');
     }
 
     /**
@@ -122,12 +122,12 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
         $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
 
-        $structure = $this->factory->getStructure('page', 'something');
+        $structure = $this->factory->getStructureMetadata('page', 'something');
 
         $this->assertEquals($this->structure->reveal(), $structure);
 
-        $this->factory->getStructure('page', 'something');
-        $this->factory->getStructure('page', 'something');
+        $this->factory->getStructureMetadata('page', 'something');
+        $this->factory->getStructureMetadata('page', 'something');
     }
 
     /**
