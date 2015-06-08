@@ -11,14 +11,14 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
-use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Structure\ManagedStructure;
+use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 
-class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
+class ManagedStructureTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -33,7 +33,7 @@ class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->legacyProperty = $this->prophesize(PropertyInterface::class);
 
-        $this->propertyContainer = new ManagedPropertyContainer(
+        $this->propertyContainer = new ManagedStructure(
             $this->contentTypeManager->reveal(),
             $this->propertyFactory->reveal(),
             $this->inspector->reveal(),

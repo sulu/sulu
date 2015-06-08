@@ -5,7 +5,7 @@ namespace Sulu\Bundle\SnippetBundle\Document;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;

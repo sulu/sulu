@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -28,7 +28,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {
