@@ -14,7 +14,6 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use ReflectionMethod;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
