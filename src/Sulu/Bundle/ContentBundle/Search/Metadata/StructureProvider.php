@@ -104,7 +104,7 @@ class StructureProvider implements ProviderInterface
     public function getMetadata(Metadata $documentMetadata, StructureMetadata $structure)
     {
         $classMetadata = $this->factory->createClassMetadata($documentMetadata->getClass());
-        $class = new \ReflectionClass($documentMetadata->getClass());
+        $class = $documentMetadata->getReflectionClass();
 
         $indexMeta = $this->factory->createIndexMetadata();
         $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
@@ -113,8 +113,12 @@ class StructureProvider implements ProviderInterface
         $indexName = 'content';
         $categoryName = 'content';
 
+        // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
-            if ($class->name !== $className) {
+            if ($documentMetadata->getAlias() !== $className && 
+                $class->name !== $className && 
+                false === $class->isSubclassOf($className)) 
+            {
                 continue;
             }
 
