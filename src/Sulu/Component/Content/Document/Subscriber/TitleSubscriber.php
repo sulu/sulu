@@ -68,7 +68,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
 
         $title = $document->getTitle();
 
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
         if (!$structure->hasProperty('title')) {
             return;
         }
@@ -88,7 +88,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
 
     private function hasTitle($document)
     {
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
 
         return $structure->hasProperty('title');
     }
