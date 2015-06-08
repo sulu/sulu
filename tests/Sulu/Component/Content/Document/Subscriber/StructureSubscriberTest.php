@@ -41,8 +41,8 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->propertyValue = $this->prophesize(PropertyValue::class);
         $this->legacyProperty = $this->prophesize(TranslatedProperty::class);
-        $this->structure = $this->prophesize(StructureMetadata::class);
-        $this->propertyContainer = $this->prophesize(Structure::class);
+        $this->structureMetadata= $this->prophesize(StructureMetadata::class);
+        $this->structure = $this->prophesize(Structure::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
 
@@ -68,7 +68,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testPersistNoStructureType()
     {
-        $document = new TestContentDocument($this->propertyContainer->reveal());
+        $document = new TestContentDocument($this->structure->reveal());
 
         // map the structure type
         $this->persistEvent->getDocument()->willReturn($document);
@@ -80,7 +80,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testPersist()
     {
-        $document = new TestContentDocument($this->propertyContainer->reveal());
+        $document = new TestContentDocument($this->structure->reveal());
         $document->setStructureType('foobar');
         $this->persistEvent->getDocument()->willReturn($document);
 
@@ -90,16 +90,16 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
 
         // map the content
-        $this->inspector->getStructureMetadata($document)->willReturn($this->structure->reveal());
+        $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structure->getProperties()->willReturn(array(
+        $this->structureMetadata->getProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
         $this->structureProperty->isRequired()->willReturn(true);
         $this->structureProperty->getContentTypeName()->willReturn('content_type');
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
         $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), 'fr')->willReturn($this->legacyProperty->reveal());
-        $this->propertyContainer->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+        $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn('test');
 
         $this->contentType->write(
@@ -121,7 +121,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testThrowExceptionPropertyRequired()
     {
-        $document = new TestContentDocument($this->propertyContainer->reveal());
+        $document = new TestContentDocument($this->structure->reveal());
         $document->setStructureType('foobar');
         $this->persistEvent->getDocument()->willReturn($document);
 
@@ -129,16 +129,16 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getLocale()->willReturn('fr');
 
         // map the content
-        $this->inspector->getStructureMetadata($document)->willReturn($this->structure->reveal());
+        $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structure->getProperties()->willReturn(array(
+        $this->structureMetadata->getProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
         $this->structureProperty->isRequired()->willReturn(true);
-        $this->propertyContainer->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+        $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn(null);
-        $this->structure->getName()->willReturn('test');
-        $this->structure->getResource()->willReturn('/path/to/resource.xml');
+        $this->structureMetadata->getName()->willReturn('test');
+        $this->structureMetadata->getResource()->willReturn('/path/to/resource.xml');
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }

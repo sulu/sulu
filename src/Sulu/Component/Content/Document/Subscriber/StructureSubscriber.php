@@ -112,11 +112,11 @@ class StructureSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $structure = $this->inspector->getStructureMetadata($document);
+        $structureMetadata = $this->inspector->getStructureMetadata($document);
 
-        $propertyContainer = $document->getStructure();
-        if ($propertyContainer instanceof ManagedStructure) {
-            $propertyContainer->setStructureMetadata($structure);
+        $structure = $document->getStructure();
+        if ($structure instanceof ManagedStructure) {
+            $structure->setStructureMetadata($structureMetadata);
         }
     }
 
