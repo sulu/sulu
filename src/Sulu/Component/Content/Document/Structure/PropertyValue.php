@@ -4,6 +4,10 @@ namespace Sulu\Component\Content\Document\Structure;
 
 /**
  * Value object for content type rendering.
+ *
+ * Note this would more appropriately be named "Property" but that potentially confuses
+ * things even more whilst the Compat\\ namespace exists. In addition, this class may
+ * not be long lived after we change the content mapping logic.
  */
 class PropertyValue
 {
