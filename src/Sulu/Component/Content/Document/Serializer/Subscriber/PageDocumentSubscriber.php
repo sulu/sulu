@@ -30,9 +30,20 @@ use PHPCR\ItemNotFoundException;
  */
 class PageDocumentSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var DocumentRegistry
+     */
     private $registry;
+
+    /**
+     * @var SessionInterface
+     */
     private $session;
 
+    /**
+     * @param DocumentRegistry $registry
+     * @param SessionInterface $session
+     */
     public function __construct(
         DocumentRegistry $registry,
         SessionInterface $session
@@ -41,6 +52,9 @@ class PageDocumentSubscriber implements EventSubscriberInterface
         $this->session = $session;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -51,6 +65,9 @@ class PageDocumentSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $document = $event->getObject();
