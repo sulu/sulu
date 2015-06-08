@@ -75,7 +75,7 @@ class PageDocumentSerializationTest extends SuluTestCase
 
         $this->assertInternalType('integer', $content->getProperty('integer')->getValue());
 
-        $this->assertInstanceOf(PropertyContainer::class, $content);
+        $this->assertInstanceOf(Structure::class, $content);
         $this->assertCount(2, $content->getProperty('arrayOfObjects')->getValue());
     }
 
