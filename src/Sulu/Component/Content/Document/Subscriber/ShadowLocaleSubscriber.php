@@ -137,7 +137,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         }
 
         $node = $event->getNode();
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
 
         if (false === $structure->hasPropertyWithTagName('sulu.rlp')) {
             return;

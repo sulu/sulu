@@ -90,7 +90,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
 
         // map the content
-        $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
+        $this->inspector->getStructureMetadata($document)->willReturn($this->structure->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
         $this->structure->getProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
@@ -129,7 +129,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getLocale()->willReturn('fr');
 
         // map the content
-        $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
+        $this->inspector->getStructureMetadata($document)->willReturn($this->structure->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
         $this->structure->getProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
