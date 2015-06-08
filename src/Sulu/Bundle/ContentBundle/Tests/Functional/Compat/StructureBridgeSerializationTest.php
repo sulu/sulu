@@ -65,7 +65,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $page->setResourceSegment('/hello');
         $page->setParent($this->contentDocument);
         $page->setStructureType('internallinks');
-        $page->getContent()->bind(array(
+        $page->getStructure()->bind(array(
             'title' => 'World',
             'internalLinks' => array(
                 $this->contentDocument->getUuid(),

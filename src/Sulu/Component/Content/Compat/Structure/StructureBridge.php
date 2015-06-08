@@ -468,7 +468,7 @@ class StructureBridge implements StructureInterface
                 $result['ext'] = $document->getExtensionsData();
             }
 
-            $result = array_merge($this->getDocument()->getContent()->toArray(), $result);
+            $result = array_merge($this->getDocument()->getStructure()->toArray(), $result);
 
             return $result;
         }
@@ -719,7 +719,7 @@ class StructureBridge implements StructureInterface
         $propertyBridge = $this->propertyFactory->createProperty($item, $this);
 
         if ($this->document) {
-            $property = $this->document->getContent()->getProperty($name);
+            $property = $this->document->getStructure()->getProperty($name);
             $propertyBridge->setPropertyValue($property);
         }
 
