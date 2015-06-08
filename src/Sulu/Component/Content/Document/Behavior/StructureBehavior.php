@@ -45,7 +45,7 @@ interface StructureBehavior extends LocaleBehavior
      *
      * @return PropertyContainerInterface
      */
-    public function getContent();
+    public function getStructure();
 }
 
 

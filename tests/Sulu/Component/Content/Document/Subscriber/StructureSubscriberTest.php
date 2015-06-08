@@ -170,7 +170,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->assertEquals('foobar', $document->getStructureType());
-        $this->accessor->set('content', Argument::type(PropertyContainer::class))->shouldHaveBeenCalled();
+        $this->accessor->set('structure', Argument::type(PropertyContainer::class))->shouldHaveBeenCalled();
     }
 
 }
@@ -178,12 +178,12 @@ class StructureSubscriberTest extends SubscriberTestCase
 class TestContentDocument implements StructureBehavior
 {
     private $structureType;
-    private $content;
+    private $structure;
     private $locale;
 
-    public function __construct(PropertyContainer $content = null)
+    public function __construct(PropertyContainer $structure = null)
     {
-        $this->content = $content;
+        $this->structure = $structure;
     }
 
     public function getStructureType() 
@@ -196,9 +196,9 @@ class TestContentDocument implements StructureBehavior
         $this->structureType = $structureType;
     }
 
-    public function getContent() 
+    public function getStructure()
     {
-        return $this->content;
+        return $this->structure;
     }
 
     public function getLocale() 

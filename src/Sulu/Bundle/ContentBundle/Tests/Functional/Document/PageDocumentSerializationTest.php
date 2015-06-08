@@ -71,7 +71,7 @@ class PageDocumentSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(PageDocument::class, $page);
         $this->assertEquals('/foo', $page->getResourceSegment()); $this->assertEquals('Hello', $page->getTitle());
-        $content = $page->getContent();
+        $content = $page->getStructure();
 
         $this->assertInternalType('integer', $content->getProperty('integer')->getValue());
 
@@ -105,7 +105,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page = $this->serializer->deserialize($data, PageDocument::class, 'json');
 
         $this->assertInstanceOf(PageDocument::class, $page);
-        $this->assertEquals('Hello', $page->getContent()->getProperty('title')->getValue());
+        $this->assertEquals('Hello', $page->getStructure()->getProperty('title')->getValue());
     }
 
     private function createPage($data)
@@ -115,7 +115,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page->setParent($this->parent);
         $page->setStructureType('contact');
         $page->setResourceSegment('/foo');
-        $page->getContent()->bind($data, true);
+        $page->getStructure()->bind($data, true);
 
         return $page;
     }
