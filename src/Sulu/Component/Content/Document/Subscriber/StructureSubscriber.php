@@ -114,7 +114,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
 
         $structure = $this->inspector->getStructure($document);
 
-        $propertyContainer = $document->getContent();
+        $propertyContainer = $document->getStructure();
         if ($propertyContainer instanceof ManagedPropertyContainer) {
             $propertyContainer->setStructure($structure);
         }
@@ -148,7 +148,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
 
         // Set the property container
         $event->getAccessor()->set(
-            'content',
+            'structure',
             $container
         );
     }
@@ -208,7 +208,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
      */
     private function mapContentToNode($document, NodeInterface $node, $locale)
     {
-        $propertyContainer = $document->getContent();
+        $propertyContainer = $document->getStructure();
         $webspaceName = $this->inspector->getWebspace($document);
         $structure = $this->inspector->getStructure($document);
 
