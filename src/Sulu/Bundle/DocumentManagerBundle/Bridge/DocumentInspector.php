@@ -101,7 +101,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getStructureMetadata(StructureBehavior $document)
     {
-        return $this->structureFactory->getStructure(
+        return $this->structureFactory->getStructureMetadata(
             $this->getMetadata($document)->getAlias(),
             $document->getStructureType()
         );
