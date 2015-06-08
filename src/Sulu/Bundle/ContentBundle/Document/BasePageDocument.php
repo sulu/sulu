@@ -145,7 +145,7 @@ class BasePageDocument implements
     protected $structureType;
 
     /**
-     * @var PropertyContainerInterface
+     * @var StructureInterface
      */
     protected $structure;
 
@@ -178,7 +178,7 @@ class BasePageDocument implements
     {
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
-        $this->structure = new PropertyContainer();
+        $this->structure = new Structure();
         $this->extensions =  new ExtensionContainer();
         $this->children = new \ArrayIterator();
     }
