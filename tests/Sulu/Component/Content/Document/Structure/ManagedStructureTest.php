@@ -41,7 +41,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->inspector->getNode($this->document->reveal())->willReturn($this->node->reveal());
-        $this->inspector->getStructure($this->document->reveal())->willReturn($this->structure->reveal());
+        $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structure->reveal());
     }
 
     /**

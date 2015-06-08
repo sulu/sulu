@@ -112,7 +112,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
 
         $propertyContainer = $document->getStructure();
         if ($propertyContainer instanceof ManagedStructure) {
@@ -208,20 +208,20 @@ class StructureSubscriber extends AbstractMappingSubscriber
      */
     private function mapContentToNode($document, NodeInterface $node, $locale)
     {
-        $propertyContainer = $document->getStructure();
+        $structure = $document->getStructure();
         $webspaceName = $this->inspector->getWebspace($document);
-        $structure = $this->inspector->getStructure($document);
+        $metadata = $this->inspector->getStructureMetadata($document);
 
-        foreach ($structure->getProperties() as $propertyName => $structureProperty) {
-            $realProperty = $propertyContainer->getProperty($propertyName);
+        foreach ($metadata->getProperties() as $propertyName => $structureProperty) {
+            $realProperty = $structure->getProperty($propertyName);
             $value = $realProperty->getValue();
 
             if ($structureProperty->isRequired() && null === $value) {
                 throw new MandatoryPropertyException(sprintf(
                     'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
                     $propertyName,
-                    $structure->getName(),
-                    $structure->resource
+                    $metadata->getName(),
+                    $metadata->resource
                 ));
             }
 

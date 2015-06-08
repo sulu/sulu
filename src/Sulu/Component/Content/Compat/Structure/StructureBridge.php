@@ -654,7 +654,7 @@ class StructureBridge implements StructureInterface
 
     protected function documentToStructure(StructureBehavior $document)
     {
-        return new $this($this->inspector->getStructure($document), $this->inspector, $this->propertyFactory, $document);
+        return new $this($this->inspector->getStructureMetadata($document), $this->inspector, $this->propertyFactory, $document);
     }
 
     private function getWorkflowDocument($method)
