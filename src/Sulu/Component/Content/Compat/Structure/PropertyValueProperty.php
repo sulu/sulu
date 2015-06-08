@@ -3,7 +3,7 @@
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
  * This property wraps the "new" PropertyValue class
