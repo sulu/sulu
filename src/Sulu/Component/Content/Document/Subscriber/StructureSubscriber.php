@@ -25,12 +25,12 @@ use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 
 class StructureSubscriber extends AbstractMappingSubscriber
 {
@@ -116,7 +116,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
 
         $propertyContainer = $document->getStructure();
         if ($propertyContainer instanceof ManagedPropertyContainer) {
-            $propertyContainer->setStructure($structure);
+            $propertyContainer->setStructureMetadata($structure);
         }
     }
 
