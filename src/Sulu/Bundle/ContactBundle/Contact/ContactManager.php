@@ -162,8 +162,12 @@ class ContactManager extends AbstractContactManager
      *
      * @return Contact
      */
-    public function save($data, $id = null, $flush = true)
-    {
+    public function save(
+        $data,
+        $id = null,
+        $patch = false,
+        $flush = true
+    ) {
         /**
          * TODO: https://github.com/sulu-io/sulu/pull/1171
          * This method needs to be refactored since in the first
@@ -182,30 +186,47 @@ class ContactManager extends AbstractContactManager
             if (!$contact) {
                 throw new EntityNotFoundException(self::$contactEntityName, $id);
             }
-
-            $this->setMainAccount($contact, $data);
-
-            // process details
-            if (!($this->processEmails($contact, $this->getProperty($data, 'emails', array()))
-                && $this->processPhones($contact, $this->getProperty($data, 'phones', array()))
-                && $this->processAddresses($contact, $this->getProperty($data, 'addresses', array()))
-                && $this->processNotes($contact, $this->getProperty($data, 'notes', array()))
-                && $this->processFaxes($contact, $this->getProperty($data, 'faxes', array()))
-                && $this->processTags($contact, $this->getProperty($data, 'tags', array()))
-                && $this->processUrls($contact, $this->getProperty($data, 'urls', array()))
-                && $this->processCategories($contact, $this->getProperty($data, 'categories', array()))
-                && $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', array())))
-            ) {
-                throw new Exception('Updating dependencies is not possible', 0);
+            if (!$patch || $this->getProperty($data, 'account')) {
+                $this->setMainAccount($contact, $data);
+            }
+            if (!$patch || $this->getProperty($data, 'emails')) {
+                $this->processEmails($contact, $this->getProperty($data, 'emails', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'phones')) {
+                $this->processPhones($contact, $this->getProperty($data, 'phones', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'addresses')) {
+                $this->processAddresses($contact, $this->getProperty($data, 'addresses', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'notes')) {
+                $this->processNotes($contact, $this->getProperty($data, 'notes', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'faxes')) {
+                $this->processFaxes($contact, $this->getProperty($data, 'faxes', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'tags')) {
+                $this->processTags($contact, $this->getProperty($data, 'tags', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'urls')) {
+                $this->processUrls($contact, $this->getProperty($data, 'urls', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'categories')) {
+                $this->processCategories($contact, $this->getProperty($data, 'categories', array()));
+            }
+            if (!$patch || $this->getProperty($data, 'bankAccounts')) {
+                $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', array()));
             }
 
         } else {
             $contact = new Contact();
         }
 
-        // Standard contact fields
-        $contact->setFirstName($firstName);
-        $contact->setLastName($lastName);
+        if (!$patch || $firstName !== null) {
+            $contact->setFirstName($firstName);
+        }
+        if (!$patch || $lastName !== null) {
+            $contact->setLastName($lastName);
+        }
 
         // Set title relation on contact
         $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
