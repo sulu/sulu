@@ -24,10 +24,6 @@
 
         <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
 
-        <parameter key="sulu.content.localization_finder.parent_child_any.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
-        <parameter key="sulu.content.localization_finder.null_webspace.class">Sulu\Component\Content\Mapper\LocalizationFinder\NullWebspaceFinder</parameter>
-        <parameter key="sulu.content.localization_finder.chain.class">Sulu\Component\Content\Mapper\LocalizationFinder\ChainFinder</parameter>
-
         <parameter key="sulu.util.node_helper.class">Sulu\Component\Util\SuluNodeHelper</parameter>
     </parameters>
 
@@ -50,26 +46,6 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu_document_manager.namespace_registry" />
-        </service>
-
-        <!-- localization finders -->
-        <service id="sulu.content.localization_finder.parent_child_any" class="%sulu.content.localization_finder.parent_child_any.class%">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument>%sulu.content.language.namespace%</argument>
-            <argument>%sulu.content.internal_prefix%</argument>
-        </service>
-
-        <service id="sulu.content.localization_finder.null_webspace" class="%sulu.content.localization_finder.null_webspace.class%">
-            <argument type="service" id="sulu.util.node_helper"/>
-        </service>
-
-        <service id="sulu.content.localization_finder" class="%sulu.content.localization_finder.chain.class%">
-            <call method="addFinder">
-                <argument type="service" id="sulu.content.localization_finder.parent_child_any" />
-            </call>
-            <call method="addFinder">
-                <argument type="service" id="sulu.content.localization_finder.null_webspace" />
-            </call>
         </service>
 
         <!-- content type manager -->
