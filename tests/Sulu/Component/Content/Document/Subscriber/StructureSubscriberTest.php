@@ -42,7 +42,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyValue = $this->prophesize(PropertyValue::class);
         $this->legacyProperty = $this->prophesize(TranslatedProperty::class);
         $this->structure = $this->prophesize(StructureMetadata::class);
-        $this->propertyContainer = $this->prophesize(PropertyContainer::class);
+        $this->propertyContainer = $this->prophesize(Structure::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
 
@@ -170,7 +170,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->assertEquals('foobar', $document->getStructureType());
-        $this->accessor->set('structure', Argument::type(PropertyContainer::class))->shouldHaveBeenCalled();
+        $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
     }
 
 }
@@ -181,7 +181,7 @@ class TestContentDocument implements StructureBehavior
     private $structure;
     private $locale;
 
-    public function __construct(PropertyContainer $structure = null)
+    public function __construct(Structure $structure = null)
     {
         $this->structure = $structure;
     }

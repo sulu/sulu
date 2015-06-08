@@ -46,7 +46,7 @@ class SnippetDocument implements
     public function __construct()
     {
         $this->workflowStage = WorkflowStage::TEST;
-        $this->structure = new PropertyContainer();
+        $this->structure = new Structure();
     }
 
     /**
