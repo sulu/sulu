@@ -101,7 +101,7 @@ class ManagedPropertyContainer extends PropertyContainer
      *
      * @param StructureMetadata $structure
      */
-    public function setStructure(StructureMetadata $structure) 
+    public function setStructureMetadata(StructureMetadata $structure)
     {
         $this->structure = $structure;
     }
