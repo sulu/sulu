@@ -13,10 +13,10 @@ namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
- * Normalize ManagedPropertyContainer instances to the PropertyContainer type
+ * Normalize ManagedStructure instances to the PropertyContainer type
  */
 class PropertyContainerSubscriber implements EventSubscriberInterface
 {

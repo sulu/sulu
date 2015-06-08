@@ -20,8 +20,8 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface as DocumentMetadataFactory;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -115,7 +115,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
         $structure = $this->inspector->getStructure($document);
 
         $propertyContainer = $document->getStructure();
-        if ($propertyContainer instanceof ManagedPropertyContainer) {
+        if ($propertyContainer instanceof ManagedStructure) {
             $propertyContainer->setStructureMetadata($structure);
         }
     }
@@ -192,7 +192,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
      */
     private function createPropertyContainer($document)
     {
-        return new ManagedPropertyContainer(
+        return new ManagedStructure(
             $this->contentTypeManager,
             $this->legacyPropertyFactory,
             $this->inspector,

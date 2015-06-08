@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Component\Content\Document\Property;
+namespace Sulu\Component\Content\Document\Structure;
 
 /**
  * Value object for content type rendering.
