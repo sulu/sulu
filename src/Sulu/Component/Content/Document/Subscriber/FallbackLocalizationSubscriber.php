@@ -81,6 +81,9 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @param HydrateEvent $event
+     */
     public function handleHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();
@@ -114,7 +117,11 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Return available localizations
+     *
+     * @param NodeInterface $node
+     * @param mixed $document
+     * @param mixed $locale
      */
     public function getAvailableLocalization(NodeInterface $node, $document, $locale)
     {
@@ -143,7 +150,12 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         return $fallbackLocale;
     }
 
-    private function getWebspaceLocale($document, $node, $locale)
+    /**
+     * @param mixed $document
+     * @param NodeInterface $node
+     * @param mixed $locale
+     */
+    private function getWebspaceLocale($document, NodeInterface $node, $locale)
     {
         $webspaceName = $this->inspector->getWebspace($document);
 

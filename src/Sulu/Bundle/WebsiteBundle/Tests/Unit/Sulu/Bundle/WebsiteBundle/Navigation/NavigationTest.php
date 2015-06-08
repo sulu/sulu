@@ -12,7 +12,6 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use PHPCR\NodeInterface;
 use ReflectionMethod;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;

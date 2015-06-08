@@ -17,8 +17,6 @@ use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
  * Base test case for functional tests in Sulu.
- *
- * NOTE: This class deprecates both PhpcrTestCase and DatabaseTestCase
  */
 abstract class SuluTestCase extends BaseTestCase
 {
