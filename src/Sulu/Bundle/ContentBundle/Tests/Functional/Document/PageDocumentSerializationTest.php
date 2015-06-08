@@ -21,7 +21,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\PhpcrOdm\ContentContainer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ContentBundle\Document\Route;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 
 class PageDocumentSerializationTest extends SuluTestCase
 {
