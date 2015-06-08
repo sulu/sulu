@@ -15,7 +15,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 /**
  * Documents implementing this behavior can have structures applied to them.
  *
- * Content is set by binding raw data to the PropertyContainerInterface retried
+ * Content is set by binding raw data to the StructureInterface retried
  * through the getContent method.
  *
  * Content is accessed as folows:
@@ -41,11 +41,11 @@ interface StructureBehavior extends LocaleBehavior
     public function setStructureType($structureType);
 
     /**
-     * Return the PropertyContainerInterface instance.
+     * Return the StructureInterface instance.
      *
-     * @return PropertyContainerInterface
+     * @return StructureInterface
      */
-    public function getContent();
+    public function getStructure();
 }
 
 

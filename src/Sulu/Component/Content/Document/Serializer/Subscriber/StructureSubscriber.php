@@ -13,12 +13,12 @@ namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
- * Normalize ManagedPropertyContainer instances to the PropertyContainer type
+ * Normalize ManagedStructure instances to the Structure type
  */
-class PropertyContainerSubscriber implements EventSubscriberInterface
+class StructureSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritDoc}
@@ -40,8 +40,8 @@ class PropertyContainerSubscriber implements EventSubscriberInterface
     {
         $object = $event->getObject();
 
-        if ($object instanceof PropertyContainer) {
-            $event->setType(PropertyContainer::class);
+        if ($object instanceof Structure) {
+            $event->setType(Structure::class);
         }
     }
 }

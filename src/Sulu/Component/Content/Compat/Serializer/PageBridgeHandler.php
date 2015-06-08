@@ -101,7 +101,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     ) {
         $document = $context->accept($data['document'], array('name' => PageDocument::class));
 
-        $structure = $this->structureFactory->getStructure('page', $data['structure']);
+        $structure = $this->structureFactory->getStructureMetadata('page', $data['structure']);
 
         $bridge = new PageBridge($structure, $this->inspector, $this->propertyFactory, $document);
 

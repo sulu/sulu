@@ -90,8 +90,8 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 
         $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($this->metadata->reveal());
         $this->metadata->getAlias()->willReturn('page');
-        $this->structureFactory->getStructure('page', 'foo')->willReturn($structure);
-        $result = $this->documentInspector->getStructure($document->reveal());
+        $this->structureFactory->getStructureMetadata('page', 'foo')->willReturn($structure);
+        $result = $this->documentInspector->getStructureMetadata($document->reveal());
         $this->assertSame($structure, $result);
     }
 

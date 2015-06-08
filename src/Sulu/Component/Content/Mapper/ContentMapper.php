@@ -1042,7 +1042,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getPropertyData($document, LegacyProperty $property)
     {
-        return $document->getContent()->getProperty($property->getName())->getValue();
+        return $document->getStructure()->getProperty($property->getName())->getValue();
     }
 
     /**
@@ -1189,7 +1189,7 @@ class ContentMapper implements ContentMapperInterface
         if (null === $document) {
             return;
         }
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
         $documentAlias = $this->inspector->getMetadata($document)->getAlias();
 
         $structureBridge = $this->structureManager->wrapStructure($documentAlias, $structure);

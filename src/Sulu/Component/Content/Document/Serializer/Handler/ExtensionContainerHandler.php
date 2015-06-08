@@ -69,5 +69,4 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
     ) {
         return new ExtensionContainer($data);
     }
-
 }

@@ -67,7 +67,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function getStructure($type, $structureType = null)
+    public function getStructureMetadata($type, $structureType = null)
     {
         $cacheKey = $type.$structureType;
         if (isset($this->cache[$cacheKey])) {
@@ -138,7 +138,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         $structures = array();
 
         foreach ($structureNames as $structureName) {
-            $structures[] = $this->getStructure($type, $structureName);
+            $structures[] = $this->getStructureMetadata($type, $structureName);
         }
 
         return $structures;

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Document\Property;
+namespace Sulu\Component\Content\Document\Structure;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -16,13 +16,12 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Document\Property\PropertyValue;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 
 /**
  * Lazy loading container for content properties.
  */
-class ManagedPropertyContainer extends PropertyContainer
+class ManagedStructure extends Structure
 {
     private $contentTypeManager;
     private $document;
@@ -101,7 +100,7 @@ class ManagedPropertyContainer extends PropertyContainer
      *
      * @param StructureMetadata $structure
      */
-    public function setStructure(StructureMetadata $structure) 
+    public function setStructureMetadata(StructureMetadata $structure)
     {
         $this->structure = $structure;
     }
@@ -148,7 +147,7 @@ class ManagedPropertyContainer extends PropertyContainer
     private function init()
     {
         if (!$this->structure) {
-            $this->structure = $this->inspector->getStructure($this->document);
+            $this->structure = $this->inspector->getStructureMetadata($this->document);
         }
     }
 }

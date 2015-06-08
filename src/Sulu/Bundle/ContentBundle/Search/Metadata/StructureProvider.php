@@ -96,7 +96,7 @@ class StructureProvider implements ProviderInterface
         }
 
         $documentMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
-        $structure = $this->structureFactory->getStructure($documentMetadata->getAlias(), $object->getStructureType());
+        $structure = $this->structureFactory->getStructureMetadata($documentMetadata->getAlias(), $object->getStructureType());
 
         return $this->getMetadata($documentMetadata, $structure);
     }
@@ -235,7 +235,7 @@ class StructureProvider implements ProviderInterface
         $className = $document->getClass();
         $structureType = $document->getField(self::FIELD_STRUCTURE_TYPE)->getValue();
         $documentMetadata = $this->metadataFactory->getMetadataForClass($className);
-        $structure = $this->structureFactory->getStructure($documentMetadata->getAlias(), $structureType);
+        $structure = $this->structureFactory->getStructureMetadata($documentMetadata->getAlias(), $structureType);
 
         return $this->getMetadata($documentMetadata, $structure);
     }
@@ -302,7 +302,7 @@ class StructureProvider implements ProviderInterface
     private function getContentField(PropertyMetadata $property)
     {
         $field = $this->factory->createMetadataExpression(sprintf(
-            'object.getContent().%s.getValue()', $property->getName()
+            'object.getStructure().%s.getValue()', $property->getName()
         ));
 
         return $field;

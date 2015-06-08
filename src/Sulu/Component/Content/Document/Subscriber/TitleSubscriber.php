@@ -68,12 +68,12 @@ class TitleSubscriber extends AbstractMappingSubscriber
 
         $title = $document->getTitle();
 
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
         if (!$structure->hasProperty('title')) {
             return;
         }
 
-        $document->getContent()->getProperty('title')->setValue($title);
+        $document->getStructure()->getProperty('title')->setValue($title);
         $this->doHydrate($event);
     }
 
@@ -83,12 +83,12 @@ class TitleSubscriber extends AbstractMappingSubscriber
             return 'Document has no "title" property in content';
         }
 
-        return $document->getContent()->getProperty('title')->getValue();
+        return $document->getStructure()->getProperty('title')->getValue();
     }
 
     private function hasTitle($document)
     {
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
 
         return $structure->hasProperty('title');
     }

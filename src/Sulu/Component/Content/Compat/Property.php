@@ -22,7 +22,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
-use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 

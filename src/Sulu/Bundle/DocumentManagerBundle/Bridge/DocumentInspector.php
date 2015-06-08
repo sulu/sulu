@@ -99,9 +99,9 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @return StructureMetadata
      */
-    public function getStructure(StructureBehavior $document)
+    public function getStructureMetadata(StructureBehavior $document)
     {
-        return $this->structureFactory->getStructure(
+        return $this->structureFactory->getStructureMetadata(
             $this->getMetadata($document)->getAlias(),
             $document->getStructureType()
         );
@@ -236,7 +236,7 @@ class DocumentInspector extends BaseDocumentInspector
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $node = $this->getNode($page);
 
-        $structure = $this->getStructure($page);
+        $structure = $this->getStructureMetadata($page);
         $rlpProperty = $structure->getPropertyByTagName('sulu.rlp');
 
         foreach ($webspace->getAllLocalizations() as $localization) {
