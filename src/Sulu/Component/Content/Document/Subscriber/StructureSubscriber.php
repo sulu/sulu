@@ -141,9 +141,9 @@ class StructureSubscriber extends AbstractMappingSubscriber
         }
 
         if ($value) {
-            $container = $this->createPropertyContainer($document);
+            $container = $this->createStructure($document);
         } else {
-            $container = new PropertyContainer();
+            $container = new Structure();
         }
 
         // Set the property container
@@ -190,7 +190,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
      * @param mixed $document
      * @param NodeInterface $node
      */
-    private function createPropertyContainer($document)
+    private function createStructure($document)
     {
         return new ManagedStructure(
             $this->contentTypeManager,
