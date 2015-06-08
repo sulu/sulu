@@ -58,7 +58,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        return $this->wrapStructure($type, $this->structureFactory->getStructure($type, $key));
+        return $this->wrapStructure($type, $this->structureFactory->getStructureMetadata($type, $key));
     }
 
     /**
