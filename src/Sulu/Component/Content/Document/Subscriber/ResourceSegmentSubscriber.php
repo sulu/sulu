@@ -79,7 +79,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 
     private function getResourceSegmentProperty($document)
     {
-        $structure = $this->inspector->getStructure($document);
+        $structure = $this->inspector->getStructureMetadata($document);
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {
