@@ -147,7 +147,7 @@ class ManagedStructure extends Structure
     private function init()
     {
         if (!$this->structure) {
-            $this->structure = $this->inspector->getStructure($this->document);
+            $this->structure = $this->inspector->getStructureMetadata($this->document);
         }
     }
 }
