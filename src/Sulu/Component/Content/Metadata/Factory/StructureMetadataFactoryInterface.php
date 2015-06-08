@@ -30,7 +30,7 @@ interface StructureMetadataFactoryInterface
      *
      * @return StructureInterface
      */
-    public function getStructure($type, $structureType);
+    public function getStructureMetadata($type, $structureType);
 
     /**
      * Return all structures of the given type
