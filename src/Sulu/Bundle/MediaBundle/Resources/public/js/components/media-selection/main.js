@@ -93,6 +93,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
+         * raised when selection is changed
+         * @event sulu.media-selection.document-selection
+         */
+        DATA_CHANGED = function() {
+            return createEventName.call(this, 'data-changed');
+        },
+
+        /**
          * returns normalized event names
          */
         createEventName = function(postFix) {
@@ -243,6 +251,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }
 
             this.$el.find('#selected-images-count').html(template);
+            this.sandbox.emit(DATA_CHANGED.call(this));
+
         },
 
         /**
