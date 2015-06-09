@@ -269,7 +269,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateAllFlat()
     {
-        $result = $this->sitemapGenerator->generateAllLocals('default', true)->getSitemap();
+        $result = $this->sitemapGenerator->generateAllLocals('sulu_io', true)->getSitemap();
 
         $this->assertEquals(11, sizeof($result));
         $this->assertEquals('Homepage', $result[0]['title']);
@@ -312,7 +312,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateFlat()
     {
-        $result = $this->sitemapGenerator->generate('default', 'en', true)->getSitemap();
+        $result = $this->sitemapGenerator->generate('sulu_io', 'en', true)->getSitemap();
 
         $this->assertEquals(6, sizeof($result));
         $this->assertEquals('Homepage', $result[0]['title']);
@@ -339,7 +339,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateTree()
     {
-        $result = $this->sitemapGenerator->generate('default', 'en')->getSitemap();
+        $result = $this->sitemapGenerator->generate('sulu_io', 'en')->getSitemap();
 
         $root = $result;
         $this->assertEquals('Homepage', $root['title']);
