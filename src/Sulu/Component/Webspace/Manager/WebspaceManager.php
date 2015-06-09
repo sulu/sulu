@@ -169,6 +169,20 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getAllLocales()
+    {
+        $locales = array();
+
+        foreach ($this->getAllLocalizations() as $localization) {
+            $locales[] = $localization->getLocalization();
+        }
+
+        return $locales;
+    }
+
+    /**
      * Returns all the webspaces managed by this specific instance.
      *
      * @return WebspaceCollection
