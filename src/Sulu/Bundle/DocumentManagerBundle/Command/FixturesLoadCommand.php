@@ -107,10 +107,16 @@ EOT
         }
 
         if (empty($paths)) {
-            $output->writeln(sprintf(
-                '<info>Could not find any existing candidate paths. Looked for: "</info>%s<comment>"</comment>',
-                implode('<comment>", "</comment>', $candidatePaths)
-            ));
+            $output->writeln(
+                '<info>Could not find any candidate fixture paths.</info>'
+            );
+           
+            if ($input->getOption('verbose')) {
+               $output->writeln(sprintf('Looked for: </comment>%s<comment>"</comment>', 
+                   implode('"<comment>", "</comment>', $candidatePaths)
+               ));
+            }
+
             return 0;
         }
 
