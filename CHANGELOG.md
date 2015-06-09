@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
     * FEATURE     #1214 [MediaBundle]    Added language chooser in "all media" view and in edit-media overlay
     * ENHANCMENT  #1206 [SecurityBundle] Corrected translation for roles entry in navigation
+    * BUGFIX      #1203 [AdminBundle]    Fixed routes for tabs
     * BUGFIX      #1169 [AdminBundle]    Fixed sidebar issue (prepending div instead of appending)
     * ENHANCEMENT #1159 [SecurityBundle] Change role naming to keep symfony2 conventions.
     * BUGFIX      #1156 [MediaBundle]    Fix mimetype check for ghostscript
