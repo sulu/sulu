@@ -34,13 +34,15 @@ define(function() {
         /** returns normalized event names */
         createEventName = function(postFix) {
             return namespace + postFix;
-        };
+        },
+
+        MEDIA_LANGUAGE = 'mediaLanguage';
 
     return {
 
         header: function() {
             // init locale
-            this.locale = this.sandbox.sulu.user.locale;
+            this.locale = this.sandbox.sulu.getUserSetting(MEDIA_LANGUAGE) || this.sandbox.sulu.user.locale;
 
             return {
                 tabs: {
@@ -123,6 +125,8 @@ define(function() {
         },
 
         setLocale: function(locale) {
+            this.sandbox.sulu.saveUserSetting(MEDIA_LANGUAGE, locale);
+
             this.locale = locale;
         },
 

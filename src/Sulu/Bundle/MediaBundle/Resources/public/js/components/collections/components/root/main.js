@@ -40,15 +40,30 @@ define(['sulumedia/model/media'], function(Media) {
                     selectable: false
                 }
             }
-        };
+        },
+
+        MEDIA_LANGUAGE = 'mediaLanguage';
 
     return {
 
         view: true,
 
-        header: {
-            noBack: true,
-            toolbar: {template: 'empty'}
+        header: function() {
+            // init locale
+            this.locale = this.sandbox.sulu.getUserSetting(MEDIA_LANGUAGE) || this.sandbox.sulu.user.locale;
+
+            return {
+                noBack: true,
+                toolbar: {
+                    template: 'empty',
+                    languageChanger: {
+                        url: '/admin/api/localizations',
+                        resultKey: 'localizations',
+                        titleAttribute: 'localization',
+                        preSelected: this.locale
+                    }
+                }
+            };
         },
 
         layout: {
@@ -114,6 +129,9 @@ define(['sulumedia/model/media'], function(Media) {
 
             // download media
             this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
+
+            // language change
+            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
         },
 
         render: function() {
@@ -177,7 +195,7 @@ define(['sulumedia/model/media'], function(Media) {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
+                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + this.locale,
                     view: listViews[this.listView].name,
                     resultKey: 'media',
                     sortable: false,
@@ -224,6 +242,15 @@ define(['sulumedia/model/media'], function(Media) {
             });
 
             return def;
+        },
+
+        /**
+         * Changes the editing language
+         * @param locale {object} the new locale to display
+         */
+        changeLanguage: function(locale) {
+            this.sandbox.sulu.saveUserSetting(MEDIA_LANGUAGE, locale.localization);
+            this.sandbox.emit('husky.datagrid.url.update', {locale: locale.localization});
         }
     };
 });
