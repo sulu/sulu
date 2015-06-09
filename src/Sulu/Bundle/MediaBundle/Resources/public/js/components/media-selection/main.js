@@ -956,6 +956,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 }
             }
             this.sandbox.emit(RECORD_DESELECTED.call(this), id);
+            this.sandbox.emit(DATA_CHANGED.call(this));
 
             this.setData(data, false);
         }
