@@ -50,7 +50,7 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         $tester = $this->execute(array(
             '--no-interaction' => true
         ));
-        $this->assertContains('Could not find any existing candidate', $tester->getDisplay());
+        $this->assertContains('Could not find any candidate fixture paths', $tester->getDisplay());
     }
 
     /**
