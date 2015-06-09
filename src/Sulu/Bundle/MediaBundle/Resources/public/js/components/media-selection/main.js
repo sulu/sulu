@@ -94,7 +94,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
         /**
          * raised when selection is changed
-         * @event sulu.media-selection.document-selection
+         * @event sulu.media-selection.document-selection.data-changed
          */
         DATA_CHANGED = function() {
             return createEventName.call(this, 'data-changed');
