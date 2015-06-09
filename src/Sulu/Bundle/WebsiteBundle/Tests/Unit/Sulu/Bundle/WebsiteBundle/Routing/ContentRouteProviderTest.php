@@ -322,6 +322,52 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/other-test', $route->getDefaults()['url']);
     }
 
+    public function testGetRedirectForExternalLink()
+    {
+        // Set up test
+        $path = '/test';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_EXTERNAL_LINK);
+        $structure
+            ->expects($this->once())
+            ->method('getPropertyValueByTagName')
+            ->will($this->returnValue('www.example.org'));
+
+        $locale = new Localization();
+        $locale->setLanguage('en');
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            $locale
+        );
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('http://www.example.org', $route->getDefaults()['url']);
+    }
+
     public function testGetCollectionEndingSlash()
     {
         // Set up test
@@ -423,7 +469,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             false,
             true,
             true,
-            array('getResourceLocator')
+            array('getResourceLocator', 'getPropertyValueByTagName')
         );
 
         $structure->setUuid($uuid);
