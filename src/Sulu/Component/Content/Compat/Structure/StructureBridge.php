@@ -627,7 +627,13 @@ class StructureBridge implements StructureInterface
         }
 
         if ($document->getRedirectType() === RedirectType::INTERNAL) {
-            return $document->getRedirectTarget()->getResourceSegment();
+            $target = $document->getRedirectTarget();
+
+            if (!$target) {
+                throw new \RuntimeException('Document is an internal redirect, but no redirect target has been set.');
+            }
+
+            return $target->getResourceSegment();
         }
 
         return $document->getResourceSegment();
