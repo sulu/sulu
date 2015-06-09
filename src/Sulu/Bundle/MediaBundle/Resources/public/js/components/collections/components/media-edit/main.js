@@ -129,6 +129,26 @@ define(function () {
             this.sandbox.on(LOADING.call(this), function() {
                 this.sandbox.emit('husky.overlay.media-edit.loading.open');
             }.bind(this));
+
+            // change language (single-edit)
+            this.sandbox.on('husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this));
+        },
+
+        /**
+         * Handles the changing of the language in the single-edit overlay
+         * @param locale
+         */
+        languageChangedSingle: function(locale) {
+            var id = this.media.id;
+
+            this.changeSingleModel();
+            this.sandbox.emit('sulu.media.collections.reload-single-media',
+                id, {locale: locale},
+                function(media) {
+                    this.media = media;
+                    this.sandbox.form.setData(constants.infoFormSelector, this.media);
+                }.bind(this)
+            );
         },
 
         /**
