@@ -83,7 +83,6 @@ class ListToTreeConverter
             // search for empty nodes
             for ($i = 0; $i < sizeof($tree['children']); $i++) {
                 if (array_keys($tree['children'][$i]) === array('children')) {
-                    array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
                     unset($tree['children'][$i]);
                 }
             }

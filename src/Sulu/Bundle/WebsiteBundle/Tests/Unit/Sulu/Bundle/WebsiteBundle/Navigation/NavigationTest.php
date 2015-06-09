@@ -602,6 +602,29 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/products/products-3', $main[2]['url']);
     }
 
+    public function testNavigationStateTestParent()
+    {
+        $this->data['products'] = $this->mapper->save(
+            array('title' => 'Products', 'url' => '/products'),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            $this->data['products']->getUuid(),
+            null,
+            StructureInterface::STATE_TEST
+        );
+
+        $navigation = $this->navigation->getRootNavigation('default', 'en', 2);
+
+        $this->assertCount(1, $navigation);
+        $this->assertEquals('/news', $navigation[0]['url']);
+        $this->assertCount(2, $navigation[0]['children']);
+        $this->assertEquals('/news/news-1', $navigation[0]['children'][0]['url']);
+        $this->assertEquals('/news/news-2', $navigation[0]['children'][1]['url']);
+    }
+
     public function testNavigationOrder()
     {
         $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
