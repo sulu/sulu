@@ -136,18 +136,26 @@ define(function () {
          * @param media {Object|Array} the media model or an array with media models
          */
         editMedia: function (media) {
-            if (this.sandbox.dom.isArray(media)) {
-                this.editMultipleMedia(media);
-            } else {
-                this.editSingleMedia(media);
-            }
+            this.sandbox.util.load('/admin/api/localizations').then(function(data) {
+                var locales = [], i, len;
+
+                for(i = 0, len = data._embedded.localizations.length; i<len;i++){
+                    locales.push(data._embedded.localizations[i].localization);
+                }
+
+                if (this.sandbox.dom.isArray(media)) {
+                    this.editMultipleMedia(media, locales);
+                } else {
+                    this.editSingleMedia(media, locales);
+                }
+            }.bind(this));
         },
 
         /**
          * Edits a single media
          * @param media {Object} the id of the media to edit
          */
-        editSingleMedia: function (media) {
+        editSingleMedia: function (media, locales) {
             this.media = media;
             this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
                 media: this.media
@@ -155,18 +163,18 @@ define(function () {
             this.$versions = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/versions', {
                 media: this.media
             }));
-            this.startSingleOverlay();
+            this.startSingleOverlay(locales);
         },
 
         /**
          * Edits multiple media
          * @param medias {Array} array with the ids of the media to edit
          */
-        editMultipleMedia: function (medias) {
+        editMultipleMedia: function (medias, locales) {
             this.medias = medias;
             this.$multiple = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/multiple-edit'));
             this.bindMultipleEditDomEvents();
-            this.startMultipleEditOverlay();
+            this.startMultipleEditOverlay(locales);
         },
 
         /**
@@ -212,7 +220,7 @@ define(function () {
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function () {
+        startSingleOverlay: function (locales) {
             var $container = this.sandbox.dom.createElement('<div class="'+ constants.singleEditClass +'"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
@@ -226,6 +234,10 @@ define(function () {
                             {title: this.sandbox.translate(this.options.infoKey), data: this.$info},
                             {title: this.sandbox.translate(this.options.versionsKey), data: this.$versions}
                         ],
+                        languageChanger: {
+                            locales: locales,
+                            preSelected: this.media.locale
+                        },
                         skin: 'wide',
                         openOnStart: true,
                         instanceName: 'media-edit',
@@ -270,7 +282,7 @@ define(function () {
         /**
          * Starts the actual overlay for multiple-edit
          */
-        startMultipleEditOverlay: function () {
+        startMultipleEditOverlay: function (locales) {
             var $container = this.sandbox.dom.createElement('<div class="'+ constants.multiEditClass +'"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindMultipleOverlayEvents();
@@ -281,6 +293,10 @@ define(function () {
                         el: $container,
                         title: this.sandbox.translate(this.options.multipleEditTitle),
                         data: this.$multiple,
+                        languageChanger: {
+                            locales: locales,
+                            preSelected: this.media.locale
+                        },
                         openOnStart: true,
                         draggable: false,
                         propagateEvents: false,
