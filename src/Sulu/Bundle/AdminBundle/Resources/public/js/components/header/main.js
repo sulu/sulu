@@ -664,6 +664,8 @@ define([], function () {
                         forceSelect: true
                     };
 
+                options.data.url = this.sandbox.mvc.history.fragment;
+
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
                 this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
 
