@@ -132,6 +132,9 @@ define(function () {
 
             // change language (single-edit)
             this.sandbox.on('husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this));
+
+            // change language (multi-edit)
+            this.sandbox.on('husky.overlay.media-multiple-edit.language-changed', this.languageChangedMultiple.bind(this));
         },
 
         /**
@@ -147,6 +150,46 @@ define(function () {
                 function(media) {
                     this.media = media;
                     this.sandbox.form.setData(constants.infoFormSelector, this.media);
+                }.bind(this)
+            );
+        },
+
+
+        /**
+         * Handles the changing of the language in the singleedit overlay
+         * @param locale
+         */
+        languageChangedMultiple: function(locale) {
+            var medias = this.medias;
+            this.changeMultipleModel();
+
+            this.sandbox.emit('sulu.media.collections.reload-media',
+                medias, {locale: locale},
+                function(medias) {
+                    this.medias = medias;
+                    var descriptionVisible = this.sandbox.dom.is(
+                            constants.multipleEditFormSelector + ' ' + constants.multipleEditDescSelector, ':visible'
+                        ),
+                        tagsVisible = this.sandbox.dom.is(
+                            constants.multipleEditFormSelector + ' ' + constants.multipleEditTagsSelector, ':visible'
+                        );
+
+                    this.sandbox.stop(constants.multipleEditFormSelector + ' *');
+                    this.sandbox.form.setData(constants.multipleEditFormSelector, {
+                        records: this.medias
+                    }).then(function() {
+                        this.sandbox.start(constants.multipleEditFormSelector);
+                        if (descriptionVisible === true) {
+                            this.sandbox.dom.show(
+                                constants.multipleEditFormSelector + ' ' + constants.multipleEditDescSelector
+                            );
+                        }
+                        if (tagsVisible) {
+                            this.sandbox.dom.show(
+                                constants.multipleEditFormSelector + ' ' + constants.multipleEditTagsSelector
+                            );
+                        }
+                    }.bind(this));
                 }.bind(this)
             );
         },
@@ -174,6 +217,7 @@ define(function () {
         /**
          * Edits a single media
          * @param media {Object} the id of the media to edit
+         * @param {Array} locales
          */
         editSingleMedia: function (media, locales) {
             this.media = media;
@@ -189,6 +233,7 @@ define(function () {
         /**
          * Edits multiple media
          * @param medias {Array} array with the ids of the media to edit
+         * @param {Array} locales
          */
         editMultipleMedia: function (medias, locales) {
             this.medias = medias;
@@ -315,7 +360,7 @@ define(function () {
                         data: this.$multiple,
                         languageChanger: {
                             locales: locales,
-                            preSelected: this.media.locale
+                            preSelected: this.medias[0].locale
                         },
                         openOnStart: true,
                         draggable: false,
