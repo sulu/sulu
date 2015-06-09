@@ -458,7 +458,7 @@ class NavigationTest extends PhpcrTestCase
         // context footer (only news and one sub page news-1)
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'footer');
 
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(1, sizeof($result));
         $layer1 = $result;
 
         $this->assertEquals(1, sizeof($layer1[0]['children']));
@@ -467,22 +467,19 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News', $layer1[0]['title']);
         $this->assertEquals('News-1', $layer2['title']);
 
-        $this->assertEquals(0, sizeof($layer1[1]['children']));
-        $this->assertEquals('Products-1', $layer1[1]['title']);
+        // /products/product-1 not: because of missing nav context on /products
 
         // context main (only products and two sub pages
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'main');
 
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(1, sizeof($result));
         $layer1 = $result;
 
         $this->assertEquals(2, sizeof($layer1[0]['children']));
-        $this->assertEquals(0, sizeof($layer1[1]['children']));
-        $this->assertEquals(0, sizeof($layer1[2]['children']));
+
+        // /news/news-1 and /news/news-2 not: because of missing nav context on /news
 
         $this->assertEquals('Products', $layer1[0]['title']);
-        $this->assertEquals('News-1', $layer1[1]['title']);
-        $this->assertEquals('News-2', $layer1[2]['title']);
 
         $layer2 = $layer1[0]['children'];
 
