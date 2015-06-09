@@ -1,5 +1,11 @@
 # Upgrade
 
+## dev-develop
+
+### Website Navigation
+
+Children of Test-Pages wont be merged into the upper layer. They will be ignored in the tree navigation.
+
 ## 1.0.0-RC1
 
 ### Security Roles
