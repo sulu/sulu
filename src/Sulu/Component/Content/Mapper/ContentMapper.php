@@ -1640,13 +1640,13 @@ class ContentMapper implements ContentMapperInterface
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
         foreach ($webspace->getAllLocalizations() as $localization) {
-
             // prepare translation vars
             $locale = $localization->getLocalization();
+            $shadowLocale = $this->getShadowLocale($node, $localization->getLocalization());
             $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
 
             // state property
-            $propertyTranslator = $this->createPropertyTranslator($localization);
+            $propertyTranslator = $this->createPropertyTranslator($shadowLocale);
             $statePropertyName = $propertyTranslator->getName('state');
 
             if ($node->getPropertyValueWithDefault(
