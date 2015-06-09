@@ -182,10 +182,6 @@
                 <source>navigation.settings</source>
                 <target>Einstellungen</target>
             </trans-unit>
-            <trans-unit id="8820ed397e9ac260b8f232dd6815e8b3" resname="navigation.settings.roles">
-                <source>navigation.settings.roles</source>
-                <target>Berechtigungen</target>
-            </trans-unit>
             <trans-unit id="a4e5be148f7d93a106d468391b00d055" resname="navigation.settings.translate">
                 <source>navigation.settings.translate</source>
                 <target>Übersetzungen</target>

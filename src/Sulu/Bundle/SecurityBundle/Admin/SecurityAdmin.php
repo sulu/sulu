@@ -33,7 +33,7 @@ class SecurityAdmin extends Admin
         $settings->setIcon('gear');
 
         if ($this->securityChecker->hasPermission('sulu.security.roles', 'view')) {
-            $roles = new NavigationItem('navigation.settings.roles', $settings);
+            $roles = new NavigationItem('security.roles.title', $settings);
             $roles->setAction('settings/roles');
             $roles->setIcon('gear');
         }
