@@ -10,20 +10,62 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Common\Persistence\ObjectManager;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ProfileController extends Controller
+/**
+ * This controller handles everything a user is allowed to change on its own.
+ */
+class ProfileController implements ClassResourceInterface
 {
-    public function changeLanguageAction(Request $request)
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
+    /**
+     * @var ViewHandlerInterface
+     */
+    private $viewHandler;
+
+    /**
+     * @param TokenStorageInterface $tokenStorage
+     * @param ObjectManager $objectManager
+     * @param ViewHandlerInterface $viewHandler
+     */
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        ObjectManager $objectManager,
+        ViewHandlerInterface $viewHandler
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->objectManager = $objectManager;
+        $this->viewHandler = $viewHandler;
+    }
+
+    /**
+     * Sets the given language on the current user
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putLanguageAction(Request $request)
     {
-        $user = $this->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $user->setLocale($request->get('locale'));
 
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
+        $this->objectManager->flush();
 
-        return new JsonResponse($user);
+        return $this->viewHandler->handle(View::create($user));
     }
 }

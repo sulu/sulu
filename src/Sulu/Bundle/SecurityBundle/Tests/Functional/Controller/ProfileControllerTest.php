@@ -17,7 +17,7 @@ class ProfileControllerTest extends SuluTestCase
     public function testChangeLanguageAction()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/security/profile/change-language', array('locale' => 'de'));
+        $client->request('PUT', '/security/profile/language', array('locale' => 'de'));
 
         // check current instance
         $user = $client->getContainer()->get('security.context')->getToken()->getUser();
