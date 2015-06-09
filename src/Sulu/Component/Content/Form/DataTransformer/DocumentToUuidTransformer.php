@@ -10,6 +10,7 @@
  
 namespace Sulu\Component\Content\Form\DataTransformer;
 
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use DTL\Component\Content\Document\DocumentInterface;
 use PHPCR\Util\UUIDHelper;
@@ -21,7 +22,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
 {
     private $documentManager;
 
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManagerInterface $documentManager)
     {
         $this->documentManager = $documentManager;
     }
