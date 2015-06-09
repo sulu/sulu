@@ -4,6 +4,6 @@ massive_search:
 sulu_content:
     search:
         mapping:
-            Sulu\Component\Content\Structure\Page:
+            Sulu\Bundle\ContentBundle\Document\PageDocument:
                 index: page
                 category: page

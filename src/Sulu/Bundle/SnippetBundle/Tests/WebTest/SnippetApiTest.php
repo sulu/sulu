@@ -11,9 +11,10 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Integration;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\Structure\Snippet;
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class SnippetApiTest extends SuluTestCase

@@ -14,7 +14,7 @@ use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -80,7 +80,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         $subject = $e->getSubject();
         $evaluator = $e->getFieldEvaluator();
 
-        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf(StructureInterface::class)) {
+        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf(StructureBehavior::class)) {
             return;
         }
 
@@ -89,7 +89,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         }
 
         $data = $evaluator->getValue($subject, $imageUrlField);
-        $locale = $subject->getLanguageCode();
+        $locale = $subject->getLocale();
 
         if (!$data) {
             $document->setImageUrl(null);

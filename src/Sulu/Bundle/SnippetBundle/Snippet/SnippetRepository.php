@@ -13,8 +13,9 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Jackalope\Query\Query;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\Content\Structure\Snippet;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 
 /**
@@ -78,7 +79,7 @@ class SnippetRepository
             try {
                 $snippet = $this->contentMapper->load($uuid, null, $languageCode);
                 $snippets[] = $snippet;
-            } catch (\PHPCR\ItemNotFoundException $e) {
+            } catch (DocumentNotFoundException $e) {
                 // ignore not found items
             }
         }

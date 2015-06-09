@@ -11,7 +11,7 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use Prophecy\Argument;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 
 class PathsHandlerTest extends \PHPUnit_Framework_TestCase
@@ -45,7 +45,7 @@ class PathsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
 
         $this->webspaceManager = $this->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
         $this->proxyClient = $this->prophesize('FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface');

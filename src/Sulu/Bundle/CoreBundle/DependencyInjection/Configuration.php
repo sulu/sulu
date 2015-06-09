@@ -234,7 +234,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('snippet')
                                     ->defaultValue('default')
                                 ->end()
-                                ->scalarNode('homepage')
+                                ->scalarNode('home')
                                     ->defaultValue('overview')
                                 ->end()
                             ->end()

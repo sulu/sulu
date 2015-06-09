@@ -12,22 +12,23 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use PHPCR\NodeInterface;
 use ReflectionMethod;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\MetadataExtension\StructureExtension;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 
-class NavigationTest extends PhpcrTestCase
+class NavigationTest extends SuluTestCase
 {
     /**
      * @var StructureInterface[]
@@ -46,12 +47,14 @@ class NavigationTest extends PhpcrTestCase
 
     protected function setUp()
     {
-        $this->prepareMapper();
+        $this->initPhpcr();
+        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->languageNamespace = 'i18n';
         $this->data = $this->prepareTestData();
-
-        $this->structureManager->expects($this->any())
-            ->method('getStructures')
-            ->will($this->returnCallback(array($this, 'structuresCallback')));
 
         $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper);
 
@@ -61,76 +64,6 @@ class NavigationTest extends PhpcrTestCase
             new NavigationQueryBuilder($this->structureManager, $this->languageNamespace),
             $this->sessionManager
         );
-    }
-
-    protected function prepareWebspaceManager()
-    {
-        if ($this->webspaceManager === null) {
-            $this->webspace = new Webspace();
-            $this->webspace->setKey('default');
-
-            $local = new Localization();
-            $local->setLanguage('en');
-
-            $this->webspace->setLocalizations(array($local));
-            $this->webspace->setName('Default');
-
-            $this->webspace->setNavigation(
-                new Navigation(
-                    array(
-                        new NavigationContext('main', array()),
-                        new NavigationContext('footer', array()),
-                    )
-                )
-            );
-
-            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
-            $this->webspaceManager
-                ->expects($this->any())
-                ->method('findWebspaceByKey')
-                ->will($this->returnValue($this->webspace));
-        }
-    }
-
-    public function structureCallback()
-    {
-        $args = func_get_args();
-        $structureKey = $args[0];
-
-        if ($structureKey == 'default_template') {
-            return $this->getStructureMock($structureKey);
-        } elseif ($structureKey == 'excerpt') {
-            return $this->getStructureMock($structureKey, false);
-        } elseif ($structureKey == 'simple') {
-            return $this->getStructureMock($structureKey);
-        } elseif ($structureKey == 'overview') {
-            return $this->getStructureMock($structureKey);
-        } elseif ($structureKey == 'norlp') {
-            return $this->getStructureMock($structureKey, false);
-        }
-
-        return;
-    }
-
-    public function structuresCallback()
-    {
-        return array(
-            $this->getStructureMock('default_template'),
-            $this->getStructureMock('excerpt'),
-            $this->getStructureMock('simple'),
-            $this->getStructureMock('overview'),
-            $this->getStructureMock('norlp'),
-        );
-    }
-
-    public function getExtensionCallback()
-    {
-        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
-    }
-
-    public function getExtensionsCallback()
-    {
-        return array($this->getExtensionCallback());
     }
 
     /**
@@ -143,7 +76,8 @@ class NavigationTest extends PhpcrTestCase
                 'title' => 'News',
                 'url' => '/news',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News')),
-                'navContexts' => array('footer'),
+                'url' => '/news',
+                'navContexts' => array('footer')
             ),
             'products' => array(
                 'title' => 'Products',
@@ -177,12 +111,12 @@ class NavigationTest extends PhpcrTestCase
             ),
         );
 
-        $this->mapper->saveStartPage(array('title' => 'Startpage', 'url' => '/'), 'simple', 'default', 'en', 1);
+        $this->mapper->saveStartPage(array('title' => 'Startpage', 'url' => '/'), 'simple', 'sulu_io', 'en', 1);
 
         $data['news'] = $this->mapper->save(
             $data['news'],
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -193,7 +127,7 @@ class NavigationTest extends PhpcrTestCase
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -204,7 +138,7 @@ class NavigationTest extends PhpcrTestCase
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -216,7 +150,7 @@ class NavigationTest extends PhpcrTestCase
         $data['products'] = $this->mapper->save(
             $data['products'],
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -227,7 +161,7 @@ class NavigationTest extends PhpcrTestCase
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -238,7 +172,7 @@ class NavigationTest extends PhpcrTestCase
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -253,7 +187,7 @@ class NavigationTest extends PhpcrTestCase
     private function getStructureMock($name, $rlp = true)
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
+            '\Sulu\Component\Content\Compat\Structure\Page',
             array($name, 'asdf', 'asdf', 2400)
         );
 
@@ -287,7 +221,7 @@ class NavigationTest extends PhpcrTestCase
 
     public function testMainNavigation()
     {
-        $main = $this->navigation->getRootNavigation('default', 'en', 2);
+        $main = $this->navigation->getRootNavigation('sulu_io', 'en', 2);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(2, sizeof($main[0]['children']));
         $this->assertEquals(2, sizeof($main[1]['children']));
@@ -299,12 +233,12 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/products/products-1', $main[1]['children'][0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['children'][1]['url']);
 
-        $main = $this->navigation->getRootNavigation('default', 'en', 1);
+        $main = $this->navigation->getRootNavigation('sulu_io', 'en', 1);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(0, sizeof($main[0]['children']));
         $this->assertEquals(0, sizeof($main[1]['children']));
 
-        $main = $this->navigation->getRootNavigation('default', 'en', null);
+        $main = $this->navigation->getRootNavigation('sulu_io', 'en', null);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(2, sizeof($main[0]['children']));
         $this->assertEquals(2, sizeof($main[1]['children']));
@@ -316,7 +250,7 @@ class NavigationTest extends PhpcrTestCase
 
     public function testNavigation()
     {
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
+        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(0, sizeof($main[0]['children']));
         $this->assertEquals(0, sizeof($main[1]['children']));
@@ -332,12 +266,12 @@ class NavigationTest extends PhpcrTestCase
 
     public function testMainNavigationFlat()
     {
-        $result = $this->navigation->getRootNavigation('default', 'en', 1, true);
+        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 1, true);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('News', $result[0]['title']);
         $this->assertEquals('Products', $result[1]['title']);
 
-        $result = $this->navigation->getRootNavigation('default', 'en', 2, true);
+        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, true);
         $this->assertEquals(6, sizeof($result));
         $this->assertEquals('News', $result[0]['title']);
         $this->assertEquals('News-1', $result[1]['title']);
@@ -356,7 +290,7 @@ class NavigationTest extends PhpcrTestCase
                 'navContexts' => array('footer'),
             ),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -365,7 +299,7 @@ class NavigationTest extends PhpcrTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
+        $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 2, true);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('News-1', $result[0]['title']);
         $this->assertEquals('News-2', $result[1]['title']);
@@ -381,7 +315,7 @@ class NavigationTest extends PhpcrTestCase
                 'navContexts' => array('footer'),
             ),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -392,7 +326,7 @@ class NavigationTest extends PhpcrTestCase
 
         $result = $this->navigation->getNavigation(
             $this->data['news']->getUuid(),
-            'default',
+            'sulu_io',
             'en',
             2,
             true,
@@ -412,7 +346,7 @@ class NavigationTest extends PhpcrTestCase
 
     public function testBreadcrumb()
     {
-        $breadcrumb = $this->navigation->getBreadcrumb($this->data['news/news-2']->getUuid(), 'default', 'en', 1);
+        $breadcrumb = $this->navigation->getBreadcrumb($this->data['news/news-2']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, sizeof($breadcrumb));
 
         // startpage has no title
@@ -424,39 +358,10 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/news/news-2', $breadcrumb[2]->getUrl());
     }
 
-    public function testNavigationNoRlp()
-    {
-        // this node should not be visible in navigation
-        $this->mapper->save(
-            array('title' => 'Hikaru Sulu'),
-            'norlp',
-            'default',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
-        $this->assertEquals(2, sizeof($main));
-        $this->assertEquals(0, sizeof($main[0]['children']));
-        $this->assertEquals(0, sizeof($main[1]['children']));
-
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['uuid']);
-        $this->assertEquals('News-1', $main[0]['title']);
-        $this->assertEquals('/news/news-1', $main[0]['url']);
-
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['uuid']);
-        $this->assertEquals('News-2', $main[1]['title']);
-        $this->assertEquals('/news/news-2', $main[1]['url']);
-    }
-
     public function testNavContexts()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'footer');
+        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, false, 'footer');
 
         $this->assertEquals(2, sizeof($result));
         $layer1 = $result;
@@ -471,7 +376,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('Products-1', $layer1[1]['title']);
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'main');
+        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, false, 'main');
 
         $this->assertEquals(3, sizeof($result));
         $layer1 = $result;
@@ -493,7 +398,7 @@ class NavigationTest extends PhpcrTestCase
     public function testNavContextsFlat()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getRootNavigation('default', 'en', 2, true, 'footer');
+        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, true, 'footer');
 
         $this->assertEquals(3, sizeof($result));
 
@@ -508,7 +413,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('Products-1', $result[2]['title']);
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getRootNavigation('default', 'en', 2, true, 'main');
+        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, true, 'main');
 
         $this->assertEquals(5, sizeof($result));
 
@@ -537,7 +442,7 @@ class NavigationTest extends PhpcrTestCase
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -546,7 +451,7 @@ class NavigationTest extends PhpcrTestCase
             StructureInterface::STATE_TEST
         );
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
@@ -554,7 +459,7 @@ class NavigationTest extends PhpcrTestCase
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -563,13 +468,13 @@ class NavigationTest extends PhpcrTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, sizeof($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
         $this->assertEquals('/products/products-3', $main[2]['url']);
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1, false, 'main');
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1, false, 'main');
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
@@ -582,20 +487,20 @@ class NavigationTest extends PhpcrTestCase
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
             $this->data['products/products-3']->getUuid()
         );
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, sizeof($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
         $this->assertEquals('/products/products-3', $main[2]['url']);
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1, false, 'main');
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1, false, 'main');
         $this->assertEquals(3, sizeof($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
@@ -604,7 +509,7 @@ class NavigationTest extends PhpcrTestCase
 
     public function testNavigationOrder()
     {
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
+        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(0, sizeof($main[0]['children']));
         $this->assertEquals(0, sizeof($main[1]['children']));
@@ -622,7 +527,7 @@ class NavigationTest extends PhpcrTestCase
         $session->save();
         $session->refresh(false);
 
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
+        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(0, sizeof($main[0]['children']));
         $this->assertEquals(0, sizeof($main[1]['children']));
@@ -637,7 +542,7 @@ class NavigationTest extends PhpcrTestCase
     }
 }
 
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension.

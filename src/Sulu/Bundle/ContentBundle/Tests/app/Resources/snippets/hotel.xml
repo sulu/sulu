@@ -8,7 +8,7 @@
     <key>hotel</key>
 
     <properties>
-        <property name="name" type="text_line" mandatory="true">
+        <property name="title" type="text_line" mandatory="true">
             <meta>
                 <title lang="de">Name</title>
                 <title lang="en">Name</title>
