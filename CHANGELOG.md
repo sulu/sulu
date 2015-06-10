@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
     * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
     * ENHANCMENT  #1206 [SecurityBundle] Corrected translation for roles entry in navigation
     * BUGFIX      #1169 [AdminBundle]    Fixed sidebar issue (prepending div instead of appending)

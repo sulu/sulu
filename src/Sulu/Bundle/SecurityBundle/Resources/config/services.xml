@@ -36,6 +36,7 @@
         <parameter key="sulu_security.entity.role">SuluSecurityBundle:Role</parameter>
         <parameter key="sulu_security.entity.group">SuluSecurityBundle:Group</parameter>
         <parameter key="sulu_security.entity.user_setting">SuluSecurityBundle:UserSetting</parameter>
+        <parameter key="sulu_security.profile_controller.class">Sulu\Bundle\SecurityBundle\Controller\ProfileController</parameter>
     </parameters>
 
     <services>
@@ -99,6 +100,13 @@
             <argument type="service" id="sulu_security.role_repository"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.profile_controller" class="%sulu_security.profile_controller.class%">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_security.user_setting_repository"/>
         </service>
 
         <service id="sulu_security.access_control_voter" class="%sulu_security.access_control_voter.class%" public="false">
