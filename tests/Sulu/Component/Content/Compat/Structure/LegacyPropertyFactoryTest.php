@@ -86,6 +86,8 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($legacyProperty->getMinOccurs(), $minOccurs);
         $this->assertEquals($legacyProperty->getColspan(), $colSpan);
         $this->assertContainsOnlyInstancesOf(PropertyParameter::class, $legacyProperty->getParams());
+        $this->assertArrayHasKey('prop', $legacyProperty->getParams());
+        $this->assertArrayHasKey('propfoo', $legacyProperty->getParams());
         $this->assertEquals($title['de'], $legacyProperty->getTitle('de'));
         $this->assertEquals($description['de'], $legacyProperty->getInfoText('de'));
         $this->assertEquals($placeholder['de'], $legacyProperty->getPlaceholder('de'));
