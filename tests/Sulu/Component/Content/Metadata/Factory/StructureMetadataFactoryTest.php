@@ -24,7 +24,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->cacheDir = __DIR__ . '/data/cache';
         $this->mappingFile = __DIR__ . '/data/page/something.xml';
 
-        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
         $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
         $this->factory = new StructureMetadataFactory(
             $this->loader->reveal(),
@@ -32,14 +32,12 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
                 'page' => array(
                     array(
                         'type' => 'page',
-                        'internal' => false,
                         'path' => __DIR__ . '/data/page',
                     ),
                 ),
                 'snoopet' => array(
                     array(
                         'type' => 'page',
-                        'internal' => false,
                         'path' => __DIR__ . '/data/snoops',
                     ),
                 ),

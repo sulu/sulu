@@ -10,6 +10,7 @@
     <view>ClientWebsiteBundle:templates:animals</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
+    <internal>true</internal>
 
     <meta>
         <title lang="de">Tiers</title>

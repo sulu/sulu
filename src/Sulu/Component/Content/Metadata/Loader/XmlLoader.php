@@ -40,6 +40,7 @@ class XmlLoader extends XmlLegacyLoader
         $structure->name = $data['key'];
         $structure->cacheLifetime = $data['cacheLifetime'];
         $structure->controller = $data['controller'];
+        $structure->internal = $data['internal'] === 'true';
         $structure->view = $data['view'];
         $structure->tags = $data['tags'];
         $structure->parameters = $data['params'];
@@ -142,6 +143,7 @@ class XmlLoader extends XmlLegacyLoader
             'key' => null,
             'view' => null,
             'controller' => null,
+            'internal' => false,
             'cacheLifetime' => null,
         ), $this->normalizeItem($data));
 

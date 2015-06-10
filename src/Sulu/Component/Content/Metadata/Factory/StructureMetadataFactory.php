@@ -47,6 +47,9 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      */
     private $defaultTypes;
 
+    /**
+     * @var array
+     */
     private $cache = array();
 
     /**
@@ -111,7 +114,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
                 ), null, $e);
             }
 
-            $metadata =  $this->loader->load($filePath, $type);
+            $metadata = $this->loader->load($filePath, $type);
+
             $resources = array(new FileResource($filePath));
 
             $cache->write(
@@ -209,18 +213,13 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      * Get the paths from the type path configuration
      *
      * @param string $type
-     * @param boolean $includeInternal
      */
-    private function getPaths($type, $includeInternal = true)
+    private function getPaths($type)
     {
         $typeConfigs = $this->typePaths[$type];
         $paths = array();
 
         foreach ($typeConfigs as $typeConfig) {
-            if (false === $includeInternal && $typeConfig['internal'] === true) {
-                continue;
-            }
-
             $paths[] = $typeConfig['path'];
         }
 
