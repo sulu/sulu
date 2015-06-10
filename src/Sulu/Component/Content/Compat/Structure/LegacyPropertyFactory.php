@@ -113,7 +113,7 @@ class LegacyPropertyFactory
                 $value = $this->arrayToParameters($value);
             }
 
-            $parameters[] = new PropertyParameter($arrayParam['name'], $value, $arrayParam['type'], $arrayParam['meta']);
+            $parameters[$arrayParam['name']] = new PropertyParameter($arrayParam['name'], $value, $arrayParam['type'], $arrayParam['meta']);
         }
 
         return $parameters;
