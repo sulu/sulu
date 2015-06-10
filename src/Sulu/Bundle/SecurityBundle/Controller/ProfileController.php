@@ -134,37 +134,4 @@ class ProfileController implements ClassResourceInterface
 
         return $this->viewHandler->handle($view);
     }
-
-    /**
-     * Returns the settings for a key for the current user
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getSettingsAction(Request $request)
-    {
-        $key = $request->get('key');
-        $value = $request->get('value');
-
-        try {
-            if (!$key) {
-                throw new MissingArgumentException(static::$entityNameUserSetting, 'key');
-            }
-
-            if (!$value) {
-                throw new MissingArgumentException(static::$entityNameUserSetting, 'value');
-            }
-
-            $user = $this->tokenStorage->getToken()->getUser();
-
-            $setting = $this->userSettingRepository->findOneBy(array('user' => $user, 'key' => $key));
-
-            $view = View::create($setting, 200);
-        } catch (RestException $exc) {
-            $view = View::create($exc->toArray(), 400);
-        }
-
-        return $this->viewHandler->handle($view);
-    }
 }
