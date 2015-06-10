@@ -488,10 +488,16 @@ define(function() {
          */
         changeSingleModel: function() {
             if (this.sandbox.form.validate(constants.infoFormSelector)) {
-                var data = this.sandbox.form.getData(constants.infoFormSelector);
+                var data = this.sandbox.form.getData(constants.infoFormSelector),
+                    before = JSON.stringify(this.media);
+
                 this.media = this.sandbox.util.extend(false, {}, this.media, data);
-                this.sandbox.emit('sulu.media.collections.save-media', this.media, this.savedCallback.bind(this));
-                this.media = null;
+                
+                if (before !== JSON.stringify(this.media)) {
+                    this.sandbox.emit('sulu.media.collections.save-media', this.media, this.savedCallback.bind(this));
+                    this.media = null;
+                }
+
                 return true;
             } else {
                 return false;
@@ -504,12 +510,18 @@ define(function() {
          */
         changeMultipleModel: function() {
             if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
-                var data = this.sandbox.form.getData(constants.multipleEditFormSelector);
+                var data = this.sandbox.form.getData(constants.multipleEditFormSelector),
+                    before = JSON.stringify(this.medias);
+
                 this.sandbox.util.foreach(this.medias, function(singleMedia, index) {
                     this.medias[index] = this.sandbox.util.extend(false, {}, singleMedia, data.records[index]);
                 }.bind(this));
-                this.sandbox.emit('sulu.media.collections.save-media', this.medias, this.savedCallback.bind(this));
-                this.medias = null;
+
+                if (before !== JSON.stringify(this.medias)) {
+                    this.sandbox.emit('sulu.media.collections.save-media', this.medias, this.savedCallback.bind(this));
+                    this.medias = null;
+                }
+
                 return true;
             } else {
                 return false;
