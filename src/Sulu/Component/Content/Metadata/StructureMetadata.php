@@ -53,6 +53,11 @@ class StructureMetadata extends ItemMetadata
     public $properties;
 
     /**
+     * @var boolean
+     */
+    public $internal;
+
+    /**
      * Return a model property.
      *
      * @see StructureMetadata::getProperties()
@@ -183,5 +188,17 @@ class StructureMetadata extends ItemMetadata
     public function getResource() 
     {
         return $this->resource;
+    }
+
+    /**
+     * Return if this is an internal structure
+     *
+     * TODO: Refactor this: https://github.com/sulu-io/sulu/issues/1220
+     *
+     * @return boolean
+     */
+    public function isInternal() 
+    {
+        return $this->internal;
     }
 }
