@@ -145,7 +145,8 @@ define(function() {
             var id = this.media.id;
 
             this.changeSingleModel();
-            this.sandbox.emit('sulu.media.collections.reload-single-media',
+            this.sandbox.emit(
+                'sulu.media.collections.reload-single-media',
                 id, {locale: locale},
                 function(media) {
                     this.media = media;
@@ -163,7 +164,8 @@ define(function() {
             var medias = this.medias;
             this.changeMultipleModel();
 
-            this.sandbox.emit('sulu.media.collections.reload-media',
+            this.sandbox.emit(
+                'sulu.media.collections.reload-media',
                 medias, {locale: locale},
                 function(medias) {
                     this.medias = medias;

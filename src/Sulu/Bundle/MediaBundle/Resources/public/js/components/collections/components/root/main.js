@@ -14,7 +14,8 @@ define(['sulumedia/model/media'], function(Media) {
     var constants = {
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
-            listViewStorageKey: 'collectionEditListView'
+            listViewStorageKey: 'collectionEditListView',
+            mediaLanguageStorageKey: 'mediaLanguage'
         },
 
         defaults = {},
@@ -40,9 +41,7 @@ define(['sulumedia/model/media'], function(Media) {
                     selectable: false
                 }
             }
-        },
-
-        MEDIA_LANGUAGE = 'mediaLanguage';
+        };
 
     return {
 
@@ -50,7 +49,7 @@ define(['sulumedia/model/media'], function(Media) {
 
         header: function() {
             // init locale
-            this.locale = this.sandbox.sulu.getUserSetting(MEDIA_LANGUAGE) || this.sandbox.sulu.user.locale;
+            this.locale = this.sandbox.sulu.getUserSetting(constants.mediaLanguageStorageKey) || this.sandbox.sulu.user.locale;
 
             return {
                 noBack: true,
@@ -195,7 +194,7 @@ define(['sulumedia/model/media'], function(Media) {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + this.locale,
+                    url: '/admin/api/media?orderBy=media.changed&orderSort=desc&locale=' + this.locale,
                     view: listViews[this.listView].name,
                     resultKey: 'media',
                     sortable: false,
@@ -249,7 +248,7 @@ define(['sulumedia/model/media'], function(Media) {
          * @param locale {object} the new locale to display
          */
         changeLanguage: function(locale) {
-            this.sandbox.sulu.saveUserSetting(MEDIA_LANGUAGE, locale.localization);
+            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale.localization);
             this.sandbox.emit('husky.datagrid.url.update', {locale: locale.localization});
         }
     };
