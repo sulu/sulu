@@ -836,18 +836,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'mandatory' => true,
                             'multilingual' => true,
                             'tags' => array(
-<<<<<<< HEAD
                                 '0' => array(
-                                    'name' => 'sulu.rlp.part',
-=======
-                                '0' => array
-                                (
                                     'name' => 'sulu.rlp',
->>>>>>> added required tag name
-                                    'priority' => 1,
-                                    'attributes' => array(),
+                                    'priority' => '1',
+                                    'attributes' => array()
                                 ),
-
                             ),
                             'params' => array(),
                             'meta' => array(),
@@ -1014,9 +1007,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ),
                     'meta' => array(),
                 ),
-<<<<<<< HEAD
-            ),
-=======
                 'url' => array(
                     'name' => 'url',
                     'type' => 'resource_locator',
@@ -1037,7 +1027,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => array()
                 ),
             )
->>>>>>> added required tag name
         );
 
         $result = $this->loadFixture('template_nesting_params.xml');
@@ -1077,9 +1066,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ),
                     'meta' => array(),
                 ),
-<<<<<<< HEAD
-            ),
-=======
                 'url' => array(
                     'name' => 'url',
                     'type' => 'resource_locator',
@@ -1100,7 +1086,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => array()
                 ),
             )
->>>>>>> added required tag name
         );
 
         $result = $this->loadFixture('template_meta_params.xml');
