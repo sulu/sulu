@@ -24,7 +24,7 @@ class ListToTreeConverter
      * ListToTreeConverter constructor.
      * @param boolean $moveUp
      */
-    public function __construct($moveUp)
+    public function __construct($moveUp = false)
     {
         $this->moveUp = $moveUp;
     }
