@@ -18,6 +18,8 @@ define(function() {
 
     return {
 
+        view: true,
+
         layout: {
             navigation: {
                 collapsed: false
@@ -31,12 +33,15 @@ define(function() {
             sidebar: false
         },
 
-        header: false,
+        header: {
+            hidden: true
+        },
 
         /**
          * Initialize the component
          */
         initialize: function() {
+
         }
     };
 });

@@ -214,6 +214,7 @@ define(function() {
          *
          * @param {Object|Function} header The header property found in the started component.
          *        If it's function it must return an object.
+         * @param {Boolean} [header.hidden} If true header gets hidden. Default is false.
          * @param {String} [header.title] Title in the header.
          * @param {Array} [header.breadcrumb] Breadcrumb object which gets passed to the header-component.
          * @param {Boolean} [header.noBack] If true the back icon won't be displayed.
@@ -237,11 +238,15 @@ define(function() {
          * @example
          *
          *      header: {
+         *          hidden: false,
          *          tabs: {
          *              url: 'url/to/tabsData',
          *          },
          *          title: 'My title',
-         *          breadcrumb: [{title: 'Crumb 1', link: 'contacts/contact'}, {title: 'Crumb 2', event: 'sulu.navigation.clicked}],
+         *          breadcrumb: [
+         *              {title: 'Crumb 1', link: 'contacts/contact'},
+         *              {title: 'Crumb 2', event: 'sulu.navigation.clicked}
+         *          ],
          *          toolbar {
          *              languageChanger: true
          *              template: 'default'
@@ -273,58 +278,67 @@ define(function() {
         handleHeader = function(header) {
             var $content, changeHeader, options;
 
-            // insert the content-container
-            $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
-            this.html($content);
+            header.hidden = (typeof header.hidden !== 'undefined') ? header.hidden : false;
 
-            /**
-             * Function for starting the header
-             * @param {Array} tabsData Array of data to pass on to the tabs component.
-             * @private
-             */
-            changeHeader = function(tabsData) {
-                // set the variables for the header-component-options properties
-                var toolbarLanguageChanger = true;
+            if (true === header.hidden) {
+                this.sandbox.emit('sulu.header.hide');
 
-                if (!!header.toolbar) {
-                    toolbarLanguageChanger = !!header.toolbar.languageChanger ? header.toolbar.languageChanger : false;
-                }
-
-                options = {
-                    tabsData: tabsData,
-                    heading: this.sandbox.translate(header.title),
-                    breadcrumb: (!!header.breadcrumb) ? header.breadcrumb : null,
-                    toolbarTemplate: (!!header.toolbar && !!header.toolbar.template) ?
-                        header.toolbar.template : 'default',
-                    toolbarParentTemplate: (!!header.toolbar && !!header.toolbar.parentTemplate) ?
-                        header.toolbar.parentTemplate : null,
-                    contentComponentOptions: this.options,
-                    contentEl: $content,
-                    toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
-                    tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
-                    tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ?
-                        header.tabs.fullControl : false,
-                    toolbarDisabled: (typeof header.toolbar === 'undefined'),
-                    toolbarLanguageChanger: toolbarLanguageChanger,
-                    noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
-                    titleColor: (!!header.titleColor) ? header.titleColor : null
-                };
-
-                if (header.tabs === false) {
-                    options.tabsOptions = false;
-                }
-
-                this.sandbox.emit('sulu.header.change', options);
-            }.bind(this);
-
-            // if a url for the tabs is set load the data first, else start the header with no tabs
-            if (!!header.tabs && !!header.tabs.url) {
-                this.sandbox.util.load(header.tabs.url).then(function(data) {
-                    // start header with tabs data passed
-                    parseContentTabs.call(this, data, this.options.id, changeHeader);
-                }.bind(this));
             } else {
-                changeHeader(null);
+                // insert the content-container
+                $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
+                this.html($content);
+
+                /**
+                 * Function for starting the header
+                 * @param {Array} tabsData Array of data to pass on to the tabs component.
+                 * @private
+                 */
+                changeHeader = function(tabsData) {
+                    // set the variables for the header-component-options properties
+                    var toolbarLanguageChanger = true;
+
+                    if (!!header.toolbar) {
+                        toolbarLanguageChanger = !!header.toolbar.languageChanger ?
+                            header.toolbar.languageChanger : false;
+                    }
+
+                    options = {
+                        tabsData: tabsData,
+                        heading: this.sandbox.translate(header.title),
+                        breadcrumb: (!!header.breadcrumb) ? header.breadcrumb : null,
+                        toolbarTemplate: (!!header.toolbar && !!header.toolbar.template) ?
+                            header.toolbar.template : 'default',
+                        toolbarParentTemplate: (!!header.toolbar && !!header.toolbar.parentTemplate) ?
+                            header.toolbar.parentTemplate : null,
+                        contentComponentOptions: this.options,
+                        contentEl: $content,
+                        toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
+                        tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
+                        tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ?
+                            header.tabs.fullControl : false,
+                        toolbarDisabled: (typeof header.toolbar === 'undefined'),
+                        toolbarLanguageChanger: toolbarLanguageChanger,
+                        noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
+                        titleColor: (!!header.titleColor) ? header.titleColor : null
+                    };
+
+                    if (header.tabs === false) {
+                        options.tabsOptions = false;
+                    }
+
+                    this.sandbox.emit('sulu.header.change', options);
+                }.bind(this);
+
+                // if a url for the tabs is set load the data first,
+                // else start the header with no tabs
+                if (!!header.tabs && !!header.tabs.url) {
+                    this.sandbox.util.load(header.tabs.url).then(function(data) {
+                        // start header with tabs data passed
+                        parseContentTabs.call(this, data, this.options.id, changeHeader);
+                    }.bind(this));
+                } else {
+                    changeHeader(null);
+                }
             }
         };
 
