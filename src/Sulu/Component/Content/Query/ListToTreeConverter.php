@@ -16,6 +16,20 @@ namespace Sulu\Component\Content\Query;
 class ListToTreeConverter
 {
     /**
+     * @var boolean
+     */
+    private $moveUp;
+
+    /**
+     * ListToTreeConverter constructor.
+     * @param boolean $moveUp
+     */
+    public function __construct($moveUp)
+    {
+        $this->moveUp = $moveUp;
+    }
+
+    /**
      * generate a tree of the given data with the path property.
      *
      * @param array $data
@@ -83,6 +97,10 @@ class ListToTreeConverter
             // search for empty nodes
             for ($i = 0; $i < sizeof($tree['children']); $i++) {
                 if (array_keys($tree['children'][$i]) === array('children')) {
+                    if(!!$this->moveUp) {
+                        array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
+                    }
+
                     unset($tree['children'][$i]);
                 }
             }

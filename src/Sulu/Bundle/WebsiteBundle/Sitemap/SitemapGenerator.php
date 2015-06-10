@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -105,6 +104,15 @@ class SitemapGenerator implements SitemapGeneratorInterface
      */
     private function generateByLocals($webspaceKey, $locales, $flat = false)
     {
-        return $this->contentQuery->execute($webspaceKey, $locales, $this->contentQueryBuilder, $flat);
+        return $this->contentQuery->execute(
+            $webspaceKey,
+            $locales,
+            $this->contentQueryBuilder,
+            $flat,
+            -1,
+            null,
+            null,
+            true
+        );
     }
 }

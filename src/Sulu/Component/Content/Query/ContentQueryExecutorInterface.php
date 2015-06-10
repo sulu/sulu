@@ -25,6 +25,7 @@ interface ContentQueryExecutorInterface
      * @param int $depth
      * @param int $limit
      * @param int $offset
+     * @param bool $moveUp
      *
      * @return array
      */
@@ -35,6 +36,7 @@ interface ContentQueryExecutorInterface
         $flat = true,
         $depth = -1,
         $limit = null,
-        $offset = null
+        $offset = null,
+        $moveUp = false
     );
 }
