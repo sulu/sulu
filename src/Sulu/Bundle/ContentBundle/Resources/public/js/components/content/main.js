@@ -732,7 +732,7 @@ define([
                 if (!!this.options.id) {
                     // disable content tab
                     if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                        this.sandbox.util.each(['content'], function(i, tabName) {
+                        this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
                             this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
                         }.bind(this));
                     }

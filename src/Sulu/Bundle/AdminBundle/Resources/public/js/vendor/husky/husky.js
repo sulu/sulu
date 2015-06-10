@@ -29529,6 +29529,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // merge defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, options);
 
+            this.editStatuses = {};
+
             this.bindCustomEvents();
             this.setVariables();
         },
@@ -30090,10 +30092,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @returns {String|Object} html or a dom object
          */
         getEditableCellContent: function(content) {
-            var returnHTML = this.sandbox.util.template(templates.editableCellContent)({
+            return this.sandbox.util.template(templates.editableCellContent)({
                 value: content
             });
-            return returnHTML;
         },
 
         /**
@@ -30356,15 +30357,22 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param attribute {String}
          */
         showInput: function(recordId, attribute) {
-            var $cell, $inputs;
+            var $cell, $inputs, $inputField, $inputWrapper;
+
             if (!attribute) {
                 $inputs = this.sandbox.dom.find('.' + constants.editableInputClass, this.table.rows[recordId].$el);
                 attribute = this.sandbox.dom.data(this.sandbox.dom.parents($inputs[0], 'td'), 'attribute');
             }
+
             $cell = this.table.rows[recordId].cells[attribute].$el;
-            this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.inputWrapperClass, $cell));
-            this.sandbox.dom.focus(this.sandbox.dom.find('.' + constants.editableInputClass, $cell));
-            this.sandbox.dom.select(this.sandbox.dom.find('.' + constants.editableInputClass, $cell));
+            $inputField = this.sandbox.dom.find('.' + constants.editableInputClass, $cell);
+            $inputWrapper = this.sandbox.dom.find('.' + constants.inputWrapperClass, $cell);
+
+            this.sandbox.dom.show($inputWrapper);
+            this.sandbox.dom.focus($inputField);
+            this.sandbox.dom.select($inputField);
+
+            this.editStatuses[recordId] = true;
         },
 
         /**
@@ -30372,12 +30380,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         editableInputKeyHandler: function(event) {
-            var recordId;
             // on enter
             if (event.keyCode === 13) {
-                this.sandbox.dom.stopPropagation(event);
-                recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
-                this.editRow(recordId);
+                this.editableInputEventHandler(event);
             }
         },
 
@@ -30387,10 +30392,21 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         editableInputFocusoutHandler: function(event) {
             if (!!this.isFocusoutHandlerEnabled) {
-                this.sandbox.dom.stopPropagation(event);
-                var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
+                this.editableInputEventHandler(event);
+            }
+        },
+
+        editableInputEventHandler: function(event) {
+            this.sandbox.dom.stopPropagation(event);
+
+            var $parent = this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass),
+                recordId = this.sandbox.dom.data($parent, 'id');
+
+            if (!!this.editStatuses[recordId]) {
                 this.editRow(recordId);
             }
+
+            this.editStatuses[recordId] = false;
         },
 
         /**
@@ -34379,13 +34395,14 @@ define('__component__$search@husky',[], function() {
  *      - preselect - either true (for url) or position / name  (see preselector for more information)
  *      - skin - string of class to add to the components element (e.g. 'overlay')
  *      - preselector:
- *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by data.url) - preselector itself is not going to be taken into account in this case
+ *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by options.fragment) - preselector itself is not going to be taken into account in this case
  *          - position: compares items position against whats defined in options.preselect
  *          - name: compares items name against whats defined in options.preselect
  *      - forceReload - defines if tabs are forcing page to reload
  *      - forceSelect - forces tabs to select first item, if no selected item has been found
  *      - preSelectEvent.enabled - when enabled triggers the item pre select event
  *      - preSelectEvent.triggerSelectItem - when previous options and this options is enabled it triggers the item select event right after the preselect
+ *      - fragment - current url to choose preselected item
  *  Provides Events
  *      - husky.tabs.<<instanceName>>.getSelected [callback(item)] - returns item with callback
  *  Triggers Events
@@ -34672,7 +34689,7 @@ define('__component__$tabs@husky',[],function() {
 
                 // check if item got selected
                 if (!!this.options.preselect) {
-                    if ((this.options.preselector === 'url' && !!data.url && data.url === item.action) ||
+                    if ((this.options.preselector === 'url' && !!this.options.fragment && this.options.fragment === item.action) ||
                         (this.options.preselector === 'position' && (index + 1).toString() === this.options.preselect.toString()) ||
                         (this.options.preselector === 'name' && item.name === this.options.preselect)) {
                         this.sandbox.dom.addClass($item, 'is-selected');
