@@ -4,8 +4,8 @@
 
 ### Website Navigation
 
-Children of pages with the state "test" or pages which wrong navigation context wont be merged into the upper layer.
-They will be ignored in the tree navigation.
+Children of pages with the state "test" or pages which have the desired navigaiton context not assigned won't be moved
+up in the hierarchy, instead they won't show up in the navigation at all.
 
 ## 1.0.0-RC1
 
