@@ -395,6 +395,7 @@ define(function() {
             }.bind(this));
 
             this.sandbox.once('husky.overlay.media-multiple-edit.closed', function() {
+                this.sandbox.emit(CLOSED.call(this));
                 this.sandbox.stop('.' + constants.multiEditClass);
             }.bind(this));
         },

@@ -140,6 +140,7 @@ define(function() {
 
             // unlock the dropzone pop-up if the media-edit overlay was closed
             this.sandbox.on('sulu.media-edit.closed', function() {
+                this.sandbox.emit('husky.datagrid.items.deselect');
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
             }.bind(this));
 
