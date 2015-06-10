@@ -26,5 +26,6 @@
             <tag name="sulu.context" context="admin"/>
             <argument>%sulu_admin.name%</argument>
         </service>
+
     </services>
 </container>

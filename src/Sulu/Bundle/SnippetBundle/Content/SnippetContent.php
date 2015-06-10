@@ -14,12 +14,12 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Structure\Snippet;
 
 /**
  * ContentType for Snippets.
@@ -176,6 +176,7 @@ class SnippetContent extends ComplexContentType
         }
 
         $refs = $property->getValue();
+
         $contentData = array();
 
         $ids = $this->getUuids($refs);
@@ -223,9 +224,11 @@ class SnippetContent extends ComplexContentType
         foreach ($ids as $i => $ref) {
             if (!array_key_exists($ref, $this->snippetCache)) {
                 $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+
                 if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
                     $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
                 }
+
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
 

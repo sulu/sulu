@@ -13,12 +13,12 @@ namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Helper\ProgressHelper;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 
 /**
  * Listen to for new hits. If document instance of structure
@@ -27,56 +27,35 @@ use Symfony\Component\Console\Helper\ProgressHelper;
 class ReindexListener
 {
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
      * @var SearchManagerInterface
      */
     private $searchManager;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var DocumentInspector
      */
-    private $webspaceManager;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
+    private $inspector;
 
     /**
      * @var string
      */
     private $mapping;
 
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        ContentMapperInterface $contentMapper,
+        DocumentManager $documentManager,
+        DocumentInspector $inspector,
         SearchManagerInterface $searchManager,
-        WebspaceManagerInterface $webspaceManager,
-        StructureManagerInterface $structureManager,
-        SuluNodeHelper $nodeHelper,
         array $mapping = array()
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->contentMapper = $contentMapper;
         $this->searchManager = $searchManager;
-        $this->webspaceManager = $webspaceManager;
-        $this->structureManager = $structureManager;
-        $this->nodeHelper = $nodeHelper;
         $this->mapping = $mapping;
+        $this->documentManager = $documentManager;
+        $this->inspector = $inspector;
     }
 
     /**
@@ -89,16 +68,13 @@ class ReindexListener
         $output = $event->getOutput();
         $purge = $event->getPurge();
         $filter = $event->getFilter();
-        $session = $this->sessionManager->getSession();
 
         $output->writeln('<info>Rebuilding content index</info>');
 
         // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
-        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"';
-
-        $queryManager = $session->getWorkspace()->getQueryManager();
-        $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
-        $result = $query->execute();
+        $query = $this->documentManager->createQuery(
+            'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"'
+        );
 
         $count = array();
 
@@ -106,39 +82,34 @@ class ReindexListener
             $this->purgeContentIndexes($output);
         }
 
-        $rows = $result->getRows();
-
+        $documents = $query->execute();
         $progress = new ProgressHelper();
-        $progress->start($output, count($rows));
+        $progress->start($output, count($documents));
 
-        /** @var Row $row */
-        foreach ($rows as $row) {
-            $node = $row->getNode('a');
-
-            $locales = $this->nodeHelper->getLanguagesForNode($node);
+        foreach ($documents as $document) {
+            $locales = $this->inspector->getLocales($document);
 
             foreach ($locales as $locale) {
                 try {
-                    $structure = $this->contentMapper->loadByNode($node, $locale, null, false, true, false);
-                    $structureClass = get_class($structure);
+                    $this->documentManager->find($document->getUuid(), $locale);
+                    $documentClass = get_class($document);
 
-                    if (!isset($count[$structureClass])) {
-                        $count[$structureClass] = array(
-                            'indexed' => 0,
-                        );
-                    }
-
-                    if ($filter && !preg_match('{' . $filter . '}', get_class($structure))) {
+                    if ($filter && !preg_match('{' . $filter . '}', $documentClass)) {
                         continue;
                     }
 
-                    $this->searchManager->index($structure, $locale);
-                    $count[$structureClass]['indexed']++;
+                    $this->searchManager->index($document, $locale);
+                    if (!isset($count[$documentClass])) {
+                        $count[$documentClass] = 0;
+                    }
+                    $count[$documentClass]++;
                 } catch (\Exception $e) {
-                    $output->writeln(
-                        '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
-                        ', locale: ' . $locale . '): ' . $e->getMessage() . '</error>'
-                    );
+                    $output->writeln(sprintf(
+                        '<error>Error indexing or de-indexing page (path: %s locale: %s)</error>: %s',
+                        $this->inspector->getPath($document),
+                        $locale,
+                        $e->getMessage()
+                    ));
                 }
             }
 
@@ -147,15 +118,15 @@ class ReindexListener
 
         $output->writeln('');
 
-        foreach ($count as $className => $stats) {
-            if ($stats['indexed'] == 0) {
+        foreach ($count as $className => $count) {
+            if ($count == 0) {
                 continue;
             }
 
             $output->writeln(sprintf(
                 '<comment>Content</comment>: %s <info>%s</info> indexed',
                 $className,
-                $stats['indexed']
+                $count
             ));
         }
     }

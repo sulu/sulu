@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
+use PHPCR\PropertyType;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 class SnippetRepositoryTest extends BaseFunctionalTestCase
@@ -70,7 +72,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit);
         $this->assertCount($expectedCount, $snippets);
         foreach ($snippets as $snippet) {
-            $this->assertInstanceOf('Sulu\Component\Content\Structure\Snippet', $snippet);
+            $this->assertInstanceOf(SnippetBridge::class, $snippet);
         }
     }
 
