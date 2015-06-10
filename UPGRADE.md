@@ -4,7 +4,8 @@
 
 ### Website Navigation
 
-Children of Test-Pages wont be merged into the upper layer. They will be ignored in the tree navigation.
+Children of pages with the state "test" or pages which wrong navigation context wont be merged into the upper layer.
+They will be ignored in the tree navigation.
 
 ## 1.0.0-RC1
 
