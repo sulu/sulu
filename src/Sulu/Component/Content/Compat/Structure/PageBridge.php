@@ -111,14 +111,6 @@ class PageBridge extends StructureBridge implements PageInterface
     /**
      * {@inheritDoc}
      */
-    public function getInternal()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setInternal($internal)
     {
         $this->readOnlyException(__METHOD__);

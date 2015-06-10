@@ -29,22 +29,18 @@ sulu_core:
              paths:
                  pages:
                      path: %kernel.root_dir%/Resources/pages
-                     internal: false
                      type: page
                  homepage:
                      path: %kernel.root_dir%/Resources/pages
-                     internal: false
                      type: home
                  templates:
                      path: %kernel.root_dir%/Resources/snippets
-                     internal: false
                      type: snippet
 
                  # This configuration could be used either from a bundle or the "root" of the repsitory
                  # We try both just to be sure
                  sulu_1:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
-                     internal: true
                      type: "page"
     webspace: ~
     locales: [ "en", "de" ]

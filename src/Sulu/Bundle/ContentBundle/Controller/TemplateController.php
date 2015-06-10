@@ -57,7 +57,7 @@ class TemplateController extends Controller
 
         $templates = array();
         foreach ($structures as $structure) {
-            if (!$structure->getInternal() || $internal !== false) {
+            if (false === $structure->getInternal() || $internal !== false) {
                 $templates[] = array(
                     'internal' => $structure->getInternal(),
                     'template' => $structure->getKey(),
