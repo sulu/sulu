@@ -8,7 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Controller;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Controller;
+
+use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
 
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 {

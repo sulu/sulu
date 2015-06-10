@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Navigation;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Navigation;
 
 use PHPCR\NodeInterface;
 use ReflectionMethod;
@@ -19,7 +19,6 @@ use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\MetadataExtension\StructureExtension;
@@ -27,6 +26,9 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
+use Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder;
 
 class NavigationTest extends SuluTestCase
 {
