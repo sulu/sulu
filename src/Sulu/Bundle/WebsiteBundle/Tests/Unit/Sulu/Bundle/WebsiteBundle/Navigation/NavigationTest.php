@@ -458,7 +458,7 @@ class NavigationTest extends PhpcrTestCase
         // context footer (only news and one sub page news-1)
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'footer');
 
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(1, sizeof($result));
         $layer1 = $result;
 
         $this->assertEquals(1, sizeof($layer1[0]['children']));
@@ -467,22 +467,19 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News', $layer1[0]['title']);
         $this->assertEquals('News-1', $layer2['title']);
 
-        $this->assertEquals(0, sizeof($layer1[1]['children']));
-        $this->assertEquals('Products-1', $layer1[1]['title']);
+        // /products/product-1 not: because of missing nav context on /products
 
         // context main (only products and two sub pages
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'main');
 
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(1, sizeof($result));
         $layer1 = $result;
 
         $this->assertEquals(2, sizeof($layer1[0]['children']));
-        $this->assertEquals(0, sizeof($layer1[1]['children']));
-        $this->assertEquals(0, sizeof($layer1[2]['children']));
+
+        // /news/news-1 and /news/news-2 not: because of missing nav context on /news
 
         $this->assertEquals('Products', $layer1[0]['title']);
-        $this->assertEquals('News-1', $layer1[1]['title']);
-        $this->assertEquals('News-2', $layer1[2]['title']);
 
         $layer2 = $layer1[0]['children'];
 
@@ -600,6 +597,29 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
         $this->assertEquals('/products/products-3', $main[2]['url']);
+    }
+
+    public function testNavigationStateTestParent()
+    {
+        $this->data['products'] = $this->mapper->save(
+            array('title' => 'Products', 'url' => '/products'),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            $this->data['products']->getUuid(),
+            null,
+            StructureInterface::STATE_TEST
+        );
+
+        $navigation = $this->navigation->getRootNavigation('default', 'en', 2);
+
+        $this->assertCount(1, $navigation);
+        $this->assertEquals('/news', $navigation[0]['url']);
+        $this->assertCount(2, $navigation[0]['children']);
+        $this->assertEquals('/news/news-1', $navigation[0]['children'][0]['url']);
+        $this->assertEquals('/news/news-2', $navigation[0]['children'][1]['url']);
     }
 
     public function testNavigationOrder()

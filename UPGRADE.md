@@ -1,5 +1,12 @@
 # Upgrade
 
+## dev-develop
+
+### Website Navigation
+
+Children of pages with the state "test" or pages which have the desired navigaiton context not assigned won't be moved
+up in the hierarchy, instead they won't show up in the navigation at all.
+
 ## 1.0.0-RC1
 
 ### Security Roles
