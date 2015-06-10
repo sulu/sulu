@@ -365,7 +365,6 @@ define(function() {
                         openOnStart: true,
                         draggable: false,
                         propagateEvents: false,
-                        closeIcon: false,
                         instanceName: 'media-multiple-edit',
                         okCallback: this.changeMultipleModel.bind(this),
                         closeCallback: function() {
