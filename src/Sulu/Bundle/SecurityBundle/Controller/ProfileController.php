@@ -14,7 +14,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -22,6 +27,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ProfileController implements ClassResourceInterface
 {
+    protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
+
     /**
      * @var TokenStorageInterface
      */
@@ -38,18 +45,26 @@ class ProfileController implements ClassResourceInterface
     private $viewHandler;
 
     /**
+     * @var UserSettingRepositoryInterface
+     */
+    private $userSettingRepository;
+
+    /**
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager $objectManager
      * @param ViewHandlerInterface $viewHandler
+     * @param UserSettingRepositoryInterface $userSettingRepository
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
-        ViewHandlerInterface $viewHandler
+        ViewHandlerInterface $viewHandler,
+        UserSettingRepositoryInterface $userSettingRepository
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->objectManager = $objectManager;
         $this->viewHandler = $viewHandler;
+        $this->userSettingRepository = $userSettingRepository;
     }
 
     /**
@@ -57,7 +72,7 @@ class ProfileController implements ClassResourceInterface
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putLanguageAction(Request $request)
     {
@@ -66,6 +81,90 @@ class ProfileController implements ClassResourceInterface
 
         $this->objectManager->flush();
 
-        return $this->viewHandler->handle(View::create($user));
+        return $this->viewHandler->handle(View::create(array('locale' => $user->getLocale())));
+    }
+
+    /**
+     * Takes a key, value pair and stores it as settings for the user
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function putSettingsAction(Request $request)
+    {
+        $key = $request->get('key');
+        $value = $request->get('value');
+
+        try {
+            if (!$key) {
+                throw new MissingArgumentException(static::$entityNameUserSetting, 'key');
+            }
+
+            if (!$value) {
+                throw new MissingArgumentException(static::$entityNameUserSetting, 'value');
+            }
+
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // encode before persist
+            $data = json_encode($value);
+
+            // get setting
+            // TODO: move this logic into own service (UserSettingManager?)
+            $setting = $this->userSettingRepository->findOneBy(array('user' => $user, 'key' => $key));
+
+            // or create new one
+            if (!$setting) {
+                $setting = new UserSetting();
+                $setting->setKey($key);
+                $setting->setUser($user);
+                $this->objectManager->persist($setting);
+            }
+
+            // persist setting
+            $setting->setValue($data);
+            $this->objectManager->flush();
+
+            //create view
+            $view = View::create($setting, 200);
+        } catch (RestException $exc) {
+            $view = View::create($exc->toArray(), 400);
+        }
+
+        return $this->viewHandler->handle($view);
+    }
+
+    /**
+     * Returns the settings for a key for the current user
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getSettingsAction(Request $request)
+    {
+        $key = $request->get('key');
+        $value = $request->get('value');
+
+        try {
+            if (!$key) {
+                throw new MissingArgumentException(static::$entityNameUserSetting, 'key');
+            }
+
+            if (!$value) {
+                throw new MissingArgumentException(static::$entityNameUserSetting, 'value');
+            }
+
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            $setting = $this->userSettingRepository->findOneBy(array('user' => $user, 'key' => $key));
+
+            $view = View::create($setting, 200);
+        } catch (RestException $exc) {
+            $view = View::create($exc->toArray(), 400);
+        }
+
+        return $this->viewHandler->handle($view);
     }
 }

@@ -161,38 +161,28 @@
              * @returns mixed
              */
             app.sandbox.sulu.getUserSetting = function(key) {
-                return (typeof app.sandbox.sulu.userSettings[key] !== 'undefined') ? app.sandbox.sulu.userSettings[key] : null;
+                return (typeof app.sandbox.sulu.userSettings[key] !== 'undefined')
+                    ? app.sandbox.sulu.userSettings[key] : null;
             };
 
             /**
              * saves data locally and to database
              * @param key
              * @param value
-             * @param url Defines where to save data to
              */
-            app.sandbox.sulu.saveUserSetting = function(key, value, url) {
+            app.sandbox.sulu.saveUserSetting = function(key, value) {
                 app.sandbox.sulu.userSettings[key] = value;
-
-                if (!url) {
-                    url = '/admin/api/users/' + SULU.user.id + '/settings/' + key;
-                }
 
                 var data = {
                     key: key,
                     value: value
                 };
+
                 // save to server
                 app.sandbox.util.ajax({
                     type: 'PUT',
-                    url: url,
-                    data: data,
-                    processData: true,
-                    success: function(response) {
-
-                    }.bind(this),
-                    error: function(response) {
-                        app.sandbox.logger.log("error", response);
-                    }
+                    url: '/admin/security/profile/settings',
+                    data: data
                 });
             };
 
