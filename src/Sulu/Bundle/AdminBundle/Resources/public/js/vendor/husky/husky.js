@@ -32185,6 +32185,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 return this.createEventName('medium-loader.hide');
             },
 
+            /**
+             * deselect all items
+             * @event husky.datagrid.items.deselect
+             */
+            ITEMS_DESELECT = function() {
+                return this.createEventName('items.deselect');
+            },
+
         /**
          * Private Methods
          * --------------------------------------------------------------------
@@ -32920,6 +32928,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
 
                 this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
+                this.sandbox.on(ITEMS_DESELECT.call(this), function() {
+                    this.gridViews[this.viewId].deselectAllRecords();
+                }.bind(this));
 
                 this.startColumnOptionsListener();
                 this.startSearchListener();

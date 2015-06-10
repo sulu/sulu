@@ -11,7 +11,11 @@ define(function() {
 
     'use strict';
 
-    var namespace = 'sulu.media.collections-edit.',
+    var constants = {
+            mediaLanguageStorageKey: 'mediaLanguage'
+        },
+
+        namespace = 'sulu.media.collections-edit.',
 
         /**
          * sets the locale
@@ -40,7 +44,7 @@ define(function() {
 
         header: function() {
             // init locale
-            this.locale = this.sandbox.sulu.user.locale;
+            this.locale = this.sandbox.sulu.getUserSetting(constants.mediaLanguageStorageKey) || this.sandbox.sulu.user.locale;
 
             return {
                 tabs: {
@@ -123,6 +127,8 @@ define(function() {
         },
 
         setLocale: function(locale) {
+            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale);
+
             this.locale = locale;
         },
 

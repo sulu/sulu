@@ -294,3 +294,8 @@
   width: 179px;
   height: 179px;
 }
+
+/* line 38, ../scss/modules/media-edit.scss */
+.multi-edit .language-changer {
+  right: 30px;
+}
