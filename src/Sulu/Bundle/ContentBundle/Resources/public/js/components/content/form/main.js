@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontent/components/content/preview/main'], function(Preview) {
+define(['app-config', 'sulucontent/components/content/preview/main'], function(AppConfig, Preview) {
 
     'use strict';
 
@@ -179,6 +179,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.createForm(this.data).then(function() {
                 this.initializeResourceLocator();
                 this.changeTemplateDropdownHandler();
+
+                this.startCollaborationComponent();
             }.bind(this));
         },
 
@@ -452,6 +454,24 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     this.sandbox.emit('sulu.content.contents.save', data, action);
                 }
             }.bind(this));
+        },
+
+        startCollaborationComponent: function() {
+            var $container = this.sandbox.dom.createElement('<div id="content-column-collaboration"/>');
+            this.$el.prepend($container);
+
+            this.sandbox.start([
+                {
+                    name: 'content/collaboration@sulucontent',
+                    options: {
+                        el: $container,
+                        id: this.options.id,
+                        webspace: this.options.webspace,
+                        userId: AppConfig.getUser().id,
+                        type: 'page'
+                    }
+                }
+            ]);
         }
     };
 });

@@ -79,6 +79,10 @@
             <tag name="sulu.structure.extension"/>
         </service>
 
+        <service id="sulu_content.collaboration" class="Sulu\Bundle\ContentBundle\Collaboration\CollaborationMessageHandler">
+            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.collaboration" />
+        </service>
+
         <!-- structure extension -->
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <argument type="service" id="sulu.content.structure_manager"/>
