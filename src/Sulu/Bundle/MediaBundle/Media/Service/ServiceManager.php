@@ -64,19 +64,22 @@ class ServiceManager implements ServiceManagerInterface
      */
     public function notify()
     {
+        $this->logger->warning('================== NO ======================' . count($this->services));
+
         foreach ($this->services as $service) {
             /** @var ServiceInterface $service */
             foreach ($this->mediaRegister as $action => $mediaList) {
-                foreach ($mediaList as $media) {
+                if (count($mediaList)) {
+                    $mediaList = array_values($mediaList);
                     switch ($action) {
                         case self::MEDIA_STATUS_ADD:
-                            $service->add($media);
+                            $service->add($mediaList);
                             break;
                         case self::MEDIA_STATUS_UPDATE:
-                            $service->update($media);
+                            $service->update($mediaList);
                             break;
                         case self::MEDIA_STATUS_DELETE:
-                            $service->delete($media);
+                            $service->delete($mediaList);
                             break;
                     }
                 }

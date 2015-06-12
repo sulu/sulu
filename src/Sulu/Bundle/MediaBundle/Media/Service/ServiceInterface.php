@@ -20,27 +20,27 @@ interface ServiceInterface
     /**
      * Send add external media request
      *
-     * @param Media $media
+     * @param Media[] $media
      *
      * @return boolean
      */
-    public function add(Media $media);
+    public function add(array $media);
 
     /**
      * Send update external media request
      *
-     * @param Media $media
+     * @param Media[] $media
      *
      * @return boolean
      */
-    public function update(Media $media);
+    public function update(array $media);
 
     /**
-     *  Send delete external media request  
+     * Send delete external media request
      *
-     * @param Media $media
+     * @param Media[] $media
      *
      * @return boolean
      */
-    public function delete(Media $media);
+    public function delete(array $media);
 }

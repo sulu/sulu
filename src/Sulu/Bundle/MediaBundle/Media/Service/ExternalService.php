@@ -59,19 +59,19 @@ class ExternalService implements ServiceInterface
         }
     }
 
-    public function add(Media $media)
+    public function add(array $media)
     {
         $mediaJson = $this->serializer->serialize($media, 'json');
         $this->makeRequest($mediaJson, 'add', 'post');
     }
 
-    public function update(Media $media)
+    public function update(array $media)
     {
     	$mediaJson = $this->serializer->serialize($media, 'json');
         $this->makeRequest($mediaJson, 'update', 'put');
     }
 
-    public function delete(Media $media)
+    public function delete(array $media)
     {
         $mediaJson = $this->serializer->serialize($media, 'json');
         $this->makeRequest($mediaJson, 'delete', 'delete');

@@ -835,13 +835,15 @@ class MediaManager implements MediaManagerInterface
             }
         }
 
+        $oldMedia = new Media(clone $mediaEntity);
+
         $this->em->remove($mediaEntity);
         $this->em->flush();
 
         $this->eventDispatcher->dispatch(
             self::EVENT_POST_MEDIA_DELETE,
             new ApiMediaEvent(
-                new Media($mediaEntity)
+                $oldMedia
             )
         );
     }
