@@ -210,6 +210,7 @@
         <service id="sulu_media.external_service" class="%sulu_media.external_service.class%">
             <argument>%sulu_media.external_service%</argument>
             <argument type="service" id="jms_serializer" />
+            <argument type="service" id="logger" />
         </service>
 
         <service id="sulu_media.service.event_listener" class="%sulu_media.service.event_listener.class%">

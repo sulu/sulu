@@ -11,6 +11,8 @@ class ExternalService implements ServiceInterface
 
     protected $serializer;
 
+    protected $logger;
+
     protected $client;
 
     /**
@@ -18,20 +20,27 @@ class ExternalService implements ServiceInterface
      */
     public function __construct(
         $externalService,
-        $serializer
+        $serializer,
+        $logger
     ) {
         $this->externalService = $externalService;
         $this->serializer = $serializer;
+        $this->logger = $logger;
         $this->client = new Client();
     }
 
     private function makeRequest($JSONstring, $action, $HTTPmethod)
     {
         foreach ($this->externalService as $key => $value) {
-            $request = $this->client->$HTTPmethod($value[$action]);
-            $request->setBody($JSONstring, 'application/json');
-            $res = $request->send();
-            echo $res->getStatusCode();
+        	try 
+        	{
+            	$request = $this->client->$HTTPmethod($value[$action]);
+            	$request->setBody($JSONstring, 'application/json');
+            	$res = $request->send();
+        	} catch (Guzzle\Http\Exception\BadResponseException $e) 
+        	{
+        		$this->logger->error('External Service Notification send error', $e->getResponse->getStatusCode);
+        	}
         }
     }
 
