@@ -20,6 +20,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface MediaManagerInterface
 {
+    const EVENT_POST_MEDIA_ADD = 'sulu.media.media.add';
+    const EVENT_POST_MEDIA_UPDATE = 'sulu.media.media.update';
+    const EVENT_POST_MEDIA_DELETE = 'sulu.media.media.delete';
+
     /**
      * Returns media with a given collection and/or ids and/or limit
      * if no arguments passed returns all media.

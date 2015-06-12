@@ -22,6 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Event\ApiMediaEvent;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
@@ -37,6 +38,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -145,6 +147,11 @@ class MediaManager implements MediaManagerInterface
     public $count;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepositoryInterface $collectionRepository
      * @param UserRepositoryInterface $userRepository
@@ -156,6 +163,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
+     * @param EventDispatcherInterface $eventDispatcher
      * @param FFProbe $ffprobe
      * @param array $permissions
      * @param string $downloadPath
@@ -173,6 +181,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
+        EventDispatcherInterface $eventDispatcher,
         FFProbe $ffprobe,
         $permissions,
         $downloadPath,
@@ -189,6 +198,7 @@ class MediaManager implements MediaManagerInterface
         $this->typeManager = $typeManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
+        $this->eventDispatcher = $eventDispatcher;
         $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
@@ -454,12 +464,21 @@ class MediaManager implements MediaManagerInterface
     public function save($uploadedFile, $data, $userId)
     {
         if (isset($data['id'])) {
+            $event = self::EVENT_POST_MEDIA_UPDATE;
             $media = $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
         } else {
+            $event = self::EVENT_POST_MEDIA_ADD;
             $media = $this->buildData($uploadedFile, $data, $this->getUser($userId));
         }
 
-        return $this->addFormatsAndUrl($media);
+        $media = $this->addFormatsAndUrl($media);
+
+        $this->eventDispatcher->dispatch(
+            $event,
+            new ApiMediaEvent($media)
+        );
+
+        return $media;
     }
 
     /**
@@ -818,6 +837,13 @@ class MediaManager implements MediaManagerInterface
 
         $this->em->remove($mediaEntity);
         $this->em->flush();
+
+        $this->eventDispatcher->dispatch(
+            self::EVENT_POST_MEDIA_DELETE,
+            new ApiMediaEvent(
+                new Media($mediaEntity)
+            )
+        );
     }
 
     /**
