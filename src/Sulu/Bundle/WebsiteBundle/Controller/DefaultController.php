@@ -30,10 +30,11 @@ class DefaultController extends WebsiteController
      *
      * @return Response
      */
-    public function indexAction(StructureInterface $structure, $preview = false, $partial = false)
+    public function indexAction(StructureInterface $structure, $view, $preview = false, $partial = false)
     {
         $response = $this->renderStructure(
             $structure,
+            $view,
             array(),
             $preview,
             $partial
