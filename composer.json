@@ -34,6 +34,7 @@
         "pagerfanta/pagerfanta": "~1.0"
     },
     "require-dev": {
+        "jackalope/jackalope-jackrabbit": "1.1.*",
         "phpcr/phpcr-shell": "~1.0.0@alpha",
         "doctrine/doctrine-bundle": "1.4.*",
         "jackalope/jackalope-jackrabbit": "~1.2.0",
