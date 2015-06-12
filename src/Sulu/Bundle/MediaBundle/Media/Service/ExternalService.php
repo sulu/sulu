@@ -25,10 +25,10 @@ class ExternalService implements ServiceInterface
         $this->client = new Client();
     }
 
-    private function makeRequest($JSONstring, $action)
+    private function makeRequest($JSONstring, $action, $method)
     {
         foreach ($this->externalService as $key => $value) {
-            $request = $this->client->post($value[$action]);
+            $request = $this->client->$method($value[$action]);
             $request->setBody($JSONstring, 'application/json');
             $res = $request->send();
             echo $res->getStatusCode();
@@ -38,18 +38,18 @@ class ExternalService implements ServiceInterface
     public function add(Media $media)
     {
         $mediaJson = $this->serializer->serialize($media, 'json');
-        $this->makeRequest($mediaJson, 'add');
+        $this->makeRequest($mediaJson, 'add', 'post');
     }
 
     public function update(Media $media)
     {
     	$mediaJson = $this->serializer->serialize($media, 'json');
-        $this->makeRequest($mediaJson, 'update');
+        $this->makeRequest($mediaJson, 'update', 'put');
     }
 
     public function delete(Media $media)
     {
         $mediaJson = $this->serializer->serialize($media, 'json');
-        $this->makeRequest($mediaJson, 'delete');
+        $this->makeRequest($mediaJson, 'delete', 'delete');
     }
 }
