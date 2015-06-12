@@ -25,10 +25,10 @@ class ExternalService implements ServiceInterface
         $this->client = new Client();
     }
 
-    private function makeRequest($JSONstring, $action, $method)
+    private function makeRequest($JSONstring, $action, $HTTPmethod)
     {
         foreach ($this->externalService as $key => $value) {
-            $request = $this->client->$method($value[$action]);
+            $request = $this->client->$HTTPmethod($value[$action]);
             $request->setBody($JSONstring, 'application/json');
             $res = $request->send();
             echo $res->getStatusCode();
