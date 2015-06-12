@@ -9,6 +9,8 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\Service;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Api\Media;
 
 /**
@@ -25,12 +27,21 @@ class ServiceManager implements ServiceManagerInterface
     /**
      * @var ServiceInterface[]
      */
-    protected $services;
+    protected $services = array();
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * creates default media register structure
+     * @param LoggerInterface $logger
      */
-    public function __construct() {
+    public function __construct(
+        $logger = null
+    ) {
+        $this->logger = $logger ? : new NullLogger();
         $this->mediaRegister[self::MEDIA_STATUS_ADD] = array();
         $this->mediaRegister[self::MEDIA_STATUS_UPDATE] = array();
         $this->mediaRegister[self::MEDIA_STATUS_DELETE] = array();
