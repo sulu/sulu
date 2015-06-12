@@ -30,6 +30,14 @@ class ExternalService implements ServiceInterface
         $this->client = new Client();
     }
 
+    /**
+     * send HTTP request
+     *
+     * @param Media $media
+     * @param String $action
+     * @param String $HTTPmethod
+     *
+     */
     private function makeRequest($JSONstring, $action, $HTTPmethod)
     {
         foreach ($this->externalService as $key => $value) {
