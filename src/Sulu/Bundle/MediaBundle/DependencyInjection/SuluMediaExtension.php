@@ -114,6 +114,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $config['upload']['max_filesize']
         );
 
+        // Services
+        $container->setParameter('sulu_media.external_service', $config['external_service']);
+
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
