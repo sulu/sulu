@@ -378,7 +378,8 @@ class ContactManager extends AbstractContactManager
      */
     public function getById($id, $locale)
     {
-        $contact = $this->em->getRepository(self::$contactEntityName)->find($id);
+        //$contact = $this->em->getRepository(self::$contactEntityName)->find($id);
+        $contact = $this->contactRepository->find($id);
         if (!$contact) {
             return;
         }

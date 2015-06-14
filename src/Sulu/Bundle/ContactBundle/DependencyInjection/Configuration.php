@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,8 +27,9 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('sulu_contact');
 
-        $treeBuilder->root('sulu_contact')
+        $rootNode
             ->children()
                 ->arrayNode('defaults')
                     ->addDefaultsIfNotSet()
@@ -72,6 +74,32 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
+        $this->addClassesSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    /**
+     * Adds `classes` section.
+     *
+     * @param ArrayNodeDefinition $node
+     */
+    private function addClassesSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('classes') // objects ???
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('contact')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\ContactBundle\Entity\Contact')->end()
+                                ->scalarNode('repository')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }

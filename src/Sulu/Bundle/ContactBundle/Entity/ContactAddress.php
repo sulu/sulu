@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Contact\Model\ContactInterface;
 
 /**
  * ContactAddress.
@@ -25,7 +26,7 @@ class ContactAddress
     private $address;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var ContactInterface
      * @Exclude
      */
     private $contact;
@@ -91,11 +92,11 @@ class ContactAddress
     /**
      * Set contact.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @param ContactInterface $contact
      *
      * @return ContactAddress
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
+    public function setContact(ContactInterface $contact)
     {
         $this->contact = $contact;
 
@@ -105,7 +106,7 @@ class ContactAddress
     /**
      * Get contact.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return ContactInterface
      */
     public function getContact()
     {

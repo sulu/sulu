@@ -10,8 +10,24 @@
 
 namespace Sulu\Bundle\ContactBundle;
 
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleBehavior;
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class SuluContactBundle extends Bundle
+class SuluContactBundle extends Bundle implements PersistenceBundleInterface
 {
+    use PersistenceBundleBehavior;
+
+    /**
+     * Target entities resolver configuration.
+     * Mapping a interface to a concrete implementation.
+     *
+     * @return array
+     */
+    protected function getModelInterfaces()
+    {
+        return array(
+            'Sulu\Component\Contact\Model\ContactInterface' => 'sulu.model.contact.class',
+        );
+    }
 }

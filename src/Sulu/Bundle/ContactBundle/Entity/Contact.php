@@ -15,115 +15,116 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Contact.
  */
-class Contact extends ApiEntity implements AuditableInterface
+class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 {
     /**
      * @var string
      */
-    private $firstName;
+    protected $firstName;
 
     /**
      * @var string
      */
-    private $middleName;
+    protected $middleName;
 
     /**
      * @var string
      */
-    private $lastName;
+    protected $lastName;
 
     /**
      * @var string
      */
-    private $title;
+    protected $title;
 
     /**
      * @Accessor(getter="getPosition")
      *
      * @var string
      */
-    private $position;
+    protected $position;
 
     /**
      * @var \DateTime
      */
-    private $birthday;
+    protected $birthday;
 
     /**
      * @var \DateTime
      */
-    private $created;
+    protected $created;
 
     /**
      * @var \DateTime
      */
-    private $changed;
+    protected $changed;
 
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $locales;
+    protected $locales;
 
     /**
      * @var \Sulu\Component\Security\Authentication\UserInterface
      */
-    private $changer;
+    protected $changer;
 
     /**
      * @var \Sulu\Component\Security\Authentication\UserInterface
      */
-    private $creator;
+    protected $creator;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $notes;
+    protected $notes;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $emails;
+    protected $emails;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $phones;
+    protected $phones;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $faxes;
+    protected $faxes;
 
     /**
      * @var int
      */
-    private $formOfAddress = 0;
+    protected $formOfAddress = 0;
 
     /**
      * @var string
      */
-    private $salutation;
+    protected $salutation;
 
     /**
      * @var int
      */
-    private $disabled = 0;
+    protected $disabled = 0;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      * @Accessor(getter="getTagNameArray")
      */
-    private $tags;
+    protected $tags;
 
     /**
      * main account.
@@ -132,7 +133,7 @@ class Contact extends ApiEntity implements AuditableInterface
      *
      * @var string
      */
-    private $account;
+    protected $account;
 
     /**
      * main account.
@@ -141,69 +142,69 @@ class Contact extends ApiEntity implements AuditableInterface
      *
      * @var string
      */
-    private $addresses;
+    protected $addresses;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
-    private $accountContacts;
+    protected $accountContacts;
 
     /**
      * @var bool
      */
-    private $newsletter;
+    protected $newsletter;
 
     /**
      * @var string
      */
-    private $gender;
+    protected $gender;
 
     /**
      * @var string
      */
-    private $mainEmail;
+    protected $mainEmail;
 
     /**
      * @var string
      */
-    private $mainPhone;
+    protected $mainPhone;
 
     /**
      * @var string
      */
-    private $mainFax;
+    protected $mainFax;
 
     /**
      * @var string
      */
-    private $mainUrl;
+    protected $mainUrl;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
-    private $contactAddresses;
+    protected $contactAddresses;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $medias;
+    protected $medias;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $categories;
+    protected $categories;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $urls;
+    protected $urls;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $bankAccounts;
+    protected $bankAccounts;
 
     /**
      * Constructor.
@@ -938,7 +939,7 @@ class Contact extends ApiEntity implements AuditableInterface
     /**
      * returns main account contact.
      */
-    private function getMainAccountContact()
+    protected function getMainAccountContact()
     {
         $accountContacts = $this->getAccountContacts();
 
