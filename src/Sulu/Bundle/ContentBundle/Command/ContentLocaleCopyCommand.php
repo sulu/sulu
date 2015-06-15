@@ -146,6 +146,15 @@ EOT
             }
         }
 
+        if ($structure->getType() && $structure->getType()->getName() === 'ghost') {
+            $this->output->writeln(
+                '<info>Processing aborted: </info>' .
+                $structure->getPath() . ' <comment>(source language does not exist)</comment>'
+            );
+
+            return;
+        }
+
         try {
             $this->contentMapper->copyLanguage(
                 $structure->getUuid(),
