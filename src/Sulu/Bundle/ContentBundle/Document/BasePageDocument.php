@@ -174,6 +174,11 @@ class BasePageDocument implements
      */
     protected $webspaceName;
 
+    /**
+     * @var integer
+     */
+    protected $suluOrder;
+
     public function __construct()
     {
         $this->workflowStage = WorkflowStage::TEST;
@@ -478,5 +483,13 @@ class BasePageDocument implements
     public function getWebspaceName()
     {
         return $this->webspaceName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSuluOrder()
+    {
+        return $this->suluOrder;
     }
 }
