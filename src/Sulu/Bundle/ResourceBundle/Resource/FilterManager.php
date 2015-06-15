@@ -18,11 +18,11 @@ use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\UnknownContextException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -67,20 +67,20 @@ class FilterManager implements FilterManagerInterface
     /**
      * @var array
      */
-    protected $aliasConfiguration;
+    protected $contextConfiguration;
 
     public function __construct(
         EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
         ConditionRepositoryInterface $conditionRepository,
-        array $aliasConfiguration
+        array $contextConfig
     ) {
         $this->em = $em;
         $this->filterRepository = $filterRepo;
         $this->userRepository = $userRepository;
         $this->conditionRepository = $conditionRepository;
-        $this->aliasConfiguration = $aliasConfiguration;
+        $this->contextConfiguration = $contextConfig;
     }
 
     /**
@@ -219,10 +219,10 @@ class FilterManager implements FilterManagerInterface
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
         if (array_key_exists('context', $data)) {
-            if ($this->getClassMappingForAlias($data['context'])) {
+            if ($this->getClassMappingForContext($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
-                throw new FilterContextNotFoundException(static::$filterEntityName, $data['context']);
+                throw new UnknownContextException($data['context']);
             }
         }
 
@@ -273,6 +273,7 @@ class FilterManager implements FilterManagerInterface
      *
      * @param ConditionGroupEntity $conditionGroup
      * @param array $matchedEntry
+     *
      * @return bool
      * @throws ConditionGroupMismatchException
      * @throws FilterDependencyNotFoundException
@@ -339,7 +340,7 @@ class FilterManager implements FilterManagerInterface
     {
         // check if date and not a relative value like -1 week
         if ($type === DataTypes::DATETIME_TYPE && !preg_match('/[A-Za-z]{3,}/', $value)) {
-           return (new \DateTime($value))->format(\DateTime::ISO8601);
+            return (new \DateTime($value))->format(\DateTime::ISO8601);
         }
 
         return $value;
@@ -350,6 +351,7 @@ class FilterManager implements FilterManagerInterface
      *
      * @param Filter $filter The filter to add the condition group to
      * @param array $conditionGroupData The array containing the data for the additional condition group
+     *
      * @return bool
      * @throws EntityIdAlreadySetException
      * @throws FilterDependencyNotFoundException
@@ -395,6 +397,7 @@ class FilterManager implements FilterManagerInterface
      * @param array $data
      * @param string $key
      * @param string $default
+     *
      * @return mixed
      */
     protected function getProperty(array $data, $key, $default = null)
@@ -421,6 +424,7 @@ class FilterManager implements FilterManagerInterface
      * @param array $data The array with the data
      * @param string $key The array key to check
      * @param bool $create Defines if the is for new or already existing data
+     *
      * @return bool
      * @throws Exception\MissingFilterAttributeException
      */
@@ -438,6 +442,7 @@ class FilterManager implements FilterManagerInterface
      * Checks if the given data is correct for a condition
      *
      * @param array $data The data to check
+     *
      * @return bool
      * @throws MissingConditionAttributeException
      */
@@ -471,27 +476,31 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Returns the configured class for a key
-     * @param string $alias
+     *
+     * @param string $context
+     *
      * @return string|null
      */
-    public function getClassMappingForAlias($alias)
+    public function getClassMappingForContext($context)
     {
-        if ($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)) {
-            return $this->aliasConfiguration[$alias]['class'];
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$context]['class'];
         }
 
         return null;
     }
 
     /**
-     * Returns the configured features for an alias
-     * @param $alias
+     * Returns the configured features for a context
+     *
+     * @param $context
+     *
      * @return array|null
      */
-    public function getFeaturesForAlias($alias)
+    public function getFeaturesForContext($context)
     {
-        if ($this->aliasConfiguration && array_key_exists($alias, $this->aliasConfiguration)) {
-            return $this->aliasConfiguration[$alias]['features'];
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$context]['features'];
         }
 
         return null;
@@ -499,6 +508,7 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Removes conditions from condition groups when they are not in the given array
+     *
      * @param ConditionGroupEntity $conditionGroup
      * @param array $conditionIds
      */
@@ -512,5 +522,40 @@ class FilterManager implements FilterManagerInterface
                 $this->em->remove($condition);
             }
         }
+    }
+
+    /**
+     * Checks if the context exists
+     *
+     * @param $context
+     *
+     * @return boolean
+     */
+    public function hasContext($context)
+    {
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a feature is enabled for a context
+     *
+     * @param $context
+     * @param $feature
+     *
+     * @return boolean
+     */
+    public function isFeatureEnabled($context, $feature)
+    {
+        if ($this->hasContext($context) &&
+            array_search($feature, $this->getFeaturesForContext($context)) !== false
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

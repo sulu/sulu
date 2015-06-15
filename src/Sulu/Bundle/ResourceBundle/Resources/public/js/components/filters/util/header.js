@@ -12,7 +12,6 @@ define(['config'], function(Config) {
     'use strict';
 
     return {
-
         /**
          * Sets the correct title in the header
          * @param sandbox

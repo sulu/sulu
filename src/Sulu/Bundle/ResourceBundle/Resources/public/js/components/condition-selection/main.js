@@ -434,7 +434,6 @@ define([], function() {
                 default:
                     this.sandbox.logger.error('Input type "' + type + '" is not supported!');
                     break;
-
             }
         },
 

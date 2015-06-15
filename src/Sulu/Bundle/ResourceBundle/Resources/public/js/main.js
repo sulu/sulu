@@ -16,7 +16,6 @@ require.config({
 });
 
 define({
-
     name: "SuluResourceBundle",
 
     /**
