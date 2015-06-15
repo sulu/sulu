@@ -113,6 +113,7 @@ class XmlLegacyLoader implements LoaderInterface
         }
 
         // FIXME until excerpt-template is no page template anymore
+        // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
         if (!$internal) {
             foreach ($this->requiredTagNames[$type] as $requiredTagName) {
                 if (!array_key_exists($requiredTagName, $tags)) {
