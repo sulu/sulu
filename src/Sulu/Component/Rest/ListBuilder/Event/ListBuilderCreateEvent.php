@@ -15,9 +15,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * An object of this class is emitted along with the listbuilder.create event
- *
- * Class ListBuilderCreateEvent
- * @package Sulu\Component\Rest\ListBuilder\Event
  */
 class ListBuilderCreateEvent extends Event
 {
@@ -26,9 +23,9 @@ class ListBuilderCreateEvent extends Event
      */
     protected $listBuilder;
 
-    public function __construct(ListbuilderInterface $lb)
+    public function __construct(ListbuilderInterface $listBuilder)
     {
-        $this->listBuilder = $lb;
+        $this->listBuilder = $listBuilder;
     }
 
     /**

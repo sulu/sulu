@@ -281,7 +281,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $betweenString = $this->createQueryString($betweenParts, strlen($firstConjunction) + 2);
-        if (strtoupper($firstConjunction) === self::OR_CONJUNCTION) {
+        if (strtoupper($firstConjunction) === self::CONJUNCTION_OR) {
             $this->queryBuilder->orWhere('(' . $betweenString . ')');
         } else {
             $this->queryBuilder->andWhere('(' . $betweenString . ')');
@@ -331,7 +331,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $whereString = $this->createQueryString($whereParts, strlen($firstConjunction) + 2);
-        if (strtoupper($firstConjunction) === self::OR_CONJUNCTION) {
+        if (strtoupper($firstConjunction) === self::CONJUNCTION_OR) {
             $this->queryBuilder->orWhere('(' . $whereString . ')');
         } else {
             $this->queryBuilder->andWhere('(' . $whereString . ')');

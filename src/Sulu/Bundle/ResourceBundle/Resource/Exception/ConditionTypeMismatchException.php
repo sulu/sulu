@@ -11,8 +11,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Exception which is thrown when the value of a condition does not match the type
- * Class ConditionTypeMismatchException
- */
+  */
 class ConditionTypeMismatchException extends FilterException
 {
     /**

@@ -24,8 +24,9 @@ interface FilterListBuilderInterface
     /**
      * Applies the conditions from a filter to the listbuilder
      *
-     * @param ListbuilderInterface $lb
-     * @return mixed
+     * @param ListbuilderInterface $listBuilder
+     *
+*@return mixed
      */
-    public function applyFilterToList(ListBuilderInterface $lb);
+    public function applyFilterToList(ListBuilderInterface $listBuilder);
 }

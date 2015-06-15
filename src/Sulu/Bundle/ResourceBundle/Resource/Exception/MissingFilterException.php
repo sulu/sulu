@@ -13,9 +13,6 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 /**
  * This exception is thrown if a required property for creating or manipulating
  * a filter is missing.
- *
- * Class MissingFilterException
- * @package Sulu\Bundle\ResourceBundle\Resource\Exception
  */
 class MissingFilterException extends FilterException
 {

@@ -14,7 +14,6 @@ use Exception;
 
 /**
  * OperatorUnknownException is thrown when the given operator is unknown
- * Class OperatorException
  */
 class OperatorUnknownException extends OperatorException
 {
