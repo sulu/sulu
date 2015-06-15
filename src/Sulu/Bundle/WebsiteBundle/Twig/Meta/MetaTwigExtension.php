@@ -51,8 +51,8 @@ class MetaTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('meta_alternate', array($this, 'getAlternateLinks')),
-            new \Twig_SimpleFunction('meta_seo', array($this, 'getSeoMetaTags')),
+            new \Twig_SimpleFunction('sulu_meta_alternate', array($this, 'getAlternateLinks')),
+            new \Twig_SimpleFunction('sulu_meta_seo', array($this, 'getSeoMetaTags')),
         );
     }
 

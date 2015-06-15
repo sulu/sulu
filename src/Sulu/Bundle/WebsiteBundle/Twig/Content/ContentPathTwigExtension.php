@@ -57,8 +57,8 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('content_path', array($this, 'getContentPath')),
-            new \Twig_SimpleFunction('content_root_path', array($this, 'getContentRootPath')),
+            new \Twig_SimpleFunction('sulu_content_path', array($this, 'getContentPath')),
+            new \Twig_SimpleFunction('sulu_content_root_path', array($this, 'getContentRootPath')),
         );
     }
 
