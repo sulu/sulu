@@ -86,6 +86,7 @@ EOT
 
     /**
      * Cleanup specific node and his children
+     *
      * @param NodeInterface $node
      * @param string $rootPath
      */
@@ -95,16 +96,18 @@ EOT
             $this->cleanup($childNode, $rootPath);
         }
 
+        $path = ltrim(str_replace($rootPath, '', $node->getPath()), '/');
+
         if (!$node->getPropertyValueWithDefault('sulu:history', false)) {
             $this->output->writeln(
-                '<info>Processing aborted: </info>' .
-                ltrim($node->getPath(), $rootPath) . ' <comment>(no history url)</comment>'
+                '<info>Processing aborted: </info>/' .
+                $path . ' <comment>(no history url)</comment>'
             );
 
             return;
         }
 
         $node->remove();
-        $this->output->writeln('<info>Processing: </info>' . ltrim($node->getPath(), $rootPath));
+        $this->output->writeln('<info>Processing: </info>/' . $path);
     }
 }
