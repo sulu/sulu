@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\ContactBundle;
 
-use Sulu\Bundle\PersistenceBundle\PersistenceBundleBehavior;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleInterface;
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluContactBundle extends Bundle implements PersistenceBundleInterface
 {
-    use PersistenceBundleBehavior;
+    use PersistenceBundleTrait;
 
     /**
      * Target entities resolver configuration.

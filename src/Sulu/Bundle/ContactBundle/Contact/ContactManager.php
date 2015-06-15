@@ -83,7 +83,7 @@ class ContactManager extends AbstractContactManager
      *
      * @param int $id
      */
-    public function delete($id)
+    public function delete()
     {
         /**
          * TODO: https://github.com/sulu-io/sulu/pull/1171
@@ -93,12 +93,10 @@ class ContactManager extends AbstractContactManager
         */
         $delete = function ($id) {
             /** @var Contact $contact */
-            $contact = $this->em->getRepository(
-                self::$contactEntityName
-            )->findByIdAndDelete($id);
+            $contact = $this->contactRepository->findByIdAndDelete($id);
 
             if (!$contact) {
-                throw new EntityNotFoundException(self::$contactEntityName, $id);
+                throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
 
             $addresses = $contact->getAddresses();
@@ -309,7 +307,7 @@ class ContactManager extends AbstractContactManager
         $contactAddress->setMain($isMain);
         $this->em->persist($contactAddress);
 
-        $contact->addContactAddresse($contactAddress);
+        $contact->addContactAddress($contactAddress);
 
         return $contactAddress;
     }
@@ -340,8 +338,8 @@ class ContactManager extends AbstractContactManager
         $isMain = $contactAddress->getMain();
 
         // remove relation
-        $contact->removeContactAddresse($contactAddress);
-        $address->removeContactAddresse($contactAddress);
+        $contact->removeContactAddress($contactAddress);
+        $address->removeContactAddress($contactAddress);
 
         // if was main, set a new one
         if ($isMain) {

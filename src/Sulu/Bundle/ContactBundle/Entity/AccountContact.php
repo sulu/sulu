@@ -18,7 +18,7 @@ class AccountContact
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Component\Contact\Model\ContactInterface
      */
     private $contact;
 
@@ -69,11 +69,11 @@ class AccountContact
     /**
      * Set contact.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @param \Sulu\Component\Contact\Model\ContactInterface $contact
      *
      * @return AccountContact
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
+    public function setContact(\Sulu\Component\Contact\Model\ContactInterface $contact)
     {
         $this->contact = $contact;
 
@@ -83,7 +83,7 @@ class AccountContact
     /**
      * Get contact.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return \Sulu\Component\Contact\Model\ContactInterface
      */
     public function getContact()
     {

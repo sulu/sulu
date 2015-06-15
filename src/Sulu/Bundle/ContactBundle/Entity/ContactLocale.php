@@ -26,7 +26,7 @@ class ContactLocale
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Component\Contact\Model\ContactInterface
      */
     private $contact;
 
@@ -67,11 +67,11 @@ class ContactLocale
     /**
      * Set contact.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @param \Sulu\Component\Contact\Model\ContactInterface $contact
      *
      * @return ContactLocale
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
+    public function setContact(\Sulu\Component\Contact\Model\ContactInterface $contact)
     {
         $this->contact = $contact;
 
@@ -81,7 +81,7 @@ class ContactLocale
     /**
      * Get contact.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return \Sulu\Component\Contact\Model\ContactInterface
      */
     public function getContact()
     {

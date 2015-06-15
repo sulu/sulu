@@ -12,5 +12,4 @@ namespace Sulu\Bundle\PersistenceBundle;
 
 interface PersistenceBundleInterface
 {
-
 }

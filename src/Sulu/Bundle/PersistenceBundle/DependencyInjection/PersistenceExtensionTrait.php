@@ -12,7 +12,7 @@ namespace Sulu\Bundle\PersistenceBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-trait PersistenceExtensionBehavior
+trait PersistenceExtensionTrait
 {
 
     /**

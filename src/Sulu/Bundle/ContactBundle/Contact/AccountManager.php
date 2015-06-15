@@ -65,8 +65,8 @@ class AccountManager extends AbstractContactManager
             $this->unsetMain($account->getAccountAddresses());
         }
         $accountAddress->setMain($isMain);
-        $account->addAccountAddresse($accountAddress);
-        $address->addAccountAddresse($accountAddress);
+        $account->addAccountAddress($accountAddress);
+        $address->addAccountAddress($accountAddress);
         $this->em->persist($accountAddress);
 
         return $accountAddress;

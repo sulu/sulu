@@ -118,11 +118,11 @@ class Phone
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
      *
      * @return Phone
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    public function addContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -132,9 +132,9 @@ class Phone
     /**
      * Remove contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    public function removeContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

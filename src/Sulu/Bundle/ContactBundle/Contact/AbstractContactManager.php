@@ -810,7 +810,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         };
 
         $delete = function ($category) use ($contact) {
-            return $contact->removeCategorie($category);
+            return $contact->removeCategory($category);
         };
 
         $add = function ($category) use ($contact) {
@@ -855,7 +855,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         if (!$category) {
             throw new EntityNotFoundException(self::$categoryEntityName, $data['id']);
         } else {
-            $contact->addCategorie($category);
+            $contact->addCategory($category);
         }
 
         return $success;

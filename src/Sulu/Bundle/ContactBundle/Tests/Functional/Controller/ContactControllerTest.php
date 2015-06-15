@@ -157,8 +157,8 @@ class ContactControllerTest extends SuluTestCase
 
         $this->contactAddress = $contactAddress;
 
-        $contact->addContactAddresse($contactAddress);
-        $address->addContactAddresse($contactAddress);
+        $contact->addContactAddress($contactAddress);
+        $address->addContactAddress($contactAddress);
 
         $note = new Note();
         $note->setValue('Note');

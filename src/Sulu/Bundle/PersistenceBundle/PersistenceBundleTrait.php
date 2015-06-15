@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PersistenceBundle;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ResolveTargetEntitiesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-trait PersistenceBundleBehavior
+trait PersistenceBundleTrait
 {
 
     /**

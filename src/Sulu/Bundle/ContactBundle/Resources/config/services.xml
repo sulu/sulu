@@ -16,7 +16,7 @@
         <parameter key="sulu_contact.account.entity">SuluContactBundle:Account</parameter>
         <parameter key="sulu_contact.account_repository.class">Sulu\Bundle\ContactBundle\Entity\AccountRepository</parameter>
         <parameter key="sulu_contact.account_factory.class">Sulu\Bundle\ContactBundle\Contact\AccountFactory</parameter>
-        <parameter key="sulu_contact.contact.entity">ClientWebsiteBundle:Contact</parameter>
+        <parameter key="sulu_contact.contact.entity">SuluContactBundle:Contact</parameter>
         <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
         <parameter key="sulu_contact.contact_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactRepository</parameter>
         <parameter key="sulu_contact.contact_title_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository</parameter>

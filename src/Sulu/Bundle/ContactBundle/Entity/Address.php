@@ -533,30 +533,6 @@ class Address
     }
 
     /**
-     * Add accountAddresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
-     *
-     * @return Address
-     */
-    public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
-    {
-        $this->accountAddresses[] = $accountAddresses;
-
-        return $this;
-    }
-
-    /**
-     * Remove accountAddresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
-     */
-    public function removeAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
-    {
-        $this->accountAddresses->removeElement($accountAddresses);
-    }
-
-    /**
      * Get accountAddresses.
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -580,16 +556,6 @@ class Address
         }
 
         return false;
-    }
-
-    /**
-     * Remove contactAddresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
-     */
-    public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
-    {
-        $this->contactAddresses->removeElement($contactAddresses);
     }
 
     /**

@@ -95,7 +95,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')->defaultValue('Sulu\Bundle\ContactBundle\Entity\Contact')->end()
-                                ->scalarNode('repository')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\ContactBundle\Entity\ContactRepository')->end()
                             ->end()
                         ->end()
                     ->end()

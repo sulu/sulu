@@ -64,7 +64,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set firstName.
+     * Set first name.
      *
      * @param string $firstName
      *
@@ -78,7 +78,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get firstName.
+     * Get first name.
      *
      * @return string
      * @VirtualProperty
@@ -91,7 +91,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set middleName.
+     * Set middle name.
      *
      * @param string $middleName
      *
@@ -106,7 +106,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get middleName.
+     * Get middle name.
      *
      * @return string
      * @VirtualProperty
@@ -119,7 +119,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set lastName.
+     * Set last name.
      *
      * @param string $lastName
      *
@@ -133,7 +133,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get lastName.
+     * Get last name.
      *
      * @return string
      * @VirtualProperty
@@ -199,7 +199,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * sets position variable.
+     * Sets current position.
      *
      * @param $position
      */
@@ -275,29 +275,29 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add locales.
+     * Add locale.
      *
-     * @param ContactLocaleEntity $locales
+     * @param ContactLocaleEntity $locale
      *
      * @return Contact
      */
-    public function addLocale(ContactLocaleEntity $locales)
+    public function addLocale(ContactLocaleEntity $locale)
     {
-        $this->entity->addLocale($locales);
+        $this->entity->addLocale($locale);
 
         return $this;
     }
 
     /**
-     * Remove locales.
+     * Remove locale.
      *
-     * @param ContactLocaleEntity $locales
+     * @param ContactLocaleEntity $locale
      *
      * @return Contact
      */
-    public function removeLocale(ContactLocaleEntity $locales)
+    public function removeLocale(ContactLocaleEntity $locale)
     {
-        $this->entity->removeLocale($locales);
+        $this->entity->removeLocale($locale);
 
         return $this;
     }
@@ -351,29 +351,29 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add notes.
+     * Add note.
      *
-     * @param NoteEntity $notes
+     * @param NoteEntity $note
      *
      * @return Contact
      */
-    public function addNote(NoteEntity $notes)
+    public function addNote(NoteEntity $note)
     {
-        $this->entity->addNote($notes);
+        $this->entity->addNote($note);
 
         return $this;
     }
 
     /**
-     * Remove notes.
+     * Remove note.
      *
-     * @param NoteEntity $notes
+     * @param NoteEntity $note
      *
      * @return $this
      */
-    public function removeNote(NoteEntity $notes)
+    public function removeNote(NoteEntity $note)
     {
-        $this->entity->removeNote($notes);
+        $this->entity->removeNote($note);
 
         return $this;
     }
@@ -399,27 +399,27 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add emails.
+     * Add email.
      *
-     * @param EmailEntity $emails
+     * @param EmailEntity $email
      *
      * @return Contact
      */
-    public function addEmail(EmailEntity $emails)
+    public function addEmail(EmailEntity $email)
     {
-        $this->entity->addEmail($emails);
+        $this->entity->addEmail($email);
 
         return $this;
     }
 
     /**
-     * Remove emails.
+     * Remove email.
      *
-     * @param EmailEntity $emails
+     * @param EmailEntity $email
      */
-    public function removeEmail(EmailEntity $emails)
+    public function removeEmail(EmailEntity $email)
     {
-        $this->entity->removeEmail($emails);
+        $this->entity->removeEmail($email);
     }
 
     /**
@@ -443,27 +443,27 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add phones.
+     * Add phone.
      *
-     * @param PhoneEntity $phones
+     * @param PhoneEntity $phone
      *
      * @return Contact
      */
-    public function addPhone(PhoneEntity $phones)
+    public function addPhone(PhoneEntity $phone)
     {
-        $this->entity->addPhone($phones);
+        $this->entity->addPhone($phone);
 
         return $this;
     }
 
     /**
-     * Remove phones.
+     * Remove phone.
      *
-     * @param PhoneEntity $phones
+     * @param PhoneEntity $phone
      */
-    public function removePhone(PhoneEntity $phones)
+    public function removePhone(PhoneEntity $phone)
     {
-        $this->entity->removePhone($phones);
+        $this->entity->removePhone($phone);
     }
 
     /**
@@ -486,43 +486,28 @@ class Contact extends ApiWrapper
         return $entities;
     }
 
-    public function toArray()
-    {
-        return array(
-            'id' => $this->getLastName(),
-            'firstName' => $this->getFirstName(),
-            'middleName' => $this->getMiddleName(),
-            'lastName' => $this->getLastName(),
-            'title' => $this->getTitle(),
-            'position' => $this->getPosition(),
-            'birthday' => $this->getBirthday(),
-            'created' => $this->getCreated(),
-            'changed' => $this->getChanged(),
-        );
-    }
-
     /**
-     * Add faxes.
+     * Add fax.
      *
-     * @param FaxEntity $faxes
+     * @param FaxEntity $fax
      *
      * @return Contact
      */
-    public function addFax(FaxEntity $faxes)
+    public function addFax(FaxEntity $fax)
     {
-        $this->entity->addFax($faxes);
+        $this->entity->addFax($fax);
 
         return $this;
     }
 
     /**
-     * Remove faxes.
+     * Remove fax.
      *
-     * @param FaxEntity $faxes
+     * @param FaxEntity $fax
      */
-    public function removeFax(FaxEntity $faxes)
+    public function removeFax(FaxEntity $fax)
     {
-        $this->entity->removeFax($faxes);
+        $this->entity->removeFax($fax);
     }
 
     /**
@@ -546,27 +531,27 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add urls.
+     * Add url.
      *
-     * @param UrlEntity $urls
+     * @param UrlEntity $url
      *
      * @return Contact
      */
-    public function addUrl(UrlEntity $urls)
+    public function addUrl(UrlEntity $url)
     {
-        $this->entity->addUrl($urls);
+        $this->entity->addUrl($url);
 
         return $this;
     }
 
     /**
-     * Remove urls.
+     * Remove url.
      *
-     * @param UrlEntity $urls
+     * @param UrlEntity $url
      */
-    public function removeUrl(UrlEntity $urls)
+    public function removeUrl(UrlEntity $url)
     {
-        $this->entity->removeUrl($urls);
+        $this->entity->removeUrl($url);
     }
 
     /**
@@ -590,31 +575,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add faxes.
-     *
-     * @param FaxEntity $faxes
-     *
-     * @return Contact
-     */
-    public function addFaxe(FaxEntity $faxes)
-    {
-        $this->entity->addFax($faxes);
-
-        return $this;
-    }
-
-    /**
-     * Remove faxes.
-     *
-     * @param FaxEntity $faxes
-     */
-    public function removeFaxe(FaxEntity $faxes)
-    {
-        $this->entity->removeFaxe($faxes);
-    }
-
-    /**
-     * Set formOfAddress.
+     * Set form of address.
      *
      * @param int $formOfAddress
      *
@@ -628,21 +589,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add tags.
-     *
-     * @param TagEntity $tags
-     *
-     * @return Contact
-     */
-    public function addTag(TagEntity $tags)
-    {
-        $this->entity->addTag($tags);
-
-        return $this;
-    }
-
-    /**
-     * Get formOfAddress.
+     * Get form of address.
      *
      * @return int
      * @VirtualProperty
@@ -709,13 +656,27 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove tags.
+     * Add tag.
      *
-     * @param TagEntity $tags
+     * @param TagEntity $tag
+     *
+     * @return Contact
      */
-    public function removeTag(TagEntity $tags)
+    public function addTag(TagEntity $tag)
     {
-        $this->entity->removeTag($tags);
+        $this->entity->addTag($tag);
+
+        return $this;
+    }
+
+    /**
+     * Remove tag.
+     *
+     * @param TagEntity $tag
+     */
+    public function removeTag(TagEntity $tag)
+    {
+        $this->entity->removeTag($tag);
     }
 
     /**
@@ -807,7 +768,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * returns main account.
+     * Returns main account.
      *
      * @VirtualProperty
      * @SerializedName("account")
@@ -820,11 +781,11 @@ class Contact extends ApiWrapper
             return new Account($mainAccount, $this->locale);
         }
 
-        return;
+        return null;
     }
 
     /**
-     * returns main addresses.
+     * Returns main addresses.
      *
      * @VirtualProperty
      * @SerializedName("addresses")
@@ -848,7 +809,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainEmail.
+     * Set main email.
      *
      * @param string $mainEmail
      *
@@ -862,7 +823,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainEmail.
+     * Get main email.
      *
      * @return string
      * @VirtualProperty
@@ -875,7 +836,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainPhone.
+     * Set main phone.
      *
      * @param string $mainPhone
      *
@@ -889,7 +850,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainPhone.
+     * Get main phone.
      *
      * @return string
      * @VirtualProperty
@@ -902,7 +863,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainFax.
+     * Set main fax.
      *
      * @param string $mainFax
      *
@@ -916,7 +877,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainFax.
+     * Get main fax.
      *
      * @return string
      * @VirtualProperty
@@ -929,7 +890,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set mainUrl.
+     * Set main url.
      *
      * @param string $mainUrl
      *
@@ -943,7 +904,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get mainUrl.
+     * Get main url.
      *
      * @return string
      * @VirtualProperty
@@ -976,41 +937,29 @@ class Contact extends ApiWrapper
             }
         }
 
-        return;
+        return null;
     }
 
     /**
-     * Add medias.
+     * Add media.
      *
-     * @param MediaEntity $medias
-     *
-     * @return Contact
-     */
-    public function addMedia(MediaEntity $medias)
-    {
-        $this->entity->addMedia($medias);
-    }
-
-    /** Add categories
-     * @param CategoryEntity $categories
+     * @param MediaEntity $media
      *
      * @return Contact
      */
-    public function addCategorie(CategoryEntity $categories)
+    public function addMedia(MediaEntity $media)
     {
-        $this->entity->addCategorie($categories);
-
-        return $this;
+        $this->entity->addMedia($media);
     }
 
     /**
-     * Remove medias.
+     * Remove media.
      *
-     * @param MediaEntity $medias
+     * @param MediaEntity $media
      */
-    public function removeMedia(MediaEntity $medias)
+    public function removeMedia(MediaEntity $media)
     {
-        $this->entity->removeMedia($medias);
+        $this->entity->removeMedia($media);
     }
 
     /**
@@ -1034,13 +983,27 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Remove categories.
+     * Add category
      *
-     * @param CategoryEntity $categories
+     * @param CategoryEntity $category
+     *
+     * @return Contact
      */
-    public function removeCategorie(CategoryEntity $categories)
+    public function addCategory(CategoryEntity $category)
     {
-        $this->entity->removeCategorie($categories);
+        $this->entity->addCategory($category);
+
+        return $this;
+    }
+
+    /**
+     * Remove category.
+     *
+     * @param CategoryEntity $category
+     */
+    public function removeCategory(CategoryEntity $category)
+    {
+        $this->entity->removeCategory($category);
     }
 
     /**
@@ -1061,5 +1024,23 @@ class Contact extends ApiWrapper
         }
 
         return $entities;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'id' => $this->getLastName(),
+            'firstName' => $this->getFirstName(),
+            'middleName' => $this->getMiddleName(),
+            'lastName' => $this->getLastName(),
+            'title' => $this->getTitle(),
+            'position' => $this->getPosition(),
+            'birthday' => $this->getBirthday(),
+            'created' => $this->getCreated(),
+            'changed' => $this->getChanged(),
+        );
     }
 }

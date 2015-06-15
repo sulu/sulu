@@ -575,13 +575,13 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresss
      *
      * @return Account
      */
-    public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress)
     {
-        $this->accountAddresses[] = $accountAddresses;
+        $this->accountAddresses[] = $accountAddress;
 
         return $this;
     }
@@ -589,11 +589,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddres
      */
-    public function removeAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress)
     {
-        $this->accountAddresses->removeElement($accountAddresses);
+        $this->accountAddresses->removeElement($accountAddress);
     }
 
     /**
@@ -702,30 +702,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add accountAddresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
-     *
-     * @return Account
-     */
-    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
-    {
-        $this->accountAddresses[] = $accountAddresses;
-
-        return $this;
-    }
-
-    /**
-     * Remove accountAddresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
-     */
-    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
-    {
-        $this->accountAddresses->removeElement($accountAddresses);
-    }
-
-    /**
      * Add children.
      *
      * @param AccountInterface $children
@@ -764,39 +740,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add categories.
-     *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
-     *
-     * @return Account
-     *
-     * FIXME someone needs this ugly methods .... (restcontroller)
-     */
-    public function addCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
-    {
-        $this->categories[] = $categories;
-
-        return $this;
-    }
-
-    /**
      * Remove categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
      */
     public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
-    {
-        $this->categories->removeElement($categories);
-    }
-
-    /**
-     * Remove categories.
-     *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
-     *
-     * FIXME someone needs this ugly methods .... (restcontroller)
-     */
-    public function removeCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
     {
         $this->categories->removeElement($categories);
     }
