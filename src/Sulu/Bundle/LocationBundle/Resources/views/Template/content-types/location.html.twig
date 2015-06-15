@@ -7,7 +7,7 @@
      data-type-instance-name="{{ id|raw }}"
      data-instance-name="{{ id|raw }}"
      data-form="true"
-     data-aura-countries="{{ parameter_to_key_value(params.countries.value)|json_encode }}"
+     data-aura-countries="{{ sulu_parameter_to_key_value(params.countries.value)|json_encode }}"
      data-aura-map-providers="{{ params.mapProviders.value|json_encode }}"
      data-geolocator-url="{{ path('sulu_location_geolocator_query') }}"
      >

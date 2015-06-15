@@ -62,8 +62,8 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('content_load', array($this, 'load')),
-            new \Twig_SimpleFunction('content_load_parent', array($this, 'loadParent')),
+            new \Twig_SimpleFunction('sulu_content_load', array($this, 'load')),
+            new \Twig_SimpleFunction('sulu_content_load_parent', array($this, 'loadParent')),
         );
     }
 

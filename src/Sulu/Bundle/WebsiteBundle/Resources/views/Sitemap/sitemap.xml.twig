@@ -6,7 +6,7 @@
 {% for webspaceSitemap in webspaceSitemaps %}
     {# ALL SITES #}
     {% for site in webspaceSitemap.sitemap %}
-        {% set url = content_path(site.url, site.webspaceKey, site.locale, domain) %}
+        {% set url = sulu_content_path(site.url, site.webspaceKey, site.locale, domain) %}
         {# IF URL EXISTS IN LOCALE #}
         {% if url is not empty and url != site.url %}
     <url>
@@ -14,7 +14,7 @@
         <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
         {# OTHER LOCALIZATIONS #}
         {% for locale, siteUrl in site.urls if locale in webspaceSitemap.getLocalizations() %}
-            {% set url = content_path(siteUrl, site.webspaceKey, locale, domain) %}
+            {% set url = sulu_content_path(siteUrl, site.webspaceKey, locale, domain) %}
             {# IF URL EXISTS IN LOCALE #}
             {% if url is not empty and url != siteUrl %}
         <xhtml:link rel="alternate" hreflang="{{ locale|replace('_', '-') }}" href="{{ url }}"/>

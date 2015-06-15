@@ -49,7 +49,7 @@ class DispositionTypeTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('get_media_url', array($this, 'getMediaUrl')),
+            new \Twig_SimpleFunction('sulu_get_media_url', array($this, 'getMediaUrl')),
         );
     }
 
