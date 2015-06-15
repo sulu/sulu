@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #1234 [All]            Prefix twig extension functions with "sulu_"
+    * ENHANCEMENT #1237 [AdminBundle]    Fixed typos in behat tests
     * BUGFIX      #1231 [ContentBundle]  Fixed wrong behaviour if you edit a shadow page
     * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
     * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
