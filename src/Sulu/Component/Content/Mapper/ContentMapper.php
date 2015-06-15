@@ -1333,7 +1333,7 @@ class ContentMapper implements ContentMapperInterface
             false
         );
 
-        $availableLocalization = $this->getShadowLocale($contentNode, $availableLocalization);
+        $availableLocalization = $this->getResolvedLocale($contentNode, $availableLocalization);
         // END: getAvailableLocalization
 
         if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
@@ -1473,7 +1473,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Determites locale for shadow-pages.
      */
-    private function getShadowLocale(NodeInterface $node, $defaultLocale)
+    private function getResolvedLocale(NodeInterface $node, $defaultLocale)
     {
         $propertyTranslator = $this->createPropertyTranslator($defaultLocale);
         $shadowOn = $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false);
@@ -1642,11 +1642,11 @@ class ContentMapper implements ContentMapperInterface
         foreach ($webspace->getAllLocalizations() as $localization) {
             // prepare translation vars
             $locale = $localization->getLocalization();
-            $shadowLocale = $this->getShadowLocale($node, $localization->getLocalization());
+            $resolvedLocale = $this->getResolvedLocale($node, $localization->getLocalization());
             $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
 
             // state property
-            $propertyTranslator = $this->createPropertyTranslator($shadowLocale);
+            $propertyTranslator = $this->createPropertyTranslator($resolvedLocale);
             $statePropertyName = $propertyTranslator->getName('state');
 
             if ($node->getPropertyValueWithDefault(
@@ -2235,7 +2235,7 @@ class ContentMapper implements ContentMapperInterface
             }
 
             $originLocale = $locale;
-            $locale = $this->getShadowLocale($node, $locale);
+            $locale = $this->getResolvedLocale($node, $locale);
             $propertyTranslator->setLanguage($locale);
 
             // load default data
