@@ -472,6 +472,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->loadDocument($uuid, $locale, $options = array(
             'load_ghost_content' => true,
             'exclude_ghost' => $excludeGhost,
+            'exclude_shadow' => false,
         ));
 
         if (null === $document) {
@@ -1162,7 +1163,7 @@ class ContentMapper implements ContentMapperInterface
             return true;
         }
 
-        if ($options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
+        if ($options['exclude_ghost'] && $options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
             return true;
         }
 

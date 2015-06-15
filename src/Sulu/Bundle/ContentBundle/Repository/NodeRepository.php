@@ -627,7 +627,6 @@ class NodeRepository implements NodeRepositoryInterface
                 $childTiers[$descendant->getUuid()][] = $this->prepareNode($child, $webspaceKey, $locale, 1, $complete, $excludeGhost);
             }
         }
-
         $result = array_shift($childTiers);
 
         $this->iterateTiers($childTiers, $result);
@@ -661,7 +660,10 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         if (!$found) {
-            throw new \Exception('fyck');
+            throw new \RuntimeException(sprintf(
+                'Could not find target node in with UUID "%s" in tier. This should not happen.',
+                $uuid
+            ));
         }
 
         $this->iterateTiers($tiers, $node['_embedded']['nodes']);
