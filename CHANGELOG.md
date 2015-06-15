@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1231 [ContentBundle]  Fixed wrong behaviour if you edit a shadow page
     * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
     * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
     * FEATURE     #1214 [MediaBundle]    Added language chooser in "all media" view and in edit-media overlay
