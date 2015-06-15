@@ -472,6 +472,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->loadDocument($uuid, $locale, $options = array(
             'load_ghost_content' => true,
             'exclude_ghost' => $excludeGhost,
+            'exclude_shadow' => false,
         ));
 
         if (null === $document) {
