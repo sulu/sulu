@@ -1163,7 +1163,7 @@ class ContentMapper implements ContentMapperInterface
             return true;
         }
 
-        if ($options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
+        if ($options['exclude_ghost'] && $options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
             return true;
         }
 
