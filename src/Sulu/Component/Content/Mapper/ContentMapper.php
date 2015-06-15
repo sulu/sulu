@@ -1301,7 +1301,6 @@ class ContentMapper implements ContentMapperInterface
         $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
-        // START: getAvailableLocalization
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
             $this->stopwatch->start('contentManager.loadByNode.available-localization');
@@ -1334,7 +1333,6 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $availableLocalization = $this->getResolvedLocale($contentNode, $availableLocalization);
-        // END: getAvailableLocalization
 
         if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
             return;
