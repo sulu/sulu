@@ -1541,8 +1541,8 @@ class ContentMapperTest extends PhpcrTestCase
         // move /a/b to /a/d/b
         $this->mapper->move($data[1]->getUuid(), $data[3]->getUuid(), 1, 'default', 'de');
 
-        // delete /a/d/b
-        $this->mapper->delete($data[1]->getUuid(), 'default');
+        // delete /a/d
+        $this->mapper->delete($data[3]->getUuid(), 'default');
 
         // check
         try {
@@ -1557,11 +1557,13 @@ class ContentMapperTest extends PhpcrTestCase
         } catch (ItemNotFoundException $ex) {
         }
 
-        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de');
-        $this->assertEquals(1, sizeof($result));
-        $this->assertEquals('/a/d', $result[0]->getPropertyValue('url'));
+        try {
+            $this->mapper->load($data[3]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
 
-        $result = $this->mapper->loadByParent($result[0]->getUuid(), 'default', 'de');
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de');
         $this->assertEquals(0, sizeof($result));
     }
 
