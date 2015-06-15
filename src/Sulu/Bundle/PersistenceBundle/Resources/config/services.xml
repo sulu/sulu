@@ -10,7 +10,7 @@
     <services>
 
         <service id="sulu.persistence.event_subscriber.orm.metadata" class="%sulu.persistence.event_subscriber.orm.metadata.class%">
-            <argument>%sulu.persistence.classes%</argument>
+            <argument>%sulu.persistence.objects%</argument>
             <tag name="doctrine.event_subscriber"/>
         </service>
 

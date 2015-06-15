@@ -25,16 +25,16 @@ class MetadataSubscriber implements EventSubscriber
     /**
      * @var array
      */
-    protected $classes;
+    protected $objects;
 
     /**
      * Constructor
      *
-     * @param array $classes
+     * @param array $objects
      */
-    public function __construct($classes)
+    public function __construct($objects)
     {
-        $this->classes = $classes;
+        $this->objects = $objects;
     }
 
     /**
@@ -69,7 +69,7 @@ class MetadataSubscriber implements EventSubscriber
 
     private function process(ClassMetadataInfo $metadata)
     {
-        foreach ($this->classes as $application => $classes) {
+        foreach ($this->objects as $application => $classes) {
             foreach ($classes as $class) {
                 if (isset($class['model']) && $class['model'] === $metadata->getName()) {
                     $metadata->isMappedSuperclass = false;
@@ -90,14 +90,19 @@ class MetadataSubscriber implements EventSubscriber
                 $configuration->getNamingStrategy()
             );
 
-            if (in_array($parent, $configuration->getMetadataDriverImpl()->getAllClassNames())) {
-                $configuration->getMetadataDriverImpl()->loadMetadataForClass($parent, $parentMetadata);
-                if ($parentMetadata->isMappedSuperclass) {
-                    foreach ($parentMetadata->getAssociationMappings() as $key => $value) {
-                        if ($this->hasRelation($value['type'])) {
-                            $metadata->associationMappings[$key] = $value;
-                        }
-                    }
+            if (!in_array($parent, $configuration->getMetadataDriverImpl()->getAllClassNames())) {
+                continue;
+            }
+
+            $configuration->getMetadataDriverImpl()->loadMetadataForClass($parent, $parentMetadata);
+            if (!$parentMetadata->isMappedSuperclass) {
+                continue;
+            }
+
+            // map relations
+            foreach ($parentMetadata->getAssociationMappings() as $key => $value) {
+                if ($this->hasRelation($value['type'])) {
+                    $metadata->associationMappings[$key] = $value;
                 }
             }
         }

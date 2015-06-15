@@ -74,7 +74,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
-        $this->addClassesSection($rootNode);
+        $this->addObjectsSection($rootNode);
 
         return $treeBuilder;
     }
@@ -84,11 +84,11 @@ class Configuration implements ConfigurationInterface
      *
      * @param ArrayNodeDefinition $node
      */
-    private function addClassesSection(ArrayNodeDefinition $node)
+    private function addObjectsSection(ArrayNodeDefinition $node)
     {
         $node
             ->children()
-                ->arrayNode('classes') // objects ???
+                ->arrayNode('objects')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('contact')

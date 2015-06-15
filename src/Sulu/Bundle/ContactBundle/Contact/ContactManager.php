@@ -171,12 +171,10 @@ class ContactManager extends AbstractContactManager
 
         if ($id) {
             /** @var Contact $contact */
-            $contact = $this->em
-                ->getRepository(self::$contactEntityName)
-                ->findById($id);
+            $contact = $this->contactRepository->findById($id);
 
             if (!$contact) {
-                throw new EntityNotFoundException(self::$contactEntityName, $id);
+                throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
             if (!$patch || $this->getProperty($data, 'account')) {
                 $this->setMainAccount($contact, $data);
@@ -376,10 +374,9 @@ class ContactManager extends AbstractContactManager
      */
     public function getById($id, $locale)
     {
-        //$contact = $this->em->getRepository(self::$contactEntityName)->find($id);
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            return null;
         }
 
         return new ContactApi($contact, $locale, $this->tagManager);

@@ -39,7 +39,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
 {
     use RelationTrait;
 
-    protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressTypeEntityName = 'SuluContactBundle:AddressType';
