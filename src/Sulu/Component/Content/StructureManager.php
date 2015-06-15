@@ -17,6 +17,7 @@ use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
+use Sulu\Component\Content\Template\TemplateReaderInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
     /**
-     * @var LoaderInterface XML Loader to load templates
+     * @var TemplateReaderInterface XML Loader to load templates
      */
     private $loader;
 
@@ -56,7 +57,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $extensions = array();
 
     /**
-     * @param LoaderInterface $loader XMLLoader to load xml templates
+     * @param TemplateReaderInterface $loader XMLLoader to load xml templates
      * @param PhpTemplateDumper $dumper
      * @param LoggerInterface $logger
      * @param array $options
@@ -64,7 +65,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @internal param string $defaultPath array with paths to search for templates
      */
     public function __construct(
-        LoaderInterface $loader,
+        TemplateReaderInterface $loader,
         PhpTemplateDumper $dumper,
         LoggerInterface $logger,
         $options = array()
