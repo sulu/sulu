@@ -78,7 +78,6 @@
         <!-- Event listener -->
         <service id="sulu_resource.listener.listbuilder_listener" class="%sulu_resource.listener.listbuilder_listener.class%">
             <argument type="service" id="sulu_resource.filter_listbuilder"/>
-
             <tag name="kernel.event_listener" event="sulu.listbuilder.create" method="onListBuilderCreate"/>
         </service>
     </services>
