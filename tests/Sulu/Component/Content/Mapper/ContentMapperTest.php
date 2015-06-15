@@ -1490,6 +1490,7 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->equalTo(ContentEvents::NODE_POST_DELETE),
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
             );
+        
         // delete /news/test-2/test-1
         $this->mapper->delete($child->getUuid(), 'default');
 
@@ -1508,6 +1509,62 @@ class ContentMapperTest extends PhpcrTestCase
 
         $result = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
         $this->assertEquals(1, sizeof($result));
+    }
+
+    public function testDeleteWithChildrenHistory()
+    {
+        $data = array(
+            array(
+                'title' => 'A',
+                'url' => '/a',
+            ),
+            array(
+                'title' => 'B',
+                'url' => '/a/b',
+            ),
+            array(
+                'title' => 'C',
+                'url' => '/a/b/c',
+            ),
+            array(
+                'title' => 'D',
+                'url' => '/a/d',
+            ),
+        );
+
+        // save content
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[2] = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $data[1]->getUuid());
+        $data[3] = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+
+        // move /a/b to /a/d/b
+        $this->mapper->move($data[1]->getUuid(), $data[3]->getUuid(), 1, 'default', 'de');
+
+        // delete /a/d
+        $this->mapper->delete($data[3]->getUuid(), 'default');
+
+        // check
+        try {
+            $this->mapper->load($data[1]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        try {
+            $this->mapper->load($data[2]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        try {
+            $this->mapper->load($data[3]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de');
+        $this->assertEquals(0, sizeof($result));
     }
 
     public function testCleanUp()

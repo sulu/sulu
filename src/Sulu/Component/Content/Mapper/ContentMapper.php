@@ -2004,7 +2004,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Remove node with references (path, history path ...).
+     * Remove node and recursive childnodes with references (path, history path ...).
      *
      * @param NodeInterface $node
      * @param string Webspace - required by event listeners
@@ -2013,6 +2013,10 @@ class ContentMapper implements ContentMapperInterface
      */
     private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
     {
+        foreach ($node->getNodes() as $childNode) {
+            $this->deleteRecursively($childNode, $webspace, $dereference);
+        }
+
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $child = $ref->getParent();
