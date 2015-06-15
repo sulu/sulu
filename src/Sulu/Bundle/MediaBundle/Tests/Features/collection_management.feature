@@ -11,7 +11,7 @@ Feature: Collection management
         # FIXME bad fix here but data-navigation needs additional time ...
         And I expect a data-navigation to appear
         When I click the add icon
-        And I expect a overlay to appear
+        And I expect an overlay to appear
         And I fill in husky field "title" with "Dornbirn"
         And I click the tick button
         And I expect to see "Dornbirn"
