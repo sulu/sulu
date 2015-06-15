@@ -329,8 +329,6 @@ class FilterManager implements FilterManagerInterface
         return true;
     }
 
-
-
     /**
      * Parses the value for a condition - is mainly used for parsing values with type datetime
      * but excludes relative values like "-1 week" or "now"
