@@ -1479,17 +1479,18 @@ class ContentMapperTest extends PhpcrTestCase
         $subChild = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
 
         $this->eventDispatcher->expects($this->at(0))
-        ->method('dispatch')
-        ->with(
-            $this->equalTo(ContentEvents::NODE_PRE_DELETE),
-            $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
-        );
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_PRE_DELETE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
+            );
         $this->eventDispatcher->expects($this->at(1))
-        ->method('dispatch')
-        ->with(
-            $this->equalTo(ContentEvents::NODE_POST_DELETE),
-            $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
-        );
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_POST_DELETE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
+            );
+        
         // delete /news/test-2/test-1
         $this->mapper->delete($child->getUuid(), 'default');
 
