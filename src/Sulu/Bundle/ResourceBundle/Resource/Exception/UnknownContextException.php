@@ -11,7 +11,6 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Exception which is thrown when a context is unknown
- * Class UnknownContextException
  */
 class UnknownContextException extends FilterException
 {
