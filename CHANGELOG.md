@@ -36,6 +36,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1237 [AdminBundle]    Fixed typos in behat tests
     * BUGFIX      #1235 [ContentBundle]  Fixed delete page which has children with history url
     * BUGFIX      #1231 [ContentBundle]  Fixed wrong behaviour if you edit a shadow page
+    * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
     * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
     * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
     * FEATURE     #1214 [MediaBundle]    Added language chooser in "all media" view and in edit-media overlay
