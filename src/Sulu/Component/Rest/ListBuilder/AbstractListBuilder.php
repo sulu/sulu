@@ -220,7 +220,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::AND_CONJUNCTION)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::CONJUNCTION_AND)
     {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
@@ -240,7 +240,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::AND_CONJUNCTION)
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND)
     {
         $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->betweenValues[$fieldDescriptor->getName()] = $values;

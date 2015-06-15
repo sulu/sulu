@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource;
 
 use Sulu\Bundle\ResourceBundle\Api\Condition;
 use Sulu\Bundle\ResourceBundle\Api\ConditionGroup;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionFieldNotFound;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionFieldNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionTypeMismatchException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
@@ -23,9 +23,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Component which triggers the generation of additional statements from the conditions of a filter
  * and applies them to the list builder
- *
- * Class FilterListBuilder
- * @package Sulu\Bundle\ResourceBundle\Resource
  */
 class FilterListBuilder implements FilterListBuilderInterface
 {
@@ -37,12 +34,12 @@ class FilterListBuilder implements FilterListBuilderInterface
     /**
      * @var FilterManagerInterface
      */
-    protected $manager;
+    protected $filterManager;
 
     /**
      * @var ListBuilderInterface
      */
-    protected $lb;
+    protected $listBuilder;
 
     /**
      * @param FilterManagerInterface $manager
@@ -50,24 +47,24 @@ class FilterListBuilder implements FilterListBuilderInterface
      */
     public function __construct(FilterManagerInterface $manager, RequestStack $requestStack)
     {
-        $this->manager = $manager;
+        $this->filterManager = $manager;
         $this->requestStack = $requestStack;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function applyFilterToList(ListBuilderInterface $lb)
+    public function applyFilterToList(ListBuilderInterface $listBuilder)
     {
         $request = $this->requestStack->getCurrentRequest();
         $locale = $request->getLocale();
         $filterId = $request->get('filter');
 
-        $this->lb = $lb;
+        $this->listBuilder = $listBuilder;
 
         // when a filter is set
         if ($filterId) {
-            $filter = $this->manager->findByIdAndLocale($filterId, $locale);
+            $filter = $this->filterManager->findByIdAndLocale($filterId, $locale);
 
             if (!$filter) {
                 throw new FilterNotFoundException($filterId);
@@ -85,16 +82,16 @@ class FilterListBuilder implements FilterListBuilderInterface
      * @param ConditionGroup $conditionGroup
      * @param string         $conjunction
      *
-     * @throws ConditionFieldNotFound
+     * @throws ConditionFieldNotFoundException
      * @throws FeatureNotImplementedException
      */
     protected function processConditionGroup(ConditionGroup $conditionGroup, $conjunction)
     {
         $condition = $conditionGroup->getConditions()[0];
-        $fieldDescriptor = $this->lb->getField($condition->getField());
+        $fieldDescriptor = $this->listBuilder->getField($condition->getField());
 
         if (!$fieldDescriptor) {
-            throw new ConditionFieldNotFound($condition->getField());
+            throw new ConditionFieldNotFoundException($condition->getField());
         }
 
         if (count($conditionGroup->getConditions()) === 1) {
@@ -118,9 +115,9 @@ class FilterListBuilder implements FilterListBuilderInterface
 
         // relative date for cases like "within a week" or "within this month"
         if ($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
-            $this->lb->between($fieldDescriptor, [$value, new \Datetime()], $conjunction);
+            $this->listBuilder->between($fieldDescriptor, [$value, new \Datetime()], $conjunction);
         } else {
-            $this->lb->where($fieldDescriptor, $value, $condition->getOperator(), $conjunction);
+            $this->listBuilder->where($fieldDescriptor, $value, $condition->getOperator(), $conjunction);
         }
     }
 

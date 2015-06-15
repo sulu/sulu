@@ -32,9 +32,9 @@ interface ListBuilderInterface
 
     const SORTORDER_DESC = 'DESC';
 
-    const AND_CONJUNCTION = 'AND';
+    const CONJUNCTION_AND = 'AND';
 
-    const OR_CONJUNCTION = 'OR';
+    const CONJUNCTION_OR = 'OR';
 
     /**
      * Sets all the field descriptors for the ListBuilder at once

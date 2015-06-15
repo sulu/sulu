@@ -11,8 +11,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Exception which is thrown when a filter cannot be found
- * Class FilterNotFoundException
- */
+  */
 class FilterNotFoundException extends FilterException
 {
     /**
