@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * ENHANCEMENT #1234 [All]            Prefix twig extension functions with "sulu_"
     * BUGFIX      #1231 [ContentBundle]  Fixed wrong behaviour if you edit a shadow page
     * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
