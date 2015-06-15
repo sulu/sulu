@@ -1,0 +1,110 @@
+<?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\ContentBundle\Command;
+
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+/**
+ * Cleanup ResourceLocator History
+ */
+class CleanupHistoryCommand extends ContainerAwareCommand
+{
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configure()
+    {
+        $this->setName('sulu:content:cleanup-history');
+        $this->setDescription('Cleanup resource-locator history');
+        $this->setHelp(
+            <<<EOT
+The <info>%command.name%</info> command cleanup the history of the resource-locator of a <info>locale</info>.
+
+    %command.full_name% sulu_io de --dry-run
+EOT
+        );
+        $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Resource-locators belonging to this webspace');
+        $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to search (e.g. de)');
+        $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $webspaceKey = $input->getArgument('webspaceKey');
+        $locale = $input->getArgument('locale');
+        $dryRun = $input->getOption('dry-run');
+
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->output = $output;
+
+        $path = $this->sessionManager->getRoutePath($webspaceKey, $locale);
+        $node = $this->session->getNode($path);
+        $this->cleanup($node, $path);
+
+        if (false === $dryRun) {
+            $this->output->writeln('<info>Saving ...</info>');
+            $this->session->save();
+            $this->output->writeln('<info>Done</info>');
+        } else {
+            $this->output->writeln('<info>Dry run complete</info>');
+        }
+    }
+
+    /**
+     * Cleanup specific node and his children
+     * @param NodeInterface $node
+     * @param string $rootPath
+     */
+    private function cleanup(NodeInterface $node, $rootPath)
+    {
+        foreach ($node->getNodes() as $childNode) {
+            $this->cleanup($childNode, $rootPath);
+        }
+
+        if (!$node->getPropertyValueWithDefault('sulu:history', false)) {
+            $this->output->writeln(
+                '<info>Processing aborted: </info>' .
+                ltrim($node->getPath(), $rootPath) . ' <comment>(no history url)</comment>'
+            );
+
+            return;
+        }
+
+        $node->remove();
+        $this->output->writeln('<info>Processing: </info>' . ltrim($node->getPath(), $rootPath));
+    }
+}
