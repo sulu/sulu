@@ -51,10 +51,15 @@ class CleanupHistoryCommand extends ContainerAwareCommand
 The <info>%command.name%</info> command cleanup the history of the resource-locator of a <info>locale</info>.
 
     %command.full_name% sulu_io de --dry-run
+
+If you want to cleanup a special directory you can past the base-path:
+
+    %command.full_name% sulu_io de -p /team --dry-run
 EOT
         );
         $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Resource-locators belonging to this webspace');
         $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to search (e.g. de)');
+        $this->addOption('base-path', 'p', InputOption::VALUE_OPTIONAL, 'base path to search for history urls');
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
     }
 
@@ -65,6 +70,7 @@ EOT
     {
         $webspaceKey = $input->getArgument('webspaceKey');
         $locale = $input->getArgument('locale');
+        $basePath = $input->getOption('base-path');
         $dryRun = $input->getOption('dry-run');
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
@@ -72,7 +78,7 @@ EOT
         $this->output = $output;
 
         $path = $this->sessionManager->getRoutePath($webspaceKey, $locale);
-        $node = $this->session->getNode($path);
+        $node = $this->session->getNode($path . ($basePath !== null ? '/' . ltrim($basePath, '/') : ''));
         $this->cleanup($node, $path);
 
         if (false === $dryRun) {
