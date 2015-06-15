@@ -33,6 +33,7 @@ class SnippetType extends AbstractStructureBehaviorType
         $builder->add('redirectType', 'text', array('mapped' => false));
         $builder->add('resourceSegment', 'text', array('mapped' => false));
         $builder->add('navigationContexts', 'text', array('mapped' => false));
+        $builder->add('shadowLocaleEnabled', 'text', array('mapped' => false));
     }
 
     /**
