@@ -23,6 +23,7 @@ interface FilterManagerInterface
      * Returns an array of field descriptors
      *
      * @param $locale
+     *
      * @return DoctrineFieldDescriptor[]
      */
     public function getFieldDescriptors($locale);
@@ -31,6 +32,7 @@ interface FilterManagerInterface
      * Returns an array of field descriptors specific for the list
      *
      * @param $locale
+     *
      * @return DoctrineFieldDescriptor[]
      */
     public function getListFieldDescriptors($locale);
@@ -40,6 +42,7 @@ interface FilterManagerInterface
      *
      * @param integer $id
      * @param string $locale
+     *
      * @return Filter
      */
     public function findByIdAndLocale($id, $locale);
@@ -48,6 +51,7 @@ interface FilterManagerInterface
      * Finds all filters by locale
      *
      * @param string $locale
+     *
      * @return Filter[]
      */
     public function findAllByLocale($locale);
@@ -66,6 +70,7 @@ interface FilterManagerInterface
      * @param string $locale
      * @param integer $userId
      * @param integer $id
+     *
      * @return Filter
      */
     public function save(array $data, $locale, $userId, $id = null);
@@ -80,30 +85,36 @@ interface FilterManagerInterface
     /**
      * Returns the configured class for a alias
      *
-*@param string $context
+     * @param string $context
      *
-*@return string|null
+     * @return string|null
      */
     public function getClassMappingForContext($context);
 
     /**
      * Returns the configured features for a context
+     *
      * @param $context
+     *
      * @return array|null
      */
     public function getFeaturesForContext($context);
 
     /**
      * Checks if the context exists
+     *
      * @param $context
+     *
      * @return boolean
      */
     public function hasContext($context);
 
     /**
      * Checks if a feature is enabled for a context
+     *
      * @param $context
      * @param $feature
+     *
      * @return boolean
      */
     public function isFeatureEnabled($context, $feature);
