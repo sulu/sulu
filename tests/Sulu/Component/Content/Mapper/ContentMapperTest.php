@@ -3526,6 +3526,60 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertArrayNotHasKey('es', $urls);
     }
 
+    public function testGetResourceLocatorsWithShadow()
+    {
+        $data = array(
+            array('title' => 'Beschreibung', 'url' => '/beschreibung'),
+            array('title' => 'Description', 'url' => '/description'),
+        );
+        $node = $this->mapper->save(
+            $data[0],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            $node->getUuid(),
+            null,
+            Structure::STATE_TEST
+        );
+        $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            $node->getUuid(),
+            null,
+            Structure::STATE_TEST,
+            true,
+            'de'
+        );
+
+        $content = $this->mapper->load($node->getUuid(), 'default', 'en');
+        $urls = $content->getUrls();
+
+        $this->assertArrayHasKey('en', $urls);
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertArrayHasKey('de', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+    }
+
     public function testContentTypeSwitch()
     {
         try {
