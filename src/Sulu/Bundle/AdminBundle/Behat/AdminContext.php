@@ -365,7 +365,7 @@ EOT;
 
     /**
      * @Given I expect a data-navigation to appear
-     * @Given I expect wait for a data-navigation to appear
+     * @Given I wait for a data-navigation to appear
      */
     public function iWaitForADataNavigationToAppear()
     {
