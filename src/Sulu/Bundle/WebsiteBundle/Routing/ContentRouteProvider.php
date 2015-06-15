@@ -256,6 +256,7 @@ class ContentRouteProvider implements RouteProviderInterface
         return new Route(
             $request->getPathInfo(), array(
                 '_controller' => $content->getController(),
+                'view' => $content->getView(),
                 'structure' => $content,
             )
         );

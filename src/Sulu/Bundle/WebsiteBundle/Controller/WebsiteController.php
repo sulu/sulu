@@ -26,6 +26,7 @@ abstract class WebsiteController extends Controller
      */
     protected function renderStructure(
         StructureInterface $structure,
+        $view,
         $attributes = array(),
         $preview = false,
         $partial = false
@@ -38,7 +39,8 @@ abstract class WebsiteController extends Controller
             $requestFormat = 'html';
         }
 
-        $viewTemplate = $structure->getView() . '.' . $requestFormat . '.twig';
+        $viewTemplate = $view . '.' . $requestFormat . '.twig';
+
 
         try {
             // get attributes to render template
