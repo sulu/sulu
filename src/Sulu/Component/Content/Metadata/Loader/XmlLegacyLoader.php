@@ -70,7 +70,7 @@ class XmlLegacyLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = 'page')
+    public function load($resource, $type = 'page', $internal = false)
     {
         // init running vars
         $tags = array();
@@ -112,9 +112,12 @@ class XmlLegacyLoader implements LoaderInterface
             }
         }
 
-        foreach ($this->requiredTagNames[$type] as $requiredTagName) {
-            if (!array_key_exists($requiredTagName, $tags)) {
-                throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
+        // FIXME until excerpt-template is no page template anymore
+        if (!$internal) {
+            foreach ($this->requiredTagNames[$type] as $requiredTagName) {
+                if (!array_key_exists($requiredTagName, $tags)) {
+                    throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
+                }
             }
         }
 

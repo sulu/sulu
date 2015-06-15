@@ -1116,6 +1116,19 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testWithoutRlpTagTypePageInternal()
+    {
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml',
+            Structure::TYPE_PAGE,
+            true
+        );
+
+        // no exception should be thrown
+        $this->assertNotNull($result);
+    }
+
     public function testWithoutRlpTagTypeSnippet()
     {
         $templateReader = new TemplateReader();
