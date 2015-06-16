@@ -45,7 +45,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected static $entityName = 'SuluContactBundle:Contact';
     protected static $entityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
@@ -112,8 +111,8 @@ class ContactController extends RestController implements ClassResourceInterface
 
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
-                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName),
+                new DoctrineFieldDescriptor('firstName', 'firstName', $this->container->getParameter('sulu.model.contact.class')),
+                new DoctrineFieldDescriptor('lastName', 'lastName', $this->container->getParameter('sulu.model.contact.class')),
             ),
             'fullName',
             'public.name',
@@ -129,7 +128,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
             'firstName',
             'firstName',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.firstName',
             array(),
             false,
@@ -142,7 +141,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
             'lastName',
             'lastName',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.lastName',
             array(),
             false,
@@ -155,7 +154,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
             'mainEmail',
             'mainEmail',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.email',
             array(),
             false,
@@ -173,7 +172,7 @@ class ContactController extends RestController implements ClassResourceInterface
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    self::$entityName . '.accountContacts',
+                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts',
                     self::$accountContactEntityName . '.main = true',
                     'LEFT'
                 ),
@@ -194,7 +193,7 @@ class ContactController extends RestController implements ClassResourceInterface
             array(
                 self::$contactAddressEntityName => new DoctrineJoinDescriptor(
                     self::$contactAddressEntityName,
-                    self::$entityName . '.contactAddresses',
+                    $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
                     self::$contactAddressEntityName . '.main = true',
                     'LEFT'
                 ),
@@ -210,7 +209,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
             'mainPhone',
             'mainPhone',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.phone',
             array(),
             false,
@@ -220,7 +219,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.id',
             array(),
             true,
@@ -232,7 +231,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
             'mainFax',
             'mainFax',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.fax',
             array(),
             true
@@ -241,7 +240,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
             'mainUrl',
             'mainUrl',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.url',
             array(),
             true
@@ -250,7 +249,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
             'created',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.created',
             array(),
             true,
@@ -261,7 +260,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
             'changed',
             'changed',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.changed',
             array(),
             true,
@@ -272,7 +271,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(
             'disabled',
             'disabled',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'public.deactivate',
             array(),
             true
@@ -281,7 +280,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor(
             'birthday',
             'birthday',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.birthday',
             array(),
             true,
@@ -297,7 +296,7 @@ class ContactController extends RestController implements ClassResourceInterface
             array(
                 self::$titleEntityName => new DoctrineJoinDescriptor(
                     self::$titleEntityName,
-                    self::$entityName . '.title'
+                    $this->container->getParameter('sulu.model.contact.class') . '.title'
                 ),
             ),
             true
@@ -306,7 +305,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['salutation'] = new DoctrineFieldDescriptor(
             'salutation',
             'salutation',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.salutation',
             array(),
             true
@@ -315,7 +314,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['formOfAddress'] = new DoctrineFieldDescriptor(
             'formOfAddress',
             'formOfAddress',
-            self::$entityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.formOfAddress',
             array(),
             true
@@ -329,7 +328,7 @@ class ContactController extends RestController implements ClassResourceInterface
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    self::$entityName . '.accountContacts'
+                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
                     self::$positionEntityName,
@@ -349,8 +348,8 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['id'] = $this->fieldDescriptors['id'];
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
-                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName),
+                new DoctrineFieldDescriptor('firstName', 'firstName', $this->container->getParameter('sulu.model.contact.class')),
+                new DoctrineFieldDescriptor('lastName', 'lastName', $this->container->getParameter('sulu.model.contact.class')),
             ),
             'fullName',
             'public.name',
@@ -370,7 +369,7 @@ class ContactController extends RestController implements ClassResourceInterface
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    self::$entityName . '.accountContacts'
+                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
                     self::$positionEntityName,
@@ -394,7 +393,7 @@ class ContactController extends RestController implements ClassResourceInterface
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    self::$entityName . '.accountContacts'
+                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
             ),
             false,
@@ -443,7 +442,7 @@ class ContactController extends RestController implements ClassResourceInterface
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create(self::$entityName);
+            $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
 
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
@@ -461,7 +460,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
             } else {
-                $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
+                $contacts = $this->getDoctrine()->getRepository($this->container->getParameter('sulu.model.contact.class'))->findAll();
                 $serializationGroups = array_merge(
                     $serializationGroups,
                     static::$contactSerializationGroups
@@ -590,8 +589,6 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
-        $contactEntity = 'SuluContactBundle:Contact';
-
         try {
             $contact = $this->getContactManager()->save(
                 $request->request->all(),
@@ -656,16 +653,16 @@ class ContactController extends RestController implements ClassResourceInterface
     private function checkArguments(Request $request)
     {
         if ($request->get('firstName') == null) {
-            throw new MissingArgumentException(static::$entityName, 'username');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'username');
         }
         if ($request->get('lastName') === null) {
-            throw new MissingArgumentException(static::$entityName, 'password');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'password');
         }
         if (is_null($request->get('disabled'))) {
-            throw new MissingArgumentException(static::$entityName, 'disabled');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'disabled');
         }
         if ($request->get('formOfAddress') == null) {
-            throw new MissingArgumentException(static::$entityName, 'contact');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');
         }
     }
 }

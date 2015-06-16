@@ -42,7 +42,6 @@ class AccountController extends RestController implements ClassResourceInterface
     protected static $entityKey = 'accounts';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $contactEntityKey = 'contacts';
-    protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
@@ -251,7 +250,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             // get contact
             $contact = $this->getDoctrine()
-                ->getRepository(self::$contactEntityName)
+                ->getRepository($this->container->getParameter('sulu.model.contact.class'))
                 ->find($contactId);
             if (!$contact) {
                 throw new EntityNotFoundException('contact', $contactId);
@@ -723,7 +722,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
         // check if mainContact is set
         if (($mainContactRequest = $request->get('mainContact')) !== null) {
-            $mainContact = $entityManager->getRepository(self::$contactEntityName)->find($mainContactRequest['id']);
+            $mainContact = $entityManager->getRepository($this->container->getParameter('sulu.model.contact.class'))->find($mainContactRequest['id']);
             if ($mainContact) {
                 $account->setMainContact($mainContact);
             }
@@ -947,8 +946,8 @@ class AccountController extends RestController implements ClassResourceInterface
                 null,
                 DoctrineJoinDescriptor::JOIN_METHOD_INNER
             ),
-            self::$contactEntityName => new DoctrineJoinDescriptor(
-                self::$contactEntityName,
+            $this->container->getParameter('sulu.model.contact.class') => new DoctrineJoinDescriptor(
+                $this->container->getParameter('sulu.model.contact.class'),
                 self::$accountContactEntityName . '.contact'
             ),
         );
@@ -956,7 +955,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            self::$contactEntityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.main-contact',
             $contactJoin,
             false,
@@ -970,7 +969,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
             'firstName',
             'firstName',
-            self::$contactEntityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.firstname',
             $contactJoin,
             false,
@@ -984,7 +983,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
             'lastName',
             'lastName',
-            self::$contactEntityName,
+            $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.lastName',
             $contactJoin,
             false,
@@ -1000,14 +999,14 @@ class AccountController extends RestController implements ClassResourceInterface
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'mainContact',
-                    self::$contactEntityName,
+                    $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
                     $contactJoin
                 ),
                 new DoctrineFieldDescriptor(
                     'lastName',
                     'mainContact',
-                    self::$contactEntityName,
+                    $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
                     $contactJoin
                 ),
@@ -1251,11 +1250,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'mainContact',
-                    self::$contactEntityName,
+                    $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
                     array(
-                        self::$contactEntityName => new DoctrineJoinDescriptor(
-                            self::$contactEntityName,
+                        $this->container->getParameter('sulu.model.contact.class')=> new DoctrineJoinDescriptor(
+                            $this->container->getParameter('sulu.model.contact.class'),
                             $this->getAccountEntityName() .
                             '.mainContact'
                         ),
@@ -1264,11 +1263,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 new DoctrineFieldDescriptor(
                     'lastName',
                     'mainContact',
-                    self::$contactEntityName,
+                    $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
                     array(
-                        self::$contactEntityName => new DoctrineJoinDescriptor(
-                            self::$contactEntityName,
+                        $this->container->getParameter('sulu.model.contact.class') => new DoctrineJoinDescriptor(
+                            $this->container->getParameter('sulu.model.contact.class'),
                             $this->getAccountEntityName() .
                             '.mainContact'
                         ),

@@ -24,9 +24,9 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
  * TODO: https://github.com/sulu-io/sulu/pull/1171
@@ -56,30 +56,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @var ObjectManager
      */
-    public $em;
+    protected $em;
 
     /**
-     * @var TagmanagerInterface
+     * @var TagManagerInterface
      */
     protected $tagManager;
 
     /**
-     * @var string
-     */
-    protected $accountEntityName;
-
-    /**
      * @param ObjectManager $em
-     * @param string $accountEntityName
+     * @param TagManagerInterface $tagManager
      */
-    public function __construct(
-        ObjectManager $em,
-        TagManagerInterface $tagManager,
-        $accountEntityName
-    ) {
+    public function __construct(ObjectManager $em, TagManagerInterface $tagManager)
+    {
         $this->em = $em;
         $this->tagManager = $tagManager;
-        $this->accountEntityName = $accountEntityName;
     }
 
     /**
@@ -970,7 +961,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Add a new phone to the given contact and persist it with the given object manager.
      *
      * @param $contact
-     * @param array$phoneData
+     * @param array $phoneData
      *
      * @throws EntityNotFoundException
      * @throws EntityIdAlreadySetException
@@ -1468,7 +1459,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $entities = $contact->getBankAccounts();
 
-        $result =  $this->processSubEntities(
+        $result = $this->processSubEntities(
             $entities,
             $bankAccounts,
             $get,
@@ -1623,6 +1614,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * TODO: this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities
+     *
      * @param mixed $entities
      */
     private function resetIndexOfSubentites($entities)

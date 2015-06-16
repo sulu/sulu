@@ -39,7 +39,6 @@ class UserManager implements UserManagerInterface
     protected static $entityName = 'SuluSecurityBundle:User';
     protected static $entityNameRole = 'SuluSecurityBundle:Role';
     protected static $entityNameGroup = 'SuluSecurityBundle:Group';
-    protected static $entityNameContact = 'SuluContactBundle:Contact';
 
     /**
      * @var CurrentUserDataInterface
@@ -191,7 +190,8 @@ class UserManager implements UserManagerInterface
             // check if username is already in database and the current user is not the user with this username
             if (!$patch || $username !== null) {
                 if ($user->getUsername() != $username &&
-                    !$this->isUsernameUnique($username)) {
+                    !$this->isUsernameUnique($username)
+                ) {
                     throw new UsernameNotUniqueException($username);
                 }
                 $user->setUsername($username);
@@ -234,7 +234,6 @@ class UserManager implements UserManagerInterface
             if ($locked !== null) {
                 $user->setLocked($locked);
             }
-
         } catch (\Exception $re) {
             if (isset($user)) {
                 $this->em->remove($user);
@@ -582,7 +581,7 @@ class UserManager implements UserManagerInterface
         $contact = $this->contactManager->findById($id);
 
         if (!$contact) {
-            throw new EntityNotFoundException(static::$entityNameContact, $id);
+            throw new EntityNotFoundException($this->contactManager->getContactEntityName(), $id);
         }
 
         return $contact;
@@ -687,6 +686,7 @@ class UserManager implements UserManagerInterface
      * this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities
+     *
      * @param mixed $entities
      *
      * @return mixed

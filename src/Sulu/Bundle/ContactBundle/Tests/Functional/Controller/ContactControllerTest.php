@@ -669,7 +669,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertEquals(
-            'The "SuluContactBundle:Contact"-entity requires a "disabled"-argument',
+            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "disabled"-argument',
             $response->message
         );
     }
@@ -694,7 +694,7 @@ class ContactControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('The "SuluContactBundle:Contact"-entity requires a "contact"-argument', $response->message);
+        $this->assertEquals('The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument', $response->message);
     }
 
     public function testPostWithEmptyAdditionalData()
