@@ -1719,7 +1719,9 @@ class ContentMapper implements ContentMapperInterface
 
         $data = $structure->toArray(true);
         foreach ($destLanguageCodes as $destLanguageCode) {
-            if ($structure->hasTag('sulu.rlp')) {
+            if ($structure->hasTag('sulu.rlp') &&
+                $structure->getPropertyByTagName('sulu.rlp')->getContentTypeName() === 'resource_locator'
+            ) {
                 $parentUrl = $resourceLocator->getResourceLocatorByUuid(
                     $parentNode->getIdentifier(),
                     $webspaceKey,

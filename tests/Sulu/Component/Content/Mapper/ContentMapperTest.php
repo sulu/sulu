@@ -89,7 +89,7 @@ class ContentMapperTest extends PhpcrTestCase
             'overview',
             'section',
             'extensions',
-            'overview',
+            'internal-link',
             'overview',
             'overview',
             'overview',
@@ -2352,6 +2352,23 @@ class ContentMapperTest extends PhpcrTestCase
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
+    }
+
+    public function testLanguageCopyInternalLink()
+    {
+        $data = array(
+            'title' => 'Page-1',
+            'internal' => '123-123-123',
+        );
+
+        $data = $this->mapper->save($data, 'internal-link', 'default', 'de', 1);
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', 'en');
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('123-123-123', $result->getPropertyValue('internal'));
     }
 
     public function testMultipleLanguagesCopy()
