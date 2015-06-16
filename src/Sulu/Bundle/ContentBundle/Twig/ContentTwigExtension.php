@@ -38,11 +38,11 @@ class ContentTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('get_type', array($this, 'getTypeFunction')),
-            new \Twig_SimpleFunction('needs_add_button', array($this, 'needsAddButtonFunction')),
-            new \Twig_SimpleFunction('get_params', array($this, 'getParamsFunction')),
-            new \Twig_SimpleFunction('parameter_to_select', array($this, 'convertParameterToSelect')),
-            new \Twig_SimpleFunction('parameter_to_key_value', array($this, 'convertParameterToKeyValue')),
+            new \Twig_SimpleFunction('sulu_get_type', array($this, 'getTypeFunction')),
+            new \Twig_SimpleFunction('sulu_needs_add_button', array($this, 'needsAddButtonFunction')),
+            new \Twig_SimpleFunction('sulu_get_params', array($this, 'getParamsFunction')),
+            new \Twig_SimpleFunction('sulu_parameter_to_select', array($this, 'convertParameterToSelect')),
+            new \Twig_SimpleFunction('sulu_parameter_to_key_value', array($this, 'convertParameterToKeyValue')),
         );
     }
 

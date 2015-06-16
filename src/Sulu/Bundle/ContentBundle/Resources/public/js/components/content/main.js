@@ -742,10 +742,12 @@ define([
                         (this.options.content !== 'settings' && this.data.shadowOn === true) ||
                         (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
                     ) {
+                        var id = (this.options.id === 'index' ? this.options.id : data.id);
+
                         this.sandbox.emit(
                             'sulu.router.navigate',
                             'content/contents/' + this.options.webspace +
-                            '/' + this.options.language + '/edit:' + data.id + '/settings'
+                            '/' + this.options.language + '/edit:' + id + '/settings'
                         );
                     }
                 }

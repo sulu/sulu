@@ -89,7 +89,7 @@ class ContentMapperTest extends PhpcrTestCase
             'overview',
             'section',
             'extensions',
-            'overview',
+            'internal-link',
             'overview',
             'overview',
             'overview',
@@ -1490,6 +1490,7 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->equalTo(ContentEvents::NODE_POST_DELETE),
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
             );
+        
         // delete /news/test-2/test-1
         $this->mapper->delete($child->getUuid(), 'default');
 
@@ -1508,6 +1509,62 @@ class ContentMapperTest extends PhpcrTestCase
 
         $result = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
         $this->assertEquals(1, sizeof($result));
+    }
+
+    public function testDeleteWithChildrenHistory()
+    {
+        $data = array(
+            array(
+                'title' => 'A',
+                'url' => '/a',
+            ),
+            array(
+                'title' => 'B',
+                'url' => '/a/b',
+            ),
+            array(
+                'title' => 'C',
+                'url' => '/a/b/c',
+            ),
+            array(
+                'title' => 'D',
+                'url' => '/a/d',
+            ),
+        );
+
+        // save content
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[2] = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $data[1]->getUuid());
+        $data[3] = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+
+        // move /a/b to /a/d/b
+        $this->mapper->move($data[1]->getUuid(), $data[3]->getUuid(), 1, 'default', 'de');
+
+        // delete /a/d
+        $this->mapper->delete($data[3]->getUuid(), 'default');
+
+        // check
+        try {
+            $this->mapper->load($data[1]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        try {
+            $this->mapper->load($data[2]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        try {
+            $this->mapper->load($data[3]->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de');
+        $this->assertEquals(0, sizeof($result));
     }
 
     public function testCleanUp()
@@ -2295,6 +2352,23 @@ class ContentMapperTest extends PhpcrTestCase
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
+    }
+
+    public function testLanguageCopyInternalLink()
+    {
+        $data = array(
+            'title' => 'Page-1',
+            'internal' => '123-123-123',
+        );
+
+        $data = $this->mapper->save($data, 'internal-link', 'default', 'de', 1);
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', 'en');
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('123-123-123', $result->getPropertyValue('internal'));
     }
 
     public function testMultipleLanguagesCopy()
@@ -3521,6 +3595,60 @@ class ContentMapperTest extends PhpcrTestCase
 
         $this->assertEquals('/description', $urls['en']);
         $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+    }
+
+    public function testGetResourceLocatorsWithShadow()
+    {
+        $data = array(
+            array('title' => 'Beschreibung', 'url' => '/beschreibung'),
+            array('title' => 'Description', 'url' => '/description'),
+        );
+        $node = $this->mapper->save(
+            $data[0],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            $node->getUuid(),
+            null,
+            Structure::STATE_TEST
+        );
+        $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            $node->getUuid(),
+            null,
+            Structure::STATE_TEST,
+            true,
+            'de'
+        );
+
+        $content = $this->mapper->load($node->getUuid(), 'default', 'en');
+        $urls = $content->getUrls();
+
+        $this->assertArrayHasKey('en', $urls);
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertArrayHasKey('de', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
         $this->assertArrayNotHasKey('de_at', $urls);
         $this->assertArrayNotHasKey('es', $urls);

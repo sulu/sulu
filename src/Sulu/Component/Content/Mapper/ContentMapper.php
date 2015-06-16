@@ -1301,7 +1301,6 @@ class ContentMapper implements ContentMapperInterface
         $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
-        // START: getAvailableLocalization
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
             $this->stopwatch->start('contentManager.loadByNode.available-localization');
@@ -1333,8 +1332,7 @@ class ContentMapper implements ContentMapperInterface
             false
         );
 
-        $availableLocalization = $this->getShadowLocale($contentNode, $availableLocalization);
-        // END: getAvailableLocalization
+        $availableLocalization = $this->getResolvedLocale($contentNode, $availableLocalization);
 
         if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
             return;
@@ -1473,7 +1471,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Determites locale for shadow-pages.
      */
-    private function getShadowLocale(NodeInterface $node, $defaultLocale)
+    private function getResolvedLocale(NodeInterface $node, $defaultLocale)
     {
         $propertyTranslator = $this->createPropertyTranslator($defaultLocale);
         $shadowOn = $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false);
@@ -1640,13 +1638,13 @@ class ContentMapper implements ContentMapperInterface
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
         foreach ($webspace->getAllLocalizations() as $localization) {
-
             // prepare translation vars
             $locale = $localization->getLocalization();
+            $resolvedLocale = $this->getResolvedLocale($node, $localization->getLocalization());
             $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
 
             // state property
-            $propertyTranslator = $this->createPropertyTranslator($localization);
+            $propertyTranslator = $this->createPropertyTranslator($resolvedLocale);
             $statePropertyName = $propertyTranslator->getName('state');
 
             if ($node->getPropertyValueWithDefault(
@@ -1721,7 +1719,9 @@ class ContentMapper implements ContentMapperInterface
 
         $data = $structure->toArray(true);
         foreach ($destLanguageCodes as $destLanguageCode) {
-            if ($structure->hasTag('sulu.rlp')) {
+            if ($structure->hasTag('sulu.rlp') &&
+                $structure->getPropertyByTagName('sulu.rlp')->getContentTypeName() === 'resource_locator'
+            ) {
                 $parentUrl = $resourceLocator->getResourceLocatorByUuid(
                     $parentNode->getIdentifier(),
                     $webspaceKey,
@@ -2006,7 +2006,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Remove node with references (path, history path ...).
+     * Remove node and recursive childnodes with references (path, history path ...).
      *
      * @param NodeInterface $node
      * @param string Webspace - required by event listeners
@@ -2015,6 +2015,10 @@ class ContentMapper implements ContentMapperInterface
      */
     private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
     {
+        foreach ($node->getNodes() as $childNode) {
+            $this->deleteRecursively($childNode, $webspace, $dereference);
+        }
+
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $child = $ref->getParent();
@@ -2235,7 +2239,7 @@ class ContentMapper implements ContentMapperInterface
             }
 
             $originLocale = $locale;
-            $locale = $this->getShadowLocale($node, $locale);
+            $locale = $this->getResolvedLocale($node, $locale);
             $propertyTranslator->setLanguage($locale);
 
             // load default data

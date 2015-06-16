@@ -50,11 +50,11 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('navigation_root_flat', array($this, 'flatRootNavigationFunction')),
-            new \Twig_SimpleFunction('navigation_root_tree', array($this, 'treeRootNavigationFunction')),
-            new \Twig_SimpleFunction('navigation_flat', array($this, 'flatNavigationFunction')),
-            new \Twig_SimpleFunction('navigation_tree', array($this, 'treeNavigationFunction')),
-            new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction')),
+            new \Twig_SimpleFunction('sulu_navigation_root_flat', array($this, 'flatRootNavigationFunction')),
+            new \Twig_SimpleFunction('sulu_navigation_root_tree', array($this, 'treeRootNavigationFunction')),
+            new \Twig_SimpleFunction('sulu_navigation_flat', array($this, 'flatNavigationFunction')),
+            new \Twig_SimpleFunction('sulu_navigation_tree', array($this, 'treeNavigationFunction')),
+            new \Twig_SimpleFunction('sulu_breadcrumb', array($this, 'breadcrumbFunction')),
         );
     }
 
