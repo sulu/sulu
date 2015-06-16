@@ -431,7 +431,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         if ($api) {
             if (isset($filterConfig['dataSource'])) {
-                if ($this->webspaceManager->findWebspaceByKey($filterConfig['dataSource']) !== null) {
+                if ($this->webspaceManager->hasWebspace($filterConfig['dataSource'])) {
                     $node = $this->sessionManager->getContentNode($filterConfig['dataSource']);
                 } else {
                     $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);

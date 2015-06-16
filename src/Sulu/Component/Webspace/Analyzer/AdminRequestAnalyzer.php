@@ -69,10 +69,17 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
         // TODO rename to locale
         $locale = $request->get('language');
 
-        if ($webspaceKey !== null) {
-            $this->webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        if (null !== $webspaceKey) {
+            // todo: we should let the webspace manager throw an exception here as
+            //       here there is a webspace key, and if it doesn't exist, something is wrong. But
+            //       this breaks the existing behavior because the resulting exception is not a REST
+            //       exception and so breaks the REST API tests.
+            if ($this->webspaceManager->hasWebspace($webspaceKey)) {
+                $this->webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+            }
         }
-        if ($this->webspace !== null && $locale !== null) {
+
+        if (null !== $this->webspace && null !== $locale) {
             $this->localization = $this->webspace->getLocalization($locale);
         }
     }

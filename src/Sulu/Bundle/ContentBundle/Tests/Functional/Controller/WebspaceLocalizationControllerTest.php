@@ -45,6 +45,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
         $client->request('GET', '/api/webspace/localizations?webspace=sulu_lo');
         $response = json_decode($client->getResponse()->getContent());
 
+        $this->assertNotNull($response);
         $this->assertEquals(0, $response->code);
         $this->assertEquals('No webspace found for key \'sulu_lo\'', $response->message);
     }
