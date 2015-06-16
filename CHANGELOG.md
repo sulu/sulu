@@ -19,6 +19,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1245 [ContentBundle]  Ensure that concrete languages will be serialized as array not as object
     * FEATURE     #1248 [ContentBundle]  Added cleanup resource-locator history command
     * BUGFIX      #1243 [ContentBundle]  Added ignore of ghost pages when content copy locale
+    * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
+                                         Added this functionality for the contact entity.
     * ENHANCEMENT #1234 [All]            Prefix twig extension functions with "sulu_"
     * ENHANCEMENT #1237 [AdminBundle]    Fixed typos in behat tests
     * BUGFIX      #1235 [ContentBundle]  Fixed delete page which has children with history url
