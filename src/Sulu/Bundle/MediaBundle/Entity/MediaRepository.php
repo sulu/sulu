@@ -86,7 +86,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
             $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
             $types = array_key_exists('types', $filter) ? $filter['types'] : null;
-            $paginator = array_key_exists('paginator', $filter) ? $filter['paginator'] : true;
             $search = array_key_exists('search', $filter) ? $filter['search'] : null;
             $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
             $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
@@ -94,6 +93,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             // if empty array of ids is requested return empty array of medias
             if ($ids !== null && sizeof($ids) === 0) {
                 return array();
+            }
+
+            if (!$ids) {
+                $ids = $this->getIds($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
             }
 
             $qb = $this->createQueryBuilder('media')
@@ -128,53 +131,38 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $qb->andWhere('media.id IN (:mediaIds)');
             }
 
-            if ($collection !== null) {
-                $qb->andWhere('collection.id = :collection');
-            }
-
-            if ($types !== null) {
-                $qb->andWhere('type.name IN (:types)');
-            }
-
-            if ($search !== null) {
-                $qb->andWhere('fileVersionMeta.title LIKE :search');
-            }
-
             if ($orderBy !== null) {
                 $qb->addOrderBy($orderBy, $orderSort);
             }
 
-            if ($limit !== null) {
-                $qb->setMaxResults($limit);
-            }
-
-            if ($offset !== null) {
-                $qb->setFirstResult($offset);
-            }
-
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-            if ($collection !== null) {
-                $query->setParameter('collection', $collection);
-            }
             if ($ids !== null) {
                 $query->setParameter('mediaIds', $ids);
             }
-            if ($types !== null) {
-                $query->setParameter('types', $types);
-            }
-            if ($search !== null) {
-                $query->setParameter('search', '%' . $search . '%');
-            }
 
-            if (!$paginator) {
-                return $query->getResult();
-            }
-
-            return new Paginator($query);
+            return $query->getResult();
         } catch (NoResultException $ex) {
             return;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count(array $filter)
+    {
+        // validate given filter array
+        $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
+        $types = array_key_exists('types', $filter) ? $filter['types'] : null;
+        $search = array_key_exists('search', $filter) ? $filter['search'] : null;
+        $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
+        $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
+
+        $query = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, null, null, 'COUNT(media)');
+        $result = $query->getSingleResult()[1];
+
+        return intval($result);
     }
 
     /**
@@ -237,5 +225,96 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $paginator = new Paginator($query);
 
         return ['media' => $paginator, 'count' => $count];
+    }
+
+    /**
+     * create a query for ids with given filter
+     * @param string $collection
+     * @param array $types
+     * @param string $search
+     * @param string $orderBy
+     * @param string $orderSort
+     * @param int $limit
+     * @param int $offset
+     * @param string $select
+     * @return Query
+     */
+    private function getIdsQuery(
+        $collection = null,
+        $types = null,
+        $search = null,
+        $orderBy = null,
+        $orderSort = null,
+        $limit = null,
+        $offset = null,
+        $select = 'media.id'
+    ) {
+        $subQueryBuilder = $this->createQueryBuilder('media')->select($select);
+
+        if ($collection !== null) {
+            $subQueryBuilder->leftJoin('media.collection', 'collection');
+            $subQueryBuilder->andWhere('collection.id = :collection');
+        }
+        if ($types !== null) {
+            $subQueryBuilder->leftJoin('media.type', 'type');
+            $subQueryBuilder->andWhere('type.name IN (:types)');
+        }
+        if ($search !== null) {
+            $subQueryBuilder
+            ->innerJoin('media.files', 'file')
+            ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
+            ->leftJoin('fileVersion.tags', 'tag')
+            ->leftJoin('fileVersion.meta', 'fileVersionMeta');
+
+            $subQueryBuilder->andWhere('fileVersionMeta.title LIKE :search');
+        }
+        if ($offset) {
+            $subQueryBuilder->setFirstResult($offset);
+        }
+        if ($limit) {
+            $subQueryBuilder->setMaxResults($limit);
+        }
+        if ($orderBy !== null) {
+            $subQueryBuilder->addOrderBy($orderBy, $orderSort);
+        }
+
+        $subQuery = $subQueryBuilder->getQuery();
+
+        if ($collection !== null) {
+            $subQuery->setParameter('collection', $collection);
+        }
+        if ($types !== null) {
+            $subQuery->setParameter('types', $types);
+        }
+        if ($search !== null) {
+            $subQuery->setParameter('search', '%' . $search . '%');
+        }
+
+        return $subQuery;
+    }
+
+    /**
+     * returns ids with given filters
+     * @param string $collection
+     * @param array $types
+     * @param string $search
+     * @param string $orderBy
+     * @param string $orderSort
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    private function getIds(
+        $collection = null,
+        $types = null,
+        $search = null,
+        $orderBy = null,
+        $orderSort = null,
+        $limit = null,
+        $offset = null
+    ) {
+        $subQuery = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
+
+        return $subQuery->getScalarResult();
     }
 }

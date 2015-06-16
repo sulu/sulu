@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -53,4 +55,16 @@ interface MediaRepositoryInterface
      * @return mixed
      */
     public function findMediaByCollectionId($collectionId, $limit, $offset);
+
+    /**
+     * Returns amount of affected rows
+     *
+     * @param array $filter
+     *
+     * @return int
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function count(array $filter);
 }
