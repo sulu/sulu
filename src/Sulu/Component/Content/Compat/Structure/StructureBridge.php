@@ -281,7 +281,7 @@ class StructureBridge implements StructureInterface
      */
     public function getHasChildren()
     {
-        return $this->getDocument()->getChildren()->count() ? true : false;
+        return $this->inspector->hasChildren($this->document);
     }
 
     /**
@@ -422,7 +422,7 @@ class StructureBridge implements StructureInterface
             'nodeState' => $this->getNodeState(),
             'internal' => false,
             'concreteLanguages' => $this->inspector->getLocales($document),
-            'hasSub' => $this->inspector->getChildren($document)->count() ? true : false,
+            'hasSub' => $this->getHasChildren(),
             'title' => $document->getTitle(), // legacy system returns diffent fields for title depending on $complete
         );
 
