@@ -25,5 +25,6 @@
         <property name="structure" type="Sulu\Component\Content\Document\Structure\Structure" />
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection" />
         <property name="parent" exclude="true" />
+        <property name="suluOrder" type="integer" />
     </class>
 </serializer>
