@@ -161,7 +161,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             implode(', ', $order)
         );
 
-
         return array($sql2, $additionalFields);
     }
 
