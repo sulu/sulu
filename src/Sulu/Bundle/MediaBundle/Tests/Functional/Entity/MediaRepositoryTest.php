@@ -31,9 +31,9 @@ class MediaRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var Collection
+     * @var Collection[]
      */
-    private $collection;
+    private $collections;
 
     /**
      * @var MediaType[]
@@ -124,10 +124,50 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->persist($collectionMeta);
         $this->em->persist($collectionMeta2);
 
-        $this->collection = $collection;
+        $this->collections[] = $collection;
+
+        $collection = new Collection();
+        $style = array(
+            'type' => 'circle',
+            'color' => '#ffcc00',
+        );
+
+        $collection->setStyle(json_encode($style));
+
+        // Create Collection Type
+        $collectionType = new CollectionType();
+        $collectionType->setName('Default Collection Type');
+        $collectionType->setDescription('Default Collection Type');
+
+        $collection->setType($collectionType);
+
+        // Collection Meta 1
+        $collectionMeta = new CollectionMeta();
+        $collectionMeta->setTitle('Test Collection');
+        $collectionMeta->setDescription('This Description is only for testing');
+        $collectionMeta->setLocale('en-gb');
+        $collectionMeta->setCollection($collection);
+
+        $collection->addMeta($collectionMeta);
+
+        // Collection Meta 2
+        $collectionMeta2 = new CollectionMeta();
+        $collectionMeta2->setTitle('Test Kollektion');
+        $collectionMeta2->setDescription('Dies ist eine Test Beschreibung');
+        $collectionMeta2->setLocale('de');
+        $collectionMeta2->setCollection($collection);
+
+        $collection->addMeta($collectionMeta2);
+
+        $this->em->persist($collection);
+        $this->em->persist($collectionType);
+        $this->em->persist($collectionMeta);
+        $this->em->persist($collectionMeta2);
+
+        $this->collections[] = $collection;
     }
 
-    protected function createMedia($name, $title, $type = 'image')
+    protected function createMedia($name, $title, $type = 'image', $collection = 0)
     {
         $media = new Media();
         $media->setType($this->mediaTypes[$type]);
@@ -166,7 +206,7 @@ class MediaRepositoryTest extends SuluTestCase
         $file->addFileVersion($fileVersion);
 
         $media->addFile($file);
-        $media->setCollection($this->collection);
+        $media->setCollection($this->collections[$collection]);
 
         $this->em->persist($media);
         $this->em->persist($file);
@@ -341,6 +381,60 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertCount(0, $result);
 
         $this->assertEquals(3, $mediaRepository->count(array('types' => array('video'))));
+    }
+
+    public function testFindMediaByCollection()
+    {
+        $media1 = $this->createMedia('test-1', 'test-1', 'image', 1);
+        $media2 = $this->createMedia('test-2', 'test-2', 'image', 1);
+        $media3 = $this->createMedia('test-3', 'test-3', 'image', 1);
+        $media4 = $this->createMedia('test-4', 'test-4', 'image', 0);
+
+        /** @var MediaRepository $mediaRepository */
+        $mediaRepository = $this->getContainer()->get('sulu_media.media_repository');
+
+        $result = $mediaRepository->findMedia(array('collection' => $this->collections[1]->getId()));
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($media1->getId(), $result[0]->getId());
+        $this->assertEquals($media2->getId(), $result[1]->getId());
+        $this->assertEquals($media3->getId(), $result[2]->getId());
+
+        $result = $mediaRepository->findMedia(array('collection' => $this->collections[0]->getId()));
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($media4->getId(), $result[0]->getId());
+
+        $this->assertEquals(3, $mediaRepository->count(array('collection' => $this->collections[1]->getId())));
+        $this->assertEquals(1, $mediaRepository->count(array('collection' => $this->collections[0]->getId())));
+    }
+
+    public function testFindMediaByCollectionPagination()
+    {
+        $media1 = $this->createMedia('test-1', 'test-1', 'image', 1);
+        $media2 = $this->createMedia('test-2', 'test-2', 'image', 1);
+        $media3 = $this->createMedia('test-3', 'test-3', 'image', 1);
+        $media4 = $this->createMedia('test-4', 'test-4', 'image', 0);
+
+        /** @var MediaRepository $mediaRepository */
+        $mediaRepository = $this->getContainer()->get('sulu_media.media_repository');
+
+        $result = $mediaRepository->findMedia(array('collection' => $this->collections[1]->getId()), 2, 0);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals($media1->getId(), $result[0]->getId());
+
+        $result = $mediaRepository->findMedia(array('collection' => $this->collections[1]->getId()), 2, 2);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($media3->getId(), $result[0]->getId());
+
+        $result = $mediaRepository->findMedia(array('collection' => $this->collections[1]->getId()), 2, 4);
+
+        $this->assertCount(0, $result);
+
+        $this->assertEquals(3, $mediaRepository->count(array('collection' => $this->collections[1]->getId())));
+        $this->assertEquals(1, $mediaRepository->count(array('collection' => $this->collections[0]->getId())));
     }
 
     public function testFindMediaByIds()
