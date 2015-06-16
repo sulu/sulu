@@ -40,8 +40,6 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->phpcrStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
 
-        $this->initPhpcr();
-
         $cleanupCommand = new CleanupHistoryCommand();
         $cleanupCommand->setApplication($application);
         $cleanupCommand->setContainer($this->getContainer());
@@ -50,15 +48,21 @@ class CleanupHistoryCommandTest extends SuluTestCase
 
     private function initNoHistory($webspaceKey, $locale)
     {
+        $this->initPhpcr();
+
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
         $this->phpcrStrategy->save($contentNode, '/team', 1, $webspaceKey, $locale);
         $this->phpcrStrategy->save($contentNode, '/team/daniel', 1, $webspaceKey, $locale);
         $this->phpcrStrategy->save($contentNode, '/team/johannes', 1, $webspaceKey, $locale);
+
+        $session = $this->sessionManager->getSession();
+        $session->save();
+        $session->refresh(false);
     }
 
     private function initHistory($webspaceKey, $locale)
     {
-        $session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
+        $this->initPhpcr();
 
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
         $this->phpcrStrategy->save($contentNode, '/team', 1, $webspaceKey, $locale);
@@ -68,6 +72,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
 
         $this->phpcrStrategy->move('/team', '/my-test', $contentNode, 1, $webspaceKey, $locale);
 
+        $session = $this->sessionManager->getSession();
         $session->save();
         $session->refresh(false);
     }
@@ -299,12 +304,23 @@ class CleanupHistoryCommandTest extends SuluTestCase
         );
         $output = $this->tester->getDisplay();
 
+        $session = $this->sessionManager->getSession();
+        $session->refresh(false);
+
         foreach ($urls['contains'] as $url => $state) {
             $this->outputContains($output, $url, $state);
+
+            if ($dryRun) {
+                $this->assertTrue($this->exists($webspaceKey, $locale, $url), $url);
+            } else {
+                $this->assertEquals($state, !$this->exists($webspaceKey, $locale, $url));
+            }
         }
 
         foreach ($urls['not-contains'] as $url) {
             $this->outputNotContains($output, $url);
+
+            $this->assertTrue($this->exists($webspaceKey, $locale, $url));
         }
 
         if ($dryRun) {
@@ -337,5 +353,17 @@ class CleanupHistoryCommandTest extends SuluTestCase
     private function outputIsSaving($output)
     {
         $this->assertContains('Saving ...', $output);
+    }
+
+    private function exists($webspace, $locale, $route)
+    {
+        if ($route === '/') {
+            return true;
+        }
+
+        $session = $this->sessionManager->getSession();
+        $fullPath = sprintf('%s/%s', $this->sessionManager->getRoutePath($webspace, $locale), ltrim($route, '/'));
+
+        return $session->nodeExists($fullPath);
     }
 }

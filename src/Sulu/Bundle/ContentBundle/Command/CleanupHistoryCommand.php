@@ -87,7 +87,7 @@ EOT
         }
 
         $node = $this->session->getNode($fullPath);
-        $this->cleanup($node, $path);
+        $this->cleanup($node, $path, $dryRun);
 
         if (false === $dryRun) {
             $this->output->writeln('<info>Saving ...</info>');
@@ -103,11 +103,12 @@ EOT
      *
      * @param NodeInterface $node
      * @param string $rootPath
+     * @param boolean $dryRun
      */
-    private function cleanup(NodeInterface $node, $rootPath)
+    private function cleanup(NodeInterface $node, $rootPath, $dryRun)
     {
         foreach ($node->getNodes() as $childNode) {
-            $this->cleanup($childNode, $rootPath);
+            $this->cleanup($childNode, $rootPath,$dryRun);
         }
 
         $path = ltrim(str_replace($rootPath, '', $node->getPath()), '/');
@@ -121,7 +122,9 @@ EOT
             return;
         }
 
-        $node->remove();
+        if ($dryRun === false) {
+            $node->remove();
+        }
         $this->output->writeln('<info>Processing: </info>/' . $path);
     }
 }
