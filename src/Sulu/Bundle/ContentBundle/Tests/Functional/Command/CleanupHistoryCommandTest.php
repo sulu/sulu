@@ -251,6 +251,8 @@ class CleanupHistoryCommandTest extends SuluTestCase
      */
     public function testRunOnlyRoot($webspaceKey, $locale, $dryRun, $basePath, $urls)
     {
+        $this->initPhpcr();
+
         $this->runCommandTest($webspaceKey, $locale, $dryRun, $basePath, $urls);
     }
 
