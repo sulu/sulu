@@ -31,6 +31,7 @@ class ResettingController extends Controller
 {
     protected static $emailSubjectKey = 'security.reset.mail-subject';
     protected static $emailMessageKey = 'security.reset.mail-message';
+    protected static $translationDomain = 'backend';
     const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
     const MAX_NUMBER_EMAILS = 3;
 
@@ -245,12 +246,12 @@ class ResettingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(static::$emailSubjectKey, array(), 'backend')
+                $translator->trans(static::$emailSubjectKey, array(), static::$translationDomain)
             )
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(static::$emailMessageKey, array(), 'backend') . PHP_EOL .
+                $translator->trans(static::$emailMessageKey, array(), static::$translationDomain) . PHP_EOL .
                 $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()), true)
             );
         $mailer->send($message);
