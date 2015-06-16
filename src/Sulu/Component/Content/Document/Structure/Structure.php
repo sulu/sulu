@@ -75,6 +75,14 @@ class Structure implements StructureInterface
     /**
      * {@inheritDoc}
      */
+    public function getContentViewProperty($name)
+    {
+        throw new \Exception('Cannot retrieve content view property for non-managed property');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function hasProperty($name)
     {
         return $this->offsetExists($name);
