@@ -82,13 +82,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     public function findMedia($filter = array(), $limit = null, $offset = null)
     {
         try {
-            // validate given filter array
-            $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
-            $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
-            $types = array_key_exists('types', $filter) ? $filter['types'] : null;
-            $search = array_key_exists('search', $filter) ? $filter['search'] : null;
-            $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
-            $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
+            list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
 
             // if empty array of ids is requested return empty array of medias
             if ($ids !== null && sizeof($ids) === 0) {
@@ -152,17 +146,31 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     public function count(array $filter)
     {
-        // validate given filter array
-        $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
-        $types = array_key_exists('types', $filter) ? $filter['types'] : null;
-        $search = array_key_exists('search', $filter) ? $filter['search'] : null;
-        $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
-        $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
+        list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
 
         $query = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, null, null, 'COUNT(media)');
         $result = $query->getSingleResult()[1];
 
         return intval($result);
+    }
+
+    /**
+     * Extracts filter vars
+     *
+     * @param array $filter
+     *
+     * @return array
+     */
+    private function extractFilterVars(array $filter)
+    {
+        $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
+        $types = array_key_exists('types', $filter) ? $filter['types'] : null;
+        $search = array_key_exists('search', $filter) ? $filter['search'] : null;
+        $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
+        $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
+        $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
+
+        return array($collection, $types, $search, $orderBy, $orderSort, $ids);
     }
 
     /**
@@ -221,7 +229,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setParameter('collectionId', $collectionId);
 
         $query = $qb->getQuery();
-
         $paginator = new Paginator($query);
 
         return ['media' => $paginator, 'count' => $count];
@@ -263,7 +270,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $subQueryBuilder
             ->innerJoin('media.files', 'file')
             ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
-            ->leftJoin('fileVersion.tags', 'tag')
             ->leftJoin('fileVersion.meta', 'fileVersionMeta');
 
             $subQueryBuilder->andWhere('fileVersionMeta.title LIKE :search');
