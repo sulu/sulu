@@ -69,14 +69,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * raised when all overlay components returned their value
-         * @event sulu.media-selection.input-retrieved
-         */
-        INPUT_RETRIEVED = function() {
-            return createEventName.call(this, 'input-retrieved');
-        },
-
-        /**
          * raised when a record has been selected
          * @event sulu.media-selection.record-selected
          */
@@ -611,22 +603,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * Displays a success label and adds the newly uploaded file
-         * @param media {Object} the media object
-         */
-        addUploadedFile = function(media) {
-            if (!!media.length) {
-                var data = this.getData();
-                this.sandbox.util.foreach(media, function(singleMedia) {
-                    data.ids.push(singleMedia.id);
-                }.bind(this));
-                this.setData(data);
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
-                reloadGridGroup.call(this);
-            }
-        },
-
-        /**
          * starts the overlay component
          */
         startAddOverlay = function() {
@@ -844,22 +820,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     }
                 ]);
 
-            }.bind(this));
-        },
-
-        /**
-         * extract data from overlay
-         */
-        getAddOverlayData = function() {
-            var idsDef = this.sandbox.data.deferred();
-
-            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.get-selected-ids', function(ids) {
-                setData.call(this, {ids: ids});
-                idsDef.resolve();
-            }.bind(this));
-
-            idsDef.then(function() {
-                this.sandbox.emit(INPUT_RETRIEVED.call(this));
             }.bind(this));
         },
 
