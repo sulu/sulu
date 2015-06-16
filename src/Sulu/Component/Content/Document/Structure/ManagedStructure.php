@@ -29,6 +29,8 @@ class ManagedStructure extends Structure
     private $inspector;
     private $structure;
     private $node;
+    private $legacyProperties = array();
+    private $contentViewProperties = array();
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
@@ -77,6 +79,8 @@ class ManagedStructure extends Structure
             $property = $this->legacyPropertyFactory->createProperty($structureProperty);
         }
 
+        $this->legacyProperties[$name] = $property;
+
         $bridge = new StructureBridge($this->structure, $this->inspector, $this->legacyPropertyFactory, $this->document);
         $property->setStructure($bridge);
 
@@ -93,6 +97,28 @@ class ManagedStructure extends Structure
         $this->properties[$name] = $valueProperty;
 
         return $valueProperty;
+    }
+
+    public function getContentViewProperty($name)
+    {
+        if (isset($this->contentViewProperties[$name])) {
+            return $this->contentViewProperties[$name];
+        }
+
+        // initialize the legacy property
+        $this->getProperty($name);
+        $legacyProperty = $this->legacyProperties[$name];
+
+        $structureProperty = $this->structure->getProperty($name);
+        $contentTypeName = $structureProperty->getType();
+        $contentType = $this->contentTypeManager->get($contentTypeName);
+        $propertyValue = new PropertyValue(
+            $name,
+            $contentType->getContentData($legacyProperty)
+        );
+        $this->contentViewProperties[$name] = $propertyValue;
+
+        return $propertyValue;
     }
 
     /**

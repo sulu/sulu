@@ -125,6 +125,7 @@ class ExcerptStructureExtension extends AbstractExtension
                 $languageCode,
                 null // segmentkey
             );
+
             $data[$property->getName()] = $property->getValue();
         }
 
