@@ -4,11 +4,14 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\File" table="me_files" repository-class="Sulu\Bundle\MediaBundle\Entity\FileRepository">
+        <indexes>
+            <index columns="version"/>
+        </indexes>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="version" type="integer" column="version" />
+        <field name="version" type="integer" column="version"/>
         <one-to-many field="fileVersions" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" mapped-by="file">
             <cascade>
                 <cascade-persist />
