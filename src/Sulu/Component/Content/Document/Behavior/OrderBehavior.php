@@ -16,4 +16,10 @@ namespace Sulu\Component\Content\Document\Behavior;
  */
 interface OrderBehavior
 {
+    /**
+     * Return the absolute order value of this document.
+     *
+     * @return integer
+     */
+    public function getSuluOrder();
 }

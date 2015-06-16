@@ -29,6 +29,7 @@ use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -420,6 +421,10 @@ class StructureBridge implements StructureInterface
             'hasSub' => $this->inspector->getChildren($document)->count() ? true : false,
             'title' => $document->getTitle(), // legacy system returns diffent fields for title depending on $complete
         );
+
+        if ($document instanceof OrderBehavior) {
+            $result['order'] = $document->getSuluOrder();
+        }
 
         if ($document instanceof RedirectTypeBehavior) {
             $redirectType = $document->getRedirectType();

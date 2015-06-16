@@ -15,8 +15,9 @@ use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use PHPCR\PropertyType;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 /**
  * Create a property with a value corresponding to the position of the node
@@ -45,6 +46,7 @@ class OrderSubscriber implements EventSubscriberInterface
     {
         return array(
             Events::PERSIST => 'handlePersist',
+            Events::HYDRATE => 'handleHydrate',
         );
     }
 
@@ -71,5 +73,25 @@ class OrderSubscriber implements EventSubscriberInterface
         $order = ($nodeCount + 1) * 10;
 
         $node->setProperty($propertyName, $order, PropertyType::LONG);
+        $this->handleHydrate($event);
+    }
+
+    /**
+     * @param HydrateEvent $event
+     */
+    public function handleHydrate(AbstractMappingEvent $event)
+    {
+        if (false == $this->supports($event->getDocument())) {
+            return;
+        }
+
+        $node = $event->getNode();
+
+        $order = $node->getPropertyValueWithDefault(
+            $this->encoder->systemName(self::FIELD),
+            null
+        );
+
+        $event->getAccessor()->set('suluOrder', $order);
     }
 }

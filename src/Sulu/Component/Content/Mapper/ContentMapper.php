@@ -60,6 +60,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
@@ -958,27 +959,29 @@ class ContentMapper implements ContentMapperInterface
         $structureType = $document->getStructureType();
         $shortPath = $this->inspector->getContentPath($originalDocument);
 
-        return array_merge(
-            array(
-                'uuid' => $document->getUuid(),
-                'nodeType' => $redirectType,
-                'path' => $shortPath,
-                'changed' => $document->getChanged(),
-                'changer' => $document->getChanger(),
-                'created' => $document->getCreated(),
-                'published' => $document->getWorkflowStage() === WorkflowStage::PUBLISHED,
-                'creator' => $document->getCreator(),
-                'title' => $originalDocument->getTitle(),
-                'url' => $url,
-                'urls' => $this->inspector->getLocalizedUrlsForPage($document),
-                'locale' => $locale,
-                'webspaceKey' => $this->inspector->getWebspace($document),
-                'template' => $structureType,
-                'parent' => $this->inspector->getParent($document)->getUuid(),
-                'order' => null, // TODO: Implement order
-            ),
-            $fieldsData
+        $documentData = array(
+            'uuid' => $document->getUuid(),
+            'nodeType' => $redirectType,
+            'path' => $shortPath,
+            'changed' => $document->getChanged(),
+            'changer' => $document->getChanger(),
+            'created' => $document->getCreated(),
+            'published' => $document->getWorkflowStage() === WorkflowStage::PUBLISHED,
+            'creator' => $document->getCreator(),
+            'title' => $originalDocument->getTitle(),
+            'url' => $url,
+            'urls' => $this->inspector->getLocalizedUrlsForPage($document),
+            'locale' => $locale,
+            'webspaceKey' => $this->inspector->getWebspace($document),
+            'template' => $structureType,
+            'parent' => $this->inspector->getParent($document)->getUuid(),
         );
+
+        if ($document instanceof OrderBehavior) {
+            $documentData['order'] = $document->getSuluOrder();
+        }
+
+        return array_merge($documentData, $fieldsData);
     }
 
     /**
