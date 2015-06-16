@@ -38,7 +38,7 @@ class ResettingController extends Controller
     /**
      * Returns the sender's email address.
      *
-     * @param Request $reqeust
+     * @param Request $request
      *
      * @return string
      */
