@@ -69,15 +69,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * raised when all overlay components returned their value
-         * @event sulu.media-selection.input-retrieved
-         */
-        INPUT_RETRIEVED = function() {
-            return createEventName.call(this, 'input-retrieved');
-        },
-
-        /**
-         * raised when data has returned from the ajax request
+         * raised when a record has been selected
          * @event sulu.media-selection.record-selected
          */
         RECORD_SELECTED = function() {
@@ -85,7 +77,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * raised when data has returned from the ajax request
+         * raised when a record has been deselected
          * @event sulu.media-selection.record-deselected
          */
         RECORD_DESELECTED = function() {
@@ -150,7 +142,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * Starts the grid-group loader
+         * Starts the overlay loader
          */
         startOverlayLoader = function() {
             var $element = this.$find(getId.call(this, 'loader'));
@@ -169,7 +161,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * Stops the grid-group loader
+         * Stops the overlay loader
          */
         stopOverlayLoader = function() {
             this.sandbox.stop(getId.call(this, 'loader'));
@@ -278,28 +270,11 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     success: function(collections) {
                         this.collectionArray = collections.toJSON();
                         stopOverlayLoader.call(this);
-                        startGridGroup.call(this);
                         startDropzone.call(this);
                     }.bind(this)
                 });
             }.bind(this));
 
-            this.sandbox.on('husky.overlay.' + this.options.instanceName + '.add.opened', function() {
-                if (this.gridGroupDeprecated === true) {
-                    reloadGridGroup.call(this);
-                    this.gridGroupDeprecated = false;
-                }
-            }.bind(this));
-
-            // set position of overlay if height of grid-group changes
-            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.height-changed', function() {
-                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.add' + '.set-position');
-            }.bind(this));
-
-            // set position of overlay if grid-group has initialized
-            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.initialized', function() {
-                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.add' + '.set-position');
-            }.bind(this));
 
             // save the collection where new media should be uploaded
             this.sandbox.on(
@@ -469,71 +444,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * Refreshes the data in the grid-group
-         */
-        reloadGridGroup = function() {
-            var data = this.getData();
-            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.reload', {
-                data: this.collectionArray,
-                preselected: data.ids
-            });
-        },
-
-        /**
-         * Starts the grid group
-         */
-        startGridGroup = function() {
-            var gridUrl, urlParameter = {}, data = this.getData();
-
-            if (this.options.types != '') {
-                gridUrl = 'filterByTypes';
-                urlParameter = {types: this.options.types};
-            } else {
-                gridUrl = 'all';
-            }
-
-            this.sandbox.start([
-                {
-                    name: 'grid-group@suluadmin',
-                    options: {
-                        data: this.collectionArray,
-                        el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
-                        instanceName: this.options.instanceName,
-                        gridUrl: gridUrl,
-                        urlParameter: urlParameter,
-                        preselected: data.ids,
-                        resultKey: this.options.resultKey,
-                        dataGridOptions: {
-                            view: 'table',
-                            viewOptions: {
-                                table: {
-                                    excludeFields: ['id'],
-                                    showHead: false,
-                                    cssClass: 'minimal'
-                                }
-                            },
-                            pagination: false,
-                            matchings: [
-                                {
-                                    name: 'id'
-                                },
-                                {
-                                    name: 'thumbnails',
-                                    translation: 'thumbnails',
-                                    type: 'thumbnails'
-                                },
-                                {
-                                    name: 'title',
-                                    translation: 'title'
-                                }
-                            ]
-                        }
-                    }
-                }
-            ]);
-        },
-
-        /**
          * Starts the dropzone for uploading a new media
          */
         startDropzone = function() {
@@ -608,22 +518,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 translation = translation + ' (' + counter + ')';
             }
             return translation;
-        },
-
-        /**
-         * Displays a success label and adds the newly uploaded file
-         * @param media {Object} the media object
-         */
-        addUploadedFile = function(media) {
-            if (!!media.length) {
-                var data = this.getData();
-                this.sandbox.util.foreach(media, function(singleMedia) {
-                    data.ids.push(singleMedia.id);
-                }.bind(this));
-                this.setData(data);
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
-                reloadGridGroup.call(this);
-            }
         },
 
         /**
@@ -847,22 +741,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
         },
 
-        /**
-         * extract data from overlay
-         */
-        getAddOverlayData = function() {
-            var idsDef = this.sandbox.data.deferred();
-
-            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.get-selected-ids', function(ids) {
-                setData.call(this, {ids: ids});
-                idsDef.resolve();
-            }.bind(this));
-
-            idsDef.then(function() {
-                this.sandbox.emit(INPUT_RETRIEVED.call(this));
-            }.bind(this));
-        },
-
         setData = function(data, reinitialize) {
             var oldData = this.getData();
 
@@ -889,7 +767,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             this.newCollection = new Collection();
             this.collectionArray = null;
             this.newCollectionId = null;
-            this.gridGroupDeprecated = false;
 
             this.options.ids = {
                 container: 'media-selection-' + this.options.instanceName + '-container',
@@ -899,7 +776,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 content: 'media-selection-' + this.options.instanceName + '-content',
                 chooseTab: 'media-selection-' + this.options.instanceName + '-choose-tab',
                 uploadTab: 'media-selection-' + this.options.instanceName + '-upload-tab',
-                gridGroup: 'media-selection-' + this.options.instanceName + '-grid-group',
                 loader: 'media-selection-' + this.options.instanceName + '-loader',
                 collectionSelect: 'media-selection-' + this.options.instanceName + '-collection-select',
                 dropzone: 'media-selection-' + this.options.instanceName + '-dropzone'
@@ -956,7 +832,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 }
             }
             this.sandbox.emit(RECORD_DESELECTED.call(this), id);
-            this.sandbox.emit(DATA_CHANGED.call(this));
 
             this.setData(data, false);
         }
