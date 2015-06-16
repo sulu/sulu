@@ -74,7 +74,7 @@ class XmlLegacyLoader implements LoaderInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
         // init result
-        $result = $this->loadTemplateAttributes($xpath, $type);
+        $result = $this->loadTemplateAttributes($resource, $xpath, $type);
 
         // load properties
         $result['properties'] = $this->loadProperties($result['key'], '/x:template/x:properties/x:*', $tags, $xpath);
@@ -107,13 +107,14 @@ class XmlLegacyLoader implements LoaderInterface
     /**
      * load basic template attributes.
      */
-    private function loadTemplateAttributes(\DOMXPath $xpath, $type)
+    private function loadTemplateAttributes($resource, \DOMXPath $xpath, $type)
     {
         if ($type === 'page' || $type === 'home') {
             $result = array(
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
                 'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
@@ -121,8 +122,12 @@ class XmlLegacyLoader implements LoaderInterface
 
             $result = array_filter($result);
 
-            if (sizeof($result) < 4) {
-                throw new InvalidXmlException($result['key']);
+            foreach (array('key', 'view', 'controller', 'cacheLifetime') as $requiredProperty) {
+                if (!isset($result[$requiredProperty])) {
+                    throw new InvalidXmlException($type, sprintf(
+                        'Property "%s" is required in XML template file "%s"', $requiredProperty, $resource
+                    ));
+                }
             }
         } else {
             $result = array(

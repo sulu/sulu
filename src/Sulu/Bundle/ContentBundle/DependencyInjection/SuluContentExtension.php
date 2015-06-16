@@ -36,7 +36,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             array(
                                 'path' => __DIR__ . '/../Content/templates',
                                 'type' => 'page',
-                                'internal' => true,
                             ),
                         ),
                     ),

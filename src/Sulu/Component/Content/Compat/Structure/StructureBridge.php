@@ -65,6 +65,11 @@ class StructureBridge implements StructureInterface
     private $locale;
 
     /**
+     * @var boolean
+     */
+    private $internal = false;
+
+    /**
      * @param StructureMetadata $structure
      * @param object $document
      * @param PageUrlGenerator $urlGenerator
@@ -214,11 +219,11 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * TODO: Implement this
+     * {@inheritDoc}
      */
     public function getInternal()
     {
-        return false;
+        return $this->structure->isInternal();
     }
 
     /**
