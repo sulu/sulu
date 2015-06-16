@@ -52,9 +52,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Return the named property and evaluate its content
-     *
-     * @param string $name
+     * {@inheritDoc}
      */
     public function getProperty($name)
     {
@@ -99,6 +97,9 @@ class ManagedStructure extends Structure
         return $valueProperty;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getContentViewProperty($name)
     {
         if (isset($this->contentViewProperties[$name])) {
