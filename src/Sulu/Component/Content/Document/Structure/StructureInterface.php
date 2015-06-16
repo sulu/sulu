@@ -23,8 +23,20 @@ interface StructureInterface extends \ArrayAccess
      * Return the named property
      *
      * @param string $name
+     *
+     * @return PropertyValue
      */
     public function getProperty($name);
+
+    /**
+     * Return the named property as rendered by the content type
+     * ->getContentData() method.
+     *
+     * @param string $name
+     *
+     * @return PropertyValue
+     */
+    public function getContentViewProperty($name);
 
     /**
      * Return true if the container has the named property
