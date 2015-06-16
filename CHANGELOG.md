@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #1251 [SecurityBundle] Refactored PasswordResetting controller for better reusability
     * BUGFIX      #1253 [MediaBundle]    Improved speed for media list query
+    * BUGFIX      #1245 [ContentBundle]  Ensure that concrete languages will be serialized as array not as object
     * ENHANCEMENT #1234 [All]            Prefix twig extension functions with "sulu_"
     * ENHANCEMENT #1237 [AdminBundle]    Fixed typos in behat tests
     * BUGFIX      #1235 [ContentBundle]  Fixed delete page which has children with history url

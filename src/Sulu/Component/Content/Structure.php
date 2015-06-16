@@ -968,7 +968,7 @@ abstract class Structure implements StructureInterface
      */
     public function getConcreteLanguages()
     {
-        return $this->concreteLanguages;
+        return array_values($this->concreteLanguages);
     }
 
     /**
