@@ -342,4 +342,21 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->assertEquals(3, $mediaRepository->count(array('types' => array('video'))));
     }
+
+    public function testFindMediaByIds()
+    {
+        $media1 = $this->createMedia('test-1', 'test-1', 'video');
+        $media2 = $this->createMedia('test-2', 'test-2', 'video');
+        $media3 = $this->createMedia('test-3', 'test-3', 'video');
+        $media4 = $this->createMedia('test-4', 'test-4', 'image');
+
+        /** @var MediaRepository $mediaRepository */
+        $mediaRepository = $this->getContainer()->get('sulu_media.media_repository');
+
+        $result = $mediaRepository->findMedia(array('ids' => array($media1->getId(), $media3->getId())));
+
+        $this->assertCount(2, $result);
+        $this->assertEquals($media1->getId(), $result[0]->getId());
+        $this->assertEquals($media3->getId(), $result[1]->getId());
+    }
 }
