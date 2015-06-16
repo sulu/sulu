@@ -80,7 +80,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Adds `classes` section.
+     * Adds `objects` section.
      *
      * @param ArrayNodeDefinition $node
      */

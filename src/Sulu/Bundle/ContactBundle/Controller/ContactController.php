@@ -111,8 +111,16 @@ class ContactController extends RestController implements ClassResourceInterface
 
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
-                new DoctrineFieldDescriptor('firstName', 'firstName', $this->container->getParameter('sulu.model.contact.class')),
-                new DoctrineFieldDescriptor('lastName', 'lastName', $this->container->getParameter('sulu.model.contact.class')),
+                new DoctrineFieldDescriptor(
+                    'firstName',
+                    'firstName',
+                    $this->container->getParameter('sulu.model.contact.class')
+                ),
+                new DoctrineFieldDescriptor(
+                    'lastName',
+                    'lastName',
+                    $this->container->getParameter('sulu.model.contact.class')
+                ),
             ),
             'fullName',
             'public.name',
@@ -348,8 +356,16 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['id'] = $this->fieldDescriptors['id'];
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             array(
-                new DoctrineFieldDescriptor('firstName', 'firstName', $this->container->getParameter('sulu.model.contact.class')),
-                new DoctrineFieldDescriptor('lastName', 'lastName', $this->container->getParameter('sulu.model.contact.class')),
+                new DoctrineFieldDescriptor(
+                    'firstName',
+                    'firstName',
+                    $this->container->getParameter('sulu.model.contact.class')
+                ),
+                new DoctrineFieldDescriptor(
+                    'lastName',
+                    'lastName',
+                    $this->container->getParameter('sulu.model.contact.class')
+                ),
             ),
             'fullName',
             'public.name',
@@ -460,7 +476,9 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
             } else {
-                $contacts = $this->getDoctrine()->getRepository($this->container->getParameter('sulu.model.contact.class'))->findAll();
+                $contacts = $this->getDoctrine()->getRepository(
+                    $this->container->getParameter('sulu.model.contact.class')
+                )->findAll();
                 $serializationGroups = array_merge(
                     $serializationGroups,
                     static::$contactSerializationGroups
@@ -569,7 +587,6 @@ class ContactController extends RestController implements ClassResourceInterface
                     static::$contactSerializationGroups
                 )
             );
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (MissingArgumentException $maex) {
