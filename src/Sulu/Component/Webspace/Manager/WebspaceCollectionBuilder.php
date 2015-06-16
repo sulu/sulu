@@ -62,13 +62,6 @@ class WebspaceCollectionBuilder
     private $path;
 
     /**
-     * The webspaces for the configured path.
-     *
-     * @var Webspace[]
-     */
-    private $webspaces;
-
-    /**
      * The portals for the configured path.
      *
      * @var Portal[]
@@ -103,7 +96,7 @@ class WebspaceCollectionBuilder
         $collection = new WebspaceCollection();
 
         // reset arrays
-        $this->webspaces = array();
+        $webspaces = array();
         $this->portals = array();
         $this->portalInformations = array();
 
@@ -115,7 +108,7 @@ class WebspaceCollectionBuilder
 
                 /** @var Webspace $webspace */
                 $webspace = $this->loader->load($file->getRealPath());
-                $this->webspaces[] = $webspace;
+                $webspaces[] = $webspace;
 
                 $this->buildPortals($webspace);
             } catch (\InvalidArgumentException $iae) {
@@ -130,7 +123,7 @@ class WebspaceCollectionBuilder
             }
         }
 
-        if (0 === count($this->webspaces)) {
+        if (0 === count($webspaces)) {
             throw new NoValidWebspaceException($this->path);
         }
 
@@ -146,7 +139,7 @@ class WebspaceCollectionBuilder
             );
         }
 
-        $collection->setWebspaces($this->webspaces);
+        $collection->setWebspaces($webspaces);
         $collection->setPortals($this->portals);
         $collection->setPortalInformations($this->portalInformations);
 

@@ -235,18 +235,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
-    public function testFindWebspaceByNotExistingKey()
-    {
-        $portal = $this->webspaceManager->findWebspaceByKey('not_existing');
-        $this->assertNull($portal);
-    }
-
-    public function testFindPortalByNotExistingKey()
-    {
-        $portal = $this->webspaceManager->findPortalByKey('not_existing');
-        $this->assertNull($portal);
-    }
-
     public function testFindPortalInformationByUrl()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
