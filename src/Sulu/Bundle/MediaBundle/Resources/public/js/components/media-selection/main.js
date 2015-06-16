@@ -77,7 +77,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * raised when data has returned from the ajax request
+         * raised when a record has been selected
          * @event sulu.media-selection.record-selected
          */
         RECORD_SELECTED = function() {
@@ -85,7 +85,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * raised when data has returned from the ajax request
+         * raised when a record has been deselected
          * @event sulu.media-selection.record-deselected
          */
         RECORD_DESELECTED = function() {
