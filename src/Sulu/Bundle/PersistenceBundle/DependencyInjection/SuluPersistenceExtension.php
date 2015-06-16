@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\Loader;
 
 /**
  * This is the class that loads and manages your bundle configuration
- *
  */
 class SuluPersistenceExtension extends Extension
 {

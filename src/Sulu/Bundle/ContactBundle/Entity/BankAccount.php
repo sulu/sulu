@@ -2,7 +2,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Contact\Model\ContactInterface;
 
 /**
  * BankAccount.
@@ -50,7 +52,8 @@ class BankAccount
      */
     public function __construct()
     {
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accounts = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     /**
@@ -196,11 +199,11 @@ class BankAccount
     /**
      * Add contacts.
      *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
+     * @param ContactInterface $contacts
      *
      * @return BankAccount
      */
-    public function addContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -210,9 +213,9 @@ class BankAccount
     /**
      * Remove contacts.
      *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
+     * @param ContactInterface $contacts
      */
-    public function removeContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

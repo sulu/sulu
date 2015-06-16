@@ -112,9 +112,8 @@ class AccountManager extends AbstractContactManager
         // reload address to get all data (including relational data)
         /** @var AddressEntity $address */
         $address = $accountAddress->getAddress();
-        $address = $this->em->getRepository(
-            'SuluContactBundle:Address'
-        )->findById($address->getId());
+        $address = $this->em->getRepository('SuluContactBundle:Address')
+            ->findById($address->getId());
 
         $isMain = $accountAddress->getMain();
 
@@ -207,17 +206,16 @@ class AccountManager extends AbstractContactManager
             $onlyFetchMainAccounts
         );
 
-        $contacts = [];
-
         if ($contactsEntities) {
+            $contacts = [];
             foreach ($contactsEntities as $contact) {
                 $contacts[] = new Contact($contact, $locale, $this->tagManager);
             }
 
             return $contacts;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -235,16 +233,18 @@ class AccountManager extends AbstractContactManager
         } else {
             $accountEntities = $this->accountRepository->findAll();
         }
-        $accounts = [];
+
         if ($accountEntities) {
+            $accounts = [];
+
             foreach ($accountEntities as $account) {
                 $accounts[] = $this->accountFactory->createApiEntity($account, $locale);
             }
-        } else {
-            return null;
+
+            return $accounts;
         }
 
-        return $accounts;
+        return null;
     }
 
     /**
@@ -259,9 +259,9 @@ class AccountManager extends AbstractContactManager
     {
         if ($account) {
             return $this->accountFactory->createApiEntity($account, $locale);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**

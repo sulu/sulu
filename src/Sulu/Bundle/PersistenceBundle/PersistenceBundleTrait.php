@@ -13,9 +13,12 @@ namespace Sulu\Bundle\PersistenceBundle;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ResolveTargetEntitiesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Adds a `ResolveTargetEntitiesPass` for each defined interface
+ * which will resolve the target entity automatically.
+ */
 trait PersistenceBundleTrait
 {
-
     /**
      * Target entities resolver configuration (Interface - Model).
      *

@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ResolveTargetEntitiesPass implements CompilerPassInterface
 {
-
     /**
      * @var array $interfaces
      */

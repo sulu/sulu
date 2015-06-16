@@ -25,7 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
-/**å
+/**
  * Contact interface.
  */
 interface ContactInterface

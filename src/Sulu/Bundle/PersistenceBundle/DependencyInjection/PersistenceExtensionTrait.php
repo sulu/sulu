@@ -14,16 +14,18 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Define repository services for each object (e.g. sulu.repository.[object name]) and
+ * map all object parameters to the container.
+ */
 trait PersistenceExtensionTrait
 {
-
     /**
      * @param array $config
      * @param ContainerBuilder $container
      */
     protected function configure(array $config, ContainerBuilder $container)
     {
-
         $objects = isset($config['objects']) ? $config['objects'] : array();
 
         $this->defineRepositories($objects, $container);

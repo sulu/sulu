@@ -48,9 +48,6 @@ class MetadataSubscriber implements EventSubscriber
     }
 
     /**
-     * Load the class data, mapping the created and changed fields
-     * to datetime fields.
-     *
      * @param LoadClassMetadataEventArgs $event
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
@@ -67,6 +64,9 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * @param ClassMetadataInfo $metadata
+     */
     private function process(ClassMetadataInfo $metadata)
     {
         foreach ($this->objects as $application => $classes) {
@@ -82,6 +82,10 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * @param ClassMetadataInfo $metadata
+     * @param Configuration $configuration
+     */
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {
         foreach (class_parents($metadata->getName()) as $parent) {
@@ -108,6 +112,9 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * @param ClassMetadataInfo $metadata
+     */
     private function unsetAssociationMappings(ClassMetadataInfo $metadata)
     {
         foreach ($metadata->getAssociationMappings() as $key => $value) {
@@ -117,6 +124,11 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * @param $type
+     *
+     * @return bool
+     */
     private function hasRelation($type)
     {
         return in_array(
