@@ -1042,7 +1042,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getPropertyData($document, LegacyProperty $property)
     {
-        return $document->getStructure()->getProperty($property->getName())->getValue();
+        return $document->getStructure()->getContentViewProperty($property->getName())->getValue();
     }
 
     /**

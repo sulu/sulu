@@ -226,7 +226,11 @@ class StructureBridge implements StructureInterface
      */
     public function getProperty($name)
     {
-        $property = $this->structure->getChild($name);
+        if ($this->hasProperty($name)) {
+            $property = $this->structure->getProperty($name);
+        } else {
+            $property = $this->structure->getChild($name);
+        }
 
         return $this->createLegacyPropertyFromItem($property);
     }
@@ -236,7 +240,7 @@ class StructureBridge implements StructureInterface
      */
     public function hasProperty($name)
     {
-        return $this->structure->hasChild($name);
+        return $this->structure->hasProperty($name);
     }
 
     /**
