@@ -48,28 +48,6 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $this->tester = new CommandTester($cleanupCommand);
     }
 
-    public function dataProviderOnlyRoot()
-    {
-        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->phpcrStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
-
-        $webspaceKey = 'sulu_io';
-        $locale = 'de';
-
-        return array(
-            array($webspaceKey, $locale, true, array('/' => false)),
-            array($webspaceKey, $locale, false, array('/' => false)),
-        );
-    }
-
-    /**
-     * @dataProvider dataProviderOnlyRoot
-     */
-    public function testRunOnlyRoot($webspaceKey, $locale, $dryRun, $urls)
-    {
-        $this->runCommandTest($webspaceKey, $locale, $dryRun, $urls);
-    }
-
     private function initNoHistory($webspaceKey, $locale)
     {
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
@@ -77,38 +55,6 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $this->phpcrStrategy->save($contentNode, '/team/daniel', 1, $webspaceKey, $locale);
         $this->phpcrStrategy->save($contentNode, '/team/johannes', 1, $webspaceKey, $locale);
     }
-
-    public function dataProviderNoHistory()
-    {
-        $webspaceKey = 'sulu_io';
-        $locale = 'de';
-
-        return array(
-            array(
-                $webspaceKey,
-                $locale,
-                true,
-                array('/' => false, '/team' => false, '/team/daniel' => false, '/team/johannes' => false)
-            ),
-            array(
-                $webspaceKey,
-                $locale,
-                false,
-                array('/' => false, '/team' => false, '/team/daniel' => false, '/team/johannes' => false)
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider dataProviderNoHistory
-     */
-    public function testRunNoHistory($webspaceKey, $locale, $dryRun, $urls)
-    {
-        $this->initNoHistory($webspaceKey, $locale);
-
-        $this->runCommandTest($webspaceKey, $locale, $dryRun, $urls);
-    }
-
 
     private function initHistory($webspaceKey, $locale)
     {
@@ -126,6 +72,81 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $session->refresh(false);
     }
 
+    public function dataProviderOnlyRoot()
+    {
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->phpcrStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+
+        $webspaceKey = 'sulu_io';
+        $locale = 'de';
+
+        return array(
+            array(
+                $webspaceKey,
+                $locale,
+                true,
+                null,
+                array(
+                    'contains' => array(
+                        '/' => false
+                    ),
+                    'not-contains' => array()
+                ),
+            ),
+            array(
+                $webspaceKey,
+                $locale,
+                false,
+                null,
+                array(
+                    'contains' => array(
+                        '/' => false
+                    ),
+                    'not-contains' => array()
+                ),
+            ),
+        );
+    }
+
+    public function dataProviderNoHistory()
+    {
+        $webspaceKey = 'sulu_io';
+        $locale = 'de';
+
+        return array(
+            array(
+                $webspaceKey,
+                $locale,
+                true,
+                null,
+                array(
+                    'contains' => array(
+                        '/' => false,
+                        '/team' => false,
+                        '/team/daniel' => false,
+                        '/team/johannes' => false
+                    ),
+                    'not-contains' => array()
+                ),
+            ),
+            array(
+                $webspaceKey,
+                $locale,
+                false,
+                null,
+                array(
+                    'contains' => array(
+                        '/' => false,
+                        '/team' => false,
+                        '/team/daniel' => false,
+                        '/team/johannes' => false
+                    ),
+                    'not-contains' => array()
+                ),
+            ),
+        );
+    }
+
     public function dataProviderHistory()
     {
         $webspaceKey = 'sulu_io';
@@ -136,50 +157,154 @@ class CleanupHistoryCommandTest extends SuluTestCase
                 $webspaceKey,
                 $locale,
                 true,
+                null,
                 array(
-                    '/' => false,
-                    '/my-team' => false,
-                    '/my-team/daniel' => false,
-                    '/my-team/johannes' => false,
-                    '/team' => true,
-                    '/team/daniel' => true,
-                    '/team/johannes' => true
+                    'contains' => array(
+                        '/' => false,
+                        '/my-test' => false,
+                        '/my-test/daniel' => false,
+                        '/my-test/johannes' => false,
+                        '/team' => true,
+                        '/team/daniel' => true,
+                        '/team/johannes' => true
+                    ),
+                    'not-contains' => array(),
                 ),
             ),
             array(
                 $webspaceKey,
                 $locale,
                 false,
+                null,
                 array(
-                    '/' => false,
-                    '/my-team' => false,
-                    '/my-team/daniel' => false,
-                    '/my-team/johannes' => false,
-                    '/team' => true,
-                    '/team/daniel' => true,
-                    '/team/johannes' => true
+                    'contains' => array(
+                        '/' => false,
+                        '/my-test' => false,
+                        '/my-test/daniel' => false,
+                        '/my-test/johannes' => false,
+                        '/team' => true,
+                        '/team/daniel' => true,
+                        '/team/johannes' => true
+                    ),
+                    'not-contains' => array(),
+                ),
+            ),
+            array(
+                $webspaceKey,
+                $locale,
+                false,
+                '/my-test',
+                array(
+                    'contains' => array(
+                        '/my-test' => false,
+                        '/my-test/daniel' => false,
+                        '/my-test/johannes' => false,
+                    ),
+                    'not-contains' => array(
+                        '/',
+                        '/team',
+                        '/team/daniel',
+                        '/team/johannes',
+                    ),
+                ),
+            ),
+            array(
+                $webspaceKey,
+                $locale,
+                false,
+                '/team',
+                array(
+                    'contains' => array(
+                        '/team' => true,
+                        '/team/daniel' => true,
+                        '/team/johannes' => true
+                    ),
+                    'not-contains' => array(
+                        '/',
+                        '/my-test',
+                        '/my-test/daniel',
+                        '/my-test/johannes',
+                    ),
                 ),
             ),
         );
     }
 
+    public function dataProviderException()
+    {
+        $webspaceKey = 'sulu_io';
+        $locale = 'de';
+
+        return array(
+            array($webspaceKey, $locale, false, '/team',),
+            array($webspaceKey, $locale, true, '/team',),
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderOnlyRoot
+     */
+    public function testRunOnlyRoot($webspaceKey, $locale, $dryRun, $basePath, $urls)
+    {
+        $this->runCommandTest($webspaceKey, $locale, $dryRun, $basePath, $urls);
+    }
+
+    /**
+     * @dataProvider dataProviderNoHistory
+     */
+    public function testRunNoHistory($webspaceKey, $locale, $dryRun, $basePath, $urls)
+    {
+        $this->initNoHistory($webspaceKey, $locale);
+
+        $this->runCommandTest($webspaceKey, $locale, $dryRun, $basePath, $urls);
+    }
+
     /**
      * @dataProvider dataProviderHistory
      */
-    public function testRunHistory($webspaceKey, $locale, $dryRun, $urls)
+    public function testRunHistory($webspaceKey, $locale, $dryRun, $basePath, $urls)
     {
         $this->initHistory($webspaceKey, $locale);
 
-        $this->runCommandTest($webspaceKey, $locale, $dryRun, $urls);
+        $this->runCommandTest($webspaceKey, $locale, $dryRun, $basePath, $urls);
     }
 
-    private function runCommandTest($webspaceKey, $locale, $dryRun, $urls)
+    /**
+     * @dataProvider dataProviderException
+     */
+    public function testRunException($webspaceKey, $locale, $dryRun, $basePath)
     {
-        $this->tester->execute(array('webspaceKey' => $webspaceKey, 'locale' => $locale, '--dry-run' => $dryRun));
+        $this->tester->execute(
+            array(
+                'webspaceKey' => $webspaceKey,
+                'locale' => $locale,
+                '--dry-run' => $dryRun,
+                '--base-path' => $basePath
+            )
+        );
         $output = $this->tester->getDisplay();
 
-        foreach ($urls as $url => $state) {
+        $this->assertEquals(sprintf('Resource-Locator "%s" not found', $basePath), $output);
+    }
+
+    private function runCommandTest($webspaceKey, $locale, $dryRun, $basePath, $urls)
+    {
+        $this->tester->execute(
+            array(
+                'webspaceKey' => $webspaceKey,
+                'locale' => $locale,
+                '--dry-run' => $dryRun,
+                '--base-path' => $basePath
+            )
+        );
+        $output = $this->tester->getDisplay();
+
+        foreach ($urls['contains'] as $url => $state) {
             $this->outputContains($output, $url, $state);
+        }
+
+        foreach ($urls['not-contains'] as $url) {
+            $this->outputNotContains($output, $url);
         }
 
         if ($dryRun) {
@@ -196,6 +321,12 @@ class CleanupHistoryCommandTest extends SuluTestCase
         } else {
             $this->assertContains('Processing: ' . $path, $output);
         }
+    }
+
+    private function outputNotContains($output, $path)
+    {
+        $this->assertNotContains('Processing aborted: ' . $path . "\n", $output);
+        $this->assertNotContains('Processing: ' . $path . "\n", $output);
     }
 
     private function outputIsDryRun($output)

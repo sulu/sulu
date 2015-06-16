@@ -78,7 +78,15 @@ EOT
         $this->output = $output;
 
         $path = $this->sessionManager->getRoutePath($webspaceKey, $locale);
-        $node = $this->session->getNode($path . ($basePath !== null ? '/' . ltrim($basePath, '/') : ''));
+        $relativePath = ($basePath !== null ? '/' . ltrim($basePath, '/') : '/');
+        $fullPath = rtrim($path . $relativePath, '/');
+
+        if (!$this->session->nodeExists($fullPath)) {
+            $this->output->write('<error>Resource-Locator "' . $relativePath . '" not found</error>');
+            return;
+        }
+
+        $node = $this->session->getNode($fullPath);
         $this->cleanup($node, $path);
 
         if (false === $dryRun) {
