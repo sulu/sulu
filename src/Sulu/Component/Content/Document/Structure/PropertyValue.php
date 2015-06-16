@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Sulu\Component\Content\Document\Structure;
 
 /**
