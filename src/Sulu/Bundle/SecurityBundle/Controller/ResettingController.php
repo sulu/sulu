@@ -11,6 +11,11 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
@@ -18,21 +23,28 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
  * Class ResettingController.
  */
 class ResettingController extends Controller
 {
+    protected static $emailSubjectKey = 'security.reset.mail-subject';
+    protected static $emailMessageKey = 'security.reset.mail-message';
     const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
-    const EMAIL_SUBJECT_KEY = 'security.reset.mail-subject';
-    const EMAIL_MESSAGE_KEY = 'security.reset.mail-message';
     const MAX_NUMBER_EMAILS = 3;
+
+    /**
+     * Returns the sender's email address.
+     *
+     * @param Request $reqeust
+     *
+     * @return string
+     */
+    protected function getSenderAddress(Request $request)
+    {
+        return 'no-reply@' . $request->getHost();
+    }
 
     /**
      * The interval in which the token is valid.
@@ -55,18 +67,6 @@ class ResettingController extends Controller
     }
 
     /**
-     * Returns the sender's email address.
-     *
-     * @param Request $reqeust
-     *
-     * @return string
-     */
-    private static function getSenderAddress(Request $reqeust)
-    {
-        return 'no-reply@' . $reqeust->getHost();
-    }
-
-    /**
      * Generates a token for a user and sends an email with
      * a link to the resetting route.
      *
@@ -84,7 +84,7 @@ class ResettingController extends Controller
                 $this->generateTokenForUser($user);
             }
             $email = $this->getEmail($user);
-            $this->sendTokenEmail($user, self::getSenderAddress($request), $email);
+            $this->sendTokenEmail($user, $this->getSenderAddress($request), $email);
             $response = new JsonResponse(array('email' => $email));
         } catch (EntityNotFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
@@ -245,12 +245,12 @@ class ResettingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(self::EMAIL_SUBJECT_KEY, array(), 'backend')
+                $translator->trans(static::$emailSubjectKey, array(), 'backend')
             )
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(self::EMAIL_MESSAGE_KEY, array(), 'backend') . PHP_EOL .
+                $translator->trans(static::$emailMessageKey, array(), 'backend') . PHP_EOL .
                 $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()), true)
             );
         $mailer->send($message);
