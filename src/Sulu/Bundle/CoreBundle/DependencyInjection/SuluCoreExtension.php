@@ -110,7 +110,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('rest.xml');
         $loader->load('build.xml');
         $loader->load('localization.xml');
-        $loader->load('persistence.xml');
     }
 
     /**
