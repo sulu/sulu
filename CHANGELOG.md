@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete
     * BUGFIX      #1250 [ContactBundle]  Fixed document assigment delete in contact area
     * ENHANCEMENT #1251 [SecurityBundle] Refactored PasswordResetting controller for better reusability
