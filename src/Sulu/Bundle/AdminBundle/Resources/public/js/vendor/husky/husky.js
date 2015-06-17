@@ -30514,7 +30514,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         bodyRowClickHandler: function(event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
-            this.emitRowClickedEvent(event);
             if (!!recordId && !!this.table.rows && !!this.table.rows[recordId]) {
                 if (this.options.highlightSelected === true) {
                     this.uniqueHighlightRecord(recordId);
@@ -30523,6 +30522,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.toggleChildren(recordId);
                 }
             }
+            this.emitRowClickedEvent(event);
         },
 
         /**
@@ -30622,6 +30622,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         deselectAllRecords: function() {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', false);
+            this.updateSelectAll();
         },
 
         /**
@@ -30638,7 +30639,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param select {Boolean} true to select false to deselect
          */
         toggleSelectRecord: function(id, select) {
-            var areAllSelected;
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
                 // ensure that checkboxes are checked
@@ -30652,11 +30652,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
                 );
             }
-            // check or uncheck checkboxes in the header
-            if (!!this.table.header) {
-                areAllSelected = this.datagrid.getSelectedItemIds.call(this.datagrid).length === this.data.embedded.length;
-                this.toggleSelectAllItem(areAllSelected);
-            }
+
+            this.updateSelectAll();
         },
 
         /**
@@ -30667,6 +30664,17 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.table.header) {
                 this.sandbox.dom.prop(
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.header.$el), 'checked', select
+                );
+            }
+        },
+
+        /**
+         * Updates the select all item depending on the given data and selections
+         */
+        updateSelectAll: function() {
+            if (!!this.table.header) {
+                this.toggleSelectAllItem(
+                    this.datagrid.getSelectedItemIds.call(this.datagrid).length === this.data.embedded.length
                 );
             }
         },
