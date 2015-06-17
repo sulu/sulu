@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
     * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete
