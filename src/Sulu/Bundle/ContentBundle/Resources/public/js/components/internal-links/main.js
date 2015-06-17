@@ -198,6 +198,8 @@ define([], function() {
                 }
             }
 
+            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.unmark', id);
+
             this.setData(data, false);
         }
     };
