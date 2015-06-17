@@ -25,11 +25,6 @@ use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 class ContactManager extends AbstractContactManager
 {
     /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
      * @var AccountRepository
      */
     private $accountRepository;
@@ -52,8 +47,7 @@ class ContactManager extends AbstractContactManager
         ContactRepository $contactRepository,
         $accountEntityName
     ) {
-        parent::__construct($em, $accountEntityName);
-        $this->tagManager = $tagManager;
+        parent::__construct($em, $tagManager, $accountEntityName);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
