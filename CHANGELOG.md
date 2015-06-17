@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete
     * BUGFIX      #1250 [ContactBundle]  Fixed document assigment delete in contact area
     * ENHANCEMENT #1251 [SecurityBundle] Refactored PasswordResetting controller for better reusability
     * BUGFIX      #1253 [MediaBundle]    Improved speed for media list query
