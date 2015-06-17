@@ -10,12 +10,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use DateTime;
 use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Api\Contact as ApiContact;
-use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -522,10 +521,10 @@ class ContactController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         try {
-            $delete = $this->getContactManager()->delete($id);
-            $view = $this->responseDelete($id, $delete);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+            $deleteCallback = $this->getContactManager()->delete();
+            $view = $this->responseDelete($id, $deleteCallback);
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
         }
 
         return $this->handleView($view);
@@ -556,8 +555,8 @@ class ContactController extends RestController implements ClassResourceInterface
                     static::$contactSerializationGroups
                 )
             );
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
         }
 
         return $this->handleView($view);
@@ -629,7 +628,7 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @return AbstractContactManager
+     * @return ContactManager
      */
     protected function getContactManager()
     {

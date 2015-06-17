@@ -206,7 +206,7 @@ class AccountManager extends AbstractContactManager
             $onlyFetchMainAccounts
         );
 
-        if ($contactsEntities) {
+        if (!empty($contactsEntities)) {
             $contacts = [];
             foreach ($contactsEntities as $contact) {
                 $contacts[] = new Contact($contact, $locale, $this->tagManager);
@@ -234,9 +234,8 @@ class AccountManager extends AbstractContactManager
             $accountEntities = $this->accountRepository->findAll();
         }
 
-        if ($accountEntities) {
+        if (!empty($accountEntities)) {
             $accounts = [];
-
             foreach ($accountEntities as $account) {
                 $accounts[] = $this->accountFactory->createApiEntity($account, $locale);
             }

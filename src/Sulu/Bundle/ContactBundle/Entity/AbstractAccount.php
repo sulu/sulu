@@ -575,7 +575,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresss
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress
      *
      * @return Account
      */
@@ -589,7 +589,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddres
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress
      */
     public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress)
     {
