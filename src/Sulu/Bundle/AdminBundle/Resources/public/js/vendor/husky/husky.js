@@ -29529,6 +29529,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // merge defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, options);
 
+            this.editStatuses = {};
+
             this.bindCustomEvents();
             this.setVariables();
         },
@@ -30090,10 +30092,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @returns {String|Object} html or a dom object
          */
         getEditableCellContent: function(content) {
-            var returnHTML = this.sandbox.util.template(templates.editableCellContent)({
+            return this.sandbox.util.template(templates.editableCellContent)({
                 value: content
             });
-            return returnHTML;
         },
 
         /**
@@ -30356,15 +30357,22 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param attribute {String}
          */
         showInput: function(recordId, attribute) {
-            var $cell, $inputs;
+            var $cell, $inputs, $inputField, $inputWrapper;
+
             if (!attribute) {
                 $inputs = this.sandbox.dom.find('.' + constants.editableInputClass, this.table.rows[recordId].$el);
                 attribute = this.sandbox.dom.data(this.sandbox.dom.parents($inputs[0], 'td'), 'attribute');
             }
+
             $cell = this.table.rows[recordId].cells[attribute].$el;
-            this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.inputWrapperClass, $cell));
-            this.sandbox.dom.focus(this.sandbox.dom.find('.' + constants.editableInputClass, $cell));
-            this.sandbox.dom.select(this.sandbox.dom.find('.' + constants.editableInputClass, $cell));
+            $inputField = this.sandbox.dom.find('.' + constants.editableInputClass, $cell);
+            $inputWrapper = this.sandbox.dom.find('.' + constants.inputWrapperClass, $cell);
+
+            this.sandbox.dom.show($inputWrapper);
+            this.sandbox.dom.focus($inputField);
+            this.sandbox.dom.select($inputField);
+
+            this.editStatuses[recordId] = true;
         },
 
         /**
@@ -30372,12 +30380,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         editableInputKeyHandler: function(event) {
-            var recordId;
             // on enter
             if (event.keyCode === 13) {
-                this.sandbox.dom.stopPropagation(event);
-                recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
-                this.editRow(recordId);
+                this.editableInputEventHandler(event);
             }
         },
 
@@ -30387,10 +30392,21 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         editableInputFocusoutHandler: function(event) {
             if (!!this.isFocusoutHandlerEnabled) {
-                this.sandbox.dom.stopPropagation(event);
-                var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
+                this.editableInputEventHandler(event);
+            }
+        },
+
+        editableInputEventHandler: function(event) {
+            this.sandbox.dom.stopPropagation(event);
+
+            var $parent = this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass),
+                recordId = this.sandbox.dom.data($parent, 'id');
+
+            if (!!this.editStatuses[recordId]) {
                 this.editRow(recordId);
             }
+
+            this.editStatuses[recordId] = false;
         },
 
         /**
@@ -30498,7 +30514,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         bodyRowClickHandler: function(event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
-            this.emitRowClickedEvent(event);
             if (!!recordId && !!this.table.rows && !!this.table.rows[recordId]) {
                 if (this.options.highlightSelected === true) {
                     this.uniqueHighlightRecord(recordId);
@@ -30507,6 +30522,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.toggleChildren(recordId);
                 }
             }
+            this.emitRowClickedEvent(event);
         },
 
         /**
@@ -30606,6 +30622,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         deselectAllRecords: function() {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', false);
+            this.updateSelectAll();
         },
 
         /**
@@ -30622,7 +30639,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param select {Boolean} true to select false to deselect
          */
         toggleSelectRecord: function(id, select) {
-            var areAllSelected;
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
                 // ensure that checkboxes are checked
@@ -30636,11 +30652,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
                 );
             }
-            // check or uncheck checkboxes in the header
-            if (!!this.table.header) {
-                areAllSelected = this.datagrid.getSelectedItemIds.call(this.datagrid).length === this.data.embedded.length;
-                this.toggleSelectAllItem(areAllSelected);
-            }
+
+            this.updateSelectAll();
         },
 
         /**
@@ -30651,6 +30664,17 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.table.header) {
                 this.sandbox.dom.prop(
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.header.$el), 'checked', select
+                );
+            }
+        },
+
+        /**
+         * Updates the select all item depending on the given data and selections
+         */
+        updateSelectAll: function() {
+            if (!!this.table.header) {
+                this.toggleSelectAllItem(
+                    this.datagrid.getSelectedItemIds.call(this.datagrid).length === this.data.embedded.length
                 );
             }
         },
@@ -32185,6 +32209,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 return this.createEventName('medium-loader.hide');
             },
 
+            /**
+             * deselect all items
+             * @event husky.datagrid.items.deselect
+             */
+            ITEMS_DESELECT = function() {
+                return this.createEventName('items.deselect');
+            },
+
         /**
          * Private Methods
          * --------------------------------------------------------------------
@@ -32920,6 +32952,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
 
                 this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
+                this.sandbox.on(ITEMS_DESELECT.call(this), function() {
+                    this.gridViews[this.viewId].deselectAllRecords();
+                }.bind(this));
 
                 this.startColumnOptionsListener();
                 this.startSearchListener();
@@ -34368,13 +34403,14 @@ define('__component__$search@husky',[], function() {
  *      - preselect - either true (for url) or position / name  (see preselector for more information)
  *      - skin - string of class to add to the components element (e.g. 'overlay')
  *      - preselector:
- *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by data.url) - preselector itself is not going to be taken into account in this case
+ *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by options.fragment) - preselector itself is not going to be taken into account in this case
  *          - position: compares items position against whats defined in options.preselect
  *          - name: compares items name against whats defined in options.preselect
  *      - forceReload - defines if tabs are forcing page to reload
  *      - forceSelect - forces tabs to select first item, if no selected item has been found
  *      - preSelectEvent.enabled - when enabled triggers the item pre select event
  *      - preSelectEvent.triggerSelectItem - when previous options and this options is enabled it triggers the item select event right after the preselect
+ *      - fragment - current url to choose preselected item
  *  Provides Events
  *      - husky.tabs.<<instanceName>>.getSelected [callback(item)] - returns item with callback
  *  Triggers Events
@@ -34661,7 +34697,7 @@ define('__component__$tabs@husky',[],function() {
 
                 // check if item got selected
                 if (!!this.options.preselect) {
-                    if ((this.options.preselector === 'url' && !!data.url && data.url === item.action) ||
+                    if ((this.options.preselector === 'url' && !!this.options.fragment && this.options.fragment === item.action) ||
                         (this.options.preselector === 'position' && (index + 1).toString() === this.options.preselect.toString()) ||
                         (this.options.preselector === 'name' && item.name === this.options.preselect)) {
                         this.sandbox.dom.addClass($item, 'is-selected');
@@ -51169,6 +51205,20 @@ define('husky_extensions/util',[],function() {
                 app.core.util.contains = function(list, value) {
                     return _.contains(list, value);
                 };
+
+            app.core.util.isAlphaNumeric = function(str) {
+                var code, i, len;
+
+                for (i = 0, len = str.length; i < len; i++) {
+                    code = str.charCodeAt(i);
+                    if (!(code > 47 && code < 58) && // numeric (0-9)
+                        !(code > 64 && code < 91) && // upper alpha (A-Z)
+                        !(code > 96 && code < 123)) { // lower alpha (a-z)
+                      return false;
+                    }
+                }
+                return true;
+            };
 
             app.core.util.uniqueId = function(prefix) {
                 return _.uniqueId(prefix);

@@ -11,11 +11,12 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 
 /**
  * Repository for the UserSettings, implementing some additional functions
  * for querying objects.
  */
-class UserSettingRepository extends EntityRepository
+class UserSettingRepository extends EntityRepository implements UserSettingRepositoryInterface
 {
 }

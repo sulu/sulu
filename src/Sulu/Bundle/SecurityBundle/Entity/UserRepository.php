@@ -47,6 +47,37 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
+    public function findUsersByAccount($accountId)
+    {
+        try {
+            $qb = $this->createQueryBuilder('user')
+                ->leftJoin('user.userRoles', 'userRoles')
+                ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.userGroups', 'userGroups')
+                ->leftJoin('user.userSettings', 'settings')
+                ->leftJoin('userGroups.group', 'grp')
+                ->leftJoin('user.contact', 'contact')
+                ->leftJoin('contact.emails', 'emails')
+                ->leftJoin('contact.accountContacts', 'accountContacts')
+                ->leftJoin('accountContacts.account', 'account')
+                ->addSelect('userRoles')
+                ->addSelect('role')
+                ->addSelect('userGroups')
+                ->addSelect('grp')
+                ->addSelect('settings')
+                ->addSelect('contact')
+                ->addSelect('emails')
+                ->where('account.id=:accountId');
+
+            $query = $qb->getQuery();
+            $query->setParameter('accountId', $accountId);
+
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -180,6 +211,26 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
+     * Finds all users for the role with the given id
+     *
+     * @param int $roleId
+     *
+     * @return array
+     */
+    public function findAllUsersByRoleId($roleId)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->leftJoin('user.userRoles', 'userRole')
+            ->leftJoin('userRole.role', 'role')
+            ->where('role=:roleId');
+
+        $query = $qb->getQuery();
+        $query->setParameter('roleId', $roleId);
+
+        return $query->getResult();
+    }
+
+    /**
      * Finds a user for a given email.
      *
      * @param string $email The email-address
@@ -295,8 +346,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     protected function getSystem()
     {
         $system = $this->suluSystem;
-        if (
-            $this->requestAnalyzer != null &&
+        if ($this->requestAnalyzer != null &&
             $this->requestAnalyzer->getWebspace() !== null &&
             $this->requestAnalyzer->getWebspace()->getSecurity() !== null
         ) {

@@ -38,11 +38,10 @@ define([
                             ids.push(el.id);
                         }.bind(this));
 
-                        value.ids = ids;
+                        value = {ids: ids};
                     }
 
                     App.dom.data($el, 'media-selection', value);
-
                 },
 
                 getValue: function() {

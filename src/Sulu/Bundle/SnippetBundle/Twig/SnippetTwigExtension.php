@@ -53,7 +53,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('snippet_load', array($this, 'loadSnippet')),
+            new \Twig_SimpleFunction('sulu_snippet_load', array($this, 'loadSnippet')),
         );
     }
 

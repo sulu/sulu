@@ -116,6 +116,14 @@ class ContentRouteProvider implements RouteProviderInterface
                         )
                     );
                 } elseif (
+                    $content->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK &&
+                    $content->getNodeState() === StructureInterface::STATE_PUBLISHED
+                ) {
+                    $collection->add(
+                        $content->getKey() . '_' . uniqid(),
+                        $this->getRedirectRoute($request, 'http://' . $content->getPropertyValueByTagName('sulu.rlp'))
+                    );
+                } elseif (
                     $content->getNodeState() === StructureInterface::STATE_TEST ||
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()

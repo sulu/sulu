@@ -55,7 +55,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         $flat = true,
         $depth = -1,
         $limit = null,
-        $offset = null
+        $offset = null,
+        $moveUp = false
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('ContentQuery::execute.build-query');
@@ -118,7 +119,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
                 $this->stopwatch->start('ContentQuery::execute.build-tree');
             }
 
-            $converter = new ListToTreeConverter();
+            $converter = new ListToTreeConverter($moveUp);
             $result = $converter->convert($result);
 
             if ($this->stopwatch) {

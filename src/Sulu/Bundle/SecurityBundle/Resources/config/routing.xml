@@ -12,9 +12,6 @@
     <route id="sulu_security.template.role.list" path="/template/role/list.html">
         <default key="_controller">SuluSecurityBundle:Template:roleList</default>
     </route>
-    <route id="sulu_security.profile.change_language" path="/profile/change-language">
-        <default key="_controller">SuluSecurityBundle:Profile:changeLanguage</default>
-    </route>
     <route id="sulu_security.reset_password.email" path="reset/email">
         <default key="_controller">SuluSecurityBundle:Resetting:sendEmail</default>
     </route>
@@ -28,4 +25,6 @@
     <route id="sulu_security.permission_tab.form" path="/template/permission-tab/form.html">
         <default key="_controller">SuluSecurityBundle:Template:permissionTabForm</default>
     </route>
+
+    <import type="rest" resource="sulu_security.profile_controller"/>
 </routes>

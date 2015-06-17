@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use Doctrine\Common\Persistence\ObjectManager;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
@@ -29,11 +28,13 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Rest\RestController;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 
 /**
  * Makes accounts available through a REST API.
  */
-class AccountController extends AbstractContactController implements SecuredControllerInterface
+class AccountController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
@@ -43,10 +44,6 @@ class AccountController extends AbstractContactController implements SecuredCont
     protected static $contactEntityKey = 'contacts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected static $emailEntityName = 'SuluContactBundle:Email';
-    protected static $phoneEntityName = 'SuluContactBundle:Phone';
-    protected static $urlEntityName = 'SuluContactBundle:Url';
-    protected static $faxEntityName = 'SuluContactBundle:Fax';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
     protected static $countryEntityName = 'SuluContactBundle:Country';
@@ -79,6 +76,14 @@ class AccountController extends AbstractContactController implements SecuredCont
     {
         // default contacts list
         return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
+    }
+
+    /**
+     * @return RestHelperInterface
+     */
+    protected function getRestHelper()
+    {
+        return $this->get('sulu_core.doctrine_rest_helper');
     }
 
     /**
@@ -502,9 +507,7 @@ class AccountController extends AbstractContactController implements SecuredCont
     protected function doPost(Request $request)
     {
         $account = $this->get('sulu_contact.account_factory')->createEntity();
-
         $account->setName($request->get('name'));
-
         $account->setCorporation($request->get('corporation'));
 
         if ($request->get('uid') !== null) {
@@ -521,14 +524,15 @@ class AccountController extends AbstractContactController implements SecuredCont
         $this->setParent($request->get('parent'), $account);
 
         // process categories
-        $this->processCategories($account, $request->get('categories', array()));
+        $accountManager = $this->getContactManager();
+        $accountManager->processCategories($account, $request->get('categories', array()));
 
         // set creator / changer
         $account->setCreator($this->getUser());
         $account->setChanger($this->getUser());
 
         // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-        $this->addNewContactRelations($account, $request);
+        $accountManager->addNewContactRelations($account, $request->request->all());
 
         return $account;
     }
@@ -611,16 +615,18 @@ class AccountController extends AbstractContactController implements SecuredCont
         $user = $this->getUser();
         $account->setChanger($user);
 
+        $accountManager = $this->getContactManager();
+
         // process details
-        if (!($this->processUrls($account, $request->get('urls', array()))
-            && $this->processEmails($account, $request->get('emails', array()))
-            && $this->processFaxes($account, $request->get('faxes', array()))
-            && $this->processPhones($account, $request->get('phones', array()))
-            && $this->processAddresses($account, $request->get('addresses', array()))
-            && $this->processTags($account, $request->get('tags', array()))
-            && $this->processNotes($account, $request->get('notes', array()))
-            && $this->processCategories($account, $request->get('categories', array()))
-            && $this->processBankAccounts($account, $request->get('bankAccounts', array())))
+        if (!($accountManager->processUrls($account, $request->get('urls', array()))
+            && $accountManager->processEmails($account, $request->get('emails', array()))
+            && $accountManager->processFaxes($account, $request->get('faxes', array()))
+            && $accountManager->processPhones($account, $request->get('phones', array()))
+            && $accountManager->processAddresses($account, $request->get('addresses', array()))
+            && $accountManager->processTags($account, $request->get('tags', array()))
+            && $accountManager->processNotes($account, $request->get('notes', array()))
+            && $accountManager->processCategories($account, $request->get('categories', array()))
+            && $accountManager->processBankAccounts($account, $request->get('bankAccounts', array())))
         ) {
             throw new RestException('Updating dependencies is not possible', 0);
         }
@@ -725,7 +731,8 @@ class AccountController extends AbstractContactController implements SecuredCont
 
         // process details
         if ($request->get('bankAccounts') !== null) {
-            $this->processBankAccounts($account, $request->get('bankAccounts', array()));
+            $accountManager = $this->getContactManager();
+            $accountManager->processBankAccounts($account, $request->get('bankAccounts', array()));
         }
     }
 

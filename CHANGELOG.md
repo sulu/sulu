@@ -1,9 +1,37 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #1264 [ContentBundle]  fixed save of changed block type
+    * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
+    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
+    * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete
+    * BUGFIX      #1250 [ContactBundle]  Fixed document assigment delete in contact area
+    * ENHANCEMENT #1251 [SecurityBundle] Refactored PasswordResetting controller for better reusability
+    * BUGFIX      #1253 [MediaBundle]    Improved speed for media list query
+    * BUGFIX      #1245 [ContentBundle]  Ensure that concrete languages will be serialized as array not as object
+    * FEATURE     #1248 [ContentBundle]  Added cleanup resource-locator history command
+    * BUGFIX      #1243 [ContentBundle]  Added ignore of ghost pages when content copy locale
+    * ENHANCEMENT #1234 [All]            Prefix twig extension functions with "sulu_"
+    * ENHANCEMENT #1237 [AdminBundle]    Fixed typos in behat tests
+    * BUGFIX      #1235 [ContentBundle]  Fixed delete page which has children with history url
+    * BUGFIX      #1231 [ContentBundle]  Fixed wrong behaviour if you edit a shadow page
+    * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
+    * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
+    * FEATURE     #1214 [MediaBundle]    Added language chooser in "all media" view and in edit-media overlay
+    * BUGFIX      #1211 [WebsiteBundle]  Fixed merge of test-page childs into upper layer in website navigation
+    * ENHANCMENT  #1206 [SecurityBundle] Corrected translation for roles entry in navigation
+    * BUGFIX      #1203 [AdminBundle]    Fixed routes for tabs
+    * BUGFIX      #1199 [ContentBundle]  URL of shadow pages are not delivered in the urls array
+    * BUGFIX      #1207 [ContentBundle]  Added additional query before generate new url
+    * BUGFIX      #1169 [AdminBundle]    Fixed sidebar issue (prepending div instead of appending)
+    * ENHANCEMENT #1159 [SecurityBundle] Change role naming to keep symfony2 conventions.
+    * BUGFIX      #1156 [MediaBundle]    Fix mimetype check for ghostscript
+    * BUGFIX      #1163 [ContentBundle]  Set existing default for content language
+
 * 1.0.0-RC1 (2015-05-29)
     * ENHANCEMENT #1148 [SecurityBundle] Moved user specific code from UserController to UserManager
-    * BUGFIX      #1147 [MediaBUndle]    Fixes fileVersion created date
+    * BUGFIX      #1147 [MediaBundle]    Fixes fileVersion created date
     * ENHANCEMENT #1134 [MediaBundle]    Add parameter to view pdf in browser instead of downloading it immediately
     * ENHANCEMENT #1055 [MediaBundle]    Use tagged services instead of prefix for image converter commands
     * ENHANCEMENT #1144 [CacheBundle]    Changed dependencies from guzzle and HTTPCacheBundle

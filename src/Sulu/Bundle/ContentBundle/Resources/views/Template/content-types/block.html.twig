@@ -40,9 +40,9 @@
                                 {% for child in type.childProperties %}
 
                                     {# get Type for property #}
-                                    {% set type = get_type(child.contentTypeName) %}
+                                    {% set type = sulu_get_type(child.contentTypeName) %}
                                     {# get params for property #}
-                                    {% set params = get_params(child) %}
+                                    {% set params = sulu_get_params(child) %}
 
                                     {% if child is multiple %}
                                         {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}

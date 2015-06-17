@@ -57,8 +57,8 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('sitemap_url', array($this, 'sitemapUrlFunction')),
-            new \Twig_SimpleFunction('sitemap', array($this, 'sitemapFunction')),
+            new \Twig_SimpleFunction('sulu_sitemap_url', array($this, 'sitemapUrlFunction')),
+            new \Twig_SimpleFunction('sulu_sitemap', array($this, 'sitemapFunction')),
         );
     }
 

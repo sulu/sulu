@@ -92,7 +92,7 @@ abstract class BaseRole extends Role implements RoleInterface
      */
     public function getRole()
     {
-        return 'SULU_ROLE_' . strtoupper($this->name);
+        return 'ROLE_SULU_' . strtoupper($this->name);
     }
 
     /**
@@ -226,6 +226,6 @@ abstract class BaseRole extends Role implements RoleInterface
      */
     public function getIdentifier()
     {
-        return 'SULU_ROLE_' . strtoupper($this->getName());
+        return 'ROLE_SULU_' . strtoupper($this->getName());
     }
 }

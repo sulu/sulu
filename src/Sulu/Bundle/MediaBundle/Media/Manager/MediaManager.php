@@ -381,7 +381,8 @@ class MediaManager implements MediaManagerInterface
     {
         $media = array();
         $mediaEntities = $this->mediaRepository->findMedia($filter, $limit, $offset);
-        $this->count = $mediaEntities instanceof Paginator ? $mediaEntities->count() : count($mediaEntities);
+        $this->count = $this->mediaRepository->count($filter);
+
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
