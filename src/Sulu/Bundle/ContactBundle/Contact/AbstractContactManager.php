@@ -14,8 +14,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Component\Persistence\RelationTrait;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -25,7 +23,10 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Persistence\RelationTrait;
+use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 
 /**
  * TODO: https://github.com/sulu-io/sulu/pull/1171
@@ -59,6 +60,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public $em;
 
     /**
+     * @var TagmanagerInterface
+     */
+    protected $tagManager;
+
+    /**
      * @var string
      */
     protected $accountEntityName;
@@ -69,9 +75,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function __construct(
         ObjectManager $em,
+        TagManagerInterface $tagManager,
         $accountEntityName
     ) {
         $this->em = $em;
+        $this->tagManager = $tagManager;
         $this->accountEntityName = $accountEntityName;
     }
 
@@ -1629,5 +1637,15 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         return $entities;
+    }
+
+    /**
+     * Returns the tag manager
+     *
+     * @return TagManagerInterface
+     */
+    public function getTagManager()
+    {
+        return $this->tagManager;
     }
 }
