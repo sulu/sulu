@@ -26,7 +26,6 @@ class AccountManager extends AbstractContactManager
 {
     protected $contactEntity = 'SuluContactBundle:Contact';
     protected $addressEntity = 'SuluContactBundle:Address';
-    protected $tagManager;
 
     /**
      * @var AccountFactory
@@ -39,8 +38,7 @@ class AccountManager extends AbstractContactManager
         AccountFactory $accountFactory,
         $accountEntityName
     ) {
-        parent::__construct($em, $accountEntityName);
-        $this->tagManager = $tagManager;
+        parent::__construct($em, $tagManager, $accountEntityName);
         $this->accountFactory = $accountFactory;
     }
 
