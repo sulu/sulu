@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Command;
+namespace Sulu\Bundle\ContentBundle\Command;
 
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -30,14 +30,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @deprecated
  */
-class UpgradeResourceLocatorCommand extends ContainerAwareCommand
+class MaintainResourceLocatorCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('sulu:upgrade:0.9.0:resource-locator')->setDescription('Upgrades resource-locators to 0.9.0');
+        $this->setName('sulu:content:resource-locator:maintain')
+            ->setDescription('Resets the cached url value on every node');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

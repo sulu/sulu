@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Upgrade commands
+
+All the upgrade commands have been removed, since they are not of any use for
+future versions of Sulu. The only exception is the
+`sulu:upgrade:0.9.0:resource-locator` command, which has been renamed to
+`sulu:content:resource-locator:maintain`.
+
 ### Twig-Extensions
 
 Following Twig-Functions has changed the name (new prefix for sulu functions):
