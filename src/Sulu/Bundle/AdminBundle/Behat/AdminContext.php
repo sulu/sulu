@@ -50,7 +50,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectAConfirmationDialogShouldAppear()
     {
-        $this->iExpectAnOverlayToAppear();
+        $this->iWaitForAOverlayToAppear();
     }
 
     /**
