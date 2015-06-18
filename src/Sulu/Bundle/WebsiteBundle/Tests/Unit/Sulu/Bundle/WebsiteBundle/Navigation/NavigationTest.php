@@ -518,7 +518,7 @@ class NavigationTest extends SuluTestCase
         $this->data['products'] = $this->mapper->save(
             array('title' => 'Products', 'url' => '/products'),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -527,7 +527,7 @@ class NavigationTest extends SuluTestCase
             StructureInterface::STATE_TEST
         );
 
-        $navigation = $this->navigation->getRootNavigation('default', 'en', 2);
+        $navigation = $this->navigation->getRootNavigation('sulu_io', 'en', 2);
 
         $this->assertCount(1, $navigation);
         $this->assertEquals('/news', $navigation[0]['url']);

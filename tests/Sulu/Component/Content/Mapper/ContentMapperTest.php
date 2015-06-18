@@ -3263,6 +3263,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals($page->getUuid(), $result->getPropertyValue('internal_link'));
     }
 
+    /**
+     * It should return the resource locators including the reosurce locator
+     * of the shadow page.
+     */
     public function testGetResourceLocatorsWithShadow()
     {
         $page = $this->documentManager->create('page');
