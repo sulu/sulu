@@ -110,6 +110,7 @@ class ReindexListener
 
         $progress = new ProgressHelper();
         $progress->start($output, count($rows));
+        $errors = array();
 
         /** @var Row $row */
         foreach ($rows as $row) {
@@ -135,10 +136,7 @@ class ReindexListener
                     $this->searchManager->index($structure, $locale);
                     $count[$structureClass]['indexed']++;
                 } catch (\Exception $e) {
-                    $output->writeln(
-                        '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
-                        ', locale: ' . $locale . '): ' . $e->getMessage() . '</error>'
-                    );
+                    $errors[] = $e;
                 }
             }
 
@@ -146,6 +144,13 @@ class ReindexListener
         }
 
         $output->writeln('');
+
+        foreach ($errors as $error) {
+            $output->writeln(
+                '<error>Error indexing or de-indexing page (path: ' . $node->getPath() .
+                ', locale: ' . $locale . ')</error>: ' . $error->getMessage()
+            );
+        }
 
         foreach ($count as $className => $stats) {
             if ($stats['indexed'] == 0) {
