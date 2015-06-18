@@ -19,12 +19,14 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
 {
     protected function registerCompilerPass(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new ResolveTargetEntitiesPass(
-            array(
-                'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
-                'Sulu\Component\Persistence\Model\BarInterface' => '\stdClass',
+        $container->addCompilerPass(
+            new ResolveTargetEntitiesPass(
+                array(
+                    'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
+                    'Sulu\Component\Persistence\Model\BarInterface' => '\stdClass',
+                )
             )
-        ));
+        );
 
         $this->setParameter('sulu.model.foo.class', '\stdClass');
         $this->setDefinition(

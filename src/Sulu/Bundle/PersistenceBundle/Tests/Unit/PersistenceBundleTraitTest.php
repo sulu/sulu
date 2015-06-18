@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
 {
-
     public function testModelInterfaceMapping()
     {
         $bundle = new UsingPersistenceBundleTrait();

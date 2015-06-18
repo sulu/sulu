@@ -14,29 +14,28 @@ use Prophecy\Argument;
 
 class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var \Doctrine\ORM\Event\LoadClassMetadataEventArgs
      */
     protected $loadClassMetadataEvent;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var \Doctrine\ORM\Mapping\ClassMetadata
      */
     protected $classMetadata;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var \ReflectionClass
      */
     protected $reflection;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var \Doctrine\ORM\Configuration
      */
     protected $configuration;
 
@@ -128,6 +127,7 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
         $this->configuration->getNamingStrategy()->willReturn(null);
 
+        /** @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $mappingDriver */
         $mappingDriver = $this->prophesize('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
         $mappingDriver->getAllClassNames()->willReturn(array(get_class($this->parentObject->reveal())));
