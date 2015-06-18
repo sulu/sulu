@@ -231,6 +231,13 @@ class StructureDriver implements AdvancedDriverInterface
             return;
         } 
 
+        if (isset($tagAttributes['role']) && null !== $tagAttributes['role']) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot assign search fields with the "role" attribute to properties within blocks when trying to set field "%s"',
+                $property->getName()
+            ));
+        }
+
         if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
             $metadata->addFieldMapping(
                 $property->getName(),
