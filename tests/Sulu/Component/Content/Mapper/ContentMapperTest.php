@@ -3187,6 +3187,122 @@ class ContentMapperTest extends SuluTestCase
         $this->mapper->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1, true, $uuid);
     }
 
+    /**
+     * It should delete a node which has children with history.
+     * It should not throw an exception
+     */
+    public function testDeleteWithChildrenHistory()
+    {
+        $data = array(
+            array(
+                'title' => 'A',
+                'url' => '/a',
+            ),
+            array(
+                'title' => 'B',
+                'url' => '/a/b',
+            ),
+            array(
+                'title' => 'C',
+                'url' => '/a/b/c',
+            ),
+            array(
+                'title' => 'D',
+                'url' => '/a/d',
+            ),
+        );
+
+        // save content
+        $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
+        $data[2] = $this->mapper->save($data[2], 'overview', 'sulu_io', 'de', 1, true, null, $data[1]->getUuid());
+        $data[3] = $this->mapper->save($data[3], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
+
+        // move /a/b to /a/d/b
+        $this->mapper->move($data[1]->getUuid(), $data[3]->getUuid(), 1, 'sulu_io', 'de');
+
+        // delete /a/d
+        $this->mapper->delete($data[3]->getUuid(), 'sulu_io');
+
+        // check
+        try {
+            $this->mapper->load($data[3]->getUuid(), 'sulu_io', 'de');
+            $this->fail('Node should not exist');
+        } catch (DocumentNotFoundException $ex) {
+        }
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de');
+        $this->assertEquals(0, sizeof($result));
+    }
+
+    /**
+     * It should copy a language with an internal link
+     */
+    public function testLanguageCopyInternalLink()
+    {
+        $page = $this->documentManager->create('page');
+        $page->setTitle('Hallo');
+        $page->setResourceSegment('/hallo');
+        $this->documentManager->persist($page, 'de', array(
+            'parent_path' => '/cmf/sulu_io/contents'
+        ));
+        $this->documentManager->flush();
+
+        $data = array(
+            'title' => 'Page-1',
+            'internal_link' => $page->getUuid(),
+        );
+
+        $data = $this->mapper->save($data, 'internal-link', 'sulu_io', 'de', 1);
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'sulu_io', 'de', 'en');
+
+        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals($page->getUuid(), $result->getPropertyValue('internal_link'));
+    }
+
+    public function testGetResourceLocatorsWithShadow()
+    {
+        $page = $this->documentManager->create('page');
+        $page->setStructureType('overview');
+        $page->setTitle('Beschreibung');
+        $page->setResourceSegment('/beschreibung');
+        $page->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($page, 'de', array(
+            'parent_path' => '/cmf/sulu_io/contents',
+        ));
+        $this->documentManager->flush();
+
+        $page->setTitle('Description');
+        $page->setResourceSegment('/description');
+        $page->setWorkflowStage(WorkflowStage::TEST);
+        $this->documentManager->persist($page, 'en', array(
+            'parent_path' => '/cmf/sulu_io/contents',
+        ));
+        $this->documentManager->flush();
+
+        $page->setShadowLocaleEnabled(true);
+        $page->setShadowLocale('de');
+
+        $this->documentManager->persist($page, 'en', array(
+            'parent_path' => '/cmf/sulu_io/contents',
+        ));
+        $this->documentManager->flush();
+
+        $content = $this->mapper->load($page->getUuid(), 'sulu_io', 'en');
+        $urls = $content->getUrls();
+
+        $this->assertArrayHasKey('en', $urls);
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertArrayHasKey('de', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+    }
+
     private function createUserTokenWithId($id)
     {
         $user = $this->prophesize(UserInterface::class);

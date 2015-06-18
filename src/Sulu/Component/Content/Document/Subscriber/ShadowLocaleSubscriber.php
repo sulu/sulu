@@ -145,6 +145,15 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 
         $locatorProperty = $structure->getPropertyByTagName('sulu.rlp');
 
+        if ($node->getPropertyValueWithDefault(
+            $this->encoder->localizedSystemName(
+                $locatorProperty->getName(), $document->getLocale()
+            ),
+            null
+        )) {
+            return;
+        }
+
         $shadowLocator = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $locatorProperty->getName(), $document->getShadowLocale()
@@ -157,8 +166,8 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         }
 
         $event->getAccessor()->set(
-            'resourceSegment',
-            $shadowLocator
+          'resourceSegment',
+          $shadowLocator
         );
     }
 

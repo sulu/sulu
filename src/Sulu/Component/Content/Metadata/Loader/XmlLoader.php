@@ -77,7 +77,9 @@ class XmlLoader extends XmlLegacyLoader
     {
         $section = new SectionMetadata();
         $section->name = $propertyName;
-        $section->title = $data['meta']['title'];
+        if (isset($data['meta']['title'])) {
+            $section->title = $data['meta']['title'];
+        }
 
         foreach ($data['properties'] as $name => $property) {
             $section->children[$name] = $this->createProperty($name, $property);
