@@ -12,6 +12,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 
 /**
  * Remove routes and references associated with content
@@ -42,10 +43,20 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
+        $this->removeDocument($document);
+    }
 
+    public function removeDocument($document)
+    {
         // TODO: This is not a good indicator. There should be a RoutableBehavior here.
         if (!$document instanceof StructureBehavior) {
             return;
+        }
+
+        if ($document instanceof ChildrenBehavior) {
+            foreach ($document->getChildren() as $child) {
+                $this->removeDocument($child);
+            }
         }
 
         $this->removeReferences($document);

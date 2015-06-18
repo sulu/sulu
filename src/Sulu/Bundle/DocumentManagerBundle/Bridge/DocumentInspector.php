@@ -21,6 +21,7 @@ use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**
  * This class infers information about documents, for example
@@ -155,6 +156,18 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
+     * Return the original (requested) locale for this document before
+     * any fallback logic was applied to it.
+     *
+     * @param object $document
+     * @return string
+     */
+    public function getOriginalLocale($document)
+    {
+        return $this->documentRegistry->getOriginalLocaleForDocument($document);
+    }
+
+    /**
      * Return the concrete localizations for the given document
      *
      * @param StructureBehavior $document
@@ -240,8 +253,17 @@ class DocumentInspector extends BaseDocumentInspector
         $rlpProperty = $structure->getPropertyByTagName('sulu.rlp');
 
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $locale = $localization->getLocalization();
-            $stageName = $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, $locale);
+            $resolvedLocale = $localization->getLocalization();
+            $locale = $resolvedLocale;
+
+            $shadowEnabledName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD, $resolvedLocale);
+
+            if (true === $node->getPropertyValueWithDefault($shadowEnabledName, false)) {
+                $shadowLocaleName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, $resolvedLocale);
+                $resolvedLocale = $node->getPropertyValue($shadowLocaleName);
+            }
+
+            $stageName = $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, $resolvedLocale);
 
             if (false === $node->hasProperty($stageName)) {
                 continue;
