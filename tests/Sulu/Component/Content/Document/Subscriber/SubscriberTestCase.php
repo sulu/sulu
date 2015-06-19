@@ -18,6 +18,36 @@ use PHPCR\NodeInterface;
 
 class SubscriberTestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var PersistEvent
+     */
+    protected $persistEvent;
+
+    /**
+     * @var HydrateEvent
+     */
+    protected $hydrateEvent;
+
+    /**
+     * @var \stdClass
+     */
+    protected $notImplementing;
+
+    /**
+     * @var PropertyEncoder
+     */
+    protected $encoder;
+
+    /**
+     * @var NodeInterface
+     */
+    protected $node;
+
+    /**
+     * @var DocumentAccessor
+     */
+    protected $accessor;
+
     public function setUp()
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
