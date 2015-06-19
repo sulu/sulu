@@ -57,6 +57,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     public static function getSubscribedEvents()
     {
         return array(
+            Events::METADATA_LOAD => 'handleMetadataLoad',
             Events::PERSIST => array(
                 // before resourceSegment and content
                 array('handlePersistUpdateUrl', 20),
@@ -66,6 +67,25 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
                 array('handleHydrate', 390),
             ),
         );
+    }
+
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (!$metadata->getReflectedClass()->isSubclassOf(ShadowLocaleBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('shadowLocaleEnabled', array(
+            'property' => self::SHADOW_ENABLED_FIELD,
+            'encoding' => 'system_localized',
+        ));
+
+        $metadata->addFieldMapping('shadowLocale', array(
+            'property' => self::SHADOW_LOCALE_FIELD,
+            'encoding' => 'system_localized',
+        ));
     }
 
     /**
@@ -82,13 +102,10 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         $document = $event->getDocument();
 
         $shadowLocaleEnabled = $this->getShadowLocaleEnabled($node, $locale);
-        $document->setShadowLocaleEnabled($shadowLocaleEnabled);
 
         if (!$shadowLocaleEnabled) {
             return;
         }
-
-        $document->setShadowLocale($this->getShadowLocale($node, $locale));
 
         $shadowLocale = $this->getShadowLocale($node, $locale);
         $this->registry->updateLocale($document, $shadowLocale, $locale);
@@ -105,16 +122,6 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         if ($document->isShadowLocaleEnabled()) {
             $this->validateShadow($document);
         }
-
-        $event->getNode()->setProperty(
-            $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $event->getLocale()),
-            $document->isShadowLocaleEnabled() ?: null
-        );
-
-        $event->getNode()->setProperty(
-            $this->encoder->localizedSystemName(self::SHADOW_LOCALE_FIELD, $event->getLocale()),
-            $document->getShadowLocale()
-        );
     }
 
     /**
