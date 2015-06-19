@@ -32,8 +32,7 @@
         "willdurand/hateoas-bundle": "0.3.*",
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
-        "sulu/document-manager": "dev-master",
-        "sulu/document-manager": "dev-master"
+        "sulu/document-manager": "dev-metadata-event"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",

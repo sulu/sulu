@@ -10,80 +10,36 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\ProxyFactory;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\DocumentManager\Events;
 
+/**
+ * Behavior for route (sulu:path) documents
+ */
 class RouteSubscriber extends AbstractMappingSubscriber
 {
     const DOCUMENT_TARGET_FIELD = 'content';
 
-    private $proxyFactory;
-    private $documentRegistry;
-
-    /**
-     * @param PropertyEncoder  $encoder
-     * @param DocumentAccessor $accessor
-     * @param ProxyFactory     $proxyFactory
-     */
-    public function __construct(
-        PropertyEncoder $encoder,
-        ProxyFactory $proxyFactory,
-        DocumentRegistry $documentRegistry
-    ) {
-        parent::__construct($encoder);
-        $this->proxyFactory = $proxyFactory;
-        $this->documentRegistry = $documentRegistry;
-    }
-
-    public function supports($document)
+    public static function getSubscribedEvents()
     {
-        return $document instanceof RouteBehavior;
-    }
-
-    /**
-     * @param HydrateEvent $event
-     */
-    public function doHydrate(AbstractMappingEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-
-        $targetNode = $node->getPropertyValueWithDefault(
-            $this->encoder->systemName(self::DOCUMENT_TARGET_FIELD),
-            null
+        return array(
+            Events::METADATA_LOAD => 'handleMetadataLoad',
         );
+    }
 
-        $targetDocument = null;
-        if ($targetNode) {
-            $targetDocument = $this->proxyFactory->createProxyForNode($document, $targetNode);
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (false === $metadata->getReflectedClass()->isSubclassOf(RouteBehavior::class)) {
+            return;
         }
 
-        $document->setTargetDocument($targetDocument);
-    }
-
-    /**
-     * @param PersistEvent $event
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-        $targetDocument = $document->getTargetDocument();
-
-        $targetNode = null;
-        if ($targetDocument) {
-            $targetNode = $this->documentRegistry->getNodeForDocument($targetDocument);
-        }
-
-        $node->setProperty(
-            $this->encoder->systemName(self::DOCUMENT_TARGET_FIELD),
-            $targetNode
-        );
+        $metadata->addFieldMapping(self::DOCUMENT_TARGET_FIELD, array(
+            'encoding' => 'system_localized',
+            'property' => self::DOCUMENT_TARGET_FIELD,
+        ));
     }
 }

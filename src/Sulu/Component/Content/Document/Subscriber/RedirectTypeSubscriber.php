@@ -22,13 +22,12 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use PHPCR\PropertyType;
 
-class RedirectTypeSubscriber extends AbstractMappingSubscriber
+class RedirectTypeSubscriber implements EventSubscriberInterface
 {
     const REDIRECT_TYPE_FIELD = 'nodeType';
     const INTERNAL_FIELD = 'internal_link';
     const EXTERNAL_FIELD = 'external';
 
-    private $proxyFactory;
     private $documentRegistry;
 
     /**
@@ -37,87 +36,39 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
      * @param ProxyFactory $proxyFactory
      */
     public function __construct(
-        PropertyEncoder $encoder, 
-        ProxyFactory $proxyFactory,
         DocumentRegistry $documentRegistry
     )
     {
-        parent::__construct($encoder);
-        $this->proxyFactory = $proxyFactory;
         $this->documentRegistry = $documentRegistry;
     }
 
-    public function supports($document)
+    public static function getSubscribedEvents()
     {
-        return $document instanceof RedirectTypeBehavior;
+        return array(
+            Events::METADATA_LOAD => 'handleMetadataLoad',
+        );
     }
 
-    /**
-     * @param HydrateEvent $event
-     */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleMetadataLoad(MetadataLoadEvent $event)
     {
-        $node = $event->getNode();
-        $document = $event->getDocument();
+        $metadata = $event->getMetadata();
 
-        $redirectType = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            RedirectType::NONE
-        );
-        $document->setRedirectType($redirectType);
-
-        if ($redirectType === RedirectType::INTERNAL) {
-            $internalNode = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-                null
-            );
-
-            if ($internalNode) {
-                $document->setRedirectTarget($this->proxyFactory->createProxyForNode($document, $internalNode));
-            }
-        }
-
-        if ($redirectType === RedirectType::EXTERNAL) {
-            $externalUrl = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-                null
-            );
-            $document->setRedirectExternal($externalUrl);
-        }
-    }
-
-    /**
-     * @param PersistEvent $event
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            $document->getRedirectType() ? : RedirectType::NONE,
-            PropertyType::LONG
-        );
-
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-            $document->getRedirectExternal()
-        );
-
-        $internalDocument = $document->getRedirectTarget();
-        if (!$internalDocument) {
+        if (false === $metadata->getReflectedClass()->isSubclassOf(OrderBehavior::class)) {
             return;
         }
 
-        $internalNode = $this->documentRegistry->getNodeForDocument($internalDocument);
-
-        // TODO: This should not be a UUID
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-            $internalNode
-        );
-
-        $this->doHydrate($event);
+        $metadata->addFieldMapping(self::REDIRECT_TYPE_FIELD, array(
+            'encoding' => 'system_localized',
+            'property' => self::REDIRECT_TYPE_FIELD,
+        ));
+        $metadata->addFieldMapping(self::EXTERNAL_FIELD, array(
+            'encoding' => 'system_localized',
+            'property' => self::EXTERNAL_FIELD,
+        ));
+        $metadata->addFieldMapping(self::INTERNAL_FIELD, array(
+            'encoding' => 'system_localized',
+            'property' => self::INTERNAL_FIELD,
+            'type' => 'reference',
+        ));
     }
 }
