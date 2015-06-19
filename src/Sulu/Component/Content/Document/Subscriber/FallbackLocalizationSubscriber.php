@@ -11,13 +11,11 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Compat\Structure\Property;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\DocumentInspector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -51,11 +49,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      * @var DocumentRegistry
      */
     private $documentRegistry;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale;
 
     public function __construct(
         PropertyEncoder $encoder,
@@ -100,8 +93,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $event->getNode();
-        $newLocale = $this->getAvailableLocalization($node, $document, $locale);
+        $newLocale = $this->getAvailableLocalization($document, $locale);
         $event->setLocale($newLocale);
 
         if ($newLocale === $locale) {
@@ -110,6 +102,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
         if ($event->getOption('load_ghost_content', true) === true) {
             $this->documentRegistry->updateLocale($document, $newLocale, $locale);
+
             return;
         }
 
@@ -119,28 +112,31 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Return available localizations
      *
-     * @param NodeInterface $node
-     * @param mixed $document
-     * @param mixed $locale
+     * @param StructureBehavior $document
+     * @param string $locale
+     *
+     * @return string
      */
-    public function getAvailableLocalization(NodeInterface $node, $document, $locale)
+    public function getAvailableLocalization(StructureBehavior $document, $locale)
     {
-        $structureTypeName = $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, $locale);
+        $availableLocales = $this->inspector->getLocales($document);
 
-        // check if it already is the correct localization
-        if ($node->hasProperty($structureTypeName)) {
+        if (in_array($locale, $availableLocales)) {
             return $locale;
         }
 
         $fallbackLocale = null;
 
         if ($document instanceof WebspaceBehavior) {
-            $fallbackLocale = $this->getWebspaceLocale($document, $node, $locale);
+            $fallbackLocale = $this->getWebspaceLocale(
+                $this->inspector->getWebspace($document),
+                $availableLocales,
+                $locale
+            );
         }
 
         if (!$fallbackLocale) {
-            $locales = $this->inspector->getLocales($document);
-            $fallbackLocale = reset($locales);
+            $fallbackLocale = reset($availableLocales);
         }
 
         if (!$fallbackLocale) {
@@ -151,16 +147,16 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param mixed $document
-     * @param NodeInterface $node
-     * @param mixed $locale
+     * @param string $webspaceName
+     * @param string[] $availableLocales
+     * @param string $locale
+     *
+     * @return string
      */
-    private function getWebspaceLocale($document, NodeInterface $node, $locale)
+    private function getWebspaceLocale($webspaceName, $availableLocales, $locale)
     {
-        $webspaceName = $this->inspector->getWebspace($document);
-
         if (!$webspaceName) {
-            return;
+            return null;
         }
 
         // get localization object for querying parent localizations
@@ -168,21 +164,21 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $localization = $webspace->getLocalization($locale);
 
         if (null === $localization) {
-            return;
+            return null;
         }
 
         $resultLocalization = null;
 
         // find first available localization in parents
         $resultLocalization = $this->findAvailableParentLocalization(
-            $node,
+            $availableLocales,
             $localization
         );
 
         // find first available localization in children, if no result is found yet
         if (!$resultLocalization) {
             $resultLocalization = $this->findAvailableChildLocalization(
-                $node,
+                $availableLocales,
                 $localization
             );
         }
@@ -190,13 +186,13 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         // find any localization available, if no result is found yet
         if (!$resultLocalization) {
             $resultLocalization = $this->findAvailableLocalization(
-                $node,
+                $availableLocales,
                 $webspace->getLocalizations()
             );
         }
 
         if (!$resultLocalization) {
-            return;
+            return null;
         }
 
         return $resultLocalization->getLocalization();
@@ -205,19 +201,17 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds the next available parent-localization in which the node has a translation
      *
-     * @param NodeInterface $node         The node, which properties will be checked
-     * @param Localization  $localization The localization to start the search for
+     * @param string[] $availableLocales
+     * @param Localization $localization The localization to start the search for
      *
-     * @return Localization|null
+     * @return null|Localization
      */
     private function findAvailableParentLocalization(
-        NodeInterface $node,
+        array $availableLocales,
         Localization $localization
     ) {
         do {
-            $propertyName = $this->getPropertyName($localization->getLocalization());
-
-            if ($node->hasProperty($propertyName)) {
+            if (in_array($localization->getLocalization(), $availableLocales)) {
                 return $localization;
             }
 
@@ -225,70 +219,64 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             $localization = $localization->getParent();
         } while ($localization != null);
 
-        return;
+        return null;
     }
 
     /**
      * Finds the next available child-localization in which the node has a translation
      *
-     * @param  NodeInterface      $node         The node, which properties will be checked
-     * @param  Localization       $localization The localization to start the search for
-     * @param  TranslatedProperty $property     The property which will be checked for the translation
+     * @param string[] $availableLocales
+     * @param Localization $localization The localization to start the search for
+     *
      * @return null|Localization
      */
     private function findAvailableChildLocalization(
-        NodeInterface $node,
+        array $availableLocales,
         Localization $localization
     ) {
         $childrenLocalizations = $localization->getChildren();
 
         if (!empty($childrenLocalizations)) {
             foreach ($childrenLocalizations as $childrenLocalization) {
-                $propertyName = $this->getPropertyName($childrenLocalization->getLocalization());
                 // return the localization if a translation exists in the child localization
-                if ($node->hasProperty($propertyName)) {
+                if (in_array($childrenLocalization->getLocalization(), $availableLocales)) {
                     return $childrenLocalization;
                 }
 
                 // recursively call this function for checking children
-                return $this->findAvailableChildLocalization($node, $childrenLocalization);
+                return $this->findAvailableChildLocalization($availableLocales, $childrenLocalization);
             }
         }
 
         // return null if nothing was found
-        return;
+        return null;
     }
 
     /**
      * Finds any localization, in which the node is translated
-     * @param  NodeInterface      $node          The node, which properties will be checkec
-     * @param  array              $localizations The available localizations
-     * @param  TranslatedProperty $property      The property to check
+     *
+     * @param string[] $availableLocales
+     * @param Localization[] $localizations The available localizations
+     *
      * @return null|Localization
      */
     private function findAvailableLocalization(
-        NodeInterface $node,
+        array $availableLocales,
         array $localizations
     ) {
         foreach ($localizations as $localization) {
-            $propertyName = $this->getPropertyName($localization->getLocalization());
 
-            if ($node->hasProperty($propertyName)) {
+            if (in_array($localization->getLocalization(), $availableLocales)) {
                 return $localization;
             }
 
             $children = $localization->getChildren();
 
             if ($children) {
-                return $this->findAvailableLocalization($node, $children);
+                return $this->findAvailableLocalization($availableLocales, $children);
             }
         }
 
-        return;
-    }
-
-    private function getPropertyName($locale)
-    {
-        return $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, $locale);
+        return null;
     }
 }

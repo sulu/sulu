@@ -8,40 +8,38 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Integration;
+namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\Structure\Snippet;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 
-class SnippetApiTest extends SuluTestCase
+class SnippetControllerTest extends SuluTestCase
 {
     /**
      * @var Client
      */
     protected $client;
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     protected $hotel1;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     protected $hotel2;
 
     /**
-     * @var ContentMapperInterface
+     * @var DocumentManagerInterface
      */
-    protected $contentMapper;
+    protected $documentManager;
 
     public function setUp()
     {
         parent::setUp();
-        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->initPhpcr();
         $this->loadFixtures();
@@ -105,13 +103,13 @@ class SnippetApiTest extends SuluTestCase
         return array(
             array(
                 array(),
-                5,
+                6,
             ),
             array(
                 array(
                     'type' => 'car',
                 ),
-                3,
+                4,
             ),
             array(
                 array(
@@ -138,7 +136,7 @@ class SnippetApiTest extends SuluTestCase
                     'limit' => 2,
                     'page' => 3,
                 ),
-                1,
+                2,
             ),
         );
     }
@@ -159,6 +157,11 @@ class SnippetApiTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
         $this->assertCount($expectedNbResults, $res['_embedded']['snippets']);
+
+        foreach ($res['_embedded']['snippets'] as $snippet) {
+            // check if all snippets have a title, even if it is a ghost page
+            $this->assertArrayHasKey('title', $snippet);
+        }
     }
 
     public function providePost()
@@ -242,22 +245,14 @@ class SnippetApiTest extends SuluTestCase
 
     public function testDeleteReferenced()
     {
-        $request = ContentMapperRequest::create()
-            ->setType('page')
-            ->setWebspaceKey('sulu_io')
-            ->setTemplateKey('hotel_page')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'Hotels page',
-                'url' => '/hotels',
-                'hotels' => array(
-                    $this->hotel1->getUuid(),
-                    $this->hotel2->getUuid(),
-                ),
-            ));
+        $page = $this->documentManager->create('page');
+        $page->setStructureType('hotel_page');
+        $page->setTitle('Hotels page');
+        $page->setResourceSegment('/hotels');
+        $page->getStructure()->bind(array('hotels' => array($this->hotel1->getUuid(), $this->hotel2->getUuid())));
+        $this->documentManager->persist($page, 'de', array('parent_path' => '/cmf/sulu_io/contents'));
+        $this->documentManager->flush();
 
-        $this->contentMapper->saveRequest($request);
         $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
         $response = $this->client->getResponse();
 
@@ -267,55 +262,37 @@ class SnippetApiTest extends SuluTestCase
     private function loadFixtures()
     {
         // HOTELS
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'Le grande budapest',
-            ));
-        $this->hotel1 = $this->contentMapper->saveRequest($req);
+        $this->hotel1 = $this->documentManager->create('snippet');
+        $this->hotel1->setStructureType('hotel');
+        $this->hotel1->setTitle('Le grande budapest');
+        $this->documentManager->persist($this->hotel1, 'de');
 
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'L\'Hôtel New Hampshire',
-            ));
-        $this->hotel2 = $this->contentMapper->saveRequest($req);
+        $this->hotel2 = $this->documentManager->create('snippet');
+        $this->hotel2->setStructureType('hotel');
+        $this->hotel2->setTitle('L\'Hôtel New Hampshire');
+        $this->documentManager->persist($this->hotel2, 'de');
 
         // CARS
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('car')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'Skoda',
-            ));
-        $this->contentMapper->saveRequest($req);
+        $car1 = $this->documentManager->create('snippet');
+        $car1->setStructureType('car');
+        $car1->setTitle('Skoda');
+        $this->documentManager->persist($car1, 'de');
 
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('car')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'Volvo',
-            ));
-        $this->contentMapper->saveRequest($req);
+        $car1 = $this->documentManager->create('snippet');
+        $car1->setStructureType('car');
+        $car1->setTitle('Volvo');
+        $this->documentManager->persist($car1, 'de');
 
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('car')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'Ford',
-            ));
-        $this->contentMapper->saveRequest($req);
+        $car1 = $this->documentManager->create('snippet');
+        $car1->setStructureType('car');
+        $car1->setTitle('Ford');
+        $this->documentManager->persist($car1, 'de');
+
+        $car1 = $this->documentManager->create('snippet');
+        $car1->setStructureType('car');
+        $car1->setTitle('VW');
+        $this->documentManager->persist($car1, 'en');
+
+        $this->documentManager->flush();
     }
 }

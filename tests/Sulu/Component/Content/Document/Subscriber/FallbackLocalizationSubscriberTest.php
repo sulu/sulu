@@ -14,8 +14,47 @@ use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
     const FIX_LOCALE = 'en';
-    const FIX_PROPERTY_NAME = 'property-name';
     const FIX_WEBSPACE = 'sulu_io';
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var DocumentRegistry
+     */
+    private $registry;
+
+    /**
+     * @var StructureBehavior
+     */
+    private $document;
+
+    /**
+     * @var Webspace
+     */
+    private $webspace;
+
+    /**
+     * @var Localization
+     */
+    private $localization1;
+
+    /**
+     * @var Localization
+     */
+    private $localization2;
+
+    /**
+     * @var FallbackLocalizationSubscriber
+     */
+    private $subscriber;
 
     public function setUp()
     {
@@ -39,9 +78,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getLocale()->willReturn(self::FIX_LOCALE);
-        $this->encoder->localizedSystemName(
-            StructureSubscriber::STRUCTURE_TYPE_FIELD, self::FIX_LOCALE
-        )->willReturn(self::FIX_PROPERTY_NAME);
         $this->webspaceManager->findWebspaceByKey(self::FIX_WEBSPACE)->willReturn($this->webspace);
         $this->registry->getDefaultLocale()->willReturn('de');
     }
@@ -55,12 +91,18 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
+    public function testAvailableLocale()
+    {
+        $this->inspector->getLocales($this->document)->willReturn(array('de', 'en'));
+        $this->hydrateEvent->setLocale('en')->shouldBeCalled();
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+    }
+
     /**
      * If no webspace is available, then return the first available localization for the document
      */
     public function testNoWebspace()
     {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
         $this->registry->updateLocale(
@@ -78,7 +120,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
      */
     public function testNoWebspaceDoNotLoadGhostContent()
     {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
@@ -100,7 +141,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
      */
     public function testNoLocale()
     {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(array());
         $this->node->getPath()->willReturn('/path/to');
@@ -112,24 +152,20 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
      */
     public function testWebspaceParentLocalization()
     {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
+        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
         $this->localization1->getLocalization()->willReturn('en');
-        $this->localization2->getLocalization()->willReturn('at');
-        $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, 'en')->willReturn('prop1');
-        $this->node->hasProperty('prop1')->willReturn(false);
+        $this->localization2->getLocalization()->willReturn('de');
         $this->localization1->getParent()->willReturn($this->localization2->reveal());
-        $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
-        $this->node->hasProperty('prop2')->willReturn(true);
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'at',
+            'de',
             'en'
         )->shouldBeCalled();
-        $this->hydrateEvent->setLocale('at')->shouldBeCalled();
+        $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -138,17 +174,12 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
      */
     public function testWebspaceChildrenLocalization()
     {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
+        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
         $this->localization1->getLocalization()->willReturn('en');
-        $this->localization2->getLocalization()->willReturn('at');
-
-        $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, 'en')->willReturn('prop1');
-        $this->node->hasProperty('prop1')->willReturn(false);
-        $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
-        $this->node->hasProperty('prop2')->willReturn(true);
+        $this->localization2->getLocalization()->willReturn('de');
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
@@ -158,10 +189,10 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'at',
+            'de',
             'en'
         )->shouldBeCalled();
-        $this->hydrateEvent->setLocale('at')->shouldBeCalled();
+        $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -170,17 +201,13 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
      */
     public function testWebspaceAnyLocalization()
     {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
+        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
         $this->localization1->getLocalization()->willReturn('en');
-        $this->localization2->getLocalization()->willReturn('at');
+        $this->localization2->getLocalization()->willReturn('de');
 
-        $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, 'en')->willReturn('prop1');
-        $this->node->hasProperty('prop1')->willReturn(false);
-        $this->encoder->localizedSystemName(StructureSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
-        $this->node->hasProperty('prop2')->willReturn(true);
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
@@ -192,10 +219,10 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'at',
+            'de',
             'en'
         )->shouldBeCalled();
-        $this->hydrateEvent->setLocale('at')->shouldBeCalled();
+        $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 }
