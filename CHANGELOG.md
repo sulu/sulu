@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #1258 [All]            Updated Symfony to version 2.7
+
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
