@@ -30,8 +30,6 @@ future versions of Sulu. The only exception is the
 `sulu:upgrade:0.9.0:resource-locator` command, which has been renamed to
 `sulu:content:resource-locator:maintain`.
 
-## 1.0.0-RC2
-
 ### Contact management changed
 
 | Removed methods                                                           | Use instead                                                               |
@@ -56,6 +54,8 @@ future versions of Sulu. The only exception is the
 | `Sulu/Bundle/ContactBundle/Entity/Contact:removeContactAddresse`          | `Sulu/Bundle/ContactBundle/Entity/Contact:removeContactAddress`           |
 | `Sulu/Bundle/ContactBundle/Entity/Contact:addCategorie`                   | `Sulu/Bundle/ContactBundle/Entity/Contact:addCategory`                    |
 | `Sulu/Bundle/ContactBundle/Entity/Contact:removeCategorie`                | `Sulu/Bundle/ContactBundle/Entity/Contact:removeCategory`                 |
+
+## 1.0.0-RC2
 
 ### Twig-Extensions
 
