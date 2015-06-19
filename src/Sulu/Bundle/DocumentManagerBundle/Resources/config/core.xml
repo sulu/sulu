@@ -30,6 +30,7 @@
         </service>
 
         <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory" public="false">
+            <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument>%sulu_document_manager.mapping%</argument>
         </service>
 

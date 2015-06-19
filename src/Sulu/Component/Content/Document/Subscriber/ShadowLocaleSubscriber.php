@@ -17,9 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 
 class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 {
@@ -57,6 +55,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     public static function getSubscribedEvents()
     {
         return [
+            Events::METADATA_LOAD => 'handleMetadataLoad',
             Events::PERSIST => [
                 // before resourceSegment and content
                 ['handlePersistUpdateUrl', 20],
@@ -66,6 +65,27 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
                 ['handleHydrate', 390],
             ],
         ];
+    }
+
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (!$metadata->getReflectionClass()->isSubclassOf(ShadowLocaleBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('shadowLocaleEnabled', array(
+            'property' => self::SHADOW_ENABLED_FIELD,
+            'encoding' => 'system_localized',
+            'mapped' => false,
+        ));
+
+        $metadata->addFieldMapping('shadowLocale', array(
+            'property' => self::SHADOW_LOCALE_FIELD,
+            'encoding' => 'system_localized',
+            'mapped' => false,
+        ));
     }
 
     /**
@@ -88,9 +108,8 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $document->setShadowLocale($this->getShadowLocale($node, $locale));
-
         $shadowLocale = $this->getShadowLocale($node, $locale);
+        $document->setShadowLocale($shadowLocale);
         $this->registry->updateLocale($document, $shadowLocale, $locale);
         $event->setLocale($shadowLocale);
     }

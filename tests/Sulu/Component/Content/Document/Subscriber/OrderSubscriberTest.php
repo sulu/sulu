@@ -28,8 +28,8 @@ class OrderSubscriberTest extends SubscriberTestCase
         parent::setUp();
 
         $this->subscriber = new OrderSubscriber($this->encoder->reveal());
-        $this->hydrateEvent->getDocument()->willReturn(new TestOrderDocument(10));
-        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->persistEvent->getDocument()->willReturn(new TestOrderDocument(null));
+        $this->persistEvent->getNode()->willReturn($this->node->reveal());
     }
 
     public function testPersist()
@@ -80,12 +80,15 @@ class OrderSubscriberTest extends SubscriberTestCase
     /**
      * It should set the order on the document.
      */
-    public function testHydrateOrder()
+    public function testPersistOrder()
     {
-        $this->encoder->systemName('order')->willReturn('sys:order');
-        $this->node->getPropertyValueWithDefault('sys:order', null)->willReturn(50);
-        $this->accessor->set('suluOrder', 50)->shouldBeCalled();
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->node->getParent()->willReturn($this->parentNode->reveal());
+        $this->parentNode->getNodes()->willReturn(array(
+            $this->node->reveal()
+        ));
+        $this->persistEvent->getAccessor()->willReturn($this->accessor->reveal());
+        $this->accessor->set('suluOrder', 20)->shouldBeCalled();
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 }
 
