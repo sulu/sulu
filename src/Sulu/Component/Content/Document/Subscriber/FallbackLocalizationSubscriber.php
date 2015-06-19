@@ -153,7 +153,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      *
      * @return string
      */
-    private function getWebspaceLocale($webspaceName, $availableLocales, $locale)
+    private function getWebspaceLocale($webspaceName, array $availableLocales, $locale)
     {
         if (!$webspaceName) {
             return null;

@@ -273,25 +273,25 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->persist($this->hotel2, 'de');
 
         // CARS
-        $car1 = $this->documentManager->create('snippet');
-        $car1->setStructureType('car');
-        $car1->setTitle('Skoda');
-        $this->documentManager->persist($car1, 'de');
+        $car = $this->documentManager->create('snippet');
+        $car->setStructureType('car');
+        $car->setTitle('Skoda');
+        $this->documentManager->persist($car, 'de');
 
-        $car1 = $this->documentManager->create('snippet');
-        $car1->setStructureType('car');
-        $car1->setTitle('Volvo');
-        $this->documentManager->persist($car1, 'de');
+        $car = $this->documentManager->create('snippet');
+        $car->setStructureType('car');
+        $car->setTitle('Volvo');
+        $this->documentManager->persist($car, 'de');
 
-        $car1 = $this->documentManager->create('snippet');
-        $car1->setStructureType('car');
-        $car1->setTitle('Ford');
-        $this->documentManager->persist($car1, 'de');
+        $car = $this->documentManager->create('snippet');
+        $car->setStructureType('car');
+        $car->setTitle('Ford');
+        $this->documentManager->persist($car, 'de');
 
-        $car1 = $this->documentManager->create('snippet');
-        $car1->setStructureType('car');
-        $car1->setTitle('VW');
-        $this->documentManager->persist($car1, 'en');
+        $car = $this->documentManager->create('snippet');
+        $car->setStructureType('car');
+        $car->setTitle('VW');
+        $this->documentManager->persist($car, 'en');
 
         $this->documentManager->flush();
     }
