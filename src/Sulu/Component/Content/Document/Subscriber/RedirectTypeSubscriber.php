@@ -20,104 +20,44 @@ use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Events;
 use PHPCR\PropertyType;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 
-class RedirectTypeSubscriber extends AbstractMappingSubscriber
+class RedirectTypeSubscriber implements EventSubscriberInterface
 {
     const REDIRECT_TYPE_FIELD = 'nodeType';
     const INTERNAL_FIELD = 'internal_link';
     const EXTERNAL_FIELD = 'external';
 
-    private $proxyFactory;
-    private $documentRegistry;
-
-    /**
-     * @param PropertyEncoder $encoder
-     * @param DocumentAccessor $accessor
-     * @param ProxyFactory $proxyFactory
-     */
-    public function __construct(
-        PropertyEncoder $encoder, 
-        ProxyFactory $proxyFactory,
-        DocumentRegistry $documentRegistry
-    )
+    public static function getSubscribedEvents()
     {
-        parent::__construct($encoder);
-        $this->proxyFactory = $proxyFactory;
-        $this->documentRegistry = $documentRegistry;
+        return array(
+            Events::METADATA_LOAD => 'handleMetadataLoad',
+        );
     }
 
-    public function supports($document)
+    public function handleMetadataLoad(MetadataLoadEvent $event)
     {
-        return $document instanceof RedirectTypeBehavior;
-    }
+        $metadata = $event->getMetadata();
 
-    /**
-     * @param HydrateEvent $event
-     */
-    public function doHydrate(AbstractMappingEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-
-        $redirectType = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            RedirectType::NONE
-        );
-        $document->setRedirectType($redirectType);
-
-        if ($redirectType === RedirectType::INTERNAL) {
-            $internalNode = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-                null
-            );
-
-            if ($internalNode) {
-                $document->setRedirectTarget($this->proxyFactory->createProxyForNode($document, $internalNode));
-            }
-        }
-
-        if ($redirectType === RedirectType::EXTERNAL) {
-            $externalUrl = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-                null
-            );
-            $document->setRedirectExternal($externalUrl);
-        }
-    }
-
-    /**
-     * @param PersistEvent $event
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            $document->getRedirectType() ? : RedirectType::NONE,
-            PropertyType::LONG
-        );
-
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-            $document->getRedirectExternal()
-        );
-
-        $internalDocument = $document->getRedirectTarget();
-        if (!$internalDocument) {
+        if (false === $metadata->getReflectionClass()->isSubclassOf(RedirectTypeBehavior::class)) {
             return;
         }
 
-        $internalNode = $this->documentRegistry->getNodeForDocument($internalDocument);
-
-        // TODO: This should not be a UUID
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-            $internalNode
-        );
-
-        $this->doHydrate($event);
+        $metadata->addFieldMapping('redirectType', array(
+            'encoding' => 'system_localized',
+            'property' => self::REDIRECT_TYPE_FIELD,
+            'default' => RedirectType::NONE,
+        ));
+        $metadata->addFieldMapping('redirectExternal', array(
+            'encoding' => 'system_localized',
+            'property' => self::EXTERNAL_FIELD,
+        ));
+        $metadata->addFieldMapping('redirectTarget', array(
+            'encoding' => 'system_localized',
+            'property' => self::INTERNAL_FIELD,
+            'type' => 'reference',
+        ));
     }
 }

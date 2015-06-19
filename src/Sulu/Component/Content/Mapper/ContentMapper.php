@@ -453,7 +453,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $documents = $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
+        $documents = $this->documentManager->createQuery($query, $locale)->execute();
 
         return $this->documentsToStructureCollection($documents, array(
             'exclude_ghost' => $excludeGhost,

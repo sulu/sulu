@@ -20,6 +20,10 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
+/**
+ * TODO: This could be made into a pure metadata subscriber if we make
+ *       the resource locator a system property.
+ */
 class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 {
     private $inspector;

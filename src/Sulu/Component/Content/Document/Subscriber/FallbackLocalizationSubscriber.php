@@ -52,11 +52,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     private $documentRegistry;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
-
     public function __construct(
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager,
@@ -102,6 +97,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $newLocale = $this->getAvailableLocalization($node, $document, $locale);
+
         $event->setLocale($newLocale);
 
         if ($newLocale === $locale) {

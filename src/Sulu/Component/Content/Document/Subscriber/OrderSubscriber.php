@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\Events;
 use PHPCR\PropertyType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 
 /**
  * Create a property with a value corresponding to the position of the node
@@ -27,18 +28,6 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
 
-    private $encoder;
-
-    public function __construct(PropertyEncoder $encoder)
-    {
-        $this->encoder = $encoder;
-    }
-
-    public function supports($document)
-    {
-        return $document instanceof OrderBehavior;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -46,8 +35,22 @@ class OrderSubscriber implements EventSubscriberInterface
     {
         return array(
             Events::PERSIST => 'handlePersist',
-            Events::HYDRATE => 'handleHydrate',
+            Events::METADATA_LOAD => 'handleMetadataLoad',
         );
+    }
+
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (false === $metadata->getReflectionClass()->isSubclassOf(OrderBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('suluOrder', array(
+            'encoding' => 'system',
+            'property' => self::FIELD,
+        ));
     }
 
     /**
@@ -55,42 +58,21 @@ class OrderSubscriber implements EventSubscriberInterface
      */
     public function handlePersist(PersistEvent $event)
     {
-        $node = $event->getNode();
         $document = $event->getDocument();
 
-        if (false == $this->supports($document)) {
+        if (false == $document instanceof OrderBehavior) {
             return;
         }
 
-        $propertyName = $this->encoder->systemName(self::FIELD);
-
-        if ($node->hasProperty($propertyName)) {
+        // TODO: This does not seem quite right..
+        if ($document->getSuluOrder()) {
             return;
         }
 
+        $node = $event->getNode();
         $parent = $node->getParent();
         $nodeCount = count($parent->getNodes());
         $order = ($nodeCount + 1) * 10;
-
-        $node->setProperty($propertyName, $order, PropertyType::LONG);
-        $this->handleHydrate($event);
-    }
-
-    /**
-     * @param HydrateEvent $event
-     */
-    public function handleHydrate(AbstractMappingEvent $event)
-    {
-        if (false == $this->supports($event->getDocument())) {
-            return;
-        }
-
-        $node = $event->getNode();
-
-        $order = $node->getPropertyValueWithDefault(
-            $this->encoder->systemName(self::FIELD),
-            null
-        );
 
         $event->getAccessor()->set('suluOrder', $order);
     }

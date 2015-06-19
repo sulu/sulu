@@ -20,6 +20,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 
 class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 {
@@ -57,6 +58,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     public static function getSubscribedEvents()
     {
         return array(
+            Events::METADATA_LOAD => 'handleMetadataLoad',
             Events::PERSIST => array(
                 // before resourceSegment and content
                 array('handlePersistUpdateUrl', 20),
@@ -66,6 +68,27 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
                 array('handleHydrate', 390),
             ),
         );
+    }
+
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (!$metadata->getReflectionClass()->isSubclassOf(ShadowLocaleBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('shadowLocaleEnabled', array(
+            'property' => self::SHADOW_ENABLED_FIELD,
+            'encoding' => 'system_localized',
+            'mapped' => false,
+        ));
+
+        $metadata->addFieldMapping('shadowLocale', array(
+            'property' => self::SHADOW_LOCALE_FIELD,
+            'encoding' => 'system_localized',
+            'mapped' => false,
+        ));
     }
 
     /**
@@ -88,9 +111,8 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $document->setShadowLocale($this->getShadowLocale($node, $locale));
-
         $shadowLocale = $this->getShadowLocale($node, $locale);
+        $document->setShadowLocale($shadowLocale);
         $this->registry->updateLocale($document, $shadowLocale, $locale);
         $event->setLocale($shadowLocale);
     }

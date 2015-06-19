@@ -285,7 +285,6 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals('Products-2 en_us', $result[9]['title']);
         $this->assertEquals('Products-3 en_us', $result[10]['title']);
 
-        $this->assertEquals('/', $result[0]['url']);
         $this->assertEquals('/news', $result[1]['url']);
         $this->assertEquals('/news/news-1', $result[2]['url']);
         $this->assertEquals('/news/news-2', $result[3]['url']);
@@ -297,6 +296,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals('http://www.asdf.at', $result[9]['url']);
         $this->assertEquals('/news', $result[10]['url']);
 
+        $this->assertEquals('/', $result[0]['url']);
         $this->assertEquals(1, $result[0]['nodeType']);
         $this->assertEquals(1, $result[1]['nodeType']);
         $this->assertEquals(1, $result[2]['nodeType']);

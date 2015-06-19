@@ -39,7 +39,6 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
         return array(
             // should happen after content is hydrated
             Events::HYDRATE => array('handleHydrate', -10),
-            Events::PERSIST => array('handlePersist', 10),
         );
     }
 
@@ -58,11 +57,7 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
         $event->getAccessor()->set('webspaceName', $webspace);
     }
 
-    /**
-     * @param PersistEvent $event
-     */
     public function doPersist(PersistEvent $event)
     {
-        $this->doHydrate($event);
     }
 }
