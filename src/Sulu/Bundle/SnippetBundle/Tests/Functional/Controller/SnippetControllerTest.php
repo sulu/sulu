@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Integration;
+namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Symfony\Bundle\FrameworkBundle\Client;
 
-class SnippetApiTest extends SuluTestCase
+class SnippetControllerTest extends SuluTestCase
 {
     /**
      * @var Client
@@ -105,13 +105,13 @@ class SnippetApiTest extends SuluTestCase
         return array(
             array(
                 array(),
-                5,
+                6,
             ),
             array(
                 array(
                     'type' => 'car',
                 ),
-                3,
+                4,
             ),
             array(
                 array(
@@ -138,7 +138,7 @@ class SnippetApiTest extends SuluTestCase
                     'limit' => 2,
                     'page' => 3,
                 ),
-                1,
+                2,
             ),
         );
     }
@@ -159,6 +159,11 @@ class SnippetApiTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
         $this->assertCount($expectedNbResults, $res['_embedded']['snippets']);
+
+        foreach ($res['_embedded']['snippets'] as $snippet) {
+            // check if all snippets have a title, even if it is a ghost page
+            $this->assertArrayHasKey('title', $snippet);
+        }
     }
 
     public function providePost()
@@ -267,7 +272,7 @@ class SnippetApiTest extends SuluTestCase
     private function loadFixtures()
     {
         // HOTELS
-        $req = ContentMapperRequest::create()
+        $request = ContentMapperRequest::create()
             ->setType('snippet')
             ->setTemplateKey('hotel')
             ->setLocale('de')
@@ -275,9 +280,9 @@ class SnippetApiTest extends SuluTestCase
             ->setData(array(
                 'title' => 'Le grande budapest',
             ));
-        $this->hotel1 = $this->contentMapper->saveRequest($req);
+        $this->hotel1 = $this->contentMapper->saveRequest($request);
 
-        $req = ContentMapperRequest::create()
+        $request = ContentMapperRequest::create()
             ->setType('snippet')
             ->setTemplateKey('hotel')
             ->setLocale('de')
@@ -285,10 +290,10 @@ class SnippetApiTest extends SuluTestCase
             ->setData(array(
                 'title' => 'L\'Hôtel New Hampshire',
             ));
-        $this->hotel2 = $this->contentMapper->saveRequest($req);
+        $this->hotel2 = $this->contentMapper->saveRequest($request);
 
         // CARS
-        $req = ContentMapperRequest::create()
+        $request = ContentMapperRequest::create()
             ->setType('snippet')
             ->setTemplateKey('car')
             ->setLocale('de')
@@ -296,9 +301,9 @@ class SnippetApiTest extends SuluTestCase
             ->setData(array(
                 'title' => 'Skoda',
             ));
-        $this->contentMapper->saveRequest($req);
+        $this->contentMapper->saveRequest($request);
 
-        $req = ContentMapperRequest::create()
+        $request = ContentMapperRequest::create()
             ->setType('snippet')
             ->setTemplateKey('car')
             ->setLocale('de')
@@ -306,9 +311,9 @@ class SnippetApiTest extends SuluTestCase
             ->setData(array(
                 'title' => 'Volvo',
             ));
-        $this->contentMapper->saveRequest($req);
+        $this->contentMapper->saveRequest($request);
 
-        $req = ContentMapperRequest::create()
+        $request = ContentMapperRequest::create()
             ->setType('snippet')
             ->setTemplateKey('car')
             ->setLocale('de')
@@ -316,6 +321,16 @@ class SnippetApiTest extends SuluTestCase
             ->setData(array(
                 'title' => 'Ford',
             ));
-        $this->contentMapper->saveRequest($req);
+        $this->contentMapper->saveRequest($request);
+
+        $request = ContentMapperRequest::create()
+            ->setType('snippet')
+            ->settemplateKey('car')
+            ->setLocale('en')
+            ->setUserId(1)
+            ->setData(array(
+                'title' => 'VW'
+            ));
+        $this->contentMapper->saveRequest($request);
     }
 }
