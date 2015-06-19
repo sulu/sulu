@@ -11,47 +11,41 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\Events;
 
-class NavigationContextSubscriber extends AbstractMappingSubscriber
+class NavigationContextSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'navContexts';
 
-    public function supports($document)
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
     {
-        return $document instanceof NavigationContextBehavior;
+        return [
+            Events::METADATA_LOAD => 'handleMetadataLoad',
+        ];
     }
 
     /**
-     * @param AbstractMappingEvent $event
+     * @param MetadataLoadEvent $event
      */
-    protected function doHydrate(AbstractMappingEvent $event)
+    public function handleMetadataLoad(MetadataLoadEvent $event)
     {
-        $node = $event->getNode();
-        $value = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::FIELD, $event->getLocale()),
-            []
-        );
-        $event->getDocument()->setNavigationContexts($value);
-    }
+        $metadata = $event->getMetadata();
 
-    /**
-     * @param PersistEvent $event
-     */
-    protected function doPersist(PersistEvent $event)
-    {
-        $locale = $event->getLocale();
-
-        if (!$locale) {
+        if (!$metadata->getReflectionClass()->isSubclassOf(NavigationContextBehavior::class)) {
             return;
         }
 
-        $node = $event->getNode();
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::FIELD, $locale),
-            $event->getDocument()->getNavigationContexts() ?: null
-        );
+        $metadata->addFieldMapping('navigationContexts', [
+            'encoding' => 'system_localized',
+            'property' => self::FIELD,
+            'multiple' => true,
+        ]);
     }
 }
