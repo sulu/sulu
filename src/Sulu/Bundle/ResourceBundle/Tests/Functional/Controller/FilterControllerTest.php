@@ -549,7 +549,7 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/filters?context=contact');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($response->_embedded->filters));
+        $this->assertEquals(2, count($response->_embedded->filters));
     }
 
     /**
@@ -563,7 +563,7 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/filters?context=contact');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->_embedded->filters));
+        $this->assertEquals(1, count($response->_embedded->filters));
     }
 
     /**
