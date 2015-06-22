@@ -105,11 +105,6 @@ class MetaTwigExtension extends \Twig_Extension
             $excerpt = $extension['excerpt'];
         }
 
-        // fallback for seo title
-        if (!array_key_exists('title', $seo) || $seo['title'] === '') {
-            $seo['title'] = $content['title'];
-        }
-
         // fallback for seo description
         if (
             (!array_key_exists('description', $seo) || $seo['description'] === '') &&
@@ -117,6 +112,7 @@ class MetaTwigExtension extends \Twig_Extension
         ) {
             $seo['description'] = strip_tags($excerpt['description']);
         }
+
         $seo['description'] = substr($seo['description'], 0, 155);
 
         // generate robots content
