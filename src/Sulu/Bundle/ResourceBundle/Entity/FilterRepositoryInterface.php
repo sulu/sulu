@@ -15,7 +15,6 @@ namespace Sulu\Bundle\ResourceBundle\Entity;
  */
 interface FilterRepositoryInterface
 {
-
     /**
      * Searches for a filter by id and locale
      *
