@@ -265,7 +265,8 @@ class DoctrineListBuilder extends AbstractListBuilder
             $conjunction = ' ' . $betweenConjunctions[$betweenField->getName()] . ' ';
 
             if (!$firstConjunction) {
-                $firstConjunction = $betweenConjunctions[$betweenField->getName()];
+                $firstConjunction = $conjunction;
+                $conjunction = '';
             }
 
             $betweenParts[] = $conjunction . $betweenField->getSelect() .
@@ -277,25 +278,12 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->queryBuilder->setParameter($betweenField->getName() . '2', $values[1]);
         }
 
-        $betweenString = $this->createQueryString($betweenParts, strlen($firstConjunction) + 2);
+        $betweenString = implode('', $betweenParts);
         if (strtoupper($firstConjunction) === self::CONJUNCTION_OR) {
             $this->queryBuilder->orWhere('(' . $betweenString . ')');
         } else {
             $this->queryBuilder->andWhere('(' . $betweenString . ')');
         }
-    }
-
-    /**
-     * Concats array to string
-     * @param array $parts
-     * @param int $skipLetters
-     * @param string $glue
-     * @return string
-     */
-    protected function createQueryString(array $parts, $skipLetters, $glue = '')
-    {
-        $tmp = implode($glue, $parts);
-        return substr($tmp, $skipLetters);
     }
 
     /**
@@ -319,14 +307,16 @@ class DoctrineListBuilder extends AbstractListBuilder
             $conjunction = ' ' . $whereConjunctions[$whereField->getName()] . ' ';
             $value = $whereValues[$whereField->getName()];
             $comparator = $whereComparators[$whereField->getName()];
-            $whereParts[] = $this->createWherePart($value, $whereField, $conjunction, $comparator);
 
             if (!$firstConjunction) {
                 $firstConjunction = $whereConjunctions[$whereField->getName()];
+                $conjunction = '';
             }
+
+            $whereParts[] = $this->createWherePart($value, $whereField, $conjunction, $comparator);
         }
 
-        $whereString = $this->createQueryString($whereParts, strlen($firstConjunction) + 2);
+        $whereString = implode('', $whereParts);
         if (strtoupper($firstConjunction) === self::CONJUNCTION_OR) {
             $this->queryBuilder->orWhere('(' . $whereString . ')');
         } else {
