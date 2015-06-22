@@ -13,7 +13,16 @@ app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]
 
 ### Page-Templates
 
-The tag `sulu.rlp` is now mandatory for page templates.
+1. The tag `sulu.rlp` is now mandatory for page templates.
+2. Page templates will now be filtered: only implemented templates in the theme will be displayed in the dropdown.
+ 
+To find pages with not implemented templates run following command:
+
+```bash
+app/console sulu:content:validate <webspace-key>
+```
+
+To fix that pages, you could implement the template in the theme or save the pages with an other template over ui.
 
 ### Webspaces
 
