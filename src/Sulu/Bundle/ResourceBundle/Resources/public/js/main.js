@@ -11,47 +11,55 @@ require.config({
     paths: {
         suluresource: '../../suluresource/js',
         'filtersutil/header': '../../suluresource/js/components/filters/util/header',
-        'type/conditionSelection': '../../suluresource/js/components/condition-selection/condition-selection-type'
+        'type/conditionSelection': '../../suluresource/js/components/condition-selection/condition-selection-type',
+        'filtersutil/toolbarExtensionHandler': '../../suluresource/js/components/filters/util/toolbar-extension-handler'
     }
 });
 
-define({
-    name: "SuluResourceBundle",
+define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler) {
 
-    /**
-     * Initializes the routes for the resource bundle
-     * @param app
-     */
-    initialize: function(app) {
+    'use strict';
 
-        'use strict';
+    return {
+        name: "SuluResourceBundle",
 
-        var sandbox = app.sandbox;
+        /**
+         * Initializes the routes for the resource bundle
+         * @param app
+         */
+        initialize: function(app) {
 
-        app.components.addSource('suluresource', '/bundles/suluresource/js/components');
+            'use strict';
 
-        // filter list view
-        sandbox.mvc.routes.push({
-            route: 'resource/filters/:type',
-            callback: function(type) {
-                this.html('<div data-aura-component="filters@suluresource" data-aura-display="list" data-aura-type="' + type + '"/>');
-            }
-        });
+            var sandbox = app.sandbox;
 
-        // add a new filter
-        sandbox.mvc.routes.push({
-            route: 'resource/filters/:type/:locale/add',
-            callback: function(type, locale) {
-                this.html('<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '"/>');
-            }
-        });
+            app.components.addSource('suluresource', '/bundles/suluresource/js/components');
 
-        // edit an existing filter
-        sandbox.mvc.routes.push({
-            route: 'resource/filters/:type/:locale/edit::id/:details',
-            callback: function(type, locale, id) {
-                this.html('<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '" data-aura-id="' + id + '"/>');
-            }
-        });
-    }
+            // filter list view
+            sandbox.mvc.routes.push({
+                route: 'resource/filters/:type',
+                callback: function(type) {
+                    this.html('<div data-aura-component="filters@suluresource" data-aura-display="list" data-aura-type="' + type + '"/>');
+                }
+            });
+
+            // add a new filter
+            sandbox.mvc.routes.push({
+                route: 'resource/filters/:type/:locale/add',
+                callback: function(type, locale) {
+                    this.html('<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '"/>');
+                }
+            });
+
+            // edit an existing filter
+            sandbox.mvc.routes.push({
+                route: 'resource/filters/:type/:locale/edit::id/:details',
+                callback: function(type, locale, id) {
+                    this.html('<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '" data-aura-id="' + id + '"/>');
+                }
+            });
+
+            toolbarExtensionHandler.initialize(sandbox);
+        }
+    };
 });
