@@ -43,7 +43,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $fields = array();
+    protected $selectFields = array();
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
@@ -118,7 +118,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $this->queryBuilder = $this->createQueryBuilder();
 
-        foreach ($this->fields as $field) {
+        foreach ($this->selectFields as $field) {
             $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
 
@@ -146,7 +146,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $this->sortField->getJoins());
         }
 
-        foreach ($this->fields as $field) {
+        foreach ($this->selectFields as $field) {
             $joins = array_merge($joins, $field->getJoins());
         }
 
