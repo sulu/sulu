@@ -20,7 +20,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
-
 class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -37,11 +36,10 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_test');
-
 
         $locale = new Localization();
         $locale->setLanguage('en');
@@ -53,7 +51,7 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getPortal()->willReturn($portal);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
-        $this->contentPath = $this->prophesize('Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface');
+        $this->contentPath = $this->prophesize(ContentPathInterface::class);
 
         $this->contentPath->getContentPath('/test', 'sulu_test', 'de')->willReturn('/de/test');
         $this->contentPath->getContentPath('/test-en', 'sulu_test', 'en')->willReturn('/en/test-en');
@@ -85,7 +83,8 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 '<link rel="alternate" href="/en/test-en" hreflang="en" />',
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
-            ), explode(PHP_EOL, $urls)
+            ),
+            explode(PHP_EOL, $urls)
         );
     }
 
@@ -121,7 +120,8 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 '<meta name="description" content="SEO Description">',
                 '<meta name="keywords" content="SEO, Keywords">',
                 '<meta name="robots" content="NOINDEX, NOFOLLOW">',
-            ), explode(PHP_EOL, $metaTags)
+            ),
+            explode(PHP_EOL, $metaTags)
         );
     }
 
@@ -156,7 +156,8 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 '<meta name="description" content="Excerpt Description">',
                 '<meta name="keywords" content="SEO, Keywords">',
                 '<meta name="robots" content="INDEX, FOLLOW">',
-            ), explode(PHP_EOL, $metaTags)
+            ),
+            explode(PHP_EOL, $metaTags)
         );
     }
 }
