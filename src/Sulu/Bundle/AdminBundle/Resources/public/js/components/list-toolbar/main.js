@@ -317,7 +317,12 @@ define([], function() {
             }
 
             // emit event to extend toolbar
-            this.sandbox.emit('sulu.header.toolbar.extend', this.options.context, this.options.template);
+            this.sandbox.emit(
+                'sulu.header.toolbar.extend',
+                this.options.context, this.options.template,
+                this.options.datagridInstanceName
+            );
+
             this.options.template = parseTemplateTypes.call(this, this.options.template);
 
             var $container,

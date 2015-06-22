@@ -20,9 +20,9 @@ class ConditionFieldNotFoundException extends FilterException
      */
     private $field;
 
-    public function __construct($id)
+    public function __construct($field)
     {
-        $this->id = $id;
+        $this->field = $field;
         parent::__construct('The condition field with the name "' . $this->field . '" could not be found.', 0);
     }
 
