@@ -10,7 +10,9 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Filter
@@ -21,11 +23,6 @@ class Filter
      * @var string
      */
     private $conjunction;
-
-    /**
-     * @var string
-     */
-    private $entityName;
 
     /**
      * @var integer
@@ -43,12 +40,42 @@ class Filter
     private $conditionGroups;
 
     /**
+     * @var UserInterface
+     */
+    private $user;
+
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $changed;
+
+    /**
+     * @var UserInterface
+     */
+    private $changer;
+
+    /**
+     * @var UserInterface
+     */
+    private $creator;
+
+    /**
+     * @var string
+     */
+    private $context;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->conditionGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->translations = new ArrayCollection();
+        $this->conditionGroups = new ArrayCollection();
     }
 
     /**
@@ -64,10 +91,10 @@ class Filter
     /**
      * Add translations
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations
+     * @param FilterTranslation $translations
      * @return Filter
      */
-    public function addTranslation(\Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations)
+    public function addTranslation(FilterTranslation $translations)
     {
         $this->translations[] = $translations;
 
@@ -77,9 +104,9 @@ class Filter
     /**
      * Remove translations
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations
+     * @param FilterTranslation $translations
      */
-    public function removeTranslation(\Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations)
+    public function removeTranslation(FilterTranslation $translations)
     {
         $this->translations->removeElement($translations);
     }
@@ -97,10 +124,10 @@ class Filter
     /**
      * Add conditionGroups
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups
+     * @param ConditionGroup $conditionGroups
      * @return Filter
      */
-    public function addConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups)
+    public function addConditionGroup(ConditionGroup $conditionGroups)
     {
         $this->conditionGroups[] = $conditionGroups;
 
@@ -110,9 +137,9 @@ class Filter
     /**
      * Remove conditionGroups
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups
+     * @param ConditionGroup $conditionGroups
      */
-    public function removeConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups)
+    public function removeConditionGroup(ConditionGroup $conditionGroups)
     {
         $this->conditionGroups->removeElement($conditionGroups);
     }
@@ -126,50 +153,6 @@ class Filter
     {
         return $this->conditionGroups;
     }
-
-    /**
-     * Set entityName
-     *
-     * @param string $entityName
-     * @return Filter
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-
-        return $this;
-    }
-
-    /**
-     * Get entityName
-     *
-     * @return string 
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
-
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
-     */
-    private $changer;
-
-    /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
-     */
-    private $creator;
-
 
     /**
      * Set created
@@ -220,10 +203,10 @@ class Filter
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param UserInterface $changer
      * @return Filter
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -233,7 +216,7 @@ class Filter
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -243,10 +226,10 @@ class Filter
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param UserInterface $creator
      * @return Filter
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -256,7 +239,7 @@ class Filter
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return UserInterface
      */
     public function getCreator()
     {
@@ -284,5 +267,51 @@ class Filter
     public function getConjunction()
     {
         return $this->conjunction;
+    }
+
+    /**
+     * Set user
+     *
+     * @param UserInterface $user
+     * @return Filter
+     */
+    public function setUser(UserInterface $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return UserInterface
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set context
+     *
+     * @param string $context
+     * @return Filter
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+
+        return $this;
+    }
+
+    /**
+     * Get context
+     *
+     * @return string 
+     */
+    public function getContext()
+    {
+        return $this->context;
     }
 }

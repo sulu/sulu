@@ -239,8 +239,15 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         $inParts = array();
         foreach ($inFields as $inField) {
-            $inParts[] = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
+            $inPart = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
             $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
+
+            // null values
+            if(array_search(null, $inValues[$inField->getName()])) {
+                $inPart .= ' OR ' . $inField->getSelect() . ' IS NULL';
+            }
+
+            $inParts[] = $inPart;
         }
 
         $this->queryBuilder->andWhere('(' . implode(' AND ', $inParts) . ')');

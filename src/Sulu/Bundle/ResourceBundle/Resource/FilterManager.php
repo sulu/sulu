@@ -14,13 +14,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
 use Sulu\Bundle\ResourceBundle\Api\Filter;
-use Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepositoryInterface;
+use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\UnknownContextException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -37,6 +39,7 @@ class FilterManager implements FilterManagerInterface
     use RelationTrait;
 
     protected static $filterEntityName = 'SuluResourceBundle:Filter';
+    protected static $userEntityName = 'SuluSecurityBundle:User';
     protected static $conditionGroupEntityName = 'SuluResourceBundle:ConditionGroup';
     protected static $conditionEntityName = 'SuluResourceBundle:Condition';
     protected static $filterTranslationEntityName = 'SuluResourceBundle:FilterTranslation';
@@ -57,20 +60,27 @@ class FilterManager implements FilterManagerInterface
     protected $userRepository;
 
     /**
-     * @var ConditionGroupRepositoryInterface
+     * @var ConditionRepositoryInterface
      */
-    protected $conditionGroupRepository;
+    protected $conditionRepository;
+
+    /**
+     * @var array
+     */
+    protected $contextConfiguration;
 
     public function __construct(
         EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
-        ConditionGroupRepositoryInterface $conditionGroupRepository
+        ConditionRepositoryInterface $conditionRepository,
+        array $contextConfig
     ) {
         $this->em = $em;
         $this->filterRepository = $filterRepo;
         $this->userRepository = $userRepository;
-        $this->conditionGroupRepository = $conditionGroupRepository;
+        $this->conditionRepository = $conditionRepository;
+        $this->contextConfiguration = $contextConfig;
     }
 
     /**
@@ -95,25 +105,42 @@ class FilterManager implements FilterManagerInterface
             array(
                 self::$filterTranslationEntityName => new DoctrineJoinDescriptor(
                     self::$filterTranslationEntityName,
-                    self::$filterEntityName.'.translations',
-                    self::$filterTranslationEntityName.'.locale = \''.$locale.'\''
+                    self::$filterEntityName . '.translations',
+                    self::$filterTranslationEntityName . '.locale = \'' . $locale . '\''
                 ),
             )
         );
-        $fieldDescriptors['conjunction'] = new DoctrineFieldDescriptor(
-            'conjunction',
-            'conjunction',
+
+        return $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getListFieldDescriptors($locale)
+    {
+        $fieldDescriptors = $this->getFieldDescriptors($locale);
+
+        $fieldDescriptors['context'] = new DoctrineFieldDescriptor(
+            'context',
+            'context',
             self::$filterEntityName,
-            'resource.filter.conjunction',
+            'public.context',
             array(),
             true
         );
-        $fieldDescriptors['entityName'] = new DoctrineFieldDescriptor(
-            'entityName',
-            'entityName',
-            self::$filterEntityName,
-            'resource.filter.entityName',
-            array(),
+
+        $fieldDescriptors['user'] = new DoctrineFieldDescriptor(
+            'id',
+            'user',
+            self::$userEntityName,
+            'public.user',
+            array(
+                self::$userEntityName => new DoctrineJoinDescriptor(
+                    self::$userEntityName,
+                    self::$filterEntityName . '.user'
+                ),
+            ),
             true
         );
 
@@ -169,6 +196,9 @@ class FilterManager implements FilterManagerInterface
     {
         $user = $this->userRepository->findUserById($userId);
 
+        // SECURITY: Only the user which is referenced by the filter should be allowed to
+        // to change the filter - or the administrator
+
         if ($id) {
             $filter = $this->filterRepository->findByIdAndLocale($id, $locale);
             if (!$filter) {
@@ -187,10 +217,21 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanged(new \DateTime());
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
-        $filter->setEntityName($this->getProperty($data, 'entityName', $filter->getEntityName()));
+
+        if (array_key_exists('context', $data)) {
+            if ($this->getClassMappingForAlias($data['context'])) {
+                $filter->setContext($data['context']);
+            } else {
+                throw new UnknownContextException($data['context']);
+            }
+        }
+
         $filter->setConjunction($this->getProperty($data, 'conjunction', $filter->getConjunction()));
         $filter->setChanger($user);
         $filter->setChanged(new \DateTime());
+
+        // set user for filter
+        $filter->setUser($user);
 
         // update condition groups and conditions
         if (isset($data['conditionGroups'])) {
@@ -233,26 +274,35 @@ class FilterManager implements FilterManagerInterface
      * @param ConditionGroupEntity $conditionGroup
      * @param array $matchedEntry
      * @return bool
+     * @throws ConditionGroupMismatchException
      * @throws FilterDependencyNotFoundException
      */
     protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
-        if (isset($matchedEntry['conditions'])) {
-
+        if (array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
             foreach ($matchedEntry['conditions'] as $conditionData) {
-
                 if (array_key_exists('id', $conditionData)) {
                     /** @var ConditionEntity $conditionEntity */
-                    $conditionEntity = $this->conditionGroupRepository->findById($conditionData['id']);
+                    $conditionEntity = $this->conditionRepository->findById($conditionData['id']);
+
+                    // check if condition exists at all
                     if (!$conditionEntity) {
                         throw new FilterDependencyNotFoundException(
                             self::$conditionEntityName,
                             $conditionData['id']
                         );
                     }
+
+                    // check if conditions is related with condition group
+                    if ($conditionEntity->getConditionGroup()->getId() !== $conditionGroup->getId()) {
+                        throw new ConditionGroupMismatchException(
+                            $matchedEntry['id']
+                        );
+                    }
                 } else {
                     $conditionEntity = new ConditionEntity();
                     $conditionEntity->setConditionGroup($conditionGroup);
+                    $conditionGroup->addCondition($conditionEntity);
                     $this->em->persist($conditionEntity);
                 }
 
@@ -262,7 +312,6 @@ class FilterManager implements FilterManagerInterface
                 );
                 $conditionEntity->setValue($this->getProperty($conditionData, 'value', $conditionEntity->getValue()));
                 $conditionEntity->setType($this->getProperty($conditionData, 'type', $conditionEntity->getType()));
-                $conditionGroup->addCondition($conditionEntity);
             }
         }
 
@@ -332,7 +381,7 @@ class FilterManager implements FilterManagerInterface
     {
         $this->checkDataSet($data, 'name', $create);
         $this->checkDataSet($data, 'conjunction', $create);
-        $this->checkDataSet($data, 'entityName', $create);
+        $this->checkDataSet($data, 'context', $create);
     }
 
     /**
@@ -377,5 +426,74 @@ class FilterManager implements FilterManagerInterface
         }
 
         return true;
+    }
+
+    /**
+     * Deletes multiple filters at once
+     *
+     * @param array $ids
+     */
+    public function batchDelete($ids)
+    {
+        $this->filterRepository->deleteByIds($ids);
+    }
+
+    /**
+     * Returns the configured class for a key
+     * @param string $alias
+     * @return string|null
+     */
+    public function getClassMappingForAlias($alias)
+    {
+        if ($this->contextConfiguration && array_key_exists($alias, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$alias]['class'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the configured features for a context
+     * @param $context
+     * @return array|null
+     */
+    public function getFeaturesForContext($context)
+    {
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$context]['features'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if the context exists
+     * @param $context
+     * @return boolean
+     */
+    public function hasContext($context)
+    {
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a feature is enabled for a context
+     * @param $context
+     * @param $feature
+     * @return boolean
+     */
+    public function isFeatureEnabled($context, $feature)
+    {
+        if ($this->hasContext($context) &&
+            array_search($feature, $this->getFeaturesForContext($context)) !== false
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -3,17 +3,30 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="sulu_resource.admin.class">Sulu\Bundle\ResourceBundle\Admin\ResourceAdmin</parameter>
+
         <!-- Filters -->
         <parameter key="sulu_resource.filter_manager.class">Sulu\Bundle\ResourceBundle\Resource\FilterManager</parameter>
         <parameter key="sulu_resource.filter_repository.class">Sulu\Bundle\ResourceBundle\Entity\FilterRepository</parameter>
         <parameter key="sulu_resource.conditionGroup_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepository</parameter>
+        <parameter key="sulu_resource.condition_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionRepository</parameter>
 
         <!-- Operators -->
         <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Resource\OperatorManager</parameter>
         <parameter key="sulu_resource.operator_repository.class">Sulu\Bundle\ResourceBundle\Entity\OperatorRepository</parameter>
+
+        <!-- JS config -->
+        <parameter key="sulu_resource.jsconfig.preview.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
     <services>
+        <service id="sulu_resource.admin" class="%sulu_resource.admin.class%">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument>%sulu_admin.name%</argument>
+        </service>
+
         <!-- Filters -->
         <service id="sulu_resource.filter_repository" class="%sulu_resource.filter_repository.class%"
                  factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
@@ -23,11 +36,16 @@
                  factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
             <argument>SuluResourceBundle:ConditionGroup</argument>
         </service>
+        <service id="sulu_resource.condition_repository" class="%sulu_resource.condition_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluResourceBundle:Condition</argument>
+        </service>
         <service id="sulu_resource.filter_manager" class="%sulu_resource.filter_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_resource.filter_repository"/>
             <argument type="service" id="sulu_security.user_repository" />
-            <argument type="service" id="sulu_resource.conditionGroup_repository"/>
+            <argument type="service" id="sulu_resource.condition_repository"/>
+            <argument>%sulu_resource.filters.aliases%</argument>
         </service>
 
         <!-- Operators -->
@@ -38,6 +56,15 @@
         <service id="sulu_resource.operator_manager" class="%sulu_resource.operator_manager.class%">
             <argument type="service" id="sulu_resource.operator_repository"/>
         </service>
-    </services>
 
+        <!-- js config -->
+        <service id="sulu_resource.jsconfig.aliases" class="%sulu_content.jsconfig.preview.class%">
+            <argument type="string">sulu.resource.aliases</argument>
+            <argument type="collection">
+                <argument key="aliases" type="string">%sulu_resource.filters.aliases%</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+        </service>
+    </services>
 </container>

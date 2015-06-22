@@ -42,6 +42,11 @@ class FilterControllerTest extends SuluTestCase
      */
     protected $filter2;
 
+    /**
+     * @var Filter
+     */
+    protected $filter3;
+
     protected function setUp()
     {
         parent::setUp();
@@ -53,17 +58,18 @@ class FilterControllerTest extends SuluTestCase
 
     protected function setUpFilter()
     {
-        $this->filter1 = $this->createFilter('filter1', 'and', 'Contact');
+        $this->filter1 = $this->createFilter('filter1', 'and', 'contact');
         $this->filter2 = $this->createFilter('filter2', 'or', 'Product');
+        $this->filter3 = $this->createFilter('filter3', 'and', 'contact');
 
         $this->em->flush();
     }
 
-    protected function createFilter($name, $conjunction, $entityName)
+    protected function createFilter($name, $conjunction, $context)
     {
         $filter = new Filter();
         $filter->setConjunction($conjunction);
-        $filter->setEntityName($entityName);
+        $filter->setContext($context);
         $filter->setChanged(new \DateTime());
         $filter->setCreated(new \DateTime());
 
@@ -139,7 +145,7 @@ class FilterControllerTest extends SuluTestCase
 
         $this->assertEquals($this->filter1->getId(), $response->id);
         $this->assertEquals($this->filter1->getConjunction(), $response->conjunction);
-        $this->assertEquals($this->filter1->getEntityName(), $response->entityName);
+        $this->assertEquals($this->filter1->getContext(), $response->context);
         $this->assertNotEmpty($response->conditionGroups);
 
         $this->assertEquals(count($this->filter1->getConditionGroups()), count($response->conditionGroups));
@@ -180,7 +186,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $this->client->request(
             'GET',
-            '/api/filters?flat=true'
+            '/api/filters?flat=true&context=contact'
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -206,16 +212,17 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPost()
     {
-        $filter = $this->createFilterAsArray('newFilter', false, 'Media');
+        $filter = $this->createFilterAsArray('newFilter', false, 'contact');
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/api/filters/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->assertEquals($filter['conjunction'], $response->conjunction);
-        $this->assertEquals($filter['entityName'], $response->entityName);
+        $this->assertEquals($filter['context'], $response->context);
         $this->assertEquals($filter['name'], $response->name);
 
         $this->assertEquals(count($filter['conditionGroups']), count($response->conditionGroups));
@@ -226,13 +233,23 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
+     * Test POST to create a new filter with details
+     */
+    public function testPostWithNotDefinedContext()
+    {
+        $filter = $this->createFilterAsArray('newFilter', false, 'not defined');
+        $this->client->request('POST', '/api/filters', $filter);
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
      * Test POST to create a new filter with invalid data
      */
     public function testInvalidPost()
     {
         $filter = array(
             'conjunction' => false,
-            'entityName' => 'contact',
+            'context' => 'contact',
         );
         $this->client->request('POST', '/api/filters', $filter);
 
@@ -240,7 +257,7 @@ class FilterControllerTest extends SuluTestCase
 
         $filter = array(
             'name' => 'name',
-            'entityName' => 'contact',
+            'context' => 'contact',
         );
         $this->client->request('POST', '/api/filters', $filter);
 
@@ -255,12 +272,12 @@ class FilterControllerTest extends SuluTestCase
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function createFilterAsArray($name, $conjunction, $entityName, $partial = false)
+    public function createFilterAsArray($name, $conjunction, $context, $partial = false)
     {
         $result = array(
             'name' => $name,
             'conjunction' => $conjunction,
-            'entityName' => $entityName,
+            'context' => $context,
         );
 
         if (!$partial) {
@@ -292,16 +309,17 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPostWithoutConditions()
     {
-        $filter = $this->createFilterAsArray('newFilter', 'and', 'Media', true);
+        $filter = $this->createFilterAsArray('newFilter', 'and', 'account', true);
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/api/filters/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->assertEquals($filter['conjunction'], $response->conjunction);
-        $this->assertEquals($filter['entityName'], $response->entityName);
+        $this->assertEquals($filter['context'], $response->context);
         $this->assertEquals($filter['name'], $response->name);
     }
 
@@ -312,7 +330,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $newName = 'The new name';
         $conjunction = false;
-        $newEntityName = 'New Entity';
+        $newContext = 'account';
 
         // remove old condition group and add a new one
         $this->client->request(
@@ -321,7 +339,7 @@ class FilterControllerTest extends SuluTestCase
             array(
                 'name' => $newName,
                 'conjunction' => $conjunction,
-                'entityName' => $newEntityName,
+                'context' => $newContext,
                 'conditionGroups' => array(
                     array(
                         'conditions' => array(
@@ -348,7 +366,7 @@ class FilterControllerTest extends SuluTestCase
 
         $this->assertEquals($newName, $response->name);
         $this->assertEquals($conjunction, $response->conjunction);
-        $this->assertEquals($newEntityName, $response->entityName);
+        $this->assertEquals($newContext, $response->context);
         $this->assertEquals(1, count($response->conditionGroups));
 
         $conditionGroupId = $response->conditionGroups[0]->id;
@@ -401,7 +419,7 @@ class FilterControllerTest extends SuluTestCase
 
         $this->assertEquals($newName, $response->name);
         $this->assertEquals($conjunction, $response->conjunction);
-        $this->assertEquals($newEntityName, $response->entityName);
+        $this->assertEquals($newContext, $response->context);
         $this->assertEquals(2, count($response->conditionGroups));
     }
 
@@ -412,7 +430,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $newName = 'The new name';
         $conjunction = false;
-        $newEntityName = 'New Entity';
+        $newContext = 'account';
 
         $this->client->request(
             'PUT',
@@ -420,7 +438,7 @@ class FilterControllerTest extends SuluTestCase
             array(
                 'name' => $newName,
                 'conjunction' => $conjunction,
-                'entityName' => $newEntityName,
+                'context' => $newContext,
             )
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -428,7 +446,7 @@ class FilterControllerTest extends SuluTestCase
 
         $this->assertEquals($newName, $response->name);
         $this->assertEquals($conjunction, $response->conjunction);
-        $this->assertEquals($newEntityName, $response->entityName);
+        $this->assertEquals($newContext, $response->context);
     }
 
     /**
@@ -455,6 +473,51 @@ class FilterControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/filters/' . $this->filter1->getId());
         $this->assertEquals('404', $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Test CDELETE
+     */
+    public function testCDeleteByIds()
+    {
+        $this->client->request('DELETE',
+            '/api/filters?ids=' . $this->filter1->getId() . ',' . $this->filter2->getId() . ',' . $this->filter3->getId(
+            )
+        );
+        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/filters?context=contact');
+        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEmpty($response->_embedded->filters);
+    }
+
+    /**
+     * Test CDELETE with non existent ids
+     */
+    public function testCDeleteByIdsNotExisting()
+    {
+        $this->client->request('DELETE', '/api/filters?ids=666,999');
+        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/filters?context=contact');
+        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($response->_embedded->filters));
+    }
+
+    /**
+     * Test CDELETE with partially existent ids
+     */
+    public function testCDeleteByIdsPartialExistent()
+    {
+        $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId() . ',666');
+        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/filters?context=contact');
+        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($response->_embedded->filters));
     }
 
     /**

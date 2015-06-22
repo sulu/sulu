@@ -12,13 +12,19 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFeatureException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\UnknownContextException;
 use Sulu\Bundle\ResourceBundle\Resource\FilterManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
@@ -32,6 +38,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FilterController extends RestController implements ClassResourceInterface
 {
+    protected static $groupConditionEntityName = 'SuluResourceBundle:GroupCondition';
+
     protected static $entityName = 'SuluResourceBundle:Filter';
 
     protected static $entityKey = 'filters';
@@ -64,15 +72,35 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('flat') == 'true') {
-            $list = $this->getListRepresentation($request);
-        } else {
-            $list = new CollectionRepresentation(
-                $this->getManager()->findAllByLocale($this->getLocale($request)),
-                self::$entityKey
-            );
+        try {
+            // check if context exists and filters are enabled for the given context
+            $context = $request->get('context');
+
+            if (!$this->getManager()->hasContext($context)) {
+                throw new UnknownContextException($context);
+            }
+
+            if (!$this->getManager()->isFeatureEnabled($context, 'filters')) {
+                throw new MissingFeatureException($context, 'filters');
+            }
+
+            if ($request->get('flat') == 'true') {
+                $list = $this->getListRepresentation($request);
+            } else {
+                $list = new CollectionRepresentation(
+                    $this->getManager()->findAllByLocale($this->getLocale($request)),
+                    self::$entityKey
+                );
+            }
+            $view = $this->view($list, 200);
+
+        } catch (UnknownContextException $exc) {
+            $exception = new RestException($exc->getMessage());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (MissingFeatureException $exc) {
+            $exception = new RestException($exc->getMessage());
+            $view = $this->view($exception->toArray(), 400);
         }
-        $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }
@@ -87,13 +115,24 @@ class FilterController extends RestController implements ClassResourceInterface
     {
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+        $fieldDescriptors = $this->getManager()->getListFieldDescriptors($this->getLocale($request));
+
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create(self::$entityName);
         $restHelper->initializeListBuilder(
             $listBuilder,
-            $this->getManager()->getFieldDescriptors($this->getLocale($request))
+            $fieldDescriptors
         );
+
+        if ($request->get('context')) {
+            $listBuilder->where($fieldDescriptors['context'], $request->get('context'));
+        }
+
+        // return all filters created by the user or without user
+        $userCondition = array($this->getUser()->getId(), null);
+        $listBuilder->in($fieldDescriptors['user'], $userCondition);
+
         $list = new ListRepresentation(
             $listBuilder->execute(),
             self::$entityKey,
@@ -131,6 +170,12 @@ class FilterController extends RestController implements ClassResourceInterface
         } catch (MissingFilterAttributeException $exc) {
             $exception = new MissingArgumentException(self::$entityName, $exc->getAttribute());
             $view = $this->view($exception->toArray(), 400);
+        } catch (ConditionGroupMismatchException $exc) {
+            $exception = new InvalidArgumentException(self::$groupConditionEntityName, $exc->getId());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (UnknownContextException $exc) {
+            $exception = new RestException($exc->getMessage());
+            $view = $this->view($exception->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -162,6 +207,12 @@ class FilterController extends RestController implements ClassResourceInterface
         } catch (MissingFilterException $exc) {
             $exception = new MissingArgumentException(self::$entityName, $exc->getFilter());
             $view = $this->view($exception->toArray(), 400);
+        } catch (ConditionGroupMismatchException $exc) {
+            $exception = new InvalidArgumentException(self::$groupConditionEntityName, $exc->getId());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (UnknownContextException $exc) {
+            $exception = new RestException($exc->getMessage());
+            $view = $this->view($exception->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -181,6 +232,30 @@ class FilterController extends RestController implements ClassResourceInterface
         } catch (FilterNotFoundException $exc) {
             $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
             $view = $this->view($exception->toArray(), 404);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Delete an filter with the given id.
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cdeleteAction(Request $request)
+    {
+        $ids = explode(',', $request->get('ids'));
+        if ($ids && count($ids) > 0) {
+            try {
+                $this->getManager()->batchDelete($ids);
+                $view = $this->view($ids, 204);
+            } catch (FilterNotFoundException $exc) {
+                $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
+                $view = $this->view($exception->toArray(), 404);
+            }
+        } else {
+            $exception = new InvalidArgumentException(static::$entityName, $ids);
+            $view = $this->view($exception->toArray(), 400);
         }
 
         return $this->handleView($view);

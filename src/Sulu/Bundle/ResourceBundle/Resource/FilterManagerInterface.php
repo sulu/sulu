@@ -28,6 +28,14 @@ interface FilterManagerInterface
     public function getFieldDescriptors($locale);
 
     /**
+     * Returns an array of field descriptors specific for the list
+     *
+     * @param $locale
+     * @return DoctrineFieldDescriptor[]
+     */
+    public function getListFieldDescriptors($locale);
+
+    /**
      * Finds a filter by id and locale
      *
      * @param integer $id
@@ -61,4 +69,40 @@ interface FilterManagerInterface
      * @return Filter
      */
     public function save(array $data, $locale, $userId, $id = null);
+
+    /**
+     * Deletes multiple filters at once
+     *
+     * @param $ids
+     */
+    public function batchDelete($ids);
+
+    /**
+     * Returns the configured class for a alias
+     * @param string $alias
+     * @return string|null
+     */
+    public function getClassMappingForAlias($alias);
+
+    /**
+     * Returns the configured features for a context
+     * @param $context
+     * @return array|null
+     */
+    public function getFeaturesForContext($context);
+
+    /**
+     * Checks if the context exists
+     * @param $context
+     * @return boolean
+     */
+    public function hasContext($context);
+
+    /**
+     * Checks if a feature is enabled for a context
+     * @param $context
+     * @param $feature
+     * @return boolean
+     */
+    public function isFeatureEnabled($context, $feature);
 }
