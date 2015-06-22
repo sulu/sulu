@@ -40,10 +40,17 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function findAllByLocale($locale)
+    public function findByUserAndContextAndLocale($locale, $context, $userId)
     {
         try {
-            return $this->getFilterQuery($locale)->getQuery()->getResult();
+            $qb = $this->getFilterQuery($locale);
+            $qb->leftJoin('filter.user', 'user')
+            ->andWhere('filter.context = :context')
+            ->andWhere('user IS NULL OR user.id = :userId')
+            ->setParameter('context', $context)
+            ->setParameter('userId', $userId);
+
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $exc) {
             return null;
         }

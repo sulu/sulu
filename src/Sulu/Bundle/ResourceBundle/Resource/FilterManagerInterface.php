@@ -48,13 +48,16 @@ interface FilterManagerInterface
     public function findByIdAndLocale($id, $locale);
 
     /**
-     * Finds all filters by locale
+     * Finds all filters filtered by context and user and
+     * for the given locale
      *
+     * @param string $context
+     * @param $userId
      * @param string $locale
      *
-     * @return Filter[]
+     * @return \Sulu\Bundle\ResourceBundle\Api\Filter[]
      */
-    public function findAllByLocale($locale);
+    public function findFiltersForUserAndContext($context, $userId, $locale);
 
     /**
      * Removes a filter with the given id
