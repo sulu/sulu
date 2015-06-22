@@ -84,7 +84,7 @@ interface FilterManagerInterface
 
     /**
      * Returns the configured class for a alias
-     * 
+     *
      * @param string $alias
      *
      * @return string|null
