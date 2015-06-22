@@ -84,8 +84,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
 
         $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
-        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($webspace->getNavigation()->getContexts()));
 
@@ -180,8 +178,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
-        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         $portal = $webspace->getPortals()[0];
 
@@ -270,8 +266,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
-        $this->assertCount(1, $webspace->getTheme()->getExcludedTemplates());
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         /** @var Portal $portal */
         $portal = $portalInformation->getPortal();
@@ -318,8 +312,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
-        $this->assertCount(1, $webspace->getTheme()->getExcludedTemplates());
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         $portal = $portalInformation->getPortal();
 
@@ -472,8 +464,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
-        $this->assertCount(1, $webspace->getTheme()->getExcludedTemplates());
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
     }
 
     public function testLocalizations()
