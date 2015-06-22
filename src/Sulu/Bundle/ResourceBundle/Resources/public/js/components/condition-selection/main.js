@@ -264,13 +264,13 @@ define([], function() {
 
         /**
          * Updates select fields according the fields but skips the given one
-         * @param $curSelect
+         * @param $currentSelect
          */
-        updateSelectFields = function($curSelect) {
+        updateSelectFields = function($currentSelect) {
             var $fieldSelects = this.sandbox.dom.find('.' + constants.fieldSelectClass, this.$el);
 
             this.sandbox.util.foreach($fieldSelects, function($select) {
-                if ($select !== $curSelect) {
+                if ($select !== $currentSelect) {
                     updateOptionsOfSelect.call(this, $select);
                 }
             }.bind(this));

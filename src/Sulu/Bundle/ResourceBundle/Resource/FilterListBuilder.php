@@ -96,7 +96,7 @@ class FilterListBuilder implements FilterListBuilderInterface
 
         if (count($conditionGroup->getConditions()) === 1) {
             $this->createCondition($condition, $fieldDescriptor, $conjunction);
-        } elseif (count($conditionGroup->getConditions()) === 2) {
+        } elseif (count($conditionGroup->getConditions()) > 1) {
             // TODO implement if needed
             throw new FeatureNotImplementedException('Multiple condition handling not yet implemented!');
         }

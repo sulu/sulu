@@ -508,7 +508,7 @@ class FilterManager implements FilterManagerInterface
     )
     {
         foreach ($conditionGroup->getConditions() as $condition) {
-            if ($condition->getId() && array_search($condition->getId(), $conditionIds) === false) {
+            if ($condition->getId() && !in_array($condition->getId(), $conditionIds)) {
                 $conditionGroup->removeCondition($condition);
                 $this->em->remove($condition);
             }
