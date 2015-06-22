@@ -15,9 +15,6 @@ use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 
 /**
  * Listens for events emitted by the list builder
- *
- * Class ListBuilderListener
- * @package Sulu\Bundle\ResourceBundle\Resource
  */
 class ListBuilderListener
 {

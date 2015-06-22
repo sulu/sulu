@@ -15,9 +15,6 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 /**
  * Component which triggers the generation of additional statements from the conditions of a filter
  * and applies them to the list builder
- *
- * Interface FilterListBuilderInterface
- * @package Sulu\Bundle\ResourceBundle\Resource+
  */
 interface FilterListBuilderInterface
 {
@@ -26,7 +23,7 @@ interface FilterListBuilderInterface
      *
      * @param ListbuilderInterface $listBuilder
      *
-*@return mixed
+     * @return mixed
      */
     public function applyFilterToList(ListBuilderInterface $listBuilder);
 }
