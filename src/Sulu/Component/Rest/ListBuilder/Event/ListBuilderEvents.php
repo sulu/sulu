@@ -12,8 +12,6 @@ namespace Sulu\Component\Rest\ListBuilder\Event;
 
 /**
  * Class which holds the available events for the listbuilder
- * Class ListBuilderEvents
- * @package Sulu\Component\Rest\ListBuilder\Event
  */
 final class ListBuilderEvents
 {

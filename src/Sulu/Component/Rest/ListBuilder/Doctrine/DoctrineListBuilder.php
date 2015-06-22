@@ -336,10 +336,12 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     /**
      * Creates a partial where statement
+     *
      * @param $value
      * @param $whereField
      * @param $conjunction
      * @param $comparator
+     *
      * @return string
      */
     protected function createWherePart($value, $whereField, $conjunction, $comparator)
@@ -347,15 +349,13 @@ class DoctrineListBuilder extends AbstractListBuilder
         if ($value === null) {
 
             return $conjunction . $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
+        } elseif ($comparator === 'LIKE') {
+            $this->queryBuilder->setParameter($whereField->getName(), '%' . $value . '%');
         } else {
-            if ($comparator === 'LIKE') {
-                $this->queryBuilder->setParameter($whereField->getName(), '%' . $value . '%');
-            } else {
-                $this->queryBuilder->setParameter($whereField->getName(), $value);
-            }
-
-            return $conjunction . $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
+            $this->queryBuilder->setParameter($whereField->getName(), $value);
         }
+
+        return $conjunction . $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
     }
 
     /**
