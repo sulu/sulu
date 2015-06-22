@@ -2,7 +2,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
+use Doctrine\ORM\EntityManager;
 use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
+use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -12,19 +15,35 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * @group nodecontroller
  */
 class NodeControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManager
+     */
     protected $em;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
 
     protected function setUp()
     {
         $this->em = $this->db('ORM')->getOm();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $this->initOrm();
         $this->initPhpcr();
@@ -263,6 +282,51 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[0]['tags'], $response['tags']);
         $this->assertEquals($data[0]['url'], $response['url']);
         $this->assertEquals($data[0]['article'], $response['article']);
+    }
+
+    public function testGetInternalLink()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $targetPage = $this->documentManager->create('page');
+        $targetPage->setTitle('target');
+        $targetPage->setResourceSegment('/target');
+        $this->documentManager->persist($targetPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+
+        $this->documentManager->flush();
+
+        $internalLinkPage = $this->documentManager->create('page');
+        $internalLinkPage->setTitle('page');
+        $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
+        $internalLinkPage->setRedirectTarget($targetPage);
+        $this->documentManager->persist($internalLinkPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+
+        $this->documentManager->flush();
+
+        $client->request('GET', '/api/nodes/' . $internalLinkPage->getUuid() . '?webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('internal', $response['linked']);
+        $this->assertEquals($targetPage->getUuid(), $response['internal_link']);
+    }
+
+    public function testGetExternalLink()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $externalLinkPage = $this->documentManager->create('page');
+        $externalLinkPage->setTitle('page');
+        $externalLinkPage->setRedirectType(RedirectType::EXTERNAL);
+        $externalLinkPage->setRedirectExternal('http://www.sulu.io');
+        $this->documentManager->persist($externalLinkPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+
+        $this->documentManager->flush();
+
+        $client->request('GET', '/api/nodes/' . $externalLinkPage->getUuid() . '?webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('external', $response['linked']);
+        $this->assertEquals('http://www.sulu.io', $response['external']);
     }
 
     public function testDelete()

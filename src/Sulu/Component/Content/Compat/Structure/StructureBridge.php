@@ -423,8 +423,10 @@ class StructureBridge implements StructureInterface
             $result['linked'] = null;
             if ($redirectType == RedirectType::INTERNAL) {
                 $result['linked'] = 'internal';
+                $result['internal_link'] = $document->getRedirectTarget()->getUuid();
             } elseif ($redirectType == RedirectType::EXTERNAL) {
                 $result['linked'] = 'external';
+                $result['external'] = $document->getRedirectExternal();
             }
         }
 
