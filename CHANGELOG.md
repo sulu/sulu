@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.0.0-RC2 (2015-06-17)
+    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay 
     * BUGFIX      #1264 [ContentBundle]  fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
     * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
