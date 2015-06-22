@@ -163,22 +163,6 @@ class FilterManager implements FilterManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function findAllByLocale($locale)
-    {
-        $filters = $this->filterRepository->findAllByLocale($locale);
-        array_walk(
-            $filters,
-            function (&$filter) use ($locale) {
-                $filter = new Filter($filter, $locale);
-            }
-        );
-
-        return $filters;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function delete($id)
     {
         $filter = $this->filterRepository->findById($id);
@@ -544,5 +528,28 @@ class FilterManager implements FilterManagerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Finds all filters filtered by context and user and
+     * for the given locale
+     *
+     * @param string $context
+     * @param $userId
+     * @param string $locale
+     *
+     * @return \Sulu\Bundle\ResourceBundle\Api\Filter[]
+     */
+    public function findFiltersForUserAndContext($context, $userId, $locale)
+    {
+        $filters = $this->filterRepository->findByUserAndContextAndLocale($locale, $context, $userId);
+        array_walk(
+            $filters,
+            function (&$filter) use ($locale) {
+                $filter = new Filter($filter, $locale);
+            }
+        );
+
+        return $filters;
     }
 }
