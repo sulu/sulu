@@ -412,6 +412,9 @@
                         gridOptions.columnOptionsInstanceName =
                             gridOptions.columnOptionsInstanceName || toolbarOptions.instanceName;
 
+                        // add datagrid instance name to toolbar
+                        toolbarOptions.datagridInstanceName = gridOptions.instanceName;
+
                         //start list-toolbar and datagrid
                         this.sandbox.start([
                             {

@@ -19,9 +19,16 @@ define([], function(Config) {
             this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
         },
 
-        extendToolbar = function(context, toolbar) {
-            if(!!context){
-                var url = constants.filterUrl+context,
+        /**
+         * Extends the list toolbar if a context, toolbar and a instance name for the datagrid is given
+         *
+         * @param context
+         * @param toolbar
+         * @param dataGridInstanceName
+         */
+        extendToolbar = function(context, toolbar, dataGridInstanceName) {
+            if (!!context && !!toolbar && !!dataGridInstanceName) {
+                var url = constants.filterUrl + context,
                     filterDropDown = {
                         id: 'filters',
                         icon: 'filter',
@@ -39,13 +46,25 @@ define([], function(Config) {
                             languageNamespace: 'toolbar.',
                             markable: true,
                             callback: function(item) {
-                                console.log(item, 'This is a test callback');
-                            }
+                                applyFilterToList.call(this, item, dataGridInstanceName);
+                            }.bind(this)
                         }
                     };
 
                 toolbar.push(filterDropDown);
+            } else {
+                this.sandbox.logger.error('Either the context, toolbar or the instance name of the datagrid are not defined!');
             }
+        },
+
+        /**
+         * Emits the url update event for the given datagrid instance
+         *
+         * @param filter
+         * @param instanceName
+         */
+        applyFilterToList = function(filter, instanceName){
+            this.sandbox.emit('husky.datagrid.'+instanceName +'.url.update',  {filter: filter.id});
         };
 
     return {
