@@ -89,6 +89,15 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
                 ]
             });
 
+            // filter integration
+            Config.set('suluresource.filters.type.contact', {
+                breadCrumb: [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.contacts.title'}
+                ],
+                fields: 'admin/api/contacts/fields'
+            });
+
             app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
 
             // list all contacts

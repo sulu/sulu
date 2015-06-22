@@ -42,7 +42,7 @@ interface ListBuilderInterface
      *
      * @return mixed
      */
-    public function setFields($fieldDescriptors);
+    public function setSelectFields($fieldDescriptors);
 
     /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list.
@@ -51,18 +51,16 @@ interface ListBuilderInterface
      *
      * @return ListBuilderInterface
      */
-    public function addField(AbstractFieldDescriptor $fieldDescriptor);
+    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Checks if field by name has been already added.
-     *
-     * Gets a field descriptor from the ListBuilder
+     * Gets a field descriptor used by the ListBuilder to retrieve and return the list
      *
      * @param string $fieldName
      *
      * @return AbstractFieldDescriptor
      */
-    public function getField($fieldName);
+    public function getSelectField($fieldName);
 
     /**
      * Checks if field by name has been already added
@@ -71,7 +69,7 @@ interface ListBuilderInterface
      *
      * @return bool
      */
-    public function hasField($name);
+    public function hasSelectField($name);
 
     /**
      * Adds a field descriptor, which will be used for search.
