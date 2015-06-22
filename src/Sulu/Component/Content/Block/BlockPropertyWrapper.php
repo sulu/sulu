@@ -26,14 +26,14 @@ class BlockPropertyWrapper implements PropertyInterface
     private $block;
 
     /**
-     * @var integer
+     * @var int
      */
     private $index;
 
     /**
      * @param PropertyInterface $property
      * @param PropertyInterface $block
-     * @param integer $index
+     * @param int $index
      */
     public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
     {
@@ -43,7 +43,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns name of template
+     * returns name of template.
+     *
      * @return string
      */
     public function getName()
@@ -54,7 +55,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns mandatory
+     * returns mandatory.
+     *
      * @return bool
      */
     public function isMandatory()
@@ -63,7 +65,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns multilingual
+     * returns multilingual.
+     *
      * @return bool
      */
     public function isMultilingual()
@@ -72,7 +75,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * return min occurs
+     * return min occurs.
+     *
      * @return int
      */
     public function getMinOccurs()
@@ -81,7 +85,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * return max occurs
+     * return max occurs.
+     *
      * @return int
      */
     public function getMaxOccurs()
@@ -90,7 +95,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns name of content type
+     * returns name of content type.
+     *
      * @return string
      */
     public function getContentTypeName()
@@ -99,7 +105,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * parameter of property
+     * parameter of property.
+     *
      * @return array
      */
     public function getParams()
@@ -108,7 +115,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * sets the value from property
+     * sets the value from property.
+     *
      * @param $value mixed
      */
     public function setValue($value)
@@ -117,7 +125,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * gets the value from property
+     * gets the value from property.
+     *
      * @return mixed
      */
     public function getValue()
@@ -158,8 +167,9 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns TRUE if property is a block
-     * @return boolean
+     * returns TRUE if property is a block.
+     *
+     * @return bool
      */
     public function getIsBlock()
     {
@@ -167,7 +177,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns TRUE if property is multiple
+     * returns TRUE if property is multiple.
+     *
      * @return bool
      */
     public function getIsMultiple()
@@ -176,8 +187,9 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns field is mandatory
-     * @return boolean
+     * returns field is mandatory.
+     *
+     * @return bool
      */
     public function getMandatory()
     {
@@ -185,8 +197,9 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns field is multilingual
-     * @return boolean
+     * returns field is multilingual.
+     *
+     * @return bool
      */
     public function getMultilingual()
     {
@@ -194,7 +207,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns tags defined in xml
+     * returns tags defined in xml.
+     *
      * @return PropertyTag[]
      */
     public function getTags()
@@ -203,8 +217,10 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns tag with given name
+     * returns tag with given name.
+     *
      * @param string $tagName
+     *
      * @return PropertyTag
      */
     public function getTag($tagName)
@@ -213,7 +229,8 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns column span
+     * returns column span.
+     *
      * @return string
      */
     public function getColspan()
@@ -222,8 +239,10 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns title of property
+     * returns title of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getTitle($languageCode)
@@ -232,8 +251,10 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns infoText of property
+     * returns infoText of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getInfoText($languageCode)
@@ -242,8 +263,10 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns placeholder of property
+     * returns placeholder of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getPlaceholder($languageCode)
@@ -252,7 +275,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc.
      */
     public function toArray($depth = null)
     {
@@ -260,7 +283,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc.
      */
     public function getStructure()
     {
@@ -268,7 +291,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc.
      */
     public function setStructure($structure)
     {

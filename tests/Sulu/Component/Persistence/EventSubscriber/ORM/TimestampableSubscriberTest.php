@@ -12,7 +12,7 @@ namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Prophecy\Argument;
 
-class TimestampableTest extends \PHPUnit_Framework_TestCase
+class TimestampableSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

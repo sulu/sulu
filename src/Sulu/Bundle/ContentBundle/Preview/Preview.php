@@ -14,8 +14,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\StructureInterface;
 
 /**
- * handles preview start / stop / update / render
- * @package Sulu\Bundle\ContentBundle\Preview
+ * handles preview start / stop / update / render.
  */
 class Preview implements PreviewInterface
 {
@@ -142,14 +141,19 @@ class Preview implements PreviewInterface
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
 
-        $content = $this->update($userId, $webspaceKey, $locale, $property, $data, $content);
-        $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+        try {
+            $content = $this->update($userId, $webspaceKey, $locale, $property, $data, $content);
+        } catch (\Twig_Error $ex) {
+            throw new TwigPreviewException($ex);
+        } finally {
+            $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+        }
 
         return $content;
     }
 
     /**
-     * updates one property without saving structure
+     * updates one property without saving structure.
      */
     private function update(
         $userId,
@@ -216,7 +220,7 @@ class Preview implements PreviewInterface
     }
 
     /**
-     * render structure
+     * render structure.
      */
     private function renderStructure(
         StructureInterface $content,
@@ -234,7 +238,7 @@ class Preview implements PreviewInterface
     }
 
     /**
-     * Sets the given data in the given content (including webspace and language) and returns sequence information
+     * Sets the given data in the given content (including webspace and language) and returns sequence information.
      */
     private function setValue(StructureInterface $content, $property, $data, $webspaceKey, $languageCode)
     {

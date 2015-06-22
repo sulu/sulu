@@ -30,7 +30,7 @@ class TemplateControllerTest extends SuluTestCase
         );
         $crawler = $client->request('GET', '/content/template/form/default.html');
 
-        $this->assertTrue(200 === $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->filter('form#content-form')->count());
 
         // foreach property one textfield
@@ -40,5 +40,4 @@ class TemplateControllerTest extends SuluTestCase
         // for tags 2
         $this->assertEquals(1, $crawler->filter('div#tags')->count());
     }
-
 }

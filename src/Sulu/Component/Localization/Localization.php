@@ -10,53 +10,59 @@
 
 namespace Sulu\Component\Localization;
 
-use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Represents a localization of a webspace definition
- * @package Sulu\Component\Portal
+ * Represents a localization of a webspace definition.
  */
 class Localization implements \JsonSerializable, ArrayableInterface
 {
     /**
-     * The language of the localization
+     * The language of the localization.
+     *
      * @var string
      */
     private $language;
 
     /**
-     * The country of the localization
+     * The country of the localization.
+     *
      * @var string
      */
     private $country;
 
     /**
-     * Defines how the generation of shadow pages should be handled
+     * Defines how the generation of shadow pages should be handled.
+     *
      * @var string
      */
     private $shadow;
 
     /**
-     * The sub localizations of this one
+     * The sub localizations of this one.
+     *
      * @var Localization[]
      */
     private $children;
 
     /**
-     * The parent localization
+     * The parent localization.
+     *
      * @var Localization
      */
     private $parent;
 
     /**
-     * Defines whether this localization is the default one or not
-     * @var boolean
+     * Defines whether this localization is the default one or not.
+     *
+     * @var bool
      */
     private $default;
 
     /**
-     * Sets the country of this localization
+     * Sets the country of this localization.
+     *
      * @param string $country
      */
     public function setCountry($country)
@@ -65,7 +71,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns the country of this localization
+     * Returns the country of this localization.
+     *
      * @return string
      */
     public function getCountry()
@@ -74,7 +81,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets the language of this localization
+     * Sets the language of this localization.
+     *
      * @param string $language
      */
     public function setLanguage($language)
@@ -83,7 +91,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns the language of this localization
+     * Returns the language of this localization.
+     *
      * @return string
      */
     public function getLanguage()
@@ -92,7 +101,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets how to handle shadow pages for this localization
+     * Sets how to handle shadow pages for this localization.
+     *
      * @param string $shadow
      */
     public function setShadow($shadow)
@@ -101,7 +111,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns how to handle shadow pages for this localization
+     * Returns how to handle shadow pages for this localization.
+     *
      * @return string
      */
     public function getShadow()
@@ -110,7 +121,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Adds a new child localization
+     * Adds a new child localization.
+     *
      * @param Localization $child
      */
     public function addChild(Localization $child)
@@ -119,7 +131,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets the children of the localization
+     * Sets the children of the localization.
+     *
      * @param Localization[] $children
      */
     public function setChildren($children)
@@ -128,7 +141,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns the children of the localization
+     * Returns the children of the localization.
+     *
      * @return Localization[]
      */
     public function getChildren()
@@ -137,8 +151,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns the localization code, which is a combination of the language and the country
+     * Returns the localization code, which is a combination of the language and the country.
+     *
      * @param string $delimiter between language and country
+     *
      * @return string
      * @VirtualProperty
      */
@@ -153,7 +169,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets the parent of this localization
+     * Sets the parent of this localization.
+     *
      * @param Localization $parent
      */
     public function setParent(Localization $parent)
@@ -162,7 +179,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns the parent of this localization
+     * Returns the parent of this localization.
+     *
      * @return Localization
      */
     public function getParent()
@@ -171,8 +189,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets if this localization is the default one
-     * @param boolean $default
+     * Sets if this localization is the default one.
+     *
+     * @param bool $default
      */
     public function setDefault($default)
     {
@@ -180,8 +199,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns if this localization is the default one
-     * @return boolean True if this is the default localization, otherwise false
+     * Returns if this localization is the default one.
+     *
+     * @return bool True if this is the default localization, otherwise false
      */
     public function isDefault()
     {
@@ -190,6 +210,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * @param string $localization
+     *
      * @return Localization|null
      */
     public function findLocalization($localization)
@@ -208,11 +229,12 @@ class Localization implements \JsonSerializable, ArrayableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns a list of all localizations and sublocalizations
+     * Returns a list of all localizations and sublocalizations.
+     *
      * @return Localization[]
      */
     public function getAllLocalizations()
@@ -243,7 +265,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     {
         return array(
             'localization' => $this->getLocalization(),
-            'name' => $this->getLocalization()
+            'name' => $this->getLocalization(),
         );
     }
 

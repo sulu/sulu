@@ -282,7 +282,15 @@ define([
                         data.id = this.options.id;
                     }
 
-                    this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                    } else {
+                        this.add(
+                            !!this.options.parent ? {id: this.options.parent} : null,
+                            this.options.webspace,
+                            item.id
+                        );
+                    }
                 } else {
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.id);
                 }
@@ -667,17 +675,19 @@ define([
             );
         },
 
-        add: function(parent) {
+        add: function(parent, webspace, language) {
             if (!!parent) {
                 this.sandbox.emit(
                     'sulu.router.navigate',
-                    'content/contents/' + this.options.webspace +
-                    '/' + this.options.language + '/add:' + parent.id + '/content'
+                    'content/contents/' + (!webspace ? this.options.webspace : webspace) +
+                    '/' + (!language ? this.options.language : language) + '/add:' + parent.id + '/content'
                 );
             } else {
                 this.sandbox.emit(
                     'sulu.router.navigate',
-                    'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content'
+                    'content/contents/' +
+                    (!webspace ? this.options.webspace : webspace) + '/' +
+                    (!language ? this.options.language : language) + '/add/content'
                 );
             }
         },
@@ -722,7 +732,7 @@ define([
                 if (!!this.options.id) {
                     // disable content tab
                     if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                        this.sandbox.util.each(['content'], function(i, tabName) {
+                        this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
                             this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
                         }.bind(this));
                     }
@@ -732,10 +742,12 @@ define([
                         (this.options.content !== 'settings' && this.data.shadowOn === true) ||
                         (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
                     ) {
+                        var id = (this.options.id === 'index' ? this.options.id : data.id);
+
                         this.sandbox.emit(
                             'sulu.router.navigate',
                             'content/contents/' + this.options.webspace +
-                            '/' + this.options.language + '/edit:' + data.id + '/settings'
+                            '/' + this.options.language + '/edit:' + id + '/settings'
                         );
                     }
                 }

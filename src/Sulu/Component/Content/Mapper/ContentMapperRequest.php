@@ -37,7 +37,7 @@ class ContentMapperRequest
     protected $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $userId;
 
@@ -57,7 +57,7 @@ class ContentMapperRequest
     protected $state = null;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isShadow;
 
@@ -67,12 +67,12 @@ class ContentMapperRequest
     protected $shadowBaseLanguage;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $partialUpdate = true;
 
     /**
-     * Create a new structure data object
+     * Create a new structure data object.
      *
      * @param string $type e.g. page or structure
      * @param string $templateKey Name of template to use
@@ -80,11 +80,11 @@ class ContentMapperRequest
      */
     public static function create()
     {
-        return new ContentMapperRequest();
+        return new self();
     }
 
     /**
-     * Return the structure type (page, snippet)
+     * Return the structure type (page, snippet).
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Set the type
+     * Set the type.
      */
     public function setType($type)
     {
@@ -104,7 +104,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the template key
+     * Return the template key.
      *
      * @return string
      */
@@ -114,7 +114,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Set the template key
+     * Set the template key.
      */
     public function setTemplateKey($templateKey)
     {
@@ -124,7 +124,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the data to map to the resolved structure
+     * Return the data to map to the resolved structure.
      *
      * @return array
      */
@@ -134,7 +134,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Set the data
+     * Set the data.
      */
     public function setData($data)
     {
@@ -144,7 +144,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the webspace key
+     * Return the webspace key.
      *
      * @return string
      */
@@ -154,7 +154,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Set the webspace key
+     * Set the webspace key.
      *
      * @param string $webspaceKey
      */
@@ -166,9 +166,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the user ID
+     * Return the user ID.
      *
-     * @return integer
+     * @return int
      */
     public function getUserId()
     {
@@ -176,9 +176,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Set the user ID
+     * Set the user ID.
      *
-     * @param integer
+     * @param int
      */
     public function setUserId($userId)
     {
@@ -199,7 +199,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Set the UUID
+     * Set the UUID.
      *
      * @param string
      */
@@ -211,9 +211,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Map the structure with this state (published / test)
+     * Map the structure with this state (published / test).
      *
-     * @return integer
+     * @return int
      */
     public function getState()
     {
@@ -221,9 +221,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Map the structure with given state
+     * Map the structure with given state.
      *
-     * @param integer $state
+     * @param int $state
      */
     public function setState($state)
     {
@@ -233,9 +233,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Get the desired shadow status
+     * Get the desired shadow status.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsShadow()
     {
@@ -243,9 +243,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Map the structure with this shadow status
+     * Map the structure with this shadow status.
      *
-     * @param boolean $isShadow
+     * @param bool $isShadow
      */
     public function setIsShadow($isShadow)
     {
@@ -255,7 +255,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the shadow base language
+     * Return the shadow base language.
      *
      * @return string
      */
@@ -265,7 +265,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Map the given shadow base language
+     * Map the given shadow base language.
      *
      * @param string
      */
@@ -277,9 +277,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Return if the content mapper should perform a partial update
+     * Return if the content mapper should perform a partial update.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPartialUpdate()
     {
@@ -287,9 +287,9 @@ class ContentMapperRequest
     }
 
     /**
-     * Set if the content mapper should perform a partial update
+     * Set if the content mapper should perform a partial update.
      *
-     * @param boolean $partialUpdate
+     * @param bool $partialUpdate
      */
     public function setPartialUpdate($partialUpdate)
     {
@@ -299,7 +299,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the UUID of the parent UUID, if any
+     * Return the UUID of the parent UUID, if any.
      *
      * @return string
      */
@@ -310,7 +310,7 @@ class ContentMapperRequest
 
     /**
      * If given the content mapper should add a node as a child
-     * of the PHPCR node referenced by the given UUID
+     * of the PHPCR node referenced by the given UUID.
      *
      * @param string $parentUuid
      */
@@ -322,7 +322,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Return the locale that this request relates to
+     * Return the locale that this request relates to.
      *
      * @return string
      */
@@ -332,7 +332,7 @@ class ContentMapperRequest
     }
 
     /**
-     * Map the request in this locale
+     * Map the request in this locale.
      *
      * @param string $locale
      */
@@ -342,5 +342,4 @@ class ContentMapperRequest
 
         return $this;
     }
-
 }

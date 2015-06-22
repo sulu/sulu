@@ -11,32 +11,43 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
 
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Default implementation of command manager
+ * Default implementation of command manager.
  */
-class CommandManager extends ContainerAware implements ManagerInterface
+class CommandManager implements ManagerInterface
 {
     /**
-     * @var string The prefix to load the image command
+     * @var CommandInterface[]
      */
-    private $prefix;
+    private $commands = array();
 
     /**
-     * @param string $prefix
+     * @param CommandInterface $command
+     *
+     * @param string $alias
      */
-    public function __construct($prefix)
+    public function add(CommandInterface $command, $alias)
     {
-        $this->prefix = $prefix;
+        $this->commands[$alias] = $command;
     }
 
     /**
-     * @param string $imageCommandName A String with the name of the image command to load
+     * @param string $name A String with the name of the image command to load
+     *
      * @return CommandInterface
+     *
+     * @throws \InvalidArgumentException If the command doesn't exist
      */
-    public function get($imageCommandName = '')
+    public function get($name)
     {
-        return $this->container->get($this->prefix . $imageCommandName);
+        if (array_key_exists($name, $this->commands)) {
+            return $this->commands[$name];
+        }
+
+        throw new \InvalidArgumentException(sprintf(
+            'A image converter command named "%s" does not exist.',
+            $name
+        ));
     }
 }

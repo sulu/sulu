@@ -10,22 +10,22 @@
 
 namespace Sulu\Component\Content\Section;
 
+use JMS\Serializer\Annotation\HandlerCallback;
+use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
- * defines a section for properties
- * @package Sulu\Component\Content
+ * defines a section for properties.
  */
 class SectionProperty extends Property implements SectionPropertyInterface
 {
     /**
-     * properties managed by this block
+     * properties managed by this block.
+     *
      * @var PropertyInterface[]
      * @Type("array<Sulu\Component\Content\Property>")
      */

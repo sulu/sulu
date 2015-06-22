@@ -13,7 +13,7 @@ namespace Sulu\Component\Websocket;
 use React\EventLoop\LoopInterface;
 
 /**
- * Interface for a app-manager
+ * Interface for a app-manager.
  */
 interface AppManagerInterface
 {
@@ -26,43 +26,50 @@ interface AppManagerInterface
     public function add($route, WebsocketAppInterface $app, $allowedOrigins = array('*'), $httpHost = null);
 
     /**
-     * Run the server by entering the event loop
+     * Run the server by entering the event loop.
      */
     public function run();
 
     /**
-     * Returns apps and configuration
+     * Returns apps and configuration.
+     *
      * @return array
      */
     public function getApps();
 
     /**
-     * Return websocket app
+     * Return websocket app.
+     *
      * @param string $name
+     *
      * @return WebsocketAppInterface
      */
     public function getApp($name);
 
     /**
-     * Returns port to listen on
+     * Returns port to listen on.
+     *
      * @return int
      */
     public function getPort();
 
     /**
-     * Returns HTTP hostname clients intend to connect to
+     * Returns HTTP hostname clients intend to connect to.
+     *
      * @return string
      */
     public function getHttpHost();
 
     /**
-     * Return IP address to bind to
+     * Return IP address to bind to.
+     *
      * @return string
      */
     public function getIpAddress();
 
     /**
-     * Return used event loop if null default loop will be created
+     * Return used event loop if null default loop will be created.
+     *
      * @return LoopInterface
      */
     public function getLoop();

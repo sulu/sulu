@@ -30,5 +30,4 @@ class NoSuchPropertyException extends \Exception
     {
         return $this->propertyName;
     }
-
 }

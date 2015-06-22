@@ -29,7 +29,7 @@ class ExcerptValueContainer implements ArrayableInterface
         if ($this->__isset($name)) {
             return $this->data[$name];
         } else {
-            return null;
+            return;
         }
     }
 

@@ -14,7 +14,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 /**
- * Class for snippet content navigation
+ * Class for snippet content navigation.
  */
 class SnippetContentNavigationProvider implements ContentNavigationProviderInterface
 {

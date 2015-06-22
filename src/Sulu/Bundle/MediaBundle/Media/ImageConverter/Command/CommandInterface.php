@@ -15,14 +15,14 @@ use Imagine\Image\ImageInterface;
 /**
  * Defines the operations of the ImageConverter Commands
  * The ImageConverter Command is a interface to manage image manipulation.
- * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Command
  */
 interface CommandInterface
 {
     /**
      * @param ImageInterface $image
      * @param $parameters
+     *
      * @return mixed
      */
-    public function execute(ImageInterface &$image, $parameters);
+    public function execute(ImageInterface & $image, $parameters);
 }

@@ -18,8 +18,8 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
-use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
@@ -46,7 +46,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     }
 
     /**
-     * prepares webspace manager
+     * prepares webspace manager.
      */
     protected function prepareWebspaceManager()
     {
@@ -94,7 +94,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
             return $this->getStructureMock();
         }
 
-        return null;
+        return;
     }
 
     public function getStructureMock()
@@ -115,9 +115,9 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
                 new Property(
                     'title', 'title', 'text_line', false, false, 1, 1, array(),
                     array(
-                        new PropertyTag('sulu.rlp.part', 100)
+                        new PropertyTag('sulu.rlp.part', 100),
                     )
-                )
+                ),
             )
         );
 
@@ -126,8 +126,8 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
             array(
                 new Property('url', 'url', 'resource_locator', false, false, 1, 1, array(),
                     array(
-                        new PropertyTag('sulu.rlp', 100)
-                    ))
+                        new PropertyTag('sulu.rlp', 100),
+                    )),
             )
         );
 

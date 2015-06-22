@@ -13,7 +13,8 @@ namespace Sulu\Component\Content\Template\Exception;
 class ReservedPropertyNameException extends InvalidXmlException
 {
     /**
-     * The reserved property name, which has been used
+     * The reserved property name, which has been used.
+     *
      * @var string
      */
     protected $propertyName;
@@ -37,7 +38,8 @@ class ReservedPropertyNameException extends InvalidXmlException
     }
 
     /**
-     * Returns the name of the property, which was not allowed to be used
+     * Returns the name of the property, which was not allowed to be used.
+     *
      * @return string
      */
     public function getPropertyName()

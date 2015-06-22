@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest;
 use FOS\RestBundle\View\View;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\Listing\ListRestHelper;
 
 class RestControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,7 +57,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $id = 1;
         $findCallback = function ($id) {
-            return null;
+            return;
         };
 
         /** @var View $view */
@@ -117,7 +116,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->invoke(
             $this->controller,
             array(
-                $this->mockedObject
+                $this->mockedObject,
             ),
             array(),
             $delete,
@@ -151,12 +150,12 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->invoke(
             $this->controller,
             array(
-                $this->mockedObject
+                $this->mockedObject,
             ),
             array(
                 array(
-                    'id' => 1
-                )
+                    'id' => 1,
+                ),
             ),
             $delete,
             $update,
@@ -191,8 +190,8 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             array(),
             array(
                 array(
-                    'id' => 1
-                )
+                    'id' => 1,
+                ),
             ),
             $delete,
             $update,
@@ -253,14 +252,14 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
     {
         $entities = array(
             array(
-                'test' => 1
+                'test' => 1,
             ),
             array(
-                'test' => 2
+                'test' => 2,
             ),
             array(
-                'test' => 3
-            )
+                'test' => 3,
+            ),
         );
 
         $controller = $this->getMockForAbstractClass(
@@ -325,23 +324,23 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
     {
         $entities = array(
             array(
-                'test' => 1
+                'test' => 1,
             ),
             array(
-                'test' => 2
+                'test' => 2,
             ),
             array(
-                'test' => 3
+                'test' => 3,
             ),
             array(
-                'test' => 4
+                'test' => 4,
             ),
             array(
-                'test' => 5
+                'test' => 5,
             ),
             array(
-                'test' => 6
-            )
+                'test' => 6,
+            ),
         );
 
         $controller = $this->getMockForAbstractClass(
@@ -396,21 +395,20 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             $view['_links']['next']
         );
         $this->assertEquals('admin/api/contacts?flat=true&orderBy=lastName&sortOrder=asc', $view['_links']['all']);
-
     }
 
     public function testCreateHalResponse()
     {
         $entities = array(
             array(
-                'test' => 1
+                'test' => 1,
             ),
             array(
-                'test' => 2
+                'test' => 2,
             ),
             array(
-                'test' => 3
-            )
+                'test' => 3,
+            ),
         );
 
         $controller = $this->getMockForAbstractClass(
@@ -461,7 +459,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
     {
         $entities = array(
             $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
-            $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity')
+            $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
         );
 
         $listHelper = $this->getMock(

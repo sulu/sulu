@@ -15,8 +15,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Class ListRepository
- * @package Sulu\Component\Rest\Listing
+ * Class ListRepository.
+ *
  * @deprecated
  */
 class ListRepository extends EntityRepository
@@ -38,12 +38,13 @@ class ListRepository extends EntityRepository
     }
 
     /**
-     * Find list with parameter
+     * Find list with parameter.
      *
      * @param array $where
      * @param string $prefix
      * @param bool $justCount Defines, if find should just return the total number of results
      * @param array $joinConditions optionally specify conditions on join
+     *
      * @return array|object|int
      */
     public function find($where = array(), $prefix = 'u', $justCount = false, $joinConditions = array())
@@ -111,7 +112,7 @@ class ListRepository extends EntityRepository
         if (sizeof($filters = $queryBuilder->getRelationalFilters()) > 0) {
             $filteredResults = array();
             // check if fields do contain id, else skip
-            if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields)!==false) {
+            if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields) !== false) {
                 $ids = array();
                 foreach ($results as $result) {
                     $id = $result['id'];
@@ -139,10 +140,12 @@ class ListRepository extends EntityRepository
     }
 
     /**
-     * returns array index of by a specified key value
+     * returns array index of by a specified key value.
+     *
      * @param $array
      * @param $value
      * @param string $key
+     *
      * @return bool|int|string
      */
     private function getArrayIndexByKeyValue($array, $value, $key = 'id')
@@ -157,10 +160,12 @@ class ListRepository extends EntityRepository
     }
 
     /**
-     * returns the amount of data
+     * returns the amount of data.
+     *
      * @param array $where
      * @param array $joinConditions
      * @param string $prefix
+     *
      * @return int
      */
     public function getCount($where = array(), $joinConditions = array(), $prefix = 'u')
@@ -169,9 +174,11 @@ class ListRepository extends EntityRepository
     }
 
     /**
-     * returns all fields with a specified type
+     * returns all fields with a specified type.
+     *
      * @param array $types
      * @param null $intersectArray only return fields that are defined in this array
+     *
      * @return array
      */
     public function getFieldsWitTypes(array $types, $intersectArray = null)

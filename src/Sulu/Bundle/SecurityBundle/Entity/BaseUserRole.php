@@ -12,20 +12,21 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * UserRole
+ * UserRole.
+ *
  * @ExclusionPolicy("all");
  */
 abstract class BaseUserRole extends ApiEntity
 {
     /**
-     * @var integer
+     * @var int
      * @Expose
      */
     protected $id;
@@ -48,9 +49,9 @@ abstract class BaseUserRole extends ApiEntity
     protected $role;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -58,9 +59,10 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return UserRole
      */
     public function setLocale($locale)
@@ -71,7 +73,7 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -81,7 +83,8 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Get Locales as array
+     * Get Locales as array.
+     *
      * @return array
      * @VirtualProperty
      * @SerializedName("locales")
@@ -92,9 +95,10 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
+     *
      * @return UserRole
      */
     public function setUser(UserInterface $user)
@@ -105,7 +109,7 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface
      */
@@ -115,9 +119,10 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param RoleInterface $role
+     *
      * @return UserRole
      */
     public function setRole(RoleInterface $role)
@@ -128,7 +133,7 @@ abstract class BaseUserRole extends ApiEntity
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return RoleInterface
      */

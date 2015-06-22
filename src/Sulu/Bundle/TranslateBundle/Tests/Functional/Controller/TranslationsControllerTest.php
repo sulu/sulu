@@ -10,11 +10,11 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TranslationsControllerTest extends SuluTestCase
 {
@@ -146,8 +146,8 @@ class TranslationsControllerTest extends SuluTestCase
                     'code' => 'code.1',
                     'frontend' => false,
                     'backend' => false,
-                    'length' => 100
-                )
+                    'length' => 100,
+                ),
             ),
             array(
                 'id' => null,
@@ -157,9 +157,9 @@ class TranslationsControllerTest extends SuluTestCase
                     'code' => 'new.code',
                     'frontend' => false,
                     'backend' => false,
-                    'length' => 101
-                )
-            )
+                    'length' => 101,
+                ),
+            ),
         );
         $client = $this->createAuthenticatedClient();
         $client->request('PATCH', '/api/catalogues/' . $this->catalogue1->getId() . '/translations', $request);

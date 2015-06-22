@@ -10,18 +10,18 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes positions available through a REST API
- * Used RouteResource annotation to prevent automatic parenting of rest controllers
+ * Used RouteResource annotation to prevent automatic parenting of rest controllers.
  */
 class PositionController extends RestController implements ClassResourceInterface
 {
@@ -36,8 +36,10 @@ class PositionController extends RestController implements ClassResourceInterfac
     protected static $entityKey = 'positions';
 
     /**
-     * Shows a single position for the given id
+     * Shows a single position for the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/positions/{id}")
      */
@@ -57,7 +59,8 @@ class PositionController extends RestController implements ClassResourceInterfac
 
     /**
      * lists all positions
-     * optional parameter 'flat' calls listAction
+     * optional parameter 'flat' calls listAction.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/positions")
      */
@@ -74,8 +77,10 @@ class PositionController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Creates a new position
+     * Creates a new position.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/positions")
      */
@@ -108,9 +113,11 @@ class PositionController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Edits the existing position for the given id
+     * Edits the existing position for the given id.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $id The id of the position to update
+     * @param int $id The id of the position to update
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -146,8 +153,10 @@ class PositionController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Delete a position for the given id
+     * Delete a position for the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/positions/{id}")
      */
@@ -171,7 +180,6 @@ class PositionController extends RestController implements ClassResourceInterfac
             };
 
             $view = $this->responseDelete($id, $delete);
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         }
@@ -180,8 +188,10 @@ class PositionController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Add or update a bunch of positions
+     * Add or update a bunch of positions.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/positions")
      */
@@ -192,7 +202,6 @@ class PositionController extends RestController implements ClassResourceInterfac
 
             $i = 0;
             while ($item = $request->get($i)) {
-
                 if (!isset($item['position'])) {
                     throw new RestException(
                         'There is no position-name for the given name'
@@ -215,9 +224,12 @@ class PositionController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Helper function for patch action
+     * Helper function for patch action.
+     *
      * @param $item
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     *
      * @return Position added or updated entity
      */
     private function addAndUpdateTitles($item)
@@ -233,7 +245,6 @@ class PositionController extends RestController implements ClassResourceInterfac
             } else {
                 $position->setPosition($item['position']);
             }
-
         } else {
             $position = new Position();
             $position->setPosition($item['position']);

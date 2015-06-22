@@ -30,7 +30,7 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     private $parent = null;
 
     /**
-     * Returns custom select statement
+     * Returns custom select statement.
      */
     protected function buildWhere($webspaceKey, $locale)
     {
@@ -48,7 +48,7 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     }
 
     /**
-     * Returns custom where statement
+     * Returns custom where statement.
      */
     protected function buildSelect($webspaceKey, $locale, &$additionalFields)
     {

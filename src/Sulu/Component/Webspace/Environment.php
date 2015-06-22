@@ -13,19 +13,22 @@ namespace Sulu\Component\Webspace;
 class Environment
 {
     /**
-     * The type of the environment (dev, staging, prod, ...)
+     * The type of the environment (dev, staging, prod, ...).
+     *
      * @var string
      */
     private $type;
 
     /**
-     * The urls for this environment
+     * The urls for this environment.
+     *
      * @var Url[]
      */
     private $urls;
 
     /**
-     * Sets the tye of this environment
+     * Sets the tye of this environment.
+     *
      * @param string $type
      */
     public function setType($type)
@@ -34,7 +37,8 @@ class Environment
     }
 
     /**
-     * Returns the type of this environment
+     * Returns the type of this environment.
+     *
      * @return string
      */
     public function getType()
@@ -43,7 +47,8 @@ class Environment
     }
 
     /**
-     * Adds a new url to this environment
+     * Adds a new url to this environment.
+     *
      * @param $url Url The url to add
      */
     public function addUrl(Url $url)
@@ -52,7 +57,8 @@ class Environment
     }
 
     /**
-     * Set the urls for this environment
+     * Set the urls for this environment.
+     *
      * @param \Sulu\Component\Webspace\Url[] $urls
      */
     public function setUrls($urls)
@@ -61,7 +67,8 @@ class Environment
     }
 
     /**
-     * Returns the urls for this environment
+     * Returns the urls for this environment.
+     *
      * @return \Sulu\Component\Webspace\Url[]
      */
     public function getUrls()

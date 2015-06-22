@@ -25,8 +25,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Responsible for centralized Tag Management
- * @package Sulu\Bundle\TagBundle\Tag
+ * Responsible for centralized Tag Management.
  */
 class TagManager implements TagManagerInterface
 {
@@ -35,7 +34,8 @@ class TagManager implements TagManagerInterface
     protected static $contactEntityName = 'SuluContactBundle:Contact';
 
     /**
-     * The repository for communication with the database
+     * The repository for communication with the database.
+     *
      * @var TagRepository
      */
     private $tagRepository;
@@ -56,7 +56,8 @@ class TagManager implements TagManagerInterface
     private $userRepository;
 
     /**
-     * Describes the fields, which are handled by this controller
+     * Describes the fields, which are handled by this controller.
+     *
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors = array();
@@ -66,8 +67,7 @@ class TagManager implements TagManagerInterface
         UserRepositoryInterface $userRepository,
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
@@ -93,7 +93,8 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Loads all the tags managed in this system
+     * Loads all the tags managed in this system.
+     *
      * @return Tag[]
      */
     public function findAll()
@@ -102,8 +103,10 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Loads the tag with the given id
+     * Loads the tag with the given id.
+     *
      * @param $id number The id of the tag
+     *
      * @return Tag
      */
     public function findById($id)
@@ -112,8 +115,10 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Loads the tag with the given name
+     * Loads the tag with the given name.
+     *
      * @param $name
+     *
      * @return Tag
      */
     public function findByName($name)
@@ -176,8 +181,10 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Deletes the given Tag
+     * Deletes the given Tag.
+     *
      * @param number $id The tag to delete
+     *
      * @throws Exception\TagNotFoundException
      */
     public function delete($id)
@@ -199,9 +206,12 @@ class TagManager implements TagManagerInterface
     /**
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
+     *
      * @param number $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
+     *
      * @throws Exception\TagNotFoundException
+     *
      * @return Tag The new Tag, which is valid for all given tags
      */
     public function merge($srcTagIds, $destTagId)
@@ -235,8 +245,10 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Resolves tag ids to names
+     * Resolves tag ids to names.
+     *
      * @param $tagIds
+     *
      * @return array
      */
     public function resolveTagIds($tagIds)
@@ -254,8 +266,10 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Resolves tag names to ids
+     * Resolves tag names to ids.
+     *
      * @param $tagNames
+     *
      * @return array
      */
     public function resolveTagNames($tagNames)
@@ -332,7 +346,7 @@ class TagManager implements TagManagerInterface
                 self::$contactEntityName => new DoctrineJoinDescriptor(
                         self::$contactEntityName,
                         self::$userEntityName . '.contact'
-                    )
+                    ),
             ),
             true
         );

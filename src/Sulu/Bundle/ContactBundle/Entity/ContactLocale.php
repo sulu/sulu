@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 /**
- * ContactLocale
+ * ContactLocale.
  */
 class ContactLocale
 {
@@ -21,7 +21,7 @@ class ContactLocale
     private $locale;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -31,9 +31,10 @@ class ContactLocale
     private $contact;
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return ContactLocale
      */
     public function setLocale($locale)
@@ -44,7 +45,7 @@ class ContactLocale
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      */
@@ -54,9 +55,9 @@ class ContactLocale
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -64,9 +65,10 @@ class ContactLocale
     }
 
     /**
-     * Set contact
+     * Set contact.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     *
      * @return ContactLocale
      */
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
@@ -77,7 +79,7 @@ class ContactLocale
     }
 
     /**
-     * Get contact
+     * Get contact.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */

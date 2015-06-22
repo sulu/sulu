@@ -10,19 +10,18 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\Content\StructureInterface;
-use FOS\HttpCache\CacheInvalidator;
-use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\PropertyInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Invalidation service for Sulu structures
+ * Invalidation service for Sulu structures.
  */
 class TagsHandler implements
     HandlerInvalidateStructureInterface,
@@ -42,7 +41,7 @@ class TagsHandler implements
     private $contentTypeManager;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $invalidated = false;
 

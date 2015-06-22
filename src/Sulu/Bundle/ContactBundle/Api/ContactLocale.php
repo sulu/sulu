@@ -11,16 +11,14 @@
 namespace Sulu\Bundle\ContactBundle\Api;
 
 use Doctrine\Entity;
-use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Component\Rest\ApiWrapper;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
- * The ContactLocale class which will be exported to the API
+ * The ContactLocale class which will be exported to the API.
  *
- * @package Sulu\Bundle\ContactBundle\Api
  * @ExclusionPolicy("all")
  */
 class ContactLocale extends ApiWrapper
@@ -34,7 +32,7 @@ class ContactLocale extends ApiWrapper
     }
 
     /**
-     * Returns the id of the product
+     * Returns the id of the product.
      *
      * @return int
      * @VirtualProperty
@@ -46,9 +44,10 @@ class ContactLocale extends ApiWrapper
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return ContactLocale
      */
     public function setLocale($locale)
@@ -59,7 +58,7 @@ class ContactLocale extends ApiWrapper
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string
      * @VirtualProperty

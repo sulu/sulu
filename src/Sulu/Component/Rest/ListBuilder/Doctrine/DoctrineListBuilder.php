@@ -16,8 +16,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFie
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
 /**
- * The listbuilder implementation for doctrine
- * @package Sulu\Component\Rest\ListBuilder\Doctrine
+ * The listbuilder implementation for doctrine.
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
@@ -27,7 +26,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $em;
 
     /**
-     * The name of the entity to build the list for
+     * The name of the entity to build the list for.
+     *
      * @var string
      */
     private $entityName;
@@ -126,7 +126,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns all the joins required for the query
+     * Returns all the joins required for the query.
+     *
      * @return DoctrineJoinDescriptor[]
      */
     private function getJoins()
@@ -229,7 +230,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * adds where statements for in-clauses
+     * adds where statements for in-clauses.
+     *
      * @param array $inFields
      * @param array $inValues
      */
@@ -245,7 +247,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * adds where statements for in-clauses
+     * adds where statements for in-clauses.
+     *
      * @param array $betweenFields
      * @param array $betweenValues
      */
@@ -254,7 +257,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $betweenParts = array();
         foreach ($betweenFields as $betweenField) {
             $betweenParts[] = $betweenField->getSelect() .
-                ' BETWEEN :' . $betweenField->getName() . '1'.
+                ' BETWEEN :' . $betweenField->getName() . '1' .
                 ' AND :' . $betweenField->getName() . '2';
             $values = $betweenValues[$betweenField->getName()];
             $this->queryBuilder->setParameter($betweenField->getName() . '1', $values[0]);
@@ -265,7 +268,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * sets where statement
+     * sets where statement.
+     *
      * @param array $whereFields
      * @param array $whereValues
      * @param string $comparator
@@ -289,6 +293,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     /**
      * @param $comparator
+     *
      * @return string
      */
     protected function convertNullComparator($comparator)

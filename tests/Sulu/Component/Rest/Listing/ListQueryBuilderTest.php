@@ -127,7 +127,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             array(),
             array('field1' => 1, 'field2' => 2),
             array('field1'),
-            array('field2','field3')
+            array('field2', 'field3')
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));

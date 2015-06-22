@@ -150,4 +150,18 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.us', $portalInformations['sulu.us']->getUrl());
         $this->assertEquals('en', $portalInformations['sulu.us']->getLocalization()->getLocalization());
     }
+
+    /**
+     * @expectedException Sulu\Component\Webspace\Exception\NoValidWebspaceException
+     */
+    public function testBuildWithInvalidWebspacesOnly()
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            $this->logger,
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/not-valid'
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+    }
 }

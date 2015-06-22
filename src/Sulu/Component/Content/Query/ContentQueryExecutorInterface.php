@@ -11,19 +11,22 @@
 namespace Sulu\Component\Content\Query;
 
 /**
- * Interface for content query
+ * Interface for content query.
  */
 interface ContentQueryExecutorInterface
 {
     /**
-     * Executes a query and returns loaded content as array
+     * Executes a query and returns loaded content as array.
+     *
      * @param string $webspaceKey
      * @param string[] $locales
      * @param ContentQueryBuilderInterface $contentQueryBuilder
      * @param bool $flat
-     * @param integer $depth
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $depth
+     * @param int $limit
+     * @param int $offset
+     * @param bool $moveUp
+     *
      * @return array
      */
     public function execute(
@@ -33,6 +36,7 @@ interface ContentQueryExecutorInterface
         $flat = true,
         $depth = -1,
         $limit = null,
-        $offset = null
+        $offset = null,
+        $moveUp = false
     );
 }

@@ -2,21 +2,22 @@
 
 namespace Sulu\Bundle\LocationBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Sulu\Bundle\LocationBundle\Geolocator\Exception\GeolocatorNotFoundException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Controller for geolocator API abstraction
+ * Controller for geolocator API abstraction.
  */
 class GeolocatorController extends Controller
 {
     /**
-     * Query the configured geolocation service
+     * Query the configured geolocation service.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function queryAction(Request $request)

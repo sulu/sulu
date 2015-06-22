@@ -47,11 +47,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                                     array(
                                         'path' => '/a/a/a',
                                         'a' => 1,
-                                        'children' => array()
-                                    )
-                                )
-                            )
-                        )
+                                        'children' => array(),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/b',
@@ -60,21 +60,21 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/b/a',
                                 'a' => 4,
-                                'children' => array()
+                                'children' => array(),
                             ),
                             array(
                                 'path' => '/b/b',
                                 'a' => 6,
-                                'children' => array()
-                            )
-                        )
+                                'children' => array(),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/c',
                         'a' => 7,
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
         );
 
@@ -109,11 +109,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/a/a/a',
                                 'a' => 0,
-                                'children' => array()
-                            )
-                        )
-                    )
-                )
+                                'children' => array(),
+                            ),
+                        ),
+                    ),
+                ),
             ),
             array(
                 'path' => '/b',
@@ -122,20 +122,20 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                     array(
                         'path' => '/b/a',
                         'a' => 3,
-                        'children' => array()
+                        'children' => array(),
                     ),
                     array(
                         'path' => '/b/b',
                         'a' => 5,
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
             array(
                 'path' => '/c',
                 'a' => 6,
-                'children' => array()
-            )
+                'children' => array(),
+            ),
         );
 
         $converter = new ListToTreeConverter();
@@ -154,6 +154,34 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
             $this->createItem('/b/b', $i++), // 3
         );
 
+        // /a/a missing => no /a/a/a
+        // /b missing => no /b/a
+        // /b missing => no /b/b
+
+        $expected = array(
+            array(
+                'path' => '/a',
+                'a' => 1,
+                'children' => array(),
+            ),
+        );
+
+        $converter = new ListToTreeConverter();
+        $result = $converter->convert($data);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testConvertWithEmptyItemsWithMoveUp()
+    {
+        $i = 0;
+        $data = array(
+            $this->createItem('/a/a/a', $i++), // 0
+            $this->createItem('/a', $i++), // 1
+            $this->createItem('/b/a', $i++), // 2
+            $this->createItem('/b/b', $i++), // 3
+        );
+
         $expected = array(
             array(
                 'path' => '/a',
@@ -162,23 +190,23 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                     array(
                         'path' => '/a/a/a',
                         'a' => 0,
-                        'children' => array()
-                    )
-                )
+                        'children' => array(),
+                    ),
+                ),
             ),
             array(
                 'path' => '/b/a',
                 'a' => 2,
-                'children' => array()
+                'children' => array(),
             ),
             array(
                 'path' => '/b/b',
                 'a' => 3,
-                'children' => array()
-            )
+                'children' => array(),
+            ),
         );
 
-        $converter = new ListToTreeConverter();
+        $converter = new ListToTreeConverter(true);
         $result = $converter->convert($data);
 
         $this->assertEquals($expected, $result);
@@ -222,11 +250,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                                     array(
                                         'path' => '/a/a/a',
                                         'a' => 2,
-                                        'children' => array()
-                                    )
-                                )
-                            )
-                        )
+                                        'children' => array(),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/b',
@@ -235,14 +263,14 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/b/a',
                                 'a' => 5,
-                                'children' => array()
+                                'children' => array(),
                             ),
                             array(
                                 'path' => '/b/b',
                                 'a' => 7,
-                                'children' => array()
-                            )
-                        )
+                                'children' => array(),
+                            ),
+                        ),
                     ),
                     array(
                         'path' => '/c',
@@ -251,11 +279,11 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                             array(
                                 'path' => '/c/a',
                                 'a' => 1,
-                                'children' => array()
-                            )
-                        )
-                    )
-                )
+                                'children' => array(),
+                            ),
+                        ),
+                    ),
+                ),
             ),
         );
 

@@ -18,7 +18,7 @@ class ScaleCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface &$image, $parameters)
+    public function execute(ImageInterface & $image, $parameters)
     {
         $parameters = array_merge(array(
             'retina' => false,
@@ -36,6 +36,7 @@ class ScaleCommand implements CommandInterface
     /**
      * @param $parameters
      * @param \Imagine\Image\BoxInterface $size
+     *
      * @return array
      */
     protected function getHeightWidth($parameters, $size)
@@ -45,7 +46,7 @@ class ScaleCommand implements CommandInterface
 
         // retina x2
         if ($parameters['retina']) {
-            $newWidth= $parameters['x'] * 2;
+            $newWidth = $parameters['x'] * 2;
             $newHeight = $parameters['x'] * 2;
         }
 
@@ -87,6 +88,7 @@ class ScaleCommand implements CommandInterface
      * @param $size1
      * @param $size2
      * @param $originalSize
+     *
      * @return array
      */
     protected function getSizeInSameRatio($size1, $size2, $originalSize)

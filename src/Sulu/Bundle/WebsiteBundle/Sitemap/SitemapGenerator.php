@@ -15,7 +15,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Generates a sitemap structure for xml or html
+ * Generates a sitemap structure for xml or html.
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {
@@ -45,28 +45,74 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
-        $locales = array();
-        foreach ($this->webspaceManager->findWebspaceByKey($webspaceKey)->getAllLocalizations() as $localizations) {
-            $locales[] = $localizations->getLocalization();
-        }
+        $webSpaceSitemap = $this->getWebspaceSitemap($webspaceKey);
+        $webSpaceSitemap->setSitemap(
+            $this->generateByLocals($webspaceKey, $webSpaceSitemap->getLocalizations(), $flat)
+        );
 
-        return $this->contentQuery->execute($webspaceKey, $locales, $this->contentQueryBuilder, $flat);
+        return $webSpaceSitemap;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generate($webspaceKey, $locale, $flat = false)
     {
-        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->contentQueryBuilder, $flat);
-        if (sizeof($result) === 1) {
-            $result = $result[0];
+        $webspaceSitemapInformation = $this->getWebspaceSitemap($webspaceKey);
+        $sitemap = $this->generateByLocals($webspaceKey, array($locale), $flat);
+        if (sizeof($sitemap) === 1 && !$flat) {
+            $sitemap = $sitemap[0];
+        }
+        $webspaceSitemapInformation->setSitemap(
+            $sitemap
+        );
+
+        return $webspaceSitemapInformation;
+    }
+
+    /**
+     * @param $webspaceKey
+     * @return WebspaceSitemap
+     */
+    private function getWebspaceSitemap($webspaceKey)
+    {
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+
+        $webspaceSitemap = new WebspaceSitemap();
+        $webspaceSitemap->setWebspaceKey($webspace->getKey());
+
+        $defaultLocalization = $webspace->getDefaultLocalization();
+        if ($defaultLocalization) {
+            $webspaceSitemap->setDefaultLocalization($defaultLocalization->getLocalization());
+        }
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $webspaceSitemap->addLocalization($localization->getLocalization());
         }
 
-        return $result;
+        return $webspaceSitemap;
+    }
+
+    /**
+     * @param string $webspaceKey
+     * @param array $locales
+     * @param bool $flat
+     * @return array
+     */
+    private function generateByLocals($webspaceKey, $locales, $flat = false)
+    {
+        return $this->contentQuery->execute(
+            $webspaceKey,
+            $locales,
+            $this->contentQueryBuilder,
+            $flat,
+            -1,
+            null,
+            null,
+            true
+        );
     }
 }

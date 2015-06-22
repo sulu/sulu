@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Types\Rlp;
 use DateTime;
 
 /**
- * holds information for one Resourcelocator and his history
+ * holds information for one Resourcelocator and his history.
  */
 class ResourceLocatorInformation
 {
@@ -40,7 +40,8 @@ class ResourceLocatorInformation
     }
 
     /**
-     * returns datetime of creation
+     * returns datetime of creation.
+     *
      * @return \DateTime
      */
     public function getCreated()
@@ -49,7 +50,8 @@ class ResourceLocatorInformation
     }
 
     /**
-     * returns resource locator string
+     * returns resource locator string.
+     *
      * @return string
      */
     public function getResourceLocator()

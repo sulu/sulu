@@ -10,12 +10,11 @@
 
 namespace Sulu\Bundle\SearchBundle\Search;
 
-use Sulu\Component\Security\Authentication\UserInterface;
 use Massive\Bundle\SearchBundle\Search\Document as BaseDocument;
 
 /**
  * Custom search document class for Sulu which includes blame
- * and timestamp fields
+ * and timestamp fields.
  */
 class Document extends BaseDocument
 {
@@ -30,7 +29,7 @@ class Document extends BaseDocument
     protected $creatorName;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $creatorId;
 
@@ -45,7 +44,7 @@ class Document extends BaseDocument
     protected $changerName;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $changerId;
 
@@ -57,7 +56,7 @@ class Document extends BaseDocument
     /**
      * @return string
      */
-    public function getCreated() 
+    public function getCreated()
     {
         return $this->created;
     }
@@ -73,11 +72,11 @@ class Document extends BaseDocument
     /**
      * @return string
      */
-    public function getChanged() 
+    public function getChanged()
     {
         return $this->changed;
     }
-    
+
     /**
      * @param string $changed
      */
@@ -89,7 +88,7 @@ class Document extends BaseDocument
     /**
      * @return string
      */
-    public function getChangerName() 
+    public function getChangerName()
     {
         return $this->changerName;
     }
@@ -105,7 +104,7 @@ class Document extends BaseDocument
     /**
      * @return string
      */
-    public function getCreatorName() 
+    public function getCreatorName()
     {
         return $this->creatorName;
     }
@@ -119,15 +118,15 @@ class Document extends BaseDocument
     }
 
     /**
-     * @return integer
+     * @return int
      */
-    public function getChangerId() 
+    public function getChangerId()
     {
         return $this->changerId;
     }
-    
+
     /**
-     * @param integer $changerId
+     * @param int $changerId
      */
     public function setChangerId($changerId)
     {
@@ -135,15 +134,15 @@ class Document extends BaseDocument
     }
 
     /**
-     * @return integer
+     * @return int
      */
-    public function getCreatorId() 
+    public function getCreatorId()
     {
         return $this->creatorId;
     }
-    
+
     /**
-     * @param integer $creatorId
+     * @param int $creatorId
      */
     public function setCreatorId($creatorId)
     {

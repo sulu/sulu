@@ -118,7 +118,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                     'resource_locator_prefix' => '/test',
                     'resource_locator' => '/path/to',
                     'portal_url' => 'sulu.lo/test',
-                    'format' => 'html'
+                    'format' => 'html',
                 ),
             ),
             array(
@@ -133,7 +133,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                     'resource_locator_prefix' => '',
                     'resource_locator' => '/test/path/to',
                     'portal_url' => 'sulu.lo',
-                    'format' => 'rss'
+                    'format' => 'rss',
                 ),
             ),
             array(
@@ -148,7 +148,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                     'resource_locator_prefix' => '/test',
                     'resource_locator' => '/path/to',
                     'portal_url' => 'sulu.lo/test',
-                    'format' => null
+                    'format' => null,
                 ),
             ),
         );

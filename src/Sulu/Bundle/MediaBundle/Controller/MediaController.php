@@ -28,8 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Makes media available through a REST API
- * @package Sulu\Bundle\MediaBundle\Controller
+ * Makes media available through a REST API.
  */
 class MediaController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -46,8 +45,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
     protected static $entityKey = 'media';
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("media/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -58,9 +59,11 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Shows a single media with the given id
+     * Shows a single media with the given id.
+     *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id, Request $request)
@@ -84,8 +87,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * lists all media
+     * lists all media.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -117,7 +122,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
                     'types' => $types,
                     'search' => $search,
                     'orderBy' => $orderBy,
-                    'orderSort' => $orderSort
+                    'orderSort' => $orderSort,
                 ), $limit, $offset);
             }
 
@@ -144,9 +149,12 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Creates a new media
+     * Creates a new media.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
      */
     public function postAction(Request $request)
@@ -155,10 +163,13 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Edits the existing media with the given id
-     * @param integer $id The id of the media to update
+     * Edits the existing media with the given id.
+     *
+     * @param int $id The id of the media to update
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function putAction($id, Request $request)
@@ -167,8 +178,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Delete a media with the given id
+     * Delete a media with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -189,10 +202,13 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Trigger an action for given media. Action is specified over get-action parameter
+     * Trigger an action for given media. Action is specified over get-action parameter.
+     *
      * @Post("media/{id}")
+     *
      * @param int $id
      * @param Request $request
+     *
      * @return Response
      */
     public function postTriggerAction($id, Request $request)
@@ -218,9 +234,11 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * Move an entity to another collection
+     * Move an entity to another collection.
+     *
      * @param int $id
      * @param Request $request
+     *
      * @return Response
      */
     protected function moveEntity($id, Request $request)
@@ -249,6 +267,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function saveEntity($id, Request $request)
@@ -273,6 +292,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * @param Request $request
      * @param $name
+     *
      * @return UploadedFile
      */
     protected function getUploadedFile(Request $request, $name)
@@ -283,6 +303,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * @param Request $request
      * @param bool $fallback
+     *
      * @return array
      */
     protected function getData(Request $request, $fallback = true)
@@ -312,7 +333,6 @@ class MediaController extends RestController implements ClassResourceInterface, 
 
     /**
      * @param Request $request
-     * @return null
      */
     protected function getTitleFromUpload($request)
     {
@@ -328,7 +348,8 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * getMediaManager
+     * getMediaManager.
+     *
      * @return MediaManagerInterface
      */
     protected function getMediaManager()

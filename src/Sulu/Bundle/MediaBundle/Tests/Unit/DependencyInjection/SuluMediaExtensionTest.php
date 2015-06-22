@@ -18,7 +18,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new SuluMediaExtension()
+            new SuluMediaExtension(),
         );
     }
 
@@ -30,17 +30,16 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', array(
             'Expires' => '+1 month',
             'Pragma' => 'public',
-            'Cache-Control' => 'public'
+            'Cache-Control' => 'public',
         ));
         $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', '170x170');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.segments', 10);
         $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', array(
-            'id' => 1
+            'id' => 1,
         ));
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.save_image', true);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
-        $this->assertContainerBuilderHasParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', array('file/exe'));
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types',  array(
@@ -56,20 +55,20 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.media.types', array(
             array(
                 'type' => 'document',
-                'mimeTypes' => array('*')
+                'mimeTypes' => array('*'),
             ),
             array(
                 'type' => 'image',
-                'mimeTypes' => array('image/*')
+                'mimeTypes' => array('image/*'),
             ),
             array(
                 'type' => 'video',
-                'mimeTypes' => array('video/*')
+                'mimeTypes' => array('video/*'),
             ),
             array(
                 'type' => 'audio',
-                'mimeTypes' => array('audio/*')
-            )
+                'mimeTypes' => array('audio/*'),
+            ),
         ));
     }
 }

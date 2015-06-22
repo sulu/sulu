@@ -13,8 +13,7 @@ namespace Sulu\Component\Webspace\Exception;
 use Sulu\Component\Webspace\Portal;
 
 /**
- * This exception is thrown when an environment in a portal does not exist
- * @package Sulu\Component\Webspace\Exception
+ * This exception is thrown when an environment in a portal does not exist.
  */
 class EnvironmentNotFoundException extends PortalException
 {

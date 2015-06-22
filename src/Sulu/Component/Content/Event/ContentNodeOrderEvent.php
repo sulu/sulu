@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event class for the ContentEvents::NODE_ORDER event
+ * Event class for the ContentEvents::NODE_ORDER event.
  */
 class ContentNodeOrderEvent extends Event
 {

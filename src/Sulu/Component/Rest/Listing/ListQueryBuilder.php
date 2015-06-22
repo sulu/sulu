@@ -11,38 +11,43 @@
 namespace Sulu\Component\Rest\Listing;
 
 /**
- * Class ListQueryBuilder
- * @package Sulu\Component\Rest\Listing
+ * Class ListQueryBuilder.
+ *
  * @deprecated
  */
 class ListQueryBuilder
 {
     /**
-     * List of all table aliases
+     * List of all table aliases.
+     *
      * @var array
      */
     private $prefixes;
 
     /**
-     * Contains the join part of the dql
+     * Contains the join part of the dql.
+     *
      * @var string
      */
     private $joins;
 
     /**
-     * Contains the select part of the dql
+     * Contains the select part of the dql.
+     *
      * @var string
      */
     private $select;
 
     /**
-     * Containing the fields which should be shown in the result
+     * Containing the fields which should be shown in the result.
+     *
      * @var array
      */
     private $fields = array();
 
     /**
-     * The array representation of the sortings
+     * The array representation of the sortings.
+     *
      * @var array
      */
     private $sorting;
@@ -50,67 +55,78 @@ class ListQueryBuilder
     /**
      * Contains all the where clauses.
      * The keys are the field names and the content is the value to filter for.
+     *
      * @var array
      */
     private $where;
 
     /**
-     * The name of the root entity
+     * The name of the root entity.
+     *
      * @var string
      */
     private $entityName;
 
     /**
-     * The names of the relations of the root entity
+     * The names of the relations of the root entity.
+     *
      * @var array
      */
     private $associationNames;
 
     /**
-     * cache variable for replacing select string in some cases
+     * cache variable for replacing select string in some cases.
+     *
      * @var string
      */
     private $replaceSelect;
 
     /**
-     * defines if query is used for counting
+     * defines if query is used for counting.
+     *
      * @var bool
      */
     private $countQuery;
 
     /**
-     * The names of columns of the root entity
+     * The names of columns of the root entity.
+     *
      * @var array
      */
     private $fieldNames;
 
     /**
-     * contains all fieldnames that are searched
+     * contains all fieldnames that are searched.
+     *
      * @var array
      */
     private $searchFields;
 
     /**
-     * contains searched fieldnames that can be queried by LIKE
+     * contains searched fieldnames that can be queried by LIKE.
+     *
      * @var array
      */
     private $searchTextFields;
 
     /**
-     * contains searched fieldnames that are numeric
+     * contains searched fieldnames that are numeric.
+     *
      * @var array
      */
     private $searchNumberFields;
 
     /**
-     * used as a storage for saving relational fields
-     * @var $relationalFilters
+     * used as a storage for saving relational fields.
+     *
+     * @var
      */
     private $relationalFilters = array();
 
     /**
-     * contains all join conditions
-     * @var $relationalFilters
+     * contains all join conditions.
+     *
+     * @var
      */
     private $joinConditions = array();
 
@@ -135,8 +151,7 @@ class ListQueryBuilder
         $searchTextFields = array(),
         $searchNumberFields = array(),
         $joinConditions = array()
-    )
-    {
+    ) {
         $this->associationNames = $associationNames;
         $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
@@ -150,9 +165,10 @@ class ListQueryBuilder
     }
 
     /**
-     * Searches Entity by filter for fields, pagination and sorted by a column
+     * Searches Entity by filter for fields, pagination and sorted by a column.
      *
      * @param string $prefix Prefix for starting Table
+     *
      * @return string
      */
     public function find($prefix = 'u')
@@ -170,7 +186,7 @@ class ListQueryBuilder
     }
 
     /**
-     * just return count
+     * just return count.
      */
     public function justCount($countAttribute = 'u.id', $alias = 'totalcount')
     {
@@ -179,9 +195,10 @@ class ListQueryBuilder
     }
 
     /**
-     * Create a Select ... From ... Statement for given fields with joins
+     * Create a Select ... From ... Statement for given fields with joins.
      *
      * @param string $prefix
+     *
      * @return string
      */
     private function getSelectFrom($prefix = 'u')
@@ -217,7 +234,7 @@ class ListQueryBuilder
     }
 
     /**
-     * solves the relations for a single field and generate dql for select and joins
+     * solves the relations for a single field and generate dql for select and joins.
      *
      * @param string $field
      * @param string $prefix
@@ -256,7 +273,8 @@ class ListQueryBuilder
     }
 
     /**
-     * Add {prefix}.{field} {alias} to select string
+     * Add {prefix}.{field} {alias} to select string.
+     *
      * @param string $prefix
      * @param string $field
      * @param string $alias
@@ -270,11 +288,12 @@ class ListQueryBuilder
     }
 
     /**
-     * Generate {prefix}.{field} {alias}
+     * Generate {prefix}.{field} {alias}.
      *
      * @param string $prefix
      * @param string $field
      * @param string $alias
+     *
      * @return string
      */
     private function generateSelect($prefix, $field, $alias = '')
@@ -285,10 +304,11 @@ class ListQueryBuilder
     }
 
     /**
-     * Generate JOIN {parent}.{fieldname} {alias} foreach fieldPart
+     * Generate JOIN {parent}.{fieldname} {alias} foreach fieldPart.
      *
      * @param array $fieldParts
      * @param string $prefix
+     *
      * @return string
      */
     private function generateJoins($fieldParts, $prefix)
@@ -311,11 +331,12 @@ class ListQueryBuilder
     }
 
     /**
-     * Generate JOIN {parent}.{fieldname} {alias}
+     * Generate JOIN {parent}.{fieldname} {alias}.
      *
      * @param string $parent
      * @param string $field
      * @param string $alias
+     *
      * @return string
      */
     private function generateJoin($parent, $field, $alias)
@@ -328,8 +349,10 @@ class ListQueryBuilder
     }
 
     /**
-     * generates the join condition
+     * generates the join condition.
+     *
      * @param $field
+     *
      * @return string
      */
     private function generateJoinCondition($field)
@@ -345,9 +368,10 @@ class ListQueryBuilder
     }
 
     /**
-     * Check if Field is an Association
+     * Check if Field is an Association.
      *
      * @param string $field
+     *
      * @return bool
      */
     private function isRelation($field)
@@ -356,9 +380,10 @@ class ListQueryBuilder
     }
 
     /**
-     * Get DQL for Where clause
+     * Get DQL for Where clause.
      *
      * @param string $prefix
+     *
      * @return string
      */
     private function getWhere($prefix)
@@ -423,9 +448,10 @@ class ListQueryBuilder
     }
 
     /**
-     * Get DQL for Sorting
+     * Get DQL for Sorting.
      *
      * @param string $prefix
+     *
      * @return string
      */
     private function getOrderBy($prefix)

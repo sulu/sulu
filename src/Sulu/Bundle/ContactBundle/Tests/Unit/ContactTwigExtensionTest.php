@@ -71,7 +71,7 @@ class ContactTwigExtensionTest extends PHPUnit_Framework_TestCase
                 $this->returnValueMap(
                     array(
                         array(1, $user1),
-                        array(2, $user2)
+                        array(2, $user2),
                     )
                 )
             );

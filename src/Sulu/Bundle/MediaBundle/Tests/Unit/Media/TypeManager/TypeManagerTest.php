@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -31,20 +30,20 @@ class TypeManagerTest extends SuluTestCase
     private $mediaTypes = array(
         array(
             'type' => 'document',
-            'mimeTypes' => array('*')
+            'mimeTypes' => array('*'),
         ),
         array(
             'type' => 'image',
-            'mimeTypes' => array('image/*')
+            'mimeTypes' => array('image/*'),
         ),
         array(
             'type' => 'video',
-            'mimeTypes' => array('video/*')
+            'mimeTypes' => array('video/*'),
         ),
         array(
             'type' => 'audio',
-            'mimeTypes' => array('audio/*')
-        )
+            'mimeTypes' => array('audio/*'),
+        ),
     );
 
     public function setUp()

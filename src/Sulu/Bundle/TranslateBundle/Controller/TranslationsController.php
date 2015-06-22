@@ -10,16 +10,16 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Entity\TranslationRepository;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Get;
 
 class TranslationsController extends RestController implements ClassResourceInterface
 {
@@ -39,8 +39,10 @@ class TranslationsController extends RestController implements ClassResourceInte
     protected $fieldDescriptors = array();
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("translations/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -138,9 +140,11 @@ class TranslationsController extends RestController implements ClassResourceInte
 
     /**
      * Lists all the translations or filters the translations by parameters for a single catalogue
-     * plus a suggestion
+     * plus a suggestion.
+     *
      * @param Request $request
      * @param $slug
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request, $slug)
@@ -169,7 +173,6 @@ class TranslationsController extends RestController implements ClassResourceInte
                     if ($code['translations'][0]['idCatalogues'] == $slug) {
                         $value = $code['translations'][0]['value'];
                         $defaultValue = $code['translations'][1]['value'];
-
                     } elseif ($code['translations'][1]['idCatalogues'] == $slug) {
                         $value = $code['translations'][1]['value'];
                         $defaultValue = $code['translations'][0]['value'];
@@ -185,14 +188,14 @@ class TranslationsController extends RestController implements ClassResourceInte
                         'code' => $code['code'],
                         'backend' => $code['backend'],
                         'frontend' => $code['frontend'],
-                        'length' => $code['length']
-                    )
+                        'length' => $code['length'],
+                    ),
                 );
             }
 
             $response = array(
                 'total' => sizeof($translations),
-                '_embedded' => array('translations' => $translations)
+                '_embedded' => array('translations' => $translations),
             );
 
             $view = $this->view($response, 200);
@@ -204,9 +207,11 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * updates an array of translations
+     * updates an array of translations.
+     *
      * @param Request $request
      * @param $slug
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function patchAction(Request $request, $slug)
@@ -223,7 +228,8 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * save a single translation
+     * save a single translation.
+     *
      * @param $catalogueId
      * @param $item
      */
@@ -253,7 +259,8 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * create a single translation
+     * create a single translation.
+     *
      * @param $catalogueId
      * @param $item
      */
@@ -279,7 +286,8 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * create a new code
+     * create a new code.
+     *
      * @param $catalogueId
      * @param $item
      */

@@ -1,5 +1,103 @@
 # Upgrade
 
+## 1.0.0-RC2
+
+### Twig-Extensions
+
+Following Twig-Functions has changed the name (new prefix for sulu functions):
+
+| Before                    | Now                           |
+|---------------------------|-------------------------------|
+| `resolve_user`            | `sulu_resolve_user`           |
+| `content_path`            | `sulu_content_path`           |
+| `content_root_path`       | `sulu_content_root_path`      |
+| `get_type`                | `sulu_get_type`               |
+| `needs_add_button`        | `sulu_needs_add_button`       |
+| `get_params`              | `sulu_get_params`             |
+| `parameter_to_select`     | `sulu_parameter_to_select`    |
+| `parameter_to_key_value`  | `sulu_parameter_to_key_value` |
+| `content_load`            | `sulu_content_load`           |
+| `content_load_parent`     | `sulu_content_load_parent`    |
+| `get_media_url`           | `sulu_get_media_url`          |
+| `meta_alternate`          | `sulu_meta_alternate`         |
+| `meta_seo`                | `sulu_meta_seo`               |
+| `navigation_root_flat`    | `sulu_navigation_root_flat`   |
+| `navigation_root_tree`    | `sulu_navigation_root_tree`   |
+| `navigation_flat`         | `sulu_navigation_flat`        |
+| `navigation_tree`         | `sulu_navigation_tree`        |
+| `breadcrumb`              | `sulu_breadcrumb`             |
+| `sitemap_url`             | `sulu_sitemap_url`            |
+| `sitemap`                 | `sulu_sitemap`                |
+| `snippet_load`            | `sulu_snippet_load`           |
+
+To automatically update this name you can run the following script. If your themes are not in the ClientWebsiteBundle
+you have to change the folder in the second line.
+
+```
+#!/usr/bin/env bash
+TWIGS=($(find ./src/Client/Bundle/WebsiteBundle/Resources/themes -type f -iname "*.twig"))
+
+NAMES[0]="resolve_user"
+NAMES[1]="content_path"
+NAMES[2]="content_root_path"
+NAMES[3]="get_type"
+NAMES[4]="needs_add_button"
+NAMES[5]="get_params"
+NAMES[6]="parameter_to_select"
+NAMES[7]="parameter_to_key_value"
+NAMES[8]="content_load"
+NAMES[9]="content_load_parent"
+NAMES[10]="get_media_url"
+NAMES[11]="meta_alternate"
+NAMES[12]="meta_seo"
+NAMES[13]="navigation_root_flat"
+NAMES[14]="navigation_root_tree"
+NAMES[15]="navigation_flat"
+NAMES[16]="navigation_tree"
+NAMES[17]="breadcrumb"
+NAMES[18]="sitemap_url"
+NAMES[19]="sitemap"
+NAMES[20]="snippet_load"
+
+for twig in ${TWIGS[*]}
+do
+    for name in ${NAMES[*]}
+    do
+        sed -i '' -e "s/$name/sulu_$name/g" $twig
+    done
+done
+```
+
+After running this script please check the changed files for conflicts and wrong replaces! 
+
+### Website Navigation
+
+Children of pages with the state "test" or pages which have the desired navigaiton context not assigned won't be moved
+up in the hierarchy, instead they won't show up in the navigation at all.
+
+## 1.0.0-RC1
+
+### Security Roles
+The identifiers in the acl_security_identities should be rename from SULU_ROLE_* to ROLE_SULU_*. This SQL snippet should 
+do the job for you, you should adapt it to fit your needs:
+
+UPDATE `acl_security_identities` SET `identifier` = REPLACE(`identifier`, 'SULU_ROLE_', 'ROLE_SULU_');
+
+### Texteditor
+
+The params for the texteditor content type where changed.
+
+| Before                                        | Now                                                                                                           |
+|-----------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| `<param name="tables" value="true" />`        | `<param name="table" value="true" />`                                                                         |
+| `<param name="links" value="true" />`         | `<param name="link" value="true" />`                                                                          |
+| `<param name="pasteFromWord" value="true" />` | `<param name="paste_from_word" value="true" />`                                                               |
+| `<param name="maxHeight" value="500" />`      | `<param name="max_height" value="500" />`                                                                     |
+|                                               |                                                                                                               |
+| `<param name="iframes" value="true" />`       | iframe and script tags can activated with an ckeditor parameter:                                              |
+| `<param name="scripts" value="true" />`       | `<param name="extra_allowed_content" value="img(*)[*]; span(*)[*]; div(*)[*]; iframe(*)[*]; script(*)[*]" />` |
+
+
 ## 0.18.0
 
 ## Search index rebuild
@@ -71,6 +169,30 @@ sulu_media:
 The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
 been removed. You have to change these names in all usages of this classes in
 your own code.
+
+### Media image converter commands
+
+The image converter commands are now handled via service container tags. No need for the 
+`sulu_media.image.command.prefix` anymore. If you have created your own command, you have to
+tag your image converter command service with `sulu_media.image.command`.
+
+Before:
+
+```xml
+<services>
+    <service id="%sulu_media.image.command.prefix%blur" class="%acme.image.command.blur.class%" />
+</services>
+```
+
+Change to:
+
+```xml
+<services>
+    <service id="acme.image.command.blur" class="%acme.image.command.blur.class%">
+        <tag name="sulu_media.image.command" alias="resize" />
+    </service>
+</services>
+```
 
 ### Media preview urls
 
@@ -156,6 +278,10 @@ urls = array(
     'es' => '/'
 );
 ```
+
+### Util
+
+The `Sulu\Component\Util\UuidUtils` has been removed. Use the `Phpcr\Utils\UuidHelper` instead.
 
 ## 0.17.0
 

@@ -10,15 +10,13 @@
 
 namespace Sulu\Bundle\SnippetBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\TableNode;
-use Sulu\Bundle\SnippetBundle\Entity\Role;
-use Sulu\Bundle\ContentBundle\Behat\BaseStructureContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Sulu\Bundle\ContentBundle\Behat\BaseStructureContext;
 
 /**
- * Behat context class for the SnippetBundle
+ * Behat context class for the SnippetBundle.
  */
 class SnippetContext extends BaseStructureContext implements SnippetAcceptingContext
 {

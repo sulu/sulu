@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-
 class NullWebspaceFinderTest extends \PHPUnit_Framework_TestCase
 {
     private $node;
@@ -35,12 +34,12 @@ class NullWebspaceFinderTest extends \PHPUnit_Framework_TestCase
             array(
                 array('de', 'fr'),
                 'fr',
-                'fr'
+                'fr',
             ),
             array(
                 array('de', 'fr'),
                 'it',
-                'de'
+                'de',
             ),
             array(
                 array(),

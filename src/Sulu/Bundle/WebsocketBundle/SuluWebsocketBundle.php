@@ -10,14 +10,13 @@
 
 namespace Sulu\Bundle\WebsocketBundle;
 
-use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass;
 use Sulu\Bundle\WebsocketBundle\DependencyInjection\Compiler\AddMessageDispatcherPass;
 use Sulu\Bundle\WebsocketBundle\DependencyInjection\Compiler\AddWebsocketAppPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Entry point of websocket bundle
+ * Entry point of websocket bundle.
  */
 class SuluWebsocketBundle extends Bundle
 {

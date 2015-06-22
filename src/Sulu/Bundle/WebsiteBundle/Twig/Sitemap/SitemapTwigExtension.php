@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Provides twig functions for sitemap
+ * Provides twig functions for sitemap.
  */
 class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
 {
@@ -57,8 +57,8 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('sitemap_url', array($this, 'sitemapUrlFunction')),
-            new \Twig_SimpleFunction('sitemap', array($this, 'sitemapFunction'))
+            new \Twig_SimpleFunction('sulu_sitemap_url', array($this, 'sitemapUrlFunction')),
+            new \Twig_SimpleFunction('sulu_sitemap', array($this, 'sitemapFunction')),
         );
     }
 
@@ -103,7 +103,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         }
 
-        return $this->sitemapGenerator->generate($webspaceKey, $locale);
+        return $this->sitemapGenerator->generate($webspaceKey, $locale)->getSitemap();
     }
 
     /**

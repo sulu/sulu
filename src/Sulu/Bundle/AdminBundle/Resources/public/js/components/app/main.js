@@ -26,7 +26,7 @@ define(function() {
             expandIcon: 'fa-chevron-right',
             noTransitionsClass: 'no-transitions',
             versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
-            changeLanguageUrl: '/admin/security/profile/change-language'
+            changeLanguageUrl: '/admin/security/profile/language'
         },
 
         templates = {
@@ -129,14 +129,6 @@ define(function() {
                             'sulu.labels.error.show',
                             'public.forbidden',
                             'public.forbidden.description',
-                            ''
-                        );
-                        break;
-                    default:
-                        this.sandbox.emit(
-                            'sulu.labels.error.show',
-                            this.extractErrorMessage(request),
-                            'public.server_error',
                             ''
                         );
                         break;
@@ -478,7 +470,7 @@ define(function() {
         changeUserLocale: function(locale) {
             //Todo: don't use hardcoded url
             this.sandbox.util.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: constants.changeLanguageUrl,
                 contentType: 'application/json', // payload format
                 dataType: 'json', // response format

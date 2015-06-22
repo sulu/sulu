@@ -17,7 +17,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Media\FormatCache
  */
 class LocalFormatCache implements FormatCacheInterface
 {
@@ -49,7 +48,7 @@ class LocalFormatCache implements FormatCacheInterface
     public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
     {
         /**
-         * @var Route $route
+         * @var Route
          */
         $this->filesystem = $filesystem;
         $this->path = $path;
@@ -103,6 +102,7 @@ class LocalFormatCache implements FormatCacheInterface
      * @param int $id
      * @param string $fileName
      * @param string $format
+     *
      * @return string
      */
     protected function getPath($prePath, $id, $fileName, $format)
@@ -119,6 +119,7 @@ class LocalFormatCache implements FormatCacheInterface
      * @param string $fileName
      * @param string $format
      * @param string $version
+     *
      * @return string
      */
     protected function getPathUrl($prePath, $id, $fileName, $format, $version = '')
@@ -145,9 +146,12 @@ class LocalFormatCache implements FormatCacheInterface
     }
 
     /**
-     * return the id of by a given url
+     * return the id of by a given url.
+     *
      * @param string $url
+     *
      * @return int
+     *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
      */
     protected function getIdFromUrl($url)
@@ -170,17 +174,21 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * @param $id
+     *
      * @return string
      */
     protected function getSegment($id)
     {
-        return sprintf('%0'.strlen($this->segments).'d', ($id % $this->segments));
+        return sprintf('%0' . strlen($this->segments) . 'd', ($id % $this->segments));
     }
 
     /**
-     * return the format by a given url
+     * return the format by a given url.
+     *
      * @param string $url
+     *
      * @return string
+     *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
      */
     protected function getFormatFromUrl($url)

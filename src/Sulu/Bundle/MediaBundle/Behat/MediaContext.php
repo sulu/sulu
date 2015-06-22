@@ -10,20 +10,19 @@
 
 namespace Sulu\Bundle\MediaBundle\Behat;
 
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
-use Behat\Behat\Context\SnippetAcceptingContext;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\Email;
-use Sulu\Bundle\MediaBundle\Entity\EmailType;
-use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 
 /**
- * Behat context class for the MediaBundle
+ * Behat context class for the MediaBundle.
  */
 class MediaContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -151,8 +150,37 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @When I attach the file ":path" to the current drop-zone
+     */
+    public function iAttachTheFileToTheCurrentDropZone($path)
+    {
+        if ($this->getMinkParameter('files_path')) {
+            $fullPath = rtrim(
+                    realpath($this->getMinkParameter('files_path')),
+                    DIRECTORY_SEPARATOR
+                ) . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+        } else {
+            $fullPath = __DIR__ . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+        }
+
+        if (!is_file($fullPath)) {
+            throw new \InvalidArgumentException(sprintf('File doesn\'t exist (%s)', $fullPath));
+        }
+
+        $fields = $this->getSession()->getPage()->findAll('css', 'input[type="file"]');
+
+        if (count($fields) == 0) {
+            throw new ElementNotFoundException($this->getSession(), 'drop-zone upload field');
+        }
+
+        /** @var NodeElement $field */
+        $field = end($fields);
+        $field->attachFile($fullPath);
+    }
+
+    /**
      * Return the last media collection that was created
-     * in this context
+     * in this context.
      *
      * @return Collection
      */
@@ -168,7 +196,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * Return the media manager
+     * Return the media manager.
      *
      * @return MediaManagerInterface
      */
@@ -178,9 +206,10 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * Get or create a collection type
+     * Get or create a collection type.
      *
      * @param string $name Name of collection type to get or create
+     *
      * @return CollectionType
      */
     private function getOrCreateCollectionType($name)
@@ -198,9 +227,10 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * Get or create a media type
+     * Get or create a media type.
      *
      * @param string $name Name of media type to created or retrieved
+     *
      * @return MediaType
      */
     private function getOrCreateMediaType($name)
@@ -218,9 +248,10 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * Get or create a media collection
+     * Get or create a media collection.
      *
      * @param string $name Name of collection to get or create
+     *
      * @return Collection
      */
     private function getOrCreateMediaCollection($name)

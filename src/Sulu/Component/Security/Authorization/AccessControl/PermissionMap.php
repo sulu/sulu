@@ -13,7 +13,7 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
 
 /**
- * Holds all the permission possibilities
+ * Holds all the permission possibilities.
  */
 class PermissionMap implements PermissionMapInterface
 {
@@ -33,10 +33,10 @@ class PermissionMap implements PermissionMapInterface
     public function getMasks($permission, $object)
     {
         if (!$this->contains($permission)) {
-            return null;
+            return;
         }
 
-         return array($this->permissions[$permission]);
+        return array($this->permissions[$permission]);
     }
 
     /**

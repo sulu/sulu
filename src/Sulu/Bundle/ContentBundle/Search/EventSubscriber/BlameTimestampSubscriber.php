@@ -10,18 +10,18 @@
 
 namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
-use Massive\Bundle\SearchBundle\Search\Factory;
-use Sulu\Component\Persistence\Model\UserBlameInterface;
-use Sulu\Component\Persistence\Model\TimestampableInterface;
-use Sulu\Component\Content\StructureInterface;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Sulu\Bundle\SearchBundle\Search\Document;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
+use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Sulu\Bundle\SearchBundle\Search\Document;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Persistence\Model\TimestampableInterface;
+use Sulu\Component\Persistence\Model\UserBlameInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Add blame (creator, changor) and timestamp (created, changed) to
@@ -63,7 +63,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Map blame and timestamp information to the search document
+     * Map blame and timestamp information to the search document.
      *
      * @param PreIndexEvent $event
      */
@@ -87,7 +87,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Map the changer and created from the field data to
-     * the search document (we don't include the field data in the search result API)
+     * the search document (we don't include the field data in the search result API).
      *
      * @param HitEvent $event
      */
@@ -111,7 +111,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Return the named field from the document or return null
+     * Return the named field from the document or return null.
      *
      * @param mixed $document
      * @param mixed $fieldName
@@ -119,14 +119,14 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     private function getFieldValue($document, $fieldName)
     {
         if (false === $document->hasField($fieldName)) {
-            return null;
+            return;
         }
 
         return $document->getField($fieldName)->getValue();
     }
 
     /**
-     * Handle Sulu Structure objects
+     * Handle Sulu Structure objects.
      *
      * @param StructureInterface $structure
      * @param Document $document
@@ -158,7 +158,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Map timestamps to the search document
+     * Map timestamps to the search document.
      *
      * @param Document $document
      * @param \DateTime $created
@@ -176,7 +176,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Map the creator and changer to the document
+     * Map the creator and changer to the document.
      *
      * @param Document $document
      * @param UserInterface $creator

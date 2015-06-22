@@ -26,7 +26,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades time to 0.16.0
+ * Upgrades time to 0.16.0.
+ *
  * @deprecated
  */
 class UpgradeTimeCommand extends ContainerAwareCommand

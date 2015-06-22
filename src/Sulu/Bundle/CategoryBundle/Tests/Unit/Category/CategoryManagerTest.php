@@ -11,11 +11,11 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -103,7 +103,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
             null,
             new CategoryEntity(),
             new CategoryEntity(),
-            null
+            null,
         ];
 
         $wrappers = $this->categoryManager->getApiObjects($entities, 'en');

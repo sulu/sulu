@@ -14,25 +14,25 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 
 /**
- * basic implementation of content mapper extension
- * @package Sulu\Component\Content\Mapper
+ * basic implementation of content mapper extension.
  */
 abstract class StructureExtension implements StructureExtensionInterface
 {
-
     /**
      * @var string[]
      */
     protected $properties;
 
     /**
-     * additional prefix for properties
+     * additional prefix for properties.
+     *
      * @var string
      */
     protected $additionalPrefix;
 
     /**
-     * name of extension
+     * name of extension.
+     *
      * @var string
      */
     protected $name;
@@ -43,8 +43,10 @@ abstract class StructureExtension implements StructureExtensionInterface
     private $translatedProperties;
 
     /**
-     * returns translated property name
+     * returns translated property name.
+     *
      * @param $propertyName
+     *
      * @return string
      */
     protected function getPropertyName($propertyName)
@@ -81,7 +83,8 @@ abstract class StructureExtension implements StructureExtensionInterface
     }
 
     /**
-     * save a single property value
+     * save a single property value.
+     *
      * @param NodeInterface $node
      * @param array $data data array
      * @param string $name name of property in node an data array
@@ -95,10 +98,12 @@ abstract class StructureExtension implements StructureExtensionInterface
     }
 
     /**
-     * load a single property value
+     * load a single property value.
+     *
      * @param NodeInterface $node
      * @param string $name name of property in node
      * @param string $default value if no property exists with given name
+     *
      * @return mixed
      */
     protected function loadProperty(NodeInterface $node, $name, $default = '')

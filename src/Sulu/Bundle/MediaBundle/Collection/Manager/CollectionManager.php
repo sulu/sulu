@@ -29,7 +29,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 /**
- * Default implementation of collection manager
+ * Default implementation of collection manager.
  */
 class CollectionManager implements CollectionManagerInterface
 {
@@ -201,7 +201,7 @@ class CollectionManager implements CollectionManagerInterface
                 self::$entityCollectionType => new DoctrineJoinDescriptor(
                     self::$entityCollectionType,
                     self::$entityName . '.type'
-                )
+                ),
             ),
             true,
             false
@@ -215,7 +215,7 @@ class CollectionManager implements CollectionManagerInterface
                 self::$entityName => new DoctrineJoinDescriptor(
                     self::$entityCollectionMeta,
                     self::$entityName . '.meta'
-                )
+                ),
             ),
             false,
             true,
@@ -231,7 +231,7 @@ class CollectionManager implements CollectionManagerInterface
                 self::$entityName => new DoctrineJoinDescriptor(
                     self::$entityCollectionMeta,
                     self::$entityName . '.meta'
-                )
+                ),
             ),
             true,
             false,
@@ -250,7 +250,7 @@ class CollectionManager implements CollectionManagerInterface
                 self::$entityContact => new DoctrineJoinDescriptor(
                     self::$entityContact,
                     self::$entityUser . '.contact'
-                )
+                ),
             ),
             true,
             false
@@ -268,7 +268,7 @@ class CollectionManager implements CollectionManagerInterface
                 self::$entityContact => new DoctrineJoinDescriptor(
                     self::$entityContact,
                     self::$entityUser . '.contact'
-                )
+                ),
             ),
             true,
             false
@@ -320,10 +320,13 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * Modified an exists collection
+     * Modified an exists collection.
+     *
      * @param $data
      * @param $user
+     *
      * @return Collection
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function modifyCollection($data, $user)
@@ -347,6 +350,7 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * @param $data
      * @param $user
+     *
      * @return Collection
      */
     private function createCollection($data, $user)
@@ -374,9 +378,11 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * Data can be set over by array
+     * Data can be set over by array.
+     *
      * @param Collection $collection
      * @param array $data
+     *
      * @return Collection
      */
     protected function setDataToCollection(Collection $collection, $data)
@@ -427,7 +433,9 @@ class CollectionManager implements CollectionManagerInterface
 
     /**
      * @param $typeId
+     *
      * @return CollectionType
+     *
      * @throws CollectionTypeNotFoundException
      */
     protected function getTypeById($typeId)
@@ -483,8 +491,10 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * Returns a user for a given user-id
+     * Returns a user for a given user-id.
+     *
      * @param $userId
+     *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     protected function getUser($userId)
@@ -494,6 +504,7 @@ class CollectionManager implements CollectionManagerInterface
 
     /**
      * @param Collection $collection
+     *
      * @return Collection
      */
     protected function addPreview(Collection $collection)
@@ -506,6 +517,7 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * @param int $id
      * @param string $locale
+     *
      * @return array
      */
     protected function getPreview($id, $locale)
@@ -537,13 +549,14 @@ class CollectionManager implements CollectionManagerInterface
      * @param int $mediaId
      * @param FileVersion $fileVersion
      * @param string $locale
+     *
      * @return array
      */
     protected function getPreviewsFromFileVersion($mediaId, $fileVersion, $locale)
     {
         $title = '';
         /**
-         * @var FileVersionMeta $meta
+         * @var FileVersionMeta
          */
         foreach ($fileVersion->getMeta() as $key => $meta) {
             if ($meta->getLocale() == $locale) {
@@ -566,7 +579,7 @@ class CollectionManager implements CollectionManagerInterface
             if ($formatName == $this->collectionPreviewFormat) {
                 return array(
                     'url' => $formatUrl,
-                    'title' => $title
+                    'title' => $title,
                 );
                 break;
             }
@@ -576,11 +589,13 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * prepare an api entity
+     * prepare an api entity.
+     *
      * @param CollectionEntity $entity
      * @param string $locale
      * @param CollectionEntity[] $entities nested set
      * @param array $breadcrumbEntities
+     *
      * @return Collection
      */
     protected function getApiEntity(CollectionInterface $entity, $locale, $entities = null, $breadcrumbEntities = null)
@@ -609,7 +624,6 @@ class CollectionManager implements CollectionManagerInterface
             }
             $apiEntity->setBreadcrumb($breadcrumbApiEntities);
         }
-
 
         return $this->addPreview($apiEntity);
     }

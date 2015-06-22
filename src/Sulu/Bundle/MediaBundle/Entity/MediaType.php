@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * MediaType
+ * MediaType.
  */
 class MediaType
 {
@@ -28,7 +28,7 @@ class MediaType
     private $description;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -39,7 +39,7 @@ class MediaType
     private $media;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -47,9 +47,10 @@ class MediaType
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return MediaType
      */
     public function setName($name)
@@ -60,7 +61,7 @@ class MediaType
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -70,9 +71,10 @@ class MediaType
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
+     *
      * @return MediaType
      */
     public function setDescription($description)
@@ -83,7 +85,7 @@ class MediaType
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -93,7 +95,7 @@ class MediaType
     }
 
     /**
-     * To force id = 1 in load fixtures
+     * To force id = 1 in load fixtures.
      *
      * @param int $id
      */
@@ -103,9 +105,9 @@ class MediaType
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -113,9 +115,10 @@ class MediaType
     }
 
     /**
-     * Add media
+     * Add media.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     *
      * @return MediaType
      */
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
@@ -126,7 +129,7 @@ class MediaType
     }
 
     /**
-     * Remove media
+     * Remove media.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
      */
@@ -136,7 +139,7 @@ class MediaType
     }
 
     /**
-     * Get media
+     * Get media.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

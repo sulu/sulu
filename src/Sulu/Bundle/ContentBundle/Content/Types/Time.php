@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for Time
+ * ContentType for Time.
  */
 class Time extends SimpleContentType
 {
@@ -27,7 +27,8 @@ class Time extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

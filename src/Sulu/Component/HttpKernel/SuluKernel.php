@@ -17,11 +17,11 @@ abstract class SuluKernel extends Kernel
 
     /**
      * Overload the parent constructor method to add an additional
-     * constructor argument
+     * constructor argument.
      *
      * {@inheritDoc}
      *
-     * @param string $environment 
+     * @param string $environment
      * @param bool $debug
      * @param string $suluContext The Sulu context (self::CONTEXT_ADMIN, self::CONTEXT_WEBSITE)
      */
@@ -52,7 +52,7 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * Set the context
+     * Set the context.
      */
     protected function setContext($context)
     {

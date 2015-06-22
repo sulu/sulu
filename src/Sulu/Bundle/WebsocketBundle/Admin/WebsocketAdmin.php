@@ -14,7 +14,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
- * Defines all the required information for websocket bundle
+ * Defines all the required information for websocket bundle.
  */
 class WebsocketAdmin extends Admin
 {

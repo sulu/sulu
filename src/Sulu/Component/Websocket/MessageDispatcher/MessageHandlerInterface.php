@@ -13,12 +13,13 @@ namespace Sulu\Component\Websocket\MessageDispatcher;
 use Ratchet\ConnectionInterface;
 
 /**
- * Interface MessageHandlerInterface
+ * Interface MessageHandlerInterface.
  */
 interface MessageHandlerInterface
 {
     /**
-     * Processes given message
+     * Processes given message.
+     *
      * @param ConnectionInterface $conn
      * @param array $message
      * @param MessageHandlerContext $context

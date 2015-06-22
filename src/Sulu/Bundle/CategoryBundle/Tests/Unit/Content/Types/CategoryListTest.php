@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
 use Sulu\Bundle\CategoryBundle\Api\Category;
+use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation as CategoryTranslationEntity;
-use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 
 class CategoryListTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,7 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
 
         $this->categoryManager->expects($this->any())->method('findByIds')->will($this->returnValueMap(
                 array(
-                    array(array(1, 2), array($categoryEntity1, $categoryEntity2))
+                    array(array(1, 2), array($categoryEntity1, $categoryEntity2)),
                 )
             )
         );
@@ -67,7 +67,7 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will($this->returnValueMap(
                 array(
-                    array('property', array(), array(1, 2))
+                    array('property', array(), array(1, 2)),
                 )
             )
         );

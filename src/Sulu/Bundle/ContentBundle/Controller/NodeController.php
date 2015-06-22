@@ -28,7 +28,7 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * handles content nodes
+ * handles content nodes.
  */
 class NodeController extends RestController
     implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
@@ -36,8 +36,10 @@ class NodeController extends RestController
     use RequestParametersTrait;
 
     /**
-     * returns language code from request
+     * returns language code from request.
+     *
      * @param Request $request
+     *
      * @return string
      */
     private function getLanguage(Request $request)
@@ -54,9 +56,11 @@ class NodeController extends RestController
     }
 
     /**
-     * returns webspace key from request
+     * returns webspace key from request.
+     *
      * @param Request $request
      * @param bool $force
+     *
      * @return string
      */
     private function getWebspace(Request $request, $force = true)
@@ -65,8 +69,10 @@ class NodeController extends RestController
     }
 
     /**
-     * returns entry point (webspace as node)
+     * returns entry point (webspace as node).
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function entryAction(Request $request)
@@ -88,7 +94,7 @@ class NodeController extends RestController
                         $ghostContent
                     );
                 } catch (ItemNotFoundException $ex) {
-                    return null;
+                    return;
                 }
             }
         );
@@ -97,20 +103,16 @@ class NodeController extends RestController
     }
 
     /**
-     * returns a content item with given UUID as JSON String
+     * returns a content item with given UUID as JSON String.
+     *
      * @param Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction(Request $request, $uuid)
     {
-        $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
-
-        if ($tree === false) {
-            $response = $this->getSingleNode($request, $uuid);
-        } else {
-            $response = $this->getTreeForUuid($request, $uuid);
-        }
+        $response = $this->getSingleNode($request, $uuid);
 
         return $response;
     }
@@ -118,6 +120,7 @@ class NodeController extends RestController
     /**
      * @param Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function getSingleNode(Request $request, $uuid)
@@ -141,7 +144,7 @@ class NodeController extends RestController
                         $ghostContent
                     );
                 } catch (ItemNotFoundException $ex) {
-                    return null;
+                    return;
                 }
             }
         );
@@ -155,6 +158,7 @@ class NodeController extends RestController
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function getTreeForUuid(Request $request, $uuid)
@@ -189,7 +193,7 @@ class NodeController extends RestController
                         'depth' => 1,
                         'language' => $language,
                         'webspace' => $webspace,
-                        'exclude-ghosts' => $excludeGhosts
+                        'exclude-ghosts' => $excludeGhosts,
                     )
                 )
             );
@@ -201,10 +205,11 @@ class NodeController extends RestController
     }
 
     /**
-     * Returns nodes by given ids
+     * Returns nodes by given ids.
      *
      * @param Request $request
      * @param array $idString
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function getNodesByIds(Request $request, $idString)
@@ -222,8 +227,10 @@ class NodeController extends RestController
     }
 
     /**
-     * returns a content item for startpage
+     * returns a content item for startpage.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -237,8 +244,10 @@ class NodeController extends RestController
     }
 
     /**
-     * returns all content items as JSON String
+     * returns all content items as JSON String.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -247,7 +256,7 @@ class NodeController extends RestController
         $ids = $this->getRequestParameter($request, 'ids');
 
         if ($tree === true) {
-            return $this->getTreeForUuid($request, null);
+            return $this->getTreeForUuid($request, $this->getRequestParameter($request, 'id', false, null));
         } elseif ($ids !== null) {
             return $this->getNodesByIds($request, $ids);
         }
@@ -279,8 +288,10 @@ class NodeController extends RestController
     }
 
     /**
-     * Returns the title of the pages for a given smart content configuration
+     * Returns the title of the pages for a given smart content configuration.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function filterAction(Request $request)
@@ -331,7 +342,7 @@ class NodeController extends RestController
             'tags' => $resolvedTags,
             'tagOperator' => $tagOperator,
             'sortBy' => $sortColumns,
-            'sortMethod' => $sortMethod
+            'sortMethod' => $sortMethod,
         );
 
         /** @var NodeRepository $repository */
@@ -349,9 +360,11 @@ class NodeController extends RestController
     }
 
     /**
-     * saves node with given uuid and data
+     * saves node with given uuid and data.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $uuid)
@@ -394,8 +407,10 @@ class NodeController extends RestController
     }
 
     /**
-     * put index page
+     * put index page.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function putIndex(Request $request)
@@ -434,8 +449,10 @@ class NodeController extends RestController
     }
 
     /**
-     * Updates a content item and returns result as JSON String
+     * Updates a content item and returns result as JSON String.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -474,9 +491,11 @@ class NodeController extends RestController
     }
 
     /**
-     * deletes node with given uuid
+     * deletes node with given uuid.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $uuid)
@@ -503,11 +522,13 @@ class NodeController extends RestController
      * - move: moves a node
      *   + destination: specifies the destination node
      * - copy: copy a node
-     *   + destination: specifies the destination node
+     *   + destination: specifies the destination node.
      *
      * @Post("/nodes/{uuid}")
+     *
      * @param string $uuid
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postTriggerAction($uuid, Request $request)
@@ -539,7 +560,7 @@ class NodeController extends RestController
                     $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
-                    $position = (int)$this->getRequestParameter($request, 'position', true);
+                    $position = (int) $this->getRequestParameter($request, 'position', true);
                     $language = $this->getLanguage($request);
 
                     // call repository method

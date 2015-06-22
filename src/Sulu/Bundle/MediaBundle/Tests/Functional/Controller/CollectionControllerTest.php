@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -42,7 +41,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $style = array(
             'type' => 'circle',
-            'color' => '#ffcc00'
+            'color' => '#ffcc00',
         );
 
         $collection->setStyle(json_encode($style));
@@ -96,7 +95,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $this->collection1->getId(),
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -107,7 +106,7 @@ class CollectionControllerTest extends SuluTestCase
             json_encode(
                 array(
                     'type' => 'circle',
-                    'color' => '#ffcc00'
+                    'color' => '#ffcc00',
                 )
             ),
             false
@@ -137,7 +136,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -185,12 +184,10 @@ class CollectionControllerTest extends SuluTestCase
             '/api/collections',
             array(
                 'locale' => 'en-gb',
-                'style' =>
-                    array(
+                'style' => array(
                         'type' => 'circle',
-                        'color' => $generateColor
-                    )
-            ,
+                        'color' => $generateColor,
+                    ),
                 'type' => array(
                     'id' => $this->collectionType1->getId(),
                 ),
@@ -227,7 +224,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?flat=true',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -293,7 +290,7 @@ class CollectionControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'style' => array(
                     'type' => 'circle',
-                    'color' => $generateColor
+                    'color' => $generateColor,
                 ),
                 'type' => array(
                     'id' => $this->collectionType1->getId(),
@@ -328,7 +325,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $this->collection1->getId() . '?depth=1',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -358,7 +355,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?flat=true&depth=2',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -405,7 +402,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -452,7 +449,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections',
             array(
-                'locale' => 'en'
+                'locale' => 'en',
             )
         );
 
@@ -509,18 +506,16 @@ class CollectionControllerTest extends SuluTestCase
             'POST',
             '/api/collections',
             array(
-                'style' =>
-                    array(
+                'style' => array(
                         'type' => 'circle',
-                        'color' => $generateColor
-                    )
-            ,
+                        'color' => $generateColor,
+                    ),
                 'type' => array(
-                    'id' => 91283
+                    'id' => 91283,
                 ),
                 'title' => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -543,12 +538,12 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' => array(
                     'type' => 'circle',
-                    'color' => '#00ccff'
+                    'color' => '#00ccff',
                 ),
                 'type' => $this->collectionType1->getId(),
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -558,7 +553,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $this->collection1->getId(),
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -622,7 +617,7 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' => array(
                     'type' => 'circle',
-                    'color' => '#00ccff'
+                    'color' => '#00ccff',
                 ),
                 'type' => 1,
                 'title' => 'Test Collection changed',
@@ -705,15 +700,13 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             array(
-                'style' =>
-                    array(
+                'style' => array(
                         'type' => 'quader',
-                        'color' => '#00ccff'
-                    )
-            ,
+                        'color' => '#00ccff',
+                    ),
                 'type' => array(
-                    'id' => $collectionType->getId()
-                )
+                    'id' => $collectionType->getId(),
+                ),
             )
         );
 
@@ -746,12 +739,10 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/404',
             array(
-                'style' =>
-                    array(
+                'style' => array(
                         'type' => 'quader',
-                        'color' => '#00ccff'
-                    )
-            ,
+                        'color' => '#00ccff',
+                    ),
                 'type' => $this->collectionType1->getId(),
             )
         );
@@ -816,7 +807,7 @@ class CollectionControllerTest extends SuluTestCase
                 'col4',
                 'col5',
                 'col6',
-                'col7'
+                'col7',
             ),
             array(
                 $collection1->getId(),
@@ -834,8 +825,8 @@ class CollectionControllerTest extends SuluTestCase
                 $collection4,
                 $collection5,
                 $collection6,
-                $collection7
-            )
+                $collection7,
+            ),
         );
     }
 
@@ -848,7 +839,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?flat=true',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -872,7 +863,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?flat=true&depth=1',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -913,7 +904,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?flat=true&depth=2',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -963,7 +954,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -986,7 +977,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?depth=1',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1030,7 +1021,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?depth=2',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1086,7 +1077,7 @@ class CollectionControllerTest extends SuluTestCase
             '/api/collections/' . $ids[6],
             array(
                 'locale' => 'en-gb',
-                'breadcrumb' => 'true'
+                'breadcrumb' => 'true',
             )
         );
 
@@ -1113,7 +1104,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3],
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1129,7 +1120,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1155,7 +1146,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3] . '?depth=2',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1195,7 +1186,7 @@ class CollectionControllerTest extends SuluTestCase
             'POST',
             '/api/collections/' . $ids[3] . '?action=move&destination=' . $ids[0],
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1209,7 +1200,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections?depth=3',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1251,7 +1242,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotNull($subItems[1]->_embedded->parent);
         $this->assertNotEmpty($subItems[1]->_embedded->collections);
 
-
         $subItems = $subItems[1]->_embedded->collections;
         $this->assertCount(1, $subItems);
         $this->assertEquals($titles[6], $subItems[0]->title);
@@ -1268,7 +1258,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1&search=col5',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1290,7 +1280,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1&page=1&limit=2',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1307,7 +1297,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1&page=2&limit=2',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 
@@ -1323,7 +1313,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1&page=1&limit=10',
             array(
-                'locale' => 'en-gb'
+                'locale' => 'en-gb',
             )
         );
 

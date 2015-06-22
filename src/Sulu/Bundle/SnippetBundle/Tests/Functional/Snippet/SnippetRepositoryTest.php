@@ -11,9 +11,8 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
-use PHPCR\PropertyType;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 class SnippetRepositoryTest extends BaseFunctionalTestCase
 {
@@ -42,23 +41,23 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         return array(
             array(
                 null, null, null,
-                5
+                5,
             ),
             array(
                 'hotel', null, null,
-                2
+                2,
             ),
             array(
                 'car', null, null,
-                3
+                3,
             ),
             array(
                 'car', 1, 2,
-                2
+                2,
             ),
             array(
                 'car', 1, 1,
-                1
+                1,
             ),
         );
     }
@@ -79,17 +78,17 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
     {
         return array(
             array(
-                array('hotel1', 'hotel2', 'car1'), 'de', 3
+                array('hotel1', 'hotel2', 'car1'), 'de', 3,
             ),
             // Currently fails because a default template does not exist...
             //array(
             //    array('hotel1', 'hotel2', 'car1'), 'en', 3
             //),
             array(
-                array('hotel1', '842e61c0-09ab-42a9-1111-111111111111', 'car1'), 'de', 2
+                array('hotel1', '842e61c0-09ab-42a9-1111-111111111111', 'car1'), 'de', 2,
             ),
             array(
-                array(), 'de', 0
+                array(), 'de', 0,
             ),
         );
     }

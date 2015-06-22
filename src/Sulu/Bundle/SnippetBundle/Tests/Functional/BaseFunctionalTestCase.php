@@ -41,7 +41,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
     }
 
     /**
-     * Load fixtures for snippet functional tests
+     * Load fixtures for snippet functional tests.
      */
     protected function loadFixtures()
     {
@@ -52,7 +52,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setLocale('de')
             ->setUserId(1)
             ->setData(array(
-                'title' => 'Le grande budapest'
+                'title' => 'Le grande budapest',
             ));
         $this->hotel1 = $this->contentMapper->saveRequest($req);
 
@@ -64,7 +64,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setUserId(1)
             ->setUuid($this->hotel1->getUuid())
             ->setData(array(
-                'title' => 'Le grande budapest (en)'
+                'title' => 'Le grande budapest (en)',
             ));
         $this->hotel1 = $this->contentMapper->saveRequest($req);
 
@@ -107,7 +107,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setIsShadow(true)
             ->setShadowBaseLanguage('de')
             ->setData(array(
-                'title' => 'Hotels'
+                'title' => 'Hotels',
             ));
 
         $this->contentMapper->saveRequest($req);

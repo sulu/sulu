@@ -17,15 +17,17 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * handles resource locator api
+ * handles resource locator api.
  */
 class NodeResourcelocatorController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
     /**
-     * return resource-locator for sub-node
+     * return resource-locator for sub-node.
+     *
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postGenerateAction()
@@ -53,8 +55,10 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
-     * return all resource locators for given node
+     * return all resource locators for given node.
+     *
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction($uuid)
@@ -66,7 +70,8 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
-     * deletes resource locator with given path
+     * deletes resource locator with given path.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction()
@@ -80,8 +85,10 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
-     * restores url with given path
+     * restores url with given path.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putRestoreAction(Request $request)
@@ -89,13 +96,14 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
         $path = $this->getRequestParameter($request, 'path', true);
 
-        $result = $this->getResourceLocatorRepository()->restore($path,$this->getUser()->getId(), $webspaceKey, $languageCode);
+        $result = $this->getResourceLocatorRepository()->restore($path, $this->getUser()->getId(), $webspaceKey, $languageCode);
 
         return $this->handleView($this->view($result));
     }
 
     /**
-     * returns webspacekey and languagecode
+     * returns webspacekey and languagecode.
+     *
      * @return array list($webspaceKey, $languageCode)
      */
     private function getWebspaceAndLanguage()

@@ -36,7 +36,12 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
             data: {message: this.generateMessage(handler, message, {})}
         }).then(function(data) {
             this._onMessage.notify(data);
-            def.resolve(data.handler, data.message);
+
+            if (!data.error) {
+                def.resolve(data.handler, data.message);
+            } else {
+                def.reject(data.handler, data.message);
+            }
         }.bind(this));
 
         return def.promise();

@@ -19,3 +19,6 @@ security:
         test:
             http_basic:
 
+sulu_security:
+    checker:
+        enabled: true

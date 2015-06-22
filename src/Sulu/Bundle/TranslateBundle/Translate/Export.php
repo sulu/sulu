@@ -11,14 +11,13 @@
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Translate\Dumper\JsonFileDumper;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
-use Sulu\Bundle\TranslateBundle\Entity\Translation;
 
 /**
- * Configures and starts an export of a translate catalogue
- * @package Sulu\Bundle\TranslateBundle\Translate
+ * Configures and starts an export of a translate catalogue.
  */
 class Export
 {
@@ -31,50 +30,58 @@ class Export
     private $em;
 
     /**
-     * The locale of the catalogue to export
+     * The locale of the catalogue to export.
+     *
      * @var string
      */
     private $locale;
 
     /**
-     * The id of the package to export
-     * @var integer
+     * The id of the package to export.
+     *
+     * @var int
      */
     private $packageId;
 
     /**
-     * The format to export the catalogue in
+     * The format to export the catalogue in.
+     *
      * @var string
      */
     private $format;
 
     /**
-     * Filter for the location to export
+     * Filter for the location to export.
+     *
      * @var string
      */
     private $location;
 
     /**
-     * Defines if the backend translations should be included
-     * @var boolean
+     * Defines if the backend translations should be included.
+     *
+     * @var bool
      */
     private $backend;
 
     /**
-     * The path, to which the file should exported (pointing to a directory)
+     * The path, to which the file should exported (pointing to a directory).
+     *
      * @var string
      */
     private $path;
 
     /**
-     * The name of the file to export
+     * The name of the file to export.
+     *
      * @var string
      */
     private $filename;
 
     /**
-     * Defines if the frontend translations should be included
-     * @var boolean
+     * Defines if the frontend translations should be included.
+     *
+     * @var bool
      */
     private $frontend;
 
@@ -84,7 +91,8 @@ class Export
     }
 
     /**
-     * Set the format, in which the catalogue should be exported
+     * Set the format, in which the catalogue should be exported.
+     *
      * @param string $format
      */
     public function setFormat($format)
@@ -93,7 +101,8 @@ class Export
     }
 
     /**
-     * Sets the filename
+     * Sets the filename.
+     *
      * @param string $filename
      */
     public function setFilename($filename)
@@ -102,7 +111,8 @@ class Export
     }
 
     /**
-     * Returns the name of the file to export
+     * Returns the name of the file to export.
+     *
      * @return string
      */
     public function getFilename()
@@ -111,7 +121,8 @@ class Export
     }
 
     /**
-     * Returns the format, in which the catalogue should be exported
+     * Returns the format, in which the catalogue should be exported.
+     *
      * @return string
      */
     public function getFormat()
@@ -120,7 +131,8 @@ class Export
     }
 
     /**
-     * Sets the locale of the package, which should be exported
+     * Sets the locale of the package, which should be exported.
+     *
      * @param string $locale
      */
     public function setLocale($locale)
@@ -129,7 +141,8 @@ class Export
     }
 
     /**
-     * Returns the locale of the package, which should be exported
+     * Returns the locale of the package, which should be exported.
+     *
      * @return string
      */
     public function getLocale()
@@ -138,7 +151,8 @@ class Export
     }
 
     /**
-     * Sets the filter for the location
+     * Sets the filter for the location.
+     *
      * @param string $location
      */
     public function setLocation($location)
@@ -147,7 +161,8 @@ class Export
     }
 
     /**
-     * Returns the filter for the location
+     * Returns the filter for the location.
+     *
      * @return string
      */
     public function getLocation()
@@ -156,8 +171,9 @@ class Export
     }
 
     /**
-     * Sets whether the backend translations should be included in the export or not
-     * @param boolean $backend
+     * Sets whether the backend translations should be included in the export or not.
+     *
+     * @param bool $backend
      */
     public function setBackend($backend)
     {
@@ -165,8 +181,9 @@ class Export
     }
 
     /**
-     * Returns whether the backend translations should be included in the export or not
-     * @return boolean
+     * Returns whether the backend translations should be included in the export or not.
+     *
+     * @return bool
      */
     public function getBackend()
     {
@@ -174,8 +191,9 @@ class Export
     }
 
     /**
-     * Sets whether the frontend translations should be included in the export or not
-     * @param boolean $frontend
+     * Sets whether the frontend translations should be included in the export or not.
+     *
+     * @param bool $frontend
      */
     public function setFrontend($frontend)
     {
@@ -183,8 +201,9 @@ class Export
     }
 
     /**
-     * Returns whether the frontend translations should be included in the export or not
-     * @return boolean
+     * Returns whether the frontend translations should be included in the export or not.
+     *
+     * @return bool
      */
     public function getFrontend()
     {
@@ -192,7 +211,8 @@ class Export
     }
 
     /**
-     * Sets the path to the directory, in which the export should be located
+     * Sets the path to the directory, in which the export should be located.
+     *
      * @param string $path
      */
     public function setPath($path)
@@ -202,7 +222,8 @@ class Export
 
     /**
      * Returns the path to the directory, in which the export should be located.
-     * If the path is not explicitly set, the current working directory will be returned
+     * If the path is not explicitly set, the current working directory will be returned.
+     *
      * @return string
      */
     public function getPath()
@@ -227,7 +248,7 @@ class Export
     }
 
     /**
-     * Executes the export
+     * Executes the export.
      */
     public function execute()
     {
@@ -247,7 +268,7 @@ class Export
             if (!array_key_exists($translation->getCode()->getCode(), $messages)) {
                 $messages[$translation->getCode()->getCode()] = $translation->getValue();
             } else {
-                throw new \InvalidArgumentException($translation->getCode()->getCode().', translation-code seems to come up multiple times');
+                throw new \InvalidArgumentException($translation->getCode()->getCode() . ', translation-code seems to come up multiple times');
             }
         }
 

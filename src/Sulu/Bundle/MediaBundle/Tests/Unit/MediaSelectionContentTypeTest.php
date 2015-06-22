@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 use PHPUnit_Framework_TestCase;
-use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -35,7 +34,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $this->mediaManager = $this->getMock('\Sulu\Bundle\MeediaBundle\Media\Manager\MediaManagerInterface');
 
         $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
-            $this->mediaManager,'SuluMediaBundle:Template:image-selection.html.twig'
+            $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
 
@@ -73,7 +72,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                 array(
                     'ids' => array(1, 2, 3, 4),
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2)
+                    'config' => array('conf1' => 1, 'conf2' => 2),
                 )
             )
         );
@@ -91,7 +90,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                 array(
                     'ids' => array(1, 2, 3, 4),
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2)
+                    'config' => array('conf1' => 1, 'conf2' => 2),
                 )
             )
         );
@@ -129,7 +128,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     'ids' => array(1, 2, 3, 4),
                     'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2),
-                    'data' => array('data1', 'data2')
+                    'data' => array('data1', 'data2'),
                 )
             )
         );
@@ -147,7 +146,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                 array(
                     'ids' => array(1, 2, 3, 4),
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2)
+                    'config' => array('conf1' => 1, 'conf2' => 2),
                 )
             )
         );
@@ -185,8 +184,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        $config
-                    )
+                        $config,
+                    ),
                 )
             )
         );
@@ -236,8 +235,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        $config
-                    )
+                        $config,
+                    ),
                 )
             )
         );
@@ -259,7 +258,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(
                 'config' => array('conf1' => 1, 'conf2' => 2),
                 'displayOption' => 'right',
-                'ids' => array(1, 2, 3, 4)
+                'ids' => array(1, 2, 3, 4),
             ),
             $property,
             'test',
@@ -298,8 +297,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        $config
-                    )
+                        $config,
+                    ),
                 )
             )
         );
@@ -311,7 +310,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
                 array(
-                    'types' => 'document'
+                    'types' => 'document',
                 )
             )
         );
@@ -349,8 +348,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        $config
-                    )
+                        $config,
+                    ),
                 )
             )
         );
@@ -362,7 +361,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
                 array(
-                    'types' => 'document'
+                    'types' => 'document',
                 )
             )
         );
@@ -371,7 +370,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(
                 'config' => array('conf1' => 1, 'conf2' => 2),
                 'displayOption' => 'right',
-                'ids' => array(1, 2, 3, 4)
+                'ids' => array(1, 2, 3, 4),
             ),
             $property,
             'test',
@@ -410,8 +409,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        $config
-                    )
+                        $config,
+                    ),
                 )
             )
         );
@@ -423,7 +422,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
                 array(
-                    'types' => 'document,image'
+                    'types' => 'document,image',
                 )
             )
         );
@@ -461,8 +460,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        $config
-                    )
+                        $config,
+                    ),
                 )
             )
         );
@@ -474,7 +473,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
                 array(
-                    'types' => 'document,image'
+                    'types' => 'document,image',
                 )
             )
         );
@@ -483,7 +482,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(
                 'config' => array('conf1' => 1, 'conf2' => 2),
                 'displayOption' => 'right',
-                'ids' => array(1, 2, 3, 4)
+                'ids' => array(1, 2, 3, 4),
             ),
             $property,
             'test',

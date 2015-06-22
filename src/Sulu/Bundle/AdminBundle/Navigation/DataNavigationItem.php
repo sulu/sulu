@@ -16,61 +16,71 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 class DataNavigationItem extends NavigationItem
 {
     /**
-     * Url to load data from
+     * Url to load data from.
+     *
      * @var string
      */
     protected $dataUrl;
 
     /**
-     * Key of the result array
+     * Key of the result array.
+     *
      * @var string
      */
     protected $dataResultKey;
 
     /**
-     * Key of the name of entity
+     * Key of the name of entity.
+     *
      * @var string
      */
     protected $dataNameKey;
 
     /**
-     * Key of the children link
+     * Key of the children link.
+     *
      * @var string
      */
     protected $dataChildrenLinkKey;
 
     /**
-     * If true a add button will be shown in data-navigation
-     * @var boolean
+     * If true a add button will be shown in data-navigation.
+     *
+     * @var bool
      */
     protected $showAddButton;
 
     /**
-     * Instance name for component
+     * Instance name for component.
+     *
      * @var string
      */
     protected $instanceName = '';
 
     /**
-     * Key to translate add button
+     * Key to translate add button.
+     *
      * @var string
      */
     protected $addButtonTranslationKey = 'sulu.data-navigation.add-button';
 
     /**
-     * Key to translate no data available
+     * Key to translate no data available.
+     *
      * @var string
      */
     protected $noDataTranslationKey = 'sulu.data-navigation.no-data';
 
     /**
-     * Key to translate root node
+     * Key to translate root node.
+     *
      * @var string
      */
     protected $titleTranslationKey = 'sulu.data-navigation.title';
 
     /**
-     * Key to translate root node
+     * Key to translate root node.
+     *
      * @var string
      */
     protected $searchTranslationKey = 'sulu.data-navigation.search';
@@ -80,7 +90,7 @@ class DataNavigationItem extends NavigationItem
      * @param string $dataUrl url to load data for data-navigation
      * @param NavigationItem $parent The parent of the item
      */
-    function __construct($name, $dataUrl, $parent = null)
+    public function __construct($name, $dataUrl, $parent = null)
     {
         parent::__construct($name, $parent);
 
@@ -144,7 +154,7 @@ class DataNavigationItem extends NavigationItem
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getShowAddButton()
     {
@@ -152,7 +162,7 @@ class DataNavigationItem extends NavigationItem
     }
 
     /**
-     * @param boolean $showAddButton
+     * @param bool $showAddButton
      */
     public function setShowAddButton($showAddButton)
     {
@@ -265,7 +275,7 @@ class DataNavigationItem extends NavigationItem
      */
     protected function copyWithName()
     {
-        return new DataNavigationItem($this->name, $this->dataUrl);
+        return new self($this->name, $this->dataUrl);
     }
 
     /**
@@ -288,8 +298,8 @@ class DataNavigationItem extends NavigationItem
                 'noData' => $this->noDataTranslationKey,
                 'title' => $this->titleTranslationKey,
                 'addButton' => $this->addButtonTranslationKey,
-                'search' => $this->searchTranslationKey
-            )
+                'search' => $this->searchTranslationKey,
+            ),
         );
 
         // not setted values should be removed

@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
  * This exception is thrown when the password is mandatory but missing.
- * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
 class MissingPasswordException extends SecurityException
 {
@@ -25,7 +24,7 @@ class MissingPasswordException extends SecurityException
     {
         return array(
             'code' => $this->code,
-            'message' => $this->message
+            'message' => $this->message,
         );
     }
 }

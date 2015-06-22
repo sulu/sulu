@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Widgets;
 
+use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandlerInterface;
-use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
@@ -42,9 +42,9 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                     'group-widget-1',
                     'group-widget-1',
                     'group-widget-3',
-                    'group-widget-2'
-                )
-            )
+                    'group-widget-2',
+                ),
+            ),
         ));
     }
 
@@ -52,6 +52,7 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
      * @param $name
      * @param $template
      * @param $data
+     *
      * @return WidgetInterface
      */
     private function getWidget($name, $template, $data)
@@ -126,27 +127,27 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                         'name' => 'widget2',
                         'template' => 'SuluTestBundle:widget:widget2.html.twig',
                         'data' => array(
-                            'test' => 2
-                        )
+                            'test' => 2,
+                        ),
                     ),
                     array(
                         'name' => 'widget1',
                         'template' => 'SuluTestBundle:widget:widget1.html.twig',
                         'data' => array(
-                            'test' => 1
-                        )
+                            'test' => 1,
+                        ),
                     ),
                     array(
                         'name' => 'widget3',
                         'template' => 'SuluTestBundle:widget:widget3.html.twig',
                         'data' => array(
-                            'test' => 3
-                        )
-                    )
+                            'test' => 3,
+                        ),
+                    ),
                 ),
                 'parameters' => array(
-                    'testParam' => 'super'
-                )
+                    'testParam' => 'super',
+                ),
             ),
             $param
         );
@@ -197,34 +198,34 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                         'name' => 'group-widget-1',
                         'template' => 'SuluTestBundle:widget:widget1.html.twig',
                         'data' => array(
-                            'test' => 1
-                        )
+                            'test' => 1,
+                        ),
                     ),
                     array(
                         'name' => 'group-widget-1',
                         'template' => 'SuluTestBundle:widget:widget1.html.twig',
                         'data' => array(
-                            'test' => 1
-                        )
+                            'test' => 1,
+                        ),
                     ),
                     array(
                         'name' => 'group-widget-3',
                         'template' => 'SuluTestBundle:widget:widget3.html.twig',
                         'data' => array(
-                            'test' => 3
-                        )
+                            'test' => 3,
+                        ),
                     ),
                     array(
                         'name' => 'group-widget-2',
                         'template' => 'SuluTestBundle:widget:widget2.html.twig',
                         'data' => array(
-                            'test' => 2
-                        )
-                    )
+                            'test' => 2,
+                        ),
+                    ),
                 ),
                 'parameters' => array(
-                    'testParam' => 'super'
-                )
+                    'testParam' => 'super',
+                ),
             ),
             $param
         );

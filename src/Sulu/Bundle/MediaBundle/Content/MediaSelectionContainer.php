@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Content;
 
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Container for Image selection, holds config for image selection and lazy loads images matches the ids
+ * Container for Image selection, holds config for image selection and lazy loads images matches the ids.
  */
 class MediaSelectionContainer implements ArrayableInterface
 {
@@ -37,24 +37,28 @@ class MediaSelectionContainer implements ArrayableInterface
 
     /**
      * @Exclude
+     *
      * @var string
      */
     private $locale;
 
     /**
      * @Exclude
+     *
      * @var Media[]
      */
     private $data;
 
     /**
      * @Exclude
+     *
      * @var string
      */
     private $types;
 
     /**
      * @Exclude
+     *
      * @var MediaManagerInterface
      */
     private $mediaManager;
@@ -70,7 +74,8 @@ class MediaSelectionContainer implements ArrayableInterface
     }
 
     /**
-     * returns data of container
+     * returns data of container.
+     *
      * @return Media[]
      */
     public function getData()
@@ -84,6 +89,7 @@ class MediaSelectionContainer implements ArrayableInterface
 
     /**
      * @param string $locale
+     *
      * @return Media[]
      */
     private function loadData($locale)
@@ -96,7 +102,8 @@ class MediaSelectionContainer implements ArrayableInterface
     }
 
     /**
-     * returns ids of container
+     * returns ids of container.
+     *
      * @return string[]
      */
     public function getIds()
@@ -143,7 +150,7 @@ class MediaSelectionContainer implements ArrayableInterface
                 return $this->getTypes();
         }
 
-        return null;
+        return;
     }
 
     public function __isset($name)
@@ -160,7 +167,7 @@ class MediaSelectionContainer implements ArrayableInterface
             'config' => $this->getConfig(),
             'ids' => $this->getIds(),
             'types' => $this->getTypes(),
-            'displayOption' => $this->getDisplayOption()
+            'displayOption' => $this->getDisplayOption(),
         );
     }
 }

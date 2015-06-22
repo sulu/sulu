@@ -11,12 +11,11 @@
 namespace Sulu\Bundle\SecurityBundle\Util;
 
 /**
- * Generates a token
+ * Generates a token.
  *
  * inspired by the FOSUserBundle's TokenGenerator
  *
  * Class TokenGenerator
- * @package Sulu\Bundle\SecurityBundle\Util
  */
 class TokenGenerator implements TokenGeneratorInterface
 {
@@ -35,7 +34,8 @@ class TokenGenerator implements TokenGeneratorInterface
     }
 
     /**
-     * Pulbic method to return the token
+     * Pulbic method to return the token.
+     *
      * @returns String the token
      */
     public function generateToken()

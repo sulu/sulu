@@ -36,16 +36,19 @@ class Navigation
     /**
      * Merges the given navigation with this one and returns the result.
      * Works only if there are no duplicate of items in the same level.
+     *
      * @param Navigation $navigation
+     *
      * @return Navigation
      */
     public function merge(Navigation $navigation)
     {
-        return new Navigation($this->getRoot()->merge($navigation->getRoot()));
+        return new self($this->getRoot()->merge($navigation->getRoot()));
     }
 
     /**
-     * Returns the navigation as array
+     * Returns the navigation as array.
+     *
      * @return array
      */
     public function toArray()

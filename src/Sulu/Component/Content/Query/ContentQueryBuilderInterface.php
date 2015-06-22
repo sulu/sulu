@@ -13,15 +13,18 @@ namespace Sulu\Component\Content\Query;
 interface ContentQueryBuilderInterface
 {
     /**
-     * Build query
+     * Build query.
+     *
      * @param string $webspaceKey
      * @param string[] $locales
+     *
      * @return string
      */
     public function build($webspaceKey, $locales);
 
     /**
-     * initialize query builder
+     * initialize query builder.
+     *
      * @param array $options
      */
     public function init(array $options);

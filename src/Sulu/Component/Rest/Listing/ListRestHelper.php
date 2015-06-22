@@ -21,13 +21,13 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * For lists it allocates a Repository
  *
- * @package Sulu\Bundle\TranslateBundle\Controller
  * @deprecated
  */
 class ListRestHelper
 {
     /**
-     * The current request object
+     * The current request object.
+     *
      * @var Request
      */
     protected $request;
@@ -38,14 +38,16 @@ class ListRestHelper
     protected $em;
 
     /**
-     * temp property for saving total amount of entities
+     * temp property for saving total amount of entities.
+     *
      * @var int
      */
     private $totalNumberOfElements;
 
     /**
      * The constructor takes the request as an argument, which
-     * is injected by the service container
+     * is injected by the service container.
+     *
      * @param Request $request
      * @param ObjectManager $em
      */
@@ -56,8 +58,10 @@ class ListRestHelper
     }
 
     /**
-     * Create a ListRepository for given EntityName
+     * Create a ListRepository for given EntityName.
+     *
      * @param string $entityName
+     *
      * @return ListRepository
      */
     public function getRepository($entityName)
@@ -66,10 +70,12 @@ class ListRestHelper
     }
 
     /**
-     * Create a ListRepository for given EntityName and find Entities for list
+     * Create a ListRepository for given EntityName and find Entities for list.
+     *
      * @param string $entityName
      * @param array $where
      * @param array $joinConditions
+     *
      * @return array
      */
     public function find($entityName, $where = array(), $joinConditions = array())
@@ -78,7 +84,8 @@ class ListRestHelper
     }
 
     /**
-     * Returns the current Request
+     * Returns the current Request.
+     *
      * @return Request
      */
     protected function getRequest()
@@ -87,7 +94,8 @@ class ListRestHelper
     }
 
     /**
-     * Returns an array containing the desired sorting
+     * Returns an array containing the desired sorting.
+     *
      * @return array
      */
     public function getSorting()
@@ -99,8 +107,9 @@ class ListRestHelper
     }
 
     /**
-     * Returns the maximum number of elements in a single response
-     * @return integer
+     * Returns the maximum number of elements in a single response.
+     *
+     * @return int
      */
     public function getLimit()
     {
@@ -109,8 +118,9 @@ class ListRestHelper
 
     /**
      * Returns the calculated value for the starting position based
-     * on the page and limit values
-     * @return integer|null
+     * on the page and limit values.
+     *
+     * @return int|null
      */
     public function getOffset()
     {
@@ -121,7 +131,8 @@ class ListRestHelper
     }
 
     /**
-     * returns the current page
+     * returns the current page.
+     *
      * @return mixed
      */
     public function getPage()
@@ -130,8 +141,10 @@ class ListRestHelper
     }
 
     /**
-     * returns total amount of pages
+     * returns total amount of pages.
+     *
      * @param int $totalNumber if not defined the total number is requested from DB
+     *
      * @return float|int
      */
     public function getTotalPages($totalNumber = null)
@@ -144,8 +157,10 @@ class ListRestHelper
     }
 
     /**
-     * returns all field names for a certain entity
+     * returns all field names for a certain entity.
+     *
      * @param $entityName
+     *
      * @return array
      */
     public function getAllFields($entityName)
@@ -156,6 +171,7 @@ class ListRestHelper
     /**
      * Returns an array with all the fields, which should be contained in the response.
      * If null is returned every field should be contained.
+     *
      * @return array|null
      */
     public function getFields()
@@ -166,7 +182,8 @@ class ListRestHelper
     }
 
     /**
-     * Returns the pattern of the search
+     * Returns the pattern of the search.
+     *
      * @return mixed
      */
     public function getSearchPattern()
@@ -175,7 +192,8 @@ class ListRestHelper
     }
 
     /**
-     * Returns an array with all the fields the search pattern should be executed on
+     * Returns an array with all the fields the search pattern should be executed on.
+     *
      * @return array|null
      */
     public function getSearchFields()
@@ -189,6 +207,7 @@ class ListRestHelper
      * @param $entityName
      * @param $where
      * @param array $joinConditions
+     *
      * @return int
      */
     public function getTotalNumberOfElements($entityName, $where, $joinConditions = array())
@@ -197,5 +216,4 @@ class ListRestHelper
 
         return $this->totalNumberOfElements;
     }
-
 }

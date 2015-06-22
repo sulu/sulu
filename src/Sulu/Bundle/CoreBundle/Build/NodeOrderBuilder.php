@@ -10,15 +10,15 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
+use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
 use PHPCR\NodeInterface;
-use Massive\Bundle\BuildBundle\Build\BuilderContext;
+use Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber;
 
 /**
- * Builder for initializing PHPCR
+ * Builder for initializing PHPCR.
  */
 class NodeOrderBuilder implements BuilderInterface
 {

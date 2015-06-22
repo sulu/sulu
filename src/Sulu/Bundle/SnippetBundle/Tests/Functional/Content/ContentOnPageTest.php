@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;

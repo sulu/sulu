@@ -10,17 +10,16 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
-use Sulu\Component\Rest\ApiWrapper;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
- * The BankAccount class which will be exported to the API
+ * The BankAccount class which will be exported to the API.
  *
- * @package Sulu\Bundle\ContactBundle\Api
  * @ExclusionPolicy("all")
  */
 class BankAccount extends ApiWrapper
@@ -34,7 +33,7 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Returns the id of the product
+     * Returns the id of the product.
      *
      * @return int
      * @VirtualProperty
@@ -47,9 +46,10 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Set bic
+     * Set bic.
      *
      * @param string $bic
+     *
      * @return BankAccount
      */
     public function setBic($bic)
@@ -60,7 +60,7 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Get bic
+     * Get bic.
      *
      * @return string
      * @VirtualProperty
@@ -73,9 +73,10 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Set iban
+     * Set iban.
      *
      * @param string $iban
+     *
      * @return BankAccount
      */
     public function setIban($iban)
@@ -86,7 +87,7 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Get iban
+     * Get iban.
      *
      * @return string
      * @VirtualProperty
@@ -99,9 +100,10 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Set public
+     * Set public.
      *
-     * @param boolean $public
+     * @param bool $public
+     *
      * @return BankAccount
      */
     public function setPublic($public)
@@ -112,9 +114,9 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Get public
+     * Get public.
      *
-     * @return boolean
+     * @return bool
      * @VirtualProperty
      * @SerializedName("public")
      * @Groups({"fullAccount","fullContact"})
@@ -125,9 +127,10 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Set bankName
+     * Set bankName.
      *
      * @param string $bankName
+     *
      * @return BankAccount
      */
     public function setBankName($bankName)
@@ -138,7 +141,7 @@ class BankAccount extends ApiWrapper
     }
 
     /**
-     * Get bankName
+     * Get bankName.
      *
      * @return string
      * @VirtualProperty

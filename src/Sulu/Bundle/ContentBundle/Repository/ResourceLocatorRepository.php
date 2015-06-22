@@ -18,7 +18,7 @@ use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
 /**
- * resource locator repository
+ * resource locator repository.
  */
 class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 {
@@ -48,19 +48,18 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $apiBasePath = array(
         '/admin/api/node/resourcelocator',
         '/admin/api/nodes/resourcelocators',
-        '/admin/api/nodes/{uuid}/resourcelocators'
+        '/admin/api/nodes/{uuid}/resourcelocators',
     );
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         RlpStrategyInterface $strategy,
         StructureManagerInterface $structureManager,
         ResourceLocatorInterface $resourceLocator,
         ContentMapperInterface $contentMapper
-    )
-    {
+    ) {
         $this->strategy = $strategy;
         $this->structureManager = $structureManager;
         $this->resourceLocator = $resourceLocator;
@@ -89,8 +88,8 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         return array(
             'resourceLocator' => $result,
             '_links' => array(
-                'self' => $this->getBasePath() . '/generates'
-            )
+                'self' => $this->getBasePath() . '/generates',
+            ),
         );
     }
 
@@ -114,19 +113,19 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
                 'created' => $url->getCreated(),
                 '_links' => array(
                     'delete' => $this->getBasePath(null, 0) . $deleteParameter,
-                    'restore' => $this->getBasePath(null, 0) . $restoreParameter
-                )
+                    'restore' => $this->getBasePath(null, 0) . $restoreParameter,
+                ),
             );
         }
 
         return array(
             '_embedded' => array(
-                'resourcelocators' => $result
+                'resourcelocators' => $result,
             ),
             '_links' => array(
-                'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey
+                'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey,
             ),
-            'total' => sizeof($result)
+            'total' => sizeof($result),
         );
     }
 
@@ -149,9 +148,11 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     }
 
     /**
-     * returns base path fo given uuid
+     * returns base path fo given uuid.
+     *
      * @param null|string $uuid
      * @param int $default
+     *
      * @return string
      */
     private function getBasePath($uuid = null, $default = 1)
@@ -167,6 +168,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      * @param StructureInterface $structure
      * @param array $parts
      * @param string $separator default '-'
+     *
      * @return string
      */
     private function implodeRlpParts(StructureInterface $structure, array $parts, $separator = '-')

@@ -10,20 +10,21 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Search\Subscriber;
 
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\File;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sulu\Bundle\SearchBundle\Search\Document;
-use Prophecy\Argument;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber;
+use Sulu\Bundle\SearchBundle\Search\Document;
 
 class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,12 +43,14 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
+        $this->logger = $this->prophesize(LoggerInterface::class);
         $this->factory = $this->prophesize(Factory::class);
         $this->subscriber = new MediaSearchSubscriber(
             $this->mediaManager->reveal(),
             $this->factory->reveal(),
+            $this->logger->reveal(),
+            array('image/jpeg'),
             'test_format'
         );
 
@@ -77,12 +80,12 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return early if the entity is not a FileVersionMeta instance
+     * It should return early if the entity is not a FileVersionMeta instance.
      */
     public function testNotMedia()
     {
         $this->indexMetadata->getName()->willReturn('Foo');
-        $this->event->getSubject()->willReturn(new \stdClass);
+        $this->event->getSubject()->willReturn(new \stdClass());
         $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(false);
         $this->fileVersionMeta->getFileVersion()->shouldNotBeCalled();
 
@@ -90,19 +93,17 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should set the image URL, ID and mime type
+     * It should set the image URL, ID and mime type.
      */
     public function testSubscriber()
     {
-        $mediaId = 123;
-        $mediaMime = 'mime/type';
+        $this->setupSubscriber(
+            123,
+            'image/jpeg',
+            321
+        );
         $imageUrl = 'foo';
-        $collectionId = 321;
 
-        $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(true);
-        $this->metadata->getName()->willReturn(FileVersionMeta::class);
-        $this->event->getSubject()->willReturn($this->fileVersionMeta->reveal());
-        $this->fileVersionMeta->getLocale()->willReturn('de');
         $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) use ($imageUrl) {
             $mediaApi = $args[0];
             $mediaApi->setFormats(array(
@@ -110,19 +111,80 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
             ));
         });
 
-
-        $this->media->getId()->willReturn($mediaId);
-        $this->media->getCollection()->willReturn($this->collection->reveal());
-        $this->collection->getId()->willReturn($collectionId);
-        $this->fileVersion->getMimeType()->willReturn($mediaMime);
         $this->document->setImageUrl($imageUrl)->shouldBeCalled();
-        $this->factory->createField('media_id', $mediaId)->willReturn($this->field1->reveal());
-        $this->factory->createField('media_mime', $mediaMime)->willReturn($this->field2->reveal());
-        $this->factory->createField('collection_id', $collectionId)->willReturn($this->field3->reveal());
         $this->document->addField($this->field1->reveal())->shouldBeCalled();
         $this->document->addField($this->field2->reveal())->shouldBeCalled();
         $this->document->addField($this->field3->reveal())->shouldBeCalled();
 
         $this->subscriber->handlePreIndex($this->event->reveal());
+    }
+
+    /**
+     * It should log a warning if the media does not have a thumbnail.
+     */
+    public function testSubscriberNoThumbnailLog()
+    {
+        $this->setupSubscriber(
+            123,
+            'image/jpeg',
+            321
+        );
+
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+            $mediaApi = $args[0];
+            $mediaApi->setFormats(array(
+                'for' => '/fo',
+            ));
+        });
+
+        $this->document->setImageUrl(null)->shouldBeCalled();
+        $this->document->addField($this->field1->reveal())->shouldBeCalled();
+        $this->document->addField($this->field2->reveal())->shouldBeCalled();
+        $this->document->addField($this->field3->reveal())->shouldBeCalled();
+        $this->logger->warning(Argument::any())->shouldBeCalled();
+
+        $this->subscriber->handlePreIndex($this->event->reveal());
+    }
+
+    /**
+     * It should set the image URL to NULL if the media is not in the list of medias with
+     * thumbnails.
+     */
+    public function testSubscriberNotImage()
+    {
+        $this->setupSubscriber(
+            123,
+            'video/mpeg',
+            321
+        );
+
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+            $mediaApi = $args[0];
+            $mediaApi->setFormats(array());
+        });
+
+        $this->document->setImageUrl(Argument::any())->shouldNotBeCalled();
+        $this->document->addField($this->field1->reveal())->shouldBeCalled();
+        $this->document->addField($this->field2->reveal())->shouldBeCalled();
+        $this->document->addField($this->field3->reveal())->shouldBeCalled();
+
+        $this->logger->warning(Argument::any())->shouldNotBeCalled();
+
+        $this->subscriber->handlePreIndex($this->event->reveal());
+    }
+
+    private function setupSubscriber($mediaId, $mediaMime, $collectionId)
+    {
+        $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(true);
+        $this->metadata->getName()->willReturn(FileVersionMeta::class);
+        $this->event->getSubject()->willReturn($this->fileVersionMeta->reveal());
+        $this->fileVersionMeta->getLocale()->willReturn('de');
+        $this->media->getId()->willReturn($mediaId);
+        $this->media->getCollection()->willReturn($this->collection->reveal());
+        $this->collection->getId()->willReturn($collectionId);
+        $this->fileVersion->getMimeType()->willReturn($mediaMime);
+        $this->factory->createField('media_id', $mediaId)->willReturn($this->field1->reveal());
+        $this->factory->createField('media_mime', $mediaMime)->willReturn($this->field2->reveal());
+        $this->factory->createField('collection_id', $collectionId)->willReturn($this->field3->reveal());
     }
 }

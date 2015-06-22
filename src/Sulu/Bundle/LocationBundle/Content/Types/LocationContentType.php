@@ -18,7 +18,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyParameter;
 
 /**
- * ContentType for TextEditor
+ * ContentType for TextEditor.
  */
 class LocationContentType extends ComplexContentType
 {

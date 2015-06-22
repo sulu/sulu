@@ -13,7 +13,8 @@ namespace Sulu\Component\Security\Authentication;
 interface UserRepositoryFactoryInterface
 {
     /**
-     * Returns the user repository for the given system
+     * Returns the user repository for the given system.
+     *
      * @return UserRepositoryInterface
      */
     public function getRepository();

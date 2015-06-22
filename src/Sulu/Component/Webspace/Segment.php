@@ -13,31 +13,34 @@ namespace Sulu\Component\Webspace;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Represents the segments defined in a webspace
- * @package Sulu\Component\Portal
+ * Represents the segments defined in a webspace.
  */
 class Segment implements ArrayableInterface
 {
     /**
-     * The key of the segment
+     * The key of the segment.
+     *
      * @var string
      */
     private $key;
 
     /**
-     * The name of the segment
+     * The name of the segment.
+     *
      * @var string
      */
     private $name;
 
     /**
-     * Defines if this segment is the default one
-     * @var boolean
+     * Defines if this segment is the default one.
+     *
+     * @var bool
      */
     private $default;
 
     /**
-     * Sets the key of the segment
+     * Sets the key of the segment.
+     *
      * @param string $key
      */
     public function setKey($key)
@@ -46,7 +49,8 @@ class Segment implements ArrayableInterface
     }
 
     /**
-     * Returns the key of the segment
+     * Returns the key of the segment.
+     *
      * @return string
      */
     public function getKey()
@@ -55,7 +59,8 @@ class Segment implements ArrayableInterface
     }
 
     /**
-     * Sets the name of the segment
+     * Sets the name of the segment.
+     *
      * @param string $name
      */
     public function setName($name)
@@ -64,7 +69,8 @@ class Segment implements ArrayableInterface
     }
 
     /**
-     * Returns the name of the segment
+     * Returns the name of the segment.
+     *
      * @return string
      */
     public function getName()
@@ -73,8 +79,9 @@ class Segment implements ArrayableInterface
     }
 
     /**
-     * Sets if this segment is the default one
-     * @param boolean $default
+     * Sets if this segment is the default one.
+     *
+     * @param bool $default
      */
     public function setDefault($default)
     {
@@ -82,8 +89,9 @@ class Segment implements ArrayableInterface
     }
 
     /**
-     * Returns whether this segment is the default one
-     * @return boolean
+     * Returns whether this segment is the default one.
+     *
+     * @return bool
      */
     public function isDefault()
     {

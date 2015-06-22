@@ -12,14 +12,13 @@ namespace Sulu\Bundle\ContactBundle\Command;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command for recovering nested tree of accounts.
- * This command is fixing wrong left/right and depths (see -d) assignments of the nested tree
+ * This command is fixing wrong left/right and depths (see -d) assignments of the nested tree.
  */
 class AccountRecoverCommand extends ContainerAwareCommand
 {
@@ -41,12 +40,10 @@ class AccountRecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Execute command
+     * Execute command.
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     *
-     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -118,7 +115,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Find number of nodes where difference to parents depth > 1
+     * Find number of nodes where difference to parents depth > 1.
      *
      * @return int Number of affected rows
      */
@@ -135,7 +132,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Find number of nodes that have no parent but depth > 0
+     * Find number of nodes that have no parent but depth > 0.
      *
      * @return int Number of nodes without a parent
      */
@@ -151,7 +148,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Fix nodes where difference to parents depth
+     * Fix nodes where difference to parents depth.
      *
      * @return int|bool Number of affected rows
      */
@@ -159,10 +156,10 @@ class AccountRecoverCommand extends ContainerAwareCommand
     {
         // FIXME: convert this native query to DQL (once its possible to join within UPDATE statement)
         // fix nodes where difference to parents depth > 1
-        $sql = "UPDATE co_accounts c2
+        $sql = 'UPDATE co_accounts c2
                 JOIN co_accounts c1 ON c2.idAccountsParent = c1.id
                 SET c2.depth = (c1.depth + 1)
-                WHERE ( c2.depth - 1 ) <> c1.depth";
+                WHERE ( c2.depth - 1 ) <> c1.depth';
 
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if ($statement->execute()) {
@@ -173,7 +170,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Set every node where depth > 0 and has no parents to depth 0
+     * Set every node where depth > 0 and has no parents to depth 0.
      */
     private function fixNodesWithoutParents()
     {

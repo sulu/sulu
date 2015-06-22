@@ -14,13 +14,13 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Component\Content\Structure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades media to 0.17.0
+ * Upgrades media to 0.17.0.
+ *
  * @deprecated
  */
 class UpgradeMediaCommand extends ContainerAwareCommand
@@ -74,7 +74,7 @@ class UpgradeMediaCommand extends ContainerAwareCommand
 
                 foreach ($versionBefore->getMeta() as $versionBeforeMeta) {
                     $newMeta = clone $versionBeforeMeta;
-                    
+
                     $newMeta->setFileVersion($fileVersion);
                     $fileVersion->addMeta($newMeta);
 

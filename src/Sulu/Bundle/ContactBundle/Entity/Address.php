@@ -15,7 +15,8 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * Address
+ * Address.
+ *
  * @ExclusionPolicy("all");
  */
 class Address
@@ -63,7 +64,7 @@ class Address
     private $state;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -84,21 +85,21 @@ class Address
     private $country;
 
     /**
-     * @var boolean
+     * @var bool
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $primaryAddress;
 
     /**
-     * @var boolean
+     * @var bool
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $deliveryAddress;
 
     /**
-     * @var boolean
+     * @var bool
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -143,7 +144,7 @@ class Address
     private $note;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -152,9 +153,10 @@ class Address
     }
 
     /**
-     * Set street
+     * Set street.
      *
      * @param string $street
+     *
      * @return Address
      */
     public function setStreet($street)
@@ -165,7 +167,7 @@ class Address
     }
 
     /**
-     * Get street
+     * Get street.
      *
      * @return string
      */
@@ -175,9 +177,10 @@ class Address
     }
 
     /**
-     * Set number
+     * Set number.
      *
      * @param string $number
+     *
      * @return Address
      */
     public function setNumber($number)
@@ -188,7 +191,7 @@ class Address
     }
 
     /**
-     * Get number
+     * Get number.
      *
      * @return string
      */
@@ -198,9 +201,10 @@ class Address
     }
 
     /**
-     * Set addition
+     * Set addition.
      *
      * @param string $addition
+     *
      * @return Address
      */
     public function setAddition($addition)
@@ -211,7 +215,7 @@ class Address
     }
 
     /**
-     * Get addition
+     * Get addition.
      *
      * @return string
      */
@@ -221,9 +225,10 @@ class Address
     }
 
     /**
-     * Set zip
+     * Set zip.
      *
      * @param string $zip
+     *
      * @return Address
      */
     public function setZip($zip)
@@ -234,7 +239,7 @@ class Address
     }
 
     /**
-     * Get zip
+     * Get zip.
      *
      * @return string
      */
@@ -244,9 +249,10 @@ class Address
     }
 
     /**
-     * Set city
+     * Set city.
      *
      * @param string $city
+     *
      * @return Address
      */
     public function setCity($city)
@@ -257,7 +263,7 @@ class Address
     }
 
     /**
-     * Get city
+     * Get city.
      *
      * @return string
      */
@@ -267,9 +273,10 @@ class Address
     }
 
     /**
-     * Set state
+     * Set state.
      *
      * @param string $state
+     *
      * @return Address
      */
     public function setState($state)
@@ -280,7 +287,7 @@ class Address
     }
 
     /**
-     * Get state
+     * Get state.
      *
      * @return string
      */
@@ -290,9 +297,9 @@ class Address
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -300,9 +307,10 @@ class Address
     }
 
     /**
-     * Set addressType
+     * Set addressType.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AddressType $addressType
+     *
      * @return Address
      */
     public function setAddressType(\Sulu\Bundle\ContactBundle\Entity\AddressType $addressType)
@@ -313,7 +321,7 @@ class Address
     }
 
     /**
-     * Get addressType
+     * Get addressType.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\AddressType
      */
@@ -323,9 +331,10 @@ class Address
     }
 
     /**
-     * Set country
+     * Set country.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Country $country
+     *
      * @return Address
      */
     public function setCountry(\Sulu\Bundle\ContactBundle\Entity\Country $country)
@@ -336,7 +345,7 @@ class Address
     }
 
     /**
-     * Get country
+     * Get country.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Country
      */
@@ -346,9 +355,10 @@ class Address
     }
 
     /**
-     * Set primaryAddress
+     * Set primaryAddress.
      *
-     * @param boolean $primaryAddress
+     * @param bool $primaryAddress
+     *
      * @return Address
      */
     public function setPrimaryAddress($primaryAddress)
@@ -359,9 +369,9 @@ class Address
     }
 
     /**
-     * Get primaryAddress
+     * Get primaryAddress.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPrimaryAddress()
     {
@@ -369,9 +379,10 @@ class Address
     }
 
     /**
-     * Set deliveryAddress
+     * Set deliveryAddress.
      *
-     * @param boolean $deliveryAddress
+     * @param bool $deliveryAddress
+     *
      * @return Address
      */
     public function setDeliveryAddress($deliveryAddress)
@@ -382,9 +393,9 @@ class Address
     }
 
     /**
-     * Get deliveryAddress
+     * Get deliveryAddress.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDeliveryAddress()
     {
@@ -392,9 +403,10 @@ class Address
     }
 
     /**
-     * Set billingAddress
+     * Set billingAddress.
      *
-     * @param boolean $billingAddress
+     * @param bool $billingAddress
+     *
      * @return Address
      */
     public function setBillingAddress($billingAddress)
@@ -405,9 +417,9 @@ class Address
     }
 
     /**
-     * Get billingAddress
+     * Get billingAddress.
      *
-     * @return boolean
+     * @return bool
      */
     public function getBillingAddress()
     {
@@ -415,9 +427,10 @@ class Address
     }
 
     /**
-     * Set postboxNumber
+     * Set postboxNumber.
      *
      * @param string $postboxNumber
+     *
      * @return Address
      */
     public function setPostboxNumber($postboxNumber)
@@ -428,7 +441,7 @@ class Address
     }
 
     /**
-     * Get postboxNumber
+     * Get postboxNumber.
      *
      * @return string
      */
@@ -438,9 +451,10 @@ class Address
     }
 
     /**
-     * Set postboxPostcode
+     * Set postboxPostcode.
      *
      * @param string $postboxPostcode
+     *
      * @return Address
      */
     public function setPostboxPostcode($postboxPostcode)
@@ -451,7 +465,7 @@ class Address
     }
 
     /**
-     * Get postboxPostcode
+     * Get postboxPostcode.
      *
      * @return string
      */
@@ -461,9 +475,10 @@ class Address
     }
 
     /**
-     * Set postboxCity
+     * Set postboxCity.
      *
      * @param string $postboxCity
+     *
      * @return Address
      */
     public function setPostboxCity($postboxCity)
@@ -474,7 +489,7 @@ class Address
     }
 
     /**
-     * Get postboxCity
+     * Get postboxCity.
      *
      * @return string
      */
@@ -484,9 +499,10 @@ class Address
     }
 
     /**
-     * Add contactAddresses
+     * Add contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     *
      * @return Address
      */
     public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
@@ -497,7 +513,7 @@ class Address
     }
 
     /**
-     * Remove contactAddresses
+     * Remove contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
      */
@@ -507,7 +523,7 @@ class Address
     }
 
     /**
-     * Get contactAddresses
+     * Get contactAddresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -517,9 +533,10 @@ class Address
     }
 
     /**
-     * Add accountAddresses
+     * Add accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     *
      * @return Address
      */
     public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
@@ -530,7 +547,7 @@ class Address
     }
 
     /**
-     * Remove accountAddresses
+     * Remove accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
      */
@@ -540,7 +557,7 @@ class Address
     }
 
     /**
-     * Get accountAddresses
+     * Get accountAddresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -550,13 +567,12 @@ class Address
     }
 
     /**
-     * returns if address has at least one relation to another entity
+     * returns if address has at least one relation to another entity.
      *
      * @return Bool
      */
     public function hasRelations()
     {
-
         if (!$this->getContactAddresses()->isEmpty() ||
             !$this->getAccountAddresses()->isEmpty()
         ) {
@@ -567,7 +583,7 @@ class Address
     }
 
     /**
-     * Remove contactAddresses
+     * Remove contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
      */
@@ -577,9 +593,10 @@ class Address
     }
 
     /**
-     * Set note
+     * Set note.
      *
      * @param string $note
+     *
      * @return Address
      */
     public function setNote($note)
@@ -590,7 +607,7 @@ class Address
     }
 
     /**
-     * Get note
+     * Get note.
      *
      * @return string
      */
@@ -600,9 +617,10 @@ class Address
     }
 
     /**
-     * Add contactAddresses
+     * Add contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     *
      * @return Address
      */
     public function addContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
@@ -613,9 +631,10 @@ class Address
     }
 
     /**
-     * Add accountAddresses
+     * Add accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     *
      * @return Address
      */
     public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
@@ -626,7 +645,7 @@ class Address
     }
 
     /**
-     * Remove accountAddresses
+     * Remove accountAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
      */

@@ -18,30 +18,34 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Request analyzer for the admin context
+ * Request analyzer for the admin context.
  */
 class AdminRequestAnalyzer implements RequestAnalyzerInterface
 {
     /**
-     * The WebspaceManager, responsible for loading the required webspaces
+     * The WebspaceManager, responsible for loading the required webspaces.
+     *
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
 
     /**
-     * The environment valid to analyze the request
+     * The environment valid to analyze the request.
+     *
      * @var string
      */
     private $environment;
 
     /**
-     * The current webspace valid for the request
+     * The current webspace valid for the request.
+     *
      * @var Webspace
      */
     private $webspace;
 
     /**
-     * The current localization for the request
+     * The current localization for the request.
+     *
      * @var Localization
      */
     private $localization;
@@ -53,8 +57,10 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Analyzes the current request, and saves the values for portal, localization and segment for further usage
+     * Analyzes the current request, and saves the values for portal, localization and segment for further usage.
+     *
      * @param Request $request The request to analyze
+     *
      * @throws Exception\UrlMatchNotFoundException
      */
     public function analyze(Request $request)
@@ -72,7 +78,8 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * set webspace for current request
+     * set webspace for current request.
+     *
      * @param string $webspaceKey
      */
     public function setWebspaceKey($webspaceKey)
@@ -81,7 +88,8 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * set localization for current request
+     * set localization for current request.
+     *
      * @param string $locale
      */
     public function setLocalizationCode($locale)
@@ -91,11 +99,12 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
 
     public function getMatchType()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the current webspace for this request
+     * Returns the current webspace for this request.
+     *
      * @return Webspace
      */
     public function getWebspace()
@@ -104,25 +113,28 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the current portal for this request
+     * Returns the current portal for this request.
+     *
      * @return Portal
      */
     public function getPortal()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the current segment for this request
+     * Returns the current segment for this request.
+     *
      * @return Segment
      */
     public function getSegment()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the current localization for this Request
+     * Returns the current localization for this Request.
+     *
      * @return Localization
      */
     public function getCurrentLocalization()
@@ -131,61 +143,68 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
-     * Returns the url of the current Portal
+     * Returns the url of the current Portal.
+     *
      * @return string
      */
     public function getPortalUrl()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the redirect, null if there is no redirect
+     * Returns the redirect, null if there is no redirect.
+     *
      * @return string
      */
     public function getRedirect()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the path of the current request, which is the url without host, language and so on
+     * Returns the path of the current request, which is the url without host, language and so on.
+     *
      * @return string
      */
     public function getResourceLocator()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the prefix required before the resource locator
+     * Returns the prefix required before the resource locator.
+     *
      * @return string
      */
     public function getResourceLocatorPrefix()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the post parameters
+     * Returns the post parameters.
+     *
      * @return array
      */
     public function getPostParameters()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the get parameters
+     * Returns the get parameters.
+     *
      * @return array
      */
     public function getGetParameters()
     {
-        return null;
+        return;
     }
 
     /**
-     * Returns the analytics key
+     * Returns the analytics key.
+     *
      * @return string
      */
     public function getAnalyticsKey()

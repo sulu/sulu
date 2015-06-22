@@ -10,17 +10,17 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\PaginatedRepresentation;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\XmlAttribute;
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\XmlAttribute;
 
 /**
- * This class represents a list for our common rest services
- * @package Sulu\Component\Rest\ListBuilder
+ * This class represents a list for our common rest services.
+ *
  * @ExclusionPolicy("all")
  * @Relation(
  *      "filter",
@@ -70,9 +70,9 @@ class ListRepresentation extends PaginatedRepresentation
      * @param string $rel The name of the relation inside of the _embedded field
      * @param string $route The name of the route, for generating the links
      * @param array $parameters The parameters to append to the route
-     * @param integer $page The number of the current page
-     * @param integer $limit The size of one page
-     * @param integer $total The total number of elements
+     * @param int $page The number of the current page
+     * @param int $limit The size of one page
+     * @param int $total The total number of elements
      */
     public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {

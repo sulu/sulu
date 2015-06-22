@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 use Sulu\Component\Cache\MemoizeInterface;
 
 /**
- * Provides memoized navigation functions
+ * Provides memoized navigation functions.
  */
 class MemoizedNavigationTwigExtension extends \Twig_Extension implements NavigationTwigExtensionInterface
 {
@@ -33,9 +33,9 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     private $lifeTime;
 
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
+    public function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;
@@ -97,5 +97,4 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     {
         return $this->extension->getFunctions();
     }
-
 }

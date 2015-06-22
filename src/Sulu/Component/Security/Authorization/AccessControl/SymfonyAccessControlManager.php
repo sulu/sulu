@@ -10,8 +10,10 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Sulu\Component\Security\Event\SecurityEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
@@ -34,10 +36,24 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
      */
     private $maskConverter;
 
-    public function __construct(MutableAclProviderInterface $aclProvider, MaskConverterInterface $maskConverter)
-    {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @param MutableAclProviderInterface $aclProvider
+     * @param MaskConverterInterface $maskConverter
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(
+        MutableAclProviderInterface $aclProvider,
+        MaskConverterInterface $maskConverter,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->aclProvider = $aclProvider;
         $this->maskConverter = $maskConverter;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -74,6 +90,11 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         $this->aclProvider->updateAcl($acl);
+
+        $this->eventDispatcher->dispatch(
+            SecurityEvents::PERMISSION_UPDATE,
+            new PermissionUpdateEvent($type, $identifier, $securityIdentity, $permissions)
+        );
     }
 
     /**

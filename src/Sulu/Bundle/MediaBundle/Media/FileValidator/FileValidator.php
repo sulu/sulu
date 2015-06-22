@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Default implementation of file validator
+ * Default implementation of file validator.
  */
 class FileValidator implements FileValidatorInterface
 {
@@ -35,17 +35,19 @@ class FileValidator implements FileValidatorInterface
     /**
      * @param UploadedFile $file
      * @param array $methods
+     *
      * @return mixed|void
+     *
      * @throws InvalidFileTypeException
      * @throws InvalidFileException
      * @throws UploadFileNotSetException
      * @throws MaxFileSizeExceededException
      */
-    public function validate (UploadedFile $file, $methods = array(
+    public function validate(UploadedFile $file, $methods = array(
             self::VALIDATOR_FILE_SET,
             self::VALIDATOR_FILE_ERRORS,
             self::VALIDATOR_BLOCK_FILE_TYPES,
-            self::VALIDATOR_MAX_FILE_SIZE
+            self::VALIDATOR_MAX_FILE_SIZE,
         ))
     {
         if (in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {

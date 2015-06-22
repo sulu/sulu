@@ -10,14 +10,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -26,13 +24,14 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactMediaControllerTest extends SuluTestCase
@@ -52,7 +51,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $contact->setLastName('Mustermann');
         $contact->setPosition('CEO');
         $contact->setFormOfAddress(1);
-        $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
+        $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
         $contact->setDisabled(0);
 
         $this->contact = $contact;
@@ -127,9 +126,9 @@ class ContactMediaControllerTest extends SuluTestCase
         $address->setBillingAddress(true);
         $address->setPrimaryAddress(true);
         $address->setDeliveryAddress(false);
-        $address->setPostboxCity("Dornbirn");
-        $address->setPostboxPostcode("6850");
-        $address->setPostboxNumber("4711");
+        $address->setPostboxCity('Dornbirn');
+        $address->setPostboxPostcode('6850');
+        $address->setPostboxNumber('4711');
 
         $contactAddress = new ContactAddress();
         $contactAddress->setAddress($address);
@@ -247,11 +246,10 @@ class ContactMediaControllerTest extends SuluTestCase
     {
         $style = array(
             'type' => 'circle',
-            'color' => '#ffcc00'
+            'color' => '#ffcc00',
         );
 
         $collection->setStyle(json_encode($style));
-
 
         // Create Collection Type
         $collectionType = new CollectionType();
@@ -300,7 +298,7 @@ class ContactMediaControllerTest extends SuluTestCase
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
             array(
-                'mediaId' => $this->media->getId()
+                'mediaId' => $this->media->getId(),
             )
         );
 
@@ -335,7 +333,7 @@ class ContactMediaControllerTest extends SuluTestCase
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
             array(
-                'mediaId' => 99
+                'mediaId' => 99,
             )
         );
 

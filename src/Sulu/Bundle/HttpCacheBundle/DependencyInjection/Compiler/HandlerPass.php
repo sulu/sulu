@@ -12,11 +12,11 @@ namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add tagged cache handler definitions to the aggregate cache handler
+ * Add tagged cache handler definitions to the aggregate cache handler.
  */
 class HandlerPass implements CompilerPassInterface
 {
@@ -79,7 +79,7 @@ class HandlerPass implements CompilerPassInterface
 
     /**
      * Ensure that the handler implements the HandlerInterface
-     * (if it does not then someone has added a tag in the wrong place)
+     * (if it does not then someone has added a tag in the wrong place).
      *
      * @param ContainerBuilder $container
      * @param mixed $id
@@ -92,8 +92,7 @@ class HandlerPass implements CompilerPassInterface
 
         if (!$reflection->implementsInterface('Sulu\Component\HttpCache\HandlerInterface')) {
             throw new \InvalidArgumentException(sprintf(
-                'Service ID "%s" was tagged as a cache handler, but it does not implement the "HandlerInterface"'
-            , $id));
+                'Service ID "%s" was tagged as a cache handler, but it does not implement the "HandlerInterface"', $id));
         }
     }
 }

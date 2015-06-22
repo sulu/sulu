@@ -13,136 +13,161 @@ namespace Sulu\Component\Content;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Property definition and value
+ * Property definition and value.
  */
 interface PropertyInterface extends ArrayableInterface
 {
     /**
-     * returns name of template
+     * returns name of template.
+     *
      * @return string
      */
     public function getName();
 
     /**
-     * returns mandatory
+     * returns mandatory.
+     *
      * @return bool
      */
     public function isMandatory();
 
     /**
-     * returns multilingual
+     * returns multilingual.
+     *
      * @return bool
      */
     public function isMultilingual();
 
     /**
-     * return min occurs
+     * return min occurs.
+     *
      * @return int
      */
     public function getMinOccurs();
 
     /**
-     * return max occurs
+     * return max occurs.
+     *
      * @return int
      */
     public function getMaxOccurs();
 
     /**
-     * returns name of content type
+     * returns name of content type.
+     *
      * @return string
      */
     public function getContentTypeName();
 
     /**
-     * parameter of property
+     * parameter of property.
+     *
      * @return array
      */
     public function getParams();
 
     /**
-     * sets the value from property
+     * sets the value from property.
+     *
      * @param $value mixed
      */
     public function setValue($value);
 
     /**
-     * gets the value from property
+     * gets the value from property.
+     *
      * @return mixed
      */
     public function getValue();
 
     /**
-     * returns TRUE if property is a block
-     * @return boolean
+     * returns TRUE if property is a block.
+     *
+     * @return bool
      */
     public function getIsBlock();
 
     /**
-     * returns TRUE if property is multiple
+     * returns TRUE if property is multiple.
+     *
      * @return bool
      */
     public function getIsMultiple();
 
     /**
-     * returns field is mandatory
-     * @return boolean
+     * returns field is mandatory.
+     *
+     * @return bool
      */
     public function getMandatory();
 
     /**
-     * returns field is multilingual
-     * @return boolean
+     * returns field is multilingual.
+     *
+     * @return bool
      */
     public function getMultilingual();
 
     /**
-     * returns tags defined in xml
+     * returns tags defined in xml.
+     *
      * @return \Sulu\Component\Content\PropertyTag[]
      */
     public function getTags();
 
     /**
-     * returns tag with given name
+     * returns tag with given name.
+     *
      * @param string $tagName
+     *
      * @return PropertyTag
      */
     public function getTag($tagName);
 
     /**
-     * returns column span
+     * returns column span.
+     *
      * @return string
      */
     public function getColspan();
 
     /**
-     * returns title of property
+     * returns title of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getTitle($languageCode);
 
     /**
-     * returns infoText of property
+     * returns infoText of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getInfoText($languageCode);
 
     /**
-     * returns placeholder of property
+     * returns placeholder of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getPlaceholder($languageCode);
 
     /**
-     * returns structure
+     * returns structure.
+     *
      * @return StructureInterface
      */
     public function getStructure();
 
     /**
-     * sets structure
+     * sets structure.
+     *
      * @param StructureInterface $structure
      */
     public function setStructure($structure);

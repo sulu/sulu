@@ -16,13 +16,12 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class ImageFormatCompilerPass
- * @package Sulu\Bundle\MediaBundle\DependencyInjection
+ * Class ImageFormatCompilerPass.
  */
 class ImageFormatCompilerPass implements CompilerPassInterface
 {
     /**
-     * @var ContainerBuilder $container
+     * @var ContainerBuilder
      */
     protected $container;
 
@@ -42,6 +41,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
     /**
      * @param array $defaultOptions
+     *
      * @return array
      */
     protected function loadThemeFormats($defaultOptions)

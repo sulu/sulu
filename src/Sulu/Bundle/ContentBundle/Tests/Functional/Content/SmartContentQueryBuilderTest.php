@@ -124,9 +124,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'ext' => array(
                     'excerpt' => array(
                         'title' => 'Excerpt Title ' . $i,
-                        'tags' => array()
-                    )
-                )
+                        'tags' => array(),
+                    ),
+                ),
             );
             $template = 'simple';
 
@@ -136,13 +136,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                     array(
                         'title' => 'Blocktitle ' . $i,
                         'article' => 'Blockarticle ' . $i,
-                        'type' => 'test'
+                        'type' => 'test',
                     ),
                     array(
                         'title' => 'Blocktitle2 ' . $i,
                         'article' => 'Blockarticle2 ' . $i,
-                        'type' => 'test'
-                    )
+                        'type' => 'test',
+                    ),
                 );
             } elseif ($i > $max / 3) {
                 $template = 'article';
@@ -178,8 +178,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder->init(
             array(
                 'properties' => array(
-                    'my_article' => new PropertyParameter('my_article', 'article')
-                )
+                    'my_article' => new PropertyParameter('my_article', 'article'),
+                ),
             )
         );
 
@@ -240,7 +240,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         for ($i = 0; $i < $max; $i++) {
             $data = array(
                 'title' => 'News ' . $i,
-                'url' => '/news/news-' . $i
+                'url' => '/news/news-' . $i,
             );
             $template = 'simple';
             $node = $this->mapper->save(
@@ -354,9 +354,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'url' => '/news/news-' . $i,
                 'ext' => array(
                     'excerpt' => array(
-                        'tags' => $tags
-                    )
-                )
+                        'tags' => $tags,
+                    ),
+                ),
             );
             $template = 'simple';
             $node = $this->mapper->save(
@@ -393,8 +393,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => array(
                     'dataSource' => $root->getIdentifier(),
                     'tags' => array($this->tag1->getId(), $this->tag2->getId()),
-                    'tagOperator' => 'and'
-                )
+                    'tagOperator' => 'and',
+                ),
             )
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
@@ -427,7 +427,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $node = $this->mapper->save(
             array(
                 'title' => 'ASDF',
-                'url' => '/asdf-1'
+                'url' => '/asdf-1',
             ),
             'simple',
             'sulu_io',
@@ -442,7 +442,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $node = $this->mapper->save(
             array(
                 'title' => 'QWERTZ',
-                'url' => '/qwertz-1'
+                'url' => '/qwertz-1',
             ),
             'simple',
             'sulu_io',
@@ -457,7 +457,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $node = $this->mapper->save(
             array(
                 'title' => 'qwertz',
-                'url' => '/qwertz'
+                'url' => '/qwertz',
             ),
             'simple',
             'sulu_io',
@@ -472,7 +472,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $node = $this->mapper->save(
             array(
                 'title' => 'asdf',
-                'url' => '/asdf'
+                'url' => '/asdf',
             ),
             'simple',
             'sulu_io',
@@ -517,8 +517,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => array(
                     'dataSource' => $root->getIdentifier(),
                     'sortBy' => array('title'),
-                    'sortMethod' => 'desc'
-                )
+                    'sortMethod' => 'desc',
+                ),
             )
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
@@ -559,8 +559,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => array(
                     'dataSource' => $root->getIdentifier(),
                     'orderBy' => array(),
-                    'sortMethod' => 'asc'
-                )
+                    'sortMethod' => 'asc',
+                ),
             )
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
@@ -576,8 +576,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => array(
                     'dataSource' => $root->getIdentifier(),
                     'orderBy' => array(),
-                    'sortMethod' => 'desc'
-                )
+                    'sortMethod' => 'desc',
+                ),
             )
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
@@ -603,8 +603,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'properties' => array(
                     'my_title' => new PropertyParameter('my_title', 'title'),
                     'ext_title' => new PropertyParameter('ext_title', 'excerpt.title'),
-                    'ext_tags' => new PropertyParameter('ext_tags', 'excerpt.tags')
-                )
+                    'ext_tags' => new PropertyParameter('ext_tags', 'excerpt.tags'),
+                ),
             )
         );
 
@@ -674,7 +674,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'Team',
-                    'url' => '/team'
+                    'url' => '/team',
                 ),
                 'en'
             )
@@ -684,7 +684,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'Thomas',
-                    'url' => '/team/thomas'
+                    'url' => '/team/thomas',
                 ),
                 'en',
                 null,
@@ -699,7 +699,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'Daniel',
-                    'url' => '/team/daniel'
+                    'url' => '/team/daniel',
                 ),
                 'en',
                 null,
@@ -711,7 +711,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'Johannes',
-                    'url' => '/team/johannes'
+                    'url' => '/team/johannes',
                 ),
                 'en',
                 null,
@@ -727,7 +727,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'Team',
-                    'url' => '/team'
+                    'url' => '/team',
                 ),
                 'de',
                 $nodesEn['/team']->getUuid(),
@@ -741,7 +741,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'not-important',
-                    'url' => '/team/thomas'
+                    'url' => '/team/thomas',
                 ),
                 'de',
                 $nodesEn['/team/thomas']->getUuid(),
@@ -755,7 +755,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'not-important',
-                    'url' => '/team/daniel'
+                    'url' => '/team/daniel',
                 ),
                 'de',
                 $nodesEn['/team/daniel']->getUuid(),
@@ -769,7 +769,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->save(
                 array(
                     'title' => 'Johannes DE',
-                    'url' => '/team/johannes'
+                    'url' => '/team/johannes',
                 ),
                 'de',
                 $nodesEn['/team/johannes']->getUuid()
@@ -834,8 +834,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'ids' => array(
                     $data['en']['/team/thomas']->getUuid(),
                     $data['en']['/team/daniel']->getUuid(),
-                    $data['en']['/team/johannes']->getUuid()
-                )
+                    $data['en']['/team/johannes']->getUuid(),
+                ),
             )
         );
 

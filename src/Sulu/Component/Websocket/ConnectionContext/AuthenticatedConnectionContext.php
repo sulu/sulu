@@ -7,12 +7,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Websocket\ConnectionContext;
 
 use Ratchet\ConnectionInterface;
 
 /**
- * Websocket context which implies logged in user in a specific firewall
+ * Websocket context which implies logged in user in a specific firewall.
  */
 class AuthenticatedConnectionContext extends ConnectionContext implements AuthenticatedConnectionContextInterface
 {
@@ -21,7 +22,7 @@ class AuthenticatedConnectionContext extends ConnectionContext implements Authen
      */
     private $firewall;
 
-    function __construct($firewall, ConnectionInterface $conn)
+    public function __construct($firewall, ConnectionInterface $conn)
     {
         parent::__construct($conn);
 

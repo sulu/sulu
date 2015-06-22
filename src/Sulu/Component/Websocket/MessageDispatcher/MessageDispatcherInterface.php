@@ -14,7 +14,7 @@ use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 
 /**
- * Interface MessageDispatcherInterface
+ * Interface MessageDispatcherInterface.
  */
 interface MessageDispatcherInterface
 {
@@ -25,7 +25,8 @@ interface MessageDispatcherInterface
     public function add($name, MessageHandlerInterface $handler);
 
     /**
-     * Dispatch event to handler with given name
+     * Dispatch event to handler with given name.
+     *
      * @param ConnectionInterface $conn
      * @param string $name Message name
      * @param array $message

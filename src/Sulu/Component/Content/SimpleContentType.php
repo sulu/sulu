@@ -13,18 +13,20 @@ namespace Sulu\Component\Content;
 use PHPCR\NodeInterface;
 
 /**
- * Simple implementation of ContentTypes
+ * Simple implementation of ContentTypes.
  */
 abstract class SimpleContentType implements ContentTypeInterface
 {
     /**
-     * name of content type
+     * name of content type.
+     *
      * @var string
      */
     private $name;
 
     /**
-     * default value if node does not have the property
+     * default value if node does not have the property.
+     *
      * @var mixed
      */
     private $defaultValue;
@@ -36,7 +38,8 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * Returns the name of the content type
+     * Returns the name of the content type.
+     *
      * @return string
      */
     public function getName()
@@ -85,8 +88,7 @@ abstract class SimpleContentType implements ContentTypeInterface
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $value = $property->getValue();
         if ($value != null) {
             $node->setProperty($property->getName(), $value);
@@ -96,7 +98,8 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * remove property from given node
+     * remove property from given node.
+     *
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @param string $webspaceKey
@@ -113,7 +116,8 @@ abstract class SimpleContentType implements ContentTypeInterface
 
     /**
      * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
+     * PRE_SAVE or POST_SAVE.
+     *
      * @return int
      */
     public function getType()
@@ -122,21 +126,22 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * magic getter for twig templates
+     * magic getter for twig templates.
+     *
      * @param $property string name of property
-     * @return null
      */
     public function __get($property)
     {
         if (method_exists($this, 'get' . ucfirst($property))) {
             return $this->{'get' . ucfirst($property)}();
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * returns default parameters
+     * returns default parameters.
+     *
      * @return array
      */
     public function getDefaultParams()

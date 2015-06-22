@@ -13,14 +13,15 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
- * This field descriptor can be used to concatenate multiple field descriptors
- * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
+ * This field descriptor can be used to concatenate multiple field descriptors.
+ *
  * @ExclusionPolicy("all")
  */
 class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
-     * The field descriptors which will be concatenated
+     * The field descriptors which will be concatenated.
+     *
      * @var AbstractDoctrineFieldDescriptor[]
      */
     private $fieldDescriptors;
@@ -40,15 +41,15 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
         $sortable = true,
         $editable = false,
         $cssClass = ''
-    )
-    {
+    ) {
         parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $sortable, $editable, $cssClass);
         $this->fieldDescriptors = $fieldDescriptors;
         $this->glue = $glue;
     }
 
     /**
-     * Returns the select statement for this field without the alias
+     * Returns the select statement for this field without the alias.
+     *
      * @return string
      */
     public function getSelect()
@@ -67,7 +68,8 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
     }
 
     /**
-     * Returns all the joins required for this field
+     * Returns all the joins required for this field.
+     *
      * @return DoctrineJoinDescriptor[]
      */
     public function getJoins()

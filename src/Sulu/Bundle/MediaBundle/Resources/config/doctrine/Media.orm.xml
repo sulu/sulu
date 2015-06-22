@@ -4,6 +4,9 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\Media" table="me_media" repository-class="Sulu\Bundle\MediaBundle\Entity\MediaRepository">
+        <indexes>
+            <index columns="changed"/>
+        </indexes>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>

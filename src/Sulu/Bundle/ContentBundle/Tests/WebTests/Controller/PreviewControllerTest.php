@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
-use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -24,7 +23,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
  * This is in preview group because it causes Jackrabbit to lock-up
- * (this is not a bug here, but some bug in Jackrabbit)
+ * (this is not a bug here, but some bug in Jackrabbit).
  *
  * @group preview
  */
@@ -96,7 +95,7 @@ class PreviewControllerTest extends SuluTestCase
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
-        $permission1->setContext("Context 1");
+        $permission1->setContext('Context 1');
         $this->em->persist($permission1);
         $this->em->flush();
     }
@@ -109,10 +108,10 @@ class PreviewControllerTest extends SuluTestCase
             'title' => 'Testtitle',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/test',
-            'article' => 'Test'
+            'article' => 'Test',
         );
 
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
@@ -134,10 +133,10 @@ class PreviewControllerTest extends SuluTestCase
             'title' => 'Testtitle',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/test',
-            'article' => 'Test'
+            'article' => 'Test',
         );
 
         $client->request('POST', '/api/nodes?template=html5&webspace=sulu_io&language=en', $data);
@@ -160,10 +159,10 @@ class PreviewControllerTest extends SuluTestCase
             'title' => 'Testtitle',
             'tags' => array(
                 'tag1',
-                'tag2'
+                'tag2',
             ),
             'url' => '/test',
-            'article' => 'Test'
+            'article' => 'Test',
         );
 
         $client->request('POST', '/api/nodes?template=invalidhtml&webspace=sulu_io&language=en', $data);

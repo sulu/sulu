@@ -13,12 +13,12 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
+use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 
 class SnippetContentTest extends BaseFunctionalTestCase
 {

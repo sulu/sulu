@@ -11,21 +11,20 @@
 namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Metadata\Driver\AdvancedDriverInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Structure;
-use Massive\Bundle\SearchBundle\Search\Field;
+use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Provides a Metadata Driver for massive search-bundle
+ * Provides a Metadata Driver for massive search-bundle.
  */
 class StructureDriver implements AdvancedDriverInterface
 {
@@ -69,9 +68,12 @@ class StructureDriver implements AdvancedDriverInterface
     }
 
     /**
-     * loads metadata for a given class if its derived from StructureInterface
+     * loads metadata for a given class if its derived from StructureInterface.
+     *
      * @param \ReflectionClass $class
+     *
      * @throws \InvalidArgumentException
+     *
      * @return IndexMetadataInterface|null
      */
     public function loadMetadataForClass(\ReflectionClass $class)
@@ -144,6 +146,8 @@ class StructureDriver implements AdvancedDriverInterface
                 array(
                     'type' => 'string',
                     'field' => $this->factory->createMetadataField($prop->getName()),
+                    'aggregated' => true,
+                    'indexed' => false,
                 )
             );
         }
@@ -151,13 +155,11 @@ class StructureDriver implements AdvancedDriverInterface
         // index the webspace
         $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_STORED_INDEXED,
             'field' => $this->factory->createMetadataProperty('webspaceKey'),
         ));
 
         $indexMeta->addFieldMapping('state', array(
             'type' => 'string',
-            'index_strategy' => Field::INDEX_STORED_INDEXED,
             'field' => $this->factory->createMetadataExpression('object.nodeState == 1 ? "test" : "published"'),
         ));
 
@@ -197,6 +199,8 @@ class StructureDriver implements AdvancedDriverInterface
                         $metadata->addFieldMapping($property->getName(), array(
                             'field' => $this->factory->createMetadataField($property->getName()),
                             'type' => 'string',
+                            'aggregated' => true,
+                            'indexed' => false,
                         ));
                         break;
                     case 'description':
@@ -204,6 +208,8 @@ class StructureDriver implements AdvancedDriverInterface
                         $metadata->addFieldMapping($property->getName(), array(
                             'field' => $this->factory->createMetadataField($property->getName()),
                             'type' => 'string',
+                            'aggregated' => true,
+                            'indexed' => false,
                         ));
                         break;
                     case 'image':
@@ -224,6 +230,8 @@ class StructureDriver implements AdvancedDriverInterface
                     array(
                         'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                         'field' => $this->factory->createMetadataField($property->getName()),
+                        'aggregated' => true,
+                        'indexed' => false,
                     )
                 );
             }

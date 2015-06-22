@@ -3,8 +3,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 /**
  * @group webtest
@@ -48,47 +48,47 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
                 'title' => 'Produkte',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/products',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'News',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'test',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'test-2',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'Test'
+                'article' => 'Test',
             ),
             array(
                 'title' => 'test',
                 'tags' => array(
                     'tag1',
-                    'tag2'
+                    'tag2',
                 ),
                 'url' => '/news/test-1/test',
-                'article' => 'Test'
-            )
+                'article' => 'Test',
+            ),
         );
 
         $client = $this->createClient(
@@ -102,11 +102,11 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent=' . $data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent=' . $data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent=' . $data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;

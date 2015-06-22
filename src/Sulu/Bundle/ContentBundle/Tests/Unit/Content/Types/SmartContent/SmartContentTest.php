@@ -94,7 +94,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $this->tagManager->expects($this->any())->method('resolveTagIds')->will(
             $this->returnValueMap(
                 array(
-                    array(array(1, 2), array('Tag1', 'Tag2'))
+                    array(array(1, 2), array('Tag1', 'Tag2')),
                 )
             )
         );
@@ -102,7 +102,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $this->tagManager->expects($this->any())->method('resolveTagName')->will(
             $this->returnValueMap(
                 array(
-                    array(array('Tag1', 'Tag2'), array(1, 2))
+                    array(array('Tag1', 'Tag2'), array(1, 2)),
                 )
             )
         );
@@ -144,11 +144,11 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             $this->returnValue(
                 array(
                     'dataSource' => array(
-                        'home/products'
+                        'home/products',
                     ),
                     'sortBy' => array(
-                        'published'
-                    )
+                        'published',
+                    ),
                 )
             )
         );
@@ -158,11 +158,11 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             json_encode(
                 array(
                     'dataSource' => array(
-                        'home/products'
+                        'home/products',
                     ),
                     'sortBy' => array(
-                        'published'
-                    )
+                        'published',
+                    ),
                 )
             )
         );
@@ -199,12 +199,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'config' => array(
                         'dataSource' => array(
-                            'home/products'
+                            'home/products',
                         ),
                         'sortBy' => array(
-                            'published'
-                        )
-                    )
+                            'published',
+                        ),
+                    ),
                 )
             )
         );
@@ -214,11 +214,11 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             json_encode(
                 array(
                     'dataSource' => array(
-                        'home/products'
+                        'home/products',
                     ),
                     'sortBy' => array(
-                        'published'
-                    )
+                        'published',
+                    ),
                 )
             )
         );
@@ -234,7 +234,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             $this->tagManager,
             array(
                 'page_parameter' => 'p',
-                'properties' => array('my_title'=>'title')
+                'properties' => array('my_title' => 'title'),
             ),
             'test',
             'en',
@@ -243,7 +243,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $smartContentContainer->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
-                'limitResult' => '2'
+                'limitResult' => '2',
             )
         );
 
@@ -270,7 +270,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
                 array(
-                    array('property', '{}', '{"tags":[1,2],"limitResult":"2"}')
+                    array('property', '{}', '{"tags":[1,2],"limitResult":"2"}'),
                 )
             )
         );
@@ -285,21 +285,20 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function testReadPreview()
     {
-
         $smartContentContainerPreview = new SmartContentContainer(
             $this->contentQuery,
             $this->contentQueryBuilder,
             $this->tagManager,
             array(
                 'page_parameter' => 'p',
-                'properties' => array()
+                'properties' => array(),
             ),
             'test', 'en', 's'
         );
         $smartContentContainerPreview->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
-                'limitResult' => '2'
+                'limitResult' => '2',
             )
         );
 
@@ -326,7 +325,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
                 array(
-                    array('property', '{}', '{"tags":[1,2],"limitResult":"2"}')
+                    array('property', '{}', '{"tags":[1,2],"limitResult":"2"}'),
                 )
             )
         );
@@ -405,7 +404,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
                 array('uuid' => 4),
                 array('uuid' => 5),
                 array('uuid' => 6),
-            ), 
+            ),
             $contentData
         );
     }

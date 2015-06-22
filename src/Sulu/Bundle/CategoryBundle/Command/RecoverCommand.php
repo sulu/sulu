@@ -13,14 +13,13 @@ namespace Sulu\Bundle\CategoryBundle\Command;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command for recovering categories.
- * This command is fixing wrong left/right and depths (see -d) assignments of the categories tree
+ * This command is fixing wrong left/right and depths (see -d) assignments of the categories tree.
  */
 class RecoverCommand extends ContainerAwareCommand
 {
@@ -42,12 +41,10 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Execute command
+     * Execute command.
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     *
-     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -119,7 +116,7 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Find number of categories where difference to parents depth > 1
+     * Find number of categories where difference to parents depth > 1.
      *
      * @return int Number of affected rows
      */
@@ -136,7 +133,7 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Find number of categories that have no parent but depth > 0
+     * Find number of categories that have no parent but depth > 0.
      *
      * @return int Number of categories without a parent
      */
@@ -152,7 +149,7 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Fix categories where difference to parents depth
+     * Fix categories where difference to parents depth.
      *
      * @return int|bool Number of affected rows
      */
@@ -160,10 +157,10 @@ class RecoverCommand extends ContainerAwareCommand
     {
         // FIXME: convert this native query to DQL (once its possible to join within UPDATE statement)
         // fix categories where difference to parents depth > 1
-        $sql = "UPDATE ca_categories c2
+        $sql = 'UPDATE ca_categories c2
                 JOIN ca_categories c1 ON c2.idCategoriesParent = c1.id
                 SET c2.depth = (c1.depth + 1)
-                WHERE ( c2.depth - 1 ) <> c1.depth";
+                WHERE ( c2.depth - 1 ) <> c1.depth';
 
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if ($statement->execute()) {
@@ -174,7 +171,7 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Set every category where depth > 0 and has no parents to depth 0
+     * Set every category where depth > 0 and has no parents to depth 0.
      */
     private function fixCategoriesWithoutParents()
     {

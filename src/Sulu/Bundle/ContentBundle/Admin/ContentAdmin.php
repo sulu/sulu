@@ -30,7 +30,8 @@ class ContentAdmin extends Admin
     private $securityChecker;
 
     /**
-     * The prefix for the security context, the key of the webspace has to be appended
+     * The prefix for the security context, the key of the webspace has to be appended.
+     *
      * @var string
      */
     private $securityContextPrefix = 'sulu.webspaces.';
@@ -101,8 +102,8 @@ class ContentAdmin extends Admin
 
         return array(
             'Sulu' => array(
-                'Webspaces' => $webspaceContexts
-            )
+                'Webspaces' => $webspaceContexts,
+            ),
         );
     }
 }
