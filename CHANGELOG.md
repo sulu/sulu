@@ -1,17 +1,19 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+
 * 1.0.0-RC3 (2015-06-24)
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle
     * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
                                          Added this functionality for the contact entity.
+    * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
+    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
 
 * 1.0.0-RC2 (2015-06-17)
-    * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
-    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay 
-    * BUGFIX      #1264 [ContentBundle]  fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
     * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete

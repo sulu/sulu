@@ -1,5 +1,16 @@
 # Upgrade
 
+## dev-develop
+
+### Snippets
+
+Snippet state has been removed and set default to published. Therefor all snippets has to be set to published by this
+running this command:
+
+```bash
+app/console sulu:upgrade:rc3:snippet-state
+```
+
 ## 1.0.0-RC3
 
 ### Document Manager

@@ -294,7 +294,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['template'], $res['template']);
         $this->assertEquals($data['title'], $res['title']);
         $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(Structure::STATE_PUBLISHED, $res['nodeState']);
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
     }
 
     /**
@@ -304,7 +304,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $params = array_merge(array(
             'language' => 'de',
-            'state' => Structure::STATE_PUBLISHED,
+            'state' => StructureInterface::STATE_PUBLISHED,
         ), $params);
 
         $query = http_build_query($params);
@@ -316,7 +316,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['template'], $res['template']);
         $this->assertEquals($data['title'], $res['title']);
         $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(Structure::STATE_PUBLISHED, $res['nodeState']);
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
     }
 
     /**
@@ -326,7 +326,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $params = array_merge(array(
             'language' => 'de',
-            'state' => Structure::STATE_TEST,
+            'state' => StructureInterface::STATE_TEST,
         ), $params);
 
         $query = http_build_query($params);
@@ -338,7 +338,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['template'], $res['template']);
         $this->assertEquals($data['title'], $res['title']);
         $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(Structure::STATE_TEST, $res['nodeState']);
+        $this->assertEquals(StructureInterface::STATE_TEST, $res['nodeState']);
     }
 
     public function testDeleteReferenced()
