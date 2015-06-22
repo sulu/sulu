@@ -17,6 +17,7 @@
 
     <theme>
         <key>dan</key>
+        <default-template>default</default-template>
         <excluded>
             <template>overview</template>
         </excluded>

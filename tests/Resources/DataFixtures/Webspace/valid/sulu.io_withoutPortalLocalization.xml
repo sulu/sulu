@@ -15,6 +15,7 @@
 
     <theme>
         <key>sulu</key>
+        <default-template>default</default-template>
         <excluded>
             <template>overview</template>
         </excluded>

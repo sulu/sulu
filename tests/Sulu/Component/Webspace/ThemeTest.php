@@ -17,12 +17,14 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array(
             'key' => 'foo',
+            'defaultTemplate' => 'default',
             'excludedTemplates' => array('portal_key'),
             'errorTemplates' => array(),
         );
 
         $this->theme->setKey($expected['key']);
         $this->theme->setExcludedTemplates($expected['excludedTemplates']);
+        $this->theme->setDefaultTemplate($expected['defaultTemplate']);
 
         $this->assertEquals($expected, $this->theme->toArray());
     }

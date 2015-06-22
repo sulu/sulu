@@ -36,6 +36,12 @@ class Theme implements ArrayableInterface
     private $errorTemplates;
 
     /**
+     * Template which is choosed by default if no other template is chosen.
+     * @var string
+     */
+    private $defaultTemplate;
+
+    /**
      * Theme constructor.
      */
     public function __construct()
@@ -136,12 +142,29 @@ class Theme implements ArrayableInterface
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultTemplate()
+    {
+        return $this->defaultTemplate;
+    }
+
+    /**
+     * @param string $defaultTemplate
+     */
+    public function setDefaultTemplate($defaultTemplate)
+    {
+        $this->defaultTemplate = $defaultTemplate;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toArray($depth = null)
     {
         return array(
             'key' => $this->getKey(),
+            'defaultTemplate' => $this->getDefaultTemplate(),
             'excludedTemplates' => $this->getExcludedTemplates(),
             'errorTemplates' => $this->getErrorTemplates(),
         );

@@ -110,6 +110,7 @@
     <xs:complexType name="themeType">
         <xs:sequence>
             <xs:element type="xs:string" name="key"/>
+            <xs:element type="xs:string" name="default-template"/>
             <xs:element type="excludedType" name="excluded" minOccurs="0"/>
             <xs:element type="errorTemplatesType" name="error-templates" minOccurs="0"/>
         </xs:sequence>

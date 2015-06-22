@@ -8,6 +8,7 @@
 
     <theme>
         <key>massiveart</key>
+        <default-template>default</default-template>
         <excluded>
             <template>overview</template>
         </excluded>
