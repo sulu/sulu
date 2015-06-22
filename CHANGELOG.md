@@ -24,6 +24,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
     * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
 
+* dev-develop
+    * FEATURE     #1278 [ContentBundle]  Implemented webspace structure provider
+
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  Fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
