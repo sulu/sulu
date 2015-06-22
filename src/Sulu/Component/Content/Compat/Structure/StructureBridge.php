@@ -3,31 +3,19 @@
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\ContentDocumentInterface;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\ItemMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata as NewProperty;
-use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 
@@ -72,8 +60,8 @@ class StructureBridge implements StructureInterface
 
     /**
      * @param StructureMetadata $structure
-     * @param object $document
-     * @param PageUrlGenerator $urlGenerator
+     * @param DocumentInspector $document
+     * @param LegacyPropertyFactory $urlGenerator
      */
     public function __construct(
         StructureMetadata $structure,
@@ -88,7 +76,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * @param ContentDocumentInterface $document
+     * @param StructureBehavior $document
      */
     public function setDocument(StructureBehavior $document)
     {

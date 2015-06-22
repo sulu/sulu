@@ -1,16 +1,12 @@
 <?php
 
-namespace Sulu\Component\Content\Compat\Block\Structure;
+namespace Sulu\Component\Content\Compat\Structure;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
-use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Compat\PropertyInterface as LegacyPropertyInterface;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -19,6 +15,41 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var NamespaceRegistry
+     */
+    private $namespaceRegistry;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
+    private $factory;
+
+    /**
+     * @var PropertyMetadata
+     */
+    private $property1;
+
+    /**
+     * @var PropertyMetadata
+     */
+    private $property2;
+
+    /**
+     * @var SectionMetadata
+     */
+    private $section;
+
+    /**
+     * @var BlockMetadata
+     */
+    private $block;
+
+    /**
+     * @var ComponentMetadata
+     */
+    private $component;
+
     public function setUp()
     {
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
@@ -26,8 +57,8 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
             $this->namespaceRegistry->reveal()
         );
 
-        $this->property = $this->prophesize(PropertyMetadata::class);
         $this->property1 = $this->prophesize(PropertyMetadata::class);
+        $this->property2 = $this->prophesize(PropertyMetadata::class);
         $this->section = $this->prophesize(SectionMetadata::class);
         $this->block = $this->prophesize(BlockMetadata::class);
         $this->component = $this->prophesize(ComponentMetadata::class);
@@ -63,19 +94,19 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $colSpan = 6;
 
-        $this->property->getType()->willReturn($type);
-        $this->property->getName()->willReturn($name);
-        $this->property->isRequired()->willReturn($required);
-        $this->property->isLocalized()->willReturn($required);
-        $this->property->getMaxOccurs()->willReturn($maxOccurs);
-        $this->property->getMinOccurs()->willReturn($minOccurs);
-        $this->property->getColSpan()->willReturn($colSpan);
-        $this->property->getParameters()->willReturn($parameters);
-        $this->property->title = $title;
-        $this->property->description = $description;
-        $this->property->placeholder = $placeholder;
+        $this->property1->getType()->willReturn($type);
+        $this->property1->getName()->willReturn($name);
+        $this->property1->isRequired()->willReturn($required);
+        $this->property1->isLocalized()->willReturn($required);
+        $this->property1->getMaxOccurs()->willReturn($maxOccurs);
+        $this->property1->getMinOccurs()->willReturn($minOccurs);
+        $this->property1->getColSpan()->willReturn($colSpan);
+        $this->property1->getParameters()->willReturn($parameters);
+        $this->property1->title = $title;
+        $this->property1->description = $description;
+        $this->property1->placeholder = $placeholder;
 
-        $legacyProperty = $this->factory->createProperty($this->property->reveal());
+        $legacyProperty = $this->factory->createProperty($this->property1->reveal());
 
         $this->assertInstanceOf(LegacyPropertyInterface::class, $legacyProperty);
         $this->assertEquals($legacyProperty->getContentTypeName(), $type);
@@ -92,7 +123,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($description['de'], $legacyProperty->getInfoText('de'));
         $this->assertEquals($placeholder['de'], $legacyProperty->getPlaceholder('de'));
 
-        return $this->property;
+        return $this->property1;
     }
 
     /**
@@ -102,9 +133,9 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateTranslated()
     {
-        $this->setUpProperty($this->property);
+        $this->setUpProperty($this->property1);
         $this->namespaceRegistry->getPrefix('content_localized')->willReturn('i18n');
-        $translatedProperty = $this->factory->createTranslatedProperty($this->property->reveal(), 'de');
+        $translatedProperty = $this->factory->createTranslatedProperty($this->property1->reveal(), 'de');
         $this->assertEquals('de', $translatedProperty->getLocalization());
         $this->assertEquals('i18n:de-name', $translatedProperty->getName());
     }
@@ -154,11 +185,16 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->component->getChildren()->willReturn(array(
             $property->reveal()
         ));
+        $this->component->title = array(
+            'de' => 'Testtitel',
+            'en' => 'Test title',
+        );
         $this->block->getComponents()->willReturn(array(
             $this->component->reveal(),
         ));
         $this->block->getDefaultComponentName()->willReturn('foobar');
 
+        /** @var BlockProperty $blockProperty */
         $blockProperty = $this->factory->createProperty($this->block->reveal());
 
         $this->assertInstanceOf(BlockPropertyInterface::class, $blockProperty);
@@ -166,6 +202,8 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $blockType = $blockProperty->getType('hai');
         $this->assertNotNull($blockType);
         $this->assertCount(1, $blockType->getChildProperties());
+        $this->assertEquals('Testtitel', $blockType->getMetadata()->get('title', 'de'));
+        $this->assertEquals('Test title', $blockType->getMetadata()->get('title', 'en'));
     }
 
     private function setUpProperty($property)

@@ -93,11 +93,21 @@ class XmlLoader extends XmlLegacyLoader
         $blockProperty = new BlockMetadata();
         $blockProperty->name = $propertyName;
         $blockProperty->defaultComponentName = $data['default-type'];
+
+        if (isset($data['meta']['title'])) {
+            $blockProperty->title = $data['meta']['title'];
+        }
+
         $this->mapProperty($blockProperty, $data);
 
         foreach ($data['types'] as $name => $type) {
             $component = new ComponentMetadata();
             $component->name = $name;
+
+            if (isset($data['meta']['title'])) {
+                $component->title = $type['meta']['title'];
+            }
+
             foreach ($type['properties'] as $propertyName => $propertyData) {
                 $property = new PropertyMetadata();
                 $property->name = $propertyName;

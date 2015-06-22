@@ -3,6 +3,7 @@
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Section\SectionProperty;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Metadata\Property;
@@ -38,8 +39,9 @@ class LegacyPropertyFactory
     /**
      * Create a new "translated" property
      *
-     * @param Item $item
+     * @param object $property
      * @param string $locale
+     *
      * @return PropertyInterface
      */
     public function createTranslatedProperty($property, $locale, StructureInterface $structure = null)
@@ -76,7 +78,7 @@ class LegacyPropertyFactory
             ));
         }
 
-        $parameters = $this->arrayToParameters($property->getParameters());
+        $parameters = $this->convertArrayToParameters($property->getParameters());
         $propertyBridge = new LegacyProperty(
             $property->getName(),
             array(
@@ -103,14 +105,14 @@ class LegacyPropertyFactory
         return $propertyBridge;
     }
 
-    private function arrayToParameters($arrayParams)
+    private function convertArrayToParameters($arrayParams)
     {
         $parameters = array();
         foreach ($arrayParams as $arrayParam) {
             $value = $arrayParam['value'];
 
             if (is_array($value)) {
-                $value = $this->arrayToParameters($value);
+                $value = $this->convertArrayToParameters($value);
             }
 
             $parameters[$arrayParam['name']] = new PropertyParameter($arrayParam['name'], $value, $arrayParam['type'], $arrayParam['meta']);
@@ -160,8 +162,8 @@ class LegacyPropertyFactory
             $blockPropertyType = new BlockPropertyType(
                 $component->getName(),
                 array(
-                    'title' => $property->title,
-                    'info_text' => $property->description,
+                    'title' => $component->title,
+                    'info_text' => $component->description,
                 )
             );
 

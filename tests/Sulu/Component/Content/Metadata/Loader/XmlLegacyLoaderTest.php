@@ -607,11 +607,37 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     'params' => array(),
-                    'meta' => array(),
+                    'meta' => array(
+                        'title' => array(
+                            'de' => 'Block1 DE',
+                            'en' => 'Block1 EN',
+                        ),
+                        'info_text' => array(
+                            'de' => 'Info Block1 DE',
+                            'en' => 'Info Block1 EN',
+                        ),
+                        'placeholder' => array(
+                            'de' => 'Placeholder Block1 DE',
+                            'en' => 'Placeholder Block1 EN',
+                        ),
+                    ),
                     'types' => array(
                         'default' => array(
                             'name' => 'default',
-                            'meta' => array(),
+                            'meta' => array(
+                                'title' => array(
+                                    'de' => 'Default DE',
+                                    'en' => 'Default EN',
+                                ),
+                                'info_text' => array(
+                                    'de' => 'Info Default DE',
+                                    'en' => 'Info Default EN',
+                                ),
+                                'placeholder' => array(
+                                    'de' => 'Placeholder Default DE',
+                                    'en' => 'Placeholder Default EN',
+                                ),
+                            ),
                             'properties' => array(
                                 'title' => array(
                                     'name' => 'title',
@@ -643,7 +669,20 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ),
                         'test' => array(
                             'name' => 'test',
-                            'meta' => array(),
+                            'meta' => array(
+                                'title' => array(
+                                    'de' => 'Test DE',
+                                    'en' => 'Test EN',
+                                ),
+                                'info_text' => array(
+                                    'de' => 'Info Test DE',
+                                    'en' => 'Info Test EN',
+                                ),
+                                'placeholder' => array(
+                                    'de' => 'Placeholder Test DE',
+                                    'en' => 'Placeholder Test EN',
+                                ),
+                            ),
                             'properties' => array(
                                 'title' => array(
                                     'name' => 'title',
