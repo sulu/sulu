@@ -87,14 +87,18 @@ class UpgradeSnippetStateCommand extends ContainerAwareCommand
         Localization $localization,
         OutputInterface $output
     ) {
+        if (!in_array($localization->getLocalization(), $snippet->getConcreteLanguages())) {
+            return;
+        }
+
         $mapperRequest = ContentMapperRequest::create()
-        ->setType('snippet')
-        ->setTemplateKey($snippet->getKey())
-        ->setUuid($snippet->getUuid())
-        ->setLocale($localization->getLocalization())
-        ->setUserId($snippet->getChanger())
-        ->setData($snippet->toArray(true))
-        ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setType('snippet')
+            ->setTemplateKey($snippet->getKey())
+            ->setUuid($snippet->getUuid())
+            ->setLocale($localization->getLocalization())
+            ->setUserId($snippet->getChanger())
+            ->setData($snippet->toArray(true))
+            ->setState(StructureInterface::STATE_PUBLISHED);
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
 
