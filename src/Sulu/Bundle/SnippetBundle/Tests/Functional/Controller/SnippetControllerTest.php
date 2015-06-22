@@ -294,6 +294,51 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['template'], $res['template']);
         $this->assertEquals($data['title'], $res['title']);
         $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+        $this->assertEquals(Structure::STATE_PUBLISHED, $res['nodeState']);
+    }
+
+    /**
+     * @dataProvider providePut
+     */
+    public function testPutPublished($params, $data)
+    {
+        $params = array_merge(array(
+            'language' => 'de',
+            'state' => Structure::STATE_PUBLISHED,
+        ), $params);
+
+        $query = http_build_query($params);
+        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $res = json_decode($response->getContent(), true);
+        $this->assertEquals($data['template'], $res['template']);
+        $this->assertEquals($data['title'], $res['title']);
+        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+        $this->assertEquals(Structure::STATE_PUBLISHED, $res['nodeState']);
+    }
+
+    /**
+     * @dataProvider providePut
+     */
+    public function testPutTest($params, $data)
+    {
+        $params = array_merge(array(
+            'language' => 'de',
+            'state' => Structure::STATE_TEST,
+        ), $params);
+
+        $query = http_build_query($params);
+        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $res = json_decode($response->getContent(), true);
+        $this->assertEquals($data['template'], $res['template']);
+        $this->assertEquals($data['title'], $res['title']);
+        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+        $this->assertEquals(Structure::STATE_TEST, $res['nodeState']);
     }
 
     public function testDeleteReferenced()
