@@ -288,7 +288,7 @@
                     cropLabelOfElement(sandbox, elements[i]);
                 }
             };
-            
+
             /**
              * creates an address string from an object
              * @param address
@@ -359,8 +359,9 @@
              * @param fields {String | Object} Url to load fields from or the fieldsObject
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
+             * @param context
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions, context) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
                     pageSizeKey = key + 'PageSize',
@@ -375,7 +376,8 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false
+                                inHeader: false,
+                                context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                             gridDefaults = {
@@ -404,7 +406,7 @@
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
                         // replace default order by custom order settings
-                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url,order);
+                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =
