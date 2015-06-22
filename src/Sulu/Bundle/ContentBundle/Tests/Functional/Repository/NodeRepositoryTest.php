@@ -27,6 +27,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
+use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;

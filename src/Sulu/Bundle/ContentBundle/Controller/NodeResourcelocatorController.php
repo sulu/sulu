@@ -37,10 +37,11 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $parts = $this->getRequestParameter($this->getRequest(), 'parts', true);
         $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
 
-        if ($templateKey === null) {
-            $templateKey = $this->container->getParameter('sulu.content.structure.default_type.page');
-        }
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
+        if ($templateKey === null) {
+            $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
+            $templateKey = $webspaceManager->findWebspaceByKey($webspaceKey)->getTheme()->getDefaultTemplate();
+        }
 
         $result = $this->getResourceLocatorRepository()->generate(
             $parts,
