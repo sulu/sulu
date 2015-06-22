@@ -2,10 +2,11 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Sulu\Component\Content\Metadata\Loader\XmlLoader;
-
 class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var XmlLoader
+     */
     private $loader;
 
     public function setUp()
@@ -16,6 +17,20 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoadTemplate()
     {
         $result = $this->load('template.xml');
+    }
+
+    public function testLoadBlockMetaTitles()
+    {
+        $result = $this->load('template_block_types.xml');
+
+        $blockTypes = $result->getProperty('block1')->getComponents();
+
+        $this->assertEquals('Default DE', $blockTypes[0]->getTitle('de'));
+        $this->assertEquals('Default EN', $blockTypes[0]->getTitle('en'));
+        $this->assertEquals('Test DE', $blockTypes[1]->getTitle('de'));
+        $this->assertEquals('Test EN', $blockTypes[1]->getTitle('en'));
+
+        // TODO also check info_text and placeholder (or are they not necessary at all?)
     }
 
     private function load($name)
