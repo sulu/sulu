@@ -268,7 +268,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $conjunction = ' ' . $betweenConjunctions[$betweenField->getName()] . ' ';
 
             if (!$firstConjunction) {
-                $firstConjunction = $conjunction;
+                $firstConjunction = $betweenConjunctions[$betweenField->getName()];
                 $conjunction = '';
             }
 
