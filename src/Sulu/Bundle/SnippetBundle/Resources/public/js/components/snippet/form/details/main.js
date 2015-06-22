@@ -134,7 +134,6 @@ define(['app-config'], function(AppConfig) {
                 tpl = this.sandbox.util.template(template, context);
 
             this.sandbox.dom.html(this.formId, tpl);
-            this.setStateDropdown(data);
 
             this.createForm(data).then(function() {
                 this.changeTemplateDropdownHandler();
@@ -226,11 +225,6 @@ define(['app-config'], function(AppConfig) {
             url += '?type=snippet&language=' + this.options.language;
 
             return url;
-        },
-
-        setStateDropdown: function(data) {
-            // FIXME add event
-            this.sandbox.emit('sulu.snippets.snippet.set-state', data);
         },
 
         initData: function() {
