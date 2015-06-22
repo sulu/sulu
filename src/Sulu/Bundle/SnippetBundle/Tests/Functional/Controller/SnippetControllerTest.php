@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 class SnippetControllerTest extends SuluTestCase
 {
@@ -208,6 +208,59 @@ class SnippetControllerTest extends SuluTestCase
         $res = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $res['title']);
         $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
+    }
+
+    /**
+     * @dataProvider providePost
+     */
+    public function testPostPublished($params, $data)
+    {
+        $params = array_merge(array(
+            'language' => 'de',
+            'state' => StructureInterface::STATE_PUBLISHED
+        ), $params);
+
+        $data = array(
+            'template' => 'car',
+            'title' => 'My New Car',
+        );
+
+        $query = http_build_query($params);
+        $this->client->request('POST', '/snippets?' . $query, $data);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $res = json_decode($response->getContent(), true);
+        $this->assertEquals($data['title'], $res['title']);
+        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
+    }
+
+    /**
+     * @dataProvider providePost
+     */
+    public function testPostTest($params, $data)
+    {
+        $params = array_merge(array(
+            'language' => 'de',
+            'state' => StructureInterface::STATE_TEST
+        ), $params);
+
+        $data = array(
+            'template' => 'car',
+            'title' => 'My New Car',
+        );
+
+        $query = http_build_query($params);
+        $this->client->request('POST', '/snippets?' . $query, $data);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $res = json_decode($response->getContent(), true);
+        $this->assertEquals($data['title'], $res['title']);
+        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_TEST, $res['nodeState']);
     }
 
     public function providePut()
