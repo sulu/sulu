@@ -12,6 +12,9 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
                                          Added this functionality for the contact entity.
 
+* dev-develop
+    * BUGIFX      #1285 [ContentBundle]  Fixed smart-content internal link link title
+
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
     * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay 
