@@ -32,6 +32,8 @@ future versions of Sulu. The only exception is the
 
 ### Contact management changed
 
+Service `sulu_contact.contact_repository` changed to `sulu.repository.contact`.
+
 | Removed methods                                                           | Use instead                                                               |
 |---------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | `Sulu/Bundle/ContactBundle/Api/Account:addAccountAddresse`                | `Sulu/Bundle/ContactBundle/Api/Account:addAccountAddress`                 |

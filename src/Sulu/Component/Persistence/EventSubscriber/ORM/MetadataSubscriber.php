@@ -106,6 +106,7 @@ class MetadataSubscriber implements EventSubscriber
             // map relations
             foreach ($parentMetadata->getAssociationMappings() as $key => $value) {
                 if ($this->hasRelation($value['type'])) {
+                    $value['sourceEntity'] = $metadata->getName();
                     $metadata->associationMappings[$key] = $value;
                 }
             }
