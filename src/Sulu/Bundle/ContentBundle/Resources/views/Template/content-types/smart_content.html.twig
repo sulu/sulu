@@ -11,13 +11,15 @@
      data-aura-locale="{{ languageCode }}"
      data-aura-has='{{ params.has | json_encode }}'
      data-aura-display-options='{{ sulu_parameter_to_key_value(params.display_options.value) | json_encode }}'
-     {% if params.has.datasource %}
+{% if params.has.datasource %}
      data-aura-datasource='{{ params.datasource | json_encode }}'
-     {% endif %}
-     {% if params.has.categories %}
+{% endif %}
+{% if params.has.categories %}
      data-aura-category-root='{{ params.category_root.value }}'
-     {% endif %}
+{% endif %}
      data-aura-url="/admin/api/items?{% if webspaceKey != '' %}webspace={{ webspaceKey }}&{% endif %}locale={{ languageCode }}&excluded=<%= options.id %>&provider={{ params.provider.value }}"
+     data-aura-navigate-event="sulu.content.navigate"
      data-aura-tags-auto-complete-url="/admin/api/tags?flat=true&sortBy=name&searchFields=name"
      data-aura-sort-by='{{ sulu_parameter_to_select(params.sorting.value, userLocale) | json_encode }}'
-     data-aura-present-as='{{ sulu_parameter_to_select(params.present_as.value, userLocale) | json_encode }}'></div>
+     data-aura-present-as='{{ sulu_parameter_to_select(params.present_as.value, userLocale) | json_encode }}'
+     data-aura-deep-link="{{ params.deep_link.value }}"></div>

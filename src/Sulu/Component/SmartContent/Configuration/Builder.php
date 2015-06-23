@@ -117,6 +117,16 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
+    public function setDeepLink($deepLink)
+    {
+        $this->configuration->setDeepLink($deepLink);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getConfiguration()
     {
         return $this->configuration;

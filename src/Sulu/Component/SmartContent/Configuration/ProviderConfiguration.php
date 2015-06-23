@@ -53,6 +53,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     private $paginated = false;
 
     /**
+     * @var string
+     */
+    private $deepLink;
+
+    /**
      * {@inheritdoc}
      */
     public function hasDatasource()
@@ -178,5 +183,21 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setPaginated($paginated)
     {
         $this->paginated = $paginated;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeepLink()
+    {
+        return $this->deepLink;
+    }
+
+    /**
+     * @param string $deepLink
+     */
+    public function setDeepLink($deepLink)
+    {
+        $this->deepLink = $deepLink;
     }
 }

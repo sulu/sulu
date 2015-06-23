@@ -11175,11 +11175,19 @@ a.btn-black, a.btn-highlight {
   color: #999;
   padding-right: 15px;
 }
-/* line 358, ../scss/modules/content-types.scss */
+/* line 359, ../scss/modules/content-types.scss */
+.white-box .content .items-list li a {
+  text-decoration: none;
+}
+/* line 362, ../scss/modules/content-types.scss */
+.white-box .content .items-list li a .value, .white-box .content .items-list li a .title {
+  color: black;
+}
+/* line 367, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
   color: #999;
 }
-/* line 361, ../scss/modules/content-types.scss */
+/* line 370, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
   position: absolute;
   top: 50%;
@@ -11193,42 +11201,42 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   color: #000;
 }
-/* line 378, ../scss/modules/content-types.scss */
+/* line 387, ../scss/modules/content-types.scss */
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
   color: #999;
   font-size: 12px;
 }
-/* line 385, ../scss/modules/content-types.scss */
+/* line 394, ../scss/modules/content-types.scss */
 .white-box.no-content {
   padding-bottom: 0;
 }
-/* line 388, ../scss/modules/content-types.scss */
+/* line 397, ../scss/modules/content-types.scss */
 .white-box.no-content .header .no-content-message {
   display: inline;
 }
-/* line 391, ../scss/modules/content-types.scss */
+/* line 400, ../scss/modules/content-types.scss */
 .white-box.no-content .header .position {
   display: none;
 }
-/* line 394, ../scss/modules/content-types.scss */
+/* line 403, ../scss/modules/content-types.scss */
 .white-box.no-content .header .selected-counter {
   display: none;
 }
-/* line 402, ../scss/modules/content-types.scss */
+/* line 411, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .loader {
   display: block;
 }
-/* line 405, ../scss/modules/content-types.scss */
+/* line 414, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .no-content-message {
   display: none;
 }
-/* line 408, ../scss/modules/content-types.scss */
+/* line 417, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .position {
   display: none;
 }
-/* line 411, ../scss/modules/content-types.scss */
+/* line 420, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .selected-counter {
   display: none;
 }
