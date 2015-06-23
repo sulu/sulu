@@ -8,7 +8,7 @@
      data-type-instance-name="{{ id|raw }}"
      data-instance-name="{{ id|raw }}"
      data-form="true"
-     data-aura-column-navigation-url="/admin/api/nodes{/dataSource}?tree=true{% if webspaceKey != '' %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true"
+     data-aura-column-navigation-url="/admin/api/nodes?{id=dataSource&}tree=true{% if webspaceKey != '' %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true"
      data-aura-hide-categories="true"
      data-aura-present-as='{{ sulu_parameter_to_select(params.present_as.value, userLocale)|json_encode }}'
      data-aura-result-key="nodes"
