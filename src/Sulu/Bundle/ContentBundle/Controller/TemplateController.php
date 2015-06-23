@@ -89,7 +89,7 @@ class TemplateController extends Controller
 
         if ($key === null && $type === 'page') {
             $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-            $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate();
+            $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
             $fireEvent = true;
         }elseif ($key === null && $type === 'snippet') {
             $key = $this->container->getParameter('sulu.content.structure.default_type.snippet');

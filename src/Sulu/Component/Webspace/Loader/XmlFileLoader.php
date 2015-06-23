@@ -12,7 +12,9 @@ namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultTemplatesException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
@@ -300,7 +302,6 @@ class XmlFileLoader extends FileLoader
     {
         $theme = new Theme();
         $theme->setKey($this->xpath->query('/x:webspace/x:theme/x:key')->item(0)->nodeValue);
-        $theme->setDefaultTemplate($this->xpath->query('/x:webspace/x:theme/x:default-template')->item(0)->nodeValue);
 
         foreach ($this->xpath->query('/x:webspace/x:theme/x:excluded/x:template') as $templateNode) {
             /** @var \DOMNode $templateNode */
@@ -308,6 +309,7 @@ class XmlFileLoader extends FileLoader
         }
 
         $this->generateErrorTemplates($theme);
+        $this->generateDefaultTemplates($theme);
 
         return $theme;
     }
@@ -338,6 +340,30 @@ class XmlFileLoader extends FileLoader
         // only one or none default error-template is legal
         if ($defaultErrorTemplates > 1) {
             throw new InvalidAmountOfDefaultErrorTemplateException($this->webspace->getKey());
+        }
+
+        return $theme;
+    }
+
+    private function generateDefaultTemplates(Theme $theme)
+    {
+        $expected = array('page', 'homepage');
+        $found = array();
+        $nodes = $this->xpath->query('/x:webspace/x:theme/x:default-templates/x:default-template');
+
+        foreach ($nodes as $node) {
+            /** @var \DOMNode $node */
+            $template = $node->nodeValue;
+            $type = $node->attributes->getNamedItem('type')->nodeValue;
+
+            $theme->addDefaultTemplate($type, $template);
+            $found[] = $type;
+        }
+
+        foreach ($expected as $item) {
+            if (!in_array($item, $found)) {
+                throw new ExpectedDefaultTemplatesNotFound($this->webspace->getKey(), $expected, $found);
+            }
         }
 
         return $theme;

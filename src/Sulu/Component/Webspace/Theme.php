@@ -36,10 +36,11 @@ class Theme implements ArrayableInterface
     private $errorTemplates;
 
     /**
-     * Template which is choosed by default if no other template is chosen.
-     * @var string
+     * Template which is selected by default if no other template is chosen.
+     *
+     * @var string[]
      */
-    private $defaultTemplate;
+    private $defaultTemplates;
 
     /**
      * Theme constructor.
@@ -48,6 +49,7 @@ class Theme implements ArrayableInterface
     {
         $this->excludedTemplates = array();
         $this->errorTemplates = array();
+        $this->defaultTemplates = array();
     }
 
     /**
@@ -142,19 +144,40 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * @return string
+     * Add a new default template for given type.
+     *
+     * @param string $type
+     * @param string $template
      */
-    public function getDefaultTemplate()
+    public function addDefaultTemplate($type, $template)
     {
-        return $this->defaultTemplate;
+        $this->defaultTemplates[$type] = $template;
     }
 
     /**
-     * @param string $defaultTemplate
+     * Returns a error template for given code.
+     *
+     * @param string $type
+     *
+     * @return string|null
      */
-    public function setDefaultTemplate($defaultTemplate)
+    public function getDefaultTemplate($type)
     {
-        $this->defaultTemplate = $defaultTemplate;
+        if (array_key_exists($type, $this->defaultTemplates)) {
+            return $this->defaultTemplates[$type];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a array of default template.
+     *
+     * @return string
+     */
+    public function getDefaultTemplates()
+    {
+        return $this->defaultTemplates;
     }
 
     /**
@@ -164,7 +187,7 @@ class Theme implements ArrayableInterface
     {
         return array(
             'key' => $this->getKey(),
-            'defaultTemplate' => $this->getDefaultTemplate(),
+            'defaultTemplates' => $this->getDefaultTemplates(),
             'excludedTemplates' => $this->getExcludedTemplates(),
             'errorTemplates' => $this->getErrorTemplates(),
         );

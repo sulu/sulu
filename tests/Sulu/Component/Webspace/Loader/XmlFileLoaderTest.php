@@ -46,7 +46,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
-        $this->assertEquals('default', $webspace->getTheme()->getDefaultTemplate());
+        $this->assertEquals(
+            array('page' => 'default', 'homepage' => 'overview'),
+            $webspace->getTheme()->getDefaultTemplates()
+        );
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
         $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
