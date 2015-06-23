@@ -12,6 +12,8 @@ define([], function() {
     'use strict';
 
     var constants = {
+            filterListUrl: 'resource/filters/',
+            manageFilters: 'manage',
             filterUrl: 'api/filters?flat=true&context='
         },
 
@@ -42,11 +44,19 @@ define([], function() {
                             languageNamespace: 'toolbar.',
                             markable: true,
                             callback: function(item) {
-                                applyFilterToList.call(this, item, dataGridInstanceName);
+                                applyFilterToList.call(this, item, dataGridInstanceName, context);
                             }.bind(this)
-                        }
+                        },
+                        items: [
+                            {
+                                id: constants.manageFilters,
+                                name: this.sandbox.translate('resource.filter.manage')
+                            }
+                        ]
+
                     };
 
+                this.context = context;
                 toolbar.push(filterDropDown);
             }
         },
@@ -54,11 +64,16 @@ define([], function() {
         /**
          * Emits the url update event for the given datagrid instance
          *
-         * @param filter
+         * @param item
          * @param instanceName
+         * @param context
          */
-        applyFilterToList = function(filter, instanceName){
-            this.sandbox.emit('husky.datagrid.'+instanceName +'.url.update',  {filter: filter.id});
+        applyFilterToList = function(item, instanceName, context) {
+            if (item.id !== constants.manageFilters) {
+                this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
+            } else {
+                this.sandbox.emit('sulu.router.navigate', constants.filterListUrl + context);
+            }
         };
 
     return {
