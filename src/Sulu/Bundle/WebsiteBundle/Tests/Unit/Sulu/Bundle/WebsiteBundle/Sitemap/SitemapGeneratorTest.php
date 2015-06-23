@@ -104,8 +104,9 @@ class SitemapGeneratorTest extends SuluTestCase
 
         $theme = new Theme();
         $theme->setKey('test');
-        $theme->setDefaultTemplate('default');
-
+        $theme->addDefaultTemplate('page', 'default');
+        $this->webspace->setTheme($theme);
+        
         $this->webspace->setNavigation(
             new Navigation(
                 array(
