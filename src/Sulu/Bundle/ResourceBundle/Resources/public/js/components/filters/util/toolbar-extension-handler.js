@@ -20,12 +20,13 @@ define([], function() {
         /**
          * Extends the list toolbar if a context, toolbar and a instance name for the datagrid is given
          *
-         * @param context
-         * @param toolbar
-         * @param dataGridInstanceName
+         * @param context {String}
+         * @param toolbarItems {Array}
+         * @param dataGridInstanceName {String}
+         * @param infoContainerSelector {String}
          */
-        extendToolbar = function(context, toolbar, dataGridInstanceName) {
-            if (!!context && !!toolbar && !!dataGridInstanceName) {
+        extendToolbar = function(context, toolbarItems, dataGridInstanceName, infoContainerSelector) {
+            if (!!context && !!toolbarItems && !!dataGridInstanceName) {
                 var url = constants.filterUrl + context,
                     filterDropDown = {
                         id: 'filters',
@@ -44,7 +45,7 @@ define([], function() {
                             languageNamespace: 'toolbar.',
                             markable: true,
                             callback: function(item) {
-                                applyFilterToList.call(this, item, dataGridInstanceName, context);
+                                applyFilterToList.call(this, item, dataGridInstanceName, context, infoContainerSelector);
                             }.bind(this)
                         },
                         items: [
@@ -56,22 +57,40 @@ define([], function() {
 
                     };
 
-                this.context = context;
-                toolbar.push(filterDropDown);
+                toolbarItems.push(filterDropDown);
+            }
+        },
+
+        /**
+         * Starts and updates the info container component
+         *
+         * @param item {Object}
+         * @param context {String}
+         * @param infoContainerSelector {String}
+         */
+        updateFilterInfoState = function(item, context, infoContainerSelector) {
+            if (!this.filterStateComponentStarted) {
+                this.filterStateComponentStarted = true;
+                //this.sandbox.start([...]);
+
+                // TODO
             }
         },
 
         /**
          * Emits the url update event for the given datagrid instance
          *
-         * @param item
-         * @param instanceName
-         * @param context
+         * @param item {Object}
+         * @param instanceName {String}
+         * @param context {String}
+         * @param infoContainerSelector {String}
          */
-        applyFilterToList = function(item, instanceName, context) {
+        applyFilterToList = function(item, instanceName, context, infoContainerSelector) {
             if (item.id !== constants.manageFilters) {
+                //updateFilterInfoState.call(this, item, context, infoContainerSelector);
                 this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
             } else {
+                //this.sandbox.stop(infoContainerSelector);
                 this.sandbox.emit('sulu.router.navigate', constants.filterListUrl + context);
             }
         };
@@ -89,4 +108,5 @@ define([], function() {
             });
         }
     };
+
 });

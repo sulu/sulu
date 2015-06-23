@@ -359,9 +359,12 @@
              * @param fields {String | Object} Url to load fields from or the fieldsObject
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
-             * @param context
+             * @param context {String}
+             * @param listInfoContainerSelector {String} Selector for the container above the list
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions, context) {
+            app.sandbox.sulu.initListToolbarAndList = function(
+                key, fields, listToolbarOptions, datagridOptions, context, listInfoContainerSelector
+            ) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
                     pageSizeKey = key + 'PageSize',
@@ -414,6 +417,7 @@
 
                         // add datagrid instance name to toolbar
                         toolbarOptions.datagridInstanceName = gridOptions.instanceName;
+                        toolbarOptions.listInfoContainerSelector = listInfoContainerSelector;
 
                         //start list-toolbar and datagrid
                         this.sandbox.start([
