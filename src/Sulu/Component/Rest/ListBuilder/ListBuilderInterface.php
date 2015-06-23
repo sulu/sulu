@@ -55,7 +55,7 @@ interface ListBuilderInterface
 
     /**
      * Gets a field descriptor used by the ListBuilder to retrieve and return the list
-     * 
+     *
      * @param string $fieldName
      *
      * @return AbstractFieldDescriptor
