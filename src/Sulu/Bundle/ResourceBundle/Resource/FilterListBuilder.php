@@ -88,7 +88,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     protected function processConditionGroup(ConditionGroup $conditionGroup, $conjunction)
     {
         $condition = $conditionGroup->getConditions()[0];
-        $fieldDescriptor = $this->listBuilder->getSelectField($condition->getField());
+        $fieldDescriptor = $this->listBuilder->getFieldDescriptor($condition->getField());
 
         if (!$fieldDescriptor) {
             throw new ConditionFieldNotFoundException($condition->getField());

@@ -55,6 +55,7 @@ interface ListBuilderInterface
 
     /**
      * Gets a field descriptor used by the ListBuilder to retrieve and return the list
+     * 
      * @param string $fieldName
      *
      * @return AbstractFieldDescriptor
@@ -182,4 +183,21 @@ interface ListBuilderInterface
      * @return mixed
      */
     public function execute();
+
+    /**
+     * Sets an array of field descriptors
+     *
+     * @param AbstractFieldDescriptor[] $fieldDescriptors
+     *
+     */
+    public function setFieldDescriptors(array $fieldDescriptors);
+
+    /**
+     * Returns a field descriptor by name
+     *
+     * @param string $name
+     *
+     * @return AbstractFieldDescriptor | null
+     */
+    public function getFieldDescriptor($name);
 }
