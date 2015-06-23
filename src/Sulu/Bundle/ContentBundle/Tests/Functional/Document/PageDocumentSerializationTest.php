@@ -10,27 +10,45 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Integration\Document;
 
+use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\DocumentRegistry;
 use Symfony\Component\Form\FormInterface;
-use Sulu\Component\Content\Form\ContentView;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\HttpFoundation\Request;
-use Sulu\Component\Content\Document\DocumentInterface;
-use Sulu\Component\Content\Document\LocalizationState;
-use Sulu\Component\Content\PhpcrOdm\ContentContainer;
 use Doctrine\Common\Collections\ArrayCollection;
-use Sulu\Bundle\ContentBundle\Document\Route;
 use Sulu\Component\Content\Document\Structure\Structure;
 
 class PageDocumentSerializationTest extends SuluTestCase
 {
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $manager;
+
+    /**
+     * @var object
+     */
+    private $parent;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var DocumentRegistry
+     */
+    private $registry;
+
     public function setUp()
     {
         $this->manager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->initPhpcr();
         $this->parent = $this->manager->find('/cmf/sulu_io/contents', 'de');
         $this->serializer = $this->getContainer()->get('jms_serializer');
+        $this->registry = $this->getContainer()->get('sulu_document_manager.document_registry');
     }
 
     /**
@@ -97,15 +115,22 @@ class PageDocumentSerializationTest extends SuluTestCase
 
     /**
      * It can deserialize persisted documents with routes
-     *
-     * @depends testSerializationPersisted
      */
-    public function testDeserializationPersisted($data)
+    public function testDeserializationPersisted()
     {
-        $page = $this->serializer->deserialize($data, PageDocument::class, 'json');
+        $page = $this->createPage(array(
+            'title' => 'Hello',
+        ));
+        $this->manager->persist($page, 'de');
+        $this->manager->flush();
+
+        $result = $this->serializer->serialize($page, 'json');
+
+        $page = $this->serializer->deserialize($result, PageDocument::class, 'json');
 
         $this->assertInstanceOf(PageDocument::class, $page);
         $this->assertEquals('Hello', $page->getStructure()->getProperty('title')->getValue());
+        $this->assertEquals('de', $this->registry->getOriginalLocaleForDocument($page));
     }
 
     private function createPage($data)

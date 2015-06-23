@@ -47,5 +47,3 @@ class ProxySubscriber implements EventSubscriberInterface
         }
     }
 }
-;
-
