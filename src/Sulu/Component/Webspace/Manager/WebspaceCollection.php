@@ -16,6 +16,8 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
+use Sulu\Component\Webspace\Exception\UnknownWebspaceException;
+use Sulu\Component\Webspace\Exception\UnknownPortalException;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
@@ -77,10 +79,26 @@ class WebspaceCollection implements \IteratorAggregate
      * @param $key string The index of the portal
      *
      * @return Portal
+     * @throws UnknownPortalException
      */
     public function getPortal($key)
     {
-        return array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
+        if (!isset($this->portals[$key])) {
+            throw new UnknownPortalException($key);
+        }
+
+        return $this->portals[$key];
+    }
+
+    /**
+     * Return true if the collection has the named portal
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function hasPortal($key)
+    {
+        return isset($this->portals[$key]);
     }
 
     /**
@@ -109,10 +127,27 @@ class WebspaceCollection implements \IteratorAggregate
      * @param $key string The key of the webspace
      *
      * @return Webspace
+     *
+     * @throws UnknownWebspaceException
      */
     public function getWebspace($key)
     {
-        return array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
+        if (!isset($this->webspaces[$key])) {
+            throw new UnknownWebspaceException($key);
+        }
+
+        return $this->webspaces[$key];
+    }
+
+    /**
+     * Return true if the collection has the webspace with the given key
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function hasWebspace($key)
+    {
+        return isset($this->webspaces[$key]);
     }
 
     /**

@@ -102,7 +102,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
 
         $portals[] = $portal;
-        $webspaces[] = $webspace;
+        $webspaces['default'] = $webspace;
 
         $portalInformations['prod']['www.portal1.com'] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -207,5 +207,34 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
     public function testGetPortalInformationsUnknown()
     {
         $this->webspaceCollection->getPortalInformations('unknown');
+    }
+
+    /**
+     * It should throw an exception if a webspace does not exist
+     *
+     * @expectedException Sulu\Component\Webspace\Exception\UnknownWebspaceException
+     */
+    public function testGetUnknownWebspace()
+    {
+        $this->webspaceCollection->getWebspace('unknown');
+    }
+
+    /**
+     * It should throw an exception if a portal does not exist
+     *
+     * @expectedException Sulu\Component\Webspace\Exception\UnknownPortalException
+     */
+    public function testGetUnknownPortal()
+    {
+        $this->webspaceCollection->getPortal('unknown');
+    }
+
+    /**
+     * It should be able to say if a webspace exists or not
+     */
+    public function testHasWebspace()
+    {
+        $this->assertTrue($this->webspaceCollection->hasWebspace('default'));
+        $this->assertFalse($this->webspaceCollection->hasWebspace('asddefault'));
     }
 }

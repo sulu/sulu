@@ -36,9 +36,8 @@ class WebspaceLocalizationController extends RestController implements ClassReso
         /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
 
-        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
-
-        if ($webspace) {
+        if ($webspaceManager->hasWebspace($webspaceKey)) {
+            $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
             $localizations = new CollectionRepresentation($webspace->getAllLocalizations(), 'localizations');
             $view = $this->view($localizations, 200);
         } else {

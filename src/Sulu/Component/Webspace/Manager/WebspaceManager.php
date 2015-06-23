@@ -62,6 +62,16 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
+     * Return true if the webspace with the given key exists.
+     *
+     * @return boolean
+     */
+    public function hasWebspace($key)
+    {
+        return $this->getWebspaceCollection()->hasWebspace($key);
+    }
+
+    /**
      * Returns the portal with the given key.
      *
      * @param string $key The key to search for
@@ -71,6 +81,16 @@ class WebspaceManager implements WebspaceManagerInterface
     public function findPortalByKey($key)
     {
         return $this->getWebspaceCollection()->getPortal($key);
+    }
+
+    /**
+     * Return true if the portal with the given key exists.
+     *
+     * @return boolean
+     */
+    public function hasPortal($key)
+    {
+        return $this->getWebspaceCollection()->hasPortal($key);
     }
 
     /**

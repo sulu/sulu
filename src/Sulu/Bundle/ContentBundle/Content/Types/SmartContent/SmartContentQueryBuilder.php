@@ -224,7 +224,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         $includeSubFolders = $this->getConfig('includeSubFolders', false);
         $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
-        if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
+        if ($this->webspaceManager->hasWebspace($dataSource)) {
             $node = $this->sessionManager->getContentNode($dataSource);
         } else {
             $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
