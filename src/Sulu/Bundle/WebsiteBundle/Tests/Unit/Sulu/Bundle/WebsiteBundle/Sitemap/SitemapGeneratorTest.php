@@ -25,6 +25,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
+use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -100,6 +101,10 @@ class SitemapGeneratorTest extends SuluTestCase
 
         $this->webspace->setLocalizations(array($local1, $local2));
         $this->webspace->setName('Default');
+
+        $theme = new Theme();
+        $theme->setKey('test');
+        $theme->setDefaultTemplate('default');
 
         $this->webspace->setNavigation(
             new Navigation(
