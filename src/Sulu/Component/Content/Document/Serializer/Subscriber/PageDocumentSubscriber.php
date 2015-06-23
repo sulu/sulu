@@ -60,7 +60,7 @@ class PageDocumentSubscriber implements EventSubscriberInterface
         return array(
             array(
                 'event' => Events::POST_DESERIALIZE,
-                'method' => 'onPostSerialize',
+                'method' => 'onPostDeserialize',
             ),
         );
     }
@@ -68,7 +68,7 @@ class PageDocumentSubscriber implements EventSubscriberInterface
     /**
      * @param ObjectEvent $event
      */
-    public function onPostSerialize(ObjectEvent $event)
+    public function onPostDeserialize(ObjectEvent $event)
     {
         $document = $event->getObject();
 
@@ -91,6 +91,7 @@ class PageDocumentSubscriber implements EventSubscriberInterface
             $this->registry->deregisterDocument($registeredDocument);
         }
 
-        $this->registry->registerDocument($document, $node);
+        // TODO use the original locale somehow
+        $this->registry->registerDocument($document, $node, $document->getLocale());
     }
 }
