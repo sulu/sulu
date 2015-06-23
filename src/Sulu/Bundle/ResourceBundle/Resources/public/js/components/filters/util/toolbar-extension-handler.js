@@ -7,16 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function(Config) {
+define([], function() {
 
     'use strict';
 
     var constants = {
             filterUrl: 'api/filters?flat=true&context='
-        },
-
-        bindCustomEvents = function() {
-            this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
         },
 
         /**
@@ -52,8 +48,6 @@ define([], function(Config) {
                     };
 
                 toolbar.push(filterDropDown);
-            } else {
-                this.sandbox.logger.error('Either the context, toolbar or the instance name of the datagrid are not defined!');
             }
         },
 
@@ -69,9 +63,15 @@ define([], function(Config) {
 
     return {
 
-        initialize: function(sandbox) {
-            this.sandbox = sandbox;
-            bindCustomEvents.call(this);
+        initialize: function(app) {
+
+            app.components.before('initialize', function() {
+                if (this.name !== 'Sulu App') {
+                    return;
+                }
+
+                this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
+            });
         }
     };
 });

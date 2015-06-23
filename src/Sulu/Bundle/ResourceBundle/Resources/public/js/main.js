@@ -59,7 +59,7 @@ define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler
                 }
             });
 
-            toolbarExtensionHandler.initialize(sandbox);
+            toolbarExtensionHandler.initialize(app);
         }
     };
 });
