@@ -14,12 +14,20 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The listbuilder implementation for doctrine.
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     /**
      * @var EntityManager
      */
@@ -50,11 +58,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $whereNotFields = array();
-
-    /**
-     * @var AbstractDoctrineFieldDescriptor[]
-     */
     protected $inFields = array();
 
     /**
@@ -67,10 +70,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $queryBuilder;
 
-    public function __construct(EntityManager $em, $entityName)
+    public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
         $this->entityName = $entityName;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -108,6 +112,10 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function execute()
     {
+        // emit listbuilder.create event
+        $event = new ListBuilderCreateEvent($this);
+        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
+
         $this->queryBuilder = $this->createQueryBuilder();
 
         foreach ($this->fields as $field) {
@@ -150,10 +158,6 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $whereField->getJoins());
         }
 
-        foreach ($this->whereNotFields as $whereNotField) {
-            $joins = array_merge($joins, $whereNotField->getJoins());
-        }
-
         foreach ($this->inFields as $inField) {
             $joins = array_merge($joins, $inField->getJoins());
         }
@@ -192,12 +196,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set where
         if (!empty($this->whereFields)) {
-            $this->addWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
-        }
-
-        // set where not
-        if (!empty($this->whereNotFields)) {
-            $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
+            $this->addWheres($this->whereFields, $this->whereValues, $this->whereComparators, $this->whereConjunctions);
         }
 
         if (!empty($this->groupByFields)) {
@@ -213,7 +212,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set between
         if (!empty($this->betweenFields)) {
-            $this->addBetweens($this->betweenFields, $this->betweenValues);
+            $this->addBetweens($this->betweenFields, $this->betweenValues, $this->betweenConjunctions);
         }
 
         if ($this->search != null) {
@@ -239,8 +238,15 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         $inParts = array();
         foreach ($inFields as $inField) {
-            $inParts[] = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
+            $inPart = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
             $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
+
+            // null values
+            if (array_search(null, $inValues[$inField->getName()])) {
+                $inPart .= ' OR ' . $inField->getSelect() . ' IS NULL';
+            }
+
+            $inParts[] = $inPart;
         }
 
         $this->queryBuilder->andWhere('(' . implode(' AND ', $inParts) . ')');
@@ -251,20 +257,36 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param array $betweenFields
      * @param array $betweenValues
+     * @param array $betweenConjunctions
      */
-    protected function addBetweens(array $betweenFields, array $betweenValues)
+    protected function addBetweens(array $betweenFields, array $betweenValues, array $betweenConjunctions)
     {
         $betweenParts = array();
+        $firstConjunction = null;
+
         foreach ($betweenFields as $betweenField) {
-            $betweenParts[] = $betweenField->getSelect() .
+            $conjunction = ' ' . $betweenConjunctions[$betweenField->getName()] . ' ';
+
+            if (!$firstConjunction) {
+                $firstConjunction = $betweenConjunctions[$betweenField->getName()];
+                $conjunction = '';
+            }
+
+            $betweenParts[] = $conjunction . $betweenField->getSelect() .
                 ' BETWEEN :' . $betweenField->getName() . '1' .
                 ' AND :' . $betweenField->getName() . '2';
+
             $values = $betweenValues[$betweenField->getName()];
             $this->queryBuilder->setParameter($betweenField->getName() . '1', $values[0]);
             $this->queryBuilder->setParameter($betweenField->getName() . '2', $values[1]);
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $betweenParts) . ')');
+        $betweenString = implode('', $betweenParts);
+        if (strtoupper($firstConjunction) === self::CONJUNCTION_OR) {
+            $this->queryBuilder->orWhere('(' . $betweenString . ')');
+        } else {
+            $this->queryBuilder->andWhere('(' . $betweenString . ')');
+        }
     }
 
     /**
@@ -272,23 +294,62 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param array $whereFields
      * @param array $whereValues
-     * @param string $comparator
+     * @param array $whereComparators
+     * @param array $whereConjunctions
+     * @internal param string $comparator
      */
-    protected function addWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
-    {
+    protected function addWheres(
+        array $whereFields,
+        array $whereValues,
+        array $whereComparators,
+        array $whereConjunctions
+    ) {
         $whereParts = array();
-        foreach ($whereFields as $whereField) {
-            $value = $whereValues[$whereField->getName()];
+        $firstConjunction = null;
 
-            if ($value === null) {
-                $whereParts[] = $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
-            } else {
-                $whereParts[] = $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
-                $this->queryBuilder->setParameter($whereField->getName(), $value);
+        foreach ($whereFields as $whereField) {
+            $conjunction = ' ' . $whereConjunctions[$whereField->getName()] . ' ';
+            $value = $whereValues[$whereField->getName()];
+            $comparator = $whereComparators[$whereField->getName()];
+
+            if (!$firstConjunction) {
+                $firstConjunction = $whereConjunctions[$whereField->getName()];
+                $conjunction = '';
             }
+
+            $whereParts[] = $this->createWherePart($value, $whereField, $conjunction, $comparator);
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
+        $whereString = implode('', $whereParts);
+        if (strtoupper($firstConjunction) === self::CONJUNCTION_OR) {
+            $this->queryBuilder->orWhere('(' . $whereString . ')');
+        } else {
+            $this->queryBuilder->andWhere('(' . $whereString . ')');
+        }
+    }
+
+    /**
+     * Creates a partial where statement
+     *
+     * @param $value
+     * @param $whereField
+     * @param $conjunction
+     * @param $comparator
+     *
+     * @return string
+     */
+    protected function createWherePart($value, $whereField, $conjunction, $comparator)
+    {
+        if ($value === null) {
+
+            return $conjunction . $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
+        } elseif ($comparator === 'LIKE') {
+            $this->queryBuilder->setParameter($whereField->getName(), '%' . $value . '%');
+        } else {
+            $this->queryBuilder->setParameter($whereField->getName(), $value);
+        }
+
+        return $conjunction . $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
     }
 
     /**

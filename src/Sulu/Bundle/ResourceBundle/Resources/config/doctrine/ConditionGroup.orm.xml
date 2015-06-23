@@ -1,0 +1,18 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ResourceBundle\Entity\ConditionGroup" table="re_condition_groups"
+            repository-class="Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\Condition" mapped-by="conditionGroup"
+                     field="conditions"/>
+
+        <many-to-one target-entity="Sulu\Bundle\ResourceBundle\Entity\Filter" field="filter"
+                     inversed-by="conditionGroups">
+            <join-column name="idFilters" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
