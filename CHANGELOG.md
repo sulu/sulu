@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
     * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
 
 * 1.0.0-RC3 (2015-06-24)
     * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit

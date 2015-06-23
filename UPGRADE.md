@@ -15,6 +15,44 @@ app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]
 
 The tag `sulu.rlp` is now mandatory for page templates.
 
+### Webspaces
+
+The default-template config moved from global configuration to webspace config. For that it is needed to add this
+config to each webspace. 
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+...
+
+    <theme>
+        <key>default</key>
+        <default-templates>
+            <default-template type="page">default</default-template>
+            <default-template type="homepage">overview</default-template>
+        </default-templates>
+    </theme>
+
+...
+
+</webspace>
+```
+
+Also remove the following default-template config for page and homepage from the file `app/config/config.yml`:
+
+```yml
+sulu_core:
+    content:
+        structure:
+            default_type:
+                snippet: "default"
+-               page: "default"
+-               homepage: "overview"
+```
+
 ## 1.0.0-RC3
 
 ### Document Manager
