@@ -3,7 +3,11 @@
         <div class="grid-row">
             <% if (!!media.thumbnails && !!media.thumbnails['200x200']) { %>
             <div class="grid-col-4">
-                <div class="media-edit-preview-image" style="background-image: url('<%=media.thumbnails['200x200']%>');"></div>
+                <a target="_blank" href="<%= media.url %>&inline=1">
+                    <div class="media-edit-preview-image"
+                         style="background-image: url('<%=media.thumbnails['200x200']%>');">
+                    </div>
+                </a>
             </div>
             <div class="grid-col-8">
             <% } else { %>
