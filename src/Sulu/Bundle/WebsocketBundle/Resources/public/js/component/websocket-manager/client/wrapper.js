@@ -131,8 +131,8 @@ define([
                 .then(function(handler, message) {
                     def.resolve(handler, message);
                 }.bind(this))
-                .fail(function() {
-                    def.reject();
+                .fail(function(handler, message) {
+                    def.reject(handler, message);
                 }.bind(this));
         }.bind(this));
 

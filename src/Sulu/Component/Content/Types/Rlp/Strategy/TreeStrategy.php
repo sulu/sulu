@@ -17,7 +17,7 @@ use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 /**
- * implements RLP Strategy "whole tree"
+ * implements RLP Strategy "whole tree".
  */
 class TreeStrategy extends RlpStrategy
 {
@@ -32,9 +32,11 @@ class TreeStrategy extends RlpStrategy
     }
 
     /**
-     * internal generator
+     * internal generator.
+     *
      * @param string $title
      * @param string $parentPath
+     *
      * @return string
      */
     protected function generatePath($title, $parentPath = null)

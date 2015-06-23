@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace;
 
-
 class PortalTest extends \PHPUnit_Framework_TestCase
 {
     /**

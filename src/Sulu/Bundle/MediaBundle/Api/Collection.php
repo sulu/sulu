@@ -25,6 +25,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 /**
  * Class Collection
  * The Collection RestObject is the api entity for the CollectionController.
+ *
  * @ExclusionPolicy("all")
  * FIXME Remove limit = 9999 after create cget without pagination
  * @Relation(
@@ -115,7 +116,8 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * Set children of resource
+     * Set children of resource.
+     *
      * @param Collection[] $children
      */
     public function setChildren($children)
@@ -132,7 +134,8 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * Returns children of resource
+     * Returns children of resource.
+     *
      * @return Collection[]
      */
     public function getChildren()
@@ -143,10 +146,12 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * Indicates if sub collections exists
+     * Indicates if sub collections exists.
+     *
      * @VirtualProperty
      * @SerializedName("hasSub")
-     * @return boolean
+     *
+     * @return bool
      */
     public function getHasSub()
     {
@@ -159,6 +164,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param string $description
+     *
      * @return $this
      */
     public function setDescription($description)
@@ -171,6 +177,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("description")
+     *
      * @return string
      */
     public function getDescription()
@@ -180,12 +187,13 @@ class Collection extends ApiWrapper
             return $meta->getDescription();
         }
 
-        return null;
+        return;
     }
 
     /**
      * @VirtualProperty
      * @SerializedName("id")
+     *
      * @return int
      */
     public function getId()
@@ -195,6 +203,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param Collection $parent
+     *
      * @return $this
      */
     public function setParent($parent)
@@ -240,6 +249,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param array $style
+     *
      * @return $this
      */
     public function setStyle($style)
@@ -255,6 +265,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("style")
+     *
      * @return array
      */
     public function getStyle()
@@ -264,6 +275,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param array $properties
+     *
      * @return $this
      */
     public function setProperties($properties)
@@ -276,6 +288,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("properties")
+     *
      * @return array
      */
     public function getProperties()
@@ -286,6 +299,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("preview")
+     *
      * @return array
      */
     public function getPreview()
@@ -295,6 +309,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param array $preview
+     *
      * @return $this
      */
     public function setPreview($preview)
@@ -307,6 +322,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("locale")
+     *
      * @return mixed
      */
     public function getLocale()
@@ -316,6 +332,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function setTitle($title)
@@ -328,6 +345,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("title")
+     *
      * @return string
      */
     public function getTitle()
@@ -337,11 +355,12 @@ class Collection extends ApiWrapper
             return $meta->getTitle();
         }
 
-        return null;
+        return;
     }
 
     /**
      * @param CollectionType $type
+     *
      * @return $this
      */
     public function setType($type)
@@ -354,6 +373,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("type")
+     *
      * @return CollectionType
      */
     public function getType()
@@ -364,6 +384,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("changed")
+     *
      * @return string
      */
     public function getChanged()
@@ -373,6 +394,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param UserInterface $changer
+     *
      * @return $this
      */
     public function setChanger($changer)
@@ -385,6 +407,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("changer")
+     *
      * @return string
      */
     public function getChanger()
@@ -394,12 +417,13 @@ class Collection extends ApiWrapper
             return $user->getFullName();
         }
 
-        return null;
+        return;
     }
 
     /**
      * @VirtualProperty
      * @SerializedName("created")
+     *
      * @return string
      */
     public function getCreated()
@@ -409,6 +433,7 @@ class Collection extends ApiWrapper
 
     /**
      * @param UserInterface $creator
+     *
      * @return $this
      */
     public function setCreator($creator)
@@ -421,6 +446,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("creator")
+     *
      * @return string
      */
     public function getCreator()
@@ -430,11 +456,12 @@ class Collection extends ApiWrapper
             return $user->getFullName();
         }
 
-        return null;
+        return;
     }
 
     /**
      * @param bool $create
+     *
      * @return CollectionMeta
      */
     private function getMeta($create = false)

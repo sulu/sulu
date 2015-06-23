@@ -13,10 +13,8 @@ namespace Sulu\Component\Security\Authorization;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-
 /**
- * Implementation of Sulu specific security checks, includes a subject, the type of permission and the localization
- * @package Sulu\Bundle\SecurityBundle\Permission
+ * Implementation of Sulu specific security checks, includes a subject, the type of permission and the localization.
  */
 class SecurityChecker extends AbstractSecurityChecker
 {

@@ -12,7 +12,6 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 /**
  *
- * @package Sulu\Bundle\AdminBundle\Admin
  */
 class JsConfig implements JsConfigInterface
 {
@@ -27,7 +26,8 @@ class JsConfig implements JsConfigInterface
     protected $name;
 
     /**
-     * constructor
+     * constructor.
+     *
      * @param $bundleName
      * @param array $params
      */
@@ -38,7 +38,7 @@ class JsConfig implements JsConfigInterface
     }
 
     /**
-     * returns array of parameters
+     * returns array of parameters.
      */
     public function getParameters()
     {
@@ -46,7 +46,8 @@ class JsConfig implements JsConfigInterface
     }
 
     /**
-     * adds a single parameter
+     * adds a single parameter.
+     *
      * @param $name
      * @param $value
      */
@@ -56,8 +57,10 @@ class JsConfig implements JsConfigInterface
     }
 
     /**
-     * adds array of parameters
+     * adds array of parameters.
+     *
      * @param array $params
+     *
      * @throws \InvalidArgumentException
      */
     public function addParameters(array $params)
@@ -75,5 +78,4 @@ class JsConfig implements JsConfigInterface
     {
         return $this->name;
     }
-
 }

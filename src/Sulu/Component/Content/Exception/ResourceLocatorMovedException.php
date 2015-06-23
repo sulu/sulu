@@ -15,13 +15,15 @@ use Exception;
 class ResourceLocatorMovedException extends Exception
 {
     /**
-     * new resource locator after move
+     * new resource locator after move.
+     *
      * @var string
      */
     private $newResourceLocator;
 
     /**
-     * uuid of new path node
+     * uuid of new path node.
+     *
      * @var string
      */
     private $newResourceLocatorUuid;

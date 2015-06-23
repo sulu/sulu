@@ -14,13 +14,12 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 
 /**
- * extends structure with seo content
- * @package Sulu\Bundle\ContentBundle\Content\Structure
+ * extends structure with seo content.
  */
 class SeoStructureExtension extends StructureExtension
 {
     /**
-     * name of structure extension
+     * name of structure extension.
      */
     const SEO_EXTENSION_NAME = 'seo';
 
@@ -34,7 +33,7 @@ class SeoStructureExtension extends StructureExtension
         'canonicalUrl',
         'noIndex',
         'noFollow',
-        'hideInSitemap'
+        'hideInSitemap',
     );
 
     /**
@@ -73,7 +72,7 @@ class SeoStructureExtension extends StructureExtension
             'canonicalUrl' => $this->loadProperty($node, 'canonicalUrl'),
             'noIndex' => $this->loadProperty($node, 'noIndex', false),
             'noFollow' => $this->loadProperty($node, 'noFollow', false),
-            'hideInSitemap' => $this->loadProperty($node, 'hideInSitemap', false)
+            'hideInSitemap' => $this->loadProperty($node, 'hideInSitemap', false),
         );
     }
 }

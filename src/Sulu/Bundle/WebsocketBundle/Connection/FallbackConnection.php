@@ -7,28 +7,31 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\WebsocketBundle\Connection;
 
 use Ratchet\ConnectionInterface;
 
 /**
- * Fall connection to use same interface as websockets
+ * Fall connection to use same interface as websockets.
  */
 class FallbackConnection implements ConnectionInterface
 {
     /**
-     * Container for send data
+     * Container for send data.
+     *
      * @var mixed
      */
     private $data;
 
     /**
-     * Id of connection
+     * Id of connection.
+     *
      * @var string
      */
     public $resourceId;
 
-    function __construct($resourceId)
+    public function __construct($resourceId)
     {
         $this->resourceId = $resourceId;
     }
@@ -36,7 +39,7 @@ class FallbackConnection implements ConnectionInterface
     /**
      * {@inheritdoc}
      */
-    function send($data)
+    public function send($data)
     {
         $this->data = $data;
 
@@ -46,7 +49,7 @@ class FallbackConnection implements ConnectionInterface
     /**
      * {@inheritdoc}
      */
-    function close()
+    public function close()
     {
         // do nothing
     }

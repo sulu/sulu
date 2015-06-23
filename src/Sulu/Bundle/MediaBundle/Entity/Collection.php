@@ -10,11 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * Collection
+ * Collection.
  */
 class Collection extends BaseCollection
 {
@@ -45,7 +44,7 @@ class Collection extends BaseCollection
     private $defaultMeta;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -71,9 +70,10 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
+     *
      * @return CollectionInterface
      */
     public function setParent(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null)
@@ -84,7 +84,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
@@ -93,11 +93,11 @@ class Collection extends BaseCollection
         return $this->parent;
     }
 
-
     /**
-     * Add meta
+     * Add meta.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta
+     *
      * @return Collection
      */
     public function addMeta(\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta)
@@ -108,7 +108,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Remove meta
+     * Remove meta.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta
      */
@@ -118,7 +118,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get meta
+     * Get meta.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -128,9 +128,10 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Add media
+     * Add media.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     *
      * @return Collection
      */
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
@@ -141,7 +142,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Remove media
+     * Remove media.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
      */
@@ -151,7 +152,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get media
+     * Get media.
      *
      * @return \Doctrine\Common\Collections\CollectionInterface
      */
@@ -161,9 +162,10 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Add children
+     * Add children.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children
+     *
      * @return Collection
      */
     public function addChildren(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children)
@@ -174,7 +176,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children
      */
@@ -184,9 +186,10 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Set defaultMeta
+     * Set defaultMeta.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $defaultMeta
+     *
      * @return Collection
      */
     public function setDefaultMeta(CollectionMeta $defaultMeta = null)
@@ -197,9 +200,9 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get defaultMeta
+     * Get defaultMeta.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionMeta 
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionMeta
      */
     public function getDefaultMeta()
     {

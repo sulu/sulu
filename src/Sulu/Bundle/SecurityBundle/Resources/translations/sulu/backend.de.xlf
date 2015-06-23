@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="5637f41956c2f7c9c1fbf0728db058cc" resname="security.roles.title">
                 <source>security.roles.title</source>
-                <target>Berechtigungen</target>
+                <target>Benutzerrollen</target>
             </trans-unit>
             <trans-unit id="5e201470bf51b79a16ef61543d22b1df" resname="security.roles">
                 <source>security.roles</source>

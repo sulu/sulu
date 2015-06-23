@@ -22,8 +22,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * content type for internal links selection
- * @package Sulu\Bundle\ContentBundle\Content\Types
+ * content type for internal links selection.
  */
 class InternalLinks extends ComplexContentType
 {
@@ -51,8 +50,7 @@ class InternalLinks extends ComplexContentType
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
         $template
-    )
-    {
+    ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
@@ -113,7 +111,8 @@ class InternalLinks extends ComplexContentType
     }
 
     /**
-     * set data to property
+     * set data to property.
+     *
      * @param string[] $data ids of images
      * @param PropertyInterface $property
      */

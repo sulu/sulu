@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\SecurityBundle\Command;
 
 use DateTime;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -20,8 +19,8 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -133,6 +132,7 @@ class CreateUserCommand extends ContainerAwareCommand
     /**
      * Returns a new instance of the user.
      * Can be overwritten to use a different implementation.
+     *
      * @return UserInterface
      */
     protected function getUser()
@@ -264,7 +264,8 @@ class CreateUserCommand extends ContainerAwareCommand
     }
 
     /**
-     * Generates a random salt for the password
+     * Generates a random salt for the password.
+     *
      * @return string
      */
     private function generateSalt()
@@ -273,10 +274,12 @@ class CreateUserCommand extends ContainerAwareCommand
     }
 
     /**
-     * Encodes the given password, for the given password, with he given salt and returns the result
+     * Encodes the given password, for the given password, with he given salt and returns the result.
+     *
      * @param $user
      * @param $password
      * @param $salt
+     *
      * @return mixed
      */
     private function encodePassword($user, $password, $salt)
@@ -287,9 +290,10 @@ class CreateUserCommand extends ContainerAwareCommand
     }
 
     /**
-     * Return the names of all the roles
+     * Return the names of all the roles.
      *
      * @return array
+     *
      * @throws RuntimeException If no roles exist
      */
     private function getRoleNames()
@@ -306,7 +310,8 @@ class CreateUserCommand extends ContainerAwareCommand
     }
 
     /**
-     * Return the doctrine service
+     * Return the doctrine service.
+     *
      * @return Doctrine\Common\Persistence\ManagerRegistry
      */
     private function getDoctrine()

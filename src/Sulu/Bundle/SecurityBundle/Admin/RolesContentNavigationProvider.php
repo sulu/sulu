@@ -12,7 +12,7 @@ class RolesContentNavigationProvider implements ContentNavigationProviderInterfa
         $details = new ContentNavigationItem('content-navigation.security.details');
         $details->setAction('details');
         $details->setComponent('roles@sulusecurity');
-        $details->setComponentOptions(array('display'=>'form'));
+        $details->setComponentOptions(array('display' => 'form'));
 
         return array($details);
     }

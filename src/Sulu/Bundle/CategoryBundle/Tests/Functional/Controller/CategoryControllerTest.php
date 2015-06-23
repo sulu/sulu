@@ -280,14 +280,14 @@ class CategoryControllerTest extends SuluTestCase
                 'meta' => array(
                     array(
                         'key' => 'myKey',
-                        'value' => 'myValue'
+                        'value' => 'myValue',
                     ),
                     array(
                         'key' => 'anotherKey',
                         'value' => 'should not be visible due to locale',
-                        'locale' => 'de-ch'
-                    )
-                )
+                        'locale' => 'de-ch',
+                    ),
+                ),
             )
         );
 
@@ -330,13 +330,13 @@ class CategoryControllerTest extends SuluTestCase
                         'id' => $this->meta1->getId(),
                         'key' => 'modifiedKey',
                         'value' => 'This meta got overriden',
-                        'locale' => null
+                        'locale' => null,
                     ),
                     array(
                         'key' => 'newMeta',
-                        'value' => 'This meta got added'
+                        'value' => 'This meta got added',
                     ),
-                )
+                ),
             )
         );
 
@@ -375,7 +375,7 @@ class CategoryControllerTest extends SuluTestCase
             'PUT',
             '/api/categories/' . $this->category1->getId() . '?locale=cn',
             array(
-                'name' => 'Imagine this is chinese'
+                'name' => 'Imagine this is chinese',
             )
         );
 
@@ -385,7 +385,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/categories/' . $this->category1->getId(). '?locale=cn'
+            '/api/categories/' . $this->category1->getId() . '?locale=cn'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -412,9 +412,9 @@ class CategoryControllerTest extends SuluTestCase
                 'meta' => array(
                     array(
                         'key' => 'newMeta',
-                        'value' => 'This meta got added'
+                        'value' => 'This meta got added',
                     ),
-                )
+                ),
             )
         );
 
@@ -428,7 +428,7 @@ class CategoryControllerTest extends SuluTestCase
             'PATCH',
             '/api/categories/' . $this->category1->getId(),
             array(
-                'name' => 'Name changed through patch'
+                'name' => 'Name changed through patch',
             )
         );
 
@@ -455,7 +455,7 @@ class CategoryControllerTest extends SuluTestCase
             'PATCH',
             '/api/categories/' . $this->category3->getId(),
             array(
-                'key' => 'first-category-key'
+                'key' => 'first-category-key',
             )
         );
 

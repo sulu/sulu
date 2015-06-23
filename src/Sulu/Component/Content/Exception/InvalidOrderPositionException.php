@@ -11,8 +11,7 @@
 namespace Sulu\Component\Content\Exception;
 
 /**
- * Thrown when the xml definition of a template contains an error
- * @package Sulu\Component\Content\Mapper\Exception
+ * Thrown when the xml definition of a template contains an error.
  */
 class InvalidOrderPositionException extends \Exception
 {

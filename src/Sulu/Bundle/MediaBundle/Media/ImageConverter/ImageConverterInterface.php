@@ -15,14 +15,15 @@ use Imagine\Image\ImageInterface;
 /**
  * Defines the operations of the ImageConverter
  * The ImageConverter is a interface to manage conversions of an Image.
- * @package Sulu\Bundle\MediaBundle\Media\ImageConverter
  */
 interface ImageConverterInterface
 {
     /**
-     * Convert an image and return the tmpPath
+     * Convert an image and return the tmpPath.
+     *
      * @param string $originalPath
      * @param array $formatOptions
+     *
      * @return ImageInterface
      */
     public function convert($originalPath, $formatOptions);

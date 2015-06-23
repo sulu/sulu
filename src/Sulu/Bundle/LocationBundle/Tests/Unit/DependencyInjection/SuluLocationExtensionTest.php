@@ -10,7 +10,7 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new SuluLocationExtension()
+            new SuluLocationExtension(),
         );
     }
 

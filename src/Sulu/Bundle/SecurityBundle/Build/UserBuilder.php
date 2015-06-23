@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Build;
 use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
- * Builder for creating users
+ * Builder for creating users.
  */
 class UserBuilder extends SuluBuilder
 {
@@ -62,7 +62,7 @@ class UserBuilder extends SuluBuilder
             'sulu:security:role:create',
             array(
                 'name' => $roleName,
-                'system' => $system
+                'system' => $system,
         ));
         $this->output->writeln(
             sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
@@ -78,7 +78,7 @@ class UserBuilder extends SuluBuilder
                 'email' => 'admin@example.com',
                 'locale' => 'de',
                 'role' => $roleName,
-                'password' => $password
+                'password' => $password,
             )
         );
         $this->output->writeln(

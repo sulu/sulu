@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Sulu\Component\Security\Authentication\RoleInterface;
 
 /**
- * SecurityType
+ * SecurityType.
  */
 class SecurityType
 {
@@ -23,7 +23,7 @@ class SecurityType
     private $name;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -33,7 +33,7 @@ class SecurityType
     private $roles;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -41,9 +41,10 @@ class SecurityType
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return SecurityType
      */
     public function setName($name)
@@ -54,7 +55,7 @@ class SecurityType
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -64,9 +65,9 @@ class SecurityType
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -74,7 +75,7 @@ class SecurityType
     }
 
     /**
-     * Set id
+     * Set id.
      *
      * @param int $id
      */
@@ -84,9 +85,10 @@ class SecurityType
     }
 
     /**
-     * Add roles
+     * Add roles.
      *
      * @param RoleInterface $roles
+     *
      * @return SecurityType
      */
     public function addRole(RoleInterface $roles)
@@ -97,7 +99,7 @@ class SecurityType
     }
 
     /**
-     * Remove roles
+     * Remove roles.
      *
      * @param RoleInterface $roles
      */
@@ -107,7 +109,7 @@ class SecurityType
     }
 
     /**
-     * Get roles
+     * Get roles.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -10,16 +10,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Search\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Psr\Log\LoggerInterface;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This subscriber populates the image URL field
@@ -33,7 +31,8 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     protected $mediaManager;
 
     /**
-     * The format of the image, which will be returned in the search
+     * The format of the image, which will be returned in the search.
+     *
      * @var string
      */
     protected $searchImageFormat;
@@ -44,18 +43,34 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     protected $factory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var array
+     */
+    protected $thumbnailMimeTypes;
+
+    /**
      * @param MediaManagerInterface $mediaManager
      * @param Factory $factory Massive search factory
+     * @param LoggerInterface $logger
+     * @param $thumbnailMimeTypes
      * @param $searchImageFormat
      */
     public function __construct(
         MediaManagerInterface $mediaManager,
         Factory $factory,
+        LoggerInterface $logger,
+        $thumbnailMimeTypes,
         $searchImageFormat
     ) {
         $this->mediaManager = $mediaManager;
         $this->factory = $factory;
         $this->searchImageFormat = $searchImageFormat;
+        $this->thumbnailMimeTypes = $thumbnailMimeTypes;
+        $this->logger = $logger;
     }
 
     /**
@@ -69,7 +84,8 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adds the image to the search document
+     * Adds the image to the search document.
+     *
      * @param PreIndexEvent $event
      */
     public function handlePreIndex(PreIndexEvent $event)
@@ -78,8 +94,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
         if (
             false === $metadata->getClassMetadata()->reflection->isSubclassOf(FileVersionMeta::class)
-            && $metadata->getName() !== FileVersionMeta::class)
-        {
+            && $metadata->getName() !== FileVersionMeta::class) {
             return;
         }
 
@@ -91,7 +106,11 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $file = $fileVersion->getFile();
         $media = $file->getMedia();
 
-        $document->setImageUrl($this->getImageUrl($media, $locale));
+        // Do not try and get the image URL if the mime type is not in the
+        // list of mime types for which thumbnails are generated.
+        if (in_array($fileVersion->getMimeType(), $this->thumbnailMimeTypes)) {
+            $document->setImageUrl($this->getImageUrl($media, $locale));
+        }
 
         $document->addField($this->factory->createField(
             'media_id',
@@ -123,9 +142,13 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $formats = $mediaApi->getThumbnails();
 
         if (!isset($formats[$this->searchImageFormat])) {
-            throw new \InvalidArgumentException(
-                sprintf('Search image format "%s" is not known', $this->searchImageFormat)
-            );
+            $this->logger->warning(sprintf(
+                'Media with ID "%s" does not have thumbnail format "%s". This thumbnail would be used by the search results.',
+                $media->getId(),
+                $this->searchImageFormat
+            ));
+
+            return;
         }
 
         return $formats[$this->searchImageFormat];

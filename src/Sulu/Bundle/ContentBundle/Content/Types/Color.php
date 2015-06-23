@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for Color
+ * ContentType for Color.
  */
 class Color extends SimpleContentType
 {
@@ -27,7 +27,8 @@ class Color extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

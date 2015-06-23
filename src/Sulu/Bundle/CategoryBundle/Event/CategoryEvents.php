@@ -15,6 +15,7 @@ final class CategoryEvents
     /**
      * The category.delete event is thrown after a category got deleted.
      * The event listener receives a CategoryDeleteEvent instance.
+     *
      * @var string
      */
     const CATEGORY_DELETE = 'sulu.category.delete';

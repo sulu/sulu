@@ -15,7 +15,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var LocalFormatCache
      */
@@ -27,7 +26,7 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
     protected $segments = 10;
 
     /**
-     * setUp
+     * setUp.
      */
     public function setUp()
     {
@@ -39,14 +38,14 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
             $this->segments,
             array(
                 '50x50' => array(
-                    'name' => '50x50'
-                )
+                    'name' => '50x50',
+                ),
             )
         );
     }
 
     /**
-     * testMediaUrlEncoding
+     * testMediaUrlEncoding.
      */
     public function testMediaUrlEncoding()
     {

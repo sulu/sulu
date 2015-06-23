@@ -16,12 +16,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command that dump the websocket app and config
+ * Command that dump the websocket app and config.
  */
 class DumpWebsocketAppsCommand extends ContainerAwareCommand
 {
     /**
-     * Service id of websocket manager
+     * Service id of websocket manager.
      */
     const MANAGER_ID = 'sulu_websocket.manager';
 
@@ -51,7 +51,7 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
                     $app['name'],
                     $app['route'],
                     print_r($app['allowedOrigins'], true),
-                    $manager->getHttpHost()
+                    $manager->getHttpHost(),
                 )
             );
         }

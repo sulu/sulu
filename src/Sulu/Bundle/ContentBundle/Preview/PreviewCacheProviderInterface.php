@@ -13,54 +13,63 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Sulu\Component\Content\StructureInterface;
 
 /**
- * provides a interface to cache preview data
+ * provides a interface to cache preview data.
  */
 interface PreviewCacheProviderInterface
 {
     /**
-     * returns TRUE if cache contains the content for user
-     * @param integer $userId
+     * returns TRUE if cache contains the content for user.
+     *
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @return boolean
+     *
+     * @return bool
      */
     public function contains($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * deletes cache for given user
-     * @param integer $userId
+     * deletes cache for given user.
+     *
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @return boolean
+     *
+     * @return bool
      */
     public function delete($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * clones original node and prepare cache node
-     * @param integer $userId
+     * clones original node and prepare cache node.
+     *
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @return boolean|StructureInterface
+     *
+     * @return bool|StructureInterface
      */
     public function warmUp($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * returns cached structure
-     * @param integer $userId
+     * returns cached structure.
+     *
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @return boolean|StructureInterface
+     *
+     * @return bool|StructureInterface
      */
     public function fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * saves given structure in cache
+     * saves given structure in cache.
+     *
      * @param StructureInterface $content
-     * @param integer $userId
+     * @param int $userId
      * @param string string $contentUuid
      * @param string string $webspaceKey
      * @param string string $locale
@@ -68,42 +77,49 @@ interface PreviewCacheProviderInterface
     public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * returns cached changes
-     * @param integer $userId
+     * returns cached changes.
+     *
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @param boolean $remove if TRUE remove changes after read (singleton)
+     * @param bool $remove if TRUE remove changes after read (singleton)
+     *
      * @return array
      */
     public function fetchChanges($userId, $contentUuid, $webspaceKey, $locale, $remove = true);
 
     /**
-     * save changes in cache
+     * save changes in cache.
+     *
      * @param array $changes
-     * @param integer $userId
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
+     *
      * @return array
      */
     public function saveChanges($changes, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * appends changes to existing changes in cache and returns new array
+     * appends changes to existing changes in cache and returns new array.
+     *
      * @param array $newChanges
-     * @param integer $userId
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
+     *
      * @return array
      */
     public function appendChanges($newChanges, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * changes template of cached node
+     * changes template of cached node.
+     *
      * @param string $template
-     * @param integer $userId
+     * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale

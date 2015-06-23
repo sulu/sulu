@@ -14,8 +14,8 @@ use FOS\HttpCache\Exception\ExceptionCollection;
 use FOS\HttpCache\Exception\InvalidUrlException;
 use FOS\HttpCache\Exception\ProxyResponseException;
 use FOS\HttpCache\Exception\ProxyUnreachableException;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
+use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use Guzzle\Http\Client;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\CurlException;
@@ -31,21 +31,21 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     const HTTP_METHOD_PURGE = 'PURGE';
 
     /**
-     * HTTP client
+     * HTTP client.
      *
      * @var ClientInterface
      */
     private $client;
 
     /**
-     * Request queue
+     * Request queue.
      *
      * @var array|RequestInterface[]
      */
     private $queue;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ClientInterface $client  HTTP client (optional). If no HTTP client
      *                                 is supplied, a default one will be
@@ -53,7 +53,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      */
     public function __construct(ClientInterface $client = null)
     {
-        $this->client = $client ? : new Client();
+        $this->client = $client ?: new Client();
     }
 
     /**
@@ -83,7 +83,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     }
 
     /**
-     * Add a request to the queue
+     * Add a request to the queue.
      *
      * @param string $method HTTP method
      * @param string $url URL
@@ -95,7 +95,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     }
 
     /**
-     * Create request
+     * Create request.
      *
      * @param string $method HTTP method
      * @param string $url URL
@@ -109,7 +109,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     }
 
     /**
-     * Sends all requests to each caching proxy server
+     * Sends all requests to each caching proxy server.
      *
      * Requests are sent in parallel to minimise impact on performance.
      *
@@ -139,7 +139,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     }
 
     /**
-     * Handle request exception
+     * Handle request exception.
      *
      * @param MultiTransferException $exceptions
      *
@@ -177,7 +177,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     }
 
     /**
-     * Filter a URL
+     * Filter a URL.
      *
      * Prefix the URL with "http://" if it has no scheme, then check the URL
      * for validity. You can specify what parts of the URL are allowed.
@@ -220,7 +220,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     }
 
     /**
-     * Get default scheme
+     * Get default scheme.
      *
      * @return string
      */

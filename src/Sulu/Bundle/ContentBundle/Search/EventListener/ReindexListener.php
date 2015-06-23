@@ -10,21 +10,19 @@
 
 namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
-use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Util\SuluNodeHelper;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Sulu\Component\Content\StructureManagerInterface;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Util\SuluNodeHelper;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Helper\ProgressHelper;
 
 /**
  * Listen to for new hits. If document instance of structure
- * prefix the current resource locator prefix to the URL
+ * prefix the current resource locator prefix to the URL.
  */
 class ReindexListener
 {
@@ -82,7 +80,8 @@ class ReindexListener
     }
 
     /**
-     * Prefix url of document with current resourcelocator prefix
+     * Prefix url of document with current resourcelocator prefix.
+     *
      * @param IndexRebuildEvent $event
      */
     public function onIndexRebuild(IndexRebuildEvent $event)

@@ -13,6 +13,8 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 use Prophecy\Argument;
 use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Domain\Entry;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
@@ -49,18 +51,25 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $acl;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->aclProvider = $this->prophesize(MutableAclProviderInterface::class);
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
-        $this->securityIdentity = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');
+        $this->securityIdentity = new RoleSecurityIdentity('ROLE_SULU_ADMINISTRATOR');
         $this->acl = $this->prophesize(MutableAclInterface::class);
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $this->accessControlManager = new SymfonyAccessControlManager(
             $this->aclProvider->reveal(),
-            $this->maskConverter->reveal()
+            $this->maskConverter->reveal(),
+            $this->eventDispatcher->reveal()
         );
     }
 
@@ -90,7 +99,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
 
-        $this->assertEquals(true, $permissions['SULU_ROLE_ADMINISTRATOR']['view']);
+        $this->assertEquals(true, $permissions['ROLE_SULU_ADMINISTRATOR']['view']);
     }
 
     /**
@@ -164,7 +173,9 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetPermissionsWithoutExistingAcl($objectId, $objectType, $locale, $objectIdentifier)
     {
-        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))->willThrow(AclNotFoundException::class);
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))->willThrow(
+            AclNotFoundException::class
+        );
         $this->aclProvider->createAcl(new ObjectIdentity($objectIdentifier, $objectType))
             ->willReturn($this->acl->reveal())->shouldBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
@@ -172,6 +183,36 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->acl->getObjectAces()->willReturn(array());
 
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
+
+        $this->accessControlManager->setPermissions(
+            $objectType,
+            $objectId,
+            $this->securityIdentity,
+            array('view'),
+            $locale
+        );
+    }
+
+    /**
+     * @dataProvider provideObjectIdentifiers
+     */
+    public function testPermissionUpdateEvent($objectId, $objectType, $locale, $objectIdentifier)
+    {
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))->willThrow(
+            AclNotFoundException::class
+        );
+        $this->aclProvider->createAcl(new ObjectIdentity($objectIdentifier, $objectType))
+            ->willReturn($this->acl->reveal())->shouldBeCalled();
+        $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
+
+        $this->acl->getObjectAces()->willReturn(array());
+
+        $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
+
+        $this->eventDispatcher->dispatch(
+            'sulu.security.permission.update',
+            new PermissionUpdateEvent($objectType, $objectIdentifier, $this->securityIdentity, array('view'))
+        )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
             $objectType,

@@ -13,23 +13,23 @@ namespace Sulu\Bundle\SnippetBundle\Command;
 use Jackalope\Query\QueryManager;
 use Jackalope\Session;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
-use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Copy internationalized properties from one locale to another
+ * Copy internationalized properties from one locale to another.
  */
 class SnippetLocaleCopyCommand extends ContainerAwareCommand
 {
     /**
-     * The namespace for languages
+     * The namespace for languages.
+     *
      * @var string
      */
     private $languageNamespace;

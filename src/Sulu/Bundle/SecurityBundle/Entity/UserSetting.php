@@ -14,30 +14,34 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * UserSetting
+ * Entry for a key-value-store like user setting.
  */
 class UserSetting
 {
     /**
+     * The value of the setting.
      * @var string
      */
     private $value;
 
     /**
+     * The key under which this setting is available.
      * @var string
      */
     private $key;
 
     /**
+     * The user for which this setting is applying.
      * @var UserInterface
      * @Exclude
      */
     private $user;
 
     /**
-     * Set value
+     * Sets the value for this user setting.
      *
      * @param string $value
+     *
      * @return UserSetting
      */
     public function setValue($value)
@@ -48,7 +52,7 @@ class UserSetting
     }
 
     /**
-     * Get value
+     * Returns the value for this user setting.
      *
      * @return string
      */
@@ -58,9 +62,10 @@ class UserSetting
     }
 
     /**
-     * Set key
+     * Sets the key for this user setting.
      *
      * @param string $key
+     *
      * @return UserSetting
      */
     public function setKey($key)
@@ -71,7 +76,7 @@ class UserSetting
     }
 
     /**
-     * Get key
+     * Returns the key for this user setting.
      *
      * @return string
      */
@@ -81,9 +86,10 @@ class UserSetting
     }
 
     /**
-     * Set user
+     * Sets the user for this user setting.
      *
      * @param UserInterface $user
+     *
      * @return UserSetting
      */
     public function setUser(UserInterface $user)
@@ -94,7 +100,7 @@ class UserSetting
     }
 
     /**
-     * Get user
+     * Returns the user for this user setting.
      *
      * @return UserInterface
      */

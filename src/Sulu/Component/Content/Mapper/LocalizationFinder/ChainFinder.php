@@ -23,7 +23,7 @@ class ChainFinder implements LocalizationFinderInterface
     private $finders;
 
     /**
-     * Add a finder to the chain
+     * Add a finder to the chain.
      *
      * @param LocalizationFinderInterface $finder
      */
@@ -43,7 +43,7 @@ class ChainFinder implements LocalizationFinderInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**

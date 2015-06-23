@@ -12,8 +12,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+
 /**
- * Note
+ * Note.
  */
 class Note
 {
@@ -24,7 +25,7 @@ class Note
     private $value;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
@@ -42,7 +43,7 @@ class Note
     private $accounts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -51,9 +52,10 @@ class Note
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return Note
      */
     public function setValue($value)
@@ -64,7 +66,7 @@ class Note
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -74,9 +76,9 @@ class Note
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -84,9 +86,10 @@ class Note
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     *
      * @return Note
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
@@ -97,7 +100,7 @@ class Note
     }
 
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
      */
@@ -107,7 +110,7 @@ class Note
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -117,9 +120,10 @@ class Note
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param AccountInterface $account
+     *
      * @return Note
      */
     public function addAccount(AccountInterface $account)
@@ -130,7 +134,7 @@ class Note
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param AccountInterface $account
      */
@@ -140,7 +144,7 @@ class Note
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

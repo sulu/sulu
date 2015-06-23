@@ -11,30 +11,34 @@
 namespace Sulu\Component\Security\Authorization;
 
 /**
- * The class which describes the necessary permissions to access a certain element
+ * The class which describes the necessary permissions to access a certain element.
  */
 class SecurityCondition
 {
     /**
-     * The string representation of the security context
+     * The string representation of the security context.
+     *
      * @var string
      */
     private $securityContext;
 
     /**
-     * The type of the object which will be accessed, null if not a certain element but an area is accessed
+     * The type of the object which will be accessed, null if not a certain element but an area is accessed.
+     *
      * @var string
      */
     private $objectType;
 
     /**
-     * The id of the object which will be accessed, null if not a certain element but an area is accessed
+     * The id of the object which will be accessed, null if not a certain element but an area is accessed.
+     *
      * @var mixed
      */
     private $objectId;
 
     /**
-     * The locale in which the object or context will be accessed
+     * The locale in which the object or context will be accessed.
+     *
      * @var string
      */
     private $locale;
@@ -48,7 +52,8 @@ class SecurityCondition
     }
 
     /**
-     * Returns the string representation of a security context
+     * Returns the string representation of a security context.
+     *
      * @return string
      */
     public function getSecurityContext()
@@ -57,7 +62,8 @@ class SecurityCondition
     }
 
     /**
-     * Returns the type of the object
+     * Returns the type of the object.
+     *
      * @return string
      */
     public function getObjectType()
@@ -66,7 +72,8 @@ class SecurityCondition
     }
 
     /**
-     * Returns the id of the object
+     * Returns the id of the object.
+     *
      * @return mixed
      */
     public function getObjectId()
@@ -75,7 +82,8 @@ class SecurityCondition
     }
 
     /**
-     * Returns the locale in which the security has to be checked
+     * Returns the locale in which the security has to be checked.
+     *
      * @return string
      */
     public function getLocale()

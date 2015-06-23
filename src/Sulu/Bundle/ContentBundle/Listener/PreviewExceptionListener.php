@@ -17,18 +17,20 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 
 /**
- * Kernel exception listener to render error page
+ * Kernel exception listener to render error page.
  */
 class PreviewExceptionListener
 {
     /**
-     * The template engine
+     * The template engine.
+     *
      * @var EngineInterface
      */
     private $templateEngine;
 
     /**
-     * Name of the template
+     * Name of the template.
+     *
      * @var string
      */
     private $templateName;
@@ -49,6 +51,7 @@ class PreviewExceptionListener
      * Handles a kernel exception and returns a relevant response.
      * Aims to deliver content to the user that explains the exception, rather than falling
      * back on symfony's exception handler which displays a less verbose error message.
+     *
      * @param GetResponseForExceptionEvent $event The exception event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -67,7 +70,7 @@ class PreviewExceptionListener
         $exception = FlattenException::create($ex, $code);
 
         // log exception
-        $this->logger->error(sprintf("%s (%s %s)", $ex->getMessage(), $code, $statusText));
+        $this->logger->error(sprintf('%s (%s %s)', $ex->getMessage(), $code, $statusText));
 
         $responseContent = $this->templateEngine->render(
             $this->findTemplate(),
@@ -84,7 +87,8 @@ class PreviewExceptionListener
     }
 
     /**
-     * Returns template
+     * Returns template.
+     *
      * @return string
      */
     private function findTemplate()
@@ -95,5 +99,4 @@ class PreviewExceptionListener
 
         return 'TwigBundle:Exception:exception_full.html.twig';
     }
-
 }

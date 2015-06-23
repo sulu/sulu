@@ -14,8 +14,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * An object of this class is thrown along with the tag.delete event
- * @package Sulu\Bundle\TagBundle\Event
+ * An object of this class is thrown along with the tag.delete event.
  */
 class TagDeleteEvent extends Event
 {
@@ -33,7 +32,8 @@ class TagDeleteEvent extends Event
     }
 
     /**
-     * Returns the deleted tag
+     * Returns the deleted tag.
+     *
      * @return Tag
      */
     public function getTag()

@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Simple websocket context
+ * Simple websocket context.
  */
 class ConnectionContext implements ConnectionContextInterface
 {
@@ -102,7 +102,7 @@ class ConnectionContext implements ConnectionContextInterface
             return unserialize($this->session->get('_security_' . $firewall));
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -114,7 +114,7 @@ class ConnectionContext implements ConnectionContextInterface
             return $token->getUser();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -174,7 +174,8 @@ class ConnectionContext implements ConnectionContextInterface
     }
 
     /**
-     * Returns all parameters
+     * Returns all parameters.
+     *
      * @return array
      */
     public function all()
@@ -183,13 +184,15 @@ class ConnectionContext implements ConnectionContextInterface
     }
 
     /**
-     * Return id of connection context for connection
+     * Return id of connection context for connection.
+     *
      * @param ConnectionInterface $conn
+     *
      * @return string
      */
     public static function getIdFromConnection(ConnectionInterface $conn)
     {
-        $context = new ConnectionContext($conn);
+        $context = new self($conn);
 
         return $context->getId();
     }

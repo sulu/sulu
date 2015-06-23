@@ -20,7 +20,6 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
      */
     public function load(ObjectManager $manager)
     {
-
         $collectionType = new CollectionType();
         $collectionType->setId(1);
 

@@ -11,20 +11,20 @@
 namespace Sulu\Bundle\AdminBundle\Admin;
 
 /**
- * The JsConfigPool is used to store parameters to be shown in index twig template
- *
- * @package Sulu\Bundle\AdminBundle\Admin
+ * The JsConfigPool is used to store parameters to be shown in index twig template.
  */
 class JsConfigPool
 {
     /**
-     * The array for all the config-parameter
+     * The array for all the config-parameter.
+     *
      * @var array
      */
     private $pool = array();
 
     /**
-     * Returns all config parameters
+     * Returns all config parameters.
+     *
      * @return array
      */
     public function getConfigParams()
@@ -33,7 +33,8 @@ class JsConfigPool
     }
 
     /**
-     * Adds a new config parameter
+     * Adds a new config parameter.
+     *
      * @param $params
      */
     public function addConfigParams(JsConfigInterface $params)

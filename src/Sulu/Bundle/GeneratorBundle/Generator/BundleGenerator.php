@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\GeneratorBundle\Generator;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Generates a sulu bundle.
@@ -49,8 +49,8 @@ abstract class BundleGenerator extends Generator
             'bundle_basename' => $basename,
             'basename' => $basename,
             'extension_alias' => Container::underscore($basename),
-            'extensionalias' => str_replace("_", "", Container::underscore($basename)),
-            'route' => $route
+            'extensionalias' => str_replace('_', '', Container::underscore($basename)),
+            'route' => $route,
         );
 
         $this->generateBundle($dir, $bundle, $basename, $structure, $parameters);

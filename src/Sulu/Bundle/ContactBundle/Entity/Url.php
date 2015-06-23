@@ -12,8 +12,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+
 /**
- * Url
+ * Url.
  */
 class Url
 {
@@ -24,7 +25,7 @@ class Url
     private $url;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
@@ -48,7 +49,7 @@ class Url
     private $contacts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -56,9 +57,10 @@ class Url
     }
 
     /**
-     * Set url
+     * Set url.
      *
      * @param string $url
+     *
      * @return Url
      */
     public function setUrl($url)
@@ -69,7 +71,7 @@ class Url
     }
 
     /**
-     * Get url
+     * Get url.
      *
      * @return string
      */
@@ -79,9 +81,9 @@ class Url
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -89,9 +91,10 @@ class Url
     }
 
     /**
-     * Set urlType
+     * Set urlType.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\UrlType $urlType
+     *
      * @return Url
      */
     public function setUrlType(\Sulu\Bundle\ContactBundle\Entity\UrlType $urlType)
@@ -102,7 +105,7 @@ class Url
     }
 
     /**
-     * Get urlType
+     * Get urlType.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\UrlType
      */
@@ -112,9 +115,10 @@ class Url
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param AccountInterface $account
+     *
      * @return Url
      */
     public function addAccount(AccountInterface $account)
@@ -125,7 +129,7 @@ class Url
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param AccountInterface $account
      */
@@ -135,7 +139,7 @@ class Url
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -145,9 +149,10 @@ class Url
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     *
      * @return Url
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
@@ -158,7 +163,7 @@ class Url
     }
 
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
      */
@@ -168,7 +173,7 @@ class Url
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

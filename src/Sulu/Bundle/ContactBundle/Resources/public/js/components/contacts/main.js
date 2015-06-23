@@ -112,10 +112,8 @@ define([
 
                 this.sandbox.util.when.apply(null, requests).then(function() {
                     if(type === 'DELETE') {
-                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.accounts.medias.removed', medias);
                     } else if(type === 'POST') {
-                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.accounts.medias.saved', medias);
                     }
                 }.bind(this));

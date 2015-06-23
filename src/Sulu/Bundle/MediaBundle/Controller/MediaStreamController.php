@@ -19,10 +19,9 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
@@ -75,13 +74,18 @@ class MediaStreamController extends Controller
             $version = $request->get('v', null);
             $noCount = $request->get('no-count', false);
 
+            $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
+            if ($request->get('inline', false)) {
+                $dispositionType = ResponseHeaderBag::DISPOSITION_INLINE;
+            }
+
             $fileVersion = $this->getFileVersion($id, $version);
 
             if (!$noCount) {
                 $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
             }
 
-            $response = $this->getFileResponse($fileVersion);
+            $response = $this->getFileResponse($fileVersion, $dispositionType);
 
             return $response;
         } catch (MediaException $e) {
@@ -91,9 +95,11 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
+     * @param string $dispositionType
+     *
      * @return StreamedResponse
      */
-    protected function getFileResponse($fileVersion)
+    protected function getFileResponse($fileVersion, $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT)
     {
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
@@ -114,9 +120,15 @@ class MediaStreamController extends Controller
             fclose($handle);
         });
 
+        // Prepare headers
+        $disposition = $response->headers->makeDisposition(
+            $dispositionType,
+            basename($fileName)
+        );
+
         // Set headers
         $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
+        $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-length', $fileSize);
 
         return $response;
@@ -125,13 +137,15 @@ class MediaStreamController extends Controller
     /**
      * @param int $id
      * @param int $version
+     *
      * @return null|FileVersion
+     *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
     protected function getFileVersion($id, $version)
     {
         /**
-         * @var Media $mediaEntity
+         * @var Media
          */
         $mediaEntity = $this->getDoctrine()
             ->getRepository('SuluMediaBundle:Media')
@@ -143,7 +157,7 @@ class MediaStreamController extends Controller
         $file = $mediaEntity->getFiles()[0];
 
         /**
-         * @var FileVersion $fileVersion
+         * @var FileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {
             if ($fileVersion->getVersion() == $version) {
@@ -159,7 +173,8 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * getMediaManager
+     * getMediaManager.
+     *
      * @return FormatManagerInterface
      */
     protected function getCacheManager()
@@ -172,7 +187,8 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * getMediaManager
+     * getMediaManager.
+     *
      * @return MediaManagerInterface
      */
     protected function getMediaManager()
@@ -185,7 +201,8 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * getStorage
+     * getStorage.
+     *
      * @return StorageInterface
      */
     protected function getStorage()

@@ -15,16 +15,17 @@ use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * provides a mechanism to get a html value of a rdfa property
- * @package Sulu\Bundle\ContentBundle\Preview
+ * provides a mechanism to get a html value of a rdfa property.
  */
 class RdfaCrawler
 {
     /**
-     * returns html value of rdfa property
+     * returns html value of rdfa property.
+     *
      * @param string $html content to crawl
      * @param StructureInterface $content
      * @param string $property could be a property sequence like (block,1,title,0)
+     *
      * @return bool
      */
     public function getPropertyValue($html, StructureInterface $content, $property)
@@ -80,9 +81,11 @@ class RdfaCrawler
     }
 
     /**
-     * extracts sequence information from property name
+     * extracts sequence information from property name.
+     *
      * @param StructureInterface $content
      * @param string $property sequence like (block,1,title,0)
+     *
      * @return array|bool
      */
     public function getSequence(StructureInterface $content, $property)
@@ -113,7 +116,7 @@ class RdfaCrawler
                 'sequence' => $sequence,
                 'propertyPath' => $propertyPath,
                 'property' => $propertyInstance,
-                'index' => $indexSequence
+                'index' => $indexSequence,
             );
         }
 

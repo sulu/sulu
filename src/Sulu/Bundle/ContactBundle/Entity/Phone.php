@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * Phone
+ * Phone.
  */
 class Phone
 {
@@ -25,7 +25,7 @@ class Phone
     private $phone;
 
     /**
-     * @var integer
+     * @var int
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
@@ -49,7 +49,7 @@ class Phone
     private $accounts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -58,9 +58,10 @@ class Phone
     }
 
     /**
-     * Set phone
+     * Set phone.
      *
      * @param string $phone
+     *
      * @return Phone
      */
     public function setPhone($phone)
@@ -71,7 +72,7 @@ class Phone
     }
 
     /**
-     * Get phone
+     * Get phone.
      *
      * @return string
      */
@@ -81,9 +82,9 @@ class Phone
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -91,9 +92,10 @@ class Phone
     }
 
     /**
-     * Set phoneType
+     * Set phoneType.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType
+     *
      * @return Phone
      */
     public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
@@ -104,7 +106,7 @@ class Phone
     }
 
     /**
-     * Get phoneType
+     * Get phoneType.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\PhoneType
      */
@@ -114,9 +116,10 @@ class Phone
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     *
      * @return Phone
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
@@ -127,7 +130,7 @@ class Phone
     }
 
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
      */
@@ -137,7 +140,7 @@ class Phone
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -147,9 +150,10 @@ class Phone
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param AccountInterface $account
+     *
      * @return Phone
      */
     public function addAccount(AccountInterface $account)
@@ -160,7 +164,7 @@ class Phone
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param AccountInterface $account
      */
@@ -170,7 +174,7 @@ class Phone
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -15,7 +15,6 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 

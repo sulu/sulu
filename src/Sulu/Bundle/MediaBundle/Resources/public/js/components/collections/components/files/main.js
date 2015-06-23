@@ -70,6 +70,7 @@ define(function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             var url = '/admin/api/collections/' + this.options.data.id + '?depth=1&sortBy=title';
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
@@ -139,6 +140,7 @@ define(function() {
 
             // unlock the dropzone pop-up if the media-edit overlay was closed
             this.sandbox.on('sulu.media-edit.closed', function() {
+                this.sandbox.emit('husky.datagrid.items.deselect');
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
             }.bind(this));
 

@@ -10,9 +10,6 @@
 
 namespace Sulu\Component\HttpCache;
 
-use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Handlers implementing this interface should "flush" their underlying proxy.
  *
@@ -23,12 +20,12 @@ use Symfony\Component\HttpFoundation\Response;
 interface HandlerFlushInterface extends HandlerInterface
 {
     /**
-     * Flush the underlying cache mechanism
+     * Flush the underlying cache mechanism.
      *
      * NOTE: Currently this could be quite inefficient as there is currently
      *       no way to track which handlers use which implementations.
      *
-     * @return boolean True for success null or false if not implemented
+     * @return bool True for success null or false if not implemented
      */
     public function flush();
 }

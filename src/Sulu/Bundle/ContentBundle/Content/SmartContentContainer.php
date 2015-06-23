@@ -10,18 +10,16 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
-use JMS\Serializer\Serializer;
+use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
-use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria
- * @package Sulu\Bundle\ContentBundle\Content
+ * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria.
  */
 class SmartContentContainer implements ArrayableInterface
 {
@@ -44,26 +42,30 @@ class SmartContentContainer implements ArrayableInterface
     private $params;
 
     /**
-     * Required for resolving the Tags to ids
+     * Required for resolving the Tags to ids.
+     *
      * @var TagManagerInterface
      * @Exclude
      */
     private $tagManager;
 
     /**
-     * The key of the webspace for this smartcontent instance
+     * The key of the webspace for this smartcontent instance.
+     *
      * @var string
      */
     private $webspaceKey;
 
     /**
-     * The code of the language for this smartcontent instance
+     * The code of the language for this smartcontent instance.
+     *
      * @var string
      */
     private $languageCode;
 
     /**
-     * Contains all the configuration for the smart content
+     * Contains all the configuration for the smart content.
+     *
      * @var array
      */
     private $config = array();
@@ -71,19 +73,22 @@ class SmartContentContainer implements ArrayableInterface
     /**
      * Stores all the structure meeting the filter criteria in the config.
      * Will be lazy loaded when accessed.
+     *
      * @var StructureInterface[]
      */
     private $data = null;
 
     /**
-     * contains current page
+     * contains current page.
+     *
      * @var int
      */
     private $page;
 
     /**
-     * indicates data has next page
-     * @var boolean
+     * indicates data has next page.
+     *
+     * @var bool
      */
     private $hasNextPage;
 
@@ -93,7 +98,7 @@ class SmartContentContainer implements ArrayableInterface
     private $stopwatch;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -115,7 +120,8 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Sets the config for this container
+     * Sets the config for this container.
+     *
      * @param array $config
      */
     public function setConfig(array $config)
@@ -124,7 +130,8 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Returns the config for this container
+     * Returns the config for this container.
+     *
      * @return array
      */
     public function getConfig()
@@ -135,10 +142,12 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Lazy loads the data based on the filter criteria from the config
+     * Lazy loads the data based on the filter criteria from the config.
+     *
      * @param array $excludeUuids
      * @param int $limit
      * @param int $offset
+     *
      * @return StructureInterface[]
      */
     public function getData($excludeUuids = array(), $limit = null, $offset = null)
@@ -162,7 +171,7 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * lazy load data
+     * lazy load data.
      */
     private function loadData($config, $excludeUuids, $limit, $offset)
     {
@@ -193,7 +202,8 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Returns current page
+     * Returns current page.
+     *
      * @return int
      */
     public function getPage()
@@ -202,7 +212,8 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Set current page
+     * Set current page.
+     *
      * @param int $page
      */
     public function setPage($page)
@@ -211,8 +222,9 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Return indicator of next page
-     * @return boolean
+     * Return indicator of next page.
+     *
+     * @return bool
      */
     public function getHasNextPage()
     {
@@ -220,8 +232,9 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * Set next page indicator
-     * @param boolean $hasNextPage
+     * Set next page indicator.
+     *
+     * @param bool $hasNextPage
      */
     public function setHasNextPage($hasNextPage)
     {
@@ -229,7 +242,7 @@ class SmartContentContainer implements ArrayableInterface
     }
 
     /**
-     * magic getter
+     * magic getter.
      */
     public function __get($name)
     {
@@ -240,11 +253,11 @@ class SmartContentContainer implements ArrayableInterface
                 return $this->getConfig();
         }
 
-        return null;
+        return;
     }
 
     /**
-     * magic isset
+     * magic isset.
      */
     public function __isset($name)
     {

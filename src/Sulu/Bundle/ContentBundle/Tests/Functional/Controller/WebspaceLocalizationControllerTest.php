@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class WebspaceLocalizationControllerTest extends SuluTestCase

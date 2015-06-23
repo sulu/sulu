@@ -15,19 +15,22 @@ use Sulu\Component\Util\ArrayableInterface;
 class Theme implements ArrayableInterface
 {
     /**
-     * The key of the theme
+     * The key of the theme.
+     *
      * @var string
      */
     private $key;
 
     /**
-     * A list of excluded templates
+     * A list of excluded templates.
+     *
      * @var array
      */
     private $excludedTemplates;
 
     /**
-     * A list of exception templates
+     * A list of exception templates.
+     *
      * @var array
      */
     private $errorTemplates;
@@ -42,7 +45,8 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Sets the key of the theme
+     * Sets the key of the theme.
+     *
      * @param string $key The key of the theme
      */
     public function setKey($key)
@@ -51,7 +55,8 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Returns the key of the theme
+     * Returns the key of the theme.
+     *
      * @return string The key of the theme
      */
     public function getKey()
@@ -60,7 +65,8 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Adds an exluded template to this theme instance
+     * Adds an exluded template to this theme instance.
+     *
      * @param $excludedTemplate string The template to exclude
      */
     public function addExcludedTemplate($excludedTemplate)
@@ -69,7 +75,8 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Sets the excluded templates
+     * Sets the excluded templates.
+     *
      * @param array $excludedTemplates
      */
     public function setExcludedTemplates($excludedTemplates)
@@ -78,7 +85,8 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Returns an array of the excluded templates
+     * Returns an array of the excluded templates.
+     *
      * @return array The excluded templates
      */
     public function getExcludedTemplates()
@@ -87,7 +95,8 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Add a new error template for given code
+     * Add a new error template for given code.
+     *
      * @param string $code
      * @param string $template
      */
@@ -97,8 +106,10 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * Returns a error template for given code
+     * Returns a error template for given code.
+     *
      * @param string $code
+     *
      * @return string|null
      */
     public function getErrorTemplate($code)
@@ -111,11 +122,12 @@ class Theme implements ArrayableInterface
             return $this->errorTemplates['default'];
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns a array of error template
+     * Returns a array of error template.
+     *
      * @return string[]
      */
     public function getErrorTemplates()

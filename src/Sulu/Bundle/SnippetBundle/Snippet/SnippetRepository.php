@@ -11,14 +11,14 @@
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Jackalope\Query\Query;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
-use PHPCR\Util\QOM\QueryBuilder;
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 
 /**
- * Repository class for snippets
+ * Repository class for snippets.
  *
  * Responsible for retrieving snippets from the content repository
  */
@@ -46,7 +46,7 @@ class SnippetRepository
 
     /**
      * Return the nodes which refer to the structure with the
-     * given UUID
+     * given UUID.
      *
      * @param string UUID
      *
@@ -87,19 +87,20 @@ class SnippetRepository
     }
 
     /**
-     * Return snippets
+     * Return snippets.
      *
      * If $type is given then only return the snippets of that type.
      *
      * @param string $languageCode
      * @param string $type Optional snippet type
-     * @param integer $offset Optional offset
-     * @param integer $max Optional max
+     * @param int $offset Optional offset
+     * @param int $max Optional max
      * @param string $search
      * @param string $sortBy
      * @param string $sortOrder
      *
      * @throws \InvalidArgumentException
+     *
      * @return Snippet[]
      */
     public function getSnippets(
@@ -117,7 +118,7 @@ class SnippetRepository
     }
 
     /**
-     * Return snippets amount
+     * Return snippets amount.
      *
      * If $type is given then only return the snippets of that type.
      *
@@ -128,6 +129,7 @@ class SnippetRepository
      * @param string $sortOrder
      *
      * @throws \InvalidArgumentException
+     *
      * @return Snippet[]
      */
     public function getSnippetsAmount(
@@ -144,14 +146,14 @@ class SnippetRepository
     }
 
     /**
-     * Return snippets load query
+     * Return snippets load query.
      *
      * If $type is given then only return the snippets of that type.
      *
      * @param string $languageCode
      * @param string $type Optional snippet type
-     * @param integer $offset Optional offset
-     * @param integer $max Optional max
+     * @param int $offset Optional offset
+     * @param int $max Optional max
      * @param string $search
      * @param string $sortBy
      * @param string $sortOrder

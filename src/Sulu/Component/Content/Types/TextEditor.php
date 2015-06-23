@@ -14,7 +14,7 @@ use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for TextEditor
+ * ContentType for TextEditor.
  */
 class TextEditor extends SimpleContentType
 {
@@ -28,7 +28,8 @@ class TextEditor extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()
@@ -37,20 +38,18 @@ class TextEditor extends SimpleContentType
     }
 
     /**
-     * returns default parameters
+     * returns default parameters.
+     *
      * @return array
      */
     public function getDefaultParams()
     {
         return array(
-            'tables' => new PropertyParameter('tables', true),
-            'links' => new PropertyParameter('links', true),
-            'scripts' => new PropertyParameter('scripts', true),
-            'iframes' => new PropertyParameter('iframes', true),
+            'table' => new PropertyParameter('table', true),
+            'link' => new PropertyParameter('link', true),
             'height' => new PropertyParameter('height', 300),
-            'maxHeight' => new PropertyParameter('maxHeight', 500),
-            'enterMode' => new PropertyParameter('enterMode', null),
-            'pasteFromWord' => new PropertyParameter('pasteFromWord', true)
+            'max_height' => new PropertyParameter('max_height', 500),
+            'paste_from_word' => new PropertyParameter('paste_from_word', true)
         );
     }
 }

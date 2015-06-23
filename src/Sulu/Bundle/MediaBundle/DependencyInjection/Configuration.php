@@ -14,7 +14,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from your app/config files
+ * This is the class that validates and merges configuration from your app/config files.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()->defaultValue(array(
                             'Expires' => '+1 month',
                             'Pragma' => 'public',
-                            'Cache-Control' => 'public'
+                            'Cache-Control' => 'public',
                         ))
                     ->end()
                     ->arrayNode('default_imagine_options')
@@ -88,20 +88,20 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()->defaultValue(array(
                             array(
                                 'type' => 'document',
-                                'mimeTypes' => array('*')
+                                'mimeTypes' => array('*'),
                             ),
                             array(
                                 'type' => 'image',
-                                'mimeTypes' => array('image/*')
+                                'mimeTypes' => array('image/*'),
                             ),
                             array(
                                 'type' => 'video',
-                                'mimeTypes' => array('video/*')
+                                'mimeTypes' => array('video/*'),
                             ),
                             array(
                                 'type' => 'audio',
-                                'mimeTypes' => array('audio/*')
-                            )
+                                'mimeTypes' => array('audio/*'),
+                            ),
                         ))
                     ->end()
                 ->end()
@@ -112,6 +112,18 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('path')->defaultValue('%kernel.root_dir%/../web/uploads/media')->end()
                     ->booleanNode('save_image')->defaultValue(true)->end()
                     ->scalarNode('segments')->defaultValue(10)->end()
+                ->end()
+            ->end()
+            ->arrayNode('disposition_type')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->enumNode('default')->values(array('inline', 'attachment'))->defaultValue('attachment')->end()
+                    ->arrayNode('mime_types_inline')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('mime_types_attachment')
+                        ->prototype('scalar')->end()
+                    ->end()
                 ->end()
             ->end();
 

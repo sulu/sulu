@@ -11,9 +11,8 @@
 namespace Sulu\Component\Webspace\Loader\Exception;
 
 /**
- * Represents a wrong default localization configuration
+ * Represents a wrong default localization configuration.
  */
 class InvalidDefaultLocalizationException extends WebspaceException
 {
-
 }

@@ -13,14 +13,14 @@ namespace Sulu\Component\Localization\Provider;
 use Sulu\Component\Localization\Localization;
 
 /**
- * Defines the method to return the localizations offered for the system
- * @package Sulu\Component\Localization\Provider
+ * Defines the method to return the localizations offered for the system.
  */
 interface LocalizationProviderInterface
 {
     /**
-     * Returns all the localizations offered for the system by this class
+     * Returns all the localizations offered for the system by this class.
+     *
      * @return Localization[]
      */
     public function getAllLocalizations();
-} 
+}

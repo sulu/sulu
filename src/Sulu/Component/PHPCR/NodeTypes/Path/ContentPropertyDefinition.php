@@ -76,7 +76,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplate or NodeDefinitionTemplate, then this method
      * will return false.
      *
-     * @return boolean True, if the item is automatically created when its
+     * @return bool True, if the item is automatically created when its
      *      parent node is created, else false.
      *
      * @api
@@ -105,7 +105,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      *
      * An item definition cannot be both residual and mandatory.
      *
-     * @return boolean True, if the item is mandatory, else false.
+     * @return bool True, if the item is mandatory, else false.
      *
      * @api
      */
@@ -132,7 +132,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplateInterface or NodeDefinitionTemplateInterface,
      * then this method will return OnParentVersionAction::COPY.
      *
-     * @return integer An int constant member of OnParentVersionAction.
+     * @return int An int constant member of OnParentVersionAction.
      *
      * @api
      */
@@ -160,7 +160,8 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplateInterface or NodeDefinitionTemplateInterface,
      * then this method will return false.
      *
-     * @return boolean True, if the child item is protected, else false.
+     * @return bool True, if the child item is protected, else false.
+     *
      * @api
      */
     public function isProtected()
@@ -193,7 +194,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinition object is actually a newly-created empty
      * PropertyDefinitionTemplate, then this method will return PropertyType::STRING.
      *
-     * @return integer An integer constant member of PropertyType.
+     * @return int An integer constant member of PropertyType.
      *
      * @api
      */
@@ -395,7 +396,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinition object is actually a newly-created empty
      * PropertyDefinitionTemplate, then this method will return false.
      *
-     * @return boolean True, if this property may have multiple values, else
+     * @return bool True, if this property may have multiple values, else
      *      false.
      *
      * @api
@@ -451,7 +452,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * This attribute only takes effect if the node type holding the
      * property definition has a queryable setting of true.
      *
-     * @return boolean True, if this property is full-text searchable, else false.
+     * @return bool True, if this property is full-text searchable, else false.
      *
      * @api
      */
@@ -470,7 +471,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * This attribute only takes effect if the node type holding the
      * property definition has a queryable setting of true.
      *
-     * @return boolean True, if this property is query orderable, else false.
+     * @return bool True, if this property is query orderable, else false.
      *
      * @api
      */

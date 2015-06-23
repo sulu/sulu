@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace;
 use Sulu\Component\Content\Metadata;
 
 /**
- * Represents a navigation context defined in webspace xml
+ * Represents a navigation context defined in webspace xml.
  */
 class NavigationContext
 {
@@ -43,6 +43,7 @@ class NavigationContext
 
     /**
      * @param $locale
+     *
      * @return null|string
      */
     public function getTitle($locale)

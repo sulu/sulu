@@ -11,12 +11,13 @@
 namespace Sulu\Component\Websocket\ConnectionContext;
 
 /**
- * Websocket context which implies logged in user in a specific firewall
+ * Websocket context which implies logged in user in a specific firewall.
  */
 interface AuthenticatedConnectionContextInterface extends ConnectionContextInterface
 {
     /**
-     * Returns user for the current firewall
+     * Returns user for the current firewall.
+     *
      * @return null|\Sulu\Component\Security\Authentication\UserInterface
      */
     public function getFirewallUser();

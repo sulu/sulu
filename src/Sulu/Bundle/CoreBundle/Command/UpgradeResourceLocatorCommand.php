@@ -17,8 +17,8 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -26,7 +26,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades Resourcelocators to 0.9.0
+ * Upgrades Resourcelocators to 0.9.0.
+ *
  * @deprecated
  */
 class UpgradeResourceLocatorCommand extends ContainerAwareCommand

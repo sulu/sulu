@@ -298,7 +298,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadWithNotExistingDefault()
     {
-        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException');
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException'
+        );
 
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefault.xml'
@@ -307,7 +309,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadWithoutDefaultLocalization()
     {
-        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException');
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException'
+        );
 
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withoutDefaultLocalization.xml'
@@ -316,7 +320,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadWithoutDefaultSegment()
     {
-        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException');
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException'
+        );
 
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefaultSegment.xml'
@@ -325,7 +331,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadWithTwoDefaultLocalization()
     {
-        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException');
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException'
+        );
 
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withTwoDefaultLocalizations.xml'
@@ -469,5 +477,18 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/sulu.io_error_templates_many_defaults.xml'
         );
+    }
+
+    public function testUrlWithTrailingSlash()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/url-with-trailing-slash/sulu.io_url_with_slash.xml'
+        );
+
+        $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertEquals(2, count($environmentDev->getUrls()));
+        $this->assertEquals('sulu-without-slash.lo', $environmentDev->getUrls()[0]->getUrl());
+        $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
     }
 }

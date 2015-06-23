@@ -16,7 +16,8 @@ use Sulu\Component\Webspace\Webspace;
 class PortalDefaultLocalizationNotFoundException extends WebspaceException
 {
     /**
-     * The portal which has no default localization
+     * The portal which has no default localization.
+     *
      * @var string
      */
     private $portal;
@@ -35,7 +36,8 @@ class PortalDefaultLocalizationNotFoundException extends WebspaceException
     }
 
     /**
-     * Returns the webspace in which the error occured
+     * Returns the webspace in which the error occured.
+     *
      * @return Webspace
      */
     public function getWebspace()

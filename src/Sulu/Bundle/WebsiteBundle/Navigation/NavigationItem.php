@@ -13,8 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 use Sulu\Component\Content\Structure;
 
 /**
- * Frontend navigation item
- * @package Sulu\Bundle\WebsiteBundle\Navigation
+ * Frontend navigation item.
  */
 class NavigationItem
 {
@@ -39,7 +38,7 @@ class NavigationItem
     private $children;
 
     /**
-     * @var integer
+     * @var int
      */
     private $nodeType;
 

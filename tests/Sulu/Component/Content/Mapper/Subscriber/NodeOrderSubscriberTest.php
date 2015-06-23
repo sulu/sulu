@@ -2,12 +2,12 @@
 
 namespace Sulu\Component\Content\Mapper\Subscriber;
 
-use Sulu\Component\Content\Event\ContentNodeEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Sulu\Component\Content\ContentEvents;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Prophecy\Argument;
+use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Event\ContentNodeOrderEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class NodeOrderSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +44,7 @@ class NodeOrderSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->sibling1,
             $this->sibling2,
             $this->node,
-            $this->sibling3
+            $this->sibling3,
         ));
 
         $this->node->setProperty('sulu:order', 30, PropertyType::LONG)->shouldBeCalled();

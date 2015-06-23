@@ -1,9 +1,8 @@
 <?php
 
-use Symfony\Cmf\Component\Testing\HttpKernel\TestKernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends SuluTestKernel
 {

@@ -11,20 +11,14 @@
 namespace Sulu\Bundle\TestBundle\Behat;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Behat\MinkExtension\Context\MinkContext;
-use Symfony\Component\Console\Output\NullOutput;
 use Behat\MinkExtension\Context\RawMinkContext;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
-use Sulu\Bundle\SecurityBundle\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Base context extended by all Sulu Behat contexts
@@ -54,7 +48,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
      *
      * This currently could be any integer I believe
      *
-     * @return integer
+     * @return int
      */
     protected function getUserId()
     {
@@ -62,8 +56,8 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     }
 
     /**
-     * Execute a symfony command
-     * 
+     * Execute a symfony command.
+     *
      * $this->executeCommand('sulu:security:user:create', array(
      *     'firstName' => 'foo',
      *     '--option' => 'bar',
@@ -72,7 +66,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
      * @param string $command Command to execute
      * @param array $args Arguments and options
      *
-     * @return integer Exit code of command
+     * @return int Exit code of command
      */
     protected function execCommand($command, $args)
     {
@@ -117,7 +111,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     }
 
     /**
-     * Return the PHPCR session
+     * Return the PHPCR session.
      */
     protected function getPhpcrSession()
     {
@@ -135,7 +129,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     }
 
     /**
-     * Return the named service from the DI container
+     * Return the named service from the DI container.
      *
      * @return mixed
      */
@@ -145,7 +139,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     }
 
     /**
-     * Click the named selector
+     * Click the named selector.
      *
      * @param string $selector
      */
@@ -194,14 +188,14 @@ EOT;
     }
 
     /**
-     * Wait for the named selector to appear
+     * Wait for the named selector to appear.
      *
      * @param string $selector Selector to wait for
-     * @param integer $time Timeout in miliseconds to wait
+     * @param int $time Timeout in miliseconds to wait
      */
     protected function waitForSelector($selector, $time = self::LONG_WAIT_TIME)
     {
-        $this->getSession()->wait($time, "document.querySelectorAll(\"" . $selector . "\").length");
+        $this->getSession()->wait($time, 'document.querySelectorAll("' . $selector . '").length');
     }
 
     /**
@@ -210,7 +204,7 @@ EOT;
      * exceeded.
      *
      * @param string $selector Selector to wait for
-     * @param integer $time Timeout in miliseconds to wait
+     * @param int $time Timeout in miliseconds to wait
      */
     protected function waitForSelectorAndAssert($selector, $time = self::LONG_WAIT_TIME)
     {
@@ -219,14 +213,14 @@ EOT;
     }
 
     /**
-     * Wait for the given text to appear
+     * Wait for the given text to appear.
      *
      * @param string $text
-     * @param integer $time Timeout in miliseconds
+     * @param int $time Timeout in miliseconds
      */
     protected function waitForText($text, $time = 10000)
     {
-        $script = sprintf("$(\"*:contains(\\\"%s\\\")\").length", $text);
+        $script = sprintf('$("*:contains(\\"%s\\")").length', $text);
         $this->getSession()->wait($time, $script);
     }
 
@@ -239,7 +233,7 @@ EOT;
     protected function waitForTextAndAssert($text)
     {
         $this->waitForText($text);
-        $script = sprintf("$(\"*:contains(\\\"%s\\\")\").length", $text);
+        $script = sprintf('$("*:contains(\\"%s\\")").length', $text);
         $res = $this->getSession()->evaluateScript($script);
 
         if (!$res) {
@@ -248,10 +242,10 @@ EOT;
     }
 
     /**
-     * Assert that the selector appears the given number of times
+     * Assert that the selector appears the given number of times.
      *
      * @param string $selector
-     * @param integer $count Number of times the selector is expected to appear
+     * @param int $count Number of times the selector is expected to appear
      */
     protected function assertNumberOfElements($selector, $count)
     {
@@ -265,13 +259,13 @@ EOT;
     }
 
     /**
-     * Assert that the given selector is present
+     * Assert that the given selector is present.
      *
      * @param string $selector
      */
     protected function assertSelector($selector)
     {
-        $res = $this->getSession()->evaluateScript("$(\"" . $selector . "\").length");
+        $res = $this->getSession()->evaluateScript('$("' . $selector . '").length');
 
         if (!$res) {
             throw new \Exception(sprintf(
@@ -282,7 +276,7 @@ EOT;
     }
 
     /**
-     * Assert that at least one of the given selectors is present
+     * Assert that at least one of the given selectors is present.
      *
      * @param array $selectors Array of selectors
      */
@@ -302,7 +296,7 @@ EOT;
     }
 
     /**
-     * Set the value of the named selector
+     * Set the value of the named selector.
      *
      * @param string $selector
      * @param mixed $value
@@ -320,10 +314,10 @@ EOT
     }
 
     /**
-     * Wait for the named aura events
+     * Wait for the named aura events.
      *
      * @param array $eventNames Array of event names
-     * @param integer $time in milliseconds
+     * @param int $time in milliseconds
      */
     protected function waitForAuraEvents($eventNames, $time = self::MEDIUM_WAIT_TIME)
     {
@@ -331,7 +325,7 @@ EOT
         $uniq = uniqid();
         $varNames = array();
 
-        foreach(array_keys($eventNames) as $i) {
+        foreach (array_keys($eventNames) as $i) {
             $varName = 'document.__behatvar' . $uniq . $i;
             $varNames[$i] = $varName;
             $script[] = sprintf('%s = false;', $varName);

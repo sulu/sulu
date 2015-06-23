@@ -130,7 +130,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
-                        )
+                        ),
                 )
             )
         );
@@ -153,7 +153,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
-                        )
+                        ),
                 )
             )
         );
@@ -172,7 +172,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
-                        )
+                        ),
                 )
             )
         );
@@ -206,7 +206,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
-        $this->queryBuilder->expects($this->once())->method('orderBy')->with(self::$entityName. '.desc', 'ASC');
+        $this->queryBuilder->expects($this->once())->method('orderBy')->with(self::$entityName . '.desc', 'ASC');
 
         $this->doctrineListBuilder->execute();
     }
@@ -229,9 +229,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                     'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                         self::$translationEntityName => new DoctrineJoinDescriptor(
                                 self::$translationEntityName, self::$entityName . '.translations'
-                            )
+                            ),
                     )
-                )
+                ),
             )
         );
 
@@ -255,7 +255,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = array(
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
-            'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName)
+            'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName),
         );
 
         $filter = array(
@@ -288,7 +288,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         $filter = array(
-            'title_id' => null
+            'title_id' => null,
         );
 
         foreach ($filter as $key => $value) {
@@ -308,7 +308,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         $filter = array(
-            'title_id' => null
+            'title_id' => null,
         );
 
         foreach ($filter as $key => $value) {
@@ -325,7 +325,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = array(
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
-            'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName)
+            'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName),
         );
 
         $filter = array(
@@ -371,12 +371,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $fieldDescriptors = array(
             'id1' => new DoctrineFieldDescriptor(
                     null, null, null, null, array(
-                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT)
+                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
                     )
                 ),
             'id2' => new DoctrineFieldDescriptor(
                     null, null, null, null, array(
-                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_INNER)
+                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_INNER),
                     )
                 ),
         );
@@ -403,7 +403,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                             null,
                             'field1 = value1',
                             DoctrineJoinDescriptor::JOIN_METHOD_LEFT
-                        )
+                        ),
                     )
                 ),
             'id2' => new DoctrineFieldDescriptor(
@@ -418,7 +418,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                             'field2 = value2',
                             DoctrineJoinDescriptor::JOIN_METHOD_INNER,
                             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON
-                        )
+                        ),
                     )
                 ),
         );

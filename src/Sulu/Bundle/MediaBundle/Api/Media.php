@@ -10,7 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use DateTime;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -21,16 +24,13 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * Class Media
  * The Media RestObject is the api entity for the MediaController.
+ *
  * @ExclusionPolicy("all")
  */
 class Media extends ApiWrapper
@@ -107,7 +107,7 @@ class Media extends ApiWrapper
      * @SerializedName("id")
      * @Groups({"partialMedia"})
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -141,7 +141,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("collection")
      *
-     * @return integer
+     * @return int
      */
     public function getCollection()
     {
@@ -150,7 +150,7 @@ class Media extends ApiWrapper
             return $collection->getId();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -169,7 +169,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("size")
      *
-     * @return integer
+     * @return int
      */
     public function getSize()
     {
@@ -279,7 +279,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("version")
      *
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {
@@ -302,6 +302,7 @@ class Media extends ApiWrapper
     public function setAdditionalVersionData($additionalVersionData)
     {
         $this->additionalVersionData = $additionalVersionData;
+
         return $this;
     }
 
@@ -331,7 +332,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param integer $name
+     * @param int $name
      *
      * @return $this
      */
@@ -346,7 +347,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("name")
      *
-     * @return integer
+     * @return int
      */
     public function getName()
     {
@@ -379,7 +380,7 @@ class Media extends ApiWrapper
     /**
      * @param string $type
      *
-     * @return boolean
+     * @return bool
      */
     public function isTypeOf($type)
     {
@@ -390,7 +391,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("isImage")
      *
-     * @return boolean
+     * @return bool
      */
     public function isImage()
     {
@@ -401,7 +402,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("isVideo")
      *
-     * @return boolean
+     * @return bool
      */
     public function isVideo()
     {
@@ -412,7 +413,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("isAudio")
      *
-     * @return boolean
+     * @return bool
      */
     public function isAudio()
     {
@@ -423,7 +424,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("isDocument")
      *
-     * @return boolean
+     * @return bool
      */
     public function isDocument()
     {
@@ -621,6 +622,21 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param \DateTime|string $changed
+     *
+     * @return $this
+     */
+    public function setChanged($changed)
+    {
+        if (is_string($changed)) {
+            $changed = new \DateTime($changed);
+        }
+        $this->getFileVersion()->setChanged($changed);
+
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @SerializedName("changed")
      *
@@ -656,7 +672,7 @@ class Media extends ApiWrapper
             return $user->getFullName();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -667,7 +683,7 @@ class Media extends ApiWrapper
      */
     public function getCreated()
     {
-        return $this->getFileVersion()->getCreated();
+        return $this->entity->getCreated();
     }
 
     /**
@@ -695,7 +711,7 @@ class Media extends ApiWrapper
             return $user->getFullName();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -741,7 +757,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * Returns array representation of media
+     * Returns array representation of media.
      *
      * @return array
      */
@@ -766,7 +782,7 @@ class Media extends ApiWrapper
             'changer' => $this->getChanger(),
             'created' => $this->getCreated(),
             'creator' => $this->getCreator(),
-            'downloadCounter' => $this->getDownloadCounter()
+            'downloadCounter' => $this->getDownloadCounter(),
         );
     }
 
@@ -816,6 +832,7 @@ class Media extends ApiWrapper
         foreach ($this->entity->getFiles() as $file) {
             // currently only one file per media exists
             $this->file = $file;
+
             return $this->file;
         }
 

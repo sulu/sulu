@@ -11,19 +11,19 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
+use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
+use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
-use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
 /**
- * Responsible for centralized Category Management
+ * Responsible for centralized Category Management.
  */
 class CategoryManager implements CategoryManagerInterface
 {
@@ -77,12 +77,11 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Initializes the field descriptors used by the list-helper
+     * Initializes the field descriptors used by the list-helper.
      */
     public function getFieldDescriptors()
     {
         if (null === $this->fieldDescriptors) {
-
             $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
                 'id',
                 'id',
@@ -109,7 +108,7 @@ class CategoryManager implements CategoryManagerInterface
                             self::$catTranslationEntityName,
                             self::$categoryEntityName .
                             '.translations'
-                        )
+                        ),
                 )
             );
             $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
@@ -145,7 +144,7 @@ class CategoryManager implements CategoryManagerInterface
                     self::$categoryEntityName . 'Parent' => new DoctrineJoinDescriptor(
                             self::$categoryEntityName,
                             self::$categoryEntityName . '.parent'
-                        )
+                        ),
                 ),
                 false
             );
@@ -158,7 +157,7 @@ class CategoryManager implements CategoryManagerInterface
                     self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
                             self::$categoryEntityName,
                             self::$categoryEntityName . '.children'
-                        )
+                        ),
                 ),
                 false
             );
@@ -169,11 +168,13 @@ class CategoryManager implements CategoryManagerInterface
 
     /**
      * Returns categories with a given parent and/or a given depth-level
-     * if no arguments passed returns all categories
+     * if no arguments passed returns all categories.
+     *
      * @param int $parent the id of the parent to filter for
      * @param int $depth the depth-level to filter for
      * @param string|null $sortBy column name to sort the categories by
      * @param string|null $sortOrder sort order
+     *
      * @return CategoryEntity[]
      */
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
@@ -182,10 +183,12 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns the children for a given category
+     * Returns the children for a given category.
+     *
      * @param int $key the key of the category to search the children for
      * @param string|null $sortBy column name to sort by
      * @param string|null $sortOrder sort order
+     *
      * @return CategoryEntity[]
      */
     public function findChildren($key, $sortBy = null, $sortOrder = null)
@@ -194,8 +197,10 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns a category with a given id
+     * Returns a category with a given id.
+     *
      * @param int $id the id of the category
+     *
      * @return CategoryEntity
      */
     public function findById($id)
@@ -204,8 +209,10 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns a category with a given key
+     * Returns a category with a given key.
+     *
      * @param string $key the key of the category
+     *
      * @return CategoryEntity
      */
     public function findByKey($key)
@@ -214,8 +221,10 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns the categories with the given ids
+     * Returns the categories with the given ids.
+     *
      * @param array $ids
+     *
      * @return CategoryEntity[]
      */
     public function findByIds(array $ids)
@@ -224,10 +233,13 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Creates a new category or overrides an existing one
+     * Creates a new category or overrides an existing one.
+     *
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
+     *
      * @throws KeyNotUniqueException
+     *
      * @return CategoryEntity
      */
     public function save($data, $userId)
@@ -239,15 +251,17 @@ class CategoryManager implements CategoryManagerInterface
                 return $this->createCategory($data, $this->getUser($userId));
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
-            // FIXME: This hides any exceptions thrown by DBAL. 
+            // FIXME: This hides any exceptions thrown by DBAL.
             //        See https://github.com/sulu-cmf/sulu/issues/871
             throw new KeyNotUniqueException();
         }
     }
 
     /**
-     * Deletes a category with a given id
+     * Deletes a category with a given id.
+     *
      * @param int $id the id of the category to delete
+     *
      * @throws EntityNotFoundException
      */
     public function delete($id)
@@ -268,9 +282,11 @@ class CategoryManager implements CategoryManagerInterface
 
     /**
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
-     * and provides neat getters and setters
+     * and provides neat getters and setters.
+     *
      * @param Category $category
      * @param string $locale
+     *
      * @return null|CategoryWrapper
      */
     public function getApiObject($category, $locale)
@@ -278,14 +294,16 @@ class CategoryManager implements CategoryManagerInterface
         if ($category instanceof CategoryEntity) {
             return new CategoryWrapper($category, $locale);
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * Same as getApiObject, but takes multiple category-entities
+     * Same as getApiObject, but takes multiple category-entities.
+     *
      * @param Category[] $categories
      * @param string $locale
+     *
      * @return CategoryWrapper[]
      */
     public function getApiObjects($categories, $locale)
@@ -303,8 +321,10 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns a user for a given user-id
+     * Returns a user for a given user-id.
+     *
      * @param $userId
+     *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     private function getUser($userId)
@@ -313,9 +333,11 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Creates a new category with given data
+     * Creates a new category with given data.
+     *
      * @param $data
      * @param $user
+     *
      * @return CategoryEntity
      */
     private function createCategory($data, $user)
@@ -345,10 +367,13 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Modifies an existing category with given data
+     * Modifies an existing category with given data.
+     *
      * @param $data
      * @param $user
+     *
      * @return CategoryEntity
+     *
      * @throws EntityNotFoundException
      */
     private function modifyCategory($data, $user)

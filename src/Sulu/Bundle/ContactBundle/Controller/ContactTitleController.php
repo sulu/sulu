@@ -10,21 +10,20 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Route;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes account categories available through a REST API
- * Used RouteResource annotation to prevent automatic parenting of rest controllers
- * @package Sulu\Bundle\ContactBundle\Controller
+ * Used RouteResource annotation to prevent automatic parenting of rest controllers.
  */
 class ContactTitleController extends RestController implements ClassResourceInterface
 {
@@ -39,8 +38,10 @@ class ContactTitleController extends RestController implements ClassResourceInte
     protected static $entityKey = 'contactTitles';
 
     /**
-     * Shows a single contact title for the given id
+     * Shows a single contact title for the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles/{id}")
      */
@@ -60,7 +61,8 @@ class ContactTitleController extends RestController implements ClassResourceInte
 
     /**
      * lists all contact titles
-     * optional parameter 'flat' calls listAction
+     * optional parameter 'flat' calls listAction.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles")
      */
@@ -77,8 +79,10 @@ class ContactTitleController extends RestController implements ClassResourceInte
     }
 
     /**
-     * Creates a new contact title
+     * Creates a new contact title.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles")
      */
@@ -111,9 +115,11 @@ class ContactTitleController extends RestController implements ClassResourceInte
     }
 
     /**
-     * Edits the existing contact title for the given id
+     * Edits the existing contact title for the given id.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $id The id of the title to update
+     * @param int $id The id of the title to update
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -149,8 +155,10 @@ class ContactTitleController extends RestController implements ClassResourceInte
     }
 
     /**
-     * Delete a contact title for the given id
+     * Delete a contact title for the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles/{id}")
      */
@@ -174,7 +182,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
             };
 
             $view = $this->responseDelete($id, $delete);
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         }
@@ -183,8 +190,10 @@ class ContactTitleController extends RestController implements ClassResourceInte
     }
 
     /**
-     * Add or update a bunch of contact titles
+     * Add or update a bunch of contact titles.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles")
      */
@@ -195,7 +204,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
 
             $i = 0;
             while ($item = $request->get($i)) {
-
                 if (!isset($item['title'])) {
                     throw new RestException(
                         'There is no title-name for the given title'
@@ -218,9 +226,12 @@ class ContactTitleController extends RestController implements ClassResourceInte
     }
 
     /**
-     * Helper function for patch action
+     * Helper function for patch action.
+     *
      * @param $item
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     *
      * @return ContactTitle added or updated entity
      */
     private function addAndUpdateTitles($item)
@@ -236,7 +247,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
             } else {
                 $title->setTitle($item['title']);
             }
-
         } else {
             $title = new ContactTitle();
             $title->setTitle($item['title']);

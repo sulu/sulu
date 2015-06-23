@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\HttpCache\Handler\AggregateHandler;
 use Prophecy\Argument;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;

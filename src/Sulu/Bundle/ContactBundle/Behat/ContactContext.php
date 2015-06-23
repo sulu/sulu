@@ -11,14 +11,14 @@
 
 namespace Sulu\Bundle\ContactBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
- * Behat context class for the ContactBundle
+ * Behat context class for the ContactBundle.
  */
 class ContactContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -73,8 +73,8 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     {
         $contact = $this->getEntityManager()
             ->getRepository('SuluContactBundle:Contact')->findOneBy(array(
-                'firstName' => $firstName, 
-                'lastName' => $lastName
+                'firstName' => $firstName,
+                'lastName' => $lastName,
             ));
 
         if ($contact) {
@@ -89,8 +89,8 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     {
         $contact = $this->getEntityManager()
             ->getRepository('SuluContactBundle:Contact')->findOneBy(array(
-                'firstName' => $firstName, 
-                'lastName' => $lastName
+                'firstName' => $firstName,
+                'lastName' => $lastName,
             ));
 
         if (!$contact) {
@@ -99,7 +99,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * Return the contact manager
+     * Return the contact manager.
      *
      * @return \Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface
      */

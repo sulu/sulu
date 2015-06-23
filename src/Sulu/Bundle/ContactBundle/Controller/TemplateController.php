@@ -6,9 +6,8 @@ use Sulu\Component\Rest\RestController;
 
 class TemplateController extends RestController
 {
-
     /**
-     * Returns Template for contact list
+     * Returns Template for contact list.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -28,7 +27,8 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns Template for account list
+     * Returns Template for account list.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function accountListAction()
@@ -39,7 +39,8 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns the form for contacts
+     * Returns the form for contacts.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contactFormAction()
@@ -58,7 +59,8 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns the form for accounts
+     * Returns the form for accounts.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function accountFormAction()
@@ -87,7 +89,8 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns the template for account- and contact-documents
+     * Returns the template for account- and contact-documents.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function basicDocumentsAction()
@@ -96,7 +99,8 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns an array for rendering a form
+     * Returns an array for rendering a form.
+     *
      * @return array
      */
     private function getRenderArray()
@@ -116,12 +120,13 @@ class TemplateController extends RestController
             'defaultAddressType' => $defaults['addressType'],
             'defaultUrlType' => $defaults['urlType'],
             'defaultFaxType' => $defaults['faxType'],
-            'defaultCountry' => $defaults['country']
+            'defaultCountry' => $defaults['country'],
         );
     }
 
     /**
-     * Returns the possible values for the dropdowns
+     * Returns the possible values for the dropdowns.
+     *
      * @return array
      */
     private function getValues()
@@ -159,7 +164,8 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns the default values for the dropdowns
+     * Returns the default values for the dropdowns.
+     *
      * @return array
      */
     private function getDefaults()

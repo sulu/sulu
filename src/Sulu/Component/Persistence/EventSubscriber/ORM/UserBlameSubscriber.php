@@ -10,19 +10,16 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
-use Sulu\Component\Persistence\Model\UserBlameInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
+use Sulu\Component\Persistence\Model\UserBlameInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Ensure that blame can be assigned to users when they break things.
@@ -67,7 +64,7 @@ class UserBlameSubscriber implements EventSubscriber
     }
 
     /**
-     * Map creator and changer fields to User objects
+     * Map creator and changer fields to User objects.
      *
      * @param LoadClassMetadataEventArgs $event
      */
@@ -86,7 +83,7 @@ class UserBlameSubscriber implements EventSubscriber
                             'name' => 'idUsersCreator',
                             'onDelete' => 'SET NULL',
                             'referencedColumnName' => 'id',
-                            'nullable'=> true,
+                            'nullable' => true,
                         ),
                     ),
                 ));
@@ -101,7 +98,7 @@ class UserBlameSubscriber implements EventSubscriber
                             'name' => 'idUsersChanger',
                             'onDelete' => 'SET NULL',
                             'referencedColumnName' => 'id',
-                            'nullable'=> true,
+                            'nullable' => true,
                         ),
                     ),
                 ));
@@ -194,7 +191,7 @@ class UserBlameSubscriber implements EventSubscriber
     }
 
     /**
-     * Return the user from the token
+     * Return the user from the token.
      *
      * @param TokenInterface
      *

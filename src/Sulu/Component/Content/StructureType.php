@@ -10,32 +10,33 @@
 
 namespace Sulu\Component\Content;
 
-use Sulu\Component\Localization\Localization;
-
 /**
- * type for structures, like ghost or shadow
- * @package Sulu\Component\Content
+ * type for structures, like ghost or shadow.
  */
 class StructureType
 {
     /**
-     * creates a new ghost type
+     * creates a new ghost type.
+     *
      * @param string $localization
+     *
      * @return StructureType
      */
     public static function getGhost($localization)
     {
-        return new StructureType('ghost', $localization);
+        return new self('ghost', $localization);
     }
 
     /**
-     * creates a new ghost type
+     * creates a new ghost type.
+     *
      * @param string $localization
+     *
      * @return StructureType
      */
     public static function getShadow($localization)
     {
-        return new StructureType('shadow', $localization);
+        return new self('shadow', $localization);
     }
 
     /**
@@ -55,7 +56,8 @@ class StructureType
     }
 
     /**
-     * return name of type
+     * return name of type.
+     *
      * @return string
      */
     public function getName()
@@ -64,7 +66,8 @@ class StructureType
     }
 
     /**
-     * return value of type
+     * return value of type.
+     *
      * @return string
      */
     public function getValue()
@@ -73,7 +76,8 @@ class StructureType
     }
 
     /**
-     * returns a array representation
+     * returns a array representation.
+     *
      * @return array
      */
     public function toArray()

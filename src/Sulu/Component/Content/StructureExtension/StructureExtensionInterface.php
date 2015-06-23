@@ -13,14 +13,13 @@ namespace Sulu\Component\Content\StructureExtension;
 use PHPCR\NodeInterface;
 
 /**
- * interface for structure extension
- * @package Sulu\Component\Content\Mapper
+ * interface for structure extension.
  */
 interface StructureExtensionInterface
 {
-
     /**
-     * set current language code to translates properties
+     * set current language code to translates properties.
+     *
      * @param $languageCode
      * @param $languageNamespace
      * @param $namespace
@@ -28,7 +27,8 @@ interface StructureExtensionInterface
     public function setLanguageCode($languageCode, $languageNamespace, $namespace);
 
     /**
-     * save data to node
+     * save data to node.
+     *
      * @param NodeInterface $node
      * @param mixed $data
      * @param string $webspaceKey
@@ -37,23 +37,28 @@ interface StructureExtensionInterface
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode);
 
     /**
-     * load data from node
+     * load data from node.
+     *
      * @param NodeInterface $node
      * @param string $webspaceKey
      * @param string $languageCode
+     *
      * @return mixed data of extension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode);
 
     /**
-     * Returns content data for given values
+     * Returns content data for given values.
+     *
      * @param mixed $container
+     *
      * @return mixed
      */
     public function getContentData($container);
 
     /**
-     * returns name of extension
+     * returns name of extension.
+     *
      * @return string
      */
     public function getName();

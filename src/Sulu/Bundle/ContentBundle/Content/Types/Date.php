@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for Date
+ * ContentType for Date.
  */
 class Date extends SimpleContentType
 {
@@ -27,7 +27,8 @@ class Date extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form
+     * returns a template to render a form.
+     *
      * @return string
      */
     public function getTemplate()

@@ -2,10 +2,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Guzzle\Http\ClientInterface;
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 
 /**
  * Geolocator which uses the open street maps nominatim service.
@@ -56,9 +56,8 @@ class NominatimGeolocator implements GeolocatorInterface
                 'setNumber' => 'house_number',
                 'setCode' => 'postcode',
                 'setTown' => 'city',
-                'setCountry' => 'country_code'
-            ) as $method => $key)
-            {
+                'setCountry' => 'country_code',
+            ) as $method => $key) {
                 if (isset($result['address'][$key])) {
                     $location->$method($result['address'][$key]);
                 }

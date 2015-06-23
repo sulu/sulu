@@ -15,14 +15,10 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Block\BlockPropertyWrapper;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -31,7 +27,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades InternalLinks to 0.15.0
+ * Upgrades InternalLinks to 0.15.0.
+ *
  * @deprecated
  */
 class UpgradeInternalLinksCommand extends ContainerAwareCommand
@@ -109,8 +106,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         Localization $localization,
         ContentMapperInterface $contentMapper,
         OutputInterface $output
-    )
-    {
+    ) {
         $pages = $contentMapper->loadByParent(
             $parent->getUuid(),
             $webspace->getKey(),
@@ -130,8 +126,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         Localization $localization,
         OutputInterface $output,
         $depth = 0
-    )
-    {
+    ) {
         foreach ($structure->getProperties(true) as $property) {
             if ($property->getContentTypeName() == 'internal_links') {
                 $transProperty = new TranslatedProperty(
@@ -140,7 +135,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
                     $this->getContainer()->getParameter('sulu.content.language.namespace')
                 );
                 $this->upgradeProperty($structure, $output, $transProperty, $depth);
-            } else if ($property instanceof BlockPropertyInterface) {
+            } elseif ($property instanceof BlockPropertyInterface) {
                 $this->upgradeBlockProperty($structure, $localization, $output, $property, $depth);
             }
         }
@@ -177,10 +172,8 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         OutputInterface $output,
         $property,
         $depth
-    )
-    {
+    ) {
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
-
 
         if ($node->hasProperty($property->getName())) {
             $value = $node->getPropertyValueWithDefault($property->getName(), '{ids: []}');

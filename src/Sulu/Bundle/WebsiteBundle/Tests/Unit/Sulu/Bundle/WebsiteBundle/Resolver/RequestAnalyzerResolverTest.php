@@ -110,8 +110,8 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'resourceLocator' => '/search',
                     'get' => array('p' => 1),
                     'post' => array(),
-                    'analyticsKey' => 'analyticsKey'
-                )
+                    'analyticsKey' => 'analyticsKey',
+                ),
             ),
             $result
         );
@@ -133,8 +133,8 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'resourceLocator' => '',
                     'get' => array(),
                     'post' => array(),
-                    'analyticsKey' => 'UA-SULU-Test'
-                )
+                    'analyticsKey' => 'UA-SULU-Test',
+                ),
             ),
             $result
         );

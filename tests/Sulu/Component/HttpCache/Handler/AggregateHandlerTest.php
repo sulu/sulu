@@ -10,10 +10,9 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\HttpCache\Handler\AggregateHandler;
-use Symfony\Component\HttpFoundation\Response;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
 {

@@ -3,17 +3,17 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 /**
- * AccountAddress
+ * AccountAddress.
  */
 class AccountAddress
 {
     /**
-     * @var boolean
+     * @var bool
      */
     private $main;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -28,9 +28,10 @@ class AccountAddress
     private $account;
 
     /**
-     * Set main
+     * Set main.
      *
-     * @param boolean $main
+     * @param bool $main
+     *
      * @return AccountAddress
      */
     public function setMain($main)
@@ -41,9 +42,9 @@ class AccountAddress
     }
 
     /**
-     * Get main
+     * Get main.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMain()
     {
@@ -51,9 +52,9 @@ class AccountAddress
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -61,9 +62,10 @@ class AccountAddress
     }
 
     /**
-     * Set address
+     * Set address.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $address
+     *
      * @return AccountAddress
      */
     public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
@@ -74,7 +76,7 @@ class AccountAddress
     }
 
     /**
-     * Get address
+     * Get address.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Address
      */
@@ -84,9 +86,10 @@ class AccountAddress
     }
 
     /**
-     * Set account
+     * Set account.
      *
      * @param AccountInterface $account
+     *
      * @return AccountAddress
      */
     public function setAccount(AccountInterface $account)
@@ -97,7 +100,7 @@ class AccountAddress
     }
 
     /**
-     * Get account
+     * Get account.
      *
      * @return AccountInterface
      */

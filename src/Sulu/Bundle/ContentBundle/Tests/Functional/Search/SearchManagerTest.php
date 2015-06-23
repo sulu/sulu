@@ -20,7 +20,6 @@ class SearchManagerTest extends BaseTestCase
 
         // ensure that we do not create new documents for existing IDs
         for ($i = 1; $i <= 2; $i++) {
-
             $this->generateStructureIndex($nbResults);
             $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('page')->execute();
 
@@ -41,6 +40,7 @@ class SearchManagerTest extends BaseTestCase
 
         if (!$this->getContainer()->get('massive_search.adapter') instanceof \Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter) {
             $this->markTestSkipped('Skipping zend lucene specific test');
+
             return;
         }
 
@@ -61,7 +61,7 @@ class SearchManagerTest extends BaseTestCase
             ->setState(2)
             ->setData(array(
                 'title' => 'Homepage',
-                'url' => '/en'
+                'url' => '/en',
             ))
         );
 

@@ -18,8 +18,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Listens on the kernel.controller event and checks if Sulu allows this action
- * @package Sulu\Bundle\SecurityBundle\EventListener
+ * Listens on the kernel.controller event and checks if Sulu allows this action.
  */
 class SuluSecurityListener
 {
@@ -34,8 +33,10 @@ class SuluSecurityListener
     }
 
     /**
-     * Checks if the action is allowed for the current user, and throws an Exception otherwise
+     * Checks if the action is allowed for the current user, and throws an Exception otherwise.
+     *
      * @param FilterControllerEvent $event
+     *
      * @throws AccessDeniedException
      */
     public function onKernelController(FilterControllerEvent $event)
@@ -97,4 +98,4 @@ class SuluSecurityListener
             );
         }
     }
-} 
+}

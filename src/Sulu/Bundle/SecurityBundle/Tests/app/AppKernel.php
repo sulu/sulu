@@ -1,7 +1,7 @@
 <?php
 
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends SuluTestKernel
 {
@@ -12,7 +12,7 @@ class AppKernel extends SuluTestKernel
             array(
                 new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
                 new Symfony\Bundle\DebugBundle\DebugBundle(),
-                new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle()
+                new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             )
         );
     }

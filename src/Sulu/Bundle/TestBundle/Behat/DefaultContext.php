@@ -12,7 +12,6 @@ namespace Sulu\Bundle\TestBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Gherkin\Node\PyStringNode;
 
 /**
  * Default context class for Sulu contexts.
@@ -30,7 +29,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
         $this->execCommand('sulu:webspace:init', array('--no-interaction' => true));
     }
 
-    /** 
+    /**
      * @Given I click ":selector"
      * @When /^(?:|I )click on the element "([^"]*)"$/
      */
@@ -65,7 +64,6 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
         while (true) {
             sleep(5);
         }
-
     }
 
     /**
@@ -96,6 +94,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
 
     /**
      * @Then I expect to see ":count" ":selector" elements
+     * @Then I wait to see ":count" ":selector" elements
      */
     public function iExpectToSeeNbElements($count, $selector)
     {

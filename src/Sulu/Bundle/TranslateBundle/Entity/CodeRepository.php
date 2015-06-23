@@ -11,19 +11,21 @@
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository for the Codes, implementing some additional functions
- * for querying objects
+ * for querying objects.
  */
 class CodeRepository extends EntityRepository
 {
     /**
-     * returns code with given ID
+     * returns code with given ID.
+     *
      * @param $id
+     *
      * @return Code|null
      */
     public function getCodeById($id)
@@ -44,16 +46,18 @@ class CodeRepository extends EntityRepository
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Searches Entities by where clauses, pagination and sorted
-     * @param integer|null $limit Page size for Pagination
-     * @param integer|null $offset Offset for Pagination
+     * Searches Entities by where clauses, pagination and sorted.
+     *
+     * @param int|null $limit Page size for Pagination
+     * @param int|null $offset Offset for Pagination
      * @param array|null $sorting Columns to sort
      * @param array|null $where Where clauses
+     *
      * @return array Results
      */
     public function findGetAll($limit = null, $offset = null, $sorting = null, $where = array())
@@ -81,8 +85,10 @@ class CodeRepository extends EntityRepository
     }
 
     /**
-     * returns array of codes filtered by catalogue
+     * returns array of codes filtered by catalogue.
+     *
      * @param $catalogueId
+     *
      * @return array
      */
     public function findByCatalogue($catalogueId)
@@ -102,8 +108,10 @@ class CodeRepository extends EntityRepository
     }
 
     /**
-     * returns array of codes filtered by catalogue with the suggestion of default language
+     * returns array of codes filtered by catalogue with the suggestion of default language.
+     *
      * @param $catalogueId
+     *
      * @return array
      */
     public function findByCatalogueWithSuggestion($catalogueId)
@@ -132,8 +140,10 @@ class CodeRepository extends EntityRepository
     }
 
     /**
-     * returns a array of codes filtered by package
+     * returns a array of codes filtered by package.
+     *
      * @param $packageId
+     *
      * @return array
      */
     public function findByPackage($packageId)
@@ -153,10 +163,12 @@ class CodeRepository extends EntityRepository
     }
 
     /**
-     * Add sorting to querybuilder
+     * Add sorting to querybuilder.
+     *
      * @param QueryBuilder $qb
      * @param array $sorting
      * @param string $prefix
+     *
      * @return QueryBuilder
      */
     private function addSorting($qb, $sorting, $prefix = 'u')
@@ -170,10 +182,12 @@ class CodeRepository extends EntityRepository
     }
 
     /**
-     * add pagination to querybuilder
+     * add pagination to querybuilder.
+     *
      * @param QueryBuilder $qb
-     * @param integer|null $limit Page size for Pagination
-     * @param integer|null $offset Offset for Pagination
+     * @param int|null $limit Page size for Pagination
+     * @param int|null $offset Offset for Pagination
+     *
      * @return QueryBuilder
      */
     private function addPagination($qb, $offset, $limit)
@@ -186,9 +200,11 @@ class CodeRepository extends EntityRepository
     }
 
     /**
-     * add where to querybuilder
+     * add where to querybuilder.
+     *
      * @param QueryBuilder $qb
      * @param array $where
+     *
      * @return QueryBuilder
      */
     private function addWhere($qb, $where)

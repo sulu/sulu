@@ -11,13 +11,29 @@
 namespace Sulu\Component\Content\Query;
 
 /**
- * Converts a list of nodes to a tree
+ * Converts a list of nodes to a tree.
  */
 class ListToTreeConverter
 {
     /**
-     * generate a tree of the given data with the path property
+     * @var boolean
+     */
+    private $moveUp;
+
+    /**
+     * ListToTreeConverter constructor.
+     * @param boolean $moveUp
+     */
+    public function __construct($moveUp = false)
+    {
+        $this->moveUp = $moveUp;
+    }
+
+    /**
+     * generate a tree of the given data with the path property.
+     *
      * @param array $data
+     *
      * @return array
      */
     public function convert($data)
@@ -81,7 +97,10 @@ class ListToTreeConverter
             // search for empty nodes
             for ($i = 0; $i < sizeof($tree['children']); $i++) {
                 if (array_keys($tree['children'][$i]) === array('children')) {
-                    array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
+                    if ($this->moveUp) {
+                        array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
+                    }
+
                     unset($tree['children'][$i]);
                 }
             }
@@ -132,12 +151,14 @@ class ListToTreeConverter
      * @author  Takkie
      * @copyright 2008 Kevin van Zonneveld (http://kevin.vanzonneveld.net)
      * @license   http://www.opensource.org/licenses/bsd-license.php New BSD Licence
+     *
      * @version   SVN: Release: $Id: explodeTree.inc.php 89 2008-09-05 20:52:48Z kevin $
+     *
      * @link      http://kevin.vanzonneveld.net/
      *
      * @param array $array
      * @param string $delimiter
-     * @param boolean $baseval
+     * @param bool $baseval
      *
      * @return array
      */
@@ -155,7 +176,7 @@ class ListToTreeConverter
 
             // Build parent structure
             // Might be slow for really deep and large structures
-            $parentArr = & $returnArr;
+            $parentArr = &$returnArr;
             foreach ($parts as $part) {
                 if (isset($parentArr['children'][$part])) {
                     if (!is_array($parentArr['children'][$part])) {
@@ -165,10 +186,10 @@ class ListToTreeConverter
                             $parentArr['children'][$part] = array();
                         }
                     }
-                    $parentArr = & $parentArr['children'][$part];
+                    $parentArr = &$parentArr['children'][$part];
                 } else {
                     $parentArr['children'][$part] = array();
-                    $parentArr = & $parentArr['children'][$part];
+                    $parentArr = &$parentArr['children'][$part];
                 }
             }
 

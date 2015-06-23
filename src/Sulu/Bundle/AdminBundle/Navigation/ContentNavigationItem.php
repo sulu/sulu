@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
 /**
- * Represents an item in an content navigation, which is usually displayed with a form in the user interface
- * @package Sulu\Bundle\AdminBundle\Navigation
+ * Represents an item in an content navigation, which is usually displayed with a form in the user interface.
  */
 class ContentNavigationItem
 {
@@ -21,56 +20,65 @@ class ContentNavigationItem
     const DISPLAY_EDIT = 'edit';
 
     /**
-     * The id of the navigation item
+     * The id of the navigation item.
+     *
      * @var string
      */
     private $id;
 
     /**
-     * The name of the navigation item
+     * The name of the navigation item.
+     *
      * @var string
      */
     private $name;
 
     /**
-     * The action to execute
+     * The action to execute.
+     *
      * @var string
      */
     private $action;
 
     /**
-     * The name of the component to start
+     * The name of the component to start.
+     *
      * @var string
      */
     private $component;
 
     /**
-     * An array of options, which will be passed to the corresponding component
+     * An array of options, which will be passed to the corresponding component.
+     *
      * @var array
      */
     private $componentOptions = array();
 
     /**
-     * Defines in which state the navigation item will be displayed (basically new, edit)
+     * Defines in which state the navigation item will be displayed (basically new, edit).
+     *
      * @var array
      */
     private $display;
 
     /**
-     * Defines if the navigation item is disabled
-     * @var boolean
+     * Defines if the navigation item is disabled.
+     *
+     * @var bool
      */
     private $disabled;
 
     /**
-     * Defines if the relationship manager in the frontend should be resetted
-     * @var boolean
+     * Defines if the relationship manager in the frontend should be resetted.
+     *
+     * @var bool
      */
     private $resetStore;
 
     /**
-     * Defines position
-     * @var integer
+     * Defines position.
+     *
+     * @var int
      */
     private $position;
 
@@ -178,7 +186,7 @@ class ContentNavigationItem
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDisabled()
     {
@@ -186,7 +194,7 @@ class ContentNavigationItem
     }
 
     /**
-     * @param boolean $disabled
+     * @param bool $disabled
      */
     public function setDisabled($disabled)
     {
@@ -194,7 +202,7 @@ class ContentNavigationItem
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getResetStore()
     {
@@ -202,7 +210,7 @@ class ContentNavigationItem
     }
 
     /**
-     * @param boolean $resetStore
+     * @param bool $resetStore
      */
     public function setResetStore($resetStore)
     {

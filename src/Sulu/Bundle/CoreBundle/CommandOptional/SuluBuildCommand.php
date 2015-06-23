@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * This command extends the Massive BuildCommand and
- * adds a global "destroy" option and changes the name to "sulu:build"
+ * adds a global "destroy" option and changes the name to "sulu:build".
  */
 class SuluBuildCommand extends BuildCommand
 {

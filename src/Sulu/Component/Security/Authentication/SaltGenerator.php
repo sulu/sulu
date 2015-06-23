@@ -13,13 +13,13 @@ namespace Sulu\Component\Security\Authentication;
 use Symfony\Component\Security\Core\Util\SecureRandom;
 
 /**
- * A simple class for creating random salts for users
- * @package Sulu\Bundle\SecurityBundle\Permission
+ * A simple class for creating random salts for users.
  */
 class SaltGenerator
 {
     /**
-     * Returns a random salt for password hashing
+     * Returns a random salt for password hashing.
+     *
      * @return string
      */
     public function getRandomSalt()

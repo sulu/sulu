@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * CollectionType
+ * CollectionType.
  */
 class CollectionType
 {
@@ -28,7 +28,7 @@ class CollectionType
     private $description;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -39,7 +39,7 @@ class CollectionType
     private $collections;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -47,9 +47,10 @@ class CollectionType
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return CollectionType
      */
     public function setName($name)
@@ -60,7 +61,7 @@ class CollectionType
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -70,9 +71,10 @@ class CollectionType
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
+     *
      * @return CollectionType
      */
     public function setDescription($description)
@@ -83,7 +85,7 @@ class CollectionType
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -93,7 +95,7 @@ class CollectionType
     }
 
     /**
-     * To force id = 1 in load fixtures
+     * To force id = 1 in load fixtures.
      *
      * @param int $id
      */
@@ -103,9 +105,9 @@ class CollectionType
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -113,9 +115,10 @@ class CollectionType
     }
 
     /**
-     * Add collections
+     * Add collections.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collections
+     *
      * @return CollectionType
      */
     public function addCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collections)
@@ -126,7 +129,7 @@ class CollectionType
     }
 
     /**
-     * Remove collections
+     * Remove collections.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collections
      */
@@ -136,7 +139,7 @@ class CollectionType
     }
 
     /**
-     * Get collections
+     * Get collections.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -10,26 +10,30 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Defines the interface for a UserRepository
- * @package Sulu\Component\Security
+ * Defines the interface for a UserRepository.
  */
-interface UserRepositoryInterface extends UserProviderInterface
+interface UserRepositoryInterface extends UserProviderInterface, ObjectRepository
 {
     /**
-     * initializes the UserRepository
+     * initializes the UserRepository.
+     *
      * @param string $suluSystem The standard sulu system
      * @param RequestAnalyzerInterface $requestAnalyzer The RequestAnalyzer is required for getting the current security
+     *
      * @return
      */
     public function init($suluSystem, RequestAnalyzerInterface $requestAnalyzer = null);
 
     /**
-     * Returns the user with the given id
+     * Returns the user with the given id.
+     *
      * @param int $id The user to find
+     *
      * @return UserInterface
      */
     public function findUserById($id);

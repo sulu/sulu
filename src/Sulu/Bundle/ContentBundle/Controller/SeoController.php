@@ -19,16 +19,17 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * handles sub resource for seo
- * @package Sulu\Bundle\ContentBundle\Controller
+ * handles sub resource for seo.
  */
 class SeoController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
     /**
-     * returns language code from request
+     * returns language code from request.
+     *
      * @param Request $request
+     *
      * @return string
      */
     private function getLanguage(Request $request)
@@ -37,8 +38,10 @@ class SeoController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns webspace key from request
+     * returns webspace key from request.
+     *
      * @param Request $request
+     *
      * @return string
      */
     private function getWebspace(Request $request)
@@ -55,7 +58,8 @@ class SeoController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns seo information for given node uuid
+     * returns seo information for given node uuid.
+     *
      * @param Request $request
      * @param string $uuid
      *
@@ -77,7 +81,7 @@ class SeoController extends RestController implements ClassResourceInterface
                         $language
                     );
                 } catch (ItemNotFoundException $ex) {
-                    return null;
+                    return;
                 }
             }
         );
@@ -86,7 +90,8 @@ class SeoController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * handles a post request to save seo data
+     * handles a post request to save seo data.
+     *
      * @param Request $request
      * @param string $uuid
      *

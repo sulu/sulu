@@ -10,26 +10,26 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Mapper\ContentMapper;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
-use FOS\RestBundle\View\ViewHandler;
-use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContext;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use FOS\RestBundle\Controller\Annotations\Get;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * handles snippets
+ * handles snippets.
  */
 class SnippetController implements SecuredControllerInterface
 {
@@ -69,7 +69,7 @@ class SnippetController implements SecuredControllerInterface
     protected $languageCode;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         ViewHandler $viewHandler,
@@ -88,8 +88,10 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Returns list of snippets
+     * Returns list of snippets.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getSnippetsAction(Request $request)
@@ -147,9 +149,11 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Returns snippet by ID
+     * Returns snippet by ID.
+     *
      * @param Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Get(defaults={"uuid" = ""})
@@ -166,8 +170,10 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Saves a new snippet
+     * Saves a new snippet.
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postSnippetAction(Request $request)
@@ -190,9 +196,11 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Saves a new existing snippet
+     * Saves a new existing snippet.
+     *
      * @param Request $request
      * @param string $uuid
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putSnippetAction(Request $request, $uuid)
@@ -216,9 +224,11 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Deletes an existing Snippet
+     * Deletes an existing Snippet.
+     *
      * @param Request $request
      * @param string $uuid
+     *
      * @return JsonResponse
      */
     public function deleteSnippetAction(Request $request, $uuid)
@@ -242,7 +252,8 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * TODO refactor
+     * TODO refactor.
+     *
      * @return JsonResponse
      */
     public function getSnippetFieldsAction()
@@ -250,66 +261,66 @@ class SnippetController implements SecuredControllerInterface
         return new JsonResponse(
             array(
                 array(
-                    "name" => "title",
-                    "translation" => "public.title",
-                    "disabled" => false,
-                    "default" => true,
-                    "sortable" => true,
-                    "type" => "",
-                    "width" => "",
-                    "minWidth" => "100px",
-                    "editable" => false
+                    'name' => 'title',
+                    'translation' => 'public.title',
+                    'disabled' => false,
+                    'default' => true,
+                    'sortable' => true,
+                    'type' => '',
+                    'width' => '',
+                    'minWidth' => '100px',
+                    'editable' => false,
                 ),
                 array(
-                    "name" => "template",
-                    "translation" => "snippets.list.template",
-                    "disabled" => false,
-                    "default" => true,
-                    "sortable" => true,
-                    "type" => "",
-                    "width" => "",
-                    "minWidth" => "",
-                    "editable" => false
+                    'name' => 'template',
+                    'translation' => 'snippets.list.template',
+                    'disabled' => false,
+                    'default' => true,
+                    'sortable' => true,
+                    'type' => '',
+                    'width' => '',
+                    'minWidth' => '',
+                    'editable' => false,
                 ),
                 array(
-                    "name" => "id",
-                    "translation" => "public.id",
-                    "disabled" => true,
-                    "default" => false,
-                    "sortable" => true,
-                    "type" => "",
-                    "width" => "50px",
-                    "minWidth" => "",
-                    "editable" => false
+                    'name' => 'id',
+                    'translation' => 'public.id',
+                    'disabled' => true,
+                    'default' => false,
+                    'sortable' => true,
+                    'type' => '',
+                    'width' => '50px',
+                    'minWidth' => '',
+                    'editable' => false,
                 ),
                 array(
-                    "name" => "created",
-                    "translation" => "public.created",
-                    "disabled" => true,
-                    "default" => false,
-                    "sortable" => true,
-                    "type" => "date",
-                    "width" => "",
-                    "minWidth" => "",
-                    "editable" => false
+                    'name' => 'created',
+                    'translation' => 'public.created',
+                    'disabled' => true,
+                    'default' => false,
+                    'sortable' => true,
+                    'type' => 'date',
+                    'width' => '',
+                    'minWidth' => '',
+                    'editable' => false,
                 ),
                 array(
-                    "name" => "changed",
-                    "translation" => "public.changed",
-                    "disabled" => true,
-                    "default" => false,
-                    "sortable" => true,
-                    "type" => "date",
-                    "width" => "",
-                    "minWidth" => "",
-                    "editable" => false
+                    'name' => 'changed',
+                    'translation' => 'public.changed',
+                    'disabled' => true,
+                    'default' => false,
+                    'sortable' => true,
+                    'type' => 'date',
+                    'width' => '',
+                    'minWidth' => '',
+                    'editable' => false,
                 ),
             )
         );
     }
-    
+
     /**
-    * Returns user
+    * Returns user.
     */
    private function getUser()
    {
@@ -318,12 +329,12 @@ class SnippetController implements SecuredControllerInterface
        if (null === $token) {
            throw new \InvalidArgumentException('No user is set');
        }
-       
+
        return $token->getUser();
    }
 
     /**
-     * Initiates the environment
+     * Initiates the environment.
      */
     private function initEnv(Request $request)
     {
@@ -335,7 +346,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Returns a required parameter
+     * Returns a required parameter.
      */
     private function getRequired(Request $request, $parameterName)
     {
@@ -354,7 +365,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Decorate snippets for HATEOAS
+     * Decorate snippets for HATEOAS.
      */
     private function decorateSnippets(array $snippets, $locale)
     {
@@ -367,7 +378,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Decorate snippet for HATEOAS
+     * Decorate snippet for HATEOAS.
      */
     private function decorateSnippet(array $snippet, $locale)
     {

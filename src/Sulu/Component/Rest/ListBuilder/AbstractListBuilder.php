@@ -13,103 +13,120 @@ namespace Sulu\Component\Rest\ListBuilder;
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
     /**
-     * The field descriptors for the current list
+     * The field descriptors for the current list.
+     *
      * @var AbstractFieldDescriptor[]
      */
     protected $fields = array();
 
     /**
-     * The field descriptors for the field, which will be used for the search
+     * The field descriptors for the field, which will be used for the search.
+     *
      * @var AbstractFieldDescriptor[]
      */
     protected $searchFields = array();
 
     /**
-     * The value for which the searchfields will be searched
+     * The value for which the searchfields will be searched.
+     *
      * @var string
      */
     protected $search;
 
     /**
-     * The field descriptor for the field to sort
+     * The field descriptor for the field to sort.
+     *
      * @var AbstractFieldDescriptor
      */
     protected $sortField = null;
 
     /**
-     * Defines the sort order of the string
+     * Defines the sort order of the string.
+     *
      * @var string
      */
     protected $sortOrder;
 
     /**
-     * The limit for this query
-     * @var integer
+     * The limit for this query.
+     *
+     * @var int
      */
     protected $limit = null;
 
     /**
-     * The fields to be checked
+     * The fields to be checked.
+     *
      * @var array
      */
     protected $whereFields = array();
 
     /**
-     * The values the where fields should have
+     * The values the where fields should have.
+     *
      * @var array
      */
     protected $whereValues = array();
 
     /**
      * The comparators the where fields should use
+     *
      * @var array
      */
     protected $whereComparators = array();
 
     /**
      * The conjunctions for the where clauses
+     *
      * @var array
      */
     protected $whereConjunctions = array();
 
     /**
-     * group by fields
+     * group by fields.
+     *
      * @var array
      */
     protected $groupByFields = array();
 
     /**
-     * The fields which will be used for in-clauses
+     * The fields which will be used for in-clauses.
+     *
      * @var array
      */
     protected $inFields = array();
 
     /**
-     * The fields which will be used for between-clauses
+     * The fields which will be used for between-clauses.
+     *
      * @var array
      */
     protected $betweenFields = array();
 
     /**
-     * The values for the in-clauses
+     * The values for the in-clauses.
+     *
      * @var array
      */
     protected $inValues = array();
 
     /**
-     * The values for the between-clauses
+     * The values for the between-clauses.
+     *
      * @var array
      */
     protected $betweenValues = array();
 
     /**
      * The conjunctions for the between clauses
+     *
      * @var array
      */
     protected $betweenConjunctions = array();
 
     /**
      * The page the resulting query will be returning
+     *
      * @var integer
      */
     protected $page = 1;

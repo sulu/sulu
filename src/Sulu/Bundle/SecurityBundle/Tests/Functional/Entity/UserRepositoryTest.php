@@ -10,17 +10,15 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
-use DateTime;
-
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class UserRepositoryTest extends SuluTestCase
@@ -138,7 +136,7 @@ class UserRepositoryTest extends SuluTestCase
 
     public function testFindBySystem()
     {
-//        $client = $this->createAuthenticatedClient();
+        //        $client = $this->createAuthenticatedClient();
 //
 //        // FIXME works when $this->getSystem() is set in user repository
 //        $em = $client->getContainer()->get('sulu_security.user_repository_factory')->getManager();

@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * provides the content_path function to generate real urls for frontend
+ * provides the content_path function to generate real urls for frontend.
  */
 class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInterface
 {
@@ -57,15 +57,15 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('content_path', array($this, 'getContentPath')),
-            new \Twig_SimpleFunction('content_root_path', array($this, 'getContentRootPath'))
+            new \Twig_SimpleFunction('sulu_content_path', array($this, 'getContentPath')),
+            new \Twig_SimpleFunction('sulu_content_root_path', array($this, 'getContentRootPath')),
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null)
+    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null)
     {
         if (
             $webspaceKey !== null &&
@@ -75,9 +75,9 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
                 $url,
                 $this->environment,
                 $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
-                $webspaceKey
+                $webspaceKey,
+                $domain
             );
-
             if (sizeof($portalUrls) > 0) {
                 return rtrim($portalUrls[0], '/');
             }

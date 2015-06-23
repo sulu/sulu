@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
 
-use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Imagine\Image\Box;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
- * Class AbstractScaleTest
+ * Class AbstractScaleTest.
  */
 abstract class AbstractCommandTest extends SuluTestCase
 {
@@ -49,7 +49,7 @@ abstract class AbstractCommandTest extends SuluTestCase
     /**
      * @return array
      */
-    protected abstract function getDataList();
+    abstract protected function getDataList();
 
     public function testCommand()
     {

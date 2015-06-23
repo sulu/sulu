@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * This compiler pass registers tagged geolocator services
- * with the geolocator manager
+ * with the geolocator manager.
  */
 class GeolocatorPass implements CompilerPassInterface
 {

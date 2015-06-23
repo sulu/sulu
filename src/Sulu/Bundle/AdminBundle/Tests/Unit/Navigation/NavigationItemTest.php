@@ -60,7 +60,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
     public function testName()
     {
         $this->navigationItem->setName('OtherNavigationItem');
-        $this->assertEquals("OtherNavigationItem", $this->navigationItem->getName());
+        $this->assertEquals('OtherNavigationItem', $this->navigationItem->getName());
     }
 
     public function testIcon()

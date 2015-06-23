@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 use Sulu\Component\Cache\MemoizeInterface;
 
 /**
- * Provides memoized twig functions for sitemap
+ * Provides memoized twig functions for sitemap.
  */
 class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
 {
@@ -33,9 +33,9 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     private $lifeTime;
 
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
+    public function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;

@@ -70,9 +70,9 @@ class TagAdmin extends Admin
         return array(
             'Sulu' => array(
                 'Settings' => array(
-                    'sulu.settings.tags'
-                )
-            )
+                    'sulu.settings.tags',
+                ),
+            ),
         );
     }
 }

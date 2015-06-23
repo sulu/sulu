@@ -2,8 +2,8 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Functional\Controller;
 
-use Guzzle\Plugin\Mock\MockPlugin;
 use Guzzle\Http\Message\Response;
+use Guzzle\Plugin\Mock\MockPlugin;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class GeolocatorControllerTest extends SuluTestCase

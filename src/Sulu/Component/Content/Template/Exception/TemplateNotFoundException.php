@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Template\Exception;
 use Exception;
 
 /**
- * indicates an exception in template loading
+ * indicates an exception in template loading.
  */
 class TemplateNotFoundException extends Exception
 {

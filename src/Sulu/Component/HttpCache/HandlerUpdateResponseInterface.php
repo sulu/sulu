@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 interface HandlerUpdateResponseInterface extends HandlerInterface
 {
     /**
-     * Update the response based on the given structure
+     * Update the response based on the given structure.
      *
      * @param Response $response
      * @param StructureInterface $structure

@@ -10,17 +10,16 @@
 
 namespace Sulu\Component\Localization\Manager;
 
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 
 /**
- * Manages all the localizations available in the system
- * @package Sulu\Component\Localization\Manager
+ * Manages all the localizations available in the system.
  */
 class LocalizationManager implements LocalizationManagerInterface
 {
     /**
-     * Contains all the registered LocalizationProviders
+     * Contains all the registered LocalizationProviders.
+     *
      * @var LocalizationProviderInterface[]
      */
     private $localizationProviders = array();
@@ -32,10 +31,8 @@ class LocalizationManager implements LocalizationManagerInterface
     {
         $localizations = array();
 
-        foreach ($this->localizationProviders as $localizationProvider)
-        {
-            foreach ($localizationProvider->getAllLocalizations() as $localization)
-            {
+        foreach ($this->localizationProviders as $localizationProvider) {
+            foreach ($localizationProvider->getAllLocalizations() as $localization) {
                 $localizations[$localization->getLocalization()] = $localization;
             }
         }

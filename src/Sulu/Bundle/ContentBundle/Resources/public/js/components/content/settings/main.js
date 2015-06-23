@@ -156,11 +156,11 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 tabAction = 'hide';
             }
 
-            this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
-                this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
-            }.bind(this));
+            if (tabAction === 'hide') {
+                this.sandbox.util.each(['content', 'seo', 'excerpt'], function(i, tabName) {
+                    this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
+                }.bind(this));
 
-            if (action === 'hide') {
                 this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             } else {
                 this.sandbox.emit('husky.toolbar.header.item.enable', 'state', false);

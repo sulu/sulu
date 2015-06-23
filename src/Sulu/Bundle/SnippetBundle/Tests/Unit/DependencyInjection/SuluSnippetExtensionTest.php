@@ -18,7 +18,7 @@ class SuluSnippetExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new SuluSnippetExtension()
+            new SuluSnippetExtension(),
         );
     }
 

@@ -14,8 +14,8 @@ use PHPCR\RepositoryException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
@@ -322,6 +322,52 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/other-test', $route->getDefaults()['url']);
     }
 
+    public function testGetRedirectForExternalLink()
+    {
+        // Set up test
+        $path = '/test';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_EXTERNAL_LINK);
+        $structure
+            ->expects($this->once())
+            ->method('getPropertyValueByTagName')
+            ->will($this->returnValue('www.example.org'));
+
+        $locale = new Localization();
+        $locale->setLanguage('en');
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            $locale
+        );
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('http://www.example.org', $route->getDefaults()['url']);
+    }
+
     public function testGetCollectionEndingSlash()
     {
         // Set up test
@@ -423,7 +469,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             false,
             true,
             true,
-            array('getResourceLocator')
+            array('getResourceLocator', 'getPropertyValueByTagName')
         );
 
         $structure->setUuid($uuid);
@@ -445,8 +491,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $matchType = RequestAnalyzerInterface::MATCH_TYPE_FULL,
         $url = null,
         $redirect = null
-    )
-    {
+    ) {
         $methods = array(
             'getPortal',
             'getCurrentPath',
@@ -454,7 +499,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             'getPortalUrl',
             'getMatchType',
             'getResourceLocator',
-            'getResourceLocatorPrefix'
+            'getResourceLocatorPrefix',
         );
 
         if ($language != null) {
@@ -515,6 +560,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $path
      * @param null $prefix
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getRequestMock($path, $prefix = null)

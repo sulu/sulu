@@ -12,13 +12,13 @@ namespace Sulu\Bundle\CoreBundle\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Component\Content\Structure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades collections to 0.17.0
+ * Upgrades collections to 0.17.0.
+ *
  * @deprecated
  */
 class UpgradeCollectionsCommand extends ContainerAwareCommand

@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 
 /**
- * Defines some common REST functionalities
+ * Defines some common REST functionalities.
  */
 class DoctrineRestHelper extends RestHelper implements RestHelperInterface
 {
@@ -33,8 +33,7 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
         callable $add = null,
         callable $update = null,
         callable $delete = null
-    )
-    {
+    ) {
         /** @var Collection $entities */
         $success = parent::processSubEntities($entities, $requestEntities, $get, $add, $update, $delete);
 

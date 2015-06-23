@@ -17,7 +17,9 @@
         <parameter key="sulu_contact.account_repository.class">Sulu\Bundle\ContactBundle\Entity\AccountRepository</parameter>
         <parameter key="sulu_contact.account_factory.class">Sulu\Bundle\ContactBundle\Contact\AccountFactory</parameter>
         <parameter key="sulu_contact.contact.entity">SuluContactBundle:Contact</parameter>
+        <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
         <parameter key="sulu_contact.contact_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactRepository</parameter>
+        <parameter key="sulu_contact.contact_title_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
@@ -43,6 +45,10 @@
                  factory-method="getRepository" factory-service="doctrine">
             <argument>%sulu_contact.contact.entity%</argument>
         </service>
+        <service id="sulu_contact.contact_title_repository" class="%sulu_contact.contact_title_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine">
+            <argument>%sulu_contact.contact_title.entity%</argument>
+        </service>
         <service id="sulu_contact.account_listener" class="%sulu_contact.account_listener.class%">
             <tag name="doctrine.event_listener" event="postPersist"/>
         </service>
@@ -55,6 +61,9 @@
         <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="service" id="sulu_contact.account_repository"/>
+            <argument type="service" id="sulu_contact.contact_title_repository"/>
+            <argument type="service" id="sulu_contact.contact_repository"/>
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.user_repository" class="%sulu_contact.user_repository.class%"

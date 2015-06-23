@@ -15,7 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TemplateController extends Controller
 {
     /**
-     * Returns Template for the categories list
+     * Returns Template for the categories list.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function categoriesListAction()
@@ -23,7 +24,8 @@ class TemplateController extends Controller
         return $this->render('SuluCategoryBundle:Template:category.list.html.twig');
     }
     /**
-     * Returns Template for the details-tab in the category-form
+     * Returns Template for the details-tab in the category-form.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function categoriesFormDetailsAction()

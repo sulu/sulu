@@ -29,7 +29,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades SmartContent to 0.18.0
+ * Upgrades SmartContent to 0.18.0.
+ *
  * @deprecated
  */
 class UpgradeSmartContentOperatorCommand extends ContainerAwareCommand
@@ -169,7 +170,7 @@ EOT
                     $this->getContainer()->getParameter('sulu.content.language.namespace')
                 );
                 $this->upgradeProperty($structure, $output, $transProperty, $depth);
-            } else if ($property instanceof BlockPropertyInterface) {
+            } elseif ($property instanceof BlockPropertyInterface) {
                 $this->upgradeBlockProperty($structure, $localization, $output, $property, $depth);
             }
         }

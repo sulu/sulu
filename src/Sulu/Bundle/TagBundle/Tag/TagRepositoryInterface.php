@@ -13,27 +13,31 @@ namespace Sulu\Bundle\TagBundle\Tag;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
 /**
- * Defines the method for the doctrine repository
- * @package Sulu\Bundle\TagBundle\Tag
+ * Defines the method for the doctrine repository.
  */
 interface TagRepositoryInterface
 {
     /**
-     * Finds the tag with the given ID
+     * Finds the tag with the given ID.
+     *
      * @param int $id
+     *
      * @return Tag
      */
     public function findTagById($id);
 
     /**
-     * Finds the tag with the given name
+     * Finds the tag with the given name.
+     *
      * @param string $name
+     *
      * @return mixed
      */
     public function findTagByName($name);
 
     /**
-     * Searches for all roles
+     * Searches for all roles.
+     *
      * @return array
      */
     public function findAllTags();

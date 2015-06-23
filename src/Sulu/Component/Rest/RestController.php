@@ -18,51 +18,58 @@ use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Abstract Controller for extracting some required rest functionality
- * @package Sulu\Bundle\CoreBundle\Controller
+ * Abstract Controller for extracting some required rest functionality.
  */
 abstract class RestController extends FOSRestController
 {
     /**
-     * The type of the entity, which is handled by the concrete controller
+     * The type of the entity, which is handled by the concrete controller.
+     *
      * @var string
      */
     protected static $entityName;
 
     /**
-     * The key of the entity which will be used in the embedded part of the REST Response
+     * The key of the entity which will be used in the embedded part of the REST Response.
+     *
      * @var string
      */
     protected static $entityKey;
 
     /**
-     * contains all attributes that are not sortable
+     * contains all attributes that are not sortable.
+     *
      * @var array
      */
     protected $unsortable = array();
 
     /**
      * contains all attributes that are sortable
-     * if defined unsortable gets ignored
+     * if defined unsortable gets ignored.
+     *
      * @var array
      */
     protected $sortable = array();
 
     /**
-     * contains all fields that should be excluded from api
+     * contains all fields that should be excluded from api.
+     *
      * @var array
+     *
      * @deprecated
      */
     protected $fieldsExcluded = array();
 
     /**
-     * contains all fields that should be hidden by default from api
+     * contains all fields that should be hidden by default from api.
+     *
      * @var array
      */
     protected $fieldsHidden = array();
 
     /**
-     * contains the matching between fields and their types
+     * contains the matching between fields and their types.
+     *
      * @var array
      */
     protected $fieldTypes = array(
@@ -71,49 +78,58 @@ abstract class RestController extends FOSRestController
         'birthday' => 'date',
         'title' => 'title',
         'size' => 'bytes',
-        'thumbnails' => 'thumbnails'
+        'thumbnails' => 'thumbnails',
     );
 
     /**
-     * contains all field relations
+     * contains all field relations.
+     *
      * @var array
+     *
      * @deprecated
      */
     protected $fieldsRelations = array();
 
     /**
-     * contains sort order of elements: array(order => fieldName)
+     * contains sort order of elements: array(order => fieldName).
+     *
      * @var array
      */
     protected $fieldsSortOrder = array();
 
     /**
-     * contains custom translation keys like array(fieldName => translationKey)
+     * contains custom translation keys like array(fieldName => translationKey).
+     *
      * @var array
+     *
      * @deprecated
      */
     protected $fieldsTranslationKeys = array();
 
     /**
-     * contains fields that cannot be hidden and are visible by default
+     * contains fields that cannot be hidden and are visible by default.
+     *
      * @var array
      */
     protected $fieldsDefault = array();
 
     /**
-     * contains fields that are editable
+     * contains fields that are editable.
+     *
      * @var array
      */
     protected $fieldsEditable = array();
 
     /**
-     * contains arrays of validation key-value data
+     * contains arrays of validation key-value data.
+     *
      * @var array
      */
     protected $fieldsValidation = array();
 
     /**
      * @var array contains the widths of the fields
+     *
      * @deprecated
      */
     protected $fieldsWidth = array();
@@ -129,13 +145,15 @@ abstract class RestController extends FOSRestController
     private $fieldsDefaultWidth = array();
 
     /**
-     * contains default translations for some fields
+     * contains default translations for some fields.
+     *
      * @var array
      */
     private $fieldsDefaultTranslationKeys = array();
 
     /**
-     * standard bundle prefix
+     * standard bundle prefix.
+     *
      * @var string
      */
     protected $bundlePrefix = '';
@@ -144,6 +162,7 @@ abstract class RestController extends FOSRestController
      * Returns the language.
      *
      * @param Request $request
+     *
      * @return mixed
      */
     public function getLocale(Request $request)
@@ -151,7 +170,7 @@ abstract class RestController extends FOSRestController
         $lang = $request->get('locale');
         if (!$lang) {
             if ($this->getUser()) {
-                $lang = $this->getUser()->getLocale() ? : $this->container->getParameter('locale');
+                $lang = $this->getUser()->getLocale() ?: $this->container->getParameter('locale');
             } else {
                 $lang = $this->container->getParameter('locale');
             }
@@ -161,14 +180,15 @@ abstract class RestController extends FOSRestController
     }
 
     /**
-     * Creates a response which contains all fields of the current entity
+     * Creates a response which contains all fields of the current entity.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @deprecated
      */
     public function responseFields()
     {
         try {
-
             $this->fieldsDefaultTranslationKeys = $this->container->getParameter('sulu.fields_defaults.translations');
             $this->fieldsDefaultWidth = $this->container->getParameter('sulu.fields_defaults.widths');
 
@@ -231,9 +251,11 @@ abstract class RestController extends FOSRestController
 
     /**
      * creates the translation keys array and sets the default attribute, if set
-     * also adds the type property for
+     * also adds the type property for.
+     *
      * @param $fields
      * @param $fieldsHidden
+     *
      * @return array
      */
     protected function addFieldAttributes($fields, $fieldsHidden = array())
@@ -262,7 +284,7 @@ abstract class RestController extends FOSRestController
             }
 
             $type = '';
-            if (isset ($this->fieldTypes[$field])) {
+            if (isset($this->fieldTypes[$field])) {
                 $type = $this->fieldTypes[$field];
             }
 
@@ -286,12 +308,15 @@ abstract class RestController extends FOSRestController
     /**
      * Lists all the entities or filters the entities by parameters
      * Special function for lists
-     * route /contacts/list
+     * route /contacts/list.
+     *
      * @param array $where
      * @param String $entityName
      * @param Function $entityFilter function for filtering entities
      * @param array $joinConditions to specify join conditions
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @deprecated
      */
     protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
@@ -319,17 +344,20 @@ abstract class RestController extends FOSRestController
             'page' => $listHelper->getPage(),
             'pages' => $pages,
             'limit' => $listHelper->getLimit(),
-            'numberOfAll' => $numberOfAll
+            'numberOfAll' => $numberOfAll,
         );
 
         return $this->view($response, 200);
     }
 
     /**
-     * creates HAL conform response-array out of an entity collection
+     * creates HAL conform response-array out of an entity collection.
+     *
      * @param array $entities
-     * @param boolean $returnListLinks
+     * @param bool $returnListLinks
+     *
      * @return array
+     *
      * @deprecated
      */
     protected function createHalResponse(array $entities, $returnListLinks = false)
@@ -342,11 +370,14 @@ abstract class RestController extends FOSRestController
     }
 
     /**
-     * returns HAL-conform _links array
+     * returns HAL-conform _links array.
+     *
      * @param array $entities
      * @param int $pages
      * @param bool $returnListLinks
+     *
      * @return array
+     *
      * @deprecated
      */
     protected function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
@@ -469,12 +500,15 @@ abstract class RestController extends FOSRestController
     }
 
     /**
-     * function replaces a url parameter
+     * function replaces a url parameter.
+     *
      * @param string $url String the complete url
      * @param string $key String parameter name (e.g. page=)
      * @param string $value replace value
      * @param bool $add defines if value should be added
+     *
      * @return mixed|string
+     *
      * @deprecated
      */
     public function replaceOrAddUrlString($url, $key, $value, $add = true)
@@ -501,7 +535,6 @@ abstract class RestController extends FOSRestController
 
                 return $result;
             }
-
         }
 
         return $url;
@@ -510,8 +543,10 @@ abstract class RestController extends FOSRestController
     /**
      * Returns the response with the entity with the given id, or a response with a status of 404, in case the entity
      * is not found. The find method is injected by a callback.
+     *
      * @param $id
      * @param callback $findCallback
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function responseGetById($id, $findCallback)
@@ -535,8 +570,10 @@ abstract class RestController extends FOSRestController
     /**
      * Deletes the entity with the given id using the deleteCallback and return a successful response, or an error
      * message with a 4xx status code.
+     *
      * @param $id
      * @param $deleteCallback
+     *
      * @return \FOS\RestBundle\View\View
      */
     public function responseDelete($id, $deleteCallback)
@@ -555,14 +592,17 @@ abstract class RestController extends FOSRestController
 
     /**
      * This method processes a put request (delete non-existing entities, update existing entities, add new
-     * entries), and let the single actions be modified by callbacks
+     * entries), and let the single actions be modified by callbacks.
+     *
      * @param ApiEntity[] $entities
      * @param $requestEntities
      * @param callback $deleteCallback
      * @param callback $updateCallback
      * @param callback $addCallback
      * @param callback $entityIdCallback defines how to get the entity's id which will be compared with requestEntities' id
+     *
      * @return bool
+     *
      * @deprecated
      */
     protected function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback, $entityIdCallback = null)
@@ -624,8 +664,9 @@ abstract class RestController extends FOSRestController
     /**
      * Tries to find a given id in a given set of entities. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
+     *
      * @param array $requestEntities The set of entities to search in
-     * @param integer $id The id to search
+     * @param int $id The id to search
      * @param array $matchedEntry
      * @param string $matchedKey
      */

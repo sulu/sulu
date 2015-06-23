@@ -15,76 +15,86 @@ use JMS\Serializer\Annotation\Expose;
 
 /**
  * This class contains the values required by all FieldDescriptors.
- * @package Sulu\Component\Rest\ListBuilder\FieldDescriptor
+ *
  * @ExclusionPolicy("all")
  */
 abstract class AbstractFieldDescriptor
 {
     /**
-     * The name of the field in the database
+     * The name of the field in the database.
+     *
      * @var string
      * @Expose
      */
     private $name;
 
     /**
-     * The translation name
+     * The translation name.
+     *
      * @var string
      * @Expose
      */
     private $translation;
 
     /**
-     * Defines whether the field is disabled or not
-     * @var boolean
+     * Defines whether the field is disabled or not.
+     *
+     * @var bool
      * @Expose
      */
     private $disabled;
 
     /**
-     * Defines whether the field is hideable or not
-     * @var boolean
+     * Defines whether the field is hideable or not.
+     *
+     * @var bool
      * @Expose
      */
     private $default;
 
     /**
-     * Defines if this field is sortable
-     * @var boolean
+     * Defines if this field is sortable.
+     *
+     * @var bool
      * @Expose
      */
     private $sortable;
 
     /**
-     * The type of the field (only used for special fields like dates)
+     * The type of the field (only used for special fields like dates).
+     *
      * @var string
      * @Expose
      */
     private $type;
 
     /**
-     * The width of the field in a table
+     * The width of the field in a table.
+     *
      * @var string
      * @Expose
      */
     private $width;
 
     /**
-     * The minimal with of the field in the table
+     * The minimal with of the field in the table.
+     *
      * @var string
      * @Expose
      */
     private $minWidth;
 
     /**
-     * Defines whether the field is editable in the table or not
-     * @var boolean
+     * Defines whether the field is editable in the table or not.
+     *
+     * @var bool
      * @Expose
      */
     private $editable;
 
     /**
-     * The css class of the column
+     * The css class of the column.
+     *
      * @var string
      * @Expose
      */
@@ -101,8 +111,7 @@ abstract class AbstractFieldDescriptor
         $sortable = true,
         $editable = false,
         $cssClass = ''
-    )
-    {
+    ) {
         $this->name = $name;
         $this->disabled = $disabled;
         $this->default = $default;
@@ -112,11 +121,12 @@ abstract class AbstractFieldDescriptor
         $this->minWidth = $minWidth;
         $this->editable = $editable;
         $this->translation = $translation == null ? $name : $translation;
-        $this->class= $cssClass;
+        $this->class = $cssClass;
     }
 
     /**
-     * Returns the name of the field
+     * Returns the name of the field.
+     *
      * @return string
      */
     public function getName()
@@ -125,8 +135,9 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns whether the field is disabled or not
-     * @return boolean
+     * Returns whether the field is disabled or not.
+     *
+     * @return bool
      */
     public function getDisabled()
     {
@@ -134,7 +145,8 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the translation code of the field
+     * Returns the translation code of the field.
+     *
      * @return string
      */
     public function getTranslation()
@@ -143,7 +155,8 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the type of the field
+     * Returns the type of the field.
+     *
      * @return string
      */
     public function getType()
@@ -152,7 +165,8 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the width of the field
+     * Returns the width of the field.
+     *
      * @return string
      */
     public function getWidth()
@@ -161,7 +175,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDefault()
     {
@@ -169,7 +183,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSortable()
     {
@@ -177,7 +191,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getEditable()
     {

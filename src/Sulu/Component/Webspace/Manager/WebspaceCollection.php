@@ -18,25 +18,27 @@ use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
 
 /**
- * A collection of all webspaces and portals in a specific sulu installation
- * @package Sulu\Component\Webspace
+ * A collection of all webspaces and portals in a specific sulu installation.
  */
 class WebspaceCollection implements \IteratorAggregate
 {
     /**
-     * All the webspaces in a specific sulu installation
+     * All the webspaces in a specific sulu installation.
+     *
      * @var Webspace[]
      */
     private $webspaces;
 
     /**
-     * All the portals in a specific sulu installation
+     * All the portals in a specific sulu installation.
+     *
      * @var Portal[]
      */
     private $portals;
 
     /**
-     * The portals of this specific sulu installation, prefiltered by the environment and url
+     * The portals of this specific sulu installation, prefiltered by the environment and url.
+     *
      * @var array
      */
     private $portalInformations;
@@ -44,12 +46,14 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Contains all the resources, which where used to build this collection.
      * Is required by the Symfony CacheConfig-Component.
+     *
      * @var FileResource[]
      */
     private $resources;
 
     /**
-     * Adds a new FileResource, which is required to determine if the cache is fresh
+     * Adds a new FileResource, which is required to determine if the cache is fresh.
+     *
      * @param FileResource $resource
      */
     public function addResource(FileResource $resource)
@@ -58,7 +62,8 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the resources used to build this collection
+     * Returns the resources used to build this collection.
+     *
      * @return array The resources build to use this collection
      */
     public function getResources()
@@ -67,8 +72,10 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the portal with the given index
+     * Returns the portal with the given index.
+     *
      * @param $key string The index of the portal
+     *
      * @return Portal
      */
     public function getPortal($key)
@@ -77,9 +84,12 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the portal informations for the given environment
+     * Returns the portal informations for the given environment.
+     *
      * @param $environment string The environment to deliver
+     *
      * @throws \InvalidArgumentException
+     *
      * @return PortalInformation[]
      */
     public function getPortalInformations($environment)
@@ -94,8 +104,10 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the webspace with the given key
+     * Returns the webspace with the given key.
+     *
      * @param $key string The key of the webspace
+     *
      * @return Webspace
      */
     public function getWebspace($key)
@@ -104,7 +116,8 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the length of the collection
+     * Returns the length of the collection.
+     *
      * @return int
      */
     public function length()
@@ -114,8 +127,10 @@ class WebspaceCollection implements \IteratorAggregate
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
+     *
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     *
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
      * <b>Traversable</b>
      */
@@ -125,7 +140,8 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the content of these portals as array
+     * Returns the content of these portals as array.
+     *
      * @return array
      */
     public function toArray()
@@ -169,7 +185,8 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns all the portals of this collection
+     * Returns all the portals of this collection.
+     *
      * @return Portal[]
      */
     public function getPortals()
@@ -178,7 +195,8 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Sets the portals for this collection
+     * Sets the portals for this collection.
+     *
      * @param Portal[] $portals
      */
     public function setPortals($portals)
@@ -187,7 +205,8 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Sets the portal Information for this collection
+     * Sets the portal Information for this collection.
+     *
      * @param array $portalInformations
      */
     public function setPortalInformations($portalInformations)

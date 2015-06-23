@@ -11,7 +11,7 @@
 namespace Sulu\Component\Rest\Exception;
 
 /**
- * parameter wrong datatype
+ * parameter wrong datatype.
  */
 class ParameterDataTypeException extends RestException
 {

@@ -14,8 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Factory for DoctrineListBuilders
- * @package Sulu\Component\Rest\ListBuilder\Doctrine
+ * Factory for DoctrineListBuilders.
  */
 class DoctrineListBuilderFactory
 {
@@ -40,8 +39,10 @@ class DoctrineListBuilderFactory
     }
 
     /**
-     * Creates a new DoctrineListBuilder for the given entity name and returns it
+     * Creates a new DoctrineListBuilder for the given entity name and returns it.
+     *
      * @param $entityName
+     *
      * @return DoctrineListBuilder
      */
     public function create($entityName)

@@ -10,22 +10,21 @@
 
 namespace Sulu\Component\Content;
 
+use JMS\Serializer\Annotation\Discriminator;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\HandlerCallback;
+use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
-use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
-use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\Exclude;
-use JMS\Serializer\Annotation\Discriminator;
-use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
- * Property of Structure generated from Structure Manager to map a template
+ * Property of Structure generated from Structure Manager to map a template.
  *
  * @Discriminator(
  *     field = "propertyType",
@@ -39,7 +38,8 @@ use JMS\Serializer\Annotation\HandlerCallback;
 class Property implements PropertyInterface, \JsonSerializable
 {
     /**
-     * name of property
+     * name of property.
+     *
      * @var string
      * @Type("string")
      */
@@ -52,63 +52,72 @@ class Property implements PropertyInterface, \JsonSerializable
     private $metadata;
 
     /**
-     * is property mandatory
+     * is property mandatory.
+     *
      * @var bool
      * @Type("boolean")
      */
     private $mandatory;
 
     /**
-     * is property multilingual
+     * is property multilingual.
+     *
      * @var bool
      * @Type("boolean")
      */
     private $multilingual;
 
     /**
-     * min occurs of property value
+     * min occurs of property value.
+     *
      * @var int
      * @Type("integer")
      */
     private $minOccurs;
 
     /**
-     * max occurs of property value
+     * max occurs of property value.
+     *
      * @var int
      * @Type("integer")
      */
     private $maxOccurs;
 
     /**
-     * name of content type
+     * name of content type.
+     *
      * @var string
      * @Type("string")
      */
     private $contentTypeName;
 
     /**
-     * parameter of property to merge with parameter of content type
+     * parameter of property to merge with parameter of content type.
+     *
      * @var array
      * @Type("array<string,Sulu\Component\Content\PropertyParameter>")
      */
     private $params;
 
     /**
-     * tags defined in xml
+     * tags defined in xml.
+     *
      * @var PropertyTag[]
      * @Type("array<Sulu\Component\Content\PropertyTag>")
      */
     private $tags;
 
     /**
-     * column span
+     * column span.
+     *
      * @var string
      * @Type("string")
      */
     private $col;
 
     /**
-     * value of property
+     * value of property.
+     *
      * @var mixed
      * @Exclude
      */
@@ -121,7 +130,7 @@ class Property implements PropertyInterface, \JsonSerializable
     private $structure;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         $name,
@@ -148,7 +157,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns name of template
+     * returns name of template.
+     *
      * @return string
      */
     public function getName()
@@ -157,7 +167,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns mandatory
+     * returns mandatory.
+     *
      * @return bool
      */
     public function isMandatory()
@@ -166,7 +177,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns multilingual
+     * returns multilingual.
+     *
      * @return bool
      */
     public function isMultilingual()
@@ -175,7 +187,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * return min occurs
+     * return min occurs.
+     *
      * @return int
      */
     public function getMinOccurs()
@@ -184,7 +197,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * return max occurs
+     * return max occurs.
+     *
      * @return int
      */
     public function getMaxOccurs()
@@ -193,8 +207,9 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns field is mandatory
-     * @return boolean
+     * returns field is mandatory.
+     *
+     * @return bool
      */
     public function getMandatory()
     {
@@ -202,8 +217,9 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns field is multilingual
-     * @return boolean
+     * returns field is multilingual.
+     *
+     * @return bool
      */
     public function getMultilingual()
     {
@@ -211,7 +227,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns tags defined in xml
+     * returns tags defined in xml.
+     *
      * @return \Sulu\Component\Content\PropertyTag[]
      */
     public function getTags()
@@ -220,8 +237,10 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns tag with given name
+     * returns tag with given name.
+     *
      * @param string $tagName
+     *
      * @return PropertyTag
      */
     public function getTag($tagName)
@@ -230,7 +249,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * add a property tag
+     * add a property tag.
+     *
      * @param PropertyTag $tag
      */
     public function addTag(PropertyTag $tag)
@@ -239,8 +259,9 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * return true if a tag with the given name exists
-     * @return boolean
+     * return true if a tag with the given name exists.
+     *
+     * @return bool
      */
     public function hasTag($tagName)
     {
@@ -248,7 +269,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns column span
+     * returns column span.
+     *
      * @return string
      */
     public function getColspan()
@@ -257,8 +279,10 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns title of property
+     * returns title of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getTitle($languageCode)
@@ -267,8 +291,10 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns infoText of property
+     * returns infoText of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getInfoText($languageCode)
@@ -277,8 +303,10 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns placeholder of property
+     * returns placeholder of property.
+     *
      * @param string $languageCode
+     *
      * @return string
      */
     public function getPlaceholder($languageCode)
@@ -287,7 +315,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * sets the value from property
+     * sets the value from property.
+     *
      * @param mixed $value
      */
     public function setValue($value)
@@ -296,7 +325,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * gets the value from property
+     * gets the value from property.
+     *
      * @return mixed
      */
     public function getValue()
@@ -305,7 +335,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns name of content type
+     * returns name of content type.
+     *
      * @return string
      */
     public function getContentTypeName()
@@ -314,7 +345,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * parameter of property
+     * parameter of property.
+     *
      * @return array
      */
     public function getParams()
@@ -323,8 +355,9 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns TRUE if property is a block
-     * @return boolean
+     * returns TRUE if property is a block.
+     *
+     * @return bool
      */
     public function getIsBlock()
     {
@@ -332,7 +365,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns TRUE if property is multiple
+     * returns TRUE if property is multiple.
+     *
      * @return bool
      */
     public function getIsMultiple()
@@ -349,7 +383,8 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns structure
+     * returns structure.
+     *
      * @return StructureInterface
      */
     public function getStructure()
@@ -366,16 +401,16 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * magic getter for twig templates
+     * magic getter for twig templates.
+     *
      * @param $property
-     * @return null
      */
     public function __get($property)
     {
         if (method_exists($this, 'get' . ucfirst($property))) {
             return $this->{'get' . ucfirst($property)}();
         } else {
-            return null;
+            return;
         }
     }
 
@@ -393,12 +428,12 @@ class Property implements PropertyInterface, \JsonSerializable
             'maxOccurs' => $this->getMaxOccurs(),
             'contentTypeName' => $this->getContentTypeName(),
             'params' => $this->getParams(),
-            'tags' => array()
+            'tags' => array(),
         );
         foreach ($this->getTags() as $tag) {
             $result['tags'][] = array(
                 'name' => $tag->getName(),
-                'priority' => $tag->getPriority()
+                'priority' => $tag->getPriority(),
             );
         }
 
@@ -437,8 +472,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $data = array();
 
         /**
-         * @var string $propertyName
-         * @var PropertyMetadata $propertyMetadata
+         * @var string
+         * @var PropertyMetadata
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             $context->pushPropertyMetadata($propertyMetadata);
@@ -473,8 +508,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $graphNavigator = $context->getNavigator();
 
         /**
-         * @var string $propertyName
-         * @var PropertyMetadata $propertyMetadata
+         * @var string
+         * @var PropertyMetadata
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             if (!($propertyMetadata instanceof StaticPropertyMetadata)) {

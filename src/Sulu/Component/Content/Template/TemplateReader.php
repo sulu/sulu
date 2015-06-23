@@ -11,17 +11,17 @@
 namespace Sulu\Component\Content\Template;
 
 use Exception;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Template\Exception\ReservedPropertyNameException;
 use Sulu\Exception\FeatureNotImplementedException;
-use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
-use Sulu\Component\Content\Structure;
 
 /**
- * reads a template xml and returns a array representation
+ * reads a template xml and returns a array representation.
  */
 class TemplateReader implements LoaderInterface
 {
@@ -29,16 +29,18 @@ class TemplateReader implements LoaderInterface
 
     /**
      * tags that are required in template
-     * TODO should be possible to inject from config
+     * TODO should be possible to inject from config.
+     *
      * @var array
      */
     private $requiredPropertyNames = array(
-        'title'
+        'title',
     );
 
     /**
      * reserved names for sulu internals
-     * TODO should be possible to inject from config
+     * TODO should be possible to inject from config.
+     *
      * @var array
      */
     private $reservedPropertyNames = array(
@@ -53,7 +55,7 @@ class TemplateReader implements LoaderInterface
         'nodeType',
         'navContexts',
         'shadow-on',
-        'shadow-base'
+        'shadow-base',
     );
 
     /**
@@ -103,7 +105,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load basic template attributes
+     * load basic template attributes.
      */
     private function loadTemplateAttributes(\DOMXPath $xpath, $type)
     {
@@ -139,7 +141,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load properties from given context
+     * load properties from given context.
      */
     private function loadProperties($templateKey, $path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
@@ -163,7 +165,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load single property
+     * load single property.
      */
     private function loadProperty($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
@@ -187,7 +189,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load single block
+     * load single block.
      */
     private function loadBlock($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
@@ -208,7 +210,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load single block
+     * load single block.
      */
     private function loadSection($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
@@ -227,7 +229,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load tags from given tag and validates them
+     * load tags from given tag and validates them.
      */
     private function loadTags($path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
@@ -245,10 +247,13 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * Loads the tags for the structure
+     * Loads the tags for the structure.
+     *
      * @param $path
      * @param $xpath
+     *
      * @return array
+     *
      * @throws \InvalidArgumentException
      */
     private function loadStructureTags($path, $xpath)
@@ -281,7 +286,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * validates a single tag
+     * validates a single tag.
      */
     private function validateTag($tag, &$tags)
     {
@@ -293,7 +298,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load single tag
+     * load single tag.
      */
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
     {
@@ -315,7 +320,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load params from given node
+     * load params from given node.
      */
     private function loadParams($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
@@ -330,7 +335,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load single param
+     * load single param.
      */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
@@ -356,7 +361,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load types from given node
+     * load types from given node.
      */
     private function loadTypes($templateKey, $path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
@@ -372,7 +377,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load single param
+     * load single param.
      */
     private function loadType($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
@@ -403,7 +408,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * load values defined by key from given node
+     * load values defined by key from given node.
      */
     private function loadValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
     {
@@ -417,7 +422,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * returns boolean value of path
+     * returns boolean value of path.
      */
     private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
     {
@@ -429,7 +434,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * returns value of path
+     * returns value of path.
      */
     private function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
     {

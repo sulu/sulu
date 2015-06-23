@@ -20,13 +20,15 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
- * representation of a block node in template xml
+ * representation of a block node in template xml.
+ *
  * @Discriminator(disabled=true)
  */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
     /**
-     * properties managed by this block
+     * properties managed by this block.
+     *
      * @var BlockPropertyType[]
      * @Type("array<string,Sulu\Component\Content\Block\BlockPropertyType>")
      */
@@ -72,7 +74,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns a list of properties managed by this block
+     * returns a list of properties managed by this block.
+     *
      * @return BlockPropertyType[]
      */
     public function getTypes()
@@ -81,7 +84,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * adds a type
+     * adds a type.
+     *
      * @param BlockPropertyType $type
      */
     public function addType(BlockPropertyType $type)
@@ -90,9 +94,12 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns type with given name
+     * returns type with given name.
+     *
      * @param string $name of property
+     *
      * @throws \InvalidArgumentException
+     *
      * @return BlockPropertyType
      */
     public function getType($name)
@@ -111,7 +118,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * return default type name
+     * return default type name.
+     *
      * @return string
      */
     public function getDefaultTypeName()
@@ -120,8 +128,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns child properties of given Type
+     * returns child properties of given Type.
+     *
      * @param string $typeName
+     *
      * @return PropertyInterface[]
      */
     public function getChildProperties($typeName)
@@ -130,9 +140,11 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * initiate new child with given type name
-     * @param integer $index
+     * initiate new child with given type name.
+     *
+     * @param int $index
      * @param string $typeName
+     *
      * @return BlockPropertyType
      */
     public function initProperties($index, $typeName)
@@ -144,7 +156,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * clears all initialized properties
+     * clears all initialized properties.
      */
     public function clearProperties()
     {
@@ -152,8 +164,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns properties for given index
-     * @param integer $index
+     * returns properties for given index.
+     *
+     * @param int $index
+     *
      * @return BlockPropertyType
      */
     public function getProperties($index)
@@ -162,7 +176,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * Returns sizeof block
+     * Returns sizeof block.
+     *
      * @return int
      */
     public function getLength()
@@ -171,7 +186,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * set value of child properties
+     * set value of child properties.
+     *
      * @param mixed $value
      */
     public function setValue($value)
@@ -199,7 +215,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * get value of sub properties
+     * get value of sub properties.
+     *
      * @return array|mixed
      */
     public function getValue()
@@ -224,8 +241,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns TRUE if property is a block
-     * @return boolean
+     * returns TRUE if property is a block.
+     *
+     * @return bool
      */
     public function getIsBlock()
     {
@@ -234,7 +252,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     public function __clone()
     {
-        $clone = new BlockProperty(
+        $clone = new self(
             $this->getName(),
             $this->getMetadata(),
             $this->getDefaultTypeName(),

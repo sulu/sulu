@@ -45,7 +45,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             array(
                 'cache_dir' => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid',
-                'cache_class' => 'WebspaceCollectionCache' . uniqid()
+                'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             )
         );
     }
@@ -428,7 +428,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->logger,
             array(
                 'cache_dir' => __DIR__ . '/../../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
+                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both',
             )
         );
 
@@ -608,49 +608,49 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(
             array(
                 'country' => 'us',
-                'language' => 'en'
+                'language' => 'en',
             ),
             $localizations
         );
         $this->assertContains(
             array(
                 'country' => 'at',
-                'language' => 'de'
+                'language' => 'de',
             ),
             $localizations
         );
         $this->assertContains(
             array(
                 'country' => 'ca',
-                'language' => 'en'
+                'language' => 'en',
             ),
             $localizations
         );
         $this->assertContains(
             array(
                 'country' => 'ca',
-                'language' => 'fr'
+                'language' => 'fr',
             ),
             $localizations
         );
         $this->assertContains(
             array(
                 'country' => null,
-                'language' => 'de'
+                'language' => 'de',
             ),
             $localizations
         );
         $this->assertContains(
             array(
                 'country' => null,
-                'language' => 'en'
+                'language' => 'en',
             ),
             $localizations
         );
         $this->assertContains(
             array(
                 'country' => 'uk',
-                'language' => 'en'
+                'language' => 'en',
             ),
             $localizations
         );

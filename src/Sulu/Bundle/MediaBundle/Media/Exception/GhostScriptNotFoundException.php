@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
 class GhostScriptNotFoundException extends MediaException
 {

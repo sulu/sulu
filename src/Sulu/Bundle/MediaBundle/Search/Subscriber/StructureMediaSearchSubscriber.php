@@ -10,14 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Search\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This subscriber populates the image URL field
@@ -36,7 +35,8 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     protected $requestAnalyzer;
 
     /**
-     * The format of the image, which will be returned in the search
+     * The format of the image, which will be returned in the search.
+     *
      * @var string
      */
     protected $searchImageFormat;
@@ -57,7 +57,8 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Returns the events this subscriber has subscribed
+     * Returns the events this subscriber has subscribed.
+     *
      * @return array
      */
     public static function getSubscribedEvents()
@@ -68,7 +69,8 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adds the image to the search document
+     * Adds the image to the search document.
+     *
      * @param PreIndexEvent $e
      */
     public function handlePreIndex(PreIndexEvent $e)
@@ -91,6 +93,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
 
         if (!$data) {
             $document->setImageUrl(null);
+
             return;
         }
 
@@ -99,10 +102,11 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Returns the url for the image
+     * Returns the url for the image.
+     *
      * @param $data
      * @param $locale
-     * @return null
+     *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
@@ -121,19 +125,19 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
             }
 
             $medias = $this->mediaManager->get($locale, array(
-                'ids' => $data['ids']
+                'ids' => $data['ids'],
             ));
         }
 
         // no media, no thumbnail URL
         if (!$medias) {
-            return null;
+            return;
         }
 
         $media = current($medias);
 
         if (!$media) {
-            return null;
+            return;
         }
 
         $formats = $media->getThumbnails();

@@ -10,26 +10,25 @@
 
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
 /**
- * Makes categories available through a REST API
- * @package Sulu\Bundle\CategoryBundle\Controller
+ * Makes categories available through a REST API.
  */
 class CategoryController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -54,7 +53,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     protected $bundlePrefix = 'category.category.';
 
     /**
-     * Returns the CategoryManager
+     * Returns the CategoryManager.
      *
      * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManager
      */
@@ -64,9 +63,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns all fields that can be used by list
+     * Returns all fields that can be used by list.
      *
      * @Get("categories/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -80,7 +80,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
                         array(
                             'depth' => false,
                             'parent' => false,
-                            'hasChildren' => false
+                            'hasChildren' => false,
                         )
                     )
                 ),
@@ -90,10 +90,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Get a single category for a given id
+     * Get a single category for a given id.
      *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id, Request $request)
@@ -113,10 +114,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns the children for a parent for the given key
+     * Returns the children for a parent for the given key.
      *
      * @param Request $request
      * @param mixed $key
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getChildrenAction(Request $request, $key)
@@ -131,16 +133,17 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request));
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
-       $view = $this->view($list, 200);
+        $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }
 
     /**
      * Shows all categories
-     * Can be filtered with "parent" and "depth" parameters
+     * Can be filtered with "parent" and "depth" parameters.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -163,9 +166,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Adds a new category
+     * Adds a new category.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -174,10 +178,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Changes an existing category
+     * Changes an existing category.
      *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction($id, Request $request)
@@ -196,10 +201,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Partly changes an existing category
+     * Partly changes an existing category.
      *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function patchAction(Request $request, $id)
@@ -208,9 +214,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Deletes the category for the given id
+     * Deletes the category for the given id.
      *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -234,10 +241,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Handles the change of a category. Used in PUT and PATCH
+     * Handles the change of a category. Used in PUT and PATCH.
      *
      * @param $id
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function saveEntity(Request $request, $id)
@@ -251,7 +259,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 'name' => $request->get('name'),
                 'meta' => $request->get('meta'),
                 'parent' => $request->get('parent'),
-                'locale' => $this->getLocale($request)
+                'locale' => $this->getLocale($request),
             ];
             $categoryEntity = $categoryManager->save($data, $this->getUser()->getId());
             $categoryWrapper = $categoryManager->getApiObject(
@@ -270,9 +278,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns a Category-list-representation
+     * Returns a Category-list-representation.
      *
      * @param Request $request
+     *
      * @return CategoryListRepresentation
      */
     protected function getCategoryListRepresentation(Request $request, $parentKey = null)
@@ -325,7 +334,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * append parent selector to listbuilder
+     * append parent selector to listbuilder.
+     *
      * @param $parentKey
      * @param DoctrineListBuilder $listBuilder
      */

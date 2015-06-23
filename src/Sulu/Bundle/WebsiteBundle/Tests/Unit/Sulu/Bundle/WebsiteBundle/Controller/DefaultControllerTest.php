@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -37,7 +35,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
             $this->returnValueMap(
                 array(
                     array('url', null, false, $portalUrl),
-                    array('redirect', null, false, $redirectUrl)
+                    array('redirect', null, false, $redirectUrl),
                 )
             )
         );

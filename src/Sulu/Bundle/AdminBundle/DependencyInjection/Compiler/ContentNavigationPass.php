@@ -10,12 +10,11 @@
 
 namespace Sulu\Bundle\AdminBundle\DependencyInjection\Compiler;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Add all services with given tag to the bundle content navigation
+ * Add all services with given tag to the bundle content navigation.
  */
 class ContentNavigationPass implements CompilerPassInterface
 {

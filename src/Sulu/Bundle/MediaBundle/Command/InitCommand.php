@@ -16,7 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Command
  */
 class InitCommand extends ContainerAwareCommand
 {

@@ -15,7 +15,6 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure\Snippet;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Sulu\Component\Content\StructureInterface;
 
 class SnippetApiTest extends SuluTestCase
 {
@@ -105,40 +104,40 @@ class SnippetApiTest extends SuluTestCase
         return array(
             array(
                 array(),
-                5
+                5,
             ),
             array(
                 array(
                     'type' => 'car',
                 ),
-                3
+                3,
             ),
             array(
                 array(
                     'type' => 'hotel',
                 ),
-                2
+                2,
             ),
             array(
                 array(
                     'limit' => 2,
-                    'page' => 1
+                    'page' => 1,
                 ),
-                2
+                2,
             ),
             array(
                 array(
                     'limit' => 2,
-                    'page' => 2
+                    'page' => 2,
                 ),
-                2
+                2,
             ),
             array(
                 array(
                     'limit' => 2,
-                    'page' => 3
+                    'page' => 3,
                 ),
-                1
+                1,
             ),
         );
     }
@@ -179,9 +178,8 @@ class SnippetApiTest extends SuluTestCase
                     'template' => 'hotel',
                     'data' => 'Some Hotel Yeah',
                 ),
-            )
+            ),
         );
-
     }
 
     /**
@@ -219,7 +217,6 @@ class SnippetApiTest extends SuluTestCase
                 ),
             ),
         );
-
     }
 
     /**
@@ -275,7 +272,7 @@ class SnippetApiTest extends SuluTestCase
             ->setLocale('de')
             ->setUserId(1)
             ->setData(array(
-                'title' => 'Le grande budapest'
+                'title' => 'Le grande budapest',
             ));
         $this->hotel1 = $this->contentMapper->saveRequest($req);
 
@@ -296,7 +293,7 @@ class SnippetApiTest extends SuluTestCase
             ->setLocale('de')
             ->setUserId(1)
             ->setData(array(
-                'title' => 'Skoda'
+                'title' => 'Skoda',
             ));
         $this->contentMapper->saveRequest($req);
 

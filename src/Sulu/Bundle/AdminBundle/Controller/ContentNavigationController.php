@@ -22,7 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * This controller returns all the content navigation items for a given alias
+ * This controller returns all the content navigation items for a given alias.
+ *
  * @RouteResource("content-navigation")
  */
 class ContentNavigationController implements ClassResourceInterface
@@ -46,8 +47,10 @@ class ContentNavigationController implements ClassResourceInterface
     }
 
     /**
-     * Returns all the content navigation items for a given alias
+     * Returns all the content navigation items for a given alias.
+     *
      * @param Request $request
+     *
      * @return Response
      */
     public function cgetAction(Request $request)

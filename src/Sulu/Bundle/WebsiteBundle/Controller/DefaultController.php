@@ -16,17 +16,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Default Controller for rendering templates, uses the themes from the ClientWebsiteBundle
- * @package Sulu\Bundle\WebsiteBundle\Controller
+ * Default Controller for rendering templates, uses the themes from the ClientWebsiteBundle.
  */
 class DefaultController extends WebsiteController
 {
     /**
      * Loads the content from the request (filled by the route provider) and creates a response with this content and
-     * the appropriate cache headers
+     * the appropriate cache headers.
+     *
      * @param \Sulu\Component\Content\StructureInterface $structure
      * @param bool $preview
      * @param bool $partial
+     *
      * @return Response
      */
     public function indexAction(StructureInterface $structure, $preview = false, $partial = false)
@@ -42,7 +43,7 @@ class DefaultController extends WebsiteController
     }
 
     /**
-     * Creates a redirect for configured webspaces
+     * Creates a redirect for configured webspaces.
      */
     public function redirectWebspaceAction(Request $request)
     {
@@ -55,7 +56,7 @@ class DefaultController extends WebsiteController
     }
 
     /**
-     * Creates a redirect for *.html to * (without html)
+     * Creates a redirect for *.html to * (without html).
      */
     public function redirectAction(Request $request)
     {
@@ -63,7 +64,7 @@ class DefaultController extends WebsiteController
     }
 
     /**
-     * Resolve the redirect URL, appending any additional path data
+     * Resolve the redirect URL, appending any additional path data.
      *
      * @param string $url Original webspace URI
      * @param string $redirectUrl  Redirect webspace URI
@@ -114,7 +115,7 @@ class DefaultController extends WebsiteController
 
     /**
      * Prefix http to the URL if it is missing and
-     * then parse the string using parse_url
+     * then parse the string using parse_url.
      *
      * @param string
      *

@@ -12,21 +12,20 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
- * Class Package
- * @package Sulu\Bundle\TranslateBundle\Entity
+ * Class Package.
  *
  * @ExclusionPolicy("all")
  */
 class Package extends ApiEntity
 {
     /**
-     * @var integer
+     * @var int
      * @Expose
      */
     private $id;
@@ -54,7 +53,7 @@ class Package extends ApiEntity
     private $catalogues;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -64,9 +63,9 @@ class Package extends ApiEntity
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -74,9 +73,10 @@ class Package extends ApiEntity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Package
      */
     public function setName($name)
@@ -87,7 +87,7 @@ class Package extends ApiEntity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -97,9 +97,10 @@ class Package extends ApiEntity
     }
 
     /**
-     * Add codes
+     * Add codes.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Code $codes
+     *
      * @return Package
      */
     public function addCode(\Sulu\Bundle\TranslateBundle\Entity\Code $codes)
@@ -110,7 +111,7 @@ class Package extends ApiEntity
     }
 
     /**
-     * Remove codes
+     * Remove codes.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Code $codes
      */
@@ -121,8 +122,10 @@ class Package extends ApiEntity
 
     /**
      * Returns the code with the given key, or null, if there is no
-     * code with the given key
+     * code with the given key.
+     *
      * @param $key The key to search a code for
+     *
      * @return null|Code
      */
     public function findCode($key)
@@ -136,11 +139,11 @@ class Package extends ApiEntity
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Get codes
+     * Get codes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -150,9 +153,10 @@ class Package extends ApiEntity
     }
 
     /**
-     * Add locations
+     * Add locations.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Location $locations
+     *
      * @return Package
      */
     public function addLocation(\Sulu\Bundle\TranslateBundle\Entity\Location $locations)
@@ -163,7 +167,7 @@ class Package extends ApiEntity
     }
 
     /**
-     * Remove locations
+     * Remove locations.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Location $locations
      */
@@ -173,7 +177,7 @@ class Package extends ApiEntity
     }
 
     /**
-     * Get locations
+     * Get locations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -183,9 +187,10 @@ class Package extends ApiEntity
     }
 
     /**
-     * Add catalogues
+     * Add catalogues.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues
+     *
      * @return Package
      */
     public function addCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues)
@@ -196,7 +201,7 @@ class Package extends ApiEntity
     }
 
     /**
-     * Remove catalogues
+     * Remove catalogues.
      *
      * @param \Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues
      */
@@ -206,7 +211,7 @@ class Package extends ApiEntity
     }
 
     /**
-     * Get catalogues
+     * Get catalogues.
      *
      * @return \Doctrine\Common\Collections\Collection
      * @VirtualProperty

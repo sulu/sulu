@@ -13,10 +13,10 @@ namespace Sulu\Bundle\AdminBundle\Behat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
-use WebDriver\Exception\UnknownError;
+use WebDriver\Exception;
 
 /**
- * Behat context class for the AdminBundle
+ * Behat context class for the AdminBundle.
  */
 class AdminContext extends BaseContext implements SnippetAcceptingContext
 {
@@ -50,18 +50,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectAConfirmationDialogShouldAppear()
     {
-        $this->iExpectAnOverlayToAppear();
-    }
-
-    /**
-     * @Then I expect an overlay to appear
-     */
-    public function iExpectAnOverlayToAppear()
-    {
-        $this->getSession()->wait(
-            5000,
-            "document.querySelector('.husky-overlay-container')"
-        );
+        $this->iWaitForAOverlayToAppear();
     }
 
     /**
@@ -110,7 +99,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iClickOnTheCloseIcon($selector = '')
     {
-        $this->clickSelector($selector.' .fa-times');
+        $this->clickSelector($selector . ' .fa-times');
     }
 
     /**
@@ -134,7 +123,7 @@ var f = function () {
     for (var i = 0; i < items.length; i++) {
         if (items[i].textContent == '%s') {
             items[i].click();
-            return;
+            break;
         }
     };
 }
@@ -191,7 +180,7 @@ EOT;
 
         $this->waitForAuraEvents(
             array(
-                'husky.toolbar.header.item.show'
+                'husky.toolbar.header.item.show',
             )
         );
 
@@ -207,7 +196,7 @@ EOT;
 
         $this->waitForAuraEvents(
             array(
-                'husky.toolbar.header.item.show'
+                'husky.toolbar.header.item.show',
             )
         );
 
@@ -223,7 +212,7 @@ EOT;
     }
 
     /**
-     * Select a value from husky select list
+     * Select a value from husky select list.
      *
      * @Given I select :itemValue from the husky :selectListClass
      */
@@ -247,7 +236,8 @@ EOT;
     }
 
     /**
-     * Fill in a husky text field
+     * Fill in a husky text field.
+     *
      * @Given I fill in husky field :name with :value
      */
     public function iFillTheHuskyField($name, $value)
@@ -280,6 +270,14 @@ EOT;
     }
 
     /**
+     * @Then I click the overlay tab ":title"
+     */
+    public function iClickTheOverlayTab($title)
+    {
+        $this->clickByTitle('.overlay-header .tabs-container ul li', $title);
+    }
+
+    /**
      * @Then I click the column navigation item :itemTitle
      */
     public function iClickTheColumnNavigationItem($itemTitle)
@@ -304,7 +302,16 @@ EOT;
     }
 
     /**
-     * Expect until all of the named events have been fired
+     * @Then I double click the data grid item :itemTitle
+     */
+    public function iDoubleClickTheDataGridItem($itemTitle)
+    {
+        $this->clickByTitle('.datagrid-container .item .title', $itemTitle, 'dblclick');
+    }
+
+    /**
+     * Expect until all of the named events have been fired.
+     *
      * @Then I expect the following events:
      */
     public function iExpectTheFollowingEvents(PyStringNode $eventNames)
@@ -347,6 +354,7 @@ EOT;
 
     /**
      * @Given I expect a data-navigation to appear
+     * @Given I wait for a data-navigation to appear
      */
     public function iWaitForADataNavigationToAppear()
     {
@@ -354,7 +362,8 @@ EOT;
     }
 
     /**
-     * @Given I expect a overlay to appear
+     * @Given I expect an overlay to appear
+     * @Given I wait for an overlay to appear
      */
     public function iWaitForAOverlayToAppear()
     {
@@ -391,7 +400,7 @@ EOT;
     {
         foreach (array(
                      'data-aura-instance-name',
-                     'data-mapper-property'
+                     'data-mapper-property',
                  ) as $propertyName) {
             $script = <<<EOT
 var el = $('%s[%s="%s"]').data('element');
@@ -408,7 +417,7 @@ EOT;
                 $this->getSession()->executeScript($script);
 
                 return;
-            } catch (UnknownError $e) {
+            } catch (Exception $e) {
                 // catch wrapped javascript exception, could not find element
                 // lets try again..
             }

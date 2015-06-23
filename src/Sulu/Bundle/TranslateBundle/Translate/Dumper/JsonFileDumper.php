@@ -15,7 +15,6 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class JsonFileDumper extends FileDumper
 {
-
     /**
      * Transforms a domain of a message catalogue to its string representation.
      *

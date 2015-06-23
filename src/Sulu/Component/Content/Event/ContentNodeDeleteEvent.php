@@ -11,13 +11,13 @@
 namespace Sulu\Component\Content\Event;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Util\SuluNodeHelper;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
- * This event is thrown when a node is deleted
+ * This event is thrown when a node is deleted.
  */
 class ContentNodeDeleteEvent extends Event
 {
@@ -52,8 +52,7 @@ class ContentNodeDeleteEvent extends Event
         SuluNodeHelper $nodeHelper,
         NodeInterface $node,
         $webspace
-    )
-    {
+    ) {
         $this->contentMapper = $contentMapper;
         $this->node = $node;
         $this->webspace = $webspace;
@@ -61,7 +60,7 @@ class ContentNodeDeleteEvent extends Event
     }
 
     /**
-     * Return the structure which was deleted
+     * Return the structure which was deleted.
      *
      * @return StructureInterface
      */
@@ -71,7 +70,7 @@ class ContentNodeDeleteEvent extends Event
     }
 
     /**
-     * Return all structures (i.e. for for each language)
+     * Return all structures (i.e. for for each language).
      *
      * @return Sulu\Component\Content\StructureInterface[]
      */
@@ -86,11 +85,11 @@ class ContentNodeDeleteEvent extends Event
     }
 
     /**
-     * Return the PHPCR node for the structure that was deleted
+     * Return the PHPCR node for the structure that was deleted.
      *
      * @return PHPCR\NodeInterface
      */
-    public function getNode() 
+    public function getNode()
     {
         return $this->node;
     }

@@ -258,7 +258,7 @@ class TagControllerTest extends SuluTestCase
             'POST',
             '/api/tags/merge',
             array('src' => implode(',', array(
-                $this->tag2->getId(), $tag3->getId(), $tag4->getId()
+                $this->tag2->getId(), $tag3->getId(), $tag4->getId(),
             )), 'dest' => $this->tag1->getId())
         );
         $this->assertEquals(303, $client->getResponse()->getStatusCode());
@@ -313,17 +313,17 @@ class TagControllerTest extends SuluTestCase
             '/api/tags',
             array(
                 array(
-                    'name' => 'tag3'
+                    'name' => 'tag3',
                 ),
                 array(
-                    'name' => 'tag4'
+                    'name' => 'tag4',
                 ),
                 array(
-                    'name' => 'tag5'
+                    'name' => 'tag5',
                 ),
                 array(
-                    'name' => 'tag6'
-                )
+                    'name' => 'tag6',
+                ),
             )
         );
 
@@ -359,11 +359,11 @@ class TagControllerTest extends SuluTestCase
             '/api/tags',
             array(
                 array(
-                    'name' => 'tag1'
+                    'name' => 'tag1',
                 ),
                 array(
-                    'name' => 'tag2'
-                )
+                    'name' => 'tag2',
+                ),
             )
         );
 
@@ -372,7 +372,6 @@ class TagControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
         $this->assertEquals('name', $response->field);
-
     }
 
     public function testPatchExistingChange()
@@ -384,12 +383,12 @@ class TagControllerTest extends SuluTestCase
             array(
                 array(
                     'id' => $this->tag1->getId(),
-                    'name' => 'tag11'
+                    'name' => 'tag11',
                 ),
                 array(
                     'id' => $this->tag1->getId(),
-                    'name' => 'tag22'
-                )
+                    'name' => 'tag22',
+                ),
             )
         );
 
@@ -411,6 +410,5 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
         $this->assertEquals('tag11', $response->_embedded->tags[2]->name);
         $this->assertEquals('tag22', $response->_embedded->tags[3]->name);
-
     }
 }

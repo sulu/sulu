@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content;
 
 /**
- * Structure for template
+ * Structure for template.
  */
 class ErrorStructure extends Structure
 {

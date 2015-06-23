@@ -14,7 +14,7 @@ use Sulu\Bundle\AdminBundle\Admin\JsConfig;
 use Sulu\Component\Websocket\AppManagerInterface;
 
 /**
- * Provides config for websocket apps
+ * Provides config for websocket apps.
  */
 class AppJsConfig extends JsConfig
 {
@@ -23,7 +23,7 @@ class AppJsConfig extends JsConfig
      */
     private $appManager;
 
-    function __construct($appManager)
+    public function __construct($appManager)
     {
         $this->appManager = $appManager;
     }

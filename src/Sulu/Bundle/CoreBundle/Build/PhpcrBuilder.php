@@ -15,7 +15,7 @@ use Jackalope\Session;
 use PHPCR\RepositoryException;
 
 /**
- * Builder for initializing PHPCR
+ * Builder for initializing PHPCR.
  */
 class PhpcrBuilder extends SuluBuilder
 {

@@ -10,14 +10,14 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new SuluCoreExtension()
+            new SuluCoreExtension(),
         );
     }
 
     public function testLoadNoConfig()
     {
         $this->load(array(
-            'locales' => array('en', 'de')
+            'locales' => array('en', 'de'),
         ));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             'sulu.cache.warmer.structure', 'kernel.cache_warmer'
@@ -43,9 +43,9 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                         'snippet' => 'barfoo',
                     ),
                     'paths' => array(),
-                )
+                ),
             ),
-            'locales' => array('en', 'de')
+            'locales' => array('en', 'de'),
         ));
 
         $this->assertEquals(

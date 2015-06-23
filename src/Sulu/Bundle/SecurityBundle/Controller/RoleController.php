@@ -10,30 +10,28 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
-use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
+use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes the roles accessible through a REST-API
- * @package Sulu\Bundle\SecurityBundle\Controller
+ * Makes the roles accessible through a REST-API.
  */
 class RoleController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -58,7 +56,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     protected $fieldDescriptors;
 
     /**
-     * TODO: move the field descriptors to a manager
+     * TODO: move the field descriptors to a manager.
      */
     public function __construct()
     {
@@ -102,8 +100,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
+     *
      * @Get("roles/fields")
+     *
      * @return mixed
      */
     public function getFieldsAction()
@@ -113,7 +113,8 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * persists a setting
+     * persists a setting.
+     *
      * @Put("roles/fields")
      */
     public function putFieldsAction()
@@ -122,8 +123,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * returns all roles
+     * returns all roles.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -155,7 +158,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 foreach ($roles as $role) {
                     array_push($convertedRoles, $this->convertRole($role));
                 }
-
             }
             $list = new CollectionRepresentation($convertedRoles, static::$entityKey);
         }
@@ -165,8 +167,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the role with the given id
+     * Returns the role with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -186,10 +190,13 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Creates a new role with the given data
+     * Creates a new role with the given data.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -210,7 +217,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $role = new Role();
             $role->setName($name);
             $role->setSystem($system);
-
 
             $permissions = $request->get('permissions');
             if (!empty($permissions)) {
@@ -240,9 +246,11 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates the role with the given id and the data given by the request
+     * Updates the role with the given id and the data given by the request.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putAction(Request $request, $id)
@@ -263,9 +271,8 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 $role->setName($name);
                 $role->setSystem($request->get('system'));
 
-
                 if (!$this->processPermissions($role, $request->get('permissions', array()))) {
-                    throw new RestException("Could not update dependencies!");
+                    throw new RestException('Could not update dependencies!');
                 }
 
                 $securityTypeData = $request->get('securityType');
@@ -288,8 +295,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Deletes the role with the given id
+     * Deletes the role with the given id.
+     *
      * @param $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -314,9 +323,11 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Process all permissions from request
+     * Process all permissions from request.
+     *
      * @param RoleInterface $role The contact on which is worked
      * @param $permissions
+     *
      * @return bool True if the processing was successful, otherwise false
      */
     protected function processPermissions(RoleInterface $role, $permissions)
@@ -343,14 +354,16 @@ class RoleController extends RestController implements ClassResourceInterface, S
         };
 
         return $restHelper->processSubEntities($role->getPermissions(), $permissions, $get, $add, $update, $delete);
-
     }
 
     /**
-     * Adds a permission to the given role
+     * Adds a permission to the given role.
+     *
      * @param RoleInterface $role
      * @param $permissionData
+     *
      * @return bool
+     *
      * @throws EntityNotFoundException
      */
     protected function addPermission(RoleInterface $role, $permissionData)
@@ -383,9 +396,11 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates an already existing permission
+     * Updates an already existing permission.
+     *
      * @param Permission $permission
      * @param $permissionData
+     *
      * @return bool
      */
     private function updatePermission(Permission $permission, $permissionData)
@@ -401,8 +416,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Converts a role object into an array for the rest service
+     * Converts a role object into an array for the rest service.
+     *
      * @param RoleInterface $role
+     *
      * @return array
      */
     protected function convertRole(RoleInterface $role)
@@ -422,7 +439,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
                     'context' => $permission->getContext(),
                     'module' => $permission->getModule(),
                     'permissions' => $this->get('sulu_security.mask_converter')
-                        ->convertPermissionsToArray($permission->getPermissions())
+                        ->convertPermissionsToArray($permission->getPermissions()),
                 );
             }
         }
@@ -431,7 +448,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
         if ($securityType) {
             $roleData['securityType'] = array(
                 'id' => $securityType->getId(),
-                'name' => $securityType->getName()
+                'name' => $securityType->getName(),
             );
         }
 
@@ -439,8 +456,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Checks if the data of the security type is correct
+     * Checks if the data of the security type is correct.
+     *
      * @param $securityTypeData
+     *
      * @return bool
      */
     private function checkSecurityTypeData($securityTypeData)
@@ -449,9 +468,11 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Sets the securityType from the given data to the role
+     * Sets the securityType from the given data to the role.
+     *
      * @param RoleInterface $role
      * @param $securityTypeData
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function setSecurityType($role, $securityTypeData)

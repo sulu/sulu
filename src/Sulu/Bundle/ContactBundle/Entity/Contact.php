@@ -10,15 +10,15 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use JMS\Serializer\Annotation\Exclude;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
- * Contact
+ * Contact.
  */
 class Contact extends ApiEntity implements AuditableInterface
 {
@@ -44,6 +44,7 @@ class Contact extends ApiEntity implements AuditableInterface
 
     /**
      * @Accessor(getter="getPosition")
+     *
      * @var string
      */
     private $position;
@@ -64,7 +65,7 @@ class Contact extends ApiEntity implements AuditableInterface
     private $changed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -104,7 +105,7 @@ class Contact extends ApiEntity implements AuditableInterface
     private $faxes;
 
     /**
-     * @var integer
+     * @var int
      */
     private $formOfAddress = 0;
 
@@ -114,7 +115,7 @@ class Contact extends ApiEntity implements AuditableInterface
     private $salutation;
 
     /**
-     * @var integer
+     * @var int
      */
     private $disabled = 0;
 
@@ -125,15 +126,19 @@ class Contact extends ApiEntity implements AuditableInterface
     private $tags;
 
     /**
-     * main account
+     * main account.
+     *
      * @Accessor(getter="getMainAccount")
+     *
      * @var string
      */
     private $account;
 
     /**
-     * main account
+     * main account.
+     *
      * @Accessor(getter="getAddresses")
+     *
      * @var string
      */
     private $addresses;
@@ -145,7 +150,7 @@ class Contact extends ApiEntity implements AuditableInterface
     private $accountContacts;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $newsletter;
 
@@ -201,7 +206,7 @@ class Contact extends ApiEntity implements AuditableInterface
     private $bankAccounts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -218,9 +223,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set firstName
+     * Set firstName.
      *
      * @param string $firstName
+     *
      * @return Contact
      */
     public function setFirstName($firstName)
@@ -231,7 +237,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get firstName
+     * Get firstName.
      *
      * @return string
      */
@@ -241,9 +247,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set middleName
+     * Set middleName.
      *
      * @param string $middleName
+     *
      * @return Contact
      */
     public function setMiddleName($middleName)
@@ -254,7 +261,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get middleName
+     * Get middleName.
      *
      * @return string
      */
@@ -264,9 +271,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set lastName
+     * Set lastName.
      *
      * @param string $lastName
+     *
      * @return Contact
      */
     public function setLastName($lastName)
@@ -277,7 +285,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get lastName
+     * Get lastName.
      *
      * @return string
      */
@@ -289,6 +297,7 @@ class Contact extends ApiEntity implements AuditableInterface
     /**
      * @VirtualProperty
      * @SerializedName("fullName")
+     *
      * @return string
      */
     public function getFullName()
@@ -297,9 +306,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param object $title
+     *
      * @return Contact
      */
     public function setTitle($title)
@@ -310,7 +320,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -320,9 +330,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set position
+     * Set position.
      *
      * @param string $position
+     *
      * @return Contact
      */
     public function setPosition($position)
@@ -337,7 +348,8 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * sets position variable
+     * sets position variable.
+     *
      * @param $position
      */
     public function setCurrentPosition($position)
@@ -346,7 +358,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get position
+     * Get position.
      *
      * @return string
      */
@@ -357,13 +369,14 @@ class Contact extends ApiEntity implements AuditableInterface
             return $mainAccountContact->getPosition();
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Set birthday
+     * Set birthday.
      *
      * @param \DateTime $birthday
+     *
      * @return Contact
      */
     public function setBirthday($birthday)
@@ -374,7 +387,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get birthday
+     * Get birthday.
      *
      * @return \DateTime
      */
@@ -384,7 +397,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -394,7 +407,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime
      */
@@ -404,9 +417,9 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -414,9 +427,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add locales
+     * Add locales.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactLocale $locales
+     *
      * @return Contact
      */
     public function addLocale(\Sulu\Bundle\ContactBundle\Entity\ContactLocale $locales)
@@ -427,7 +441,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove locales
+     * Remove locales.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactLocale $locales
      */
@@ -437,7 +451,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get locales
+     * Get locales.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -447,9 +461,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     *
      * @return Contact
      */
     public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
@@ -460,7 +475,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -470,9 +485,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     *
      * @return Contact
      */
     public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
@@ -483,7 +499,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */
@@ -493,9 +509,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add notes
+     * Add notes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     *
      * @return Contact
      */
     public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
@@ -506,7 +523,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove notes
+     * Remove notes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
      */
@@ -516,7 +533,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -526,9 +543,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add emails
+     * Add emails.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     *
      * @return Contact
      */
     public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
@@ -539,7 +557,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove emails
+     * Remove emails.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
      */
@@ -549,7 +567,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get emails
+     * Get emails.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -559,9 +577,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add phones
+     * Add phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     *
      * @return Contact
      */
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
@@ -572,7 +591,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove phones
+     * Remove phones.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
      */
@@ -582,7 +601,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get phones
+     * Get phones.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -602,14 +621,15 @@ class Contact extends ApiEntity implements AuditableInterface
             'position' => $this->getPosition(),
             'birthday' => $this->getBirthday(),
             'created' => $this->getCreated(),
-            'changed' => $this->getChanged()
+            'changed' => $this->getChanged(),
         );
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return Contact
      */
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
@@ -620,7 +640,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
@@ -630,7 +650,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get faxes
+     * Get faxes.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -640,9 +660,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add urls
+     * Add urls.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     *
      * @return Contact
      */
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
@@ -653,7 +674,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove urls
+     * Remove urls.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
      */
@@ -663,7 +684,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get urls
+     * Get urls.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -673,9 +694,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add faxes
+     * Add faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     *
      * @return Contact
      */
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
@@ -686,7 +708,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove faxes
+     * Remove faxes.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
@@ -696,9 +718,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set formOfAddress
+     * Set formOfAddress.
      *
-     * @param integer $formOfAddress
+     * @param int $formOfAddress
+     *
      * @return Contact
      */
     public function setFormOfAddress($formOfAddress)
@@ -709,9 +732,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add tags
+     * Add tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     *
      * @return Contact
      */
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
@@ -722,9 +746,9 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get formOfAddress
+     * Get formOfAddress.
      *
-     * @return integer
+     * @return int
      */
     public function getFormOfAddress()
     {
@@ -732,9 +756,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set salutation
+     * Set salutation.
      *
      * @param string $salutation
+     *
      * @return Contact
      */
     public function setSalutation($salutation)
@@ -745,7 +770,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get salutation
+     * Get salutation.
      *
      * @return string
      */
@@ -755,9 +780,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set disabled
+     * Set disabled.
      *
-     * @param integer $disabled
+     * @param int $disabled
+     *
      * @return Contact
      */
     public function setDisabled($disabled)
@@ -768,9 +794,9 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get disabled
+     * Get disabled.
      *
-     * @return integer
+     * @return int
      */
     public function getDisabled()
     {
@@ -778,7 +804,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove tags
+     * Remove tags.
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
      */
@@ -788,7 +814,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get tags
+     * Get tags.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -798,7 +824,8 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * parses tags to array containing tag names
+     * parses tags to array containing tag names.
+     *
      * @return array
      */
     public function getTagNameArray()
@@ -814,9 +841,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add accountContacts
+     * Add accountContacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     *
      * @return Contact
      */
     public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
@@ -827,7 +855,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove accountContacts
+     * Remove accountContacts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
      */
@@ -837,7 +865,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get accountContacts
+     * Get accountContacts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -847,9 +875,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set newsletter
+     * Set newsletter.
      *
-     * @param boolean $newsletter
+     * @param bool $newsletter
+     *
      * @return Contact
      */
     public function setNewsletter($newsletter)
@@ -860,9 +889,9 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get newsletter
+     * Get newsletter.
      *
-     * @return boolean
+     * @return bool
      */
     public function getNewsletter()
     {
@@ -870,9 +899,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set gender
+     * Set gender.
      *
      * @param string $gender
+     *
      * @return Contact
      */
     public function setGender($gender)
@@ -883,7 +913,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get gender
+     * Get gender.
      *
      * @return string
      */
@@ -893,7 +923,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * returns main account
+     * returns main account.
      */
     public function getMainAccount()
     {
@@ -902,11 +932,11 @@ class Contact extends ApiEntity implements AuditableInterface
             return $mainAccountContact->getAccount();
         }
 
-        return null;
+        return;
     }
 
     /**
-     * returns main account contact
+     * returns main account contact.
      */
     private function getMainAccountContact()
     {
@@ -921,11 +951,11 @@ class Contact extends ApiEntity implements AuditableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * returns main account
+     * returns main account.
      */
     public function getAddresses()
     {
@@ -945,9 +975,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set mainEmail
+     * Set mainEmail.
      *
      * @param string $mainEmail
+     *
      * @return Contact
      */
     public function setMainEmail($mainEmail)
@@ -958,7 +989,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get mainEmail
+     * Get mainEmail.
      *
      * @return string
      */
@@ -968,9 +999,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set mainPhone
+     * Set mainPhone.
      *
      * @param string $mainPhone
+     *
      * @return Contact
      */
     public function setMainPhone($mainPhone)
@@ -981,7 +1013,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get mainPhone
+     * Get mainPhone.
      *
      * @return string
      */
@@ -991,9 +1023,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set mainFax
+     * Set mainFax.
      *
      * @param string $mainFax
+     *
      * @return Contact
      */
     public function setMainFax($mainFax)
@@ -1004,7 +1037,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get mainFax
+     * Get mainFax.
      *
      * @return string
      */
@@ -1014,9 +1047,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set mainUrl
+     * Set mainUrl.
      *
      * @param string $mainUrl
+     *
      * @return Contact
      */
     public function setMainUrl($mainUrl)
@@ -1027,7 +1061,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get mainUrl
+     * Get mainUrl.
      *
      * @return string
      */
@@ -1037,9 +1071,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add contactAddresses
+     * Add contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     *
      * @return Contact
      */
     public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
@@ -1050,7 +1085,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove contactAddresses
+     * Remove contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
      */
@@ -1060,7 +1095,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get contactAddresses
+     * Get contactAddresses.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -1070,7 +1105,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Returns the main address
+     * Returns the main address.
      *
      * @return mixed
      */
@@ -1087,13 +1122,14 @@ class Contact extends ApiEntity implements AuditableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Add medias
+     * Add medias.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     *
      * @return Contact
      */
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
@@ -1102,8 +1138,8 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /** Add categories
-     *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     *
      * @return Contact
      */
     public function addCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
@@ -1114,7 +1150,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove medias
+     * Remove medias.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
      */
@@ -1124,7 +1160,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get medias
+     * Get medias.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -1134,7 +1170,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove categories
+     * Remove categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
      */
@@ -1144,7 +1180,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get categories
+     * Get categories.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -1154,9 +1190,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add contactAddresses
+     * Add contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     *
      * @return Contact
      */
     public function addContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
@@ -1167,7 +1204,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove contactAddresses
+     * Remove contactAddresses.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
      */
@@ -1177,9 +1214,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add categories
+     * Add categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     *
      * @return Contact
      */
     public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
@@ -1190,7 +1228,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove categories
+     * Remove categories.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
      */
@@ -1200,9 +1238,10 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add bankAccounts
+     * Add bankAccounts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     *
      * @return Contact
      */
     public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
@@ -1213,7 +1252,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Remove bankAccounts
+     * Remove bankAccounts.
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
      */
@@ -1223,7 +1262,7 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get bankAccounts
+     * Get bankAccounts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

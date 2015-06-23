@@ -61,7 +61,15 @@ define([], function() {
          * custom event handling
          */
         bindCustomEvents = function() {
-            this.sandbox.on('husky.overlay.snippet-content.' + this.options.instanceName + '.add.initialized', initSnippetList.bind(this));
+            this.sandbox.on(
+                'husky.overlay.snippet-content.' + this.options.instanceName + '.add.initialized',
+                initSnippetList.bind(this)
+            );
+
+            this.sandbox.on(
+                'husky.overlay.snippet-content.' + this.options.instanceName + '.add.opened',
+                updateSnippetList.bind(this)
+            );
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.datagrid.view.rendered', function() {
@@ -121,6 +129,18 @@ define([], function() {
                     }
                 }
             ]);
+        },
+
+        /**
+         * Updates the datagrid when opening the overlay again
+         */
+        updateSnippetList = function() {
+            var selectedItems = this.getData() || [];
+
+            this.sandbox.emit(
+                'husky.datagrid.selected.update',
+                selectedItems
+            );
         },
 
         /**

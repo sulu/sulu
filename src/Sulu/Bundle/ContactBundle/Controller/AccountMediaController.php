@@ -10,20 +10,22 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class AccountMediaController
+ * Class AccountMediaController.
+ *
  * @RouteResource("Medias")
  */
 class AccountMediaController extends AbstractMediaController
 {
     /**
-     * Removes a media from the relation to the account
+     * Removes a media from the relation to the account.
      *
      * @param $id - account id
      * @param $slug - media id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id, $slug)
@@ -32,10 +34,11 @@ class AccountMediaController extends AbstractMediaController
     }
 
     /**
-     * Adds a new media to the account
+     * Adds a new media to the account.
      *
      * @param $id
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction($id, Request $request)

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Provides fallback interface for websocket apps
+ * Provides fallback interface for websocket apps.
  */
 class FallbackController
 {
@@ -26,15 +26,17 @@ class FallbackController
      */
     private $appManager;
 
-    function __construct(AppManagerInterface $appManager)
+    public function __construct(AppManagerInterface $appManager)
     {
         $this->appManager = $appManager;
     }
 
     /**
-     * Redirect message to app and returns value as json response
+     * Redirect message to app and returns value as json response.
+     *
      * @param string $appName
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function send($appName, Request $request)
@@ -48,6 +50,12 @@ class FallbackController
         $connection = new FallbackConnection($id);
 
         $app->onMessage($connection, $message);
+
+        // clean output buffer if there is data in it
+        // happens if a twig error occurs
+        if (ob_get_length() > 0) {
+            ob_clean();
+        }
 
         return new Response($connection->getData(), 200, array('Content-Type' => 'application/json'));
     }

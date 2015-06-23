@@ -16,7 +16,6 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 class LocationAdmin extends Admin
 {
-
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);

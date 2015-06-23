@@ -19,7 +19,7 @@ class CropCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface &$image, $parameters)
+    public function execute(ImageInterface & $image, $parameters)
     {
         $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
         $x = isset($parameters['x']) ? intval($parameters['x']) * $retina : 0;

@@ -19,8 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * The listbuilder implementation for doctrine
- * @package Sulu\Component\Rest\ListBuilder\Doctrine
+ * The listbuilder implementation for doctrine.
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
@@ -35,7 +34,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $em;
 
     /**
-     * The name of the entity to build the list for
+     * The name of the entity to build the list for.
+     *
      * @var string
      */
     private $entityName;
@@ -134,7 +134,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns all the joins required for the query
+     * Returns all the joins required for the query.
+     *
      * @return DoctrineJoinDescriptor[]
      */
     private function getJoins()
@@ -228,7 +229,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * adds where statements for in-clauses
+     * adds where statements for in-clauses.
+     *
      * @param array $inFields
      * @param array $inValues
      */
@@ -251,7 +253,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * adds where statements for in-clauses
+     * adds where statements for in-clauses.
+     *
      * @param array $betweenFields
      * @param array $betweenValues
      * @param array $betweenConjunctions
@@ -287,7 +290,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * sets where statement
+     * sets where statement.
+     *
      * @param array $whereFields
      * @param array $whereValues
      * @param array $whereComparators
@@ -350,6 +354,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     /**
      * @param $comparator
+     *
      * @return string
      */
     protected function convertNullComparator($comparator)
