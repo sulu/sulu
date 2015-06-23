@@ -127,6 +127,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $page = 1;
 
     /**
+     * All field descriptors for the current context.
+     *
+     * @var AbstractFieldDescriptor[]
+     */
+    protected $fieldDescriptors;
+
+    /**
      * {@inheritDoc}
      */
     public function setSelectFields($fieldDescriptors)
@@ -162,6 +169,26 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function hasSelectField($name)
     {
         return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFieldDescriptors(array $fieldDescriptors)
+    {
+        $this->fieldDescriptors = $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptor($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->fieldDescriptors)) {
+            return $this->fieldDescriptors[$fieldName];
+        }
+
+        return null;
     }
 
     /**
