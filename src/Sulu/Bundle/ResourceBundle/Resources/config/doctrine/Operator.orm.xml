@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ResourceBundle\Entity\Operator" table="re_operators"
+            repository-class="Sulu\Bundle\ResourceBundle\Entity\OperatorRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="operator" type="string" length="255" column="operator" nullable="false"/>
+        <field name="type" type="integer" column="type" nullable="false"/>
+        <field name="inputType" type="string" length="255" column="inputType" nullable="true"/>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation" mapped-by="operator"
+                     field="translations">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorValue" mapped-by="operator"
+                     field="values"/>
+
+    </entity>
+</doctrine-mapping>

@@ -13,9 +13,18 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 use PHPUnit_Framework_Assert;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $eventDispatcher;
+
     /**
      * @var DoctrineListBuilder
      */
@@ -65,7 +74,17 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             self::$entityName, self::$entityName
         )->willReturnSelf();
 
-        $this->doctrineListBuilder = new DoctrineListBuilder($this->em, self::$entityName);
+        $this->eventDispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->doctrineListBuilder = new DoctrineListBuilder($this->em, self::$entityName, $this->eventDispatcher);
+
+        $event = new ListBuilderCreateEvent($this->doctrineListBuilder);
+        $this->eventDispatcher->expects($this->any())->method('dispatch')->with(
+            ListBuilderEvents::LISTBUILDER_CREATE, $event
+        )->willReturn($event);
+
     }
 
     public function testSetField()
@@ -228,7 +247,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->expects($this->exactly(1))->method('setParameter');
         $this->queryBuilder->expects($this->never())->method('setMaxResults');
         $this->queryBuilder->expects($this->never())->method('setFirstResult');
-
+        
         $this->doctrineListBuilder->count();
     }
 
@@ -294,7 +313,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         foreach ($filter as $key => $value) {
             $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
-            $this->doctrineListBuilder->whereNot($fieldDescriptors[$key], $value);
+            $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
         $this->queryBuilder->expects($this->once())->method('andWhere')->with('(SuluCoreBundle:Example.id IS NOT NULL)');
@@ -316,16 +335,16 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         foreach ($filter as $key => $value) {
             $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
-            $this->doctrineListBuilder->whereNot($fieldDescriptors[$key], $value);
+            $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotValues'));
-        $whereNotValues = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotValues');
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues'));
+        $whereNotValues = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues');
         $this->assertEquals(3, $whereNotValues['title_id']);
         $this->assertEquals(1, $whereNotValues['desc_id']);
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotFields'));
-        $whereNotFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotFields');
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields'));
+        $whereNotFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields');
         $this->assertEquals($fieldDescriptors['title_id'], $whereNotFields['title_id']);
         $this->assertEquals($fieldDescriptors['desc_id'], $whereNotFields['desc_id']);
 
