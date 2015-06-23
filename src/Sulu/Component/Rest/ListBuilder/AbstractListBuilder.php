@@ -69,18 +69,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereValues = array();
 
     /**
-     * The where-not fields to be checked.
+     * The comparators the where fields should use
      *
      * @var array
      */
-    protected $whereNotFields = array();
+    protected $whereComparators = array();
 
     /**
-     * The values the where-not fields should have.
+     * The conjunctions for the where clauses
      *
      * @var array
      */
-    protected $whereNotValues = array();
+    protected $whereConjunctions = array();
 
     /**
      * group by fields.
@@ -118,9 +118,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $betweenValues = array();
 
     /**
-     * The page the resulting query will be returning.
+     * The conjunctions for the between clauses
      *
-     * @var int
+     * @var array
+     */
+    protected $betweenConjunctions = array();
+
+    /**
+     * The page the resulting query will be returning
+     *
+     * @var integer
      */
     protected $page = 1;
 
@@ -140,6 +147,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
         $this->fields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getField($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->fields)) {
+            return $this->fields[$fieldName];
+        }
+
+        return null;
     }
 
     /**
@@ -218,19 +237,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::CONJUNCTION_AND)
     {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
-    {
-        $this->whereNotFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereNotValues[$fieldDescriptor->getName()] = $value;
+        $this->whereComparators[$fieldDescriptor->getName()] = $comparator;
+        $this->whereConjunctions[$fieldDescriptor->getName()] = $conjunction;
     }
 
     /**
@@ -245,10 +257,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values)
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND)
     {
         $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->betweenValues[$fieldDescriptor->getName()] = $values;
+        $this->betweenConjunctions[$fieldDescriptor->getName()] = $conjunction;
     }
 
     /**

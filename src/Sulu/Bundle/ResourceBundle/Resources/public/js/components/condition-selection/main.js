@@ -8,7 +8,7 @@
  */
 
 /**
- * handles condition selection
+ * Handles management of conditions
  *
  * @class ConditionSelection
  * @constructor
@@ -67,7 +67,7 @@ define([], function() {
             removeButton: function(cssClass) {
                 return [
                     '<div class="grid-col-1 align-center pointer ', cssClass, '">',
-                    '<span class="fa-minus-circle m-top-5"></span>',
+                    '<span class="fa-minus-circle m-top-7"></span>',
                     '</div>'
                 ].join('');
             },
@@ -109,7 +109,7 @@ define([], function() {
 
         /**
          * raised when all overlay components returned their value
-         * @event sulu.condition-selection.data-changed
+         * @event sulu.condition-selection.[instanceName].data-changed
          */
         DATA_CHANGED = function() {
             return createEventName.call(this, 'data-changed');
@@ -229,6 +229,79 @@ define([], function() {
         },
 
         /**
+         * Removes a field from the used fields and adds it to the available fields
+         * should always be called in context with update select fields
+         * @param fieldName
+         */
+        removesUsedField = function(fieldName) {
+            var value;
+
+            if (!!this.usedFields[fieldName]) {
+                value = this.usedFields[fieldName];
+                delete this.usedFields[fieldName];
+                this.fields[fieldName] = value;
+            } else {
+                this.sandbox.logger.error('Field ' + fieldName + ' could not be found in used fields!');
+            }
+        },
+
+        /**
+         * Adds a field to the used fields and removes it from the available ones
+         * should always be called in context with update select fields
+         * @param fieldName
+         */
+        addUsedField = function(fieldName) {
+            var value;
+
+            if (!!this.fields[fieldName]) {
+                value = this.fields[fieldName];
+                delete this.fields[fieldName];
+                this.usedFields[fieldName] = value;
+            } else {
+                this.sandbox.logger.error('Field ' + fieldName + ' could not be found in fields!');
+            }
+        },
+
+        /**
+         * Updates select fields according the fields but skips the given one
+         * @param $currentSelect
+         */
+        updateSelectFields = function($currentSelect) {
+            var $fieldSelects = this.sandbox.dom.find('.' + constants.fieldSelectClass, this.$el);
+
+            this.sandbox.util.foreach($fieldSelects, function($select) {
+                if ($select !== $currentSelect) {
+                    updateOptionsOfSelect.call(this, $select);
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Updates the options of a given select according the usedFields
+         * @param $select
+         */
+        updateOptionsOfSelect = function($select) {
+            var $options = this.sandbox.dom.find('option', $select),
+                value = this.sandbox.dom.val($select),
+                prependEmpty = false, translatedText;
+
+            if (!this.sandbox.dom.val($options[0])) {
+                prependEmpty = true;
+            }
+
+            this.sandbox.dom.remove($options);
+            $options = createOptionsForSelect.call(this, value, 'name', 'translation', this.fields, prependEmpty);
+
+            // when the selected value is not in the fields append it
+            if (!this.fields[value]) {
+                translatedText = this.sandbox.translate(this.usedFields[value]['translation']);
+                $options.push('<option value="' + this.usedFields[value]['name'] + '" selected>' + translatedText + '</option>');
+            }
+
+            this.sandbox.dom.append($select, $options.join(''));
+        },
+
+        /**
          * Creates a select for fields
          * @param selectedField
          * @param prependEmpty
@@ -245,6 +318,12 @@ define([], function() {
                     constants.fieldSelectClass,
                     prependEmpty
                 );
+
+            if (!!selectedField) {
+                addUsedField.call(this, selectedField);
+                updateSelectFields.call(this, $select[0]);
+                this.sandbox.dom.data($select, 'value', selectedField);
+            }
 
             if (!!wrap) {
                 $wrapper = this.sandbox.dom.createElement(templates.col('grid-col-4'));
@@ -455,22 +534,8 @@ define([], function() {
          * @param prependEmpty prepend an empty option
          */
         createSelect = function(selected, valueProperty, displayProperty, values, cssClass, prependEmpty) {
-            var options = [],
-                translateText = null,
+            var options = createOptionsForSelect.call(this, selected, valueProperty, displayProperty, values, prependEmpty),
                 $select = this.sandbox.dom.createElement(templates.select.call(this, cssClass));
-
-            if (!!prependEmpty) {
-                options.push('<option value=""></option>');
-            }
-
-            values.forEach(function(value) {
-                translateText = this.sandbox.translate(value[displayProperty]);
-                if (value[valueProperty] === selected) {
-                    options.push('<option value="' + value[valueProperty] + '" selected>' + translateText + '</option>');
-                } else {
-                    options.push('<option value="' + value[valueProperty] + '">' + translateText + '</option>');
-                }
-            }.bind(this));
 
             if (!!this.options.validationSelector) {
                 this.sandbox.form.addField(this.options.validationSelector, $select);
@@ -481,7 +546,36 @@ define([], function() {
         },
 
         /**
-         * Renders the add button at the bottm
+         * Creates and returns an array of options for a select
+         * @param selected
+         * @param valueProperty
+         * @param displayProperty
+         * @param values
+         * @param prependEmpty
+         */
+        createOptionsForSelect = function(selected, valueProperty, displayProperty, values, prependEmpty) {
+            var key, translateText, options = [];
+
+            if (!!prependEmpty) {
+                options.push('<option value=""></option>');
+            }
+
+            for (key in values) {
+                if (values.hasOwnProperty(key)) {
+                    translateText = this.sandbox.translate(values[key][displayProperty]);
+                    if (values[key][valueProperty] === selected) {
+                        options.push('<option value="' + values[key][valueProperty] + '" selected>' + translateText + '</option>');
+                    } else {
+                        options.push('<option value="' + values[key][valueProperty] + '">' + translateText + '</option>');
+                    }
+                }
+            }
+
+            return options;
+        },
+
+        /**
+         * Renders the add button at the bottom
          */
         renderAddButton = function() {
             var text = this.sandbox.translate(this.options.translations.addButton),
@@ -509,18 +603,37 @@ define([], function() {
 
             // listen for select change
             this.sandbox.dom.on(this.$container, 'change', function() {
+                // FIXME Datepicker triggers multiple change events?
                 updateDataAttribute.call(this);
-            }.bind(this), 'select');
-
-            // listen for input change
-            this.sandbox.dom.on(this.$container, 'change', function() {
-                updateDataAttribute.call(this);
-            }.bind(this), 'input');
+            }.bind(this), 'select, input');
 
             // update operator data
             this.sandbox.dom.on(this.$container, 'change', function(event) {
                 updateOperatorType.call(this, event);
             }.bind(this), 'select.' + constants.operatorSelectClass);
+
+            // field select listener
+            this.sandbox.dom.on(this.$container, 'change', fieldSelectChangedHandler.bind(this), 'select.' + constants.fieldSelectClass);
+        },
+
+        /**
+         * Handles the event when a select for a field changed its value
+         * @param event
+         */
+        fieldSelectChangedHandler = function(event) {
+            var $select = this.sandbox.dom.createElement(event.currentTarget),
+                oldValue = this.sandbox.dom.data($select, 'value'),
+                value = this.sandbox.dom.val($select);
+
+            if (!!oldValue) {
+                removesUsedField.call(this, oldValue);
+            }
+
+            if (!!value) {
+                addUsedField.call(this, value);
+                updateSelectFields.call(this, $select[0]);
+                this.sandbox.dom.data($select, 'value', value);
+            }
         },
 
         updateOperatorType = function(event) {
@@ -532,10 +645,21 @@ define([], function() {
         },
 
         /**
+         * Resets the used fields and puts all fields back into the fields obj
+         */
+        resetUsedFields = function() {
+            for (var fieldName in this.usedFields) {
+                this.fields[fieldName] = this.usedFields[fieldName];
+            }
+            this.usedFields = {};
+        },
+
+        /**
          * Triggers data update for component
          */
         dataChangedEventHandler = function() {
             var data = this.sandbox.dom.data(this.options.el, 'condition-selection');
+            resetUsedFields.call(this);
             updateData.call(this, data);
             updateDataAttribute.call(this);
         },
@@ -583,7 +707,7 @@ define([], function() {
          */
         fieldChangedEventHandler = function(event) {
             var fieldName = event.target.value,
-                field = getFieldByName.call(this, fieldName),
+                field = this.fields[fieldName],
                 filteredOperators = filterOperatorsByType.call(this, field.type),
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row)[0],
@@ -609,22 +733,6 @@ define([], function() {
         },
 
         /**
-         * Searches for a field by name
-         * @param name
-         * @returns {*}
-         */
-        getFieldByName = function(name) {
-            var result = {type: 'string'}; // default if no type is defined
-            this.fields.forEach(function(field) {
-                if (field.name === name) {
-                    result = field;
-                    return false;
-                }
-            }.bind(this));
-            return result;
-        },
-
-        /**
          * Adds a new condition row
          */
         addConditionEventHandler = function() {
@@ -637,7 +745,12 @@ define([], function() {
          * @param event
          */
         removeConditionEventHandler = function(event) {
-            var $row = this.sandbox.dom.closest(event.currentTarget, '.' + constants.conditionRowClass);
+            var $row = this.sandbox.dom.closest(event.currentTarget, '.' + constants.conditionRowClass),
+                $select = this.sandbox.dom.find('.' + constants.fieldSelectClass, $row),
+                value = this.sandbox.dom.data($select, 'value');
+
+            removesUsedField.call(this, value);
+            updateSelectFields.call(this, $select);
             removeConditionFromDomAndValidation.call(this, $row);
         },
 
@@ -720,6 +833,18 @@ define([], function() {
             this.data = getData.call(this);
             this.sandbox.dom.data(this.options.el, 'conditionSelection', this.data);
             this.sandbox.emit(DATA_CHANGED.call(this));
+        },
+
+        /**
+         * Transforms the fields array to a object for easier handling
+         * @param fields array of fields
+         */
+        transformFieldsArrayToObject = function(fields) {
+            var result = {};
+            fields.forEach(function(field) {
+                result[field.name] = field;
+            }.bind(this));
+            return result;
         };
 
     return {
@@ -752,7 +877,7 @@ define([], function() {
                 this.sandbox.data.when(operatorPromise, fieldsPromise).done(
                     function(operators, fields) {
                         this.operators = operators[0]._embedded.items;
-                        this.fields = fields[0];
+                        this.fields = transformFieldsArrayToObject.call(this, fields[0]);
 
                         this.render();
                     }.bind(this));
@@ -762,6 +887,7 @@ define([], function() {
         },
 
         render: function() {
+            this.usedFields = {};
             this.deferreds = [];
             this.$container = this.sandbox.dom.createElement(
                 templates.container(constants.conditionContainerClass, this.options.ids.container));

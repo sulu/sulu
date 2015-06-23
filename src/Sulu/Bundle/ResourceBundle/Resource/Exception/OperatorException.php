@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Base exception for handling operator specific exceptions.
- * Class OperatorException
  */
 class OperatorException extends \Exception
 {

@@ -35,7 +35,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
         $metadata = $manager->getClassMetaData(get_class(new Operator()));
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $i = 1;
-        $file = dirname(__FILE__).'/../../operators.xml';
+        $file = dirname(__FILE__) . '/../../operators.xml';
         $doc = new \DOMDocument();
         $doc->load($file);
         $xpath = new \DOMXpath($doc);
@@ -133,11 +133,11 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
      */
     protected function getTypeForString($type)
     {
-        switch($type){
+        switch ($type) {
             case 'string':
                 return DataTypes::STRING_TYPE;
             case 'number':
-                    return DataTypes::NUMBER_TYPE;
+                return DataTypes::NUMBER_TYPE;
             case 'date':
             case 'datetime':
                 return DataTypes::DATETIME_TYPE;

@@ -424,6 +424,52 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
+     * Test PUT to update an existing condition group
+     */
+    public function testPutNewConditionExistingConditionGroup()
+    {
+        $newName = 'The new name';
+        $conjunction = false;
+        $newContext = 'account';
+
+        // remove old condition group and add a new one
+        $this->client->request(
+            'PUT',
+            '/api/filters/' . $this->filter1->getId(),
+            array(
+                'name' => $newName,
+                'conjunction' => $conjunction,
+                'context' => $newContext,
+                'conditionGroups' => array(
+                    array(
+                        'id' => $this->filter1->getConditionGroups()[0]->getId(),
+                        'conditions' => array(
+                            array(
+                                'value' => '6',
+                                'field' => 'nr',
+                                'operator' => '<',
+                                'type' => Condition::TYPE_NUMBER,
+                            )
+                        ),
+                    ),
+                ),
+            )
+        );
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($newName, $response->name);
+        $this->assertEquals($conjunction, $response->conjunction);
+        $this->assertEquals($newContext, $response->context);
+        $this->assertCount(1, $response->conditionGroups);
+        $this->assertCount(1, $response->conditionGroups[0]->conditions);
+        $this->assertEquals('6', $response->conditionGroups[0]->conditions[0]->value);
+        $this->assertEquals('nr', $response->conditionGroups[0]->conditions[0]->field);
+        $this->assertEquals('<', $response->conditionGroups[0]->conditions[0]->operator);
+    }
+
+    /**
      * Test PUT to update an existing filter without conditions
      */
     public function testPutWithoutConditions()

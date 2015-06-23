@@ -19,9 +19,21 @@ interface ListBuilderInterface
 
     const WHERE_COMPARATOR_UNEQUAL = '!=';
 
+    const WHERE_COMPARATOR_GREATER = '>';
+
+    const WHERE_COMPARATOR_GREATER_THAN = '>=';
+
+    const WHERE_COMPARATOR_LESS = '<';
+
+    const WHERE_COMPARATOR_LESS_THAN = '<=';
+
     const SORTORDER_ASC = 'ASC';
 
     const SORTORDER_DESC = 'DESC';
+
+    const CONJUNCTION_AND = 'AND';
+
+    const CONJUNCTION_OR = 'OR';
 
     /**
      * Sets all the field descriptors for the ListBuilder at once.
@@ -42,7 +54,16 @@ interface ListBuilderInterface
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Checks if field by name has been already added.
+     * Gets a field descriptor from the ListBuilder
+     *
+     * @param string $fieldName
+     *
+     * @return AbstractFieldDescriptor
+     */
+    public function getField($fieldName);
+
+    /**
+     * Checks if field by name has been already added
      *
      * @param $name
      *
@@ -115,20 +136,12 @@ interface ListBuilderInterface
      *
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should have
+     * @param string $comparator The comparator use to compare the values
+     * @param string $conjunction The conjunction to connect the where statements
      *
      * @return mixed
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value);
-
-    /**
-     * Defines a constraint for the rows to return which are not equal the specified values.
-     *
-     * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
-     * @param string $value The value the FieldDescriptor should not have
-     *
-     * @return mixed
-     */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator, $conjunction);
 
     /**
      * Defines GROUP BY.
@@ -152,8 +165,10 @@ interface ListBuilderInterface
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
+     * @param string $conjunction The conjunction to connect the between statements
+     * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values);
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction);
 
     /**
      * The number of total elements for this list.

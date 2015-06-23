@@ -219,7 +219,7 @@ class FilterManager implements FilterManagerInterface
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
         if (array_key_exists('context', $data)) {
-            if ($this->getClassMappingForAlias($data['context'])) {
+            if ($this->getClassMappingForContext($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
                 throw new UnknownContextException($data['context']);
@@ -273,6 +273,7 @@ class FilterManager implements FilterManagerInterface
      *
      * @param ConditionGroupEntity $conditionGroup
      * @param array $matchedEntry
+     *
      * @return bool
      * @throws ConditionGroupMismatchException
      * @throws FilterDependencyNotFoundException
@@ -280,6 +281,7 @@ class FilterManager implements FilterManagerInterface
     protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
         if (array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
+            $conditionIds = array();
             foreach ($matchedEntry['conditions'] as $conditionData) {
                 if (array_key_exists('id', $conditionData)) {
                     /** @var ConditionEntity $conditionEntity */
@@ -299,6 +301,9 @@ class FilterManager implements FilterManagerInterface
                             $matchedEntry['id']
                         );
                     }
+
+                    $conditionIds[] = $conditionEntity->getId();
+
                 } else {
                     $conditionEntity = new ConditionEntity();
                     $conditionEntity->setConditionGroup($conditionGroup);
@@ -310,12 +315,35 @@ class FilterManager implements FilterManagerInterface
                 $conditionEntity->setOperator(
                     $this->getProperty($conditionData, 'operator', $conditionEntity->getOperator())
                 );
-                $conditionEntity->setValue($this->getProperty($conditionData, 'value', $conditionEntity->getValue()));
+
                 $conditionEntity->setType($this->getProperty($conditionData, 'type', $conditionEntity->getType()));
+                $value = $this->getValueForCondition(
+                    $this->getProperty($conditionData, 'value', $conditionEntity->getValue()),
+                    $conditionEntity->getType()
+                );
+                $conditionEntity->setValue($value);
             }
+
+            $this->removeNonExistentConditions($conditionGroup, $conditionIds);
         }
 
         return true;
+    }
+
+    /**
+     * Parses the value for a condition - is mainly used for parsing values with type datetime
+     * but excludes relative values like "-1 week" or "now"
+     *
+     * @return string
+     */
+    protected function getValueForCondition($value, $type)
+    {
+        // check if date and not a relative value like -1 week
+        if ($type === DataTypes::DATETIME_TYPE && !preg_match('/[A-Za-z]{3,}/', $value)) {
+            return (new \DateTime($value))->format(\DateTime::ISO8601);
+        }
+
+        return $value;
     }
 
     /**
@@ -323,6 +351,7 @@ class FilterManager implements FilterManagerInterface
      *
      * @param Filter $filter The filter to add the condition group to
      * @param array $conditionGroupData The array containing the data for the additional condition group
+     *
      * @return bool
      * @throws EntityIdAlreadySetException
      * @throws FilterDependencyNotFoundException
@@ -340,8 +369,12 @@ class FilterManager implements FilterManagerInterface
                     throw new EntityIdAlreadySetException(self::$conditionEntityName, $conditionData['id']);
                 } elseif ($this->isValidConditionData($conditionData)) {
                     $condition = new ConditionEntity();
-                    $condition->setValue($conditionData['value']);
                     $condition->setType($conditionData['type']);
+                    $value = $this->getValueForCondition(
+                        $conditionData['value'],
+                        $conditionData['type']
+                    );
+                    $condition->setValue($value);
                     $condition->setOperator($conditionData['operator']);
                     $condition->setField($conditionData['field']);
                     $condition->setConditionGroup($conditionGroup);
@@ -364,6 +397,7 @@ class FilterManager implements FilterManagerInterface
      * @param array $data
      * @param string $key
      * @param string $default
+     *
      * @return mixed
      */
     protected function getProperty(array $data, $key, $default = null)
@@ -390,6 +424,7 @@ class FilterManager implements FilterManagerInterface
      * @param array $data The array with the data
      * @param string $key The array key to check
      * @param bool $create Defines if the is for new or already existing data
+     *
      * @return bool
      * @throws Exception\MissingFilterAttributeException
      */
@@ -407,6 +442,7 @@ class FilterManager implements FilterManagerInterface
      * Checks if the given data is correct for a condition
      *
      * @param array $data The data to check
+     *
      * @return bool
      * @throws MissingConditionAttributeException
      */
@@ -440,13 +476,15 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Returns the configured class for a key
-     * @param string $alias
+     *
+     * @param string $context
+     *
      * @return string|null
      */
-    public function getClassMappingForAlias($alias)
+    public function getClassMappingForContext($context)
     {
-        if ($this->contextConfiguration && array_key_exists($alias, $this->contextConfiguration)) {
-            return $this->contextConfiguration[$alias]['class'];
+        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+            return $this->contextConfiguration[$context]['class'];
         }
 
         return null;
@@ -454,7 +492,9 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Returns the configured features for a context
+     *
      * @param $context
+     *
      * @return array|null
      */
     public function getFeaturesForContext($context)
@@ -467,8 +507,28 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
+     * Removes conditions from condition groups when they are not in the given array
+     *
+     * @param ConditionGroupEntity $conditionGroup
+     * @param array $conditionIds
+     */
+    protected function removeNonExistentConditions(
+        $conditionGroup,
+        $conditionIds
+    ) {
+        foreach ($conditionGroup->getConditions() as $condition) {
+            if ($condition->getId() && !in_array($condition->getId(), $conditionIds)) {
+                $conditionGroup->removeCondition($condition);
+                $this->em->remove($condition);
+            }
+        }
+    }
+
+    /**
      * Checks if the context exists
+     *
      * @param $context
+     *
      * @return boolean
      */
     public function hasContext($context)
@@ -482,8 +542,10 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Checks if a feature is enabled for a context
+     *
      * @param $context
      * @param $feature
+     *
      * @return boolean
      */
     public function isFeatureEnabled($context, $feature)
