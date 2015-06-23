@@ -320,7 +320,8 @@ define([], function() {
             this.sandbox.emit(
                 'sulu.header.toolbar.extend',
                 this.options.context, this.options.template,
-                this.options.datagridInstanceName
+                this.options.datagridInstanceName,
+                this.options.listInfoContainerSelector
             );
 
             this.options.template = parseTemplateTypes.call(this, this.options.template);

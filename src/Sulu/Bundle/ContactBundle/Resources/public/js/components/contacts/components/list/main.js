@@ -108,7 +108,8 @@ define(['widget-groups'], function(WidgetGroups) {
                         }
                     }
                 },
-                'contacts'
+                'contacts',
+                '#people-list-info'
             );
         }
     };
