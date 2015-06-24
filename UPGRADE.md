@@ -1,5 +1,35 @@
 # Upgrade
 
+## dev-develop
+
+### Document Manager
+
+The new Document Manager have been introduced, which means that a few files need to be updated.
+
+There is a new namespace `Sulu\Component\Content\Compat`, which acts as a compatability layer. So all the controllers
+extending the `DefaultController` and adapting its `indexAction` need to change a use statement from
+`Sulu\Component\Content\StructureInterface` to `Sulu\Component\Content\Compat\StructureInterface`.
+
+There are also some changes in the database, so you have to run the migrations:
+
+```
+app/console phpcr:migrations:migrate
+```
+
+In case the system still contains old data from the internal links content type you also have to run the upgrade command
+again.
+
+```
+app/console sulu:upgrade:rc3:internal-links
+```
+
+### Upgrade commands
+
+All the upgrade commands have been removed, since they are not of any use for
+future versions of Sulu. The only exception is the
+`sulu:upgrade:0.9.0:resource-locator` command, which has been renamed to
+`sulu:content:resource-locator:maintain`.
+
 ## 1.0.0-RC2
 
 ### Twig-Extensions

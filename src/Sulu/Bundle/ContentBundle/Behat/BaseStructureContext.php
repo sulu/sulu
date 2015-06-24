@@ -12,9 +12,11 @@
 namespace Sulu\Bundle\ContentBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
  * Base context class for Structure based feature contexts.
@@ -142,13 +144,15 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     protected function createStructureTemplate($type, $name, $template)
     {
         $paths = $this->getContainer()->getParameter('sulu.content.structure.paths');
-        $paths = array_filter($paths, function ($value) use ($type) {
-            if ($value['type'] == $type) {
-                return true;
-            }
 
-            return false;
-        });
+        if (!isset($paths[$type])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Unknown structure type, "%s" in behat test',
+                $type
+            ));
+        }
+
+        $paths = $paths[$type];
 
         if (count($paths) == 0) {
             throw new \Exception(sprintf(

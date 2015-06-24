@@ -6,9 +6,10 @@
 
     <key>excerpt</key>
 
-    <view>not in use</view>
     <controller>not in use</controller>
+    <view>not in use</view>
     <cacheLifetime>1</cacheLifetime>
+    <internal>true</internal>
 
     <properties>
         <property name="title" type="text_line">

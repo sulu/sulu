@@ -12,12 +12,13 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use PHPCR\ItemNotFoundException;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -26,6 +27,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 /**
  * handles content nodes.
@@ -93,8 +95,8 @@ class NodeController extends RestController
                         $depth,
                         $ghostContent
                     );
-                } catch (ItemNotFoundException $ex) {
-                    return;
+                } catch (DocumentNotFoundException $ex) {
+                    return null;
                 }
             }
         );
@@ -143,8 +145,8 @@ class NodeController extends RestController
                         $complete,
                         $ghostContent
                     );
-                } catch (ItemNotFoundException $ex) {
-                    return;
+                } catch (DocumentNotFoundException $ex) {
+                    return null;
                 }
             }
         );
@@ -183,7 +185,7 @@ class NodeController extends RestController
             } else {
                 $result = $this->getRepository()->getWebspaceNodes($language);
             }
-        } catch (ItemNotFoundException $ex) {
+        } catch (DocumentNotFoundException $ex) {
             // TODO return 404 and handle this edge case on client side
             return $this->redirect(
                 $this->generateUrl(
@@ -508,7 +510,7 @@ class NodeController extends RestController
             function ($id) use ($language, $webspace) {
                 try {
                     $this->getRepository()->deleteNode($id, $webspace, $language);
-                } catch (ItemNotFoundException $ex) {
+                } catch (DocumentNotFoundException $ex) {
                     throw new EntityNotFoundException('Content', $id);
                 }
             }
@@ -612,7 +614,7 @@ class NodeController extends RestController
      */
     public function getSecuredClass()
     {
-        return Structure::class;
+        return WebspaceBehavior::class;
     }
 
     /**

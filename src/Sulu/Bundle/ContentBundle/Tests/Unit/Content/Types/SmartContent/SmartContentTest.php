@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Component\Content\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -129,7 +129,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -183,7 +183,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -258,7 +258,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -313,7 +313,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -347,7 +347,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testGetViewData()
     {
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -356,7 +356,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $config = array('dataSource' => 'some-uuid');
@@ -420,7 +420,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testGetContentDataPaged()
     {
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -429,7 +429,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
@@ -482,7 +482,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testGetContentDataPagedLimit($page, $pageSize, $offset, $limitResult, $uuid, $data, $expectedData, $limit, $hasNextPage)
     {
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -491,7 +491,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
@@ -529,7 +529,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testGetViewDataPagedLimit($page, $pageSize, $offset, $limitResult, $uuid, $data, $expectedData, $limit, $hasNextPage)
     {
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -538,7 +538,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
@@ -594,7 +594,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     private function getContentDataProperty()
     {
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -603,7 +603,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $property->expects($this->exactly(1))->method('getValue')

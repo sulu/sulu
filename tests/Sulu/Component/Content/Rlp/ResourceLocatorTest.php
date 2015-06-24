@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Rlp;
+namespace Sulu\Component\Content\Compat\Rlp;
 
 use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Property;
+use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;

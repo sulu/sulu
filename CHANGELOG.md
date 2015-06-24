@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
+
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
     * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay 

@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
@@ -92,8 +92,9 @@ class TagList extends ComplexContentType
         $segmentKey
     ) {
         $tagIds = array();
+        $tags = $property->getValue() === null ? array() : $property->getValue();
 
-        foreach ($property->getValue() as $tag) {
+        foreach ($tags as $tag) {
             $tagIds[] = $this->tagManager->findOrCreateByName($tag, $userId)->getId();
         }
 
