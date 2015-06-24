@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
+
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete

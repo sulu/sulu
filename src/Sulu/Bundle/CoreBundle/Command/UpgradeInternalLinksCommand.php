@@ -10,20 +10,17 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
+use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\Structure\Page;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -31,7 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades InternalLinks to 0.15.0.
+ * Upgrades InternalLinks to RC3
  *
  * @deprecated
  */
@@ -52,7 +49,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('sulu:upgrade:0.15.0:internal-links')->setDescription('Upgrades internal-links to 0.15.0');
+        $this->setName('sulu:upgrade:rc3:internal-links')->setDescription('Upgrades internal-links to RC3');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -105,7 +102,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
     }
 
     private function upgradeByParent(
-        Structure $parent,
+        StructureBridge $parent,
         Webspace $webspace,
         Localization $localization,
         ContentMapperInterface $contentMapper,
@@ -126,7 +123,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
     }
 
     private function upgradeNode(
-        Structure $structure,
+        StructureBridge $structure,
         Localization $localization,
         OutputInterface $output,
         $depth = 0
@@ -146,7 +143,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
     }
 
     private function upgradeBlockProperty(
-        Structure $structure,
+        StructureBridge $structure,
         Localization $localization,
         OutputInterface $output,
         BlockPropertyInterface $property,
@@ -172,7 +169,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
     }
 
     private function upgradeProperty(
-        Structure $structure,
+        StructureBridge $structure,
         OutputInterface $output,
         $property,
         $depth
@@ -191,7 +188,17 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
 
             $ids = array_key_exists('ids', $value) ? $value['ids'] : $value;
 
-            $node->setProperty($property->getName(), $ids, PropertyType::REFERENCE);
+            $references = array();
+            foreach ($ids as $id) {
+                try {
+                    $this->session->getNodeByIdentifier($id);
+                    $references[] = $id;
+                } catch (ItemNotFoundException $e) {
+                    // don't add to reference list if item does not exist
+                }
+            }
+
+            $node->setProperty($property->getName(), $references, PropertyType::REFERENCE);
 
             $prefix = '   ';
             for ($i = 0; $i < $depth; $i++) {
