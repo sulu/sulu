@@ -1,8 +1,9 @@
 massive_search:
-    adapter: zend_lucene
-    adapters:
-        zend_lucene:
-            hide_index_exception: true
+    adapter: test
+    #adapter: zend_lucene
+    #adapters:
+        #zend_lucene:
+            #hide_index_exception: true
 
 sulu_content:
     search:
