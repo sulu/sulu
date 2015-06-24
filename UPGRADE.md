@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 1.0.0-RC3
 
 ### Document Manager
 
