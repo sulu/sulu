@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -35,7 +36,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    protected static $entityName = 'SuluSecurityBundle:User';
+    protected static $entityName = 'Sulu\Component\Security\Authentication\UserInterface';
 
     protected static $entityKey = 'users';
 
@@ -247,7 +248,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create(static::$entityName);
+            $listBuilder = $factory->create($this->container->getParameter('sulu.model.user.class'));
 
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
@@ -265,7 +266,9 @@ class UserController extends RestController implements ClassResourceInterface, S
 
             if ($contactId != null) {
                 $entities = array();
-                $entities[] = $this->getDoctrine()->getRepository(static::$entityName)->findUserByContact($contactId);
+                $entities[] = $this->getDoctrine()->getRepository(
+                    $this->container->getParameter('sulu.model.user.class')
+                )->findUserByContact($contactId);
                 if (!$entities[0]) {
                     $view = $this->view(null, 204);
                 }

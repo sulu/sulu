@@ -36,10 +36,6 @@ class UserManager implements UserManagerInterface
 {
     use RelationTrait;
 
-    protected static $entityName = 'SuluSecurityBundle:User';
-    protected static $entityNameRole = 'SuluSecurityBundle:Role';
-    protected static $entityNameGroup = 'SuluSecurityBundle:Group';
-
     /**
      * @var CurrentUserDataInterface
      */
@@ -122,7 +118,7 @@ class UserManager implements UserManagerInterface
         $delete = function ($id) {
             $user = $this->userRepository->findUserById($id);
             if (!$user) {
-                throw new EntityNotFoundException(static::$entityName, $id);
+                throw new EntityNotFoundException($this->userRepository->getClassName(), $id);
             }
 
             $this->em->remove($user);
@@ -175,7 +171,7 @@ class UserManager implements UserManagerInterface
                 // update user
                 $user = $this->userRepository->findUserById($id);
                 if (!$user) {
-                    throw new EntityNotFoundException(static::$entityName, $id);
+                    throw new EntityNotFoundException($this->userRepository->getClassName(), $id);
                 }
                 $this->processEmail($user, $email);
             } else {
@@ -456,7 +452,7 @@ class UserManager implements UserManagerInterface
         $role = $this->roleRepository->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException(static::$entityNameRole, $userRole['role']['id']);
+            throw new EntityNotFoundException($this->roleRepository->getClassName(), $userRole['role']['id']);
         }
 
         $userRole->setRole($role);
@@ -486,7 +482,7 @@ class UserManager implements UserManagerInterface
         $role = $this->roleRepository->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException(static::$entityNameRole, $userRoleData['role']['id']);
+            throw new EntityNotFoundException($this->roleRepository->getClassName(), $userRoleData['role']['id']);
         }
 
         if ($user->getUserRoles()) {
@@ -525,7 +521,7 @@ class UserManager implements UserManagerInterface
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
         if (!$group) {
-            throw new EntityNotFoundException(static::$entityNameGroup, $userGroupData['group']['id']);
+            throw new EntityNotFoundException($this->groupRepository->getClassName(), $userGroupData['group']['id']);
         }
 
         $userGroup = new UserGroup();
@@ -554,7 +550,7 @@ class UserManager implements UserManagerInterface
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
         if (!$group) {
-            throw new EntityNotFoundException(static::$entityNameGroup, $userGroup['group']['id']);
+            throw new EntityNotFoundException($this->groupRepository->getClassName(), $userGroup['group']['id']);
         }
 
         $userGroup->setGroup($group);
@@ -634,13 +630,13 @@ class UserManager implements UserManagerInterface
     /**
      * Processes the email and adds it to the user
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $email
      * @param null|array $contact
      *
      * @throws EmailNotUniqueException
      */
-    private function processEmail(User $user, $email, $contact = null)
+    private function processEmail(UserInterface $user, $email, $contact = null)
     {
         if ($contact) {
             // if no email passed try to use the contact's first email

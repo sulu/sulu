@@ -46,12 +46,12 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                     array(
                         new Reference('doctrine.orm.entity_manager'),
                         new Reference('security.encoder_factory'),
-                        new Reference('sulu_security.role_repository'),
+                        new Reference('sulu.repository.role'),
                         new Reference('sulu_security.group_repository'),
                         new Reference('sulu_contact.contact_manager'),
                         new Reference('sulu_security.salt_generator'),
                         new Reference('sulu_security.user_manager.current_user_data'),
-                        new Reference('sulu_security.user_repository'),
+                        new Reference('sulu.repository.user'),
                     )
                 )
             );
