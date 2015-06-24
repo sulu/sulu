@@ -100,8 +100,14 @@ class CategoryList extends ComplexContentType
         $segmentKey
     ) {
         $categoryIds = array();
+        $value = $property->getValue();
 
-        foreach ($property->getValue() as $category) {
+        if (null === $value) {
+            $node->setProperty($property->getName(), null);
+            return;
+        }
+
+        foreach ($value as $category) {
             if (is_numeric($category)) {
                 // int value for id
                 $categoryIds[] = $category;

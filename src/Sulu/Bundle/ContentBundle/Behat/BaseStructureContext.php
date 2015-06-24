@@ -144,14 +144,15 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     protected function createStructureTemplate($type, $name, $template)
     {
         $paths = $this->getContainer()->getParameter('sulu.content.structure.paths');
-        // FIX THIS
-        $paths = array_filter($paths, function ($value) use ($type) {
-            if ($value['type'] == $type) {
-                return true;
-            }
 
-            return false;
-        });
+        if (!isset($paths[$type])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Unknown structure type, "%s" in behat test',
+                $type
+            ));
+        }
+
+        $paths = $paths[$type];
 
         if (count($paths) == 0) {
             throw new \Exception(sprintf(
