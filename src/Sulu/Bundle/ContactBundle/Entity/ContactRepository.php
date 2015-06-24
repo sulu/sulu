@@ -10,10 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Repository for the Codes, implementing some additional functions

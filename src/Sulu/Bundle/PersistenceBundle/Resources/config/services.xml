@@ -1,24 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" ?>
 <container xmlns="http://symfony.com/schema/dic/services"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
         <parameter key="sulu.persistence.event_subscriber.orm.timestampable.class">Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber</parameter>
         <parameter key="sulu.persistence.event_subscriber.orm.user_blame.class">Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber</parameter>
+        <parameter key="sulu.persistence.event_subscriber.orm.metadata.class">Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber</parameter>
     </parameters>
 
     <services>
 
         <service id="sulu.persistence.event_subscriber.orm.timestampable" class="%sulu.persistence.event_subscriber.orm.timestampable.class%">
-            <tag name="doctrine.event_subscriber" />
+            <tag name="doctrine.event_subscriber"/>
         </service>
 
         <service id="sulu.persistence.event_subscriber.orm.user_blame" class="%sulu.persistence.event_subscriber.orm.user_blame.class%">
             <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <tag name="doctrine.event_subscriber" />
+            <tag name="doctrine.event_subscriber"/>
+        </service>
+
+        <service id="sulu.persistence.event_subscriber.orm.metadata" class="%sulu.persistence.event_subscriber.orm.metadata.class%">
+            <argument>%sulu.persistence.objects%</argument>
+            <tag name="doctrine.event_subscriber"/>
         </service>
 
     </services>
-
 </container>

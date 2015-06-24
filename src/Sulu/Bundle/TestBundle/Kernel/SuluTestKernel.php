@@ -26,6 +26,7 @@ class SuluTestKernel extends SuluKernel
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
+            new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),

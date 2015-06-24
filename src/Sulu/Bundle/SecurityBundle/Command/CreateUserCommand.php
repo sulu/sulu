@@ -14,6 +14,9 @@ use DateTime;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Component\Contact\Model\ContactInterface;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -90,7 +93,10 @@ class CreateUserCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $contact = new Contact();
+        /** @var RepositoryInterface $contactRepository */
+        $contactRepository = $this->getContainer()->get('sulu.repository.contact');
+        /** @var ContactInterface $contact */
+        $contact = $contactRepository->createNew();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
 

@@ -124,8 +124,8 @@ class AccountMediaControllerTest extends SuluTestCase
         $accountAddress->setAddress($address);
         $accountAddress->setAccount($this->account);
         $accountAddress->setMain(true);
-        $this->account->addAccountAddresse($accountAddress);
-        $address->addAccountAddresse($accountAddress);
+        $this->account->addAccountAddress($accountAddress);
+        $address->addAccountAddress($accountAddress);
 
         $contact = new Contact();
         $contact->setFirstName('Vorname');

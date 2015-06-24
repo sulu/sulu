@@ -909,9 +909,9 @@ class Account extends ApiWrapper
      *
      * @return Account
      */
-    public function addAccountAddresse(AccountAddressEntity $accountAddress)
+    public function addAccountAddress(AccountAddressEntity $accountAddress)
     {
-        $this->entity->addAccountAddresse($accountAddress);
+        $this->entity->addAccountAddress($accountAddress);
 
         return $this;
     }
@@ -921,9 +921,9 @@ class Account extends ApiWrapper
      *
      * @param AccountAddressEntity $accountAddresses
      */
-    public function removeAccountAddresse(AccountAddressEntity $accountAddresses)
+    public function removeAccountAddress(AccountAddressEntity $accountAddresses)
     {
-        $this->entity->removeAccountAddresse($accountAddresses);
+        $this->entity->removeAccountAddress($accountAddresses);
     }
 
     /**

@@ -107,7 +107,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $mainUrl;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Component\Contact\Model\ContactInterface
      */
     private $mainContact;
 

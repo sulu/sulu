@@ -135,8 +135,8 @@ class ContactMediaControllerTest extends SuluTestCase
         $contactAddress->setContact($contact);
         $contactAddress->setMain(true);
 
-        $contact->addContactAddresse($contactAddress);
-        $address->addContactAddresse($contactAddress);
+        $contact->addContactAddress($contactAddress);
+        $address->addContactAddress($contactAddress);
 
         $note = new Note();
         $note->setValue('Note');

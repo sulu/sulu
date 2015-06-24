@@ -5,7 +5,7 @@
     <entity name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users"
             repository-class="Sulu\Bundle\SecurityBundle\Entity\UserRepository">
 
-        <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <one-to-one field="contact" target-entity="Sulu\Component\Contact\Model\ContactInterface">
             <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
         </one-to-one>
 

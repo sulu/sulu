@@ -50,7 +50,6 @@ class MediaManager implements MediaManagerInterface
     const ENTITY_NAME_TAG = 'SuluTagBundle:Tag';
     const ENTITY_NAME_FILEVERSIONCONTENTLANGUAGE = 'SuluMediaBundle:FileVersionContentLanguage';
     const ENTITY_NAME_FILEVERSIONPUBLISHLANGUAGE = 'SuluMediaBundle:FileVersionPublishLanguage';
-    const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
     const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
 
     /**

@@ -10,17 +10,22 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
-use \DateTime;
+use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
-use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
+use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContentBundle\Content\Types\Email;
+use Sulu\Bundle\ContentBundle\Content\Types\Phone;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class ContactManager extends AbstractContactManager
 {
@@ -39,15 +44,21 @@ class ContactManager extends AbstractContactManager
      */
     private $contactRepository;
 
+    /**
+     * @param ObjectManager $em
+     * @param TagManagerInterface $tagManager
+     * @param AccountRepository $accountRepository
+     * @param ContactTitleRepository $contactTitleRepository
+     * @param ContactRepository $contactRepository
+     */
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
-        ContactRepository $contactRepository,
-        $accountEntityName
+        ContactRepository $contactRepository
     ) {
-        parent::__construct($em, $tagManager, $accountEntityName);
+        parent::__construct($em, $tagManager);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
@@ -57,6 +68,8 @@ class ContactManager extends AbstractContactManager
      * Find a contact by it's id
      *
      * @param int $id
+     *
+     * @return mixed|null
      */
     public function findById($id)
     {
@@ -69,36 +82,24 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Returns the tag manager
-     *
-     * @return TagManagerInterface
-     */
-    public function getTagManager()
-    {
-        return $this->tagManager;
-    }
-
-    /**
      * Deletes the contact for the given id
      *
-     * @param int $id
+     * @return \Closure
      */
-    public function delete($id)
+    public function delete()
     {
         /**
          * TODO: https://github.com/sulu-io/sulu/pull/1171
          * This method needs to be refactored since in the first
          * iteration the logic was just moved from the Controller
          * to this class due to better reusability.
-        */
+         */
         $delete = function ($id) {
             /** @var Contact $contact */
-            $contact = $this->em->getRepository(
-                self::$contactEntityName
-            )->findByIdAndDelete($id);
+            $contact = $this->contactRepository->findByIdAndDelete($id);
 
             if (!$contact) {
-                throw new EntityNotFoundException(self::$contactEntityName, $id);
+                throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
 
             $addresses = $contact->getAddresses();
@@ -151,10 +152,12 @@ class ContactManager extends AbstractContactManager
      * Creates a new contact for the given data
      *
      * @param array $data
-     * @param int $id
+     * @param int|null $id
+     * @param bool $patch
      * @param bool $flush
      *
      * @return Contact
+     * @throws EntityNotFoundException
      */
     public function save(
         $data,
@@ -167,18 +170,16 @@ class ContactManager extends AbstractContactManager
          * This method needs to be refactored since in the first
          * iteration the logic was just moved from the Controller to this class due
          * to better reusability.
-        */
+         */
         $firstName = $this->getProperty($data, 'firstName');
         $lastName = $this->getProperty($data, 'lastName');
 
         if ($id) {
             /** @var Contact $contact */
-            $contact = $this->em
-                ->getRepository(self::$contactEntityName)
-                ->findById($id);
+            $contact = $this->contactRepository->findById($id);
 
             if (!$contact) {
-                throw new EntityNotFoundException(self::$contactEntityName, $id);
+                throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
             if (!$patch || $this->getProperty($data, 'account')) {
                 $this->setMainAccount($contact, $data);
@@ -210,9 +211,8 @@ class ContactManager extends AbstractContactManager
             if (!$patch || $this->getProperty($data, 'bankAccounts')) {
                 $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', array()));
             }
-
         } else {
-            $contact = new Contact();
+            $contact = $this->contactRepository->createNew();
         }
 
         if (!$patch || $firstName !== null) {
@@ -309,7 +309,7 @@ class ContactManager extends AbstractContactManager
         $contactAddress->setMain($isMain);
         $this->em->persist($contactAddress);
 
-        $contact->addContactAddresse($contactAddress);
+        $contact->addContactAddress($contactAddress);
 
         return $contactAddress;
     }
@@ -340,8 +340,8 @@ class ContactManager extends AbstractContactManager
         $isMain = $contactAddress->getMain();
 
         // remove relation
-        $contact->removeContactAddresse($contactAddress);
-        $address->removeContactAddresse($contactAddress);
+        $contact->removeContactAddress($contactAddress);
+        $address->removeContactAddress($contactAddress);
 
         // if was main, set a new one
         if ($isMain) {
@@ -378,9 +378,9 @@ class ContactManager extends AbstractContactManager
      */
     public function getById($id, $locale)
     {
-        $contact = $this->em->getRepository(self::$contactEntityName)->find($id);
+        $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            return null;
         }
 
         return new ContactApi($contact, $locale, $this->tagManager);
@@ -399,7 +399,7 @@ class ContactManager extends AbstractContactManager
         if ($contact) {
             return new ContactApi($contact, $locale, $this->tagManager);
         } else {
-            return;
+            return null;
         }
     }
 
@@ -418,12 +418,10 @@ class ContactManager extends AbstractContactManager
         ) {
             $accountId = $data['account']['id'];
 
-            $account = $this->em
-                ->getRepository($this->accountEntityName)
-                ->findAccountById($accountId);
+            $account = $this->accountRepository->findAccountById($accountId);
 
             if (!$account) {
-                throw new EntityNotFoundException($this->accountEntityName, $accountId);
+                throw new EntityNotFoundException($this->accountRepository->getClassName(), $accountId);
             }
 
             // get position
@@ -498,5 +496,15 @@ class ContactManager extends AbstractContactManager
         } else {
             $contact->setTitle(null);
         }
+    }
+
+    /**
+     * Get contact entity name.
+     *
+     * @return string
+     */
+    public function getContactEntityName()
+    {
+        return $this->contactRepository->getClassName();
     }
 }
