@@ -10,20 +10,20 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondStructureCache;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondDocumentCache;
+use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Document;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
-class DeleteStructureTest extends BaseTestCase
+class DeleteDocumentTest extends BaseTestCase
 {
-    public function testDeleteStructure()
+    public function testDeleteDocument()
     {
         $searchManager = $this->getSearchManager();
         $mapper = $this->getContainer()->get('sulu.content.mapper');
 
-        $structure = $this->indexStructure('About Us', '/about-us');
+        $structure = $this->indexDocument('About Us', '/about-us');
         $this->documentManager->flush();
 
         $res = $searchManager->createSearch('About')->locale('de')->index('page')->execute();

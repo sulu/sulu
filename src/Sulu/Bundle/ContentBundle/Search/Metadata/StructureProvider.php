@@ -134,6 +134,10 @@ class StructureProvider implements ProviderInterface
                 $propertyMapping = new ComplexMetadata();
                 foreach ($property->getComponents() as $component) {
                     foreach ($component->getChildren() as $componentProperty) {
+                        if (false === $componentProperty->hasTag('sulu.search.field')) {
+                            continue;
+                        }
+
                         $propertyMapping->addFieldMapping(
                             'title',
                             array(

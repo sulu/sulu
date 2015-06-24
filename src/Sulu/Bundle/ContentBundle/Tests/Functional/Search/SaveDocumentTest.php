@@ -11,21 +11,21 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondStructureCache;
+use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondDocumentCache;
 use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Document;
+use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
-class SaveStructureTest extends BaseTestCase
+class SaveDocumentTest extends BaseTestCase
 {
     /**
      * Check that the automatic indexing works.
      */
-    public function testSaveStructure()
+    public function testSaveDocument()
     {
-        $this->indexStructure('About Us', '/about-us');
+        $this->indexDocument('About Us', '/about-us');
 
         $searchManager = $this->getSearchManager();
         $res = $searchManager->createSearch('About')->locale('de')->index('page')->execute();
@@ -38,7 +38,7 @@ class SaveStructureTest extends BaseTestCase
         $this->assertEquals(null, $document->getDescription());
     }
 
-    public function testSaveStructureWithBlocks()
+    public function testSaveDocumentWithBlocks()
     {
         $document = new PageDocument();
         $document->setTitle('Places');
@@ -56,6 +56,7 @@ class SaveStructureTest extends BaseTestCase
                     'type' => 'article',
                     'title' => 'Basel',
                     'article' => 'Basel Switzerland',
+                    'lines' => array('line1', 'line2'),
                 ),
             )), false);
         $document->setParent($this->webspaceDocument);

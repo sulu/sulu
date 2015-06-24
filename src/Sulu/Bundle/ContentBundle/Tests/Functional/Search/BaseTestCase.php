@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
+use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultDocumentCache;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Document;
+use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -27,11 +27,10 @@ class BaseTestCase extends SuluTestCase
     public function setUp()
     {
         $this->initPhpcr();
-        $fs = new Filesystem();
-        $fs->remove(__DIR__ . '/../app/data');
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->getSearchManager()->purge('page');
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
     }
 
@@ -42,13 +41,13 @@ class BaseTestCase extends SuluTestCase
         return $searchManager;
     }
 
-    public function generateStructureIndex($count)
+    public function generateDocumentIndex($count)
     {
         $documents = array();
         for ($i = 1; $i <= $count; $i++) {
             $pageDocument = new PageDocument();
             $pageDocument->setParent($this->webspaceDocument);
-            $pageDocument->setTitle('Structure Title ' . $i);
+            $pageDocument->setTitle('Document Title ' . $i);
             $pageDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
 
             $this->documentManager->persist($pageDocument, 'de');
@@ -60,7 +59,7 @@ class BaseTestCase extends SuluTestCase
         return $documents;
     }
 
-    public function indexStructure($title, $url)
+    public function indexDocument($title, $url)
     {
         /** @var ContentMapperInterface $mapper */
         $document = $this->documentManager->create('page');
