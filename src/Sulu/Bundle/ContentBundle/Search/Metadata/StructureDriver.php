@@ -146,7 +146,7 @@ class StructureDriver implements AdvancedDriverInterface
                 array(
                     'type' => 'string',
                     'field' => $this->factory->createMetadataField($prop->getName()),
-                    'aggregated' => true,
+                    'aggregate' => true,
                     'indexed' => false,
                 )
             );
@@ -188,53 +188,66 @@ class StructureDriver implements AdvancedDriverInterface
 
     private function mapProperty(PropertyInterface $property, $metadata)
     {
-        if ($property->hasTag('sulu.search.field')) {
-            $tag = $property->getTag('sulu.search.field');
-            $tagAttributes = $tag->getAttributes();
+        if (!$property->hasTag('sulu.search.field')) {
+            return;
+        }
 
-            if ($metadata instanceof IndexMetadata && isset($tagAttributes['role'])) {
-                switch ($tagAttributes['role']) {
-                    case 'title':
-                        $metadata->setTitleField($this->factory->createMetadataField($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->createMetadataField($property->getName()),
-                            'type' => 'string',
-                            'aggregated' => true,
-                            'indexed' => false,
-                        ));
-                        break;
-                    case 'description':
-                        $metadata->setDescriptionField($this->factory->createMetadataField($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->createMetadataField($property->getName()),
-                            'type' => 'string',
-                            'aggregated' => true,
-                            'indexed' => false,
-                        ));
-                        break;
-                    case 'image':
-                        $metadata->setImageUrlField($this->factory->createMetadataField($property->getName()));
-                        break;
-                    default:
-                        throw new \InvalidArgumentException(
-                            sprintf(
-                                'Unknown search field role "%s", role must be one of "%s"',
-                                $tagAttributes['role'],
-                                implode(', ', array('title', 'description', 'image'))
-                            )
-                        );
-                }
-            } elseif (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
-                $metadata->addFieldMapping(
-                    $property->getName(),
-                    array(
-                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+        $tag = $property->getTag('sulu.search.field');
+        $tagAttributes = $tag->getAttributes();
+
+        if ($metadata instanceof IndexMetadata && isset($tagAttributes['role'])) {
+            switch ($tagAttributes['role']) {
+                case 'title':
+                    $metadata->setTitleField($this->factory->createMetadataField($property->getName()));
+                    $metadata->addFieldMapping($property->getName(), array(
                         'field' => $this->factory->createMetadataField($property->getName()),
-                        'aggregated' => true,
+                        'type' => 'string',
+                        'aggregate' => true,
                         'indexed' => false,
-                    )
-                );
+                    ));
+                    break;
+                case 'description':
+                    $metadata->setDescriptionField($this->factory->createMetadataField($property->getName()));
+                    $metadata->addFieldMapping($property->getName(), array(
+                        'field' => $this->factory->createMetadataField($property->getName()),
+                        'type' => 'string',
+                        'aggregate' => true,
+                        'indexed' => false,
+                    ));
+                    break;
+                case 'image':
+                    $metadata->setImageUrlField($this->factory->createMetadataField($property->getName()));
+                    break;
+                default:
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Unknown search field role "%s", role must be one of "%s"',
+                            $tagAttributes['role'],
+                            implode(', ', array('title', 'description', 'image'))
+                        )
+                    );
             }
+
+            return;
+        } 
+
+        if (isset($tagAttributes['role']) && null !== $tagAttributes['role']) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot assign search fields with the "role" attribute to properties within blocks when trying to set field "%s"',
+                $property->getName()
+            ));
+        }
+
+        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+            $metadata->addFieldMapping(
+                $property->getName(),
+                array(
+                    'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                    'field' => $this->factory->createMetadataField($property->getName()),
+                    'aggregate' => true,
+                    'indexed' => false,
+                )
+            );
         }
     }
 }

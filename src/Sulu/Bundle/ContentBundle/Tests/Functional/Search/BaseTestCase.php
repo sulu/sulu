@@ -25,11 +25,10 @@ class BaseTestCase extends SuluTestCase
     public function setUp()
     {
         $this->initPhpcr();
-        $fs = new Filesystem();
-        $fs->remove(__DIR__ . '/../app/data');
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->getSearchManager()->purge('page');
     }
 
     public function getSearchManager()

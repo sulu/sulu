@@ -45,7 +45,7 @@ class SearchManagerTest extends BaseTestCase
         }
 
         // TODO: This should should not be here
-        $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('page')->execute();
+        $res = $this->getSearchManager()->createSearch('+webspace_key:webspace_four Structure')->locale('de')->index('page')->execute();
         $this->assertCount(4, $res);
     }
 
@@ -67,9 +67,5 @@ class SearchManagerTest extends BaseTestCase
 
         $result = $this->getSearchManager()->createSearch('Homepage')->execute();
         $this->assertCount(1, $result);
-        $firstHit = reset($result);
-        $document = $firstHit->getDocument();
-        $this->markTestSkipped('Cannot determine if the page is the homepage');
-        $this->assertEquals('homepage', $document->getCategory());
     }
 }
