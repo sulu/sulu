@@ -98,7 +98,7 @@ class CodeControllerTest extends SuluTestCase
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var int

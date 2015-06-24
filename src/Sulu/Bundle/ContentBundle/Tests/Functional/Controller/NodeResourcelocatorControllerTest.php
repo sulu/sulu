@@ -19,7 +19,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var array

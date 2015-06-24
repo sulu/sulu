@@ -27,7 +27,7 @@ class SearchControllerTest extends SuluTestCase
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var EntityManager
