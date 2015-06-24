@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\PersistenceBundle\Tests\Unit\Fixture\Bundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class UsingPersistenceBundleTrait extends Bundle
@@ -20,10 +21,15 @@ class UsingPersistenceBundleTrait extends Bundle
     public $modelInterfaces = array();
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
-    protected function getModelInterfaces()
+    public function build(ContainerBuilder $container)
     {
-        return $this->modelInterfaces;
+        parent::build($container);
+
+        $this->buildPersistence(
+            $this->modelInterfaces,
+            $container
+        );
     }
 }

@@ -21,13 +21,11 @@ use Symfony\Component\DependencyInjection\Reference;
 trait PersistenceExtensionTrait
 {
     /**
-     * @param array $config
+     * @param array $objects
      * @param ContainerBuilder $container
      */
-    protected function configure(array $config, ContainerBuilder $container)
+    protected function configurePersistence(array $objects, ContainerBuilder $container)
     {
-        $objects = isset($config['objects']) ? $config['objects'] : array();
-
         $this->defineRepositories($objects, $container);
 
         $this->remapObjectParameters($objects, $container);
@@ -50,7 +48,7 @@ trait PersistenceExtensionTrait
      * @param array $objects
      * @param ContainerBuilder $container
      */
-    protected function defineRepositories(array $objects, ContainerBuilder $container)
+    private function defineRepositories(array $objects, ContainerBuilder $container)
     {
         foreach ($objects as $object => $services) {
             if (array_key_exists('model', $services)) {
@@ -73,9 +71,11 @@ trait PersistenceExtensionTrait
      *
      * @return Definition
      */
-    protected function getRepositoryDefinition($object, array $services, ContainerBuilder $container)
+    private function getRepositoryDefinition($object, array $services, ContainerBuilder $container)
     {
         $repositoryKey = $this->getContainerKey('repository', $object, '.class');
+
+        // default repository
         $repositoryClass = 'Sulu\Component\Persistence\Repository\ORM\EntityRepository';
 
         if ($container->hasParameter($repositoryKey)) {
@@ -100,7 +100,7 @@ trait PersistenceExtensionTrait
      *
      * @return Definition
      */
-    protected function getClassMetadataDefinition($model)
+    private function getClassMetadataDefinition($model)
     {
         $definition = new Definition('Doctrine\ORM\Mapping\ClassMetadata');
         $definition
@@ -120,7 +120,7 @@ trait PersistenceExtensionTrait
      * @param array $objects
      * @param ContainerBuilder $container
      */
-    protected function remapObjectParameters(array $objects, ContainerBuilder $container)
+    private function remapObjectParameters(array $objects, ContainerBuilder $container)
     {
         foreach ($objects as $object => $services) {
             foreach ($services as $service => $class) {
@@ -145,7 +145,7 @@ trait PersistenceExtensionTrait
      *
      * @return string
      */
-    protected function getContainerKey($key, $object, $suffix = null)
+    private function getContainerKey($key, $object, $suffix = null)
     {
         return sprintf('sulu.%s.%s%s', $key, $object, $suffix);
     }
@@ -155,7 +155,7 @@ trait PersistenceExtensionTrait
      *
      * @return string
      */
-    protected function getEntityManagerServiceKey()
+    private function getEntityManagerServiceKey()
     {
         return 'doctrine.orm.default_entity_manager';
     }

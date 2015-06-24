@@ -55,7 +55,7 @@ class SuluContactExtension extends Extension
             $config['form']['account']['category_root']
         );
 
-        $this->configure($config, $container);
+        $this->configurePersistence($config['objects'], $container);
     }
 
     /**

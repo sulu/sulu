@@ -14,29 +14,21 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ResolveTargetEnti
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Adds a `ResolveTargetEntitiesPass` for each defined interface
- * which will resolve the target entity automatically.
+ * Adds a `ResolveTargetEntitiesPass` for the defined interfaces
+ * which will resolve the target entities automatically.
  */
 trait PersistenceBundleTrait
 {
+
     /**
-     * Target entities resolver configuration (Interface - Model).
+     * Build persistence adds a `ResolveTargetEntitiesPass` for the given interfaces.
      *
-     * @return array
+     * @param array $interfaces Target entities resolver configuration.
+     *                          Mapping interfaces to a concrete implementation.
+     * @param ContainerBuilder $container
      */
-    protected function getModelInterfaces()
+    public function buildPersistence(array $interfaces, ContainerBuilder $container)
     {
-        return array();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $interfaces = $this->getModelInterfaces();
         if (!empty($interfaces)) {
             $container->addCompilerPass(
                 new ResolveTargetEntitiesPass($interfaces)

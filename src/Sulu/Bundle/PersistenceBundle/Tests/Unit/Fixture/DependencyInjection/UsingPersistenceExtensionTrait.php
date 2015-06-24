@@ -20,6 +20,6 @@ class UsingPersistenceExtensionTrait extends Extension
 
     public function load(array $config, ContainerBuilder $container)
     {
-        $this->configure($config, $container);
+        $this->configurePersistence($config['objects'], $container);
     }
 }

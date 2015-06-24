@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluContactBundle extends Bundle
@@ -18,15 +19,17 @@ class SuluContactBundle extends Bundle
     use PersistenceBundleTrait;
 
     /**
-     * Target entities resolver configuration.
-     * Mapping a interface to a concrete implementation.
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    protected function getModelInterfaces()
+    public function build(ContainerBuilder $container)
     {
-        return array(
-            'Sulu\Component\Contact\Model\ContactInterface' => 'sulu.model.contact.class',
+        parent::build($container);
+
+        $this->buildPersistence(
+            array(
+                'Sulu\Component\Contact\Model\ContactInterface' => 'sulu.model.contact.class',
+            ),
+            $container
         );
     }
 }
