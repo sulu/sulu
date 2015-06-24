@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class WebspaceSubscriber extends AbstractMappingSubscriber

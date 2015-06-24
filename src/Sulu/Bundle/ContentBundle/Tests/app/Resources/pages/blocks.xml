@@ -75,6 +75,13 @@
                             <tag name="sulu.search.field" type="string" />
                         </property>
 
+                        <property name="lines" type="text_line" minOccurs="2" maxOccurs="2" mandatory="false">
+                            <meta>
+                                <title lang="de">Lines</title>
+                                <title lang="en">Lines</title>
+                            </meta>
+                        </property>
+
                     </properties>
                 </type>
             </types>

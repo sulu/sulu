@@ -16,6 +16,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
  * Base context class for Structure based feature contexts.
@@ -143,6 +144,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     protected function createStructureTemplate($type, $name, $template)
     {
         $paths = $this->getContainer()->getParameter('sulu.content.structure.paths');
+        // FIX THIS
         $paths = array_filter($paths, function ($value) use ($type) {
             if ($value['type'] == $type) {
                 return true;
