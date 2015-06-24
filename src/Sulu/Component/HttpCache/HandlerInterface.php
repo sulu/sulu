@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\HttpCache;
 
+use Sulu\Component\Content\Compat\StructureInterface;
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * This interface is extended by the other handlers and indicates that
  * the implementing class implements one, some or all of:.

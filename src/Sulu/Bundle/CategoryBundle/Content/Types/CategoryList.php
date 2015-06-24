@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
@@ -100,8 +100,14 @@ class CategoryList extends ComplexContentType
         $segmentKey
     ) {
         $categoryIds = array();
+        $value = $property->getValue();
 
-        foreach ($property->getValue() as $category) {
+        if (null === $value) {
+            $node->setProperty($property->getName(), null);
+            return;
+        }
+
+        foreach ($value as $category) {
             if (is_numeric($category)) {
                 // int value for id
                 $categoryIds[] = $category;

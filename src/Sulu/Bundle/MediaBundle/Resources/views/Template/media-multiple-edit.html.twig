@@ -27,7 +27,9 @@
                 <div>
                     <div class="grid-row">
                         <div class="grid-col-2">
-                            <img src="<~= thumbnails['50x50'] ~>"/>
+                            <a target="_blank" href="<~= url ~>&inline=1">
+                                <img src="<~= thumbnails['50x50'] ~>"/>
+                            </a>
                         </div>
                         <div class="grid-col-10">
                             <label for="media-edit-title-<~= id ~>"><%= translate('public.title') %></label>
@@ -53,7 +55,7 @@
                              data-aura-get-parameter="search">
                         </div>
                     </div>
-                    <hr class="divider dark small"></hr>
+                    <hr class="divider dark small"/>
                 </div>
             </script>
         </div>

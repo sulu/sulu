@@ -10,6 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\TagBundle\Entity\Tag;
+
 /**
  * interface for accounts.
  */
@@ -20,7 +24,7 @@ interface AccountInterface
      *
      * @param string $name
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setName($name);
 
@@ -36,7 +40,7 @@ interface AccountInterface
      *
      * @param string $externalId
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setExternalId($externalId);
 
@@ -52,7 +56,7 @@ interface AccountInterface
      *
      * @param string $number
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setNumber($number);
 
@@ -68,7 +72,7 @@ interface AccountInterface
      *
      * @param string $corporation
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setCorporation($corporation);
 
@@ -84,7 +88,7 @@ interface AccountInterface
      *
      * @param int $disabled
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setDisabled($disabled);
 
@@ -100,7 +104,7 @@ interface AccountInterface
      *
      * @param string $uid
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setUid($uid);
 
@@ -116,7 +120,7 @@ interface AccountInterface
      *
      * @param string $registerNumber
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setRegisterNumber($registerNumber);
 
@@ -132,7 +136,7 @@ interface AccountInterface
      *
      * @param string $placeOfJurisdiction
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setPlaceOfJurisdiction($placeOfJurisdiction);
 
@@ -148,7 +152,7 @@ interface AccountInterface
      *
      * @param string $mainEmail
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setMainEmail($mainEmail);
 
@@ -164,7 +168,7 @@ interface AccountInterface
      *
      * @param string $mainPhone
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setMainPhone($mainPhone);
 
@@ -180,7 +184,7 @@ interface AccountInterface
      *
      * @param string $mainFax
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setMainFax($mainFax);
 
@@ -196,7 +200,7 @@ interface AccountInterface
      *
      * @param string $mainUrl
      *
-     * @return BaseAccount
+     * @return AccountInterface
      */
     public function setMainUrl($mainUrl);
 
@@ -331,18 +335,18 @@ interface AccountInterface
     /**
      * Add urls.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     * @param Url $urls
      *
      * @return Account
      */
-    public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls);
+    public function addUrl(Url $urls);
 
     /**
      * Remove urls.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     * @param Url $urls
      */
-    public function removeUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls);
+    public function removeUrl(Url $urls);
 
     /**
      * Get urls.
@@ -354,18 +358,18 @@ interface AccountInterface
     /**
      * Add phones.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     * @param Phone $phones
      *
      * @return Account
      */
-    public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones);
+    public function addPhone(Phone $phones);
 
     /**
      * Remove phones.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     * @param Phone $phones
      */
-    public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones);
+    public function removePhone(Phone $phones);
 
     /**
      * Get phones.
@@ -377,18 +381,18 @@ interface AccountInterface
     /**
      * Add emails.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     * @param Email $emails
      *
      * @return Account
      */
-    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails);
+    public function addEmail(Email $emails);
 
     /**
      * Remove emails.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     * @param Email $emails
      */
-    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails);
+    public function removeEmail(Email $emails);
 
     /**
      * Get emails.
@@ -400,18 +404,18 @@ interface AccountInterface
     /**
      * Add notes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     * @param Note $notes
      *
      * @return Account
      */
-    public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes);
+    public function addNote(Note $notes);
 
     /**
      * Remove notes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     * @param Note $notes
      */
-    public function removeNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes);
+    public function removeNote(Note $notes);
 
     /**
      * Get notes.
@@ -430,18 +434,18 @@ interface AccountInterface
     /**
      * Add faxes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @param Fax $faxes
      *
      * @return Account
      */
-    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes);
+    public function addFax(Fax $faxes);
 
     /**
      * Remove faxes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @param Fax $faxes
      */
-    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes);
+    public function removeFax(Fax $faxes);
 
     /**
      * Get faxes.
@@ -453,18 +457,18 @@ interface AccountInterface
     /**
      * Add bankAccounts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @param BankAccount $bankAccounts
      *
      * @return Account
      */
-    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts);
+    public function addBankAccount(BankAccount $bankAccounts);
 
     /**
      * Remove bankAccounts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @param BankAccount $bankAccounts
      */
-    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts);
+    public function removeBankAccount(BankAccount $bankAccounts);
 
     /**
      * Get bankAccounts.
@@ -476,18 +480,18 @@ interface AccountInterface
     /**
      * Add tags.
      *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @param Tag $tags
      *
      * @return Account
      */
-    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags);
+    public function addTag(Tag $tags);
 
     /**
      * Remove tags.
      *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @param Tag $tags
      */
-    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags);
+    public function removeTag(Tag $tags);
 
     /**
      * Get tags.
@@ -499,18 +503,18 @@ interface AccountInterface
     /**
      * Add accountContacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @param AccountContact $accountContacts
      *
      * @return Account
      */
-    public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts);
+    public function addAccountContact(AccountContact $accountContacts);
 
     /**
      * Remove accountContacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @param AccountContact $accountContacts
      */
-    public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts);
+    public function removeAccountContact(AccountContact $accountContacts);
 
     /**
      * Get accountContacts.
@@ -543,18 +547,18 @@ interface AccountInterface
     /**
      * Add medias.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @param Media $medias
      *
      * @return Account
      */
-    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias);
+    public function addMedia(Media $medias);
 
     /**
      * Remove medias.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @param Media $medias
      */
-    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias);
+    public function removeMedia(Media $medias);
 
     /**
      * Get medias.
@@ -566,18 +570,18 @@ interface AccountInterface
     /**
      * Add accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @param AccountAddress $accountAddresses
      *
      * @return Account
      */
-    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses);
+    public function addAccountAddress(AccountAddress $accountAddresses);
 
     /**
      * Remove accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @param AccountAddress $accountAddresses
      */
-    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses);
+    public function removeAccountAddress(AccountAddress $accountAddresses);
 
     /**
      * Add children.
@@ -593,23 +597,23 @@ interface AccountInterface
      *
      * @param AccountInterface $child
      */
-    public function removeChild(AccountInterface$child);
+    public function removeChild(AccountInterface $child);
 
     /**
      * Add categories.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return Account
      */
-    public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category);
+    public function addCategory(Category $category);
 
     /**
      * Remove categories.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     * @param Category $category
      */
-    public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category);
+    public function removeCategory(Category $category);
 
     /**
      * Get categories.

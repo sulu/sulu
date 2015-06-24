@@ -23,7 +23,7 @@
         "guzzle/guzzle": "3.*",
         "imagine/imagine": "~0.6.1",
         "liip/theme-bundle": "1.3.*",
-        "massive/search-bundle": "~1.0@dev",
+        "massive/search-bundle": "0.6.*",
         "php": ">=5.5",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
@@ -31,7 +31,8 @@
         "symfony/symfony": "2.6.*",
         "willdurand/hateoas-bundle": "0.3.*",
         "symfony/swiftmailer-bundle": "~2.3",
-        "pagerfanta/pagerfanta": "~1.0"
+        "pagerfanta/pagerfanta": "~1.0",
+        "sulu/document-manager": "0.1.*"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",
@@ -41,7 +42,7 @@
         "guzzle/plugin-mock": "3.9.*",
         "massive/build-bundle": "0.2.*",
         "matthiasnoback/symfony-config-test": "v0.1.1",
-        "matthiasnoback/symfony-dependency-injection-test": "v0.7.1",
+        "matthiasnoback/symfony-dependency-injection-test": "v0.7.3",
         "phpunit/phpunit": "~4.5.0",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony-cmf/testing": "~1.2",
@@ -78,6 +79,11 @@
     "autoload": {
         "psr-0": {
             "Sulu\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Sulu\\": "tests/"
         }
     }
 }

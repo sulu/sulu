@@ -2,6 +2,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Sulu\Component\Contact\Model\ContactInterface;
+
 /**
  * AccountContact.
  */
@@ -18,7 +20,7 @@ class AccountContact
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var ContactInterface
      */
     private $contact;
 
@@ -69,11 +71,11 @@ class AccountContact
     /**
      * Set contact.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @param ContactInterface $contact
      *
      * @return AccountContact
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
+    public function setContact(ContactInterface $contact)
     {
         $this->contact = $contact;
 
@@ -83,7 +85,7 @@ class AccountContact
     /**
      * Get contact.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return ContactInterface
      */
     public function getContact()
     {

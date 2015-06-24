@@ -148,8 +148,8 @@ class AccountControllerTest extends SuluTestCase
         $accountAddress->setAddress($address);
         $accountAddress->setAccount($account);
         $accountAddress->setMain(true);
-        $account->addAccountAddresse($accountAddress);
-        $address->addAccountAddresse($accountAddress);
+        $account->addAccountAddress($accountAddress);
+        $address->addAccountAddress($accountAddress);
 
         $contact = new Contact();
         $contact->setFirstName('Vorname');

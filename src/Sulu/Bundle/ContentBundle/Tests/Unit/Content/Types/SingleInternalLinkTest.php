@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +28,7 @@ class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->property = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+        $this->property = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
 
         $this->type = new SingleInternalLink(
             'some_template.html.twig'

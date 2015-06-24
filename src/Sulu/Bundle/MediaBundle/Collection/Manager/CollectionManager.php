@@ -37,7 +37,7 @@ class CollectionManager implements CollectionManagerInterface
     private static $entityCollectionType = 'SuluMediaBundle:Collection';
     private static $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
     private static $entityUser = 'SuluSecurityBundle:User';
-    private static $entityContact = 'SuluContactBundle:Contact';
+    private static $entityContact = 'Sulu\Component\Contact\Model\ContactInterface';
 
     /**
      * @var CollectionRepositoryInterface

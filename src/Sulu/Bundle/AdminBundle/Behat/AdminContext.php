@@ -50,18 +50,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectAConfirmationDialogShouldAppear()
     {
-        $this->iExpectAnOverlayToAppear();
-    }
-
-    /**
-     * @Then I expect an overlay to appear
-     */
-    public function iExpectAnOverlayToAppear()
-    {
-        $this->getSession()->wait(
-            5000,
-            "document.querySelector('.husky-overlay-container')"
-        );
+        $this->iWaitForAOverlayToAppear();
     }
 
     /**

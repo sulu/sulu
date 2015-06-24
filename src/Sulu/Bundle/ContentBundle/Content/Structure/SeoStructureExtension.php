@@ -11,12 +11,12 @@
 namespace Sulu\Bundle\ContentBundle\Content\Structure;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\Extension\AbstractExtension;
 
 /**
  * extends structure with seo content.
  */
-class SeoStructureExtension extends StructureExtension
+class SeoStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension.

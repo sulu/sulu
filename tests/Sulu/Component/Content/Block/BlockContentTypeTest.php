@@ -11,10 +11,13 @@
 namespace Sulu\Component\Content\Block;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\Block\BlockProperty;
+use Sulu\Component\Content\Compat\Block\BlockPropertyType;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 

@@ -802,7 +802,10 @@ define([], function() {
          * initialize column navigation
          */
         initColumnNavigation: function() {
-            var url = this.options.columnNavigationUrl.replace('{/dataSource}', (!!this.overlayData.dataSource ? '/' + this.overlayData.dataSource : ''));
+            var url = this.options.columnNavigationUrl.replace(
+                '{id=dataSource&}',
+                (!!this.overlayData.dataSource ? 'id=' + this.overlayData.dataSource + '&' : '')
+            );
 
             this.sandbox.start(
                 [

@@ -27,7 +27,7 @@
         <field name="mainFax" type="string" column="mainFax" nullable="true"/>
         <field name="mainUrl" type="string" column="mainUrl" nullable="true"/>
 
-        <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <many-to-one field="mainContact" target-entity="Sulu\Component\Contact\Model\ContactInterface">
             <join-columns>
                 <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>

@@ -12,10 +12,10 @@ namespace Sulu\Bundle\ContentBundle\Content;
 
 use JMS\Serializer\Annotation\Exclude;
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**

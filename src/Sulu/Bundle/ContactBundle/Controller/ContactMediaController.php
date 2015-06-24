@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactMediaController extends AbstractMediaController
 {
-    protected static $entityName = 'SuluContactBundle:Contact';
-
     /**
      * Removes a media from the relation to the account.
      *
@@ -32,7 +30,11 @@ class ContactMediaController extends AbstractMediaController
      */
     public function deleteAction($id, $slug)
     {
-        return $this->removeMediaFromEntity(self::$entityName, $id, $slug);
+        return $this->removeMediaFromEntity(
+            $this->container->getParameter('sulu.model.contact.class'),
+            $id,
+            $slug
+        );
     }
 
     /**
@@ -45,6 +47,10 @@ class ContactMediaController extends AbstractMediaController
      */
     public function postAction($id, Request $request)
     {
-        return $this->addMediaToEntity(self::$entityName, $id, $request->get('mediaId', ''));
+        return $this->addMediaToEntity(
+            $this->container->getParameter('sulu.model.contact.class'),
+            $id,
+            $request->get('mediaId', '')
+        );
     }
 }

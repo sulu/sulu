@@ -10,10 +10,14 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\Content\PageInterface;
-use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureInterface;
+use FOS\HttpCache\ProxyClient;
+use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
+use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Component\Content\Compat\PageInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

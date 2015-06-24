@@ -4,28 +4,20 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="sulu_content.search.metadata.driver.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureDriver</parameter>
-        <parameter key="sulu_content.search.event_subscriber.content_mapper.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\ContentMapperSubscriber</parameter>
+        <parameter key="sulu_content.search.metadata.provider.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureProvider</parameter>
         <parameter key="sulu_content.search.event_subscriber.blame_timestamp.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\BlameTimestampSubscriber</parameter>
-        <parameter key="sulu_content.search.event_listener.search.class">Sulu\Bundle\ContentBundle\Search\EventListener\SearchListener</parameter>
+        <parameter key="sulu_content.search.event_subscriber.structure.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\StructureSubscriber</parameter>
         <parameter key="sulu_content.search.event_listener.reindex.class">Sulu\Bundle\ContentBundle\Search\EventListener\ReindexListener</parameter>
+        <parameter key="sulu_search.event_listener.hit.class">Sulu\Bundle\ContentBundle\Search\EventListener\HitListener</parameter>
     </parameters>
 
     <services>
-
-        <service id="sulu_content.search.metadata.driver.structure" class="%sulu_content.search.metadata.driver.structure.class%">
+        <service id="sulu_content.search.metadata.provider.structure" class="%sulu_content.search.metadata.provider.structure.class%">
             <argument type="service" id="massive_search.factory" />
-            <argument type="service" id="event_dispatcher" />
-            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_document_manager.metadata_factory" />
+            <argument type="service" id="sulu_content.structure.factory" />
             <argument>%sulu_content.search.mapping%</argument>
-            <tag name="massive_search.metadata.driver" />
-        </service>
-
-        <!-- Node save event subscriber -->
-        <service id="sulu_content.search.subscriber.content_mapper" class="%sulu_content.search.event_subscriber.content_mapper.class%">
-            <argument type="service" id="massive_search.search_manager" />
-            <argument type="service" id="sulu.phpcr.session" />
-            <tag name="kernel.event_subscriber" />
+            <tag name="massive_search.metadata.provider" />
         </service>
 
         <!-- Blame and Timestamp subscriber -->
@@ -35,23 +27,25 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <!-- Search event to be sure that all structures are loaded (generated) -->
-        <service id="sulu_content.search.event_listener.search" class="%sulu_search.event_listener.search.class%">
-            <argument type="service" id="sulu.content.structure_manager" />
-            <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
-        </service>
-
         <!-- Rebuild structure index on massive:search:index:rebuild -->
         <service id="sulu_content.search.event_listener.search" class="%sulu_content.search.event_listener.reindex.class%">
-            <argument type="service" id="sulu.phpcr.session" />
-            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="massive_search.search_manager" />
-            <argument type="service" id="sulu_core.webspace.webspace_manager" />
-            <argument type="service" id="sulu.content.structure_manager" />
-            <argument type="service" id="sulu.util.node_helper" />
             <argument>%sulu_content.search.mapping%</argument>
             <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
         </service>
 
+        <service id="sulu_content.search.event_subscriber.structure" class="%sulu_content.search.event_subscriber.structure.class%">
+            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="sulu_document_manager.metadata_factory" />
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_search.event_listener.hit" class="%sulu_search.event_listener.hit.class%">
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <tag name="kernel.event_listener" event="massive_search.hit" method="onHit" />
+            <tag name="sulu.context" context="website"/>
+        </service>
     </services>
 </container>

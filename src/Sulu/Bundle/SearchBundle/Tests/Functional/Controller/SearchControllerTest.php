@@ -27,7 +27,7 @@ class SearchControllerTest extends SuluTestCase
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var EntityManager
@@ -61,6 +61,7 @@ class SearchControllerTest extends SuluTestCase
                         'contact' => 0,
                         'media' => 0,
                         'test' => 0,
+                        'content' => 0,
                     ),
                     'total' => 0,
                 ),
@@ -106,6 +107,7 @@ class SearchControllerTest extends SuluTestCase
                         'contact' => 0,
                         'media' => 0,
                         'page' => 0,
+                        'content' => 0,
                     ),
                     'total' => 1,
                 ),
@@ -151,6 +153,7 @@ class SearchControllerTest extends SuluTestCase
                         'contact' => 0,
                         'media' => 0,
                         'page' => 0,
+                        'content' => 0,
                     ),
                     'total' => 2,
                 ),

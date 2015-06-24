@@ -17,7 +17,6 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Sulu\Bundle\SearchBundle\Search\Document;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -27,8 +26,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Add blame (creator, changor) and timestamp (created, changed) to
  * the document before it is indexed.
  *
- * Works for both objects implementing interfaces (UserBlameInterface and
- * TimestampableInterface) and Structures.
+ * Works for objects implementing interfaces (UserBlameInterface and
+ * TimestampableInterface).
  */
 class BlameTimestampSubscriber implements EventSubscriberInterface
 {
@@ -79,10 +78,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         if ($subject instanceof TimestampableInterface) {
             $this->mapTimestamp($document, $subject->getCreated(), $subject->getChanged());
         }
-
-        if ($subject instanceof StructureInterface) {
-            $this->handleStructure($subject, $document);
-        }
     }
 
     /**
@@ -123,38 +118,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         }
 
         return $document->getField($fieldName)->getValue();
-    }
-
-    /**
-     * Handle Sulu Structure objects.
-     *
-     * @param StructureInterface $structure
-     * @param Document $document
-     */
-    private function handleStructure(StructureInterface $structure, Document $document)
-    {
-        $creatorId = $structure->getCreator();
-        $changerId = $structure->getChanger();
-        $creator = null;
-        $changer = null;
-
-        // do not try to do this if the Sulu Security component is not registered
-        // for some reason.
-        //
-        // TODO: ->find does not seem to work when using the UserInterface, so we
-        //       are now coupled to the Sulu User entity.
-        if (class_exists('Sulu\Bundle\SecurityBundle\Entity\User')) {
-            if ($creatorId) {
-                $creator = $this->entityManager->find(User::class, $creatorId);
-            }
-
-            if ($changerId) {
-                $changer = $this->entityManager->find(User::class, $changerId);
-            }
-        }
-
-        $this->mapCreatorAndChanger($document, $creator, $changer);
-        $this->mapTimestamp($document, $structure->getCreated(), $structure->getChanged());
     }
 
     /**

@@ -11,14 +11,17 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
+use Prophecy\Argument;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,7 +45,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization);
         $activeTheme = $this->getActiveThemeMock();
 
-        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
         $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
@@ -292,9 +295,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_INTERNAL_LINK);
-        $structure->expects($this->any())
-            ->method('getResourceLocator')
-            ->will($this->returnValue('/other-test'));
 
         $locale = new Localization();
         $locale->setLanguage('en');
@@ -337,10 +337,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_EXTERNAL_LINK);
-        $structure
-            ->expects($this->once())
-            ->method('getPropertyValueByTagName')
-            ->will($this->returnValue('www.example.org'));
 
         $locale = new Localization();
         $locale->setLanguage('en');
@@ -458,26 +454,22 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return PageBridge
      */
     protected function getStructureMock($uuid, $state = Structure::STATE_PUBLISHED, $type = Structure::NODE_TYPE_CONTENT)
     {
-        $structure = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
-            array(),
-            '',
-            false,
-            true,
-            true,
-            array('getResourceLocator', 'getPropertyValueByTagName')
-        );
+        $structure = $this->prophesize(PageBridge::class);
 
-        $structure->setUuid($uuid);
-        $structure->setNodeState($state);
-        $structure->setNodeType($type);
-        $structure->setHasTranslation(true);
+        $structure->getUuid()->willReturn($uuid);
+        $structure->getNodeState()->willReturn($state);
+        $structure->getNodeType()->willReturn($type);
+        $structure->getHasTranslation()->willReturn(true);
+        $structure->getController()->willReturn('');
+        $structure->getKey()->willReturn('key');
+        $structure->getResourceLocator()->willReturn('/other-test');
+        $structure->getPropertyValueByTagName(Argument::any())->willReturn('www.example.org');
 
-        return $structure;
+        return $structure->reveal();
     }
 
     /**
@@ -537,7 +529,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     protected function getContentMapperMock()
     {
         $contentMapper = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Mapper\ContentMapperInterface',
+            ContentMapperInterface::class,
             array(),
             '',
             false,
@@ -572,3 +564,4 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 }
+

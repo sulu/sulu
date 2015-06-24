@@ -111,11 +111,11 @@ class Fax
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
      *
      * @return Fax
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    public function addContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -125,9 +125,9 @@ class Fax
     /**
      * Remove contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    public function removeContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

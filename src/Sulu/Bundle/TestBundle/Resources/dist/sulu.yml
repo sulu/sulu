@@ -2,6 +2,8 @@ framework:
     secret: secret
     router: { resource: "%kernel.root_dir%/config/routing.yml" }
     templating: { engines: ['twig'] }
+    form:
+        enabled: true
     test: ~
     session:
         storage_id: session.storage.mock_file
@@ -14,11 +16,8 @@ fos_rest:
 
 monolog:
     handlers:
+
         main:
-            type:         fingers_crossed
-            action_level: error
-            handler:      nested
-        nested:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
@@ -30,11 +29,19 @@ sulu_core:
              paths:
                  pages:
                      path: %kernel.root_dir%/Resources/pages
-                     internal: false
+                     type: page
+                 homepage:
+                     path: %kernel.root_dir%/Resources/pages
+                     type: home
                  templates:
                      path: %kernel.root_dir%/Resources/snippets
-                     internal: false
                      type: snippet
+
+                 # This configuration could be used either from a bundle or the "root" of the repsitory
+                 # We try both just to be sure
+                 sulu_1:
+                     path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
+                     type: "page"
     webspace: ~
     locales: [ "en", "de" ]
 
@@ -77,3 +84,23 @@ parameters:
 
 sulu_test:
     enable_test_user_provider: true
+
+sulu_document_manager:
+    debug: false
+    mapping:
+        page:
+            class: Sulu\Bundle\ContentBundle\Document\PageDocument
+            phpcr_type: sulu:page
+        home:
+            class: Sulu\Bundle\ContentBundle\Document\HomeDocument
+            phpcr_type: sulu:home
+        route:
+            class: Sulu\Bundle\ContentBundle\Document\RouteDocument
+            phpcr_type: sulu:path
+        snippet:
+            class: Sulu\Bundle\SnippetBundle\Document\SnippetDocument
+            phpcr_type: sulu:snippet
+
+jms_serializer:
+    metadata:
+        debug: %kernel.debug%

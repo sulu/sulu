@@ -193,7 +193,7 @@ class UserBlameSubscriber implements EventSubscriber
     /**
      * Return the user from the token.
      *
-     * @param TokenInterface
+     * @param TokenInterface $token
      *
      * @return UserInterface
      */

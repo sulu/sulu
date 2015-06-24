@@ -14,8 +14,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Component\Persistence\RelationTrait;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -25,6 +23,9 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Persistence\RelationTrait;
+use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
@@ -38,7 +39,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
 {
     use RelationTrait;
 
-    protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressTypeEntityName = 'SuluContactBundle:AddressType';
@@ -56,23 +56,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @var ObjectManager
      */
-    public $em;
+    protected $em;
 
     /**
-     * @var string
+     * @var TagManagerInterface
      */
-    protected $accountEntityName;
+    protected $tagManager;
 
     /**
      * @param ObjectManager $em
-     * @param string $accountEntityName
+     * @param TagManagerInterface $tagManager
      */
-    public function __construct(
-        ObjectManager $em,
-        $accountEntityName
-    ) {
+    public function __construct(ObjectManager $em, TagManagerInterface $tagManager)
+    {
         $this->em = $em;
-        $this->accountEntityName = $accountEntityName;
+        $this->tagManager = $tagManager;
     }
 
     /**
@@ -802,7 +800,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         };
 
         $delete = function ($category) use ($contact) {
-            return $contact->removeCategorie($category);
+            return $contact->removeCategory($category);
         };
 
         $add = function ($category) use ($contact) {
@@ -847,7 +845,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         if (!$category) {
             throw new EntityNotFoundException(self::$categoryEntityName, $data['id']);
         } else {
-            $contact->addCategorie($category);
+            $contact->addCategory($category);
         }
 
         return $success;
@@ -963,7 +961,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Add a new phone to the given contact and persist it with the given object manager.
      *
      * @param $contact
-     * @param array$phoneData
+     * @param array $phoneData
      *
      * @throws EntityNotFoundException
      * @throws EntityIdAlreadySetException
@@ -1461,7 +1459,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $entities = $contact->getBankAccounts();
 
-        $result =  $this->processSubEntities(
+        $result = $this->processSubEntities(
             $entities,
             $bankAccounts,
             $get,
@@ -1616,6 +1614,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * TODO: this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities
+     *
      * @param mixed $entities
      */
     private function resetIndexOfSubentites($entities)
@@ -1629,5 +1628,15 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         return $entities;
+    }
+
+    /**
+     * Returns the tag manager
+     *
+     * @return TagManagerInterface
+     */
+    public function getTagManager()
+    {
+        return $this->tagManager;
     }
 }

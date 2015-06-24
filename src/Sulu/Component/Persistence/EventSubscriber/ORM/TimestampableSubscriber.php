@@ -70,7 +70,7 @@ class TimestampableSubscriber implements EventSubscriber
     /**
      * Set the timestamps before update.
      *
-     * @param LifecycleEventArgs $events
+     * @param LifecycleEventArgs $event
      */
     public function preUpdate(LifecycleEventArgs $event)
     {
@@ -80,7 +80,7 @@ class TimestampableSubscriber implements EventSubscriber
     /**
      * Set the timestamps before creation.
      *
-     * @param LifecycleEventArgs $events
+     * @param LifecycleEventArgs $event
      */
     public function prePersist(LifecycleEventArgs $event)
     {

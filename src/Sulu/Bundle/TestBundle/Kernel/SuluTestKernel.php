@@ -26,6 +26,7 @@ class SuluTestKernel extends SuluKernel
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
+            new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
@@ -39,6 +40,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\SnippetBundle\SuluSnippetBundle(),
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
+            new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
         );
 
         return $bundles;
@@ -52,5 +54,15 @@ class SuluTestKernel extends SuluKernel
     public function getCacheDir()
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Add the Sulu environment to the container name
+     */
+    protected function getContainerClass()
+    {
+        return $this->name.ucfirst($this->getContext()).ucfirst($this->environment).($this->debug ? 'Debug' : '').'ProjectContainer';
     }
 }

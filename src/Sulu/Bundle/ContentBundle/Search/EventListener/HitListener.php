@@ -36,7 +36,7 @@ class HitListener
      */
     public function onHit(HitEvent $event)
     {
-        if (false === $event->getMetadata()->reflection->isSubclassOf('Sulu\Component\Content\Structure')) {
+        if (false === $event->getMetadata()->reflection->isSubclassOf('Sulu\Bundle\ContentBundle\Document\BasePageDocument')) {
             return;
         }
 

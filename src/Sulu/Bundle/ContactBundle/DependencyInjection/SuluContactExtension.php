@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -22,6 +23,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluContactExtension extends Extension
 {
+    use PersistenceExtensionTrait;
+
     /**
      * {@inheritDoc}
      */
@@ -51,6 +54,8 @@ class SuluContactExtension extends Extension
             'sulu_contact.account_form.category_root',
             $config['form']['account']['category_root']
         );
+
+        $this->configurePersistence($config['objects'], $container);
     }
 
     /**

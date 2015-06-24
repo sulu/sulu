@@ -40493,17 +40493,17 @@ define('__component__$ckeditor@husky',[], function() {
             var config = this.sandbox.util.extend(false, {}, this.options);
 
             config.toolbar = [
-                { name: 'semantics', items: ['Format']},
-                { name: 'basicstyles', items: [ 'Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike'] },
-                { name: 'blockstyles', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-                { name: 'list', items: [ 'NumberedList', 'BulletedList'] }
+                {name: 'semantics', items: ['Format']},
+                {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
+                {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                {name: 'list', items: ['NumberedList', 'BulletedList']}
             ];
 
             // activate paste from Word
             if (this.options.pasteFromWord === true) {
                 config.toolbar.push({
                     name: 'paste',
-                    items: [ 'PasteFromWord' ]
+                    items: ['PasteFromWord']
                 });
             }
 
@@ -40511,7 +40511,7 @@ define('__component__$ckeditor@husky',[], function() {
             if (this.options.link === true) {
                 config.toolbar.push({
                     name: 'links',
-                    items: [ 'Link', 'Unlink' ]
+                    items: ['Link', 'Unlink']
                 });
                 config.linkShowTargetTab = false;
             }
@@ -40520,7 +40520,7 @@ define('__component__$ckeditor@husky',[], function() {
             if (this.options.table === true) {
                 config.toolbar.push({
                     name: 'insert',
-                    items: [ 'Table' ]
+                    items: ['Table']
                 });
             }
 
@@ -40548,11 +40548,11 @@ define('__component__$ckeditor@husky',[], function() {
             if (!!config.stylesSet && config.stylesSet.length > 0) {
                 config.toolbar.push({
                     name: 'styles',
-                    items: [ 'Styles' ]
+                    items: ['Styles']
                 });
             }
 
-            config.toolbar.push({ name: 'code', items: [ 'Source' ] });
+            config.toolbar.push({name: 'code', items: ['Source']});
 
             delete config.initializedCallback;
             delete config.baseUrl;
@@ -40645,10 +40645,10 @@ define('__component__$ckeditor@husky',[], function() {
             if (!!instance) {
                 // FIXME HACK
                 // this hack fix 'clearCustomData' not null on template change
-                // this error come when editor dom element don't exists
-                // check if dom element exist else remove the instance from object
-                // should also fix memory leak that the instances are not deleted from CKEDITOR
-                if (instance.window.getFrame()) {
+                // it occurs if the editor dom element not exists
+                // check if dom element exist then destroy instance else remove the instance from global object
+                // this should also fix memory leak that the instances are not deleted from global CKEDITOR
+                if (!!instance.window && instance.window.getFrame()) {
                     instance.destroy();
                 } else {
                     delete CKEDITOR.instances[this.options.instanceName];

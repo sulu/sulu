@@ -11,17 +11,18 @@
 namespace Sulu\Bundle\ContentBundle\Content\Structure;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * extends structure with seo content.
  */
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension.
@@ -63,6 +64,11 @@ class ExcerptStructureExtension extends StructureExtension
      * @var string
      */
     private $languageNamespace;
+
+    /**
+     * @var string
+     */
+    private $languageCode;
 
     public function __construct(
         StructureManagerInterface $structureManager,
@@ -119,6 +125,7 @@ class ExcerptStructureExtension extends StructureExtension
                 $languageCode,
                 null // segmentkey
             );
+
             $data[$property->getName()] = $property->getValue();
         }
 
@@ -136,6 +143,7 @@ class ExcerptStructureExtension extends StructureExtension
         if ($this->excerptStructure === null) {
             $this->initProperties();
         }
+        $this->languageCode = $languageCode;
 
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
         $this->languageNamespace = $languageNamespace;
@@ -169,7 +177,9 @@ class ExcerptStructureExtension extends StructureExtension
     {
         if ($this->excerptStructure === null) {
             $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+            $this->excerptStructure->setLanguageCode($this->languageCode);
         }
+
 
         return $this->excerptStructure;
     }
