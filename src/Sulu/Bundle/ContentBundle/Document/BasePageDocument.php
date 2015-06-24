@@ -154,6 +154,8 @@ class BasePageDocument implements
      */
     protected $locale;
 
+    protected $originalLocale;
+
     /**
      * @var ChildrenCollection
      */
