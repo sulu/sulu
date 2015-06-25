@@ -11,12 +11,13 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
@@ -32,7 +33,6 @@ class ResettingController extends Controller
     protected static $emailSubjectKey = 'security.reset.mail-subject';
     protected static $emailMessageKey = 'security.reset.mail-message';
     protected static $translationDomain = 'backend';
-    const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
     const MAX_NUMBER_EMAILS = 3;
 
     /**
@@ -79,7 +79,7 @@ class ResettingController extends Controller
     public function sendEmailAction(Request $request, $generateNewKey = true)
     {
         try {
-            /** @var User $user */
+            /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
             if ($generateNewKey === true) {
                 $this->generateTokenForUser($user);
@@ -111,7 +111,7 @@ class ResettingController extends Controller
     {
         try {
             $token = $request->get('token');
-            /** @var User $user */
+            /** @var UserInterface $user */
             $user = $this->findUserByValidToken($token);
             $this->changePassword($user, $request->get('password', ''));
             $this->deleteToken($user);
@@ -129,11 +129,11 @@ class ResettingController extends Controller
     /**
      * Returns the users email or as a fallback the installation-email-adress.
      *
-     * @param User $user
+     * @param UserInterface $user
      *
      * @return string
      */
-    private function getEmail(User $user)
+    private function getEmail(UserInterface $user)
     {
         if ($user->getEmail() !== null) {
             return $user->getEmail();
@@ -147,16 +147,16 @@ class ResettingController extends Controller
      *
      * @param string $identifier
      *
-     * @return \Symfony\Component\Security\Core\User\UserInterface
+     * @return UserInterface
      *
      * @throws EntityNotFoundException
      */
     private function findUser($identifier)
     {
         try {
-            return $this->getDoctrine()->getRepository(static::ENTITY_NAME_USER)->findUserByIdentifier($identifier);
+            return $this->getUserRepository()->findUserByIdentifier($identifier);
         } catch (NoResultException $exc) {
-            throw new EntityNotFoundException(static::ENTITY_NAME_USER, $identifier);
+            throw new EntityNotFoundException($this->getUserRepository()->getClassName(), $identifier);
         }
     }
 
@@ -172,8 +172,8 @@ class ResettingController extends Controller
     private function findUserByValidToken($token)
     {
         try {
-            /** @var User $user */
-            $user = $this->getDoctrine()->getRepository(static::ENTITY_NAME_USER)->findUserByToken($token);
+            /** @var UserInterface $user */
+            $user = $this->getUserRepository()->findUserByToken($token);
             if (new \DateTime() > $user->getPasswordResetTokenExpiresAt()) {
                 throw new InvalidTokenException($token);
             }
@@ -195,10 +195,10 @@ class ResettingController extends Controller
     /**
      * Gives a user a token, so she's logged in.
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param $request
      */
-    private function loginUser(User $user, $request)
+    private function loginUser(UserInterface $user, $request)
     {
         $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
         $this->get('security.context')->setToken($token); //now the user is logged in
@@ -211,9 +211,9 @@ class ResettingController extends Controller
     /**
      * Deletes the user's reset-password-token.
      *
-     * @param User $user
+     * @param UserInterface $user
      */
-    private function deleteToken(User $user)
+    private function deleteToken(UserInterface $user)
     {
         $em = $this->getDoctrine()->getManager();
         $user->setPasswordResetToken(null);
@@ -226,14 +226,14 @@ class ResettingController extends Controller
     /**
      * Sends the password-reset-token of a user to an email-adress.
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $from From-Email-Address
      * @param string $to To-Email-Address
      *
      * @throws NoTokenFoundException
      * @throws TokenEmailsLimitReachedException
      */
-    private function sendTokenEmail(User $user, $from, $to)
+    private function sendTokenEmail(UserInterface $user, $from, $to)
     {
         if ($user->getPasswordResetToken() === null) {
             throw new NoTokenFoundException($user);
@@ -263,12 +263,12 @@ class ResettingController extends Controller
     /**
      * Changes the password of a user.
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $password
      *
      * @throws MissingPasswordException
      */
-    private function changePassword(User $user, $password)
+    private function changePassword(UserInterface $user, $password)
     {
         if ($password === '') {
             throw new MissingPasswordException();
@@ -282,11 +282,11 @@ class ResettingController extends Controller
     /**
      * Generates a new token for a new user.
      *
-     * @param User $user
+     * @param UserInterface $user
      *
      * @throws TokenAlreadyRequestedException
      */
-    private function generateTokenForUser(User $user)
+    private function generateTokenForUser(UserInterface $user)
     {
         // if a token was already requested within the request interval time frame
         if ($user->getPasswordResetToken() !== null &&
@@ -342,7 +342,7 @@ class ResettingController extends Controller
     private function getUniqueToken($startToken)
     {
         try {
-            $this->getDoctrine()->getRepository(static::ENTITY_NAME_USER)->findUserByToken($startToken);
+            $this->getUserRepository()->findUserByToken($startToken);
         } catch (NoResultException $ex) {
             return $startToken;
         }
@@ -353,16 +353,23 @@ class ResettingController extends Controller
     /**
      * Returns an encoded password gor a given one.
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $password
      * @param string $salt
      *
      * @return mixed
      */
-    private function encodePassword(User $user, $password, $salt)
+    private function encodePassword(UserInterface $user, $password, $salt)
     {
         $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
+    }
+
+    /**
+     * @return UserRepositoryInterface
+     */
+    private function getUserRepository() {
+        return $this->get('sulu.repository.user');
     }
 }

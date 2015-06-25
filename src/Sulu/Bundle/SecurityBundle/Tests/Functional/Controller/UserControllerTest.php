@@ -829,7 +829,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
-        $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
+        $this->assertEquals('The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "password"-argument', $response->message);
     }
 
     public function testPostWithEmptyPassword()
@@ -904,7 +904,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
-        $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
+        $this->assertEquals('The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "password"-argument', $response->message);
     }
 
     public function testPutWithEmptyPassword()

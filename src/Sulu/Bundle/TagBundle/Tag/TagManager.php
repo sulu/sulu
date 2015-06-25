@@ -30,7 +30,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class TagManager implements TagManagerInterface
 {
     protected static $tagEntityName = 'SuluTagBundle:Tag';
-    protected static $userEntityName = 'SuluSecurityBundle:User';
+    protected static $userEntityName = 'Sulu\Component\Security\Authentication\UserInterface';
     protected static $contactEntityName = 'Sulu\Component\Contact\Model\ContactInterface';
 
     /**

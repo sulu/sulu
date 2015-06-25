@@ -180,7 +180,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             throw new NoResultException();
         } catch (NoResultException $nre) {
             $message = sprintf(
-                'Unable to find an SuluSecurityBundle:User object identified by %s',
+                'Unable to find an Sulu\Component\Security\Authentication\UserInterface object identified by %s',
                 $identifier
             );
 

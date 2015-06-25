@@ -10,14 +10,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
@@ -101,7 +99,7 @@ class UserManager implements UserManagerInterface
      *
      * @param int $id userId
      *
-     * @return User
+     * @return UserInterface
      */
     public function getUserById($id)
     {
@@ -179,7 +177,8 @@ class UserManager implements UserManagerInterface
                 if (!$this->isValidPassword($password)) {
                     throw new MissingPasswordException();
                 }
-                $user = new User();
+                /** @var UserInterface $user */
+                $user = $this->userRepository->createNew();
                 $this->processEmail($user, $email, $contact);
             }
 
@@ -324,11 +323,11 @@ class UserManager implements UserManagerInterface
     /**
      * @param int $id
      *
-     * @return User
+     * @return UserInterface
      */
     public function enableUser($id)
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->userRepository->findUserById($id);
         $user->setEnabled(true);
         $this->em->persist($user);
@@ -468,14 +467,14 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserRole to the given user
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param $userRoleData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
      * @return bool
      */
-    private function addUserRole(User $user, $userRoleData)
+    private function addUserRole(UserInterface $user, $userRoleData)
     {
         $alreadyContains = false;
 
@@ -509,14 +508,14 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserGroup to the given user
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param $userGroupData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
      * @return bool
      */
-    private function addUserGroup(User $user, $userGroupData)
+    private function addUserGroup(UserInterface $user, $userGroupData)
     {
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
@@ -596,13 +595,13 @@ class UserManager implements UserManagerInterface
     /**
      * Encodes the given password, for the given passwort, with he given salt and returns the result
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $password
      * @param string $salt
      *
      * @return string
      */
-    private function encodePassword($user, $password, $salt)
+    private function encodePassword(UserInterface $user, $password, $salt)
     {
         $encoder = $this->encoderFactory->getEncoder($user);
 

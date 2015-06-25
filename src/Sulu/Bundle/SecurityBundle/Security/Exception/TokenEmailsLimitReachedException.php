@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * This exception is thrown if a user requests to much resetting-emails.
@@ -23,11 +23,11 @@ class TokenEmailsLimitReachedException extends SecurityException
     private $limit;
 
     /**
-     * @var User
+     * @var UserInterface
      */
     private $user;
 
-    public function __construct($limit, User $user)
+    public function __construct($limit, UserInterface $user)
     {
         parent::__construct('The resetting-email limit has been reached!', 1007);
         $this->limit = $limit;

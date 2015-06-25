@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
@@ -26,7 +27,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
      *
      * @param int $id ID of the role
      *
-     * @return Role
+     * @return RoleInterface
      */
     public function findRoleById($id)
     {
@@ -54,7 +55,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
      * @param string $name
      * @param string $system
      *
-     * @return Role|null
+     * @return RoleInterface|null
      */
     public function findRoleByNameAndSystem($name, $system)
     {
