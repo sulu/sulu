@@ -683,6 +683,18 @@ class UserManager implements UserManagerInterface
     }
 
     /**
+     * Finds a user for a given contact id
+     *
+     * @param int $contactId
+     *
+     * @return UserInterface
+     */
+    public function findUserByContact($contactId)
+    {
+        return $this->userRepository->findUserByContact($contactId);
+    }
+
+    /**
      * this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities
