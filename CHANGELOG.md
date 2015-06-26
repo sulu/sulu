@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 * unreleased
-    * ENHANCEMENT #ADDMYPRNUMBER! [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
+    * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
 
 * 1.0.0-RC3 (2015-06-24)
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
