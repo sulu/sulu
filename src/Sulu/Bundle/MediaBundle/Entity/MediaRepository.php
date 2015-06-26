@@ -59,7 +59,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->where('media.id = :mediaId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('mediaId', $id);
 
             if ($asArray) {
