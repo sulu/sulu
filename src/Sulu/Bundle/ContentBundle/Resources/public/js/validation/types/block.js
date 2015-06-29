@@ -111,8 +111,6 @@ define([
                         this.form.removeFields($element);
                         $element.remove();
 
-                        this.checkSortable();
-
                         $(form.$el).trigger('form-remove', [this.propertyName]);
                         this.checkFullAndEmpty();
                     }
@@ -188,8 +186,6 @@ define([
                         if (this.getMinOccurs() === this.getMaxOccurs()) {
                             App.dom.remove(App.dom.find('.options-remove', $template));
                         }
-
-                        this.checkSortable();
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
@@ -305,6 +301,7 @@ define([
                     $('#edit-text-blocks-' + this.id).removeClass('hidden'); 
                     
                     this.$el.addClass('is-sortmode');
+                    this.checkSortable();
 
                     this.iterateBlockFields($blocks, function($field, $block) {
                         var property = $field.data('property') || {},
@@ -335,8 +332,9 @@ define([
                 showEditMode: function() {
                     var $blocks = this.getChildren();
 
-                    $('#sort-text-blocks-' + this.id).removeClass('hidden');
-                    $('#edit-text-blocks-' + this.id).addClass('hidden');
+                    App.dom.removeClass(this.$el, 'sortable');
+                    App.dom.removeClass('#sort-text-blocks-' + this.id, 'hidden');
+                    App.dom.addClass('#edit-text-blocks-' + this.id, 'hidden');
 
                     this.$el.removeClass('is-sortmode');
 
