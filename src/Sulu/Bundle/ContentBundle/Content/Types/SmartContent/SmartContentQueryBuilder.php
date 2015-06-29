@@ -175,6 +175,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             $alias = $parameter->getName();
             $propertyName = $parameter->getValue();
 
+            if ($alias === 'title') {
+                // title will be populated automatically
+                continue;
+            }
+
             if (strpos($propertyName, '.') !== false) {
                 $parts = explode('.', $propertyName);
 
