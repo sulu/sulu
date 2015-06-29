@@ -9,6 +9,9 @@ CHANGELOG for Sulu
 * dev-develop
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
 
+* dev-master
+    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
+
 * 1.0.0-RC3 (2015-06-24)
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
