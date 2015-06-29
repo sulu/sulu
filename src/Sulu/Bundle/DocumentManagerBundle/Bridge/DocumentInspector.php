@@ -2,27 +2,23 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
-use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\PathSegmentRegistry;
-use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\Metadata;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Sulu\Component\DocumentManager\ProxyFactory;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
-use Sulu\Component\Content\Document\LocalizationState;
-use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
-use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
-use Sulu\Component\Webspace\Manager\WebspaceManager;
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**
  * This class infers information about documents, for example
@@ -47,8 +43,7 @@ class DocumentInspector extends BaseDocumentInspector
         StructureMetadataFactoryInterface $structureFactory,
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager
-    )
-    {
+    ) {
         parent::__construct($documentRegistry, $pathSegmentRegistry, $proxyFactory);
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
@@ -199,7 +194,7 @@ class DocumentInspector extends BaseDocumentInspector
     /**
      * Return locales which are not shadows
      *
-     * @param object $document
+     * @param ShadowLocaleBehavior $document
      *
      * @return array
      */
@@ -210,7 +205,7 @@ class DocumentInspector extends BaseDocumentInspector
 
     /**
      * Return the enabled shadow locales for the given document
-     * 
+     *
      * @param ShadowLocaleBehavior $document
      *
      * @return array
@@ -221,8 +216,14 @@ class DocumentInspector extends BaseDocumentInspector
         $locales = $this->getLocales($document);
         $node = $this->getNode($document);
         foreach ($locales as $locale) {
-            $shadowEnabledName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD, $locale);
-            $shadowLocaleName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, $locale);
+            $shadowEnabledName = $this->encoder->localizedSystemName(
+                ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD,
+                $locale
+            );
+            $shadowLocaleName = $this->encoder->localizedSystemName(
+                ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD,
+                $locale
+            );
 
             if ($node->getPropertyValueWithDefault($shadowEnabledName, false)) {
                 $shadowLocales[$node->getPropertyValue($shadowLocaleName)] = $locale;
@@ -237,10 +238,8 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * TODO: Implement a router service instead of this.
      *
-     * @param  Page          $page
-     * @param  NodeInterface $node
-     * @param  string        $webspaceKey
-     * @param  string        $segmentKey
+     * @param BasePageDocument $page
+     *
      * @return array
      */
     public function getLocalizedUrlsForPage(BasePageDocument $page)
@@ -257,14 +256,23 @@ class DocumentInspector extends BaseDocumentInspector
             $resolvedLocale = $localization->getLocalization();
             $locale = $resolvedLocale;
 
-            $shadowEnabledName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD, $resolvedLocale);
+            $shadowEnabledName = $this->encoder->localizedSystemName(
+                ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD,
+                $resolvedLocale
+            );
 
             if (true === $node->getPropertyValueWithDefault($shadowEnabledName, false)) {
-                $shadowLocaleName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, $resolvedLocale);
+                $shadowLocaleName = $this->encoder->localizedSystemName(
+                    ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD,
+                    $resolvedLocale
+                );
                 $resolvedLocale = $node->getPropertyValue($shadowLocaleName);
             }
 
-            $stageName = $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, $resolvedLocale);
+            $stageName = $this->encoder->localizedSystemName(
+                WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD,
+                $resolvedLocale
+            );
 
             if (false === $node->hasProperty($stageName)) {
                 continue;
@@ -295,14 +303,19 @@ class DocumentInspector extends BaseDocumentInspector
      * Extracts webspace key from given path
      *
      * @param string $path path of node
+     *
      * @return string
      */
     private function extractWebspaceFromPath($path)
     {
-        $match = preg_match(sprintf(
-            '/^\/%s\/([\w\.]*?)\/.*$/',
-            $this->pathSegmentRegistry->getPathSegment('base')
-        ), $path, $matches);
+        $match = preg_match(
+            sprintf(
+                '/^\/%s\/([\w\.]*?)\/.*$/',
+                $this->pathSegmentRegistry->getPathSegment('base')
+            ),
+            $path,
+            $matches
+        );
 
         if ($match) {
             return $matches[1];
