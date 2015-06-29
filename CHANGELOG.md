@@ -1,9 +1,13 @@
 CHANGELOG for Sulu
 ==================
-* unreleased
+
+* dev-develop
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove unvalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
+    * BUGIFX      #1285 [ContentBundle]  Fixed smart-content internal link link title
+    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
+    * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
 
 * 1.0.0-RC3 (2015-06-24)
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
@@ -11,11 +15,6 @@ CHANGELOG for Sulu
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle
     * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
                                          Added this functionality for the contact entity.
-
-* dev-develop
-    * BUGIFX      #1285 [ContentBundle]  Fixed smart-content internal link link title
-    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
-    * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
 
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  Fixed save of changed block type
