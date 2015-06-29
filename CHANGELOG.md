@@ -4,14 +4,14 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
     * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
-    * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
     * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
     * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
-    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
+    * FEATURE     #1278 [ContentBundle]  Implemented webspace structure provider
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
     * FEATURE     #1315 [ContentBundle]  Fixed translator locale for preview
 
 * 1.0.0-RC3 (2015-06-24)
@@ -23,9 +23,6 @@ CHANGELOG for Sulu
                                          Added this functionality for the contact entity.
     * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
     * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
-
-* dev-develop
-    * FEATURE     #1278 [ContentBundle]  Implemented webspace structure provider
 
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  Fixed save of changed block type
