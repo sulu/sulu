@@ -17,64 +17,92 @@ define([], function() {
             filterUrl: 'api/filters?flat=true&context='
         },
 
+        // TODO listen on navigate event to stop result component?
+
         /**
          * Extends the list toolbar if a context, toolbar and a instance name for the datagrid is given
          *
          * @param context {String}
          * @param toolbarItems {Array}
          * @param dataGridInstanceName {String}
-         * @param infoContainerSelector {String}
+         * @param filterResultSelector {String}
          */
-        extendToolbar = function(context, toolbarItems, dataGridInstanceName, infoContainerSelector) {
+        extendToolbar = function(context, toolbarItems, dataGridInstanceName, filterResultSelector) {
             if (!!context && !!toolbarItems && !!dataGridInstanceName) {
                 var url = constants.filterUrl + context,
-                    filterDropDown = {
-                        id: 'filters',
-                        icon: 'filter',
-                        title: this.sandbox.translate('resource.filter'),
-                        group: 2,
-                        position: 1,
-                        class: 'highlight-white',
-                        type: 'select',
-                        itemsOption: {
-                            url: url,
-                            resultKey: 'filters',
-                            titleAttribute: 'name',
-                            idAttribute: 'id',
-                            translate: false,
-                            languageNamespace: 'toolbar.',
-                            markable: true,
-                            callback: function(item) {
-                                applyFilterToList.call(this, item, dataGridInstanceName, context, infoContainerSelector);
-                            }.bind(this)
-                        },
-                        items: [
-                            {
-                                id: constants.manageFilters,
-                                name: this.sandbox.translate('resource.filter.manage')
-                            }
-                        ]
+                    filterDropDown = getFilterDropdown.call(this, context, dataGridInstanceName, url);
 
-                    };
+                this.filterResultSelector = filterResultSelector;
+                this.context = context;
+                this.datagridInstance = dataGridInstanceName;
 
                 toolbarItems.push(filterDropDown);
+                this.sandbox.on('husky.datagrid.' + dataGridInstanceName + '.updated', updateFilterResult.bind(this));
             }
         },
 
         /**
          * Starts and updates the info container component
          *
-         * @param item {Object}
-         * @param context {String}
-         * @param infoContainerSelector {String}
+         * @param result {Object} contains result from datagrid update
          */
-        updateFilterInfoState = function(item, context, infoContainerSelector) {
-            if (!this.filterStateComponentStarted) {
-                this.filterStateComponentStarted = true;
-                //this.sandbox.start([...]);
-
-                // TODO
+        updateFilterResult = function(result) {
+            if (!this.filterResultComponentStarted) {
+                this.filterResultComponentStarted = true;
+                App.start([
+                    {
+                        name: 'filter-result@suluresource',
+                        options: {
+                            el: this.filterResultSelector,
+                            filter: this.filter,
+                            datagridInstance: this.datagridInstance,
+                            numberOfResults: result.total,
+                            filterUrl: 'TODO',
+                            instanceName: this.context
+                        }
+                    }
+                ]);
+            } else {
+                this.sandbox.emit('', result.total, this.item);
             }
+        },
+
+        /**
+         * Returns the object to render the dropdown for the filters
+         * @param context {String}
+         * @param dataGridInstanceName {String}
+         * @param url {String}
+         * @returns {Object}
+         */
+        getFilterDropdown = function(context, dataGridInstanceName, url) {
+            return {
+                id: 'filters',
+                icon: 'filter',
+                title: this.sandbox.translate('resource.filter'),
+                group: 2,
+                position: 1,
+                class: 'highlight-white',
+                type: 'select',
+                itemsOption: {
+                    url: url,
+                    resultKey: 'filters',
+                    titleAttribute: 'name',
+                    idAttribute: 'id',
+                    translate: false,
+                    languageNamespace: 'toolbar.',
+                    markable: true,
+                    callback: function(item) {
+                        applyFilterToList.call(this, item, dataGridInstanceName, context);
+                    }.bind(this)
+                },
+                items: [
+                    {
+                        id: constants.manageFilters,
+                        name: this.sandbox.translate('resource.filter.manage')
+                    }
+                ]
+
+            };
         },
 
         /**
@@ -83,14 +111,13 @@ define([], function() {
          * @param item {Object}
          * @param instanceName {String}
          * @param context {String}
-         * @param infoContainerSelector {String}
          */
-        applyFilterToList = function(item, instanceName, context, infoContainerSelector) {
+        applyFilterToList = function(item, instanceName, context) {
             if (item.id !== constants.manageFilters) {
-                //updateFilterInfoState.call(this, item, context, infoContainerSelector);
+                this.filter = item;
                 this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
             } else {
-                //this.sandbox.stop(infoContainerSelector);
+                this.filter = null;
                 this.sandbox.emit('sulu.router.navigate', constants.filterListUrl + context);
             }
         };
@@ -98,6 +125,8 @@ define([], function() {
     return {
 
         initialize: function(app) {
+
+            //app.components.addSource('sulufilter', '/bundles/sulusearch/js/components/filters');
 
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {

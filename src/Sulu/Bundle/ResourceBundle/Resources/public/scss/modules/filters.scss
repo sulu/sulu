@@ -3,3 +3,20 @@
         margin-top: 7px !important;
     }
 }
+
+.filter-result-box {
+    margin: 0 50px 25px 50px;
+    padding: 15px;
+    background: #ccc;
+    border-radius: 3px;
+    color: #666;
+
+    a {
+        text-decoration: none;
+    }
+
+    .filter-icons {
+        float:right;
+        color: #000;
+    }
+}
