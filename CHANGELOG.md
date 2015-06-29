@@ -1,10 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
-    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
-
 * 1.0.0-RC3 (2015-06-24)
+    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle
