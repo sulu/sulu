@@ -1,5 +1,16 @@
 # Upgrade
 
+## dev-develop
+
+### Snippets
+
+Snippet state has been removed and set default to published. Therefor all snippets has to be set to published by this
+running this command for each <locale>:
+
+```bash
+app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [jcr:mixinTypes] = 'sulu:snippet'" --apply-closure="\$node->setProperty('i18n:<locale>-state', 2);"
+```
+
 ## 1.0.0-RC3
 
 ### Document Manager
