@@ -13,13 +13,13 @@
  * @class ConditionSelection
  * @constructor
  *
- * @param {Object} [options] Configuration object
- * @param {String} [options.instanceName] Instance name of this component instance
- * @param {Object} [options.filter] Filter object
- * @param {Object} [options.filtersUrl] Url to edit filter
- * @param {String} [options.datagridInstance] Instance name of related datagrid
- * @param {integer} [options.numberOfResults] Number of results
- * @param {String} [options.eventNamespace] Namespace of the events
+ * @param {Object}  [options] Configuration object
+ * @param {String}  [options.instanceName] Instance name of this component instance
+ * @param {Object}  [options.filter] Filter object
+ * @param {Object}  [options.filtersUrl] Url to edit filter
+ * @param {String}  [options.datagridInstance] Instance name of related datagrid
+ * @param {int}     [options.numberOfResults] Number of results
+ * @param {String}  [options.eventNamespace] Namespace of the events
  *
  */
 define(function() {
@@ -115,7 +115,7 @@ define(function() {
          * @param numberOfResults
          * @param filter
          */
-        setFilterResultContent = function(numberOfResults, filter){
+        setFilterResultContent = function(numberOfResults, filter) {
             var htmlText = templates.text.call(this, numberOfResults, filter),
                 htmlContent = templates.baseStructure(htmlText);
 
@@ -132,7 +132,7 @@ define(function() {
             this.sandbox.dom.on(this.$el, 'click', editFilter.bind(this), constants.editFilterSelector);
         },
 
-        bindCustomEvents = function(){
+        bindCustomEvents = function() {
             this.sandbox.on(UPDATE.call(this), setFilterResultContent.bind(this));
         };
 

@@ -18,8 +18,6 @@ define(['app-config'], function(AppConfig) {
             filterUrl: 'resource/filters/'
         },
 
-    // TODO extract constants?
-
         /**
          * Extends the list toolbar if a context, toolbar and a instance name for the datagrid is given
          *

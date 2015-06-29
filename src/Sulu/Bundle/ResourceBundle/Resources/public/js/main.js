@@ -29,8 +29,6 @@ define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler
          */
         initialize: function(app) {
 
-            'use strict';
-
             var sandbox = app.sandbox;
 
             app.components.addSource('suluresource', '/bundles/suluresource/js/components');
