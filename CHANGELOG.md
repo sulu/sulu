@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove unvalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
+    * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
 
 * dev-develop
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
@@ -36,7 +37,6 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1237 [AdminBundle]    Fixed typos in behat tests
     * BUGFIX      #1235 [ContentBundle]  Fixed delete page which has children with history url
     * BUGFIX      #1231 [ContentBundle]  Fixed wrong behaviour if you edit a shadow page
-    * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
     * BUGFIX      #1216 [SecurityBundle] Moved settings action to non-secured ProfileController
     * BUGFIX      #1213 [ContentBundle]  Fixed redirect of external links
     * FEATURE     #1214 [MediaBundle]    Added language chooser in "all media" view and in edit-media overlay

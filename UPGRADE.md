@@ -2,6 +2,7 @@
 
 ## dev-develop
 
+<<<<<<< HEAD
 ### Snippets
 
 Snippet state has been removed and set default to published. Therefor all snippets has to be set to published by this
@@ -10,6 +11,10 @@ running this command for each <locale>:
 ```bash
 app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [jcr:mixinTypes] = 'sulu:snippet'" --apply-closure="\$node->setProperty('i18n:<locale>-state', 2);"
 ```
+
+### Page-Templates
+
+The tag `sulu.rlp` is now mandatory for page templates.
 
 ## 1.0.0-RC3
 
@@ -169,10 +174,6 @@ After running this script please check the changed files for conflicts and wrong
 
 Children of pages with the state "test" or pages which have the desired navigaiton context not assigned won't be moved
 up in the hierarchy, instead they won't show up in the navigation at all.
-
-### Page-Templates
-
-The tag `sulu.rlp` is now mandatory for page templates.
 
 ## 1.0.0-RC1
 
