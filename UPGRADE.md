@@ -23,6 +23,33 @@ again.
 app/console sulu:upgrade:rc3:internal-links
 ```
 
+The following classes have been moved, and every reference to them has to be updated:
+
+Old name                                                 | New name
+---------------------------------------------------------|---------------------------------------------------------------
+Sulu\Component\Content\Event\ContentNodeDeleteEvent      | Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent
+Sulu\Component\Content\Event\ContentNodeEvent            | Sulu\Component\Content\Mapper\Event\ContentNodeEvent
+Sulu\Component\Content\Event\ContentNodeOrderEvent       | Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent
+Sulu\Component\Content\Block\BlockProperty               | Sulu\Component\Content\Compat\Block\BlockProperty
+Sulu\Component\Content\Block\BlockPropertyInterface      | Sulu\Component\Content\Compat\Block\BlockPropertyInterface
+Sulu\Component\Content\Block\BlockPropertyType           | Sulu\Component\Content\Compat\Block\BlockPropertyType
+Sulu\Component\Content\Block\BlockPropertyWrapper        | Sulu\Component\Content\Compat\Block\BlockPropertyWrapper
+Sulu\Component\Content\Section\SectionProperty           | Sulu\Component\Content\Compat\Section\SectionProperty
+Sulu\Component\Content\Section\SectionPropertyInterface  | Sulu\Component\Content\Compat\Section\SectionPropertyInterface
+Sulu\Component\Content\ErrorStructure                    | Sulu\Component\Content\Compat\ErrorStructure
+Sulu\Component\Content\Section\MetaData                  | Sulu\Component\Content\Compat\MetaData
+Sulu\Component\Content\Section\PageInterface             | Sulu\Component\Content\Compat\PageInterface
+Sulu\Component\Content\Section\Property                  | Sulu\Component\Content\Compat\Property
+Sulu\Component\Content\Section\PropertyInterface         | Sulu\Component\Content\Compat\PropertyInterface
+Sulu\Component\Content\Section\PropertyParameter         | Sulu\Component\Content\Compat\PropertyParameter
+Sulu\Component\Content\Section\PropertyTag               | Sulu\Component\Content\Compat\PropertyTag
+Sulu\Component\Content\Section\Structure                 | Sulu\Component\Content\Compat\Structure
+Sulu\Component\Content\Section\StructureInterface        | Sulu\Component\Content\Compat\StructureInterface
+Sulu\Component\Content\Section\StructureManager          | Sulu\Component\Content\Compat\StructureManager
+Sulu\Component\Content\Section\StructureManagerInterface | Sulu\Component\Content\Compat\StructureManagerInterface
+Sulu\Component\Content\Section\StructureTag              | Sulu\Component\Content\Compat\StructureTag
+Sulu\Component\Content\Section\StructureType             | Sulu\Component\Content\Compat\StructureType
+
 ### Upgrade commands
 
 All the upgrade commands have been removed, since they are not of any use for

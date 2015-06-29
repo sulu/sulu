@@ -26943,6 +26943,10 @@ define('type/husky-input',[
                     var value = typeGetter.default.call(this),
                         dateTime = Globalize.parseDate(value, this.options.timeFormat);
 
+                    if (value === '') {
+                        return value;
+                    }
+
                     return Globalize.format(dateTime, 'HH:mm:ss');
                 },
                 date: function() {
@@ -43901,7 +43905,6 @@ define('__component__$input@husky',[], function() {
             this.sandbox.dom.addClass(this.$el, constants.colorpickerClass);
             this.changeColorPreview(this.sandbox.dom.val(this.input.$input));
             this.sandbox.colorpicker.init(this.input.$input, this.sandbox.util.extend(true, {}, {
-                defaultValue: this.sandbox.dom.val(this.input.$input),
                 change: this.changeColorPreview.bind(this)
             }, this.options.colorPickerOptions));
         },

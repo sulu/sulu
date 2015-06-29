@@ -73,7 +73,6 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 .cke_dialog_footer {
     text-align: right;
-    position: relative;
     border-top: 1px solid #ccc !important;
 }
 
@@ -244,12 +243,12 @@ div.cke_disabled .cke_dialog_ui_labeled_content div * {
 }
 
 .cke_dialog_footer .cke_dialog_ui_hbox_first {
-    display: none;
+    padding: 5px;
+    text-align: center;
 }
 
 .cke_dialog_footer .cke_dialog_ui_hbox_last {
-    padding: 5px;
-    text-align: center;
+    display: none;
 }
 
 .cke_dialog_ui_hbox_first, .cke_dialog_ui_hbox_child, .cke_dialog_ui_hbox_last {
