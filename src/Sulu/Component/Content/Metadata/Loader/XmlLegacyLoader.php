@@ -42,8 +42,8 @@ class XmlLegacyLoader implements LoaderInterface
      * @var array
      */
     private $requiredTagNames = array(
-        Structure::TYPE_PAGE => array('sulu.rlp'),
-        Structure::TYPE_SNIPPET => array()
+        'page' => array('sulu.rlp'),
+        'snippet' => array()
     );
 
     /**
