@@ -7,34 +7,38 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
     var constants = {
             filterListUrl: 'resource/filters/',
             manageFilters: 'manage',
-            filterUrl: 'api/filters?flat=true&context='
+            filtersUrl: 'api/filters?flat=true&context=',
+            filterUrl: 'resource/filters/'
         },
 
-        // TODO listen on navigate event to stop result component?
+    // TODO listen on navigate event to stop result component?
+    // TODO extract constants?
 
         /**
          * Extends the list toolbar if a context, toolbar and a instance name for the datagrid is given
          *
          * @param context {String}
          * @param toolbarItems {Array}
+         * @param toolbarInstanceName {String}
          * @param dataGridInstanceName {String}
          * @param filterResultSelector {String}
          */
-        extendToolbar = function(context, toolbarItems, dataGridInstanceName, filterResultSelector) {
+        extendToolbar = function(context, toolbarItems, toolbarInstanceName, dataGridInstanceName, filterResultSelector) {
             if (!!context && !!toolbarItems && !!dataGridInstanceName) {
-                var url = constants.filterUrl + context,
+                var url = constants.filtersUrl + context,
                     filterDropDown = getFilterDropdown.call(this, context, dataGridInstanceName, url);
 
                 this.filterResultSelector = filterResultSelector;
                 this.context = context;
                 this.datagridInstance = dataGridInstanceName;
+                this.toolbarInstanceName = toolbarInstanceName;
 
                 toolbarItems.push(filterDropDown);
                 this.sandbox.on('husky.datagrid.' + dataGridInstanceName + '.updated', updateFilterResult.bind(this));
@@ -47,24 +51,36 @@ define([], function() {
          * @param result {Object} contains result from datagrid update
          */
         updateFilterResult = function(result) {
-            if (!this.filterResultComponentStarted) {
-                this.filterResultComponentStarted = true;
-                App.start([
-                    {
-                        name: 'filter-result@suluresource',
-                        options: {
-                            el: this.filterResultSelector,
-                            filter: this.filter,
-                            datagridInstance: this.datagridInstance,
-                            numberOfResults: result.total,
-                            filterUrl: 'TODO',
-                            instanceName: this.context
+            if (!!this.filter) {
+                if (!this.filterResultComponentStarted) {
+                    this.filterResultComponentStarted = true;
+                    App.start([
+                        {
+                            name: 'filter-result@suluresource',
+                            options: {
+                                el: this.filterResultSelector,
+                                filter: this.filter,
+                                datagridInstance: this.datagridInstance,
+                                numberOfResults: result.total,
+                                filterUrl: createUrlToFilterDetails.call(this),
+                                instanceName: this.context
+                            }
                         }
-                    }
-                ]);
-            } else {
-                this.sandbox.emit('', result.total, this.item);
+                    ]).then(function() {
+                        this.sandbox.on('sulu.filter-result.' + this.context + '.unset_filter', unsetFilter.bind(this));
+                    }.bind(this));
+                } else {
+                    this.sandbox.emit('sulu.filter-result.' + this.context + '.update', result.total, this.filter);
+                }
             }
+        },
+
+        /**
+         * Called when filter is unset
+         */
+        unsetFilter = function() {
+            this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.unmark', this.filter.id);
+            this.filter = null;
         },
 
         /**
@@ -106,6 +122,14 @@ define([], function() {
         },
 
         /**
+         * Creates the url to edit a specific filter
+         * @returns {string}
+         */
+        createUrlToFilterDetails = function() {
+            return constants.filterUrl + this.context + '/' + AppConfig.getUser().locale + '/edit:' + this.filter.id + '/edit';
+        },
+
+        /**
          * Emits the url update event for the given datagrid instance
          *
          * @param item {Object}
@@ -115,9 +139,11 @@ define([], function() {
         applyFilterToList = function(item, instanceName, context) {
             if (item.id !== constants.manageFilters) {
                 this.filter = item;
+                this.filterUrl = createUrlToFilterDetails.call(this);
                 this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
             } else {
                 this.filter = null;
+                this.filterUrl = null;
                 this.sandbox.emit('sulu.router.navigate', constants.filterListUrl + context);
             }
         };
@@ -125,9 +151,6 @@ define([], function() {
     return {
 
         initialize: function(app) {
-
-            //app.components.addSource('sulufilter', '/bundles/sulusearch/js/components/filters');
-
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {
                     return;
