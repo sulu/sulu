@@ -89,7 +89,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSetField()
     {
-        $this->doctrineListBuilder->setFields(
+        $this->doctrineListBuilder->setSelectFields(
             array(
                 new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
                 new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName),
@@ -109,8 +109,8 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testAddField()
     {
-        $this->doctrineListBuilder->addField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
-        $this->doctrineListBuilder->addField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
+        $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
+        $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
 
         $this->queryBuilder->expects($this->at(1))->method('addSelect')->with(
             self::$entityName . '.name AS name_alias'
@@ -125,7 +125,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testAddFieldWithJoin()
     {
-        $this->doctrineListBuilder->addField(
+        $this->doctrineListBuilder->addSelectField(
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
@@ -222,7 +222,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testCount()
     {
-        $this->doctrineListBuilder->setFields(
+        $this->doctrineListBuilder->setSelectFields(
             array(
                 new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
                 new DoctrineFieldDescriptor(
@@ -264,7 +264,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($filter as $key => $value) {
-            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
         }
 
@@ -292,7 +292,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($filter as $key => $value) {
-            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
         }
 
@@ -312,7 +312,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($filter as $key => $value) {
-            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
@@ -334,7 +334,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($filter as $key => $value) {
-            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
@@ -355,7 +355,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('id', 'title_id', self::$entityName);
 
-        $this->doctrineListBuilder->addField($fieldDescriptor);
+        $this->doctrineListBuilder->addSelectField($fieldDescriptor);
         $this->doctrineListBuilder->in($fieldDescriptor, array(1, 2));
 
         $this->queryBuilder
@@ -381,7 +381,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 ),
         );
 
-        $this->doctrineListBuilder->setFields($fieldDescriptors);
+        $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
         $this->queryBuilder->expects($this->once())->method('leftJoin');
         $this->queryBuilder->expects($this->once())->method('innerJoin');
@@ -423,7 +423,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 ),
         );
 
-        $this->doctrineListBuilder->setFields($fieldDescriptors);
+        $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
         $this->queryBuilder->expects($this->once())->method('leftJoin')->with(
             null,
@@ -445,7 +445,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
-        $this->doctrineListBuilder->setFields(
+        $this->doctrineListBuilder->setSelectFields(
             array(
                 $nameFieldDescriptor,
             )
@@ -462,7 +462,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
-        $this->doctrineListBuilder->setFields(
+        $this->doctrineListBuilder->setSelectFields(
             array(
                 $nameFieldDescriptor,
             )

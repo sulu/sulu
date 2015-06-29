@@ -72,7 +72,17 @@ define(['widget-groups'], function(WidgetGroups) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    inHeader: true
+                    inHeader: true,
+                    groups: [
+                        {
+                            id: 1,
+                            align: 'left'
+                        },
+                        {
+                            id: 2,
+                            align: 'right'
+                        }
+                    ]
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
@@ -80,6 +90,7 @@ define(['widget-groups'], function(WidgetGroups) {
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
+                    instanceName: 'contacts',
                     viewOptions: {
                         table: {
                             icons: [
@@ -96,7 +107,9 @@ define(['widget-groups'], function(WidgetGroups) {
                             fullWidth: true
                         }
                     }
-                }
+                },
+                'contacts',
+                '#people-list-info'
             );
         }
     };

@@ -33291,8 +33291,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.loading();
                 this.load({
                     url: url,
-                    success: function() {
-                        this.sandbox.emit(UPDATED.call(this));
+                    success: function(data) {
+                        this.sandbox.emit(UPDATED.call(this), data);
                     }.bind(this)
                 });
             },
@@ -34898,6 +34898,16 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
+         * event to unmark a subitem
+         *
+         * @event husky.toolbar.[INSTANCE_NAME.]item.unmark
+         * @param {string} button The id of the button
+         */
+        ITEM_UNMARK = function() {
+            return createEventName.call(this, 'item.unmark');
+        },
+
+        /**
          * event to change a buttons default title and default icon
          *
          * @event husky.toolbar.[INSTANCE_NAME.]button.set
@@ -34985,6 +34995,8 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ITEM_MARK.call(this), uniqueMarkItem.bind(this));
+
+            this.sandbox.on(ITEM_UNMARK.call(this), unmarkItem.bind(this));
 
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
                 if (!!this.items[button]) {
@@ -35358,6 +35370,16 @@ define('__component__$toolbar@husky',[],function() {
                 }.bind(this));
                 // mark passed element
                 this.sandbox.dom.addClass(this.items[itemId].$el, constants.markedClass);
+            }
+        },
+
+        /**
+         * Unmark an item by removing the marked class from the item
+         * @param itemId {Number|String} the id of the item
+         */
+        unmarkItem = function(itemId){
+            if (!!this.items[itemId] && !!this.items[itemId].parentId) {
+                this.sandbox.dom.removeClass(this.items[itemId].$el, constants.markedClass);
             }
         },
 
@@ -35750,6 +35772,11 @@ define('__component__$toolbar@husky',[],function() {
                                 var data = result[this.options.itemsRequestKey];
                                 if (!!item.itemsOption.resultKey) {
                                     data = data[item.itemsOption.resultKey];
+                                }
+
+                                // add items if present
+                                if(!!item.items) {
+                                    data = data.concat(item.items);
                                 }
 
                                 handleRequestedItems.call(this, data, item.id);
@@ -40493,17 +40520,17 @@ define('__component__$ckeditor@husky',[], function() {
             var config = this.sandbox.util.extend(false, {}, this.options);
 
             config.toolbar = [
-                { name: 'semantics', items: ['Format']},
-                { name: 'basicstyles', items: [ 'Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike'] },
-                { name: 'blockstyles', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-                { name: 'list', items: [ 'NumberedList', 'BulletedList'] }
+                {name: 'semantics', items: ['Format']},
+                {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
+                {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                {name: 'list', items: ['NumberedList', 'BulletedList']}
             ];
 
             // activate paste from Word
             if (this.options.pasteFromWord === true) {
                 config.toolbar.push({
                     name: 'paste',
-                    items: [ 'PasteFromWord' ]
+                    items: ['PasteFromWord']
                 });
             }
 
@@ -40511,7 +40538,7 @@ define('__component__$ckeditor@husky',[], function() {
             if (this.options.link === true) {
                 config.toolbar.push({
                     name: 'links',
-                    items: [ 'Link', 'Unlink' ]
+                    items: ['Link', 'Unlink']
                 });
                 config.linkShowTargetTab = false;
             }
@@ -40520,7 +40547,7 @@ define('__component__$ckeditor@husky',[], function() {
             if (this.options.table === true) {
                 config.toolbar.push({
                     name: 'insert',
-                    items: [ 'Table' ]
+                    items: ['Table']
                 });
             }
 
@@ -40548,11 +40575,11 @@ define('__component__$ckeditor@husky',[], function() {
             if (!!config.stylesSet && config.stylesSet.length > 0) {
                 config.toolbar.push({
                     name: 'styles',
-                    items: [ 'Styles' ]
+                    items: ['Styles']
                 });
             }
 
-            config.toolbar.push({ name: 'code', items: [ 'Source' ] });
+            config.toolbar.push({name: 'code', items: ['Source']});
 
             delete config.initializedCallback;
             delete config.baseUrl;
@@ -40645,10 +40672,10 @@ define('__component__$ckeditor@husky',[], function() {
             if (!!instance) {
                 // FIXME HACK
                 // this hack fix 'clearCustomData' not null on template change
-                // this error come when editor dom element don't exists
-                // check if dom element exist else remove the instance from object
-                // should also fix memory leak that the instances are not deleted from CKEDITOR
-                if (instance.window.getFrame()) {
+                // it occurs if the editor dom element not exists
+                // check if dom element exist then destroy instance else remove the instance from global object
+                // this should also fix memory leak that the instances are not deleted from global CKEDITOR
+                if (!!instance.window && instance.window.getFrame()) {
                     instance.destroy();
                 } else {
                     delete CKEDITOR.instances[this.options.instanceName];

@@ -299,9 +299,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $this->getManager()->getFieldDescriptors()
         );
 
-        $listBuilder->addField($this->getManager()->getFieldDescriptor('depth'));
-        $listBuilder->addField($this->getManager()->getFieldDescriptor('parent'));
-        $listBuilder->addField($this->getManager()->getFieldDescriptor('hasChildren'));
+        $listBuilder->addSelectField($this->getManager()->getFieldDescriptor('depth'));
+        $listBuilder->addSelectField($this->getManager()->getFieldDescriptor('parent'));
+        $listBuilder->addSelectField($this->getManager()->getFieldDescriptor('hasChildren'));
 
         $listBuilder->addGroupBy($this->getManager()->getFieldDescriptor('id'));
 

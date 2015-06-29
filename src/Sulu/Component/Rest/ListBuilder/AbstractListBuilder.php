@@ -17,7 +17,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $fields = array();
+    protected $selectFields = array();
 
     /**
      * The field descriptors for the field, which will be used for the search.
@@ -132,19 +132,26 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $page = 1;
 
     /**
+     * All field descriptors for the current context.
+     *
+     * @var AbstractFieldDescriptor[]
+     */
+    protected $fieldDescriptors;
+
+    /**
      * {@inheritDoc}
      */
-    public function setFields($fieldDescriptors)
+    public function setSelectFields($fieldDescriptors)
     {
-        $this->fields = $fieldDescriptors;
+        $this->selectFields = $fieldDescriptors;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addField(AbstractFieldDescriptor $fieldDescriptor)
+    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor)
     {
-        $this->fields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
         return $this;
     }
@@ -152,10 +159,10 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function getField($fieldName)
+    public function getSelectField($fieldName)
     {
-        if (array_key_exists($fieldName, $this->fields)) {
-            return $this->fields[$fieldName];
+        if (array_key_exists($fieldName, $this->selectFields)) {
+            return $this->selectFields[$fieldName];
         }
 
         return null;
@@ -164,9 +171,29 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function hasField($name)
+    public function hasSelectField($name)
     {
-        return array_key_exists($name, $this->fields);
+        return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFieldDescriptors(array $fieldDescriptors)
+    {
+        $this->fieldDescriptors = $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptor($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->fieldDescriptors)) {
+            return $this->fieldDescriptors[$fieldName];
+        }
+
+        return null;
     }
 
     /**
