@@ -194,7 +194,8 @@ define([
                                 valueName: 'position',
                                 returnValue: 'id',
                                 data: response._embedded.positions,
-                                noNewValues: true
+                                noNewValues: true,
+                                isNative: true
                             }
                         }
                     ]);
