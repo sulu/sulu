@@ -12,10 +12,6 @@
   color: #666;
 }
 /* line 14, ../scss/modules/filters.scss */
-.filter-result-box a {
-  text-decoration: none;
-}
-/* line 18, ../scss/modules/filters.scss */
 .filter-result-box .filter-icons {
   float: right;
   color: #000;
