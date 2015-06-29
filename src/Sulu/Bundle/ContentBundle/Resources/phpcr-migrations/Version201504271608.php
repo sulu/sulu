@@ -2,8 +2,11 @@
 
 namespace Sulu\Bundle\ContentBundle;
 
+use Jackalope\Property;
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
+use PHPCR\Util\UUIDHelper;
 use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,8 +56,35 @@ class Version201504271608 implements VersionInterface, ContainerAwareInterface
             }
 
             $homeNode = $webspace->getNode($homeNodeName);
-            $homeNode->addMixin($to);
+            $tmpNode = $session->getRootNode()->addNode('/tmp');
+            $tmpNode->addMixin('mix:referenceable');
+
+            $session->save();
+
+            $homeNodeReferences = $homeNode->getReferences();
+            $homeNodeReferenceValues = array();
+            foreach ($homeNodeReferences as $homeNodeReference) {
+                /** @var Property $homeNodeReference */
+                $homeNodeReferenceValues[$homeNodeReference->getPath()] = $homeNodeReference->getValue();
+                $homeNodeReference->setValue($tmpNode);
+            }
+
+            $session->save();
             $homeNode->removeMixin($from);
+            $session->save();
+            $homeNode->addMixin($to);
+            $session->save();
+
+            foreach ($homeNodeReferences as $homeNodeReference) {
+                $homeNodeReference->setValue(
+                    $homeNodeReferenceValues[$homeNodeReference->getPath()],
+                    PropertyType::REFERENCE
+                );
+            }
+
+            $session->save();
+
+            $tmpNode->remove();
         }
     }
 }
