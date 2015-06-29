@@ -18,7 +18,6 @@ define(['app-config'], function(AppConfig) {
             filterUrl: 'resource/filters/'
         },
 
-    // TODO listen on navigate event to stop result component?
     // TODO extract constants?
 
         /**
@@ -33,6 +32,7 @@ define(['app-config'], function(AppConfig) {
         extendToolbar = function(context, toolbarItems, toolbarInstanceName, dataGridInstanceName, filterResultSelector) {
             if (!!context && !!toolbarItems && !!dataGridInstanceName) {
                 var url = constants.filtersUrl + context,
+                    updateEventName = 'husky.datagrid.' + dataGridInstanceName + '.updated',
                     filterDropDown = getFilterDropdown.call(this, context, dataGridInstanceName, url);
 
                 this.filterResultSelector = filterResultSelector;
@@ -41,7 +41,8 @@ define(['app-config'], function(AppConfig) {
                 this.toolbarInstanceName = toolbarInstanceName;
 
                 toolbarItems.push(filterDropDown);
-                this.sandbox.on('husky.datagrid.' + dataGridInstanceName + '.updated', updateFilterResult.bind(this));
+                this.sandbox.off(updateEventName);
+                this.sandbox.on(updateEventName, updateFilterResult.bind(this));
             }
         },
 
@@ -130,6 +131,17 @@ define(['app-config'], function(AppConfig) {
         },
 
         /**
+         * Resets filter and stops filter result component
+         */
+        resetOnNavigate = function() {
+            this.filter = null;
+            this.filterResultComponentStarted = false;
+            if (!!this.filterResultSelector) {
+                App.stop(this.filterResultSelector);
+            }
+        },
+
+        /**
          * Emits the url update event for the given datagrid instance
          *
          * @param item {Object}
@@ -157,6 +169,7 @@ define(['app-config'], function(AppConfig) {
                 }
 
                 this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
+                this.sandbox.on('sulu.router.navigate', resetOnNavigate.bind(this));
             });
         }
     };
