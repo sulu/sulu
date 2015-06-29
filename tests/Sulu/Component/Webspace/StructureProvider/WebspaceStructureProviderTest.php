@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace\StructureProvider;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +39,7 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
         $twig = $this->prophesize('\Twig_Environment');
         $twig->getLoader()->willReturn($twigLoader->reveal());
 
-        $structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
+        $structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');
         $structureManager->getStructures()->willReturn($structures);
 
         $webspaceManager = $this->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
@@ -81,7 +81,7 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
         $twig = $this->prophesize('\Twig_Environment');
         $twig->getLoader()->shouldNotBeCalled();
 
-        $structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
+        $structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');
         $structureManager->getStructures()->shouldNotBeCalled();
         $structureManager->getStructure('t1')->willReturn($structures[0]);
         $structureManager->getStructure('t2')->shouldNotBeCalled();
@@ -117,7 +117,7 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function generateStructure($key, $view)
     {
-        $mock = $this->prophesize('Sulu\Component\Content\Structure\Page');
+        $mock = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
 
         $mock->getKey()->willReturn($key);
         $mock->getView()->willReturn($view);

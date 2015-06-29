@@ -12,8 +12,8 @@ namespace Sulu\Component\Webspace\StructureProvider;
 
 use Doctrine\Common\Cache\Cache;
 use Liip\ThemeBundle\ActiveTheme;
-use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
@@ -97,7 +97,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $structures = array();
         $keys = array();
         foreach ($this->structureManager->getStructures() as $page) {
-            /** @var Page $page */
+            /** @var PageBridge $page */
             $template = sprintf('%s.html.twig', $page->getView());
             if ($this->templateExists($template)) {
                 $keys[] = $page->getKey();
