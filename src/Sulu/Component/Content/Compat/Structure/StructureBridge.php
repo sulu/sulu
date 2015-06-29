@@ -27,7 +27,7 @@ class StructureBridge implements StructureInterface
     protected $structure;
 
     /**
-     * @var Document
+     * @var StructureBehavior
      */
     protected $document;
 
@@ -54,14 +54,10 @@ class StructureBridge implements StructureInterface
     private $locale;
 
     /**
-     * @var boolean
-     */
-    private $internal = false;
-
-    /**
      * @param StructureMetadata $structure
+     * @param DocumentInspector $inspector
+     * @param LegacyPropertyFactory $propertyFactory
      * @param DocumentInspector $document
-     * @param LegacyPropertyFactory $urlGenerator
      */
     public function __construct(
         StructureMetadata $structure,
@@ -124,7 +120,7 @@ class StructureBridge implements StructureInterface
      */
     public function getUuid()
     {
-        return $this->getDocument()->getUuid();
+        return $this->getDocument()->getUuid($this->document);
     }
 
     /**
@@ -287,7 +283,7 @@ class StructureBridge implements StructureInterface
     {
         $children = array();
 
-        foreach ($this->document->getChildren() as $child) {
+        foreach ($this->document->getChildren($this->document) as $child) {
             $children[] = $this->documentToStructure($child);
         }
 
