@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 * unreleased
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
+    * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove unvalid title meta tag
+    * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
 
 * 1.0.0-RC3 (2015-06-24)
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands

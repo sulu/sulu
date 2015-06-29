@@ -67,7 +67,6 @@ class MetaTwigExtension extends \Twig_Extension
     {
         // determine default and current values
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $currentLocale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         $currentPortal = $this->requestAnalyzer->getPortal();
         $defaultLocale = null;
         if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
@@ -78,11 +77,9 @@ class MetaTwigExtension extends \Twig_Extension
         foreach ($urls as $locale => $url) {
             if ($url !== null) {
                 if ($locale === $defaultLocale) {
-                    $result[] = $this->getAlternate($url, $webspaceKey, $locale);
                     $result[] = $this->getAlternate($url, $webspaceKey, $locale, true);
-                } elseif ($locale !== $currentLocale) {
-                    $result[] = $this->getAlternate($url, $webspaceKey, $locale);
                 }
+                $result[] = $this->getAlternate($url, $webspaceKey, $locale);
             }
         }
 
@@ -108,11 +105,6 @@ class MetaTwigExtension extends \Twig_Extension
             $excerpt = $extension['excerpt'];
         }
 
-        // fallback for seo title
-        if (!array_key_exists('title', $seo) || $seo['title'] === '') {
-            $seo['title'] = $content['title'];
-        }
-
         // fallback for seo description
         if (
             (!array_key_exists('description', $seo) || $seo['description'] === '') &&
@@ -120,6 +112,7 @@ class MetaTwigExtension extends \Twig_Extension
         ) {
             $seo['description'] = strip_tags($excerpt['description']);
         }
+
         $seo['description'] = substr($seo['description'], 0, 155);
 
         // generate robots content
@@ -129,7 +122,6 @@ class MetaTwigExtension extends \Twig_Extension
 
         // build meta tags
         $result = array();
-        $result[] = $this->getMeta('title', $seo['title']);
         $result[] = $this->getMeta('description', $seo['description']);
         $result[] = $this->getMeta('keywords', $seo['keywords']);
         $result[] = $this->getMeta('robots', strtoupper(implode(', ', $robots)));
