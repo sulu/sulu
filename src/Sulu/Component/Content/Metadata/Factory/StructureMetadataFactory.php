@@ -55,6 +55,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     /**
      * @param LoaderInterface $loader
      * @param array $typePaths
+     * @param array $defaultTypes
      * @param mixed $cachePath
      * @param mixed $debug
      */
@@ -213,6 +214,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      * Get the paths from the type path configuration
      *
      * @param string $type
+     *
+     * @return array
      */
     private function getPaths($type)
     {
@@ -228,6 +231,10 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
     /**
      * Return the default structure type for the the given document type
+     *
+     * @param string $type
+     *
+     * @return string
      */
     private function getDefaultStructureType($type)
     {

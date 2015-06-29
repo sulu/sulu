@@ -88,10 +88,12 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
+     * @param JsonDeserializationVisitor|JsonSerializationVisitor $visitor
+     * @param array $data
      * @param array $type
      * @param Context $context
+     *
+     * @return PageBridge
      */
     public function doDeserialize(
         JsonDeserializationVisitor $visitor,

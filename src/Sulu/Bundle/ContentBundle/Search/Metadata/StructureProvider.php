@@ -85,8 +85,7 @@ class StructureProvider implements ProviderInterface
 
     /**
      * loads metadata for a given class if its derived from StructureInterface
-     * @param \ReflectionClass $class
-     * @throws \InvalidArgumentException
+     * @param object $object
      * @return IndexMetadataInterface|null
      */
     public function getMetadataForObject($object)

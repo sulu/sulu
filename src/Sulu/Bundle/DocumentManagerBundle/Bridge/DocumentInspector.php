@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;

@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use Behat\Behat\Snippet\Snippet;
 use PHPCR\PropertyType;
+use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
