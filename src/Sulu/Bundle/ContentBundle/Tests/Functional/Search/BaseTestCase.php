@@ -17,7 +17,6 @@ use Sulu\Component\Content\Compat\Document;
 use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 class BaseTestCase extends SuluTestCase
 {
@@ -41,7 +40,7 @@ class BaseTestCase extends SuluTestCase
         return $searchManager;
     }
 
-    public function generateDocumentIndex($count)
+    public function generateDocumentIndex($count, $urlPrefix = '/test-')
     {
         $documents = array();
         for ($i = 1; $i <= $count; $i++) {
@@ -49,6 +48,7 @@ class BaseTestCase extends SuluTestCase
             $pageDocument->setParent($this->webspaceDocument);
             $pageDocument->setTitle('Document Title ' . $i);
             $pageDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $pageDocument->setResourceSegment($urlPrefix . $i);
 
             $this->documentManager->persist($pageDocument, 'de');
             $documents[] = $pageDocument;
