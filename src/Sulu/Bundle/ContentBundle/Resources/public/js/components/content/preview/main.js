@@ -88,7 +88,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
             },
 
             applyChanges = function(handler, message) {
-                if (!!message.data) {
+                if (!!message && !!message.data) {
                     this.sandbox.emit('sulu.preview.changes', message.data);
                 }
             },
