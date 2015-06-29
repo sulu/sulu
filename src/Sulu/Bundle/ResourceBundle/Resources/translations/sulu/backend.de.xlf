@@ -39,6 +39,22 @@
                 <source>resource.filter.add-condition</source>
                 <target>Bedingung hinzufügen</target>
             </trans-unit>
+            <trans-unit id="10" resname="resource.filter.manage">
+                <source>resource.filter.manage</source>
+                <target>Filter verwalten</target>
+            </trans-unit>
+            <trans-unit id="11" resname="resource.filter.entries">
+                <source>resource.filter.entries</source>
+                <target>Einträge</target>
+            </trans-unit>
+            <trans-unit id="12" resname="resource.filter.resultText">
+                <source>resource.filter.resultText</source>
+                <target>entsprechen dem Filter</target>
+            </trans-unit>
+            <trans-unit id="13" resname="resource.filter.edit">
+                <source>resource.filter.edit</source>
+                <target>Filter bearbeiten</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
