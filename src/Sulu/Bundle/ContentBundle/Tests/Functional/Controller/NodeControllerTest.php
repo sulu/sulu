@@ -291,12 +291,14 @@ class NodeControllerTest extends SuluTestCase
         $targetPage = $this->documentManager->create('page');
         $targetPage->setTitle('target');
         $targetPage->setResourceSegment('/target');
+        $targetPage->setStructureType('default');
         $this->documentManager->persist($targetPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
 
         $this->documentManager->flush();
 
         $internalLinkPage = $this->documentManager->create('page');
         $internalLinkPage->setTitle('page');
+        $internalLinkPage->setStructureType('internal-link');
         $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
         $internalLinkPage->setRedirectTarget($targetPage);
         $internalLinkPage->setResourceSegment('/test');
@@ -317,6 +319,7 @@ class NodeControllerTest extends SuluTestCase
 
         $externalLinkPage = $this->documentManager->create('page');
         $externalLinkPage->setTitle('page');
+        $externalLinkPage->setStructureType('external-link');
         $externalLinkPage->setRedirectType(RedirectType::EXTERNAL);
         $externalLinkPage->setRedirectExternal('http://www.sulu.io');
         $externalLinkPage->setResourceSegment('/test');

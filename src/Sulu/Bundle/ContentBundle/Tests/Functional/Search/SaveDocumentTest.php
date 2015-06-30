@@ -59,7 +59,7 @@ class SaveDocumentTest extends BaseTestCase
                     'lines' => array('line1', 'line2'),
                 ),
             )), false);
-        $document->setParent($this->webspaceDocument);
+        $document->setParent($this->homeDocument);
 
         $this->documentManager->persist($document, 'de');
         $this->documentManager->flush();
