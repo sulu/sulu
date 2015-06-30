@@ -119,10 +119,10 @@ define([
                 checkSortable: function() {
                     // check for dragable
                     if (this.getChildren().length <= 1) {
-                        App.dom.removeClass(this.$el, 'sortable');
                         App.dom.attr(App.dom.children(this.$el), 'draggable', false);
-                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
-                        App.dom.addClass(this.$el, 'sortable');
+                        this.setSortable(false);
+                    } else {
+                        this.setSortable(true);
                     }
                 },
 
@@ -298,8 +298,8 @@ define([
                         section = AppConfig.getSection('sulu-content');
 
                     $('#sort-text-blocks-' + this.id).addClass('hidden');
-                    $('#edit-text-blocks-' + this.id).removeClass('hidden'); 
-                    
+                    $('#edit-text-blocks-' + this.id).removeClass('hidden');
+
                     this.$el.addClass('is-sortmode');
                     this.checkSortable();
 
@@ -332,7 +332,8 @@ define([
                 showEditMode: function() {
                     var $blocks = this.getChildren();
 
-                    App.dom.removeClass(this.$el, 'sortable');
+                    this.setSortable(false);
+
                     App.dom.removeClass('#sort-text-blocks-' + this.id, 'hidden');
                     App.dom.addClass('#edit-text-blocks-' + this.id, 'hidden');
 
@@ -345,6 +346,16 @@ define([
                             App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.start');
                         }
                     }.bind(this));
+                },
+
+                setSortable: function(state) {
+                    if (!state) {
+                        App.dom.removeClass(this.$el, 'sortable');
+                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
+                        App.dom.addClass(this.$el, 'sortable');
+                    }
+
+                    $(form.$el).trigger('init-sortable');
                 }
             };
 

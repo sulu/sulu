@@ -297,6 +297,11 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 // reinit sorting
                 this.initSortableBlock();
             }.bind(this));
+
+            this.sandbox.dom.on(this.formId, 'init-sortable', function(e) {
+                // reinit sorting
+                this.initSortableBlock();
+            }.bind(this));
         },
 
         setFormData: function(data) {
