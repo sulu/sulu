@@ -44,7 +44,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('aliases')
+                ->arrayNode('contexts')
                     ->useAttributeAsKey('title')
                         ->prototype('array')
                             ->addDefaultsIfNotSet()

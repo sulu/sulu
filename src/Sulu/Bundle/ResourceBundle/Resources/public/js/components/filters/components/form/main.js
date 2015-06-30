@@ -61,7 +61,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
         initialize: function() {
             this.saved = true;
-            this.config = Config.get('sulu.resource.aliases').aliases;
+            this.config = Config.get('sulu.resource.contexts').contexts;
 
             this.initializeValidation();
             this.bindCustomEvents();
@@ -131,7 +131,8 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
          */
         startOperatorSelection: function(){
             var $element = this.sandbox.dom.find(constants.conditionSelector),
-                typeConfig = this.getConfigForType(this.options.type);
+                typeConfig = this.getConfigForType(this.options.type),
+                conditionGroups = !!this.options.data ? this.options.data.conditionGroups : null;
 
             this.sandbox.start([
                 {
@@ -140,7 +141,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                         el: $element,
                         fieldsUrl: typeConfig.fields,
                         operatorsUrl: constants.operatorsUrl,
-                        data: this.options.data.conditionGroups,
+                        data: conditionGroups,
                         validationSelector: formSelector
                     }
                 }

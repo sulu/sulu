@@ -49,7 +49,7 @@
             <argument type="service" id="sulu_resource.filter_repository"/>
             <argument type="service" id="sulu_security.user_repository" />
             <argument type="service" id="sulu_resource.condition_repository"/>
-            <argument>%sulu_resource.filters.aliases%</argument>
+            <argument>%sulu_resource.filters.contexts%</argument>
         </service>
         <service id="sulu_resource.filter_listbuilder" class="%sulu_resource.filter_listbuilder.class%">
             <argument type="service" id="sulu_resource.filter_manager"/>
@@ -66,10 +66,10 @@
         </service>
 
         <!-- JS config -->
-        <service id="sulu_resource.jsconfig.aliases" class="%sulu_content.jsconfig.preview.class%">
-            <argument type="string">sulu.resource.aliases</argument>
+        <service id="sulu_resource.jsconfig.contexts" class="%sulu_content.jsconfig.preview.class%">
+            <argument type="string">sulu.resource.contexts</argument>
             <argument type="collection">
-                <argument key="aliases" type="string">%sulu_resource.filters.aliases%</argument>
+                <argument key="contexts" type="string">%sulu_resource.filters.contexts%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

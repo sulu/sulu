@@ -66,6 +66,7 @@ define(['app-config'], function(AppConfig) {
                             }
                         }
                     ]).then(function() {
+                        this.sandbox.off('sulu.filter-result.' + this.context + '.unset_filter');
                         this.sandbox.on('sulu.filter-result.' + this.context + '.unset_filter', unsetFilter.bind(this));
                     }.bind(this));
                 } else {

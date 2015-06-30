@@ -1,5 +1,5 @@
 sulu_resource:
-    aliases:
+    contexts:
         contact:
             class: "Sulu\Bundle\ContactBundle\Entity\Contact"
             features:
