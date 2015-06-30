@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove unvalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
+    * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
 
 * dev-develop
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
