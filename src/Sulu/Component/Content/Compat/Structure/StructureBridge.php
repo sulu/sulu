@@ -27,7 +27,7 @@ class StructureBridge implements StructureInterface
     protected $structure;
 
     /**
-     * @var StructureBehavior
+     * @var object
      */
     protected $document;
 
@@ -57,7 +57,7 @@ class StructureBridge implements StructureInterface
      * @param StructureMetadata $structure
      * @param DocumentInspector $inspector
      * @param LegacyPropertyFactory $propertyFactory
-     * @param DocumentInspector $document
+     * @param object $document
      */
     public function __construct(
         StructureMetadata $structure,
@@ -92,11 +92,11 @@ class StructureBridge implements StructureInterface
      */
     public function getLanguageCode()
     {
-        if (!$this->document) {
+        if (!$this->getDocument()) {
             return $this->locale;
         }
 
-        return $this->inspector->getOriginalLocale($this->document);
+        return $this->inspector->getOriginalLocale($this->getDocument());
     }
 
     /**
@@ -112,7 +112,7 @@ class StructureBridge implements StructureInterface
      */
     public function getWebspaceKey()
     {
-        return $this->inspector->getWebspace($this->document);
+        return $this->inspector->getWebspace($this->getDocument());
     }
 
     /**
@@ -120,7 +120,7 @@ class StructureBridge implements StructureInterface
      */
     public function getUuid()
     {
-        return $this->getDocument()->getUuid($this->document);
+        return $this->getDocument()->getUuid();
     }
 
     /**
@@ -265,7 +265,7 @@ class StructureBridge implements StructureInterface
      */
     public function getHasChildren()
     {
-        return $this->inspector->hasChildren($this->document);
+        return $this->inspector->hasChildren($this->getDocument());
     }
 
     /**
@@ -283,7 +283,7 @@ class StructureBridge implements StructureInterface
     {
         $children = array();
 
-        foreach ($this->document->getChildren($this->document) as $child) {
+        foreach ($this->getDocument()->getChildren($this->getDocument()) as $child) {
             $children[] = $this->documentToStructure($child);
         }
 
@@ -292,7 +292,7 @@ class StructureBridge implements StructureInterface
 
     public function getParent()
     {
-        return $this->documentToStructure($this->documentInspector->getParent($this->document));
+        return $this->documentToStructure($this->documentInspector->getParent($this->getDocument()));
     }
 
     /**
@@ -526,7 +526,7 @@ class StructureBridge implements StructureInterface
     public function getNodeType()
     {
         if ($this->getDocument() instanceof RedirectTypeBehavior) {
-            return $this->document->getRedirectType();
+            return $this->getDocument()->getRedirectType();
         }
 
         return RedirectType::NONE;
@@ -538,14 +538,14 @@ class StructureBridge implements StructureInterface
     public function getNodeName()
     {
         if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
-            return $this->document->getRedirectTarget()->getTitle();
+            return $this->getDocument()->getRedirectTarget()->getTitle();
         }
 
         if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
-            return $this->document->getTitle();
+            return $this->getDocument()->getTitle();
         }
 
-        return $this->document->getTitle();
+        return $this->getDocument()->getTitle();
     }
 
     /**
@@ -724,8 +724,8 @@ class StructureBridge implements StructureInterface
 
         $propertyBridge = $this->propertyFactory->createProperty($item, $this);
 
-        if ($this->document) {
-            $property = $this->document->getStructure()->getProperty($name);
+        if ($this->getDocument()) {
+            $property = $this->getDocument()->getStructure()->getProperty($name);
             $propertyBridge->setPropertyValue($property);
         }
 

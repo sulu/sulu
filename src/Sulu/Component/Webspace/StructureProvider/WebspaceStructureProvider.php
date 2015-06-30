@@ -47,8 +47,6 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     private $cache;
 
     /**
-     * WebspaceStructureProvider constructor.
-     *
      * @param \Twig_Environment $twig
      * @param StructureManagerInterface $structureManager
      * @param WebspaceManagerInterface $webspaceManager
@@ -130,8 +128,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
 
             return true;
         } catch (\Twig_Error_Loader $e) {
+            return false;
         }
-
-        return false;
     }
 }

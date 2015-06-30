@@ -27,7 +27,7 @@ To fix that pages, you could implement the template in the theme or save the pag
 ### Webspaces
 
 1. The default-template config moved from global configuration to webspace config. For that it is needed to add this config to each webspace. 
-2. The excluded xml-tag has been removed from Webspace theme. Remove complete xml-node from all webspace xml files.
+2. The excluded xml tag has been removed from the webspace configuration file, so you have to remove this tag from all these files.
 
 After that your webspace theme config should look like this:
 

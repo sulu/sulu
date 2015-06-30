@@ -67,9 +67,9 @@ class ValidatePagesCommand extends ContainerAwareCommand
             $structures[] = $structure->getKey();
         }
 
-        $availableStructures = array();
+        $availableStructureKeys = array();
         foreach ($structureProvider->getStructures($webspaceKey) as $structure) {
-            $availableStructures[] = $structure->getKey();
+            $availableStructureKeys[] = $structure->getKey();
         }
 
         $queryManager = $session->getWorkspace()->getQueryManager();
@@ -99,7 +99,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
                     $descriptions[] = sprintf('Language "%s" contains a not existing xml-template', $header);
                     $result++;
                 }
-                if ($template !== '' && !in_array($template, $availableStructures)) {
+                if ($template !== '' && !in_array($template, $availableStructureKeys)) {
                     $tableRow[0] = 'X';
                     $descriptions[] = sprintf(
                         'Language "%s" contains a not implemented xml-template in webspace "%s"',
