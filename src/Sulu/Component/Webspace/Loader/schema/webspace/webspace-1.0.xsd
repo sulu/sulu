@@ -110,9 +110,22 @@
     <xs:complexType name="themeType">
         <xs:sequence>
             <xs:element type="xs:string" name="key"/>
+            <xs:element type="defaultTemplatesType" name="default-templates" minOccurs="1" maxOccurs="1"/>
             <xs:element type="excludedType" name="excluded" minOccurs="0"/>
-            <xs:element type="errorTemplatesType" name="error-templates" minOccurs="0"/>
+            <xs:element type="errorTemplatesType" name="error-templates" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="defaultTemplatesType">
+        <xs:sequence>
+            <xs:element type="defaultTemplateType" name="default-template" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="defaultTemplateType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="errorTemplatesType">
         <xs:sequence>

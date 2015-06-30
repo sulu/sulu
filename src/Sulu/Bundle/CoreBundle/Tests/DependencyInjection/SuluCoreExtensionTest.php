@@ -25,10 +25,6 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
 
         $this->assertEquals(
             'default',
-            $this->container->getParameter('sulu.content.structure.default_type.page')
-        );
-        $this->assertEquals(
-            'default',
             $this->container->getParameter('sulu.content.structure.default_type.snippet')
         );
     }
@@ -39,7 +35,6 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
             'content' => array(
                 'structure' => array(
                     'default_type' => array(
-                        'page' => 'foobar',
                         'snippet' => 'barfoo',
                     ),
                     'paths' => array(),
@@ -48,10 +43,6 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
             'locales' => array('en', 'de'),
         ));
 
-        $this->assertEquals(
-            'foobar',
-            $this->container->getParameter('sulu.content.structure.default_type.page')
-        );
         $this->assertEquals(
             'barfoo',
             $this->container->getParameter('sulu.content.structure.default_type.snippet')

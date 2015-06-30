@@ -10,20 +10,19 @@
 
 namespace Sulu\Component\Content\Compat\Serializer;
 
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
+use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\DocumentManager\Document\UnknownDocument;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 
 /**
- * Handle serializeation and deserialization of the PageBridge
+ * Handle serialization and deserialization of the PageBridge
  */
 class PageBridgeHandler implements SubscribingHandlerInterface
 {
@@ -35,8 +34,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         DocumentInspector $inspector,
         LegacyPropertyFactory $propertyFactory,
         StructureMetadataFactory $structureFactory
-    )
-    {
+    ) {
         $this->structureFactory = $structureFactory;
         $this->inspector = $inspector;
         $this->propertyFactory = $propertyFactory;
@@ -62,7 +60,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
+     * @param PageBridge $bridge
      * @param array $type
      * @param Context $context
      */
@@ -81,17 +79,21 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         $document = $documentProperty->getValue($bridge);
         $structure = $structureProperty->getValue($bridge);
 
-        $context->accept(array(
-            'document' => $document,
-            'structure' => $structure->name
-        ));
+        $context->accept(
+            array(
+                'document' => $document,
+                'structure' => $structure->name
+            )
+        );
     }
 
     /**
-     * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
+     * @param JsonDeserializationVisitor|JsonSerializationVisitor $visitor
+     * @param array $data
      * @param array $type
      * @param Context $context
+     *
+     * @return PageBridge
      */
     public function doDeserialize(
         JsonDeserializationVisitor $visitor,

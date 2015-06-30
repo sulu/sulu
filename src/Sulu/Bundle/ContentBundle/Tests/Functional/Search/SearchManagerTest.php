@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-
 class SearchManagerTest extends BaseTestCase
 {
     /**
@@ -36,8 +34,8 @@ class SearchManagerTest extends BaseTestCase
 
     public function testSearchByWebspace()
     {
-        $this->generateDocumentIndex(4);
-        $this->generateDocumentIndex(2);
+        $this->generateDocumentIndex(4, '/test-');
+        $this->generateDocumentIndex(2, '/test-1');
         $result = $this->getSearchManager()->createSearch('Document')->locale('de')->index('page')->execute();
         $this->assertCount(6, $result);
 

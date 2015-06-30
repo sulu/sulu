@@ -8,14 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Metadata\Factory;
 
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Symfony\Component\Config\FileLocator;
-use Doctrine\Common\Inflector\Inflector;
 
 interface StructureMetadataFactoryInterface
 {
@@ -37,7 +34,7 @@ interface StructureMetadataFactoryInterface
      *
      * @param string
      *
-     * @return Structure[]
+     * @return StructureInterface[]
      */
     public function getStructures($type);
 

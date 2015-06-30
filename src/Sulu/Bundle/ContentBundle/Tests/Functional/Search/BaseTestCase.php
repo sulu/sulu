@@ -10,19 +10,30 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
+use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultDocumentCache;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\Document;
-use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class BaseTestCase extends SuluTestCase
 {
+    /**
+     * @var SessionInterface
+     */
     protected $session;
+
+    /**
+     * @var DocumentManagerInterface
+     */
     protected $documentManager;
+
+    /**
+     * @var HomeDocument
+     */
+    protected $homeDocument;
 
     public function setUp()
     {
@@ -31,7 +42,7 @@ class BaseTestCase extends SuluTestCase
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->getSearchManager()->purge('page');
-        $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
     }
 
     public function getSearchManager()
@@ -41,14 +52,16 @@ class BaseTestCase extends SuluTestCase
         return $searchManager;
     }
 
-    public function generateDocumentIndex($count)
+    public function generateDocumentIndex($count, $urlPrefix = '/test-')
     {
         $documents = array();
         for ($i = 1; $i <= $count; $i++) {
             $pageDocument = new PageDocument();
-            $pageDocument->setParent($this->webspaceDocument);
+            $pageDocument->setStructureType('default');
+            $pageDocument->setParent($this->homeDocument);
             $pageDocument->setTitle('Document Title ' . $i);
             $pageDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $pageDocument->setResourceSegment($urlPrefix . $i);
 
             $this->documentManager->persist($pageDocument, 'de');
             $documents[] = $pageDocument;
@@ -65,7 +78,7 @@ class BaseTestCase extends SuluTestCase
         $document = $this->documentManager->create('page');
         $document->setTitle($title);
         $document->setStructureType('default');
-        $document->setParent($this->webspaceDocument);
+        $document->setParent($this->homeDocument);
         $document->setResourceSegment($url);
         $this->documentManager->persist($document, 'de');
 

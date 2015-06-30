@@ -36,12 +36,20 @@ class Theme implements ArrayableInterface
     private $errorTemplates;
 
     /**
+     * Template which is selected by default if no other template is chosen.
+     *
+     * @var string[]
+     */
+    private $defaultTemplates;
+
+    /**
      * Theme constructor.
      */
     public function __construct()
     {
         $this->excludedTemplates = array();
         $this->errorTemplates = array();
+        $this->defaultTemplates = array();
     }
 
     /**
@@ -136,12 +144,50 @@ class Theme implements ArrayableInterface
     }
 
     /**
+     * Add a new default template for given type.
+     *
+     * @param string $type
+     * @param string $template
+     */
+    public function addDefaultTemplate($type, $template)
+    {
+        $this->defaultTemplates[$type] = $template;
+    }
+
+    /**
+     * Returns a error template for given code.
+     *
+     * @param string $type
+     *
+     * @return string|null
+     */
+    public function getDefaultTemplate($type)
+    {
+        if (array_key_exists($type, $this->defaultTemplates)) {
+            return $this->defaultTemplates[$type];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a array of default template.
+     *
+     * @return string
+     */
+    public function getDefaultTemplates()
+    {
+        return $this->defaultTemplates;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toArray($depth = null)
     {
         return array(
             'key' => $this->getKey(),
+            'defaultTemplates' => $this->getDefaultTemplates(),
             'excludedTemplates' => $this->getExcludedTemplates(),
             'errorTemplates' => $this->getErrorTemplates(),
         );
