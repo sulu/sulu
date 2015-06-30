@@ -3242,6 +3242,7 @@ class ContentMapperTest extends SuluTestCase
     public function testLanguageCopyInternalLink()
     {
         $page = $this->documentManager->create('page');
+        $page->setStructureType('default');
         $page->setTitle('Hallo');
         $page->setResourceSegment('/hallo');
         $this->documentManager->persist($page, 'de', array(
