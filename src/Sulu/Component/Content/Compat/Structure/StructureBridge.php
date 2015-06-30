@@ -92,7 +92,7 @@ class StructureBridge implements StructureInterface
      */
     public function getLanguageCode()
     {
-        if (!$this->getDocument()) {
+        if (!$this->document) {
             return $this->locale;
         }
 
@@ -724,7 +724,7 @@ class StructureBridge implements StructureInterface
 
         $propertyBridge = $this->propertyFactory->createProperty($item, $this);
 
-        if ($this->getDocument()) {
+        if ($this->document) {
             $property = $this->getDocument()->getStructure()->getProperty($name);
             $propertyBridge->setPropertyValue($property);
         }
