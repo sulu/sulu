@@ -68,7 +68,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->listRestHelper->expects($this->any())->method('getSelectFields')->willReturn(array('name', 'desc'));
+        $this->listRestHelper->expects($this->any())->method('getFields')->willReturn(array('name', 'desc'));
         $listBuilder->expects($this->at(0))->method('addSelectField')->with($field1);
         $listBuilder->expects($this->at(1))->method('addSelectField')->with($field2);
 
