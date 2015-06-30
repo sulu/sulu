@@ -41,7 +41,15 @@ define(function() {
          * Initialize the component
          */
         initialize: function() {
-
+            this.sandbox.start([
+                {
+                    name: 'search-results@sulusearch',
+                    options: {
+                        el: this.$el,
+                        displayLogo: true
+                    }
+                }
+            ], {reset: true});
         }
     };
 });

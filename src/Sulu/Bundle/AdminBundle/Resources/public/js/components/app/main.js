@@ -175,7 +175,7 @@ define(function() {
                 },
 
                 dashboard: function() {
-                    this.html('<div data-aura-component="dashboard@suluadmin"/>');
+                    this.html('<div class="sulu-dashboard" data-aura-component="dashboard@suluadmin"/>');
                 }.bind(this),
 
                 default: function() {

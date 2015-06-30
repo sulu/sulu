@@ -1,0 +1,18 @@
+.sulu-dashboard {
+    height: 100%;
+
+    .logo {
+        width: 100px;
+        height: 100px;
+        background-size: 90px 72px;
+        margin: 0 auto;
+        display: block;
+        float: none;
+        transition: opacity .125s linear;
+        opacity: 0;
+
+        &.is-visible {
+            opacity: 1;
+        }
+    }
+}
