@@ -14,7 +14,7 @@
             <tag name="sulu.node.title" priority="10" />
         </property>
         <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp.part" priority="1" />
+            <tag name="sulu.rlp" priority="1" />
         </property>
         <property name="article" type="text_area" mandatory="false">
             <tag name="sulu.node.title" priority="10" />
@@ -28,6 +28,10 @@
                 <param name="minLinks" value="1"/>
                 <param name="maxLinks" value="10"/>
             </params>
+        </property>
+
+        <property name="url" type="text_line">
+            <tag name="sulu.rlp" />
         </property>
     </properties>
 </template>

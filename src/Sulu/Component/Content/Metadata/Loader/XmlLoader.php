@@ -31,7 +31,7 @@ class XmlLoader extends XmlLegacyLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = 'page')
     {
         $data = parent::load($resource, $type);
         $data = $this->normalizeStructureData($data);

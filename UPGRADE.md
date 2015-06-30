@@ -11,6 +11,10 @@ running this command for each <locale>:
 app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [jcr:mixinTypes] = 'sulu:snippet'" --apply-closure="\$node->setProperty('i18n:<locale>-state', 2);"
 ```
 
+### Page-Templates
+
+The tag `sulu.rlp` is now mandatory for page templates.
+
 ## 1.0.0-RC3
 
 ### Document Manager

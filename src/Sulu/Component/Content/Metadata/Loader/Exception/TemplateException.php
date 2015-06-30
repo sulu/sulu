@@ -14,7 +14,6 @@ use Exception;
 
 /**
  * Thrown when there is an error concerning a template
- * @package Sulu\Component\Content\Template\Exception
  */
 class TemplateException extends Exception
 {

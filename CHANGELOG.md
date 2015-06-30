@@ -1,19 +1,16 @@
 CHANGELOG for Sulu
 ==================
-* unreleased
+* dev-develop
     * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove unvalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
-
-* dev-develop
+    * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
 
-* dev-master
-    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
-
 * 1.0.0-RC3 (2015-06-24)
+    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle

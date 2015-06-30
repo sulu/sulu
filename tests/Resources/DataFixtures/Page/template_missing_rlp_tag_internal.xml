@@ -10,15 +10,9 @@
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
-    <properties>
-        <section name="title_section">
-            <properties>
-                <property name="title" type="text_line" mandatory="true"/>
-            </properties>
-        </section>
+    <internal>true</internal>
 
-        <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp" priority="1"/>
-        </property>
+    <properties>
+        <property name="title" type="text_line"/>
     </properties>
 </template>

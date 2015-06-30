@@ -13,22 +13,22 @@ namespace Sulu\Component\Content\Metadata\Loader\Exception;
 /**
  * Thrown when a template does not contain a required property name
  */
-class RequiredPropertyNameNotFoundException extends InvalidXmlException
+class RequiredTagNotFoundException extends InvalidXmlException
 {
     /**
      * The name of the property, which is required, but not found
      * @var string
      */
-    protected $propertyName;
+    protected $tagName;
 
-    public function __construct($template, $propertyName)
+    public function __construct($template, $tagName)
     {
-        $this->propertyName = $propertyName;
+        $this->tagName = $tagName;
         parent::__construct(
             $template,
             sprintf(
-                'The property with the name "%s" is required, but was not found in the template "%s"',
-                $this->propertyName,
+                'The tag with the name "%s" is required, but was not found in the template "%s"',
+                $this->tagName,
                 $template
             )
         );
