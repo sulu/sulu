@@ -15,6 +15,7 @@ use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,6 +53,9 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $structure = $this->getMockBuilder(PageBridge::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $translator = $this->getMockBuilder(TranslatorInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $webspaceManager->expects($this->any())
             ->method('findWebspaceByKey')
@@ -87,7 +91,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $requestStack->expects($this->once())
             ->method('pop');
 
-        $renderer = new PreviewRenderer($activeTheme, $controllerResolver, $webspaceManager, $requestStack);
+        $renderer = new PreviewRenderer($activeTheme, $controllerResolver, $webspaceManager, $requestStack, $translator);
 
         $result = $renderer->render($structure);
 
