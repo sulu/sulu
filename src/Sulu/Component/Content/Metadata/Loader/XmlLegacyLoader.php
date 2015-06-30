@@ -43,7 +43,8 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private $requiredTagNames = array(
         'page' => array('sulu.rlp'),
-        'snippet' => array()
+        'home' => array('sulu.rlp'),
+        'snippet' => array(),
     );
 
     /**
@@ -70,7 +71,7 @@ class XmlLegacyLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = 'page', $internal = false)
+    public function load($resource, $type = 'page')
     {
         // init running vars
         $tags = array();
@@ -114,7 +115,7 @@ class XmlLegacyLoader implements LoaderInterface
 
         // FIXME until excerpt-template is no page template anymore
         // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
-        if (!$internal) {
+        if (!array_key_exists('internal', $result) || !$result['internal']) {
             foreach ($this->requiredTagNames[$type] as $requiredTagName) {
                 if (!array_key_exists($requiredTagName, $tags)) {
                     throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
