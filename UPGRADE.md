@@ -2,7 +2,6 @@
 
 ## dev-develop
 
-<<<<<<< HEAD
 ### Snippets
 
 Snippet state has been removed and set default to published. Therefor all snippets has to be set to published by this
