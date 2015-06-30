@@ -301,7 +301,6 @@ define([
                     $('#edit-text-blocks-' + this.id).removeClass('hidden');
 
                     this.$el.addClass('is-sortmode');
-                    this.checkSortable();
 
                     this.iterateBlockFields($blocks, function($field, $block) {
                         var property = $field.data('property') || {},
@@ -315,6 +314,8 @@ define([
                             this.showSortModeField($field, $block);
                         }
                     }.bind(this));
+
+                    this.checkSortable();
                 },
 
                 showSortModeField: function($field, $block) {
@@ -351,6 +352,7 @@ define([
                 setSortable: function(state) {
                     if (!state) {
                         App.dom.removeClass(this.$el, 'sortable');
+                        App.dom.sortable(this.$el, 'destroy');
                     } else if (!App.dom.hasClass(this.$el, 'sortable')) {
                         App.dom.addClass(this.$el, 'sortable');
                     }
