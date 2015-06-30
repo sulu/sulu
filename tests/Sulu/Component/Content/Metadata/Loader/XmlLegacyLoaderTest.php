@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Metadata\Loader;
 
 use InvalidArgumentException;
-use Sulu\Component\Content\Structure;
 
 class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -1106,23 +1105,49 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     public function testWithoutRlpTagTypePage()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\RequiredTagNotFoundException',
+            '\Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException',
             'The tag with the name "sulu.rlp" is required, but was not found in the template "template"'
         );
 
-        $templateReader = new TemplateReader();
+        $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml'
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml',
+            'page'
         );
     }
 
     public function testWithoutRlpTagTypePageInternal()
     {
-        $templateReader = new TemplateReader();
+        $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml',
-            Structure::TYPE_PAGE,
-            true
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            'page'
+        );
+
+        // no exception should be thrown
+        $this->assertNotNull($result);
+    }
+
+    public function testWithoutRlpTagTypeHome()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException',
+            'The tag with the name "sulu.rlp" is required, but was not found in the template "template"'
+        );
+
+        $templateReader = new XmlLegacyLoader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml',
+            'home'
+        );
+    }
+
+    public function testWithoutRlpTagTypeHomeInternal()
+    {
+        $templateReader = new XmlLegacyLoader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            'home'
         );
 
         // no exception should be thrown
@@ -1131,33 +1156,26 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testWithoutRlpTagTypeSnippet()
     {
-        $templateReader = new TemplateReader();
+        $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml',
-            Structure::TYPE_SNIPPET
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml',
+            'snippet'
         );
 
-        $this->assertEquals(
-            array(
-                'key' => 'template',
-                'properties' => array(
-                    'title' => array(
-                        'name' => 'title',
-                        'type' => 'text_line',
-                        'minOccurs' => null,
-                        'maxOccurs' => null,
-                        'colspan' => null,
-                        'cssClass' => null,
-                        'mandatory' => false,
-                        'multilingual' => true,
-                        'tags' => array(),
-                        'params' => array(),
-                        'meta' => array(),
-                    )
-                )
-            ),
-            $result
+        // no exception should be thrown
+        $this->assertNotNull($result);
+    }
+
+    public function testWithoutRlpTagTypeSnippetInternal()
+    {
+        $templateReader = new XmlLegacyLoader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            'snippet'
         );
+
+        // no exception should be thrown
+        $this->assertNotNull($result);
     }
 
     private function arrayRecursiveDiff($aArray1, $aArray2)
