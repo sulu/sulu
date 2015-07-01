@@ -10,14 +10,14 @@
 
 namespace Sulu\Component\Security\Authentication;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Defines the interface for a UserRepository.
  */
-interface UserRepositoryInterface extends UserProviderInterface, ObjectRepository
+interface UserRepositoryInterface extends UserProviderInterface, RepositoryInterface
 {
     /**
      * initializes the UserRepository.

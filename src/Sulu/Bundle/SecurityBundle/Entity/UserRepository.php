@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
@@ -180,7 +180,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             throw new NoResultException();
         } catch (NoResultException $nre) {
             $message = sprintf(
-                'Unable to find an SuluSecurityBundle:User object identified by %s',
+                'Unable to find an Sulu\Component\Security\Authentication\UserInterface object identified by %s',
                 $identifier
             );
 

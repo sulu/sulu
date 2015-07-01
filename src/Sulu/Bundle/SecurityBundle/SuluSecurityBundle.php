@@ -10,16 +10,27 @@
 
 namespace Sulu\Bundle\SecurityBundle;
 
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\CurrentUserDataCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluSecurityBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
     public function build(ContainerBuilder $container)
     {
-        parent::build($container);
+        $this->buildPersistence(
+            array(
+                'Sulu\Component\Security\Authentication\UserInterface' => 'sulu.model.user.class',
+                'Sulu\Component\Security\Authentication\RoleInterface' => 'sulu.model.role.class',
+            ),
+            $container
+        );
 
         $container->addCompilerPass(new CurrentUserDataCompilerPass());
+
+        parent::build($container);
     }
 }

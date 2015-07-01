@@ -25,7 +25,7 @@ class GroupRepository extends EntityRepository
      *
      * @param $id
      *
-     * @return role
+     * @return Group
      */
     public function findGroupById($id)
     {

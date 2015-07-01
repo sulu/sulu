@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Security\Authentication;
 
-interface RoleRepositoryInterface
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
+
+interface RoleRepositoryInterface extends RepositoryInterface
 {
     /**
      * Finds a role with a specific id.

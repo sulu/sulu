@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### User / Role management changed
+
+Service `sulu_security.role_repository` changed to `sulu.repository.role`.
+Service `sulu_security.user_repository` should be avoided. Use `sulu.repository.user` instead.
+
 ### Snippets
 
 Snippet state has been removed and set default to published. Therefor all snippets has to be set to published by this

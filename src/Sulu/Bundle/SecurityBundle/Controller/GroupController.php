@@ -21,6 +21,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -210,8 +211,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
         $get = function ($entity) {
-            /** @var Role $entity */
-
+            /** @var RoleInterface $entity */
             return $entity->getId();
         };
 
@@ -270,13 +270,11 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     private function addRole(Group $group, $roleData)
     {
-        $em = $this->getDoctrine()->getManager();
-
         if (isset($roleData['id'])) {
-            $role = $em->getRepository(static::ENTITY_NAME_ROLE)->findRoleById($roleData['id']);
+            $role = $this->get('sulu.repository.role')->findRoleById($roleData['id']);
 
             if (!$role) {
-                throw new EntityNotFoundException(static::ENTITY_NAME_ROLE, $roleData['id']);
+                throw new EntityNotFoundException($this->get('sulu.repository.role')->getClassName(), $roleData['id']);
             }
 
             if (!$group->getRoles()->contains($role)) {
@@ -290,12 +288,12 @@ class GroupController extends RestController implements ClassResourceInterface, 
     /**
      * Updates an already existing role.
      *
-     * @param Role $role
+     * @param RoleInterface $role
      * @param $roleData
      *
      * @return bool
      */
-    private function updateRole(Role $role, $roleData)
+    private function updateRole(RoleInterface $role, $roleData)
     {
         // no action on update
         return true;
