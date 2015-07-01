@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
     * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.

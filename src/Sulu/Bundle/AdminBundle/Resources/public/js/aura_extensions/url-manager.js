@@ -54,7 +54,7 @@
                     }
 
                     return sandbox.template.parse(template, data);
-                }
+                };
             }
         };
     });
