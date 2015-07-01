@@ -13,12 +13,23 @@ app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]
 
 ### Page-Templates
 
-The tag `sulu.rlp` is now mandatory for page templates.
+1. The tag `sulu.rlp` is now mandatory for page templates.
+2. Page templates will now be filtered: only implemented templates in the theme will be displayed in the dropdown.
+ 
+To find pages with not implemented templates run following command:
+
+```bash
+app/console sulu:content:validate <webspace-key>
+```
+
+To fix that pages, you could implement the template in the theme or save the pages with an other template over ui.
 
 ### Webspaces
 
-The default-template config moved from global configuration to webspace config. For that it is needed to add this
-config to each webspace. 
+1. The default-template config moved from global configuration to webspace config. For that it is needed to add this config to each webspace. 
+2. The excluded xml tag has been removed from the webspace configuration file, so you have to remove this tag from all these files.
+
+After that your webspace theme config should look like this:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

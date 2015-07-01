@@ -17,9 +17,6 @@
             <default-template type="page">default</default-template>
             <default-template type="homepage">overview</default-template>
         </default-templates>
-        <excluded>
-            <template>overview</template>
-        </excluded>
     </theme>
 
     <navigation>

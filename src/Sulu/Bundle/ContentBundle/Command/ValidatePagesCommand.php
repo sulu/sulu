@@ -38,14 +38,10 @@ class ValidatePagesCommand extends ContainerAwareCommand
     {
         $webspaceKey = $input->getArgument('webspaceKey');
 
-        /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
-
-        /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
-
-        /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $structureProvider = $this->getContainer()->get('sulu.content.webspace_structure_provider');
 
         /** @var Webspace $webspace */
         $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
@@ -60,7 +56,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $select = rtrim($select, ',');
 
         $sql2 = sprintf(
-            "SELECT %s FROM [nt:unstructured] as page WHERE page.[jcr:mixinTypes] = 'sulu:content' AND (isdescendantnode(page, '/cmf/%s/contents') OR issamenode(page, '/cmf/%s/contents'))",
+            "SELECT %s FROM [nt:unstructured] as page WHERE page.[jcr:mixinTypes] = 'sulu:page' AND (isdescendantnode(page, '/cmf/%s/contents') OR issamenode(page, '/cmf/%s/contents'))",
             $select,
             $webspaceKey,
             $webspaceKey
@@ -69,6 +65,11 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $structures = array();
         foreach ($structureManager->getStructures() as $structure) {
             $structures[] = $structure->getKey();
+        }
+
+        $availableStructureKeys = array();
+        foreach ($structureProvider->getStructures($webspaceKey) as $structure) {
+            $availableStructureKeys[] = $structure->getKey();
         }
 
         $queryManager = $session->getWorkspace()->getQueryManager();
@@ -95,7 +96,16 @@ class ValidatePagesCommand extends ContainerAwareCommand
                 $tableRow[] = $template;
                 if ($template !== '' && !in_array($template, $structures)) {
                     $tableRow[0] = 'X';
-                    $descriptions[] = sprintf('Language %s contains a not existing xml-template', $header);
+                    $descriptions[] = sprintf('Language "%s" contains a not existing xml-template', $header);
+                    $result++;
+                }
+                if ($template !== '' && !in_array($template, $availableStructureKeys)) {
+                    $tableRow[0] = 'X';
+                    $descriptions[] = sprintf(
+                        'Language "%s" contains a not implemented xml-template in webspace "%s"',
+                        $header,
+                        $webspaceKey
+                    );
                     $result++;
                 }
             }

@@ -4,14 +4,14 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
     * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
-    * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
     * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
     * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
     * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
-    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
+    * FEATURE     #1278 [ContentBundle]  Implemented webspace structure provider
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
     * FEATURE     #1315 [ContentBundle]  Fixed translator locale for preview
     * BUGFIX      #1023 [ContactBundle]  Fixed back to list in contact-list
 

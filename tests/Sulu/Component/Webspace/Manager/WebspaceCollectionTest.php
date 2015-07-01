@@ -44,7 +44,6 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
         $theme = new Theme();
         $theme->setKey('portal1theme');
-        $theme->setExcludedTemplates(array('overview', 'default'));
 
         $environment = new Environment();
         $url = new Url();
@@ -151,7 +150,6 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('w', $webspace['segments'][1]['key']);
         $this->assertEquals(false, $webspace['segments'][1]['default']);
         $this->assertEquals('portal1theme', $webspace['theme']['key']);
-        $this->assertEquals(array('overview', 'default'), $webspace['theme']['excludedTemplates']);
 
         $this->assertEquals(1, count($webspace['navigation']));
         $this->assertEquals(1, count($webspace['navigation']['contexts']));

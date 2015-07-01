@@ -9,6 +9,8 @@
 
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\Compat\StructureManager</parameter>
+        <parameter key="sulu.content.webspace_structure_provider.cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
+        <parameter key="sulu.content.webspace_structure_provider.class">Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
@@ -59,6 +61,18 @@
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+        </service>
+
+        <service id="sulu.content.webspace_structure_provider.cache" class="%sulu.content.webspace_structure_provider.cache.class%">
+            <argument type="string">%sulu.cache_dir%/webspace_structures</argument>
+        </service>
+
+        <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="liip_theme.active_theme"/>
+            <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
         </service>
 
         <!-- rlp mapper -->

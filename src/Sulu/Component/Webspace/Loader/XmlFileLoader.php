@@ -302,12 +302,6 @@ class XmlFileLoader extends FileLoader
     {
         $theme = new Theme();
         $theme->setKey($this->xpath->query('/x:webspace/x:theme/x:key')->item(0)->nodeValue);
-
-        foreach ($this->xpath->query('/x:webspace/x:theme/x:excluded/x:template') as $templateNode) {
-            /** @var \DOMNode $templateNode */
-            $theme->addExcludedTemplate($templateNode->nodeValue);
-        }
-
         $this->generateErrorTemplates($theme);
         $this->generateDefaultTemplates($theme);
 

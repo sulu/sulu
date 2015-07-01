@@ -1295,7 +1295,7 @@ define([
                                     title: '',
                                     hidden: false,
                                     itemsOption: {
-                                        url: '/admin/content/template',
+                                        url: '/admin/content/template?webspace=' + this.options.webspace,
                                         titleAttribute: 'title',
                                         idAttribute: 'template',
                                         translate: false,

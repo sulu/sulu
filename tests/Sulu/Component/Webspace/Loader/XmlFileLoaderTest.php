@@ -50,8 +50,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
             array('page' => 'default', 'homepage' => 'overview'),
             $webspace->getTheme()->getDefaultTemplates()
         );
-        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
@@ -123,8 +121,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $webspace->getSegments()[1]->isDefault());
 
         $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
-        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals('tree', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
@@ -244,8 +240,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
-        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 

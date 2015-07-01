@@ -48,9 +48,8 @@ class TemplateController extends Controller
     {
         $internal = $request->get('internal', false);
 
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->get('sulu.content.structure_manager');
-        $structures = $structureManager->getStructures();
+        $structureProvider = $this->get('sulu.content.webspace_structure_provider');
+        $structures = $structureProvider->getStructures($request->get('webspace'));
 
         $templates = array();
         foreach ($structures as $structure) {
