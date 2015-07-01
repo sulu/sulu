@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
     * FEATURE     #1314 [SecurityBundle] Enable new persistence handling for User & Role.
     * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
+    * BUGFIX      #1313 [MediaBundle]    Fixed image conversion in environments where open_basedir is enabled
     * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
     * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
     * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
