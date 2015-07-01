@@ -111,7 +111,6 @@
         <xs:sequence>
             <xs:element type="xs:string" name="key"/>
             <xs:element type="defaultTemplatesType" name="default-templates" minOccurs="1" maxOccurs="1"/>
-            <xs:element type="excludedType" name="excluded" minOccurs="0"/>
             <xs:element type="errorTemplatesType" name="error-templates" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
@@ -139,11 +138,6 @@
                 <xs:attribute name="code" type="xs:integer"/>
             </xs:extension>
         </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="excludedType">
-        <xs:sequence>
-            <xs:element type="xs:string" name="template" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
     </xs:complexType>
     <xs:complexType name="environmentsType">
         <xs:sequence>

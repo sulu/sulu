@@ -22,13 +22,6 @@ class Theme implements ArrayableInterface
     private $key;
 
     /**
-     * A list of excluded templates.
-     *
-     * @var array
-     */
-    private $excludedTemplates;
-
-    /**
      * A list of exception templates.
      *
      * @var array
@@ -47,7 +40,6 @@ class Theme implements ArrayableInterface
      */
     public function __construct()
     {
-        $this->excludedTemplates = array();
         $this->errorTemplates = array();
         $this->defaultTemplates = array();
     }
@@ -70,36 +62,6 @@ class Theme implements ArrayableInterface
     public function getKey()
     {
         return $this->key;
-    }
-
-    /**
-     * Adds an exluded template to this theme instance.
-     *
-     * @param $excludedTemplate string The template to exclude
-     */
-    public function addExcludedTemplate($excludedTemplate)
-    {
-        $this->excludedTemplates[] = $excludedTemplate;
-    }
-
-    /**
-     * Sets the excluded templates.
-     *
-     * @param array $excludedTemplates
-     */
-    public function setExcludedTemplates($excludedTemplates)
-    {
-        $this->excludedTemplates = $excludedTemplates;
-    }
-
-    /**
-     * Returns an array of the excluded templates.
-     *
-     * @return array The excluded templates
-     */
-    public function getExcludedTemplates()
-    {
-        return $this->excludedTemplates;
     }
 
     /**
@@ -188,7 +150,6 @@ class Theme implements ArrayableInterface
         return array(
             'key' => $this->getKey(),
             'defaultTemplates' => $this->getDefaultTemplates(),
-            'excludedTemplates' => $this->getExcludedTemplates(),
             'errorTemplates' => $this->getErrorTemplates(),
         );
     }
