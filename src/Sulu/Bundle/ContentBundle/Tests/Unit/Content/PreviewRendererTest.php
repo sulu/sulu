@@ -10,11 +10,18 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content;
 
+use Liip\ThemeBundle\ActiveTheme;
+use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewRenderer;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,59 +44,41 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $activeTheme = $this->getMockBuilder('Liip\ThemeBundle\ActiveTheme')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $controllerResolver = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $webspaceManager = $this->getMockBuilder('Sulu\Component\Webspace\Manager\WebspaceManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $structure = $this->getMockBuilder(PageBridge::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $activeTheme = $this->prophesize(ActiveTheme::class);
+        $controllerResolver = $this->prophesize(ControllerResolver::class);
+        $webspaceManager = $this->prophesize(WebspaceManager::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $structure = $this->prophesize(PageBridge::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
 
-        $webspaceManager->expects($this->any())
-            ->method('findWebspaceByKey')
-            ->willReturn($this->getWebspace());
+        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($this->getWebspace());
 
-        $structure->expects($this->any())
-            ->method('getController')
-            ->willReturn('TestController:test');
+        $structure->getController()->willReturn('TestController:test');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
 
-        $controllerResolver->expects($this->once())
-            ->method('getController')
+        $controllerResolver->getController(Argument::type(Request::class))
             ->will(
-                $this->returnCallback(
-                    function ($request) {
-                        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $request);
-                        $this->assertEquals('TestController:test', $request->attributes->get('_controller'));
-
-                        return [new TestController(), 'testAction'];
-                    }
-                )
+                function () {
+                    return [new TestController(), 'testAction'];
+                }
             );
+        $requestStack->push(Argument::type(Request::class))->shouldBeCalled();
+        $requestStack->pop()->shouldBeCalled();
 
-        $requestStack->expects($this->once())
-            ->method('push')
-            ->will(
-                $this->returnCallback(
-                    function ($request) {
-                        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $request);
-                        $this->assertEquals('TestController:test', $request->attributes->get('_controller'));
-                    }
-                )
-            );
-        $requestStack->expects($this->once())
-            ->method('pop');
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de_at')->shouldBeCalled();
+        $translator->setLocale('de')->shouldBeCalled();
 
-        $renderer = new PreviewRenderer($activeTheme, $controllerResolver, $webspaceManager, $requestStack);
+        $renderer = new PreviewRenderer(
+            $activeTheme->reveal(),
+            $controllerResolver->reveal(),
+            $webspaceManager->reveal(),
+            $requestStack->reveal(),
+            $translator->reveal()
+        );
 
-        $result = $renderer->render($structure);
+        $result = $renderer->render($structure->reveal());
 
         $this->assertEquals('TEST', $result);
     }
