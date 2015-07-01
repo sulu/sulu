@@ -13,6 +13,7 @@ CHANGELOG for Sulu
     * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
     * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
     * FEATURE     #1315 [ContentBundle]  Fixed translator locale for preview
+    * BUGFIX      #1023 [ContactBundle]  Fixed back to list in contact-list
 
 * 1.0.0-RC3 (2015-06-24)
     * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit

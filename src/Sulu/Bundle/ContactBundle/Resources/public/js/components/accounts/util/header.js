@@ -12,16 +12,16 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     // sets headlines and breadcrumb
-    var setHeadlinesAndBreadCrumb = function(accountName, accountNumber) {
+    var setHeadlinesAndBreadCrumb = function(account) {
             var breadcrumb = [
                     {title: 'navigation.contacts'},
-                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
+                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list', eventArgs: account}
                 ],
                 title = this.sandbox.translate('contact.accounts.title');
 
-            if (accountNumber) {
-                breadcrumb.push({title: '#' + accountNumber});
-                title = accountName;
+            if (account.number) {
+                breadcrumb.push({title: '#' + account.number});
+                title = account.name;
             }
 
             this.sandbox.emit('sulu.header.set-title', title);
@@ -78,7 +78,7 @@ define(['app-config'], function(AppConfig) {
             account = account.toJSON();
 
             // set headline based on type and account
-            setHeadlinesAndBreadCrumb.call(this, account.name, account.number);
+            setHeadlinesAndBreadCrumb.call(this, account);
             setHeaderToolbar.call(this);
         }
     };
