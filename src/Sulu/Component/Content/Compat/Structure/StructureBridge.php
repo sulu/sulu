@@ -585,13 +585,13 @@ class StructureBridge implements StructureInterface
      */
     public function copyFrom(StructureInterface $structure)
     {
-        $this->setDocument($structure->getDocument());
-
         foreach ($this->getProperties(true) as $property) {
             if ($structure->hasProperty($property->getName())) {
                 $property->setValue($structure->getPropertyValue($property->getName()));
             }
         }
+
+        $this->setDocument($structure->getDocument());
     }
 
     /**
