@@ -194,8 +194,8 @@ class UserManager implements UserManagerInterface
 
             // check if password is valid
             if (!$patch || $password !== null) {
-                $user->setSalt($this->generateSalt());
                 if ($this->isValidPassword($password)) {
+                    $user->setSalt($this->generateSalt());
                     $user->setPassword(
                         $this->encodePassword($user, $password, $user->getSalt())
                     );
