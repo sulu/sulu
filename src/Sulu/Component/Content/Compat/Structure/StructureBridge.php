@@ -8,16 +8,16 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
+use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -585,7 +585,13 @@ class StructureBridge implements StructureInterface
      */
     public function copyFrom(StructureInterface $structure)
     {
-        $this->notImplemented(__METHOD__);
+        $this->setDocument($structure->getDocument());
+
+        foreach ($this->getProperties(true) as $property) {
+            if ($structure->hasProperty($property->getName())) {
+                $property->setValue($structure->getPropertyValue($property->getName()));
+            }
+        }
     }
 
     /**
