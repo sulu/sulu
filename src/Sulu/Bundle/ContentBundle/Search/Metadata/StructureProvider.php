@@ -109,8 +109,8 @@ class StructureProvider implements ProviderInterface
         $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->createMetadataField('locale'));
 
-        $indexName = 'content';
-        $categoryName = 'content';
+        $indexName = 'page';
+        $categoryName = 'page';
 
         // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
