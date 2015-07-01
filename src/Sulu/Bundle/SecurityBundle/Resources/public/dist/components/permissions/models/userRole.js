@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel","mvc/hasone","sulusecurity/models/role"],function(a,b,c){"use strict";return a({urlRoot:"/admin/api/roles",defaults:function(){return{locale:"",role:null}},relations:[{type:b,key:"role",relatedModel:c}]})});
