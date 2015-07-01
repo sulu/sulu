@@ -205,5 +205,9 @@ class TestContentDocument implements StructureBehavior
     {
         return $this->locale;
     }
-    
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
 }
