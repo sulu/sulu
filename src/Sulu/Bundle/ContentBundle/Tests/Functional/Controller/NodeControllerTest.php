@@ -1371,6 +1371,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
+        $this->assertEquals($data['article'], $result['article']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
     }
