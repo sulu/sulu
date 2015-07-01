@@ -16,7 +16,6 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -27,6 +26,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,8 +35,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RoleController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    protected static $entityName = 'SuluSecurityBundle:Role';
-
     protected static $entityKey = 'roles';
 
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
@@ -53,18 +51,25 @@ class RoleController extends RestController implements ClassResourceInterface, S
      * @var Array - Holds the field descriptors for the list response
      * TODO: Create a Manager and move the field descriptors to the manager
      */
-    protected $fieldDescriptors;
+    protected $fieldDescriptors = array();
 
-    /**
-     * TODO: move the field descriptors to a manager.
-     */
-    public function __construct()
+    // TODO: move field descriptors to a manager
+    protected function getFieldDescriptors()
+    {
+        if (empty($this->fieldDescriptors)) {
+            $this->initFieldDescriptors();
+        }
+
+        return $this->fieldDescriptors;
+    }
+
+    private function initFieldDescriptors()
     {
         $this->fieldDescriptors = array();
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            static::$entityName,
+            $this->container->getParameter('sulu.model.role.class'),
             'public.id',
             array(),
             false, false, '', '50px'
@@ -72,19 +77,19 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
-            static::$entityName,
+            $this->container->getParameter('sulu.model.role.class'),
             'public.name'
         );
         $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
             'system',
             'system',
-            static::$entityName,
+            $this->container->getParameter('sulu.model.role.class'),
             'security.roles.system'
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
             'created',
-            static::$entityName,
+            $this->container->getParameter('sulu.model.role.class'),
             'public.created',
             array(),
             false, false, 'date'
@@ -92,7 +97,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
             'changed',
             'changed',
-            static::$entityName,
+            $this->container->getParameter('sulu.model.role.class'),
             'public.changed',
             array(),
             true, false, 'date'
@@ -109,7 +114,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     public function getFieldsAction()
     {
         // default contacts list
-        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
     }
 
     /**
@@ -138,9 +143,9 @@ class RoleController extends RestController implements ClassResourceInterface, S
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create(static::$entityName);
+            $listBuilder = $factory->create($this->container->getParameter('sulu.model.role.class'));
 
-            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
@@ -152,7 +157,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 $listBuilder->count()
             );
         } else {
-            $roles = $this->getDoctrine()->getRepository(static::$entityName)->findAllRoles();
+            $roles = $this->getRoleRepository()->findAllRoles();
             $convertedRoles = [];
             if ($roles != null) {
                 foreach ($roles as $role) {
@@ -176,10 +181,8 @@ class RoleController extends RestController implements ClassResourceInterface, S
     public function getAction($id)
     {
         $find = function ($id) {
-            /** @var Role $role */
-            $role = $this->getDoctrine()
-                ->getRepository(static::$entityName)
-                ->findRoleById($id);
+            /** @var RoleInterface $role */
+            $role = $this->getRoleRepository()->findRoleById($id);
 
             return $this->convertRole($role);
         };
@@ -214,7 +217,8 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
             $em = $this->getDoctrine()->getManager();
 
-            $role = new Role();
+            /** @var RoleInterface $role */
+            $role = $this->getRoleRepository()->createNew();
             $role->setName($name);
             $role->setSystem($system);
 
@@ -255,14 +259,12 @@ class RoleController extends RestController implements ClassResourceInterface, S
      */
     public function putAction(Request $request, $id)
     {
-        /** @var Role $role */
-        $role = $this->getDoctrine()
-            ->getRepository(static::$entityName)
-            ->findRoleById($id);
+        /** @var RoleInterface $role */
+        $role = $this->getRoleRepository()->findRoleById($id);
 
         try {
             if (!$role) {
-                throw new EntityNotFoundException(static::$entityName, $id);
+                throw new EntityNotFoundException($this->getRoleRepository()->getClassName(), $id);
             } else {
                 $em = $this->getDoctrine()->getManager();
 
@@ -304,12 +306,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $role = $this->getDoctrine()
-                ->getRepository(static::$entityName)
-                ->findRoleById($id);
+            $role = $this->getRoleRepository()->findRoleById($id);
 
             if (!$role) {
-                throw new EntityNotFoundException(static::$entityName, $id);
+                throw new EntityNotFoundException($this->getRoleRepository()->getClassName(), $id);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -493,5 +493,13 @@ class RoleController extends RestController implements ClassResourceInterface, S
     public function getSecurityContext()
     {
         return 'sulu.security.roles';
+    }
+
+    /**
+     * @return RoleRepositoryInterface
+     */
+    private function getRoleRepository()
+    {
+        return $this->get('sulu.repository.role');
     }
 }

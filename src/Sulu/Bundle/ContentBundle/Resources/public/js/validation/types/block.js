@@ -111,8 +111,6 @@ define([
                         this.form.removeFields($element);
                         $element.remove();
 
-                        this.checkSortable();
-
                         $(form.$el).trigger('form-remove', [this.propertyName]);
                         this.checkFullAndEmpty();
                     }
@@ -121,10 +119,10 @@ define([
                 checkSortable: function() {
                     // check for dragable
                     if (this.getChildren().length <= 1) {
-                        App.dom.removeClass(this.$el, 'sortable');
                         App.dom.attr(App.dom.children(this.$el), 'draggable', false);
-                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
-                        App.dom.addClass(this.$el, 'sortable');
+                        this.setSortable(false);
+                    } else {
+                        this.setSortable(true);
                     }
                 },
 
@@ -188,8 +186,6 @@ define([
                         if (this.getMinOccurs() === this.getMaxOccurs()) {
                             App.dom.remove(App.dom.find('.options-remove', $template));
                         }
-
-                        this.checkSortable();
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
@@ -302,8 +298,8 @@ define([
                         section = AppConfig.getSection('sulu-content');
 
                     $('#sort-text-blocks-' + this.id).addClass('hidden');
-                    $('#edit-text-blocks-' + this.id).removeClass('hidden'); 
-                    
+                    $('#edit-text-blocks-' + this.id).removeClass('hidden');
+
                     this.$el.addClass('is-sortmode');
 
                     this.iterateBlockFields($blocks, function($field, $block) {
@@ -318,6 +314,8 @@ define([
                             this.showSortModeField($field, $block);
                         }
                     }.bind(this));
+
+                    this.checkSortable();
                 },
 
                 showSortModeField: function($field, $block) {
@@ -335,8 +333,10 @@ define([
                 showEditMode: function() {
                     var $blocks = this.getChildren();
 
-                    $('#sort-text-blocks-' + this.id).removeClass('hidden');
-                    $('#edit-text-blocks-' + this.id).addClass('hidden');
+                    this.setSortable(false);
+
+                    App.dom.removeClass('#sort-text-blocks-' + this.id, 'hidden');
+                    App.dom.addClass('#edit-text-blocks-' + this.id, 'hidden');
 
                     this.$el.removeClass('is-sortmode');
 
@@ -347,6 +347,17 @@ define([
                             App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.start');
                         }
                     }.bind(this));
+                },
+
+                setSortable: function(state) {
+                    if (!state) {
+                        App.dom.removeClass(this.$el, 'sortable');
+                        App.dom.sortable(this.$el, 'destroy');
+                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
+                        App.dom.addClass(this.$el, 'sortable');
+                    }
+
+                    $(form.$el).trigger('init-sortable');
                 }
             };
 

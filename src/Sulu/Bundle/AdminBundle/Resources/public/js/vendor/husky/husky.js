@@ -26943,6 +26943,10 @@ define('type/husky-input',[
                     var value = typeGetter.default.call(this),
                         dateTime = Globalize.parseDate(value, this.options.timeFormat);
 
+                    if (value === '') {
+                        return value;
+                    }
+
                     return Globalize.format(dateTime, 'HH:mm:ss');
                 },
                 date: function() {
@@ -27952,13 +27956,13 @@ define('__component__$navigation@husky',[],function() {
             //footer template
             footer: [
                 '<div class="user">',
-                '<span class="fa-user pic"></span>',
-                '<div class="name"><%= userName %></div>',
+                '   <span class="fa-user pic"></span>',
+                '   <div class="name"><%= userName %></div>',
                 '</div>',
                 '<div class="options">',
-                '<div class="locale-dropdown"></div>',
-                '<a href="<%= logoutRoute %>" title="Logout" class="fa-lock logout"></a>',
-                '</div>',
+                '   <div class="locale-dropdown"></div>',
+                '       <a href="<%= logoutRoute %>" title="Logout" class="fa-lock logout"></a>',
+                '   </div>',
                 '<div class="version"><%= system %> (<%= version %>, <a href="#"><%= versionHistory %></a>)</div>'
             ].join('')
         },
@@ -27991,6 +27995,19 @@ define('__component__$navigation@husky',[],function() {
         namespace = 'husky.navigation.',
 
         /**
+         * raised when header was clicked
+         * @event husky.navigation.header.clicked
+         */
+        EVENT_HEADER_CLICKED = namespace + 'header.clicked',
+
+        /**
+         * raised when item is selected
+         * @event husky.navigation.item.select
+         * @param {Object} item The selected item
+         */
+        EVENT_ITEM_SELECT = namespace + 'item.select',
+
+        /**
          * listens on and activates the matching navigation-item
          * @event husky.navigation.select-item
          * @param {string} selectAction The select-action to match the navigation-item for
@@ -28018,7 +28035,6 @@ define('__component__$navigation@husky',[],function() {
          * @param {Number} width The width of the un-collapsed navigation
          */
         EVENT_UNCOLLAPSED = namespace + 'uncollapsed',
-
 
         /**
          * forces navigation to collapse
@@ -28284,12 +28300,14 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.dom.on(this.$el, 'click', this.toggleSections.bind(this), '.section-toggle');
             this.sandbox.dom.on(this.$el, 'click', this.settingsClicked.bind(this), '.js-navigation-settings');
             this.sandbox.dom.on(this.$el, 'click', this.selectSubItem.bind(this), '.js-navigation-sub-item, .js-navigation-item');
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.sandbox.emit(EVENT_HEADER_CLICKED);
+            }.bind(this), '.navigation-header div');
 
             // collapse events
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeListener.bind(this));
             this.sandbox.dom.on(this.$el, 'click', this.collapse.bind(this), '.navigation.collapseIcon .navigation-close-icon');
             this.sandbox.dom.on(this.$el, 'click', this.collapsedFooterClickHandler.bind(this), '.navigation.collapsed footer');
-
 
             // tooltip events
             this.sandbox.dom.on(this.$el, 'mouseenter', function(event) {
@@ -28675,7 +28693,7 @@ define('__component__$navigation@husky',[],function() {
         unCollapse: function(forced) {
             if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
                 if (forced) {
-                    if(!this.hasDataNavigation()) {
+                    if (!this.hasDataNavigation()) {
                         // freeze width of parent so that the navigation overlaps the content
                         this.sandbox.dom.width(this.$el, this.sandbox.dom.width(this.$navigation));
                     }
@@ -28751,7 +28769,7 @@ define('__component__$navigation@husky',[],function() {
                 if (item.event) {
                     this.sandbox.emit('husky.navigation.item.event.' + item.event, item.eventArgs);
                 } else {
-                    this.sandbox.emit('husky.navigation.item.select', extendedItem);
+                    this.sandbox.emit(EVENT_ITEM_SELECT, extendedItem);
                 }
             }
 
@@ -28838,7 +28856,7 @@ define('__component__$navigation@husky',[],function() {
             if (!!options.translates) {
                 componentOptions.translates = {};
 
-                for(key in options.translates){
+                for (key in options.translates) {
                     componentOptions.translates[key] = this.sandbox.translate(options.translates[key]);
                 }
             }
@@ -43901,7 +43919,6 @@ define('__component__$input@husky',[], function() {
             this.sandbox.dom.addClass(this.$el, constants.colorpickerClass);
             this.changeColorPreview(this.sandbox.dom.val(this.input.$input));
             this.sandbox.colorpicker.init(this.input.$input, this.sandbox.util.extend(true, {}, {
-                defaultValue: this.sandbox.dom.val(this.input.$input),
                 change: this.changeColorPreview.bind(this)
             }, this.options.colorPickerOptions));
         },

@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Metadata\Loader;
 use Exception;
 use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -33,6 +34,17 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private $requiredPropertyNames = array(
         'title',
+    );
+
+    /**
+     * tags that are required in template
+     * TODO should be possible to inject from config
+     * @var array
+     */
+    private $requiredTagNames = array(
+        'page' => array('sulu.rlp'),
+        'home' => array('sulu.rlp'),
+        'snippet' => array(),
     );
 
     /**
@@ -98,6 +110,16 @@ class XmlLegacyLoader implements LoaderInterface
 
             if (!$requiredPropertyNameFound) {
                 throw new RequiredPropertyNameNotFoundException($result['key'], $requiredPropertyName);
+            }
+        }
+
+        // FIXME until excerpt-template is no page template anymore
+        // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
+        if (!array_key_exists('internal', $result) || !$result['internal']) {
+            foreach ($this->requiredTagNames[$type] as $requiredTagName) {
+                if (!array_key_exists($requiredTagName, $tags)) {
+                    throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
+                }
             }
         }
 

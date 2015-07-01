@@ -11,13 +11,13 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Liip\ThemeBundle\ActiveTheme;
-use Sulu\Component\Content\Compat\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PreviewRenderer
 {
@@ -41,22 +41,29 @@ class PreviewRenderer
      */
     private $requestStack;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         ActiveTheme $activeTheme,
         ControllerResolverInterface $controllerResolver,
         WebspaceManagerInterface $webspaceManager,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TranslatorInterface $translator
     ) {
         $this->activeTheme = $activeTheme;
         $this->controllerResolver = $controllerResolver;
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
+        $this->translator = $translator;
     }
 
     /**
      * renders content with the real website controller.
      *
-     * @param Page $content
+     * @param PageBridge $content
      * @param bool $partial
      *
      * @return string
@@ -69,14 +76,21 @@ class PreviewRenderer
 
         // get controller and invoke action
         $request = new Request();
-        $request->setLocale($content->getLanguageCode());
         $request->attributes->set('_controller', $content->getController());
         $controller = $this->controllerResolver->getController($request);
+
+        // prepare locale for translator and request
+        $request->setLocale($content->getLanguageCode());
+        $localeBefore = $this->translator->getLocale();
+        $this->translator->setLocale($content->getLanguageCode());
 
         $this->requestStack->push($request);
         /** @var Response $response */
         $response = $controller[0]->{$controller[1]}($content, true, $partial);
+
+        // roll back
         $this->requestStack->pop();
+        $this->translator->setLocale($localeBefore);
 
         return $response->getContent();
     }

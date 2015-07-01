@@ -43,7 +43,7 @@ class UserBuilder extends SuluBuilder
         $roleName = 'User';
         $system = 'Sulu';
         $doctrine = $this->container->get('doctrine')->getManager();
-        $userRep = $doctrine->getRepository('SuluSecurityBundle:User');
+        $userRep = $this->container->get('sulu.repository.user');
 
         $existing = $userRep->findOneByUsername($user);
 

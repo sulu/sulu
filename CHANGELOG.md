@@ -1,6 +1,23 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.0.0 (2015-07-01)
+    * ENHANCEMENT #1319 [ContentBundle]  Fixed location of cached structures
+    * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
+    * FEATURE     #1314 [SecurityBundle] Enable new persistence handling for User & Role.
+    * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
+    * BUGFIX      #1313 [MediaBundle]    Fixed image conversion in environments where open_basedir is enabled
+    * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
+    * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
+    * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
+    * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
+    * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
+    * FEATURE     #1278 [ContentBundle]  Implemented webspace structure provider
+    * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
+    * FEATURE     #1315 [ContentBundle]  Fixed translator locale for preview
+    * BUGFIX      #1023 [ContactBundle]  Fixed back to list in contact-list
+
 * 1.0.0-RC3 (2015-06-24)
     * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
@@ -8,11 +25,11 @@ CHANGELOG for Sulu
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle
     * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
                                          Added this functionality for the contact entity.
+    * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
+    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
 
 * 1.0.0-RC2 (2015-06-17)
-    * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
-    * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay 
-    * BUGFIX      #1264 [ContentBundle]  fixed save of changed block type
+    * BUGFIX      #1264 [ContentBundle]  Fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
     * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete

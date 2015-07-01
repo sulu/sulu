@@ -272,7 +272,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountContact->setContact($contact);
 
             // Set position on contact
-            $position = $this->getPosition($request->get('position', null));
+            $position = $this->getContactManager()->getPosition($request->get('position', null));
             $accountContact->setPosition($position);
             $contact->setCurrentPosition($position);
 
@@ -408,6 +408,8 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * @param Request $request
      * @param $filter
+     *
+     * @return \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder
      */
     protected function generateFlatListBuilder(Request $request, $filter)
     {
@@ -915,6 +917,9 @@ class AccountController extends RestController implements ClassResourceInterface
         return $this->fieldDescriptors;
     }
 
+    /**
+     * @return null|array
+     */
     protected function getAccountContactFieldDescriptors()
     {
         if ($this->accountContactFieldDescriptors === null) {
@@ -924,6 +929,9 @@ class AccountController extends RestController implements ClassResourceInterface
         return $this->accountContactFieldDescriptors;
     }
 
+    /**
+     * @return null|array
+     */
     protected function getAccountAddressesFieldDescriptors()
     {
         if ($this->accountAddressesFieldDescriptors === null) {

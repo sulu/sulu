@@ -102,6 +102,10 @@
         margin-top: $headerHeight + $tabsHeight;
         padding-bottom: $headerHeight + $tabsHeight;
     }
+    &.hidden + .page {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 .sulu-header-background {

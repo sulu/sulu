@@ -65,7 +65,7 @@ class WebspaceInitializer implements InitializerInterface
         } else {
             $homeDocument = new HomeDocument();
             $homeDocument->setTitle('Homepage');
-            $homeDocument->setStructureType('overview');
+            $homeDocument->setStructureType($webspace->getTheme()->getDefaultTemplate('homepage'));
             $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
             $existingLocales = array();
         }

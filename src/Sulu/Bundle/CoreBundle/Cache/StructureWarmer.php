@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\Structure;
 class StructureWarmer implements CacheWarmerInterface
 {
     /**
-     * @var StructureManager
+     * @var StructureManagerInterface
      */
     private $structureManager;
 

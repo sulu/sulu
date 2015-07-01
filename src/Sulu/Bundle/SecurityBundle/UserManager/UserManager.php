@@ -10,14 +10,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
@@ -35,10 +33,6 @@ use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 class UserManager implements UserManagerInterface
 {
     use RelationTrait;
-
-    protected static $entityName = 'SuluSecurityBundle:User';
-    protected static $entityNameRole = 'SuluSecurityBundle:Role';
-    protected static $entityNameGroup = 'SuluSecurityBundle:Group';
 
     /**
      * @var CurrentUserDataInterface
@@ -105,7 +99,7 @@ class UserManager implements UserManagerInterface
      *
      * @param int $id userId
      *
-     * @return User
+     * @return UserInterface
      */
     public function getUserById($id)
     {
@@ -122,7 +116,7 @@ class UserManager implements UserManagerInterface
         $delete = function ($id) {
             $user = $this->userRepository->findUserById($id);
             if (!$user) {
-                throw new EntityNotFoundException(static::$entityName, $id);
+                throw new EntityNotFoundException($this->userRepository->getClassName(), $id);
             }
 
             $this->em->remove($user);
@@ -175,7 +169,7 @@ class UserManager implements UserManagerInterface
                 // update user
                 $user = $this->userRepository->findUserById($id);
                 if (!$user) {
-                    throw new EntityNotFoundException(static::$entityName, $id);
+                    throw new EntityNotFoundException($this->userRepository->getClassName(), $id);
                 }
                 $this->processEmail($user, $email);
             } else {
@@ -183,7 +177,8 @@ class UserManager implements UserManagerInterface
                 if (!$this->isValidPassword($password)) {
                     throw new MissingPasswordException();
                 }
-                $user = new User();
+                /** @var UserInterface $user */
+                $user = $this->userRepository->createNew();
                 $this->processEmail($user, $email, $contact);
             }
 
@@ -199,8 +194,8 @@ class UserManager implements UserManagerInterface
 
             // check if password is valid
             if (!$patch || $password !== null) {
-                $user->setSalt($this->generateSalt());
                 if ($this->isValidPassword($password)) {
+                    $user->setSalt($this->generateSalt());
                     $user->setPassword(
                         $this->encodePassword($user, $password, $user->getSalt())
                     );
@@ -328,11 +323,11 @@ class UserManager implements UserManagerInterface
     /**
      * @param int $id
      *
-     * @return User
+     * @return UserInterface
      */
     public function enableUser($id)
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->userRepository->findUserById($id);
         $user->setEnabled(true);
         $this->em->persist($user);
@@ -456,7 +451,7 @@ class UserManager implements UserManagerInterface
         $role = $this->roleRepository->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException(static::$entityNameRole, $userRole['role']['id']);
+            throw new EntityNotFoundException($this->roleRepository->getClassName(), $userRole['role']['id']);
         }
 
         $userRole->setRole($role);
@@ -472,21 +467,21 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserRole to the given user
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param $userRoleData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
      * @return bool
      */
-    private function addUserRole(User $user, $userRoleData)
+    private function addUserRole(UserInterface $user, $userRoleData)
     {
         $alreadyContains = false;
 
         $role = $this->roleRepository->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException(static::$entityNameRole, $userRoleData['role']['id']);
+            throw new EntityNotFoundException($this->roleRepository->getClassName(), $userRoleData['role']['id']);
         }
 
         if ($user->getUserRoles()) {
@@ -513,19 +508,19 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserGroup to the given user
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param $userGroupData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
      * @return bool
      */
-    private function addUserGroup(User $user, $userGroupData)
+    private function addUserGroup(UserInterface $user, $userGroupData)
     {
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
         if (!$group) {
-            throw new EntityNotFoundException(static::$entityNameGroup, $userGroupData['group']['id']);
+            throw new EntityNotFoundException($this->groupRepository->getClassName(), $userGroupData['group']['id']);
         }
 
         $userGroup = new UserGroup();
@@ -554,7 +549,7 @@ class UserManager implements UserManagerInterface
         $group = $this->groupRepository->findGroupById($userGroupData['group']['id']);
 
         if (!$group) {
-            throw new EntityNotFoundException(static::$entityNameGroup, $userGroup['group']['id']);
+            throw new EntityNotFoundException($this->groupRepository->getClassName(), $userGroup['group']['id']);
         }
 
         $userGroup->setGroup($group);
@@ -600,13 +595,13 @@ class UserManager implements UserManagerInterface
     /**
      * Encodes the given password, for the given passwort, with he given salt and returns the result
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $password
      * @param string $salt
      *
      * @return string
      */
-    private function encodePassword($user, $password, $salt)
+    private function encodePassword(UserInterface $user, $password, $salt)
     {
         $encoder = $this->encoderFactory->getEncoder($user);
 
@@ -634,13 +629,13 @@ class UserManager implements UserManagerInterface
     /**
      * Processes the email and adds it to the user
      *
-     * @param User $user
+     * @param UserInterface $user
      * @param string $email
      * @param null|array $contact
      *
      * @throws EmailNotUniqueException
      */
-    private function processEmail(User $user, $email, $contact = null)
+    private function processEmail(UserInterface $user, $email, $contact = null)
     {
         if ($contact) {
             // if no email passed try to use the contact's first email
@@ -680,6 +675,18 @@ class UserManager implements UserManagerInterface
     public function findUsersByAccount($accountId)
     {
         return $this->userRepository->findUsersByAccount($accountId);
+    }
+
+    /**
+     * Finds a user for a given contact id
+     *
+     * @param int $contactId
+     *
+     * @return UserInterface
+     */
+    public function findUserByContact($contactId)
+    {
+        return $this->userRepository->findUserByContact($contactId);
     }
 
     /**

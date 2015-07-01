@@ -89,7 +89,6 @@ class RoleControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/roles?flat=true');
-
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, count($response->_embedded->roles));

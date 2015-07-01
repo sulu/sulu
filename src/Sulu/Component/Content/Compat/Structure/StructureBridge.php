@@ -8,16 +8,16 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
+use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -27,7 +27,7 @@ class StructureBridge implements StructureInterface
     protected $structure;
 
     /**
-     * @var Document
+     * @var object
      */
     protected $document;
 
@@ -54,14 +54,10 @@ class StructureBridge implements StructureInterface
     private $locale;
 
     /**
-     * @var boolean
-     */
-    private $internal = false;
-
-    /**
      * @param StructureMetadata $structure
-     * @param DocumentInspector $document
-     * @param LegacyPropertyFactory $urlGenerator
+     * @param DocumentInspector $inspector
+     * @param LegacyPropertyFactory $propertyFactory
+     * @param object $document
      */
     public function __construct(
         StructureMetadata $structure,
@@ -100,7 +96,7 @@ class StructureBridge implements StructureInterface
             return $this->locale;
         }
 
-        return $this->inspector->getOriginalLocale($this->document);
+        return $this->inspector->getOriginalLocale($this->getDocument());
     }
 
     /**
@@ -116,7 +112,7 @@ class StructureBridge implements StructureInterface
      */
     public function getWebspaceKey()
     {
-        return $this->inspector->getWebspace($this->document);
+        return $this->inspector->getWebspace($this->getDocument());
     }
 
     /**
@@ -269,7 +265,7 @@ class StructureBridge implements StructureInterface
      */
     public function getHasChildren()
     {
-        return $this->inspector->hasChildren($this->document);
+        return $this->inspector->hasChildren($this->getDocument());
     }
 
     /**
@@ -287,7 +283,7 @@ class StructureBridge implements StructureInterface
     {
         $children = array();
 
-        foreach ($this->document->getChildren() as $child) {
+        foreach ($this->getDocument()->getChildren($this->getDocument()) as $child) {
             $children[] = $this->documentToStructure($child);
         }
 
@@ -296,7 +292,7 @@ class StructureBridge implements StructureInterface
 
     public function getParent()
     {
-        return $this->documentToStructure($this->documentInspector->getParent($this->document));
+        return $this->documentToStructure($this->documentInspector->getParent($this->getDocument()));
     }
 
     /**
@@ -530,7 +526,7 @@ class StructureBridge implements StructureInterface
     public function getNodeType()
     {
         if ($this->getDocument() instanceof RedirectTypeBehavior) {
-            return $this->document->getRedirectType();
+            return $this->getDocument()->getRedirectType();
         }
 
         return RedirectType::NONE;
@@ -542,14 +538,14 @@ class StructureBridge implements StructureInterface
     public function getNodeName()
     {
         if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
-            return $this->document->getRedirectTarget()->getTitle();
+            return $this->getDocument()->getRedirectTarget()->getTitle();
         }
 
         if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
-            return $this->document->getTitle();
+            return $this->getDocument()->getTitle();
         }
 
-        return $this->document->getTitle();
+        return $this->getDocument()->getTitle();
     }
 
     /**
@@ -589,7 +585,13 @@ class StructureBridge implements StructureInterface
      */
     public function copyFrom(StructureInterface $structure)
     {
-        $this->notImplemented(__METHOD__);
+        foreach ($this->getProperties(true) as $property) {
+            if ($structure->hasProperty($property->getName())) {
+                $property->setValue($structure->getPropertyValue($property->getName()));
+            }
+        }
+
+        $this->setDocument($structure->getDocument());
     }
 
     /**
@@ -729,7 +731,7 @@ class StructureBridge implements StructureInterface
         $propertyBridge = $this->propertyFactory->createProperty($item, $this);
 
         if ($this->document) {
-            $property = $this->document->getStructure()->getProperty($name);
+            $property = $this->getDocument()->getStructure()->getProperty($name);
             $propertyBridge->setPropertyValue($property);
         }
 

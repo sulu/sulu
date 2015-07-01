@@ -243,6 +243,15 @@ div.cke_disabled .cke_dialog_ui_labeled_content div * {
     width: 100%
 }
 
+.cke_dialog_footer .cke_dialog_ui_hbox_first {
+    display: none;
+}
+
+.cke_dialog_footer .cke_dialog_ui_hbox_last {
+    padding: 5px;
+    text-align: center;
+}
+
 .cke_dialog_ui_hbox_first, .cke_dialog_ui_hbox_child, .cke_dialog_ui_hbox_last {
     vertical-align: top
 }
@@ -299,8 +308,6 @@ input.cke_dialog_ui_input_text:focus, input.cke_dialog_ui_input_password:focus, 
 a.cke_dialog_ui_button_ok {
     position: relative;
     display: inline-block;
-    left: 50%;
-    margin-left: -205px;
     margin-top: 5px;
     margin-bottom: 5px;
     background: #52b6ca;
@@ -338,7 +345,6 @@ a.cke_dialog_ui_button_cancel {
 
 .cke_dialog_footer_buttons {
     display: inline-table;
-    margin: 5px;
     width: auto;
     position: relative;
     vertical-align: middle

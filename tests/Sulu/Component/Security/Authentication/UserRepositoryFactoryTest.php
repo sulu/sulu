@@ -28,7 +28,7 @@ class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        return new UserRepositoryFactory($entityManagerMock, 'Sulu');
+        return new UserRepositoryFactory($entityManagerMock, 'Sulu', 'Sulu\Bundle\SecurityBundle\Entity\User');
     }
 
     public function testGetRepository()

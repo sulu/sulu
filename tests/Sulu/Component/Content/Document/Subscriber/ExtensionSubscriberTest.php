@@ -148,4 +148,8 @@ class TestExtensionDocument implements ExtensionBehavior
     public function getLocale() 
     {
     }
+
+    public function setLocale($locale)
+    {
+    }
 }

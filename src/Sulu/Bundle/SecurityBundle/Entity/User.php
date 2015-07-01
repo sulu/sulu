@@ -3,11 +3,12 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Component\Contact\Model\ContactInterface;
 
 /**
  * User.
@@ -17,33 +18,34 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 class User extends BaseUser
 {
     /**
-     * @var Contact
+     * @var ContactInterface
      * @Expose
      */
-    private $contact;
+    protected $contact;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Expose
      */
-    private $userRoles;
+    protected $userRoles;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Expose
      */
-    private $userGroups;
+    protected $userGroups;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $userSettings;
+    protected $userSettings;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
+        parent::__construct();
         $this->userRoles = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
         $this->userSettings = new ArrayCollection();
@@ -54,7 +56,7 @@ class User extends BaseUser
      *
      * @param UserRole $userRoles
      *
-     * @return User
+     * @return self
      */
     public function addUserRole(UserRole $userRoles)
     {
@@ -103,7 +105,7 @@ class User extends BaseUser
      *
      * @param UserGroup $userGroups
      *
-     * @return User
+     * @return self
      */
     public function addUserGroup(UserGroup $userGroups)
     {
@@ -137,7 +139,7 @@ class User extends BaseUser
      *
      * @param UserSetting $userSettings
      *
-     * @return User
+     * @return self
      */
     public function addUserSetting(UserSetting $userSettings)
     {
@@ -159,7 +161,7 @@ class User extends BaseUser
     /**
      * Get userSettings.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUserSettings()
     {
@@ -169,11 +171,11 @@ class User extends BaseUser
     /**
      * Set contact.
      *
-     * @param Contact $contact
+     * @param ContactInterface $contact
      *
-     * @return User
+     * @return self
      */
-    public function setContact(Contact $contact = null)
+    public function setContact(ContactInterface $contact = null)
     {
         $this->contact = $contact;
 
@@ -183,7 +185,7 @@ class User extends BaseUser
     /**
      * Get contact.
      *
-     * @return Contact
+     * @return ContactInterface
      */
     public function getContact()
     {
@@ -198,6 +200,7 @@ class User extends BaseUser
      */
     public function getFullName()
     {
-        return $this->getContact()->getFullName();
+        return null !== $this->getContact() ?
+            $this->getContact()->getFullName() : $this->getUsername();
     }
 }

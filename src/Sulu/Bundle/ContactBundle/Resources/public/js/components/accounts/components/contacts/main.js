@@ -43,7 +43,7 @@ define([
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list');
+                this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
             }, this);
 
             // add new record to datagrid
@@ -194,7 +194,8 @@ define([
                                 valueName: 'position',
                                 returnValue: 'id',
                                 data: response._embedded.positions,
-                                noNewValues: true
+                                noNewValues: true,
+                                isNative: true
                             }
                         }
                     ]);

@@ -10,17 +10,17 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * This exception is thrown when a token-email for user without a token is requested.
  */
 class NoTokenFoundException extends SecurityException
 {
-    /** @var User  */
+    /** @var UserInterface */
     private $user;
 
-    public function __construct(User $user)
+    public function __construct(UserInterface $user)
     {
         parent::__construct(sprintf('The user "%s" has no token!', $user->getUsername()), 1006);
         $this->user = $user;

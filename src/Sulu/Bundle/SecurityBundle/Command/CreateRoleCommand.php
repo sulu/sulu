@@ -11,7 +11,8 @@
 namespace Sulu\Bundle\SecurityBundle\Command;
 
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,11 +44,11 @@ class CreateRoleCommand extends ContainerAwareCommand
     {
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
-        $now = new \DateTime();
         $name = $input->getArgument('name');
         $system = $input->getArgument('system');
 
-        $repository = $em->getRepository('SuluSecurityBundle:Role');
+        /** @var RepositoryInterface $roleRepository */
+        $repository = $this->getContainer()->get('sulu.repository.role');
 
         $role = $repository->findOneByName($name);
 
@@ -60,7 +61,8 @@ class CreateRoleCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $role = new Role();
+        /** @var RoleInterface $role */
+        $role = $repository->createNew();
         $role->setName($name);
         $role->setSystem($system);
 
@@ -117,7 +119,7 @@ class CreateRoleCommand extends ContainerAwareCommand
                         throw new \InvalidArgumentException('Rolename cannot be empty');
                     }
 
-                    $roles = $doctrine->getRepository('SuluSecurityBundle:Role')->findBy(array('name' => $name));
+                    $roles = $this->getContainer()->get('sulu.repository.role')->findBy(array('name' => $name));
                     if (count($roles) > 0) {
                         throw new \InvalidArgumentException(sprintf('Rolename "%s" is not unique', $name));
                     }

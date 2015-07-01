@@ -14,15 +14,11 @@ define([
 
     'use strict';
 
-    var STATE_TEST = 1,
+    var SnippetForm = function() {
+        BaseSnippet.call(this);
 
-        STATE_PUBLISHED = 2,
-
-        SnippetForm = function() {
-            BaseSnippet.call(this);
-
-            return this;
-        };
+        return this;
+    };
 
     SnippetForm.prototype = Object.create(BaseSnippet.prototype);
     SnippetForm.prototype.constructor = BaseSnippet;
@@ -42,7 +38,7 @@ define([
     };
 
     SnippetForm.prototype.header = function() {
-        return{
+        return {
             breadcrumb: this.breadcrumb,
 
             tabs: {
@@ -58,41 +54,6 @@ define([
                 },
 
                 template: [
-                    {
-                        id: 'state',
-                        group: 'left',
-                        position: 100,
-                        type: 'select',
-                        itemsOption: {
-                            markable: true
-                        },
-                        items: [
-                            {
-                                id: STATE_PUBLISHED,
-                                title: this.sandbox.translate('toolbar.state-publish'),
-                                icon: 'husky-publish',
-                                callback: function() {
-                                    if (!!this.state) {
-                                        this.setHeaderBar(false);
-                                    }
-                                    this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
-                                    this.state = STATE_PUBLISHED;
-                                }.bind(this)
-                            },
-                            {
-                                id: STATE_TEST,
-                                title: this.sandbox.translate('toolbar.state-test'),
-                                icon: 'husky-test',
-                                callback: function() {
-                                    if (!!this.state) {
-                                        this.setHeaderBar(false);
-                                    }
-                                    this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
-                                    this.state = STATE_TEST;
-                                }.bind(this)
-                            }
-                        ]
-                    },
                     {
                         id: 'template',
                         icon: 'pencil',
@@ -157,11 +118,6 @@ define([
             this.setHeaderBar(saved);
         }.bind(this));
 
-        // setter for state bar buttons
-        this.sandbox.on('sulu.snippets.snippet.set-state', function(data) {
-            this.setState(data);
-        }.bind(this));
-
         // content saved
         this.sandbox.on('sulu.snippets.snippet.saved', function(data) {
             this.data = data;
@@ -181,18 +137,6 @@ define([
         this.sandbox.on('sulu.header.toolbar.delete', function() {
             this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
         }, this);
-    };
-
-    /**
-     * Sets state to header
-     * @param {Object} data
-     */
-    SnippetForm.prototype.setState = function(data) {
-        var state = !!data.nodeState ? data.nodeState : STATE_TEST;
-
-        if (state !== '' && state !== undefined && state !== null) {
-            this.sandbox.emit('sulu.header.toolbar.item.change', 'state', state);
-        }
     };
 
     /**

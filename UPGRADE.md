@@ -1,5 +1,74 @@
 # Upgrade
 
+## dev-develop
+
+### User / Role management changed
+
+Service `sulu_security.role_repository` changed to `sulu.repository.role`.
+Service `sulu_security.user_repository` should be avoided. Use `sulu.repository.user` instead.
+
+### Snippets
+
+Snippet state has been removed and set default to published. Therefor all snippets has to be set to published by this
+running this command for each <locale>:
+
+```bash
+app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [jcr:mixinTypes] = 'sulu:snippet'" --apply-closure="\$node->setProperty('i18n:<locale>-state', 2);"
+```
+
+### Page-Templates
+
+1. The tag `sulu.rlp` is now mandatory for page templates.
+2. Page templates will now be filtered: only implemented templates in the theme will be displayed in the dropdown.
+ 
+To find pages with not implemented templates run following command:
+
+```bash
+app/console sulu:content:validate <webspace-key>
+```
+
+To fix that pages, you could implement the template in the theme or save the pages with an other template over ui.
+
+### Webspaces
+
+1. The default-template config moved from global configuration to webspace config. For that it is needed to add this config to each webspace. 
+2. The excluded xml tag has been removed from the webspace configuration file, so you have to remove this tag from all these files.
+
+After that your webspace theme config should look like this:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+...
+
+    <theme>
+        <key>default</key>
+        <default-templates>
+            <default-template type="page">default</default-template>
+            <default-template type="homepage">overview</default-template>
+        </default-templates>
+    </theme>
+
+...
+
+</webspace>
+```
+
+Also remove the following default-template config for page and homepage from the file `app/config/config.yml`:
+
+```yml
+sulu_core:
+    content:
+        structure:
+            default_type:
+                snippet: "default"
+-               page: "default"
+-               homepage: "overview"
+```
+
 ## 1.0.0-RC3
 
 ### Document Manager
@@ -22,6 +91,33 @@ again.
 ```
 app/console sulu:upgrade:rc3:internal-links
 ```
+
+The following classes have been moved, and every reference to them has to be updated:
+
+Old name                                                 | New name
+---------------------------------------------------------|---------------------------------------------------------------
+Sulu\Component\Content\Event\ContentNodeDeleteEvent      | Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent
+Sulu\Component\Content\Event\ContentNodeEvent            | Sulu\Component\Content\Mapper\Event\ContentNodeEvent
+Sulu\Component\Content\Event\ContentNodeOrderEvent       | Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent
+Sulu\Component\Content\Block\BlockProperty               | Sulu\Component\Content\Compat\Block\BlockProperty
+Sulu\Component\Content\Block\BlockPropertyInterface      | Sulu\Component\Content\Compat\Block\BlockPropertyInterface
+Sulu\Component\Content\Block\BlockPropertyType           | Sulu\Component\Content\Compat\Block\BlockPropertyType
+Sulu\Component\Content\Block\BlockPropertyWrapper        | Sulu\Component\Content\Compat\Block\BlockPropertyWrapper
+Sulu\Component\Content\Section\SectionProperty           | Sulu\Component\Content\Compat\Section\SectionProperty
+Sulu\Component\Content\Section\SectionPropertyInterface  | Sulu\Component\Content\Compat\Section\SectionPropertyInterface
+Sulu\Component\Content\ErrorStructure                    | Sulu\Component\Content\Compat\ErrorStructure
+Sulu\Component\Content\Section\MetaData                  | Sulu\Component\Content\Compat\MetaData
+Sulu\Component\Content\Section\PageInterface             | Sulu\Component\Content\Compat\PageInterface
+Sulu\Component\Content\Section\Property                  | Sulu\Component\Content\Compat\Property
+Sulu\Component\Content\Section\PropertyInterface         | Sulu\Component\Content\Compat\PropertyInterface
+Sulu\Component\Content\Section\PropertyParameter         | Sulu\Component\Content\Compat\PropertyParameter
+Sulu\Component\Content\Section\PropertyTag               | Sulu\Component\Content\Compat\PropertyTag
+Sulu\Component\Content\Section\Structure                 | Sulu\Component\Content\Compat\Structure
+Sulu\Component\Content\Section\StructureInterface        | Sulu\Component\Content\Compat\StructureInterface
+Sulu\Component\Content\Section\StructureManager          | Sulu\Component\Content\Compat\StructureManager
+Sulu\Component\Content\Section\StructureManagerInterface | Sulu\Component\Content\Compat\StructureManagerInterface
+Sulu\Component\Content\Section\StructureTag              | Sulu\Component\Content\Compat\StructureTag
+Sulu\Component\Content\Section\StructureType             | Sulu\Component\Content\Compat\StructureType
 
 ### Upgrade commands
 

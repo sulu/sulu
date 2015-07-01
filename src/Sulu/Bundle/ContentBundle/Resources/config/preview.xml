@@ -33,6 +33,7 @@
             <argument type="service" id="controller_resolver"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
         </service>
         <service id="sulu_content.preview.crawler" class="%sulu_content.preview.crawler.class%" public="false"/>
         <service id="sulu_content.preview" class="%sulu_content.preview.class%">

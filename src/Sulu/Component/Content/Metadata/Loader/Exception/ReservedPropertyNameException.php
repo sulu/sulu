@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
+/**
+ * Thrown when a template does not contain a reserved property name
+ */
 class ReservedPropertyNameException extends InvalidXmlException
 {
     /**
