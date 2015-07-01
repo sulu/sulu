@@ -233,6 +233,9 @@ class ContentMapper implements ContentMapperInterface
             $options['webspace_key'] = $webspaceKey;
         }
 
+        // disable csrf protection, since we can't produce a token, because the form is cached on the client
+        $options['csrf_protection'] = false;
+
         $form = $this->formFactory->create($documentAlias, $document, $options);
 
         $clearMissing = false;
