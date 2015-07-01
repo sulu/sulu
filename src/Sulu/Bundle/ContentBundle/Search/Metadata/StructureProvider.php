@@ -10,33 +10,23 @@
 
 namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 
-use DTL\DecoratorGenerator\DecoratorFactory;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
-use Metadata\Driver\AdvancedDriverInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Structure\Block;
-use Sulu\Component\Content\Structure\Factory\StructureFactory;
-use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -95,7 +85,10 @@ class StructureProvider implements ProviderInterface
         }
 
         $documentMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
-        $structure = $this->structureFactory->getStructureMetadata($documentMetadata->getAlias(), $object->getStructureType());
+        $structure = $this->structureFactory->getStructureMetadata(
+            $documentMetadata->getAlias(),
+            $object->getStructureType()
+        );
 
         return $this->getMetadata($documentMetadata, $structure);
     }
@@ -114,10 +107,10 @@ class StructureProvider implements ProviderInterface
 
         // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
-            if ($documentMetadata->getAlias() !== $className && 
-                $class->name !== $className && 
-                false === $class->isSubclassOf($className)) 
-            {
+            if ($documentMetadata->getAlias() !== $className &&
+                $class->name !== $className &&
+                false === $class->isSubclassOf($className)
+            ) {
                 continue;
             }
 
@@ -141,7 +134,9 @@ class StructureProvider implements ProviderInterface
                             'title',
                             array(
                                 'type' => 'string',
-                                'field' => $this->factory->createMetadataProperty('[' . $componentProperty->getName(). ']')
+                                'field' => $this->factory->createMetadataProperty(
+                                    '[' . $componentProperty->getName() . ']'
+                                )
                             )
                         );
                     }
@@ -182,25 +177,36 @@ class StructureProvider implements ProviderInterface
 
         if ($class->isSubclassOf(WebspaceBehavior::class)) {
             // index the webspace
-            $indexMeta->addFieldMapping('webspace_key', array(
-                'type' => 'string',
-                'field' => $this->factory->createMetadataProperty('webspaceName'),
-            ));
+            $indexMeta->addFieldMapping(
+                'webspace_key',
+                array(
+                    'type' => 'string',
+                    'field' => $this->factory->createMetadataProperty('webspaceName'),
+                )
+            );
         }
 
         if ($class->isSubclassOf(WorkflowStageBehavior::class)) {
-            $indexMeta->addFieldMapping('state', array(
-                'type' => 'string',
-                'field' => $this->factory->createMetadataExpression('object.getWorkflowStage() == 1 ? "test" : "published"'),
-            ));
+            $indexMeta->addFieldMapping(
+                'state',
+                array(
+                    'type' => 'string',
+                    'field' => $this->factory->createMetadataExpression(
+                        'object.getWorkflowStage() == 1 ? "test" : "published"'
+                    ),
+                )
+            );
         }
 
-        $indexMeta->addFieldMapping(self::FIELD_STRUCTURE_TYPE, array(
-            'type' => 'string',
-            'stored' => true,
-            'indexed' => false,
-            'field' => $this->factory->createMetadataProperty('structureType'),
-        ));
+        $indexMeta->addFieldMapping(
+            self::FIELD_STRUCTURE_TYPE,
+            array(
+                'type' => 'string',
+                'stored' => true,
+                'indexed' => false,
+                'field' => $this->factory->createMetadataProperty('structureType'),
+            )
+        );
 
         $classMetadata->addIndexMetadata('_default', $indexMeta);
 
@@ -229,7 +235,7 @@ class StructureProvider implements ProviderInterface
 
         return $metadatas;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -260,21 +266,27 @@ class StructureProvider implements ProviderInterface
             switch ($tagAttributes['role']) {
                 case 'title':
                     $metadata->setTitleField($this->getContentField($property));
-                    $metadata->addFieldMapping($property->getName(), array(
-                        'field' => $this->getContentField($property),
-                        'type' => 'string',
-                        'aggregate' => true,
-                        'indexed' => false,
-                    ));
+                    $metadata->addFieldMapping(
+                        $property->getName(),
+                        array(
+                            'field' => $this->getContentField($property),
+                            'type' => 'string',
+                            'aggregate' => true,
+                            'indexed' => false,
+                        )
+                    );
                     break;
                 case 'description':
                     $metadata->setDescriptionField($this->getContentField($property));
-                    $metadata->addFieldMapping($property->getName(), array(
-                        'field' => $this->getContentField($property),
-                        'type' => 'string',
-                        'aggregate' => true,
-                        'indexed' => false,
-                    ));
+                    $metadata->addFieldMapping(
+                        $property->getName(),
+                        array(
+                            'field' => $this->getContentField($property),
+                            'type' => 'string',
+                            'aggregate' => true,
+                            'indexed' => false,
+                        )
+                    );
                     break;
                 case 'image':
                     $metadata->setImageUrlField($this->getContentField($property));
@@ -308,9 +320,12 @@ class StructureProvider implements ProviderInterface
 
     private function getContentField(PropertyMetadata $property)
     {
-        $field = $this->factory->createMetadataExpression(sprintf(
-            'object.getStructure().%s.getValue()', $property->getName()
-        ));
+        $field = $this->factory->createMetadataExpression(
+            sprintf(
+                'object.getStructure().%s.getValue()',
+                $property->getName()
+            )
+        );
 
         return $field;
     }
