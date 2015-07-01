@@ -188,6 +188,14 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getPath() 
     {
         return $this->path;
