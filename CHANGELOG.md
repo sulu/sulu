@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1319 [ContentBundle]  Fixed location of cached structures
     * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
     * FEATURE     #1314 [SecurityBundle] Enable new persistence handling for User & Role.
     * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
