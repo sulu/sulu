@@ -54,6 +54,7 @@ class LocalStorage extends AbstractStorage
     {
         $this->storageOptions = new \stdClass();
 
+        $segment = '01';
         if ($preferredStorageOptions) {
             $preferredStorageOptions = json_decode($preferredStorageOptions);
             if (!empty($preferredStorageOptions->segment)) {
