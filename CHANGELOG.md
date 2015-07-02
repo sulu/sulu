@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
+    * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
+    * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
 
 * 1.0.0 (2015-07-01)
     * ENHANCEMENT #1319 [ContentBundle]  Fixed location of cached structures
