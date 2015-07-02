@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
+
 * 1.0.0 (2015-07-01)
     * ENHANCEMENT #1319 [ContentBundle]  Fixed location of cached structures
     * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
