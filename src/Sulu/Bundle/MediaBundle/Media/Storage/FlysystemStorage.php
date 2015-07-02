@@ -93,7 +93,13 @@ class FlysystemStorage extends AbstractStorage
     {
         $this->storageOptions = json_decode($storageOptions);
 
-        return $this->getFilesystem()->delete($this->getStorageOption(self::STORAGE_OPTION_FILENAME));
+        $fileName = $this->getStorageOption(self::STORAGE_OPTION_FILENAME);
+
+        if ($fileName && $this->exists($fileName)) {
+            $this->getFilesystem()->delete($fileName);
+        }
+
+        return true;
     }
 
     /**
