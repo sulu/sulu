@@ -104,7 +104,7 @@ class XmlLoader extends XmlLegacyLoader
             $component = new ComponentMetadata();
             $component->name = $name;
 
-            if (isset($data['meta']['title'])) {
+            if (isset($type['meta']['title'])) {
                 $component->title = $type['meta']['title'];
             }
 
