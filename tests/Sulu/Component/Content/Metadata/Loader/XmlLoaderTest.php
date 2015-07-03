@@ -33,6 +33,13 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
         // TODO also check info_text and placeholder (or are they not necessary at all?)
     }
 
+    public function testLoadBlockTypeWithoutMeta()
+    {
+        $result = $this->load('template_block_type_without_meta.xml');
+
+        $this->assertCount(1, $result->getProperty('block1')->getComponents());
+    }
+
     private function load($name)
     {
         $result = $this->loader->load(
