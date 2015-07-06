@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.0.1 (2015-07-06)
     * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title
 
 * 1.0.0 (2015-07-01)
