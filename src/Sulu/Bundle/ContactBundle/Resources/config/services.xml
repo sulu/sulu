@@ -11,8 +11,6 @@
         <parameter key="sulu_contact.account_manager.class">Sulu\Bundle\ContactBundle\Contact\AccountManager</parameter>
         <parameter key="sulu_contact.twig.class">Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension</parameter>
         <parameter key="sulu_contact.twig.cache.class">Doctrine\Common\Cache\ArrayCache</parameter>
-        <parameter key="sulu_contact.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
-        <parameter key="sulu_contact.user_repository.entity">SuluSecurityBundle:User</parameter>
         <parameter key="sulu_contact.account.entity">SuluContactBundle:Account</parameter>
         <parameter key="sulu_contact.account_repository.class">Sulu\Bundle\ContactBundle\Entity\AccountRepository</parameter>
         <parameter key="sulu_contact.account_factory.class">Sulu\Bundle\ContactBundle\Contact\AccountFactory</parameter>
@@ -63,15 +61,11 @@
             <argument type="service" id="sulu.repository.contact"/>
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
-        <service id="sulu_contact.user_repository" class="%sulu_contact.user_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine">
-            <argument>%sulu_contact.user_repository.entity%</argument>
-        </service>
         <service id="sulu_contact.twig.cache" class="%sulu_contact.twig.cache.class%"/>
         <service id="sulu_contact.twig" class="%sulu_contact.twig.class%">
             <tag name="twig.extension"/>
             <argument type="service" id="sulu_contact.twig.cache"/>
-            <argument type="service" id="sulu_contact.user_repository"/>
+            <argument type="service" id="sulu.repository.user"/>
         </service>
 
         <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>

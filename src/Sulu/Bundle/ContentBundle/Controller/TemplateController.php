@@ -10,13 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,9 +48,8 @@ class TemplateController extends Controller
     {
         $internal = $request->get('internal', false);
 
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->get('sulu.content.structure_manager');
-        $structures = $structureManager->getStructures();
+        $structureProvider = $this->get('sulu.content.webspace_structure_provider');
+        $structures = $structureProvider->getStructures($request->get('webspace'));
 
         $templates = array();
         foreach ($structures as $structure) {
@@ -86,14 +82,18 @@ class TemplateController extends Controller
     {
         $fireEvent = false;
         $templateIndex = null;
-        if ($key === null) {
-            $key = $this->container->getParameter('sulu.content.structure.default_type.page');
-            $fireEvent = true;
-        }
-
         $webspace = $request->get('webspace');
         $language = $request->get('language');
         $type = $request->get('type', 'page');
+
+        if ($key === null && $type === 'page') {
+            $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
+            $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
+            $fireEvent = true;
+        } elseif ($key === null && $type === 'snippet') {
+            $key = $this->container->getParameter('sulu.content.structure.default_type.snippet');
+            $fireEvent = true;
+        }
 
         /** @var UserInterface $user */
         $user = $this->getUser();

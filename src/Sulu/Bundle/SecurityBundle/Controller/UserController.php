@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -35,8 +36,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    protected static $entityName = 'SuluSecurityBundle:User';
-
     protected static $entityKey = 'users';
 
     /**
@@ -47,16 +46,53 @@ class UserController extends RestController implements ClassResourceInterface, S
     protected $fieldDescriptors;
 
     // TODO: move field descriptors to a manager
-    public function __construct()
+    protected function getFieldDescriptors()
+    {
+        if (empty($this->fieldDescriptors)) {
+            $this->initFieldDescriptors();
+        }
+
+        return $this->fieldDescriptors;
+    }
+
+    private function initFieldDescriptors()
     {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', static::$entityName);
-        $this->fieldDescriptors['username'] = new DoctrineFieldDescriptor('username', 'username', static::$entityName);
-        $this->fieldDescriptors['email'] = new DoctrineFieldDescriptor('email', 'email', static::$entityName);
-        $this->fieldDescriptors['password'] = new DoctrineFieldDescriptor('password', 'password', static::$entityName);
-        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', static::$entityName);
-        $this->fieldDescriptors['salt'] = new DoctrineFieldDescriptor('salt', 'salt', static::$entityName);
-        $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor('apiKey', 'apiKey', static::$entityName);
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            $this->container->getParameter('sulu.model.user.class')
+        );
+        $this->fieldDescriptors['username'] = new DoctrineFieldDescriptor(
+            'username',
+            'username',
+            $this->container->getParameter('sulu.model.user.class')
+        );
+        $this->fieldDescriptors['email'] = new DoctrineFieldDescriptor(
+            'email',
+            'email',
+            $this->container->getParameter('sulu.model.user.class')
+        );
+        $this->fieldDescriptors['password'] = new DoctrineFieldDescriptor(
+            'password',
+            'password',
+            $this->container->getParameter('sulu.model.user.class')
+        );
+        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor(
+            'locale',
+            'locale',
+            $this->container->getParameter('sulu.model.user.class')
+        );
+        $this->fieldDescriptors['salt'] = new DoctrineFieldDescriptor(
+            'salt',
+            'salt',
+            $this->container->getParameter('sulu.model.user.class')
+        );
+        $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor(
+            'apiKey',
+            'apiKey',
+            $this->container->getParameter('sulu.model.user.class')
+        );
     }
 
     /**
@@ -215,16 +251,16 @@ class UserController extends RestController implements ClassResourceInterface, S
     private function checkArguments(Request $request)
     {
         if ($request->get('username') == null) {
-            throw new MissingArgumentException(static::$entityName, 'username');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
         }
         if ($request->get('password') === null) {
-            throw new MissingArgumentException(static::$entityName, 'password');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'password');
         }
         if ($request->get('locale') == null) {
-            throw new MissingArgumentException(static::$entityName, 'locale');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'locale');
         }
         if ($request->get('contact') == null) {
-            throw new MissingArgumentException(static::$entityName, 'contact');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'contact');
         }
     }
 
@@ -247,9 +283,9 @@ class UserController extends RestController implements ClassResourceInterface, S
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create(static::$entityName);
+            $listBuilder = $factory->create($this->container->getParameter('sulu.model.user.class'));
 
-            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
@@ -265,7 +301,9 @@ class UserController extends RestController implements ClassResourceInterface, S
 
             if ($contactId != null) {
                 $entities = array();
-                $entities[] = $this->getDoctrine()->getRepository(static::$entityName)->findUserByContact($contactId);
+                $entities[] = $this->getDoctrine()->getRepository(
+                    $this->container->getParameter('sulu.model.user.class')
+                )->findUserByContact($contactId);
                 if (!$entities[0]) {
                     $view = $this->view(null, 204);
                 }

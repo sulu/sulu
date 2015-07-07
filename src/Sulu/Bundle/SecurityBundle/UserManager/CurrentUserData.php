@@ -4,7 +4,6 @@ namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;

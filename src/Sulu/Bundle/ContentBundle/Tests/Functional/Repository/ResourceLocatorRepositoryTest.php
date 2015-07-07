@@ -20,6 +20,7 @@ use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 

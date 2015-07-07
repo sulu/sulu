@@ -26,6 +26,7 @@ use Sulu\Component\Content\MetadataExtension\StructureExtension;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
+use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
 class NavigationTest extends SuluTestCase

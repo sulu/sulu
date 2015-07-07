@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -22,6 +23,56 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class UserControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * @var Contact
+     */
+    private $contact1;
+
+    /**
+     * @var Contact
+     */
+    private $contact2;
+
+    /**
+     * @var Contact
+     */
+    private $contact3;
+
+    /**
+     * @var Role
+     */
+    private $role1;
+
+    /**
+     * @var Role
+     */
+    private $role2;
+
+    /**
+     * @var User
+     */
+    private $user1;
+
+    /**
+     * @var User
+     */
+    private $user2;
+
+    /**
+     * @var Group
+     */
+    private $group1;
+
+    /**
+     * @var Group
+     */
+    private $group2;
+
     public function setUp()
     {
         $this->em = $this->db('ORM')->getOm();
@@ -829,7 +880,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
-        $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
+        $this->assertEquals('The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "password"-argument', $response->message);
     }
 
     public function testPostWithEmptyPassword()
@@ -904,7 +955,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
-        $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
+        $this->assertEquals('The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "password"-argument', $response->message);
     }
 
     public function testPutWithEmptyPassword()
@@ -951,6 +1002,9 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+
+        $refreshedUser = $this->em->getRepository('SuluSecurityBundle:User')->find($this->user1->getId());
+        $this->assertEquals($this->user1->getSalt(), $refreshedUser->getSalt());
     }
 
     public function testEnableUser()

@@ -17,9 +17,10 @@
 
     <theme>
         <key>sulu</key>
-        <excluded>
-            <template>overview</template>
-        </excluded>
+        <default-templates>
+            <default-template type="page">default</default-template>
+            <default-template type="homepage">overview</default-template>
+        </default-templates>
 
         <error-templates>
             <error-template default="true">ClientWebsiteBundle:views:error.html.twig</error-template>

@@ -24,7 +24,8 @@ define([
             instanceName: '',
             searchUrl: '/admin/search',
             enabledCategoriesUrl: '/admin/search/categories',
-            pageLimit: 100
+            pageLimit: 100,
+            displayLogo: false
         },
 
         createEventName = function(postfix) {
@@ -67,6 +68,7 @@ define([
                 this.startInfiniteScroll();
                 this.bindEvents();
                 this.bindDomEvents();
+                this.displayLogo();
                 this.sandbox.emit(INITIALIZED.call(this));
             }.bind(this));
         },
@@ -99,6 +101,28 @@ define([
             this.$el.html(template);
             this.createSearchInput();
             this.createSearchTotals();
+        },
+
+        /**
+         * @method displayLog
+         */
+        displayLogo: function() {
+            if (true === this.options.displayLogo) {
+                var $logo = this.$el.find('.logo').first();
+                $logo.removeClass('hidden');
+                this.sandbox.util.delay(function() {
+                    $logo.addClass('is-visible');
+                }, 10);
+            }
+        },
+
+        /**
+         * @method displayLog
+         */
+        hideLogo: function() {
+            var $logo = this.$el.find('.logo').first();
+            $logo.addClass('hidden');
+            $logo.removeClass('is-visible');
         },
 
         /**
@@ -285,6 +309,7 @@ define([
                 this.state.page = 1;
                 this.categoriesStore = {};
 
+                this.hideLogo();
                 this.startLoader();
                 this.updateResults();
                 this.load().then(function(data) {

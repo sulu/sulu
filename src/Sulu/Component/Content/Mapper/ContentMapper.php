@@ -233,6 +233,9 @@ class ContentMapper implements ContentMapperInterface
             $options['webspace_key'] = $webspaceKey;
         }
 
+        // disable csrf protection, since we can't produce a token, because the form is cached on the client
+        $options['csrf_protection'] = false;
+
         $form = $this->formFactory->create($documentAlias, $document, $options);
 
         $clearMissing = false;
@@ -626,6 +629,7 @@ class ContentMapper implements ContentMapperInterface
         $resourceLocatorType = $this->getResourceLocator();
 
         foreach ($destLocales as $destLocale) {
+            $document->setLocale($destLocale);
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
                 $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
@@ -639,6 +643,8 @@ class ContentMapper implements ContentMapperInterface
                     $webspaceKey,
                     $destLocale
                 );
+
+                $document->getStructure()->bind($document->getStructure()->toArray());
 
                 $document->setResourceSegment($resourceLocator);
             }

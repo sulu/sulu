@@ -22,13 +22,6 @@ class Theme implements ArrayableInterface
     private $key;
 
     /**
-     * A list of excluded templates.
-     *
-     * @var array
-     */
-    private $excludedTemplates;
-
-    /**
      * A list of exception templates.
      *
      * @var array
@@ -36,12 +29,19 @@ class Theme implements ArrayableInterface
     private $errorTemplates;
 
     /**
+     * Template which is selected by default if no other template is chosen.
+     *
+     * @var string[]
+     */
+    private $defaultTemplates;
+
+    /**
      * Theme constructor.
      */
     public function __construct()
     {
-        $this->excludedTemplates = array();
         $this->errorTemplates = array();
+        $this->defaultTemplates = array();
     }
 
     /**
@@ -62,36 +62,6 @@ class Theme implements ArrayableInterface
     public function getKey()
     {
         return $this->key;
-    }
-
-    /**
-     * Adds an exluded template to this theme instance.
-     *
-     * @param $excludedTemplate string The template to exclude
-     */
-    public function addExcludedTemplate($excludedTemplate)
-    {
-        $this->excludedTemplates[] = $excludedTemplate;
-    }
-
-    /**
-     * Sets the excluded templates.
-     *
-     * @param array $excludedTemplates
-     */
-    public function setExcludedTemplates($excludedTemplates)
-    {
-        $this->excludedTemplates = $excludedTemplates;
-    }
-
-    /**
-     * Returns an array of the excluded templates.
-     *
-     * @return array The excluded templates
-     */
-    public function getExcludedTemplates()
-    {
-        return $this->excludedTemplates;
     }
 
     /**
@@ -136,13 +106,50 @@ class Theme implements ArrayableInterface
     }
 
     /**
+     * Add a new default template for given type.
+     *
+     * @param string $type
+     * @param string $template
+     */
+    public function addDefaultTemplate($type, $template)
+    {
+        $this->defaultTemplates[$type] = $template;
+    }
+
+    /**
+     * Returns a error template for given code.
+     *
+     * @param string $type
+     *
+     * @return string|null
+     */
+    public function getDefaultTemplate($type)
+    {
+        if (array_key_exists($type, $this->defaultTemplates)) {
+            return $this->defaultTemplates[$type];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a array of default template.
+     *
+     * @return string
+     */
+    public function getDefaultTemplates()
+    {
+        return $this->defaultTemplates;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toArray($depth = null)
     {
         return array(
             'key' => $this->getKey(),
-            'excludedTemplates' => $this->getExcludedTemplates(),
+            'defaultTemplates' => $this->getDefaultTemplates(),
             'errorTemplates' => $this->getErrorTemplates(),
         );
     }

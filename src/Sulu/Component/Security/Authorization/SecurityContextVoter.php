@@ -13,10 +13,10 @@ namespace Sulu\Component\Security\Authorization;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
@@ -153,7 +153,7 @@ class SecurityContextVoter implements VoterInterface
     {
         // check if the group contains the permission
         foreach ($group->getRoles() as $role) {
-            /** @var Role $role */
+            /** @var RoleInterface $role */
             if ($this->checkPermissions($object, $attribute, $role->getPermissions(), $locales)) {
                 return true;
             }

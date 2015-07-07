@@ -7,7 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\DocumentManager\Events;
@@ -41,7 +41,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
     private $legacyPropertyFactory;
 
     /**
-     * @param PropertyEncoder $encoder<
+     * @param PropertyEncoder $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param StructureMetadataFactory $structureFactory
      */
@@ -50,8 +50,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
         ContentTypeManagerInterface $contentTypeManager,
         DocumentInspector $inspector,
         LegacyPropertyFactory $legacyPropertyFactory
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->contentTypeManager = $contentTypeManager;
         $this->inspector = $inspector;
@@ -82,12 +81,16 @@ class StructureSubscriber extends AbstractMappingSubscriber
     public function configureOptions(ConfigureOptionsEvent $event)
     {
         $options = $event->getOptions();
-        $options->setDefaults(array(
-            'load_ghost_content' => true
-        ));
-        $options->setAllowedTypes(array(
-            'load_ghost_content' => 'bool',
-        ));
+        $options->setDefaults(
+            array(
+                'load_ghost_content' => true
+            )
+        );
+        $options->setAllowedTypes(
+            array(
+                'load_ghost_content' => 'bool',
+            )
+        );
     }
 
     /**
@@ -217,12 +220,14 @@ class StructureSubscriber extends AbstractMappingSubscriber
             $value = $realProperty->getValue();
 
             if ($structureProperty->isRequired() && null === $value) {
-                throw new MandatoryPropertyException(sprintf(
-                    'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
-                    $propertyName,
-                    $metadata->getName(),
-                    $metadata->resource
-                ));
+                throw new MandatoryPropertyException(
+                    sprintf(
+                        'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
+                        $propertyName,
+                        $metadata->getName(),
+                        $metadata->resource
+                    )
+                );
             }
 
             $contentTypeName = $structureProperty->getContentTypeName();

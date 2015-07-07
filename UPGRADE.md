@@ -1,6 +1,11 @@
 # Upgrade
 
-## dev-develop
+## 1.0.0
+
+### User / Role management changed
+
+Service `sulu_security.role_repository` changed to `sulu.repository.role`.
+Service `sulu_security.user_repository` should be avoided. Use `sulu.repository.user` instead.
 
 ### Snippets
 
@@ -9,6 +14,59 @@ running this command for each <locale>:
 
 ```bash
 app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [jcr:mixinTypes] = 'sulu:snippet'" --apply-closure="\$node->setProperty('i18n:<locale>-state', 2);"
+```
+
+### Page-Templates
+
+1. The tag `sulu.rlp` is now mandatory for page templates.
+2. Page templates will now be filtered: only implemented templates in the theme will be displayed in the dropdown.
+ 
+To find pages with not implemented templates run following command:
+
+```bash
+app/console sulu:content:validate <webspace-key>
+```
+
+To fix that pages, you could implement the template in the theme or save the pages with an other template over ui.
+
+### Webspaces
+
+1. The default-template config moved from global configuration to webspace config. For that it is needed to add this config to each webspace. 
+2. The excluded xml tag has been removed from the webspace configuration file, so you have to remove this tag from all these files.
+
+After that your webspace theme config should look like this:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+...
+
+    <theme>
+        <key>default</key>
+        <default-templates>
+            <default-template type="page">default</default-template>
+            <default-template type="homepage">overview</default-template>
+        </default-templates>
+    </theme>
+
+...
+
+</webspace>
+```
+
+Also remove the following default-template config for page and homepage from the file `app/config/config.yml`:
+
+```yml
+sulu_core:
+    content:
+        structure:
+            default_type:
+                snippet: "default"
+-               page: "default"
+-               homepage: "overview"
 ```
 
 ## 1.0.0-RC3

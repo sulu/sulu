@@ -10,13 +10,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Command;
 
-use DateTime;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Contact\Model\ContactInterface;
-use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,6 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -57,6 +57,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
         foreach ($localizations as $localization) {
+            /** @var Localization $localization */
             $locales[] = $localization->getLocalization();
         }
 
@@ -71,8 +72,6 @@ class CreateUserCommand extends ContainerAwareCommand
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getManager();
         $user = $this->getUser();
-
-        $now = new DateTime();
 
         $existing = $doctrine->getRepository(get_class($user))->findOneBy(array('username' => $username));
 
@@ -110,7 +109,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLocale($locale);
         $user->setEmail($email);
 
-        $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array('name' => $roleName));
+        /** @var RoleRepositoryInterface $contactRepository */
+        $roleRepository = $this->getContainer()->get('sulu.repository.role');
+        /** @var RoleInterface $role */
+        $role = $roleRepository->findOneBy(array('name' => $roleName));
 
         if (!$role) {
             $output->writeln(sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
@@ -143,7 +145,10 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function getUser()
     {
-        return new User();
+        /** @var RepositoryInterface $userRepository */
+        $userRepository = $this->getContainer()->get('sulu.repository.user');
+
+        return $userRepository->createNew();
     }
 
     /**
@@ -156,17 +161,18 @@ class CreateUserCommand extends ContainerAwareCommand
         $doctrine = $this->getDoctrine();
         $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
+        /** @var RepositoryInterface $contactRepository */
+        $userRepository = $this->getContainer()->get('sulu.repository.user');
+
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
             $question->setValidator(
-                function ($username) use ($doctrine) {
+                function ($username) use ($userRepository) {
                     if (empty($username)) {
                         throw new \InvalidArgumentException('Username can not be empty');
                     }
 
-                    $users = $doctrine->getRepository('SuluSecurityBundle:User')->findBy(
-                        array('username' => $username)
-                    );
+                    $users = $userRepository->findBy(array('username' => $username));
                     if (count($users) > 0) {
                         throw new \InvalidArgumentException(sprintf('Username "%s" is not unique', $username));
                     }
@@ -214,14 +220,12 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose a Email: ');
             $question->setValidator(
-                function ($email) use ($doctrine) {
+                function ($email) use ($userRepository) {
                     if (empty($email)) {
                         $email = null;
                     }
                     if ($email !== null) {
-                        $users = $doctrine->getRepository('SuluSecurityBundle:User')->findBy(
-                            array('email' => $email)
-                        );
+                        $users = $userRepository->findBy(array('email' => $email));
                         if (count($users) > 0) {
                             throw new \InvalidArgumentException(sprintf('Email "%s" is not unique', $email));
                         }
@@ -290,6 +294,7 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     private function encodePassword($user, $password, $salt)
     {
+        /** @var PasswordEncoderInterface $encoder */
         $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
@@ -300,11 +305,11 @@ class CreateUserCommand extends ContainerAwareCommand
      *
      * @return array
      *
-     * @throws RuntimeException If no roles exist
+     * @throws \RuntimeException If no roles exist
      */
     private function getRoleNames()
     {
-        $roleNames = $this->getDoctrine()->getRepository('SuluSecurityBundle:Role')->getRoleNames();
+        $roleNames = $this->getContainer()->get('sulu.repository.role')->getRoleNames();
 
         if (empty($roleNames)) {
             throw new \RuntimeException(sprintf(
@@ -318,7 +323,7 @@ class CreateUserCommand extends ContainerAwareCommand
     /**
      * Return the doctrine service.
      *
-     * @return Doctrine\Common\Persistence\ManagerRegistry
+     * @return \Doctrine\Common\Persistence\ManagerRegistry
      */
     private function getDoctrine()
     {

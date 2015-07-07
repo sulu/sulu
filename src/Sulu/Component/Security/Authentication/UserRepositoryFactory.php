@@ -30,10 +30,16 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
      */
     private $suluSystem;
 
-    public function __construct(EntityManager $em, $suluSystem, RequestAnalyzerInterface $requestAnalyzer = null)
+    /**
+     * @var string
+     */
+    private $entityName;
+
+    public function __construct(EntityManager $em, $suluSystem, $entityName, RequestAnalyzerInterface $requestAnalyzer = null)
     {
         $this->em = $em;
         $this->suluSystem = $suluSystem;
+        $this->entityName = $entityName;
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
@@ -43,7 +49,7 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
     public function getRepository()
     {
         /** @var UserRepositoryInterface $repository */
-        $repository = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
+        $repository = $this->em->getRepository($this->entityName);
         $repository->init($this->suluSystem, $this->requestAnalyzer);
 
         return $repository;

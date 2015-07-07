@@ -542,7 +542,7 @@ class NavigationItem implements \Iterator
             'eventArguments' => $this->getEventArguments(),
             'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
-            'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
+            'id' => ($this->getId() != null) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
         );
 
         if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {

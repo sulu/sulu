@@ -1,19 +1,31 @@
 CHANGELOG for Sulu
 ==================
-* unreleased
-    * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
-    * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
-    * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove unvalid title meta tag
-    * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
-    * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
 
 * dev-develop
-    * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+    * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
 
 * dev-master
-    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
+    * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title
+
+* 1.0.0 (2015-07-01)
+    * ENHANCEMENT #1319 [ContentBundle]  Fixed location of cached structures
+    * BUGFIX      #1316 [ContentBundle]  Reenabled csrf protection and disabled it only for the content mapper
+    * FEATURE     #1314 [SecurityBundle] Enable new persistence handling for User & Role.
+    * FEATURE     #1314 [AdminBundle]    Added search component to the sulu dashboard
+    * BUGFIX      #1313 [MediaBundle]    Fixed image conversion in environments where open_basedir is enabled
+    * BUGFIX      #1308 [ContactBundle]  Fixed adding a new contact-account relation in contacts tab of account
+    * ENHANCEMENT #1302 [MediaBundle]    Removed 'partial-load' hint from getMediaById repository function.
+    * BUGFIX      #1172 [ContentBundle]  Fix hreflang meta tags, remove invalid title meta tag
+    * BUGFIX      #1172 [ContentBundle]  Fixed ckeditor in blocks for IE11
+    * ENHANCEMENT #1040 [ContentBundle]  Added validation for required tag name
+    * FEATURE     #1278 [ContentBundle]  Implemented webspace structure provider
+    * FEATURE     #1273 [SnippetBundle]  Removed snippet state from ui and set default published
+    * FEATURE     #1281 [ContentBundle]  Added default-template config to webspace theme
+    * FEATURE     #1315 [ContentBundle]  Fixed translator locale for preview
+    * BUGFIX      #1023 [ContactBundle]  Fixed back to list in contact-list
 
 * 1.0.0-RC3 (2015-06-24)
+    * HOTFIX      #1306 [ContentBundle]  Fixed migration commands for jackrabbit
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle

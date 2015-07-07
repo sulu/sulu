@@ -16,5 +16,9 @@
                 <property name="title" type="text_line" mandatory="true"/>
             </properties>
         </section>
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <tag name="sulu.rlp" priority="1"/>
+        </property>
     </properties>
 </template>

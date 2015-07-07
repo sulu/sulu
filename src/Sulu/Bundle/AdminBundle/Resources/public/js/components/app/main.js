@@ -167,11 +167,18 @@ define(function() {
         initializeRouter: function() {
             var AppRouter = this.sandbox.mvc.Router({
                 routes: {
+                    // Dashboard
+                    '': 'dashboard',
+
                     // Default
-                    '*actions': 'defaultAction'
+                    '*actions': 'default'
                 },
 
-                defaultAction: function() {
+                dashboard: function() {
+                    this.html('<div class="sulu-dashboard" data-aura-component="dashboard@suluadmin"/>');
+                }.bind(this),
+
+                default: function() {
                     // We have no matching route
                 }
             });
@@ -293,6 +300,10 @@ define(function() {
                 }
             }.bind(this));
 
+            this.sandbox.on('husky.navigation.header.clicked', function(){
+                this.navigate('', true, false, false);
+            }.bind(this));
+
             this.sandbox.on('husky.data-navigation.select', function(item) {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
@@ -308,11 +319,6 @@ define(function() {
             this.sandbox.on('husky.tabs.header.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
-
-            // return current url
-            this.sandbox.on('navigation.url', function(callbackFunction) {
-                callbackFunction(this.sandbox.mvc.history.fragment);
-            }, this);
 
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);

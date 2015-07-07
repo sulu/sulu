@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\SerializerInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\Page;
@@ -200,9 +201,9 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale)
     {
-        /** @var Page $structure */
+        /** @var PageBridge $structure */
         $structure = $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
-        /** @var Page $newStructure */
+        /** @var PageBridge $newStructure */
         $newStructure = $this->structureManager->getStructure($template);
 
         $newStructure->copyFrom($structure);

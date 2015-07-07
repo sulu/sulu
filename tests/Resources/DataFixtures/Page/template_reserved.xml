@@ -10,7 +10,11 @@
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
-        <property name="changed" type="text_line" mandatory="true">
+        <property name="title" type="text_line" mandatory="true"/>
+        <property name="changed" type="text_line" mandatory="true"/>
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <tag name="sulu.rlp" priority="1"/>
         </property>
     </properties>
 </template>

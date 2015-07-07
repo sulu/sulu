@@ -8,14 +8,14 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Metadata\Factory;
 
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\FileLocator;
 use Doctrine\Common\Inflector\Inflector;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * Create new (mapped) structures using the provided loader.
@@ -55,11 +55,17 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     /**
      * @param LoaderInterface $loader
      * @param array $typePaths
+     * @param array $defaultTypes
      * @param mixed $cachePath
      * @param mixed $debug
      */
-    public function __construct(LoaderInterface $loader, array $typePaths, array $defaultTypes, $cachePath, $debug = false)
-    {
+    public function __construct(
+        LoaderInterface $loader,
+        array $typePaths,
+        array $defaultTypes,
+        $cachePath,
+        $debug = false
+    ) {
         $this->typePaths = $typePaths;
         $this->cachePath = $cachePath;
         $this->loader = $loader;
@@ -72,7 +78,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      */
     public function getStructureMetadata($type, $structureType = null)
     {
-        $cacheKey = $type.$structureType;
+        $cacheKey = $type . $structureType;
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];
         }
@@ -84,14 +90,16 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         }
 
         if (!is_string($structureType)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Expected string for structureType, got: %s',
-                is_object($structureType) ? get_class($structureType) : gettype($structureType)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Expected string for structureType, got: %s',
+                    is_object($structureType) ? get_class($structureType) : gettype($structureType)
+                )
+            );
         }
 
         $cachePath = sprintf(
-            '%s/%s%s', 
+            '%s/%s%s',
             $this->cachePath,
             Inflector::camelize($type),
             Inflector::camelize($structureType)
@@ -106,12 +114,14 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             try {
                 $filePath = $fileLocator->locate(sprintf('%s.xml', $structureType));
             } catch (\InvalidArgumentException $e) {
-                throw new Exception\StructureTypeNotFoundException(sprintf(
-                    'Could not load structure type "%s" for document type "%s", looked in "%s"',
-                    $structureType,
-                    $type,
-                    implode('", "', $paths)
-                ), null, $e);
+                throw new Exception\StructureTypeNotFoundException(
+                    sprintf(
+                        'Could not load structure type "%s" for document type "%s", looked in "%s"',
+                        $structureType,
+                        $type,
+                        implode('", "', $paths)
+                    ), null, $e
+                );
             }
 
             $metadata = $this->loader->load($filePath, $type);
@@ -200,11 +210,13 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private function assertExists($type)
     {
         if (!isset($this->typePaths[$type])) {
-            throw new Exception\DocumentTypeNotFoundException(sprintf(
-                'Structure path for document type "%s" is not mapped. Mapped structure types: "%s"',
-                $type,
-                implode('", "', array_keys($this->typePaths))
-            ));
+            throw new Exception\DocumentTypeNotFoundException(
+                sprintf(
+                    'Structure path for document type "%s" is not mapped. Mapped structure types: "%s"',
+                    $type,
+                    implode('", "', array_keys($this->typePaths))
+                )
+            );
         }
 
     }
@@ -213,6 +225,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      * Get the paths from the type path configuration
      *
      * @param string $type
+     *
+     * @return array
      */
     private function getPaths($type)
     {
@@ -228,14 +242,20 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
     /**
      * Return the default structure type for the the given document type
+     *
+     * @param string $type
+     *
+     * @return string
      */
     private function getDefaultStructureType($type)
     {
         if (!isset($this->defaultTypes[$type])) {
-            throw new \RuntimeException(sprintf(
-                'No structure type was available and no default exists for document with alias "%s"',
-                $type
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'No structure type was available and no default exists for document with alias "%s"',
+                    $type
+                )
+            );
         }
 
         return $this->defaultTypes[$type];

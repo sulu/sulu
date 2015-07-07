@@ -135,7 +135,7 @@ define(['widget-groups'], function(WidgetGroups) {
 
             this.sandbox.on('sulu.header.back', function() {
                 if (this.options.params.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.accounts.list');
+                    this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
                 } else {
                     this.sandbox.emit('sulu.contacts.contacts.list');
                 }

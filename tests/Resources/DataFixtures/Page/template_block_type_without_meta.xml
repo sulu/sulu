@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template_block_types</key>
+
+    <view>ClientWebsiteBundle:Website:complex.html.twig</view>
+    <controller>SuluWebsiteBundle:Default:index</controller>
+    <cacheLifetime>4800</cacheLifetime>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <tag name="sulu.node.title" priority="10"/>
+        </property>
+        <property name="url" type="resource_locator" mandatory="true">
+            <tag name="sulu.rlp" priority="1"/>
+        </property>
+        <block name="block1" default-type="default" minOccurs="2" maxOccurs="10" mandatory="true">
+            <meta>
+                <title lang="de">Block1 DE</title>
+                <title lang="en">Block1 EN</title>
+                <info_text lang="de">Info Block1 DE</info_text>
+                <info_text lang="en">Info Block1 EN</info_text>
+                <placeholder lang="de">Placeholder Block1 DE</placeholder>
+                <placeholder lang="en">Placeholder Block1 EN</placeholder>
+            </meta>
+            <tag name="sulu.node.block" priority="20"/>
+            <tag name="sulu.test.block" priority="1"/>
+            <types>
+                <type name="default">
+                    <properties>
+                        <property name="title" type="text_line" mandatory="true"/>
+                        <property name="article" type="text_area" mandatory="true" minOccurs="2"/>
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</template>

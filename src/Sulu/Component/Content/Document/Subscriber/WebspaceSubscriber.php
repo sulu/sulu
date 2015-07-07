@@ -10,17 +10,20 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class WebspaceSubscriber extends AbstractMappingSubscriber
 {
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
 
     public function __construct(
@@ -28,6 +31,7 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
         DocumentInspector $inspector
     ) {
         parent::__construct($encoder);
+
         $this->inspector = $inspector;
     }
 
@@ -49,13 +53,14 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent|HydrateEvent $event
+     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function doHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
-        $webspace = $this->inspector->getWebspace($document);
-        $event->getAccessor()->set('webspaceName', $webspace);
+        $webspaceName = $this->inspector->getWebspace($document);
+        $event->getAccessor()->set('webspaceName', $webspaceName);
     }
 
     /**

@@ -440,6 +440,14 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getChildren()
     {
         return $this->children;

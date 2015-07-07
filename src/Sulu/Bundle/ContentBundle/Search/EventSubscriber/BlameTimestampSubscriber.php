@@ -16,7 +16,6 @@ use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Sulu\Bundle\SearchBundle\Search\Document;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;

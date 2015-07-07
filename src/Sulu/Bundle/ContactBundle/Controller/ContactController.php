@@ -640,7 +640,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     protected function getContactsByUserSystem()
     {
-        $repo = $this->get('sulu_security.user_repository');
+        $repo = $this->get('sulu.repository.user');
         $users = $repo->getUserInSystem();
         $contacts = [];
 

@@ -10,11 +10,8 @@
 
 namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
-use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
-
 /**
  * Thrown when a template does not contain a required property name
- * @package Sulu\Component\Content\Template\Exception
  */
 class RequiredPropertyNameNotFoundException extends InvalidXmlException
 {

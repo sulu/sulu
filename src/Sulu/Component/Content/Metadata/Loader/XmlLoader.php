@@ -31,7 +31,7 @@ class XmlLoader extends XmlLegacyLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = 'page')
     {
         $data = parent::load($resource, $type);
         $data = $this->normalizeStructureData($data);
@@ -104,7 +104,7 @@ class XmlLoader extends XmlLegacyLoader
             $component = new ComponentMetadata();
             $component->name = $name;
 
-            if (isset($data['meta']['title'])) {
+            if (isset($type['meta']['title'])) {
                 $component->title = $type['meta']['title'];
             }
 
