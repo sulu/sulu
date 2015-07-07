@@ -43,6 +43,9 @@ define([
                         case 'BG':
                             regex = /^0?[0-9]{9,10}$/;
                             break;
+                        case 'CH':
+                            regex = /^.{6,}$/;
+                            break;
                         case 'CZ':
                             regex = /^[0-9]{8,10}$/;
                             break;
