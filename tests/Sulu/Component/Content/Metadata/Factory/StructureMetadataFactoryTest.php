@@ -11,12 +11,36 @@
 
 namespace Sulu\Component\Content\Metadata\Factory;
 
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\Filesystem\Filesystem;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
 class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
     private $cacheDir;
+
+    /**
+     * @var string
+     */
+    private $mappingFile;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structure;
+
+    /**
+     * @var LoaderInterface
+     */
+    private $loader;
+
+    /**
+     * @var StructureMetadataFactory
+     */
+    private $factory;
 
     public function setUp()
     {
