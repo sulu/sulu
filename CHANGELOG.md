@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #1341 [SecurityBundle] Excluded user-roles from role-api serialization
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
+    * ENHANCEMENT #1342 [SecurityBundle] Added creator and changer of contact to 'fullContact' serialization group
 
 * 1.0.1 (2015-07-06)
     * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title

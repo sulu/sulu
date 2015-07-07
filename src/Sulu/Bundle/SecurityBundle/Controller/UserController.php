@@ -10,11 +10,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
-use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
@@ -108,9 +109,16 @@ class UserController extends RestController implements ClassResourceInterface, S
             return $this->getUserManager()->getUserById($id);
         };
 
-        return $this->handleView(
-            $this->responseGetById($id, $find)
+        $view = $this->responseGetById($id, $find);
+
+        // set serialization groups
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(
+                array('Default', 'partialContact')
+            )
         );
+
+        return $this->handleView($view);
     }
 
     /**
@@ -276,7 +284,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     {
         $view = null;
         if ($request->get('flat') == 'true') {
-
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -317,6 +324,13 @@ class UserController extends RestController implements ClassResourceInterface, S
         if (!$view) {
             $view = $this->view($list, 200);
         }
+
+        // set serialization groups
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(
+                array('Default', 'partialContact')
+            )
+        );
 
         return $this->handleView($view);
     }
