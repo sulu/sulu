@@ -5,7 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1341 [SecurityBundle] Excluded user-roles from role-api serialization
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
 
-* dev-master
+* 1.0.1 (2015-07-06)
     * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title
 
 * 1.0.0 (2015-07-01)
