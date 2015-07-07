@@ -9,6 +9,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\Contact\Model\ContactInterface;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * User.

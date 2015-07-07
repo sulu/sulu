@@ -29,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use JMS\Serializer\SerializationContext;
 
 /**
  * Makes the users accessible through a rest api
@@ -108,9 +109,16 @@ class UserController extends RestController implements ClassResourceInterface, S
             return $this->getUserManager()->getUserById($id);
         };
 
-        return $this->handleView(
-            $this->responseGetById($id, $find)
+        $view = $this->responseGetById($id, $find);
+
+        // set serialization groups
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(
+                array('Default', 'partialContact')
+            )
         );
+
+        return $this->handleView($view);
     }
 
     /**
@@ -276,7 +284,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     {
         $view = null;
         if ($request->get('flat') == 'true') {
-
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -317,6 +324,13 @@ class UserController extends RestController implements ClassResourceInterface, S
         if (!$view) {
             $view = $this->view($list, 200);
         }
+
+        // set serialization groups
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(
+                array('Default', 'partialContact')
+            )
+        );
 
         return $this->handleView($view);
     }

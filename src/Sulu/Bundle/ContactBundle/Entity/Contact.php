@@ -23,6 +23,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Contact.
@@ -83,11 +84,13 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var UserInterface
+     * @Groups({"fullContact"})
      */
     protected $changer;
 
     /**
      * @var UserInterface
+     * @Groups({"fullContact"})
      */
     protected $creator;
 
