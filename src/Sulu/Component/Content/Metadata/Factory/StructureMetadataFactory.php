@@ -109,7 +109,9 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
         if ($this->debug || !$cache->isFresh()) {
             $paths = $this->getPaths($type);
-            $fileLocator = new FileLocator($paths);
+
+            // reverse paths, so that the last path overrides previous ones
+            $fileLocator = new FileLocator(array_reverse($paths));
 
             try {
                 $filePath = $fileLocator->locate(sprintf('%s.xml', $structureType));

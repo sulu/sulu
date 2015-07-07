@@ -7,6 +7,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
     * ENHANCEMENT #1342 [SecurityBundle] Added creator and changer of contact to 'fullContact' serialization group
 
+* dev-master
+    * HOTFIX      #1346 [ContentBundle]  Reversed order of paths to enable overriding of templates again
+
 * 1.0.1 (2015-07-06)
     * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title
 
