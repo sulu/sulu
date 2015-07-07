@@ -3,7 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
-    * ENHANCEMENT #1342 [SecurityBundle] Added fullContact group to creator and changer property of contact
+    * ENHANCEMENT #1342 [SecurityBundle] Added creator and changer of contact to 'fullContact' serialization group
 
 * dev-master
     * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title

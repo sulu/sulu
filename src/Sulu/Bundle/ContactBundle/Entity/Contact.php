@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\SerializedName;
@@ -23,7 +24,6 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * Contact.

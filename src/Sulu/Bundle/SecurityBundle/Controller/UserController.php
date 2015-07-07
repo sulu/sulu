@@ -10,11 +10,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
-use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
@@ -29,7 +30,6 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use JMS\Serializer\SerializationContext;
 
 /**
  * Makes the users accessible through a rest api
