@@ -142,9 +142,26 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
+     * @deprecated use setSelectFields instead
+     */
+    public function setFields($fieldDescriptors){
+        $this->selectFields = $fieldDescriptors;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function addSelectField(AbstractFieldDescriptor $fieldDescriptor)
+    {
+        $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated use addSelectField instead
+     */
+    public function addField(AbstractFieldDescriptor $fieldDescriptor)
     {
         $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
@@ -168,6 +185,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function hasSelectField($name)
     {
+        return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * @deprecated use hasSelectField instead
+     */
+    public function hasField($name){
         return array_key_exists($name, $this->selectFields);
     }
 
@@ -265,6 +289,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
         $this->whereValues[$fieldDescriptor->getName()] = $value;
         $this->whereComparators[$fieldDescriptor->getName()] = $comparator;
         $this->whereConjunctions[$fieldDescriptor->getName()] = $conjunction;
+    }
+
+    /**
+     * @deprecated use where instead
+     */
+    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value){
+        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->whereValues[$fieldDescriptor->getName()] = $value;
+        $this->whereComparators[$fieldDescriptor->getName()] = self::WHERE_COMPARATOR_UNEQUAL;
+        $this->whereConjunctions[$fieldDescriptor->getName()] = self::CONJUNCTION_AND;
     }
 
     /**

@@ -45,6 +45,11 @@ interface ListBuilderInterface
     public function setSelectFields($fieldDescriptors);
 
     /**
+     * @deprecated use setSelectFields instead
+     */
+    public function setFields($fieldDescriptors);
+
+    /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
@@ -52,6 +57,11 @@ interface ListBuilderInterface
      * @return ListBuilderInterface
      */
     public function addSelectField(AbstractFieldDescriptor $fieldDescriptor);
+
+    /**
+     * @deprecated use addSelectField instead
+     */
+    public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
      * Gets a field descriptor used by the ListBuilder to retrieve and return the list
@@ -70,6 +80,11 @@ interface ListBuilderInterface
      * @return bool
      */
     public function hasSelectField($name);
+
+    /**
+     * @deprecated use hasSelectField instead
+     */
+    public function hasField($name);
 
     /**
      * Adds a field descriptor, which will be used for search.
@@ -141,7 +156,17 @@ interface ListBuilderInterface
      *
      * @return mixed
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator, $conjunction);
+    public function where(
+        AbstractFieldDescriptor $fieldDescriptor,
+        $value,
+        $comparator = self::WHERE_COMPARATOR_EQUAL,
+        $conjunction = self::CONJUNCTION_AND
+    );
+
+    /**
+     * @deprecated use where instead
+     */
+    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
 
     /**
      * Defines GROUP BY.
@@ -169,7 +194,7 @@ interface ListBuilderInterface
      *
      * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction);
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND);
 
     /**
      * The number of total elements for this list.
