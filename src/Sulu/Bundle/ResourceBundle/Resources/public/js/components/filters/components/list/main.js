@@ -17,6 +17,14 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
             this.sandbox.emit('sulu.resource.filters.new');
         }.bind(this));
 
+        // back button clicked
+        this.sandbox.on('sulu.header.back', function() {
+            var config = Config.get('suluresource.filters.type.' + this.options.type);
+            if(config.routeToList) {
+                this.sandbox.emit('sulu.router.navigate', config.routeToList);
+            }
+        }.bind(this));
+
         // delete clicked
         this.sandbox.on('sulu.list-toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
@@ -43,7 +51,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         header: function() {
             return {
                 title: 'resource.filter',
-                noBack: true
+                noBack: false
             };
         },
 
