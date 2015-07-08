@@ -113,6 +113,9 @@ define(['app-config'], function(AppConfig) {
                 },
                 items: [
                     {
+                        divider: true
+                    },
+                    {
                         id: constants.manageFilters,
                         name: this.sandbox.translate('resource.filter.manage')
                     }
