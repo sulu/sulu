@@ -53,11 +53,12 @@ define([], function() {
             button: function(id, text) {
                 return [
                     '<div class="grid-row">',
-                    '<div class="grid-col-3">',
-                    '<div id="', id, '" class="btn action">',
-                    text,
-                    '</div>',
-                    '</div>',
+                    '   <div class="grid-col-3">',
+                    '       <div id="', id, '" class="btn action">',
+                    '           <span class="fa-plus-circle"></span>',
+                    '           <span class="text">',text,'</span>',
+                    '       </div>',
+                    '   </div>',
                     '</div>'
                 ].join('');
             },
