@@ -82,26 +82,14 @@
     <!-- date -->
     <operator type="date" inputType="datepicker" operator="&gt;">
         <translations>
-            <translation locale="de">größer als</translation>
-            <translation locale="en">greater than</translation>
+            <translation locale="de">nach</translation>
+            <translation locale="en">after</translation>
         </translations>
     </operator>
     <operator type="date" inputType="datepicker" operator="&lt;">
         <translations>
-            <translation locale="de">kleiner als</translation>
-            <translation locale="en">less than</translation>
-        </translations>
-    </operator>
-    <operator type="date" inputType="datepicker" operator="&lt;=">
-        <translations>
-            <translation locale="de">kleiner gleich</translation>
-            <translation locale="en">less than or equal</translation>
-        </translations>
-    </operator>
-    <operator type="date" inputType="datepicker" operator="&gt;=">
-        <translations>
-            <translation locale="de">größer gleich</translation>
-            <translation locale="en">greater than or equal</translation>
+            <translation locale="de">vor</translation>
+            <translation locale="en">before</translation>
         </translations>
     </operator>
     <operator type="date" inputType="datepicker" operator="=">
