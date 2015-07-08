@@ -26,37 +26,48 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         templates: ['/admin/resource/template/filter/form'],
 
         header: function() {
-            return {
-                toolbar: {
-                    template: [
-                        {
-                            id: 'save-button',
-                            icon: 'floppy-o',
-                            iconSize: 'large',
-                            class: 'highlight',
-                            position: 1,
-                            group: 'left',
-                            disabled: true,
-                            callback: function() {
-                                this.sandbox.emit('sulu.header.toolbar.save');
-                            }.bind(this)
-                        },
-                        {
-                            icon: 'trash-o',
-                            iconSize: 'large',
-                            group: 'left',
-                            id: 'delete-button',
-                            position: 30,
-                            callback: function() {
-                                this.sandbox.emit('sulu.header.toolbar.delete');
-                            }.bind(this)
-                        }
-                    ],
-                    languageChanger: {
-                        preSelected: this.options.locale
+            return  {
+                toolbar: this.getToolbar()
+            };
+        },
+
+        getToolbar: function() {
+            var toolbar = {
+                template: [
+                    {
+                        id: 'save-button',
+                        icon: 'floppy-o',
+                        iconSize: 'large',
+                        class: 'highlight',
+                        position: 1,
+                        group: 'left',
+                        disabled: true,
+                        callback: function() {
+                            this.sandbox.emit('sulu.header.toolbar.save');
+                        }.bind(this)
                     }
+                ],
+                languageChanger: {
+                    preSelected: this.options.locale
                 }
             };
+            this.appendToolbarDeleteButton(toolbar);
+            return toolbar;
+        },
+
+        appendToolbarDeleteButton: function(toolbar){
+            if (!!this.options.data && !!this.options.data.id) {
+                toolbar.template.push({
+                    icon: 'trash-o',
+                    iconSize: 'large',
+                    group: 'left',
+                    id: 'delete-button',
+                    position: 30,
+                    callback: function() {
+                        this.sandbox.emit('sulu.header.toolbar.delete');
+                    }.bind(this)
+                });
+            }
         },
 
         initialize: function() {
