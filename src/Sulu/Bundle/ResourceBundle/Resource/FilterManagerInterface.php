@@ -86,15 +86,6 @@ interface FilterManagerInterface
     public function batchDelete($ids);
 
     /**
-     * Returns the configured class for a context
-     *
-     * @param string $context
-     *
-     * @return string|null
-     */
-    public function getClassMappingForContext($context);
-
-    /**
      * Returns the configured features for a context
      *
      * @param $context

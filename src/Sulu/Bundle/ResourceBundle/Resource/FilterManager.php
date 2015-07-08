@@ -203,7 +203,7 @@ class FilterManager implements FilterManagerInterface
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
         if (array_key_exists('context', $data)) {
-            if ($this->getClassMappingForContext($data['context'])) {
+            if ($this->hasContext($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
                 throw new UnknownContextException($data['context']);
@@ -451,22 +451,6 @@ class FilterManager implements FilterManagerInterface
     public function batchDelete($ids)
     {
         $this->filterRepository->deleteByIds($ids);
-    }
-
-    /**
-     * Returns the configured class for a key
-     *
-     * @param string $context
-     *
-     * @return string|null
-     */
-    public function getClassMappingForContext($context)
-    {
-        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
-            return $this->contextConfiguration[$context]['class'];
-        }
-
-        return null;
     }
 
     /**

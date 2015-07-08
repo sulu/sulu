@@ -1,10 +1,10 @@
 sulu_resource:
     contexts:
         contact:
-            class: "Sulu\Bundle\ContactBundle\Entity\Contact"
+            fields: "/admin/api/contacts/fields"
             features:
                 - "filters"
         account:
-             class: "Sulu\Bundle\ContactBundle\Entity\Account"
-             features:
+            fields: "/admin/api/accounts/fields"
+            features:
                  - "filters"
