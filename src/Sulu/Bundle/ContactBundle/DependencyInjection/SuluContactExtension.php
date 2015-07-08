@@ -36,6 +36,7 @@ class SuluContactExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('content.xml');
 
         $container->setParameter(
             'sulu_contact.defaults',
@@ -54,6 +55,10 @@ class SuluContactExtension extends Extension
         $container->setParameter(
             'sulu_contact.account_form.category_root',
             $config['form']['account']['category_root']
+        );
+        $container->setParameter(
+            'sulu_contact.content-type.contact.template',
+            $config['types']['contact']['template']
         );
 
         $this->configurePersistence($config['objects'], $container);
