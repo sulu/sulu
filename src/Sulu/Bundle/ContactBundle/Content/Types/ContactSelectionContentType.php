@@ -61,11 +61,11 @@ class ContactSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $refs = array();
+        $values = array();
         if ($node->hasProperty($property->getName())) {
-            $refs = $node->getProperty($property->getName())->getValue();
+            $values = $node->getPropertyValue($property->getName());
         }
-        $this->setData($refs, $property);
+        $this->setData($values, $property);
     }
 
     /**
@@ -92,7 +92,8 @@ class ContactSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->setProperty($property->getName(), $property->getValue());
+        $value = $property->getValue();
+        $node->setProperty($property->getName(), ($value === null ? array() : $value));
     }
 
     /**
@@ -120,8 +121,15 @@ class ContactSelectionContentType extends ComplexContentType
         $contacts = array();
         $ids = $property->getValue();
 
+        if ($ids === null || !is_array($ids)) {
+            return array();
+        }
+
         foreach ($ids as $id) {
-            $contacts[] = $this->contactManager->getById($id, $locale);
+            $contact = $this->contactManager->getById($id, $locale);
+            if ($contact !== null) {
+                $contacts[] = $contact;
+            }
         }
 
         return $contacts;
