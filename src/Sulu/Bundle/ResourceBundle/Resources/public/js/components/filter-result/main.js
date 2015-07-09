@@ -113,15 +113,17 @@ define(function() {
         /**
          * Sets the content in the container
          * @param numberOfResults
-         * @param filter
+         * @param filter the filter object
+         * @param url new/updated url
          */
-        setFilterResultContent = function(numberOfResults, filter) {
+        setFilterResultContent = function(numberOfResults, filter, url) {
             var htmlText = templates.text.call(this, numberOfResults, filter),
                 htmlContent = templates.baseStructure(htmlText);
 
             this.sandbox.dom.empty(this.$el);
             this.sandbox.dom.append(this.$el, htmlContent);
             this.sandbox.dom.show(this.$el);
+            this.options.filterUrl = url;
         },
 
         bindDomEvents = function() {
@@ -147,7 +149,7 @@ define(function() {
         },
 
         render: function() {
-            setFilterResultContent.call(this, this.options.numberOfResults, this.options.filter);
+            setFilterResultContent.call(this, this.options.numberOfResults, this.options.filter, this.options.filterUrl);
         }
     };
 });
