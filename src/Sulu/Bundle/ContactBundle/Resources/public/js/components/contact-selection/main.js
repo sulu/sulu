@@ -110,7 +110,8 @@ define([], function() {
                         matchings: [
                             {
                                 content: 'id',
-                                name: 'id'
+                                name: 'id',
+                                disabled: true
                             },
                             {
                                 content: 'firstName',
