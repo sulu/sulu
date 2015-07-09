@@ -99,6 +99,15 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
                 routeToList: 'contacts/contacts'
             });
 
+            Config.set('suluresource.filters.type.accounts', {
+                breadCrumb: [
+                    {title: 'navigation.accounts'},
+                    {title: 'contact.accounts.title', link: 'contacts/accounts'}
+                ],
+                fields: 'admin/api/accounts/fields',
+                routeToList: 'contacts/accounts'
+            });
+
             app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
 
             // list all contacts

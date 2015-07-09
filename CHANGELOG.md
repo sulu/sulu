@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filter for contact-list
+    * ENHANCEMENT #1353 [ContactBundle]  Integrated custom filters for account-list 
+    * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filters for contact-list
     * ENHANCEMENT #1345 [ContactBundle]  Added VAT validation for switzerland
     * ENHANCEMENT #1341 [SecurityBundle] Excluded user-roles from role-api serialization
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
