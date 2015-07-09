@@ -221,7 +221,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         listenForChange: function() {
             this.sandbox.dom.on('#filter-form', 'change', function() {
                 this.setHeaderBar(false);
-            }.bind(this), 'select');
+            }.bind(this), 'select, input');
             this.sandbox.dom.on('#filter-form', 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input, textarea');

@@ -303,4 +303,26 @@ class Filter extends ApiWrapper
     {
         return $this->entity->getUser();
     }
+
+    /**
+     * Get private flag
+     *
+     * @VirtualProperty
+     * @SerializedName("private")
+     * @return boolean
+     */
+    public function getPrivate(){
+        return $this->entity->getPrivate();
+    }
+
+    /**
+     * Sets the private flag
+     *
+     * @param $private boolean
+     *
+     * @return FilterEntity
+     */
+    public function setPrivate($private){
+        $this->entity->setPrivate($private);
+    }
 }

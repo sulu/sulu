@@ -46,7 +46,8 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
             $qb = $this->getFilterQuery($locale);
             $qb->leftJoin('filter.user', 'user')
             ->andWhere('filter.context = :context')
-            ->andWhere('user IS NULL OR user.id = :userId')
+            ->orWhere('(user.id = :userId')
+            ->orWhere('filter.private = false)')
             ->setParameter('context', $context)
             ->setParameter('userId', $userId);
 

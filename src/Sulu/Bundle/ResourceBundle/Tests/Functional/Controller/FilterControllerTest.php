@@ -19,6 +19,7 @@ use Sulu\Bundle\ResourceBundle\Entity\FilterTranslation;
 use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpKernel\Client;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class FilterControllerTest extends SuluTestCase
 {
@@ -58,20 +59,22 @@ class FilterControllerTest extends SuluTestCase
 
     protected function setUpFilter()
     {
-        $this->filter1 = $this->createFilter('filter1', 'and', 'contact');
-        $this->filter2 = $this->createFilter('filter2', 'or', 'Product');
-        $this->filter3 = $this->createFilter('filter3', 'and', 'contact');
+        $this->filter1 = $this->createFilter('filter1', 'and', 'contact', false);
+        $this->filter2 = $this->createFilter('filter2', 'or', 'Product', true, $this->getTestUser());
+        $this->filter3 = $this->createFilter('filter3', 'and', 'contact', true, $this->getTestUser());
 
         $this->em->flush();
     }
 
-    protected function createFilter($name, $conjunction, $context)
+    protected function createFilter($name, $conjunction, $context, $private, $user = null)
     {
         $filter = new Filter();
         $filter->setConjunction($conjunction);
         $filter->setContext($context);
         $filter->setChanged(new \DateTime());
         $filter->setCreated(new \DateTime());
+        $filter->setPrivate($private);
+        $filter->setUser($user);
 
         $filter->setCreator($this->getTestUser());
         $filter->setChanger($this->getTestUser());
@@ -180,6 +183,19 @@ class FilterControllerTest extends SuluTestCase
         }
 
         return null;
+    }
+
+    public function testCget()
+    {
+        $this->client->request(
+            'GET',
+            '/api/filters?context=contact'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(2, count($response->_embedded->filters));
     }
 
     public function testCgetFlat()
@@ -546,7 +562,7 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('DELETE', '/api/filters?ids=666,999');
         $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/filters?context=contact');
+        $this->client->request('GET', '/api/filters?context=contact&flat=true');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($response->_embedded->filters));
@@ -560,7 +576,7 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId() . ',666');
         $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/filters?context=contact');
+        $this->client->request('GET', '/api/filters?context=contact&flat=true');
         $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->_embedded->filters));

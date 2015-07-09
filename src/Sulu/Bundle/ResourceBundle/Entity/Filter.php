@@ -70,6 +70,11 @@ class Filter
     private $context;
 
     /**
+     * @var boolean
+     */
+    private $private;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -313,5 +318,28 @@ class Filter
     public function getContext()
     {
         return $this->context;
+    }
+
+    /**
+     * Set private
+     *
+     * @param boolean $private
+     * @return Filter
+     */
+    public function setPrivate($private)
+    {
+        $this->private = $private;
+
+        return $this;
+    }
+
+    /**
+     * Get private
+     *
+     * @return boolean 
+     */
+    public function getPrivate()
+    {
+        return $this->private;
     }
 }

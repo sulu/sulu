@@ -97,6 +97,7 @@ class FilterManager implements FilterManagerInterface
             array(),
             true
         );
+
         $fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
@@ -108,7 +109,31 @@ class FilterManager implements FilterManagerInterface
                     self::$filterEntityName . '.translations',
                     self::$filterTranslationEntityName . '.locale = \'' . $locale . '\''
                 ),
-            )
+            ),
+            false,
+            true
+        );
+
+        $fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$filterEntityName,
+            'public.created',
+            array(),
+            false,
+            true,
+            'date'
+        );
+
+        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$filterEntityName,
+            'public.changed',
+            array(),
+            true,
+            false,
+            'date'
         );
 
         return $fieldDescriptors;
@@ -180,7 +205,7 @@ class FilterManager implements FilterManagerInterface
     {
         $user = $this->userRepository->findUserById($userId);
 
-        // SECURITY: Only the user which is referenced by the filter should be allowed to
+        // TODO SECURITY: Only the user which is referenced by the filter should be allowed to
         // to change the filter - or the administrator
 
         if ($id) {
@@ -210,12 +235,17 @@ class FilterManager implements FilterManagerInterface
             }
         }
 
+        if(array_key_exists('private', $data) &&  $data['private'] === true){
+            $filter->setPrivate($data['private']);
+            $filter->setUser($user);
+        } else {
+            $filter->setPrivate(false);
+            $filter->setUser(null);
+        }
+
         $filter->setConjunction($this->getProperty($data, 'conjunction', $filter->getConjunction()));
         $filter->setChanger($user);
         $filter->setChanged(new \DateTime());
-
-        // set user for filter
-        $filter->setUser($user);
 
         // update condition groups and conditions
         if (isset($data['conditionGroups'])) {

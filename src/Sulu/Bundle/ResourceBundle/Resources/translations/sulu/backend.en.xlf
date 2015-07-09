@@ -54,6 +54,10 @@
                 <source>resource.filter.edit</source>
                 <target>Edit filter</target>
             </trans-unit>
+            <trans-unit id="14" resname="resource.filter.private">
+                <source>resource.filter.private</source>
+                <target>Private</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
