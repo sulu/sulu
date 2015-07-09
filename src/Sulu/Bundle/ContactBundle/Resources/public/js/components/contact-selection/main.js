@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -61,25 +61,25 @@ define([], function() {
          */
         bindCustomEvents = function() {
             this.sandbox.on(
-                'husky.overlay.snippet-content.' + this.options.instanceName + '.add.initialized',
-                initSnippetList.bind(this)
+                'husky.overlay.contact-selection.' + this.options.instanceName + '.add.initialized',
+                initList.bind(this)
             );
 
             this.sandbox.on(
-                'husky.overlay.snippet-content.' + this.options.instanceName + '.add.opened',
+                'husky.overlay.contact-selection.' + this.options.instanceName + '.add.opened',
                 updateSnippetList.bind(this)
             );
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.datagrid.view.rendered', function() {
-                this.sandbox.emit('husky.overlay.snippet-content.' + this.options.instanceName + '.add.set-position');
+                this.sandbox.emit('husky.overlay.contact-selection.' + this.options.instanceName + '.add.set-position');
             }.bind(this));
         },
 
         /**
          * initialize column navigation
          */
-        initSnippetList = function() {
+        initList = function() {
             var data = this.getData();
 
             this.sandbox.start([
@@ -93,11 +93,6 @@ define([], function() {
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'list'),
                         searchInstanceName: this.options.instanceName + '-search',
-                        paginationOptions: {
-                            dropdown: {
-                                limit: 99999
-                            }
-                        },
                         viewOptions: {
                             table: {
                                 selectItem: {
@@ -114,15 +109,11 @@ define([], function() {
                         },
                         matchings: [
                             {
-                                content: 'Title',
-                                width: "100%",
-                                name: "title",
-                                editable: true,
+                                content: 'Name',
+                                name: 'name',
+                                editable: false,
                                 sortable: true,
-                                type: 'title',
-                                validation: {
-                                    required: false
-                                }
+                                type: 'title'
                             }
                         ]
                     }
@@ -176,8 +167,7 @@ define([], function() {
                         el: $element,
                         removeOnClose: false,
                         container: this.$el,
-
-                        instanceName: 'snippet-content.' + this.options.instanceName + '.add',
+                        instanceName: 'contact-selection.' + this.options.instanceName + '.add',
                         skin: 'wide',
                         slides: [
                             {
@@ -207,12 +197,12 @@ define([], function() {
 
             // init ids
             this.options.ids = {
-                container: 'snippet-content-' + this.options.instanceName + '-container',
-                addButton: 'snippet-content-' + this.options.instanceName + '-add',
-                configButton: 'snippet-content-' + this.options.instanceName + '-config',
-                content: 'snippet-content-' + this.options.instanceName + '-content',
-                list: 'snippet-content-' + this.options.instanceName + '-column-navigation',
-                search: 'snippet-content-' + this.options.instanceName + '-search'
+                container: 'contact-selection-' + this.options.instanceName + '-container',
+                addButton: 'contact-selection-' + this.options.instanceName + '-add',
+                configButton: 'contact-selection-' + this.options.instanceName + '-config',
+                content: 'contact-selection-' + this.options.instanceName + '-content',
+                list: 'contact-selection-' + this.options.instanceName + '-column-navigation',
+                search: 'contact-selection-' + this.options.instanceName + '-search'
             };
 
             // sandbox event handling
