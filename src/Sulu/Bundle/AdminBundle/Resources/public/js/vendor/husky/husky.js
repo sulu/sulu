@@ -35349,11 +35349,9 @@ define('__component__$toolbar@husky',[],function() {
 
             this.sandbox.dom.append(listItem, $list);
             this.sandbox.util.foreach(parent.items, function(item) {
-
                 if (item.divider) {
-
                     // prevent divider when not enough items
-                    if(this.items[parent.id].items.length <= 2) {
+                    if (this.items[parent.id].items.length <= 2) {
                         return
                     }
                     this.sandbox.dom.append($list, '<li class="divider"></li>');
