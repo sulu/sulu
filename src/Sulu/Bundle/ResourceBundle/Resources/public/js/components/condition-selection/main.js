@@ -237,7 +237,7 @@ define([], function() {
         removesUsedField = function(fieldName) {
             var value;
 
-            if(!fieldName){
+            if (!fieldName) {
                 return;
             }
 
