@@ -30,10 +30,6 @@ sulu_content.seo:
     pattern: /template/content/seo.html
     defaults: { _controller: SuluContentBundle:Template:seo }
 
-sulu_content.excerpt:
-    pattern: /template/content/excerpt.html
-    defaults: { _controller: SuluContentBundle:Template:excerpt }
-
 sulu_content.template.settings:
     pattern: /template/content/settings.html
     defaults: { _controller: SuluContentBundle:Template:settings }

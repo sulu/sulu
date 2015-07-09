@@ -70,7 +70,13 @@ define(['app-config'], function(AppConfig) {
                         this.sandbox.on('sulu.filter-result.' + this.context + '.unset_filter', unsetFilter.bind(this));
                     }.bind(this));
                 } else {
-                    this.sandbox.emit('sulu.filter-result.' + this.context + '.update', result.total, this.filter);
+                    var updatedUrl = createUrlToFilterDetails.call(this);
+                    this.sandbox.emit(
+                        'sulu.filter-result.' + this.context + '.update',
+                        result.total,
+                        this.filter,
+                        updatedUrl
+                    );
                 }
             }
         },
