@@ -87,6 +87,16 @@ define([
                     instanceName: 'accounts',
                     parentTemplate: 'default',
                     inHeader: true,
+                    groups: [
+                        {
+                            id: 1,
+                            align: 'left'
+                        },
+                        {
+                            id: 2,
+                            align: 'right'
+                        }
+                    ],
                     template: function() {
                         return this.getToolbarTemplate();
                     }.bind(this)
@@ -96,6 +106,7 @@ define([
                     url: '/admin/api/accounts?flat=true',
                     resultKey: 'accounts',
                     searchInstanceName: 'accounts',
+                    instanceName: 'accounts',
                     searchFields: ['name'],
                     viewOptions: {
                         table: {
@@ -113,7 +124,10 @@ define([
                             fullWidth: true
                         }
                     }
-                });
+                },
+                'accounts',
+                '#companies-list-info'
+            );
         },
 
         getToolbarTemplate: function() {

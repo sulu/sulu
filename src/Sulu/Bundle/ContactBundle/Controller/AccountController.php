@@ -1205,7 +1205,7 @@ class AccountController extends RestController implements ClassResourceInterface
             array(),
             false,
             false,
-            '',
+            'string',
             '90px'
         );
 
@@ -1217,7 +1217,7 @@ class AccountController extends RestController implements ClassResourceInterface
             array(),
             false,
             true,
-            '',
+            'string',
             '300px'
         );
 
@@ -1228,7 +1228,8 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.accounts.corporation',
             array(),
             true,
-            false
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
@@ -1250,7 +1251,7 @@ class AccountController extends RestController implements ClassResourceInterface
             ),
             false,
             true,
-            true
+            'string'
         );
 
         $this->fieldDescriptors['mainContact'] = new DoctrineConcatenationFieldDescriptor(
@@ -1287,7 +1288,7 @@ class AccountController extends RestController implements ClassResourceInterface
             ' ',
             false,
             true,
-            '',
+            'string',
             '200px',
             '',
             false
@@ -1297,7 +1298,11 @@ class AccountController extends RestController implements ClassResourceInterface
             'mainPhone',
             'mainPhone',
             $this->getAccountEntityName(),
-            'public.phone'
+            'public.phone',
+            array(),
+            false,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
@@ -1308,7 +1313,7 @@ class AccountController extends RestController implements ClassResourceInterface
             array(),
             false,
             true,
-            '',
+            'string',
             '',
             '140px'
         );
@@ -1321,7 +1326,7 @@ class AccountController extends RestController implements ClassResourceInterface
             array(),
             true,
             false,
-            '',
+            'number',
             '50px'
         );
 
@@ -1353,7 +1358,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'public.locked',
             array(),
-            true
+            true,
+            false,
+            'boolean'
         );
 
         $this->fieldDescriptors['uid'] = new DoctrineFieldDescriptor(
@@ -1362,7 +1369,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'contact.accounts.uid',
             array(),
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['registerNumber'] = new DoctrineFieldDescriptor(
@@ -1371,7 +1380,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'contact.accounts.registerNumber',
             array(),
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
@@ -1381,7 +1392,8 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.phone',
             array(),
             true,
-            false
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
@@ -1391,7 +1403,8 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.url',
             array(),
             true,
-            false
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['placeOfJurisdiction'] = new DoctrineFieldDescriptor(
@@ -1400,7 +1413,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'contact.accounts.placeOfJurisdiction',
             array(),
-            true
+            true,
+            false,
+            'string'
         );
     }
 
