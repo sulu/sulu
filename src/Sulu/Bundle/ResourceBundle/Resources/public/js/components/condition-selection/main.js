@@ -237,6 +237,10 @@ define([], function() {
         removesUsedField = function(fieldName) {
             var value;
 
+            if(!fieldName){
+                return;
+            }
+
             if (!!this.usedFields[fieldName]) {
                 value = this.usedFields[fieldName];
                 delete this.usedFields[fieldName];
@@ -293,13 +297,15 @@ define([], function() {
             this.sandbox.dom.remove($options);
             $options = createOptionsForSelect.call(this, value, 'name', 'translation', this.fields, prependEmpty);
 
-            // when the selected value is not in the fields append it
-            if (!this.fields[value]) {
-                translatedText = this.sandbox.translate(this.usedFields[value]['translation']);
-                $options.push('<option value="' + this.usedFields[value]['name'] + '" selected>' + translatedText + '</option>');
-            }
+            if (!!value) {
+                // when the selected value is not in the fields append it
+                if (!this.fields[value]) {
+                    translatedText = this.sandbox.translate(this.usedFields[value]['translation']);
+                    $options.push('<option value="' + this.usedFields[value]['name'] + '" selected>' + translatedText + '</option>');
+                }
 
-            this.sandbox.dom.append($select, $options.join(''));
+                this.sandbox.dom.append($select, $options.join(''));
+            }
         },
 
         /**
