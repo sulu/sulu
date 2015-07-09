@@ -109,11 +109,16 @@ define([], function() {
                         },
                         matchings: [
                             {
-                                content: 'Name',
-                                name: 'name',
-                                editable: false,
-                                sortable: true,
-                                type: 'title'
+                                content: 'id',
+                                name: 'id'
+                            },
+                            {
+                                content: 'firstName',
+                                name: 'firstName'
+                            },
+                            {
+                                content: 'lastName',
+                                name: 'lastName'
                             }
                         ]
                     }
@@ -226,7 +231,7 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title);
+            return templates.contentItem(item.firstName + ' ' + item.lastName);
         },
 
         sortHandler: function(ids) {
