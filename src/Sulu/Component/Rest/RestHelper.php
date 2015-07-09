@@ -38,14 +38,15 @@ class RestHelper implements RestHelperInterface
     public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors)
     {
         $listBuilder->limit($this->listRestHelper->getLimit())->setCurrentPage($this->listRestHelper->getPage());
+        $listBuilder->setFieldDescriptors($fieldDescriptors);
 
         $fields = $this->listRestHelper->getFields();
         if ($fields != null) {
             foreach ($fields as $field) {
-                $listBuilder->addField($fieldDescriptors[$field]);
+                $listBuilder->addSelectField($fieldDescriptors[$field]);
             }
         } else {
-            $listBuilder->setFields($fieldDescriptors);
+            $listBuilder->setSelectFields($fieldDescriptors);
         }
 
         $searchFields = $this->listRestHelper->getSearchFields();

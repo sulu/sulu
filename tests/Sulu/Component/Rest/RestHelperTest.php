@@ -57,7 +57,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
     public function testInitializeListBuilderAddFields()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(array('addField'))
+            ->setMethods(array('addSelectField'))
             ->getMockForAbstractClass();
 
         $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
@@ -69,8 +69,8 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->listRestHelper->expects($this->any())->method('getFields')->willReturn(array('name', 'desc'));
-        $listBuilder->expects($this->at(0))->method('addField')->with($field1);
-        $listBuilder->expects($this->at(1))->method('addField')->with($field2);
+        $listBuilder->expects($this->at(0))->method('addSelectField')->with($field1);
+        $listBuilder->expects($this->at(1))->method('addSelectField')->with($field2);
 
         $this->restHelper->initializeListBuilder($listBuilder, array('name' => $field1, 'desc' => $field2));
     }
@@ -78,7 +78,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
     public function testInitializeListBuilderSetFields()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(array('setFields'))
+            ->setMethods(array('setSelectFields'))
             ->getMockForAbstractClass();
 
         $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
@@ -91,7 +91,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
         $fields = array('name' => $field1, 'desc' => $field2);
 
-        $listBuilder->expects($this->once())->method('setFields')->with($fields);
+        $listBuilder->expects($this->once())->method('setSelectFields')->with($fields);
 
         $this->restHelper->initializeListBuilder($listBuilder, $fields);
     }

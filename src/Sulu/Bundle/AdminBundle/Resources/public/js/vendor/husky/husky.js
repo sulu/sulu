@@ -33309,8 +33309,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.loading();
                 this.load({
                     url: url,
-                    success: function() {
-                        this.sandbox.emit(UPDATED.call(this));
+                    success: function(data) {
+                        this.sandbox.emit(UPDATED.call(this), data);
                     }.bind(this)
                 });
             },
@@ -34916,6 +34916,16 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
+         * event to unmark a subitem
+         *
+         * @event husky.toolbar.[INSTANCE_NAME.]item.unmark
+         * @param {string} button The id of the button
+         */
+        ITEM_UNMARK = function() {
+            return createEventName.call(this, 'item.unmark');
+        },
+
+        /**
          * event to change a buttons default title and default icon
          *
          * @event husky.toolbar.[INSTANCE_NAME.]button.set
@@ -35003,6 +35013,8 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ITEM_MARK.call(this), uniqueMarkItem.bind(this));
+
+            this.sandbox.on(ITEM_UNMARK.call(this), unmarkItem.bind(this));
 
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
                 if (!!this.items[button]) {
@@ -35339,6 +35351,11 @@ define('__component__$toolbar@husky',[],function() {
             this.sandbox.util.foreach(parent.items, function(item) {
 
                 if (item.divider) {
+
+                    // prevent divider when not enough items
+                    if(this.items[parent.id].items.length <= 2) {
+                        return
+                    }
                     this.sandbox.dom.append($list, '<li class="divider"></li>');
                     return;
                 }
@@ -35380,6 +35397,16 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
+         * Unmark an item by removing the marked class from the item
+         * @param itemId {Number|String} the id of the item
+         */
+        unmarkItem = function(itemId){
+            if (!!this.items[itemId] && !!this.items[itemId].parentId) {
+                this.sandbox.dom.removeClass(this.items[itemId].$el, constants.markedClass);
+            }
+        },
+
+        /**
          * set width for button with dropdown-items
          * @param listItem
          * @param parent
@@ -35404,7 +35431,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param buttonId
          */
         handleRequestedItems = function(requestedItems, buttonId) {
-            var id, title, icon, callback, i, length;
+            var id, title, icon, callback, divider, i, length;
             this.items[buttonId].items = [];
 
             //for loop sets the the items[button].items - array together
@@ -35429,8 +35456,15 @@ define('__component__$toolbar@husky',[],function() {
                 if (!!requestedItems[i].icon) {
                     icon = requestedItems[i].icon;
                 }
+
                 if (!!requestedItems[i].callback) {
                     callback = requestedItems[i].callback;
+                }
+
+                if (!!requestedItems[i].divider) {
+                    divider = requestedItems[i].divider;
+                } else {
+                    divider = false;
                 }
 
                 this.items[buttonId].items[i] = {
@@ -35438,6 +35472,7 @@ define('__component__$toolbar@husky',[],function() {
                     title: title,
                     icon: icon,
                     callback: callback,
+                    divider: divider,
                     _original: requestedItems[i]
                 };
             }
@@ -35768,6 +35803,11 @@ define('__component__$toolbar@husky',[],function() {
                                 var data = result[this.options.itemsRequestKey];
                                 if (!!item.itemsOption.resultKey) {
                                     data = data[item.itemsOption.resultKey];
+                                }
+
+                                // add items if present
+                                if (!!item.items) {
+                                    data = data.concat(item.items);
                                 }
 
                                 handleRequestedItems.call(this, data, item.id);
