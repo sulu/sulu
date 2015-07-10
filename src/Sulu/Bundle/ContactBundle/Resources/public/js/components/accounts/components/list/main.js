@@ -30,13 +30,11 @@ define([
         },
 
         clickCallback = function(id) {
-            if (WidgetGroups.exists('account-info')) {
-                // show sidebar for selected item
-                this.sandbox.emit(
-                    'sulu.sidebar.set-widget',
-                    '/admin/widget-groups/account-info?account=' + id
-                );
-            }
+            // show sidebar for selected item
+            this.sandbox.emit(
+                'sulu.sidebar.set-widget',
+                '/admin/widget-groups/account-info?account=' + id
+            );
         },
 
         actionCallback = function(id) {
@@ -110,7 +108,7 @@ define([
                     searchInstanceName: 'accounts',
                     instanceName: 'accounts',
                     searchFields: ['name'],
-                    clickCallback: clickCallback.bind(this),
+                    clickCallback: (WidgetGroups.exists('account-info')) ? clickCallback.bind(this) : null,
                     actionCallback: actionCallback.bind(this)
                 },
                 'accounts',

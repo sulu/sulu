@@ -26,10 +26,8 @@ define(['widget-groups'], function(WidgetGroups) {
     },
 
     clickCallback = function(item) {
-        if (WidgetGroups.exists('contact-info')) {
-            // show sidebar for selected item
-            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
-        }
+        // show sidebar for selected item
+        this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
     },
 
     acitonCallback = function(id) {
@@ -92,7 +90,7 @@ define(['widget-groups'], function(WidgetGroups) {
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
-                    clickCallback: clickCallback.bind(this),
+                    clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
                     actionCallback: acitonCallback.bind(this)
                 },
                 'contacts',

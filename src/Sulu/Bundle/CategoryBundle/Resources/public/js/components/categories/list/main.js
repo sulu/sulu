@@ -48,6 +48,7 @@ define(function () {
         },
 
         bindCustomEvents: function() {
+            this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this))
             this.sandbox.on('sulu.list-toolbar.add', this.addNewCategory.bind(this));
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
         },
@@ -73,7 +74,6 @@ define(function () {
                     resultKey: 'categories',
                     searchFields: ['name'],
                     pagination: false,
-                    clickCallback: this.saveLastClickedCategory.bind(this),
                     actionCallback: this.editCategory.bind(this),
                     viewOptions: {
                         table: {

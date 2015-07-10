@@ -9316,9 +9316,8 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid {
   position: relative;
   padding-top: 10px;
-  color: #000;
 }
-/* line 12, ../scss/modules/datagrid.scss */
+/* line 11, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table {
   position: relative;
   top: 0px;
@@ -9331,20 +9330,20 @@ a.btn-black, a.btn-highlight {
   /** After render effect (start) **/
   /** After render effect (end) **/
 }
-/* line 18, ../scss/modules/datagrid.scss */
+/* line 17, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.overflow {
   padding-right: 30px;
 }
-/* line 20, ../scss/modules/datagrid.scss */
+/* line 19, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.overflow + .pagination-wrapper {
   padding-right: 30px;
 }
-/* line 23, ../scss/modules/datagrid.scss */
+/* line 22, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.overflow td, .husky-datagrid .husky-table.overflow th {
   max-width: 500px;
   overflow: hidden;
 }
-/* line 27, ../scss/modules/datagrid.scss */
+/* line 26, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.overflow:after {
   display: block;
   content: "";
@@ -9355,46 +9354,46 @@ a.btn-black, a.btn-highlight {
   margin-top: -28px;
   top: 50%;
 }
-/* line 40, ../scss/modules/datagrid.scss */
+/* line 39, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.minimal {
   padding: 0;
 }
-/* line 44, ../scss/modules/datagrid.scss */
+/* line 43, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.minimal tbody td img {
   height: 30px;
 }
-/* line 54, ../scss/modules/datagrid.scss */
+/* line 53, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.rendering table tbody tr {
   opacity: 0.3;
 }
-/* line 61, ../scss/modules/datagrid.scss */
+/* line 60, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .fit {
   width: 1%;
 }
-/* line 64, ../scss/modules/datagrid.scss */
+/* line 63, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .thumbnail-cell {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-/* line 69, ../scss/modules/datagrid.scss */
+/* line 68, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .checkbox-placeholder {
   display: inline-block;
   width: 12px;
   height: 15px;
 }
-/* line 75, ../scss/modules/datagrid.scss */
+/* line 74, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .row-remover {
   display: block;
   cursor: pointer;
 }
-/* line 80, ../scss/modules/datagrid.scss */
+/* line 79, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .header-loader {
   display: inline-block;
   width: 0;
   padding-left: 5px;
   margin-right: -5px;
 }
-/* line 87, ../scss/modules/datagrid.scss */
+/* line 86, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .input-wrapper {
   position: relative;
   top: 0px;
@@ -9404,7 +9403,7 @@ a.btn-black, a.btn-highlight {
   height: 30px;
   display: none;
 }
-/* line 96, ../scss/modules/datagrid.scss */
+/* line 95, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .editable-input {
   position: absolute;
   top: 0px;
@@ -9412,16 +9411,10 @@ a.btn-black, a.btn-highlight {
   padding: 0 7px;
 }
 /* line 103, ../scss/modules/datagrid.scss */
-.husky-datagrid .husky-table .has-action,
-.husky-datagrid .husky-table .has-action .cell-content {
-  color: #000;
-  cursor: pointer;
-}
-/* line 110, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .has-action:hover td:first-child, .husky-datagrid .husky-table .has-action.selected:hover td:first-child {
   position: relative;
 }
-/* line 112, ../scss/modules/datagrid.scss */
+/* line 105, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .has-action:hover td:first-child::before, .husky-datagrid .husky-table .has-action.selected:hover td:first-child::before {
   content: "";
   display: block;
@@ -9432,69 +9425,70 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 126, ../scss/modules/datagrid.scss */
+/* line 119, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table .server-validation-error .editable-input {
   border-color: #EA524E !important;
   border-width: 2px !important;
 }
-/* line 132, ../scss/modules/datagrid.scss */
+/* line 125, ../scss/modules/datagrid.scss */
 .husky-datagrid .table {
   white-space: nowrap;
+  color: #000;
 }
-/* line 137, ../scss/modules/datagrid.scss */
+/* line 131, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .cell-content {
   display: block;
 }
-/* line 140, ../scss/modules/datagrid.scss */
+/* line 134, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .is-sortable {
   color: black;
   cursor: pointer;
 }
-/* line 143, ../scss/modules/datagrid.scss */
+/* line 137, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .is-sortable .cell-content {
   margin-right: 5px;
 }
-/* line 146, ../scss/modules/datagrid.scss */
+/* line 140, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .is-sortable.is-loading .cell-content {
   margin-right: 0;
 }
-/* line 149, ../scss/modules/datagrid.scss */
+/* line 143, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .is-sortable.is-loading .cell-content:after {
   margin-right: 5px;
 }
-/* line 152, ../scss/modules/datagrid.scss */
+/* line 146, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .is-sortable .cell-content::after {
   margin-left: 5px;
   font-size: 12px;
   float: right;
   line-height: 50px;
 }
-/* line 160, ../scss/modules/datagrid.scss */
+/* line 154, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .sorted-asc {
   font-weight: bold;
 }
-/* line 162, ../scss/modules/datagrid.scss */
+/* line 156, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .sorted-asc .cell-content::after {
   content: "";
 }
-/* line 166, ../scss/modules/datagrid.scss */
+/* line 160, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .sorted-desc {
   font-weight: bold;
 }
-/* line 168, ../scss/modules/datagrid.scss */
+/* line 162, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .sorted-desc .cell-content::after {
   content: "";
 }
-/* line 174, ../scss/modules/datagrid.scss */
+/* line 168, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody {
   /** after render effect (start) **/
   /** after render effect (end) **/
 }
-/* line 177, ../scss/modules/datagrid.scss */
+/* line 171, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row {
   opacity: 1;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(1) {
   -moz-transition: opacity 250ms 100ms;
   -o-transition: opacity 250ms 100ms;
@@ -9502,7 +9496,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 100ms;
   transition: opacity 250ms 100ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(2) {
   -moz-transition: opacity 250ms 140ms;
   -o-transition: opacity 250ms 140ms;
@@ -9510,7 +9504,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 140ms;
   transition: opacity 250ms 140ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(3) {
   -moz-transition: opacity 250ms 180ms;
   -o-transition: opacity 250ms 180ms;
@@ -9518,7 +9512,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 180ms;
   transition: opacity 250ms 180ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(4) {
   -moz-transition: opacity 250ms 220ms;
   -o-transition: opacity 250ms 220ms;
@@ -9526,7 +9520,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 220ms;
   transition: opacity 250ms 220ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(5) {
   -moz-transition: opacity 250ms 260ms;
   -o-transition: opacity 250ms 260ms;
@@ -9534,7 +9528,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 260ms;
   transition: opacity 250ms 260ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(6) {
   -moz-transition: opacity 250ms 300ms;
   -o-transition: opacity 250ms 300ms;
@@ -9542,7 +9536,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 300ms;
   transition: opacity 250ms 300ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(7) {
   -moz-transition: opacity 250ms 340ms;
   -o-transition: opacity 250ms 340ms;
@@ -9550,7 +9544,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 340ms;
   transition: opacity 250ms 340ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(8) {
   -moz-transition: opacity 250ms 380ms;
   -o-transition: opacity 250ms 380ms;
@@ -9558,7 +9552,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 380ms;
   transition: opacity 250ms 380ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(9) {
   -moz-transition: opacity 250ms 420ms;
   -o-transition: opacity 250ms 420ms;
@@ -9566,7 +9560,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 420ms;
   transition: opacity 250ms 420ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(10) {
   -moz-transition: opacity 250ms 460ms;
   -o-transition: opacity 250ms 460ms;
@@ -9574,7 +9568,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 460ms;
   transition: opacity 250ms 460ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(11) {
   -moz-transition: opacity 250ms 500ms;
   -o-transition: opacity 250ms 500ms;
@@ -9582,7 +9576,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 500ms;
   transition: opacity 250ms 500ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(12) {
   -moz-transition: opacity 250ms 540ms;
   -o-transition: opacity 250ms 540ms;
@@ -9590,7 +9584,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 540ms;
   transition: opacity 250ms 540ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(13) {
   -moz-transition: opacity 250ms 580ms;
   -o-transition: opacity 250ms 580ms;
@@ -9598,7 +9592,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 580ms;
   transition: opacity 250ms 580ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(14) {
   -moz-transition: opacity 250ms 620ms;
   -o-transition: opacity 250ms 620ms;
@@ -9606,7 +9600,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 620ms;
   transition: opacity 250ms 620ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(15) {
   -moz-transition: opacity 250ms 660ms;
   -o-transition: opacity 250ms 660ms;
@@ -9614,7 +9608,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 660ms;
   transition: opacity 250ms 660ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(16) {
   -moz-transition: opacity 250ms 700ms;
   -o-transition: opacity 250ms 700ms;
@@ -9622,7 +9616,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 700ms;
   transition: opacity 250ms 700ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(17) {
   -moz-transition: opacity 250ms 740ms;
   -o-transition: opacity 250ms 740ms;
@@ -9630,7 +9624,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 740ms;
   transition: opacity 250ms 740ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(18) {
   -moz-transition: opacity 250ms 780ms;
   -o-transition: opacity 250ms 780ms;
@@ -9638,7 +9632,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 780ms;
   transition: opacity 250ms 780ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(19) {
   -moz-transition: opacity 250ms 820ms;
   -o-transition: opacity 250ms 820ms;
@@ -9646,7 +9640,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 820ms;
   transition: opacity 250ms 820ms;
 }
-/* line 183, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(20) {
   -moz-transition: opacity 250ms 860ms;
   -o-transition: opacity 250ms 860ms;
@@ -9654,7 +9648,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 860ms;
   transition: opacity 250ms 860ms;
 }
-/* line 187, ../scss/modules/datagrid.scss */
+/* line 181, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:nth-child(n+20) {
   -moz-transition: opacity 250ms 900ms;
   -o-transition: opacity 250ms 900ms;
@@ -9662,31 +9656,45 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 900ms;
   transition: opacity 250ms 900ms;
 }
-/* line 190, ../scss/modules/datagrid.scss */
+/* line 184, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row.even {
   background: #fff;
 }
-/* line 193, ../scss/modules/datagrid.scss */
+/* line 187, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row.odd {
   background: #f6f6f6;
 }
+/* line 190, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .row.has-action {
+  cursor: pointer;
+}
+/* line 192, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .row.has-action .cell-content {
+  color: #000;
+  cursor: pointer;
+}
 /* line 197, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .row.inactive {
+  cursor: auto;
+}
+/* line 199, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row.inactive .cell-content {
+  cursor: auto;
   color: #999;
 }
-/* line 205, ../scss/modules/datagrid.scss */
+/* line 208, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .child-wrapper .toggle-icon {
   margin-right: 9px;
 }
-/* line 208, ../scss/modules/datagrid.scss */
+/* line 211, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .child-wrapper .custom-checkbox {
   margin-right: 16px;
 }
-/* line 213, ../scss/modules/datagrid.scss */
+/* line 216, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:hover .grid-icon {
   opacity: 1;
 }
-/* line 218, ../scss/modules/datagrid.scss */
+/* line 221, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon {
   width: 30px;
   height: 20px;
@@ -9704,11 +9712,11 @@ a.btn-black, a.btn-highlight {
   -webkit-transition-delay: 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 230, ../scss/modules/datagrid.scss */
+/* line 233, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon.right {
   float: right;
 }
-/* line 235, ../scss/modules/datagrid.scss */
+/* line 238, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-image {
   position: relative;
   width: 50px;
@@ -9716,90 +9724,90 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 50px;
 }
-/* line 242, ../scss/modules/datagrid.scss */
+/* line 245, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-image img {
   position: absolute;
   top: 0;
   left: 0;
 }
-/* line 248, ../scss/modules/datagrid.scss */
+/* line 251, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-image .fa-coffee {
   color: #ccc;
   font-size: 1.6em;
 }
-/* line 255, ../scss/modules/datagrid.scss */
+/* line 258, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   width: 100%;
   overflow: auto;
   border-radius: 3px;
 }
-/* line 261, ../scss/modules/datagrid.scss */
+/* line 264, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head thead {
   display: none;
 }
-/* line 265, ../scss/modules/datagrid.scss */
+/* line 268, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head tbody tr:last-child {
   border-bottom: none;
 }
-/* line 272, ../scss/modules/datagrid.scss */
+/* line 275, ../scss/modules/datagrid.scss */
 .husky-datagrid .datagrid-loader {
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -50px 0 0 -50px;
 }
-/* line 279, ../scss/modules/datagrid.scss */
+/* line 282, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-menu {
   margin-top: 5px;
 }
-/* line 282, ../scss/modules/datagrid.scss */
+/* line 285, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-toggle::after {
   margin-left: 12px;
 }
-/* line 286, ../scss/modules/datagrid.scss */
+/* line 289, ../scss/modules/datagrid.scss */
 .husky-datagrid.loading {
   min-height: 150px;
 }
-/* line 290, ../scss/modules/datagrid.scss */
+/* line 293, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list {
   text-align: center;
   color: #ccc;
   padding: 20px 0;
   background: #fff;
 }
-/* line 296, ../scss/modules/datagrid.scss */
+/* line 299, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list .icon {
   display: block;
   font-size: 50px;
   padding-bottom: 5px;
 }
-/* line 301, ../scss/modules/datagrid.scss */
+/* line 304, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list span {
   display: block;
 }
-/* line 306, ../scss/modules/datagrid.scss */
+/* line 309, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements {
   display: block;
   padding-bottom: 10px;
 }
-/* line 309, ../scss/modules/datagrid.scss */
+/* line 312, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements.indent {
   padding-left: 60px;
 }
-/* line 314, ../scss/modules/datagrid.scss */
+/* line 317, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader {
   overflow: hidden;
   height: 0px;
   transition: all 200ms;
   margin-top: 0px;
 }
-/* line 320, ../scss/modules/datagrid.scss */
+/* line 323, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader.show {
   height: 70px;
   margin-top: 10px;
 }
 
-/* line 329, ../scss/modules/datagrid.scss */
+/* line 332, ../scss/modules/datagrid.scss */
 .editable .husky-validate-error .husky-input input {
   height: 30px;
   margin-top: -30px;

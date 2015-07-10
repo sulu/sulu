@@ -29671,7 +29671,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.renderChildrenHidden = this.options.hideChildrenAtBeginning;
             this.tableCropped = false;
             this.cropBreakPoint = null;
-            this.icons = this.options.icons;
+            this.icons = this.sandbox.util.extend(true, [], this.options.icons);
         },
 
         /**
@@ -30054,7 +30054,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     content: content
                 });
             }
-            if (!!this.options.icons) {
+            if (!!this.icons) {
                 content = this.addIconsToCellContent(content, column);
             }
             return content;
@@ -30256,7 +30256,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.sandbox.dom.on(this.table.$body, 'focusout', this.editableInputFocusoutHandler.bind(this), '.' + constants.editableInputClass);
                 this.sandbox.dom.on(this.table.$body, 'keypress', this.editableInputKeyHandler.bind(this), '.' + constants.editableInputClass);
             }
-            if (!!this.options.icons) {
+            if (!!this.icons) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.iconClickHandler.bind(this), '.' + constants.gridIconClass);
             }
             this.sandbox.dom.on(this.table.$body.find('img'), 'error', function() {
@@ -30286,7 +30286,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         iconClickHandler: function(event) {
             event.stopPropagation();
-            var icon = this.options.icons[this.sandbox.dom.data(event.currentTarget, 'icon-index')],
+            var icon = this.icons[this.sandbox.dom.data(event.currentTarget, 'icon-index')],
                 recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
             if (typeof recordId !== 'undefined' && !!icon && typeof icon.callback === 'function') {
                 icon.callback(recordId);
