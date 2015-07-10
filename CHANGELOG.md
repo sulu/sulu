@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #???? [ContactBundle]  Fixed getContactsByUserSystem function
+    * ENHANCEMENT #1356 [ContactBundle]  Fixed getContactsByUserSystem function
     * ENHANCEMENT #1345 [ContactBundle]  Added VAT validation for switzerland
     * ENHANCEMENT #1341 [SecurityBundle] Excluded user-roles from role-api serialization
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
