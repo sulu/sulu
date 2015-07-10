@@ -23,13 +23,17 @@ define(['widget-groups'], function(WidgetGroups) {
         this.sandbox.on('sulu.list-toolbar.add', function() {
             this.sandbox.emit('sulu.contacts.contacts.new');
         }, this);
+    },
 
+    clickCallback = function(item) {
         if (WidgetGroups.exists('contact-info')) {
             // show sidebar for selected item
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
-            }, this);
+            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
         }
+    },
+
+    acitonCallback = function(id) {
+        this.sandbox.emit('sulu.contacts.contacts.load', id);
     };
 
     return {
@@ -37,9 +41,7 @@ define(['widget-groups'], function(WidgetGroups) {
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             },
             sidebar: {
                 width: 'fixed',
@@ -90,23 +92,8 @@ define(['widget-groups'], function(WidgetGroups) {
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
-                    instanceName: 'contacts',
-                    viewOptions: {
-                        table: {
-                            icons: [
-                                {
-                                    icon: 'pencil',
-                                    column: 'firstName',
-                                    align: 'left',
-                                    callback: function(id) {
-                                        this.sandbox.emit('sulu.contacts.contacts.load', id);
-                                    }.bind(this)
-                                }
-                            ],
-                            highlightSelected: true,
-                            fullWidth: true
-                        }
-                    }
+                    clickCallback: clickCallback.bind(this),
+                    actionCallback: acitonCallback.bind(this)
                 },
                 'contacts',
                 '#people-list-info'

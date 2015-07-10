@@ -256,7 +256,7 @@
             </trans-unit>
             <trans-unit id="a8930b800abe85d3b19da82ca85dc4c0" resname="pagination.elements-per-page">
                 <source>pagination.elements-per-page</source>
-                <target>elements per page</target>
+                <target>Items per page</target>
             </trans-unit>
             <trans-unit id="ab31942997c01851a4e84e476882c5bc" resname="pagination.show-all-elements">
                 <source>pagination.show-all-elements</source>

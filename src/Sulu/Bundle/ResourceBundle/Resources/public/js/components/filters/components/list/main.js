@@ -42,9 +42,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             }
         },
 
@@ -79,11 +77,9 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                     resultKey: 'filters',
                     searchInstanceName: 'filterSearch',
                     searchFields: ['name'],
-                    viewOptions: {
-                        table: {
-                            fullWidth: true
-                        }
-                    }
+                    actionCallback: function(id) {
+                        this.sandbox.emit('sulu.resource.filters.edit', id)
+                    }.bind(this)
                 }
             );
         },

@@ -27,16 +27,20 @@ define([
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.accounts.new');
             }, this);
+        },
 
+        clickCallback = function(id) {
             if (WidgetGroups.exists('account-info')) {
                 // show sidebar for selected item
-                this.sandbox.on('husky.datagrid.item.click', function(id) {
-                    this.sandbox.emit(
-                        'sulu.sidebar.set-widget',
-                        '/admin/widget-groups/account-info?account=' + id
-                    );
-                }, this);
+                this.sandbox.emit(
+                    'sulu.sidebar.set-widget',
+                    '/admin/widget-groups/account-info?account=' + id
+                );
             }
+        },
+
+        actionCallback = function(id) {
+            this.sandbox.emit('sulu.contacts.accounts.load', id);
         };
 
     return {
@@ -45,9 +49,7 @@ define([
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             },
             sidebar: {
                 width: 'fixed',
@@ -108,22 +110,8 @@ define([
                     searchInstanceName: 'accounts',
                     instanceName: 'accounts',
                     searchFields: ['name'],
-                    viewOptions: {
-                        table: {
-                            icons: [
-                                {
-                                    icon: 'pencil',
-                                    column: 'name',
-                                    align: 'left',
-                                    callback: function(id) {
-                                        this.sandbox.emit('sulu.contacts.accounts.load', id);
-                                    }.bind(this)
-                                }
-                            ],
-                            highlightSelected: true,
-                            fullWidth: true
-                        }
-                    }
+                    clickCallback: clickCallback.bind(this),
+                    actionCallback: actionCallback.bind(this)
                 },
                 'accounts',
                 '#companies-list-info'

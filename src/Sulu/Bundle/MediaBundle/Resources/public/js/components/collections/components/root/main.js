@@ -116,16 +116,6 @@ define(['sulumedia/model/media'], function(Media) {
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
 
-            this.sandbox.on('husky.datagrid.item.click', function(id, item) {
-                this.sandbox.emit(
-                    'sulu.router.navigate',
-                    'media/collections/edit:' + item.collection + '/files/edit:' + id
-                );
-
-                var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
-                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-            }.bind(this));
-
             // download media
             this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
 
@@ -147,6 +137,16 @@ define(['sulumedia/model/media'], function(Media) {
 
             this.sandbox.emit('sulu.header.set-title', 'sulu.media.all');
             this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
+        },
+
+        actionCallback: function(id, item) {
+            this.sandbox.emit(
+                'sulu.router.navigate',
+                'media/collections/edit:' + item.collection + '/files/edit:' + id
+            );
+
+            var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
         },
 
         /**
@@ -198,11 +198,11 @@ define(['sulumedia/model/media'], function(Media) {
                     view: listViews[this.listView].name,
                     resultKey: 'media',
                     sortable: false,
+                    actionCallback: this.actionCallback.bind(this),
                     viewOptions: {
                         table: {
                             selectItem: true,
-                            fullWidth: false,
-                            rowClickSelect: false
+                            actionIconColumn: 'name'
                         },
                         thumbnail: listViews[this.listView].thViewOptions || {}
                     }

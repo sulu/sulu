@@ -56,9 +56,7 @@ define(function() {
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             }
         },
 
@@ -101,8 +99,7 @@ define(function() {
                     viewOptions: {
                         table: {
                             editable: true,
-                            validation: true,
-                            fullWidth: true
+                            validation: true
                         }
                     }
                 }
