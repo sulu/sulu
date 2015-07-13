@@ -19,7 +19,7 @@ Feature: Role management
     Scenario: Edit a role
         Given I am on "/admin/#settings/roles"
         And I wait to see "1" "#roles-list tbody .row" elements
-        And I doubleclick the row containing "Sulu"
+        And I click the edit icon in the row containing "Sulu"
         And I expect the "husky.select.system.preselected.item" event
         And I fill in "name" with "Goat"
         And I click the save icon
@@ -32,7 +32,7 @@ Feature: Role management
             | Content editor | Sulu |
             | Translator | Sulu | 
         And I am on "/admin/#settings/roles"
-        And I doubleclick the row containing "Translator"
+        And I click the edit icon in the row containing "Translator"
         And I wait a second
         And I click delete from the drop down
         Then I expect a confirmation dialog to appear
