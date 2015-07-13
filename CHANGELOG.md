@@ -2,14 +2,15 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1363 [ContactBundle]  Removed old config from filter config
-    * ENHANCEMENT #1353 [ContactBundle]  Integrated custom filters for account-list 
-    * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filters for contact-list
-    * ENHANCEMENT #1356 [ContactBundle]  Fixed getContactsByUserSystem function
-    * ENHANCEMENT #1345 [ContactBundle]  Added VAT validation for switzerland
-    * ENHANCEMENT #1341 [SecurityBundle] Excluded user-roles from role-api serialization
-    * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
-    * ENHANCEMENT #1342 [SecurityBundle] Added creator and changer of contact to 'fullContact' serialization group
+    * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
+    * ENHANCEMENT #1363 [ContactBundle]   Removed old config from filter config
+    * ENHANCEMENT #1353 [ContactBundle]   Integrated custom filters for account-list 
+    * ENHANCEMENT #1310 [ContactBundle]   Integrated custom filters for contact-list
+    * ENHANCEMENT #1356 [ContactBundle]   Fixed getContactsByUserSystem function
+    * ENHANCEMENT #1345 [ContactBundle]   Added VAT validation for switzerland
+    * ENHANCEMENT #1341 [SecurityBundle]  Excluded user-roles from role-api serialization
+    * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
+    * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
 
 * dev-master
     * HOTFIX      #1346 [ContentBundle]  Reversed order of paths to enable overriding of templates again
