@@ -1,7 +1,7 @@
 {
     "name": "sulu/sulu",
     "type": "library",
-    "description": "SuluCMF core distribution",
+    "description": "Sulu core distribution",
     "license": "MIT",
     "keywords": [
         "core",
