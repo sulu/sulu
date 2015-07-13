@@ -191,7 +191,7 @@ define([
                         var contact = new Contact({id: id});
                         contact.destroy({
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.record.remove', id);
+                                this.sandbox.emit('husky.datagrid.contacts.record.remove', id);
                             }.bind(this)
                         });
                     }.bind(this));

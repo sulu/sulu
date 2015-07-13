@@ -16,28 +16,34 @@ define([
     'use strict';
 
     var bindCustomEvents = function() {
-            // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.contacts.accounts.delete', ids);
-                }.bind(this));
-            }, this);
+        // delete clicked
+        this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.datagrid.accounts.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.contacts.accounts.delete', ids);
+            }.bind(this));
+        }, this);
 
-            // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
-                this.sandbox.emit('sulu.contacts.accounts.new');
-            }, this);
+        // add clicked
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('sulu.contacts.accounts.new');
+        }, this);
 
-            if (WidgetGroups.exists('account-info')) {
-                // show sidebar for selected item
-                this.sandbox.on('husky.datagrid.item.click', function(id) {
-                    this.sandbox.emit(
-                        'sulu.sidebar.set-widget',
-                        '/admin/widget-groups/account-info?account=' + id
-                    );
-                }, this);
-            }
-        };
+        // checkbox clicked
+        this.sandbox.on('husky.datagrid.accounts.number.selections', function(number) {
+            var postfix = number > 0 ? 'enable' : 'disable';
+            this.sandbox.emit('husky.toolbar.accounts.item.' + postfix, 'delete', false);
+        }.bind(this));
+
+        if (WidgetGroups.exists('account-info')) {
+            // show sidebar for selected item
+            this.sandbox.on('husky.datagrid.accounts.item.click', function(id) {
+                this.sandbox.emit(
+                    'sulu.sidebar.set-widget',
+                    '/admin/widget-groups/account-info?account=' + id
+                );
+            }, this);
+        }
+    };
 
     return {
 
