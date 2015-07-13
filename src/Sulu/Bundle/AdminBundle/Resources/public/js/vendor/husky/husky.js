@@ -31516,6 +31516,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
  * @param {String} [options.selectedCounterText] translation key or text used in the selected-counter
  * @param {Function} [options.clickCallback] callback for clicking an item - first parameter item id, second parameter the dataset of the clicked item
  * @param {Function} [options.actionCallback] action callback. E.g. executed on double-click in table-view - first parameter item id, second parameter the dataset of the clicked item
+ * @param {Function} [options.idKey] the name of the id property
  */
 (function() {
 
@@ -31559,7 +31560,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 selectedCounterText: 'public.elements-selected',
                 viewSpacingBottom: 110,
                 clickCallback: null,
-                actionCallback: null
+                actionCallback: null,
+                idKey: 'id'
             },
 
             types = {
@@ -32184,7 +32186,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         // push the constructed matching to the global matchings array
                         this.matchings.push(matchingObject);
                         this.requestFields.push(matching.name);
-                    } else if (matching.name === 'id') {
+                    } else if (matching.name === this.options.idKey) {
                         this.requestFields.push(matching.name);
                     }
                     // always load the id (never ever even think about not loading the id)
