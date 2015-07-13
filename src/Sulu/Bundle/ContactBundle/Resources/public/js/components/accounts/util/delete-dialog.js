@@ -132,7 +132,7 @@ define(['sulucontact/model/account'], function(Account) {
                     processData: true,
                     success: function() {
                         if(!!this.recordRemove){
-                            this.sandbox.emit('husky.datagrid.record.remove', this.account.get('id'));
+                            this.sandbox.emit('husky.datagrid.accounts.record.remove', this.account.get('id'));
                         }
                         this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
                     }.bind(this)
@@ -194,7 +194,7 @@ define(['sulucontact/model/account'], function(Account) {
                         processData: true,
 
                         success: function() {
-                            this.sandbox.emit('husky.datagrid.record.remove', id);
+                            this.sandbox.emit('husky.datagrid.accounts.record.remove', id);
                         }.bind(this)
                     });
                 }.bind(this));
