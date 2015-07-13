@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1363 [ContactBundle]  Removed old config from filter config
     * ENHANCEMENT #1353 [ContactBundle]  Integrated custom filters for account-list 
     * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filters for contact-list
     * ENHANCEMENT #1356 [ContactBundle]  Fixed getContactsByUserSystem function

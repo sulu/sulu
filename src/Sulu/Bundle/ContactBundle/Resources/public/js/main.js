@@ -95,7 +95,6 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
                     {title: 'navigation.contacts'},
                     {title: 'contact.contacts.title', link: 'contacts/contacts'}
                 ],
-                fields: 'admin/api/contacts/fields',
                 routeToList: 'contacts/contacts'
             });
 
@@ -104,7 +103,6 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
                     {title: 'navigation.accounts'},
                     {title: 'contact.accounts.title', link: 'contacts/accounts'}
                 ],
-                fields: 'admin/api/accounts/fields',
                 routeToList: 'contacts/accounts'
             });
 
