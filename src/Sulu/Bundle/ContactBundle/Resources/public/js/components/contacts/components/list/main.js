@@ -11,10 +11,13 @@ define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 
-    var bindCustomEvents = function() {
+    var constants = {
+            datagridInstanceName: 'contacts'
+        },
+        bindCustomEvents = function() {
         // delete clicked
         this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.contacts.items.get-selected', function(ids) {
+            this.sandbox.emit('husky.datagrid.'+constants.datagridInstanceName+'.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.contacts.contacts.delete', ids);
             }.bind(this));
         }, this);
@@ -25,14 +28,14 @@ define(['widget-groups'], function(WidgetGroups) {
         }, this);
 
         // checkbox clicked
-        this.sandbox.on('husky.datagrid.contacts.number.selections', function(number) {
+        this.sandbox.on('husky.datagrid.'+constants.datagridInstanceName+'.number.selections', function(number) {
             var postfix = number > 0 ? 'enable' : 'disable';
             this.sandbox.emit('husky.toolbar.contacts.item.' + postfix, 'delete', false);
         }.bind(this));
 
         if (WidgetGroups.exists('contact-info')) {
             // show sidebar for selected item
-            this.sandbox.on('husky.datagrid.contacts.item.click', function(item) {
+            this.sandbox.on('husky.datagrid.'+constants.datagridInstanceName+'.item.click', function(item) {
                 this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
             }, this);
         }
@@ -96,7 +99,7 @@ define(['widget-groups'], function(WidgetGroups) {
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
-                    instanceName: 'contacts',
+                    instanceName: constants.datagridInstanceName,
                     viewOptions: {
                         table: {
                             icons: [
