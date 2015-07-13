@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1366 [CoreBundle]     Fixed build command for not existing database
+
 * 1.0.1 (2015-07-06)
     * HOTFIX      #1338 [Content]        Fixed wrong check for block type meta title
 
