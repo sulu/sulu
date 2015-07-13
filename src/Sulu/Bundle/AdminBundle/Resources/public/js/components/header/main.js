@@ -1013,7 +1013,7 @@ define([], function () {
          * Hides the header
          */
         hide: function () {
-            this.$el.addClass('hidden');
+            this.sandbox.dom.addClass(this.$el, 'invisible');
             this.sandbox.dom.hide(constants.headerBackgroundSelector);
         },
 
@@ -1021,7 +1021,7 @@ define([], function () {
          * Shows the header
          */
         show: function () {
-            this.$el.removeClass('hidden');
+            this.sandbox.dom.removeClass(this.$el, 'invisible');
             this.sandbox.dom.show(constants.headerBackgroundSelector);
         }
     };

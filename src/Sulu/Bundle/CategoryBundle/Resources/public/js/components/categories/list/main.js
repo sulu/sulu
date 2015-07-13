@@ -1,4 +1,4 @@
-/*
+of/*
  * This file is part of the Sulu CMS.
  *
  * (c) MASSIVE ART WebServices GmbH

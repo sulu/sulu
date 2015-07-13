@@ -8178,61 +8178,100 @@ a.btn-black, a.btn-highlight {
 /* line 5, ../scss/modules/tabs.scss */
 .tabs-container {
   background-color: #fff;
-  border-bottom: 1px solid #f1f1f1;
-  padding: 20px 50px 0 50px;
+  padding: 0 50px;
+  position: relative;
+  /**
+  *** Deactivated Skin
+  **/
   /**
   *** Overlay Skin
   **/
 }
-/* line 12, ../scss/modules/tabs.scss */
+/* line 11, ../scss/modules/tabs.scss */
 .tabs-container ul {
   padding: 0;
   margin: 0;
   white-space: nowrap;
 }
-/* line 17, ../scss/modules/tabs.scss */
+/* line 16, ../scss/modules/tabs.scss */
 .tabs-container ul li {
   display: inline-block;
   list-style-type: none;
-  line-height: 30px;
-  height: 30px;
-  padding: 0 10px;
-  text-align: center;
-  border-radius: 3px 3px 0 0;
+  line-height: 50px;
+  height: 50px;
+  text-align: left;
+  padding-right: 30px;
+  min-width: 60px;
+  cursor: pointer;
 }
 /* line 26, ../scss/modules/tabs.scss */
 .tabs-container ul li a {
   color: black;
   text-decoration: none;
   font-size: 14px;
+  outline: 0;
 }
-/* line 32, ../scss/modules/tabs.scss */
-.tabs-container ul li.is-selected {
-  background-color: #f1f1f1;
-}
-/* line 35, ../scss/modules/tabs.scss */
+/* line 34, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
   color: #52B6CA;
   font-weight: bold;
 }
-/* line 45, ../scss/modules/tabs.scss */
+/* line 42, ../scss/modules/tabs.scss */
+.tabs-container .marker {
+  height: 2px;
+  background: #52B6CA;
+  position: absolute;
+  bottom: 0;
+  width: 0px;
+  left: 0px;
+}
+/* line 51, ../scss/modules/tabs.scss */
+.tabs-container .marker.animate {
+  -moz-transition: left 350ms ease, width 350ms ease;
+  -o-transition: left 350ms ease, width 350ms ease;
+  -webkit-transition: left 350ms ease, width 350ms ease;
+  transition: left 350ms ease, width 350ms ease;
+}
+/* line 61, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
   color: #999;
   cursor: default;
 }
-/* line 49, ../scss/modules/tabs.scss */
+/* line 65, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li.is-selected a {
   color: #52B6CA;
 }
-/* line 58, ../scss/modules/tabs.scss */
+/* line 74, ../scss/modules/tabs.scss */
 .tabs-container.overlay {
   background-color: transparent;
-  border-bottom: none;
   padding: 10px 0 0 20px;
 }
-/* line 64, ../scss/modules/tabs.scss */
+/* line 79, ../scss/modules/tabs.scss */
+.tabs-container.overlay ul {
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+/* line 83, ../scss/modules/tabs.scss */
+.tabs-container.overlay ul li {
+  line-height: 30px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 3px 3px 0 0;
+  text-align: center;
+  min-width: 0;
+}
+/* line 90, ../scss/modules/tabs.scss */
+.tabs-container.overlay ul li a {
+  font-size: 14px;
+}
+/* line 93, ../scss/modules/tabs.scss */
 .tabs-container.overlay ul li.is-selected {
   background-color: #fff;
+}
+/* line 99, ../scss/modules/tabs.scss */
+.tabs-container.overlay .marker {
+  display: none;
 }
 
 /*styles related to the whole container*/
@@ -8617,12 +8656,13 @@ a.btn-black, a.btn-highlight {
 .table.matrix td.all {
   text-align: left;
   padding-left: 16px;
+  color: #000;
 }
-/* line 33, ../scss/modules/matrix.scss */
+/* line 34, ../scss/modules/matrix.scss */
 .table.matrix td.section {
   color: #999;
 }
-/* line 38, ../scss/modules/matrix.scss */
+/* line 39, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon {
   border: 1px solid #000;
   color: #000;
@@ -8633,7 +8673,7 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   text-align: center;
 }
-/* line 51, ../scss/modules/matrix.scss */
+/* line 52, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon.is-active {
   color: #fff;
   border-color: #5DC774;
