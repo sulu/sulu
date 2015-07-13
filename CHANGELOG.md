@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1358 [AdminBundle]  Added new grid-style and refactored list in all affected bundles
     * ENHANCEMENT #1353 [ContactBundle]  Integrated custom filters for account-list 
     * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filters for contact-list
     * ENHANCEMENT #1345 [ContactBundle]  Added VAT validation for switzerland
