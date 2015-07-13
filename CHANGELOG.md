@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1341 [SecurityBundle]  Excluded user-roles from role-api serialization
     * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
+    * BUGFIX      #1365 [ContactBundle]  Fixed bug caused by new instance name of datagrid
 
 * dev-master
     * HOTFIX      #1346 [ContentBundle]  Reversed order of paths to enable overriding of templates again
