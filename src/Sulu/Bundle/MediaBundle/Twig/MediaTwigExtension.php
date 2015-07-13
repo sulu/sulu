@@ -46,8 +46,8 @@ class MediaTwigExtension extends \Twig_Extension
      * resolves media id or object.
      *
      * @param int|MediaEntity $media id to resolve
-     *
      * @param string $locale
+     * 
      * @return MediaApi
      */
     public function resolveMediaFunction($media, $locale)
