@@ -30,8 +30,18 @@ class SuluMediaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // routing paths
+        $container->setParameter('sulu_media.format_cache.media_proxy_path', $config['routing']['media_proxy_path']);
+        $container->setParameter(
+            'sulu_media.media_manager.media_download_path',
+            $config['routing']['media_download_path']
+        );
+
         // format manager
-        $container->setParameter('sulu_media.format_manager.response_headers', $config['format_manager']['response_headers']);
+        $container->setParameter(
+            'sulu_media.format_manager.response_headers',
+            $config['format_manager']['response_headers']
+        );
         $container->setParameter(
             'sulu_media.format_manager.default_imagine_options',
             $config['format_manager']['default_imagine_options']
@@ -49,16 +59,22 @@ class SuluMediaExtension extends Extension
 
         // storage
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
-        $container->setParameter('sulu_media.media.blocked_file_types', $config['format_manager']['blocked_file_types']);
+        $container->setParameter(
+            'sulu_media.media.blocked_file_types',
+            $config['format_manager']['blocked_file_types']
+        );
 
         // local storage
         $container->setParameter('sulu_media.media.storage.local.path', $config['storage']['local']['path']);
         $container->setParameter('sulu_media.media.storage.local.segments', $config['storage']['local']['segments']);
 
         // collections
-        $container->setParameter('sulu_media.collection.type.default', array(
-            'id' => 1,
-        ));
+        $container->setParameter(
+            'sulu_media.collection.type.default',
+            array(
+                'id' => 1,
+            )
+        );
         $container->setParameter('sulu_media.collection.previews.format', '50x50');
 
         // media
@@ -69,8 +85,14 @@ class SuluMediaExtension extends Extension
 
         // disposition type
         $container->setParameter('sulu_media.disposition_type.default', $config['disposition_type']['default']);
-        $container->setParameter('sulu_media.disposition_type.mime_types_inline', $config['disposition_type']['mime_types_inline']);
-        $container->setParameter('sulu_media.disposition_type.mime_types_attachment', $config['disposition_type']['mime_types_attachment']);
+        $container->setParameter(
+            'sulu_media.disposition_type.mime_types_inline',
+            $config['disposition_type']['mime_types_inline']
+        );
+        $container->setParameter(
+            'sulu_media.disposition_type.mime_types_attachment',
+            $config['disposition_type']['mime_types_attachment']
+        );
 
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
