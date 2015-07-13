@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document
     * HOTFIX      #1346 [ContentBundle]  Reversed order of paths to enable overriding of templates again
     * HOTFIX      #1366 [CoreBundle]     Fixed build command for not existing database
