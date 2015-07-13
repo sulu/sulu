@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
+use Doctrine\DBAL\Exception\ConnectionException;
+
 /**
  * Builder for initializing the (relational) database.
  */
@@ -38,12 +40,12 @@ class DatabaseBuilder extends SuluBuilder
     {
         $doctrine = $this->container->get('doctrine');
         $connection = $databaseExists = $doctrine->getConnection();
-        $schemaManager = $connection->getSchemaManager();
 
         try {
+            $schemaManager = $connection->getSchemaManager();
             $databaseExists = true;
             $schemaManager->listDatabases();
-        } catch (\Exception $e) {
+        } catch (ConnectionException $e) {
             $databaseExists = false;
         }
 
