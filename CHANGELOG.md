@@ -2,7 +2,6 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1355 [CoreBundle]     Fixed creator id for website document
     * ENHANCEMENT #1353 [ContactBundle]  Integrated custom filters for account-list 
     * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filters for contact-list
     * ENHANCEMENT #1345 [ContactBundle]  Added VAT validation for switzerland
@@ -11,6 +10,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle] Added creator and changer of contact to 'fullContact' serialization group
 
 * dev-master
+    * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document
     * HOTFIX      #1346 [ContentBundle]  Reversed order of paths to enable overriding of templates again
 
 * 1.0.1 (2015-07-06)
