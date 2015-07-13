@@ -22,6 +22,8 @@
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
         <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
+        <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
+        <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -55,7 +57,7 @@
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
-            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.image.proxy').getPath()</argument>
+            <argument>%sulu_media.format_cache.media_proxy_path%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
             <argument>%sulu_media.image.formats%</argument>
         </service>
@@ -85,7 +87,7 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="service" id="sulu_media.type_manager" />
-            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.media.download').getPath()</argument>
+            <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
         </service>
 
