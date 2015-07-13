@@ -15,30 +15,30 @@ define(['widget-groups'], function(WidgetGroups) {
             datagridInstanceName: 'contacts'
         },
         bindCustomEvents = function() {
-        // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.'+constants.datagridInstanceName+'.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-            }.bind(this));
-        }, this);
-
-        // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('sulu.contacts.contacts.new');
-        }, this);
-
-        // checkbox clicked
-        this.sandbox.on('husky.datagrid.'+constants.datagridInstanceName+'.number.selections', function(number) {
-            var postfix = number > 0 ? 'enable' : 'disable';
-            this.sandbox.emit('husky.toolbar.contacts.item.' + postfix, 'delete', false);
-        }.bind(this));
-
-        if (WidgetGroups.exists('contact-info')) {
-            // show sidebar for selected item
-            this.sandbox.on('husky.datagrid.'+constants.datagridInstanceName+'.item.click', function(item) {
-                this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+                }.bind(this));
             }, this);
-        }
+
+            // add clicked
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('sulu.contacts.contacts.new');
+            }, this);
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('husky.toolbar.contacts.item.' + postfix, 'delete', false);
+            }.bind(this));
+
+            if (WidgetGroups.exists('contact-info')) {
+                // show sidebar for selected item
+                this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.item.click', function(item) {
+                    this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
+                }, this);
+            }
     };
 
     return {
