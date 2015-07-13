@@ -17,6 +17,10 @@ define([
 
     'use strict';
 
+    var constants = {
+        datagridInstanceName: 'contacts'
+    };
+
     return {
 
         initialize: function() {
@@ -191,7 +195,7 @@ define([
                         var contact = new Contact({id: id});
                         contact.destroy({
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.contacts.record.remove', id);
+                                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
                             }.bind(this)
                         });
                     }.bind(this));
