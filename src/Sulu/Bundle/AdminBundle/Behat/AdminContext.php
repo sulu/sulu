@@ -136,6 +136,31 @@ EOT;
     }
 
     /**
+     * @Given I doubleclick the row containing ":text"
+     */
+    public function iDoubleClickOnTheRowContaining($text)
+    {
+        $this->waitForText($text);
+        $script = <<<EOT
+var f = function () {
+    var items = document.querySelectorAll("td span.cell-content");
+
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].textContent == '%s') {
+            items[i].dblclick();
+            break;
+        }
+    };
+}
+
+f();
+EOT;
+
+        $script = sprintf($script, $text);
+        $this->getSession()->executeScript($script);
+    }
+
+    /**
      * @Given I click the edit icon in the row containing ":text"
      */
     public function iClickOnTheEditIconInTheRowContaining($text)
