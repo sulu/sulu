@@ -70,8 +70,10 @@ class FilterListBuilder implements FilterListBuilderInterface
                 throw new FilterNotFoundException($filterId);
             }
 
-            foreach ($filter->getConditionGroups() as $conditionGroup) {
-                $this->processConditionGroup($conditionGroup, $filter->getConjunction());
+            if ($filter->getConjunction()) { // do nothing if no conjunction is set
+                foreach ($filter->getConditionGroups() as $conditionGroup) {
+                    $this->processConditionGroup($conditionGroup, $filter->getConjunction());
+                }
             }
         }
     }
