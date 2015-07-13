@@ -65,7 +65,7 @@ class PathCleanup implements PathCleanupInterface
      */
     public function cleanup($dirty, $languageCode)
     {
-        $clean = strtolower($dirty);
+        $clean = mb_strtolower($dirty);
 
         $replacers = array_merge(
             $this->replacers['default'],
