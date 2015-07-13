@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1365 [ContactBundle]  Fixed bug caused by new instance name of datagrid
     * ENHANCEMENT #1363 [ContactBundle]  Removed old config from filter config
     * ENHANCEMENT #1353 [ContactBundle]  Integrated custom filters for account-list 
     * ENHANCEMENT #1310 [ContactBundle]  Integrated custom filters for contact-list
