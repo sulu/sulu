@@ -14,6 +14,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
     var formSelector = '#filter-form',
 
         constants = {
+            coniditionsWrapperSelector: '#conditions-wrapper',
             conditionSelector: '#conditions',
             operatorsUrl: '/admin/api/operators'
         };
@@ -87,6 +88,10 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                 this.save();
             }.bind(this));
 
+            this.sandbox.on('husky.select.conjunction.selected.item', function() {
+                this.sandbox.dom.show(constants.coniditionsWrapperSelector);
+            }.bind(this));
+
             // filter delete
             this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.resource.filters.delete', this.sandbox.dom.val('#id'), this.options.type);
@@ -121,7 +126,10 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                     delete data.id;
                 }
 
-                data.conjunction = data.conjunction.id;
+                if (data.conjunction) {
+                    data.conjunction = data.conjunction.id;
+                }
+
                 data.context = this.options.type;
 
                 this.sandbox.emit('sulu.resource.filters.save', data);
@@ -133,6 +141,10 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
             this.setHeaderInformation();
             this.startOperatorSelection();
+
+            if (!this.options.data || !this.options.data.conjunction) {
+                this.sandbox.dom.hide(constants.coniditionsWrapperSelector);
+            }
 
             this.initForm(this.options.data);
         },
