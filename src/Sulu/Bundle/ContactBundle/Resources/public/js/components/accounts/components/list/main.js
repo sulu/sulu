@@ -18,8 +18,9 @@ define([
     var constants = {
             datagridInstanceName: 'accounts'
         },
+
         bindCustomEvents = function() {
-        // delete clicked
+            // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
@@ -36,17 +37,19 @@ define([
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('husky.toolbar.accounts.item.' + postfix, 'delete', false);
             }.bind(this));
+        },
 
-            if (WidgetGroups.exists('account-info')) {
-                // show sidebar for selected item
-                this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.item.click', function(id) {
-                    this.sandbox.emit(
-                        'sulu.sidebar.set-widget',
-                        '/admin/widget-groups/account-info?account=' + id
-                    );
-                }, this);
-            }
-    };
+        clickCallback = function(id) {
+            // show sidebar for selected item
+            this.sandbox.emit(
+                'sulu.sidebar.set-widget',
+                '/admin/widget-groups/account-info?account=' + id
+            );
+        },
+
+        actionCallback = function(id) {
+            this.sandbox.emit('sulu.contacts.accounts.load', id);
+        };
 
     return {
 
@@ -54,9 +57,7 @@ define([
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             },
             sidebar: {
                 width: 'fixed',
@@ -117,22 +118,8 @@ define([
                     searchInstanceName: 'accounts',
                     instanceName: constants.datagridInstanceName,
                     searchFields: ['name'],
-                    viewOptions: {
-                        table: {
-                            icons: [
-                                {
-                                    icon: 'pencil',
-                                    column: 'name',
-                                    align: 'left',
-                                    callback: function(id) {
-                                        this.sandbox.emit('sulu.contacts.accounts.load', id);
-                                    }.bind(this)
-                                }
-                            ],
-                            highlightSelected: true,
-                            fullWidth: true
-                        }
-                    }
+                    clickCallback: (WidgetGroups.exists('account-info')) ? clickCallback.bind(this) : null,
+                    actionCallback: actionCallback.bind(this)
                 },
                 'accounts',
                 '#companies-list-info'

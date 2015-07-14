@@ -29,6 +29,12 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         FILTER_DELETE = eventNamespace + 'delete',
 
         /**
+         * @event sulu.resource.filters.delete
+         * @description Opens the form for a new filter
+         */
+        FILTER_EDIT = eventNamespace + 'edit',
+
+        /**
          * @event sulu.resource.filters.save
          * @description Saves a given filter
          */
@@ -72,7 +78,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.datagrid.item.click', function(id) {
+            this.sandbox.on(FILTER_EDIT, function(id) {
                 this.load(id, AppConfig.getUser().locale);
             }.bind(this));
 

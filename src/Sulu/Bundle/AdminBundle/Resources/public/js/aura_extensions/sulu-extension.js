@@ -390,8 +390,7 @@
                                 selectedCounter: true,
                                 viewOptions: {
                                     table: {
-                                        noItemsText: 'public.empty-list',
-                                        stickyHeader: true
+                                        noItemsText: 'public.empty-list'
                                     }
                                 }
                             },

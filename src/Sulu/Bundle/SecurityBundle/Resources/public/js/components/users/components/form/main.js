@@ -538,7 +538,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 return [
                     '<thead>',
                     '   <tr>',
-                    '       <th width="5%">',
+                    '       <th class="checkbox-cell">',
                     '           <div class="custom-checkbox">',
                     '               <input id="selectAll" type="checkbox"/>',
                     '               <span class="icon"></span>',
@@ -559,7 +559,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 if (!!selected) {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                        '   <td>',
+                        '   <td class="checkbox-cell">',
                         '       <div class="custom-checkbox">',
                         '           <input type="checkbox" class="is-selected" checked/>',
                         '           <span class="icon"></span>',
@@ -573,7 +573,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 } else {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                        '   <td>',
+                        '   <td class="checkbox-cell">',
                         '       <div class="custom-checkbox">',
                         '           <input type="checkbox"/>',
                         '           <span class="icon"></span>',

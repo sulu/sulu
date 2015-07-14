@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
     * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
     * ENHANCEMENT #1363 [ContactBundle]   Removed old config from filter config
     * ENHANCEMENT #1353 [ContactBundle]   Integrated custom filters for account-list 
@@ -11,7 +12,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1341 [SecurityBundle]  Excluded user-roles from role-api serialization
     * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
-    * BUGFIX      #1365 [ContactBundle]  Fixed bug caused by new instance name of datagrid
+    * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
 
 * 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document

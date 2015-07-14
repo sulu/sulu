@@ -709,10 +709,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         sortable: false,
                         viewSpacingBottom: 180,
                         viewOptions: {
-                            table: {
-                                fullWidth: false,
-                                rowClickSelect: true
-                            },
                             thumbnail: listViews[this.listView].thViewOptions || {}
                         },
                         paginationOptions: {

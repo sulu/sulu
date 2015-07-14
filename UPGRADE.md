@@ -1,5 +1,12 @@
 # Upgrade
 
+## Dev-develop
+
+### Datagrid style upgrade
+- Deleted options: fullwidth, stickyHeader, rowClickSelect
+- The list-view with no margin was removed from the design. The view is still of width: 'max' but now with spacing on the left and right.
+- For routing from a list to the edit the new option actionCallback should be used. For other actions like displaying additional information in the sidebar there exists a new option clickCallback. These two callbacks alow the component to adapt its style depending on if there is an action or not. For special cases there is still the item.click event.
+
 ## 1.0.0
 
 ### User / Role management changed
