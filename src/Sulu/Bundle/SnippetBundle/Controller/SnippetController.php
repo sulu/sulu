@@ -269,7 +269,7 @@ class SnippetController implements SecuredControllerInterface
     public function postTriggerAction($uuid, Request $request)
     {
         $view = null;
-        $data = null;
+        $snippet = null;
 
         $this->initEnv($request);
         $action = $this->getRequestParameter($request, 'action', true);
@@ -280,7 +280,7 @@ class SnippetController implements SecuredControllerInterface
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
 
                     // call repository method
-                    $data = $this->snippetRepository->copyLocale(
+                    $snippet = $this->snippetRepository->copyLocale(
                         $uuid,
                         $this->getUser()->getId(),
                         $this->languageCode,
@@ -292,12 +292,15 @@ class SnippetController implements SecuredControllerInterface
             }
 
             // prepare view
-            $view = $this->view($data, $data !== null ? 200 : 204);
+            $view = View::create(
+                $this->decorateSnippet($snippet->toArray(), $this->languageCode),
+                $snippet !== null ? 200 : 204
+            );
         } catch (RestException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = View::create($exc->toArray(), 400);
         }
 
-        return $this->handleView($view);
+        return $this->viewHandler->handle($view);
     }
 
     /**
