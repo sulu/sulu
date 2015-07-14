@@ -14,7 +14,8 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Jackalope\Query\Query;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Util\QOM\QueryBuilder;
-use Sulu\Component\Content\Compat\Structure\Snippet;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
@@ -50,7 +51,7 @@ class SnippetRepository
      * Return the nodes which refer to the structure with the
      * given UUID.
      *
-     * @param string UUID
+     * @param string $uuid
      *
      * @return \PHPCR\NodeInterface[]
      */
@@ -70,7 +71,7 @@ class SnippetRepository
      * @param array  $uuids
      * @param string $languageCode
      *
-     * @return Snippet[]
+     * @return SnippetBridge[]
      */
     public function getSnippetsByUuids(array $uuids = [], $languageCode)
     {
@@ -103,7 +104,7 @@ class SnippetRepository
      *
      * @throws \InvalidArgumentException
      *
-     * @return Snippet[]
+     * @return SnippetBridge[]
      */
     public function getSnippets(
         $languageCode,
@@ -132,7 +133,7 @@ class SnippetRepository
      *
      * @throws \InvalidArgumentException
      *
-     * @return Snippet[]
+     * @return SnippetBridge[]
      */
     public function getSnippetsAmount(
         $languageCode,
@@ -145,6 +146,28 @@ class SnippetRepository
         $result = $query->execute();
 
         return count(iterator_to_array($result->getRows()));
+    }
+
+    /**
+     * Copy snippet from src-locale to dest-locale
+     *
+     * @param string $uuid
+     * @param int $userId
+     * @param string $srcLocale
+     * @param string $destLocales
+     *
+     * @return SnippetBridge
+     */
+    public function copyLocale($uuid, $userId, $srcLocale, $destLocales)
+    {
+        return $this->contentMapper->copyLanguage(
+            $uuid,
+            $userId,
+            null,
+            $srcLocale,
+            $destLocales,
+            Structure::TYPE_SNIPPET
+        );
     }
 
     /**
