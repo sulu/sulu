@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1367 [AdminBundle]     new tabs design
     * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
     * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
     * ENHANCEMENT #1363 [ContactBundle]   Removed old config from filter config
