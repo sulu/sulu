@@ -36,7 +36,6 @@ class PackageRepository extends EntityRepository
                 ->where('package.id=:packageId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('packageId', $id);
 
             return $query->getSingleResult();

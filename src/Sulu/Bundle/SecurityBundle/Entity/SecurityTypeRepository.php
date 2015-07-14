@@ -35,7 +35,6 @@ class SecurityTypeRepository extends EntityRepository
                 ->where('securityType.id=:securityTypeId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('securityTypeId', $id);
 
             return $query->getSingleResult();
