@@ -575,7 +575,7 @@ input, select {
   padding-bottom: 200px;
 }
 /* line 105, ../scss/modules/header.scss */
-.sulu-header.hidden + .page {
+.sulu-header.invisible + .page {
   margin-top: 0;
   padding-bottom: 0;
 }
