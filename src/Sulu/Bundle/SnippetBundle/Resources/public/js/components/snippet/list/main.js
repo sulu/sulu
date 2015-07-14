@@ -13,7 +13,11 @@ define([
 
     'use strict';
 
-    var template = [
+    var constants = {
+            localizationUrl: '/admin/api/localizations'
+        },
+
+        template = [
             '<div id="list-toolbar-container"></div>',
             '<div id="snippet-list"></div>',
             '<div id="dialog"></div>'
@@ -94,8 +98,7 @@ define([
                                     this.sandbox.emit('sulu.snippets.snippet.load', id);
                                 }.bind(this)
                             }
-                        ],
-                        highlightSelected: true
+                        ]
                     }
                 }
             }
