@@ -81,6 +81,10 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.security" class="Sulu\Component\Content\Document\Subscriber\SecuritySubscriber">
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
         <service id="sulu_document_manager.document.subscriber.webspace" class="Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
