@@ -171,32 +171,53 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $joins;
     }
 
+    private function createSubQuery()
+    {
+        // TODO: what about group by fields
+
+        $filterFields = array_merge($this->whereFields, $this->inFields, $this->betweenFields, $this->searchFields);
+        $joins = $this->getJoins();
+
+        $addJoins = array();
+        foreach ($joins as $entity => $join) {
+            if (array_search($entity, $filterFields) != false ||
+                $join->getJoinConditionMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
+            ) {
+                $addJoins[$entity] = $join;
+            }
+        }
+
+        $this->createQueryBuilder($addJoins);
+    }
+
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createQueryBuilder()
+    private function createQueryBuilder($joins = null)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
 
-        foreach ($this->getJoins() as $entity => $join) {
-            switch ($join->getJoinMethod()) {
-                case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
-                    $this->queryBuilder->leftJoin(
-                        $join->getJoin(),
-                        $entity,
-                        $join->getJoinConditionMethod(),
-                        $join->getJoinCondition()
-                    );
-                    break;
-                case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
-                    $this->queryBuilder->innerJoin(
-                        $join->getJoin(),
-                        $entity,
-                        $join->getJoinConditionMethod(),
-                        $join->getJoinCondition()
-                    );
-                    break;
+        if ($joins !== null) {
+            foreach ($this->getJoins() as $entity => $join) {
+                switch ($join->getJoinMethod()) {
+                    case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
+                        $this->queryBuilder->leftJoin(
+                            $join->getJoin(),
+                            $entity,
+                            $join->getJoinConditionMethod(),
+                            $join->getJoinCondition()
+                        );
+                        break;
+                    case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
+                        $this->queryBuilder->innerJoin(
+                            $join->getJoin(),
+                            $entity,
+                            $join->getJoinConditionMethod(),
+                            $join->getJoinCondition()
+                        );
+                        break;
+                }
             }
         }
 
@@ -296,7 +317,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * sets where statement.
+     * Sets where statement
      *
      * @param array $whereFields
      * @param array $whereValues
