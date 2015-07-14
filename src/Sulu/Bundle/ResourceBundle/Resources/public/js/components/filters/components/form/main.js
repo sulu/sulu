@@ -88,7 +88,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                 this.save();
             }.bind(this));
 
-            this.sandbox.on('husky.select.conjunction.selected.item', function(){
+            this.sandbox.on('husky.select.conjunction.selected.item', function() {
                 this.sandbox.dom.show(constants.coniditionsWrapperSelector);
             }.bind(this));
 
@@ -142,7 +142,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             this.setHeaderInformation();
             this.startOperatorSelection();
 
-            if(!this.options.data || !this.options.data.conjunction){
+            if (!this.options.data || !this.options.data.conjunction) {
                 this.sandbox.dom.hide(constants.coniditionsWrapperSelector);
             }
 
