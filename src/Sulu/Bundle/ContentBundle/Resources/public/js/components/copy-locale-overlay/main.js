@@ -80,10 +80,7 @@ define(function() {
         },
 
         copyLocale = function(id, src, dest, successCallback, errorCallback) {
-            var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
-                '&language=', src, '&dest=', dest.join(','), '&action=copy-locale'
-            ].join('');
+            var url = this.getCopyLocaleUrl(id, src, dest.join(','));
 
             this.sandbox.util.save(url, 'POST', {})
                 .then(function(data) {
@@ -104,7 +101,8 @@ define(function() {
         },
 
         startCopyLocalesOverlay: function() {
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+            var def = this.sandbox.data.deferred(),
+                $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 languages = [],
                 currentLocaleText = this.sandbox.translate('content.contents.settings.copy-locales.current-language'),
                 deselectHandler = function(item) {
@@ -178,13 +176,7 @@ define(function() {
                                     this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler);
                                     copyLocale.call(this, this.data.id, src[0], dest);
 
-                                    // define data and overwrite data.id if startpage (index) - for correct redirect
-                                    var data = this.data;
-                                    if (this.options.id === 'index') {
-                                        data.id = this.options.id;
-                                    }
-
-                                    this.load(data, this.options.webspace, this.options.language, true);
+                                    def.resolve();
                                 }.bind(this)
                             }
                         ]
@@ -204,6 +196,8 @@ define(function() {
                     }
                 }
             ]);
+
+            return def.promise();
         }
     };
 });

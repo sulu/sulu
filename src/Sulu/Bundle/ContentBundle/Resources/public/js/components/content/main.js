@@ -1002,6 +1002,13 @@ define([
             });
         },
 
+        getCopyLocaleUrl: function(id, src, dest) {
+            return [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
+                '&language=', src, '&dest=', dest, '&action=copy-locale'
+            ].join('');
+        },
+
         header: function() {
             // because it is called first
             this.headerInitialized = this.sandbox.data.deferred();
@@ -1134,7 +1141,9 @@ define([
                                         {
                                             title: this.sandbox.translate('toolbar.copy-locale'),
                                             callback: function() {
-                                                CopyLocale.startCopyLocalesOverlay.call(this);
+                                                CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                                    this.load(this.data, this.options.webspace, this.options.language, true);
+                                                }.bind(this));
                                             }.bind(this)
                                         }
                                     ]

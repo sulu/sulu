@@ -9,12 +9,17 @@
 
 define([
     'sulusnippet/components/snippet/main',
-    'sulusnippet/model/snippet'
-], function(BaseSnippet, Snippet) {
+    'sulusnippet/model/snippet',
+    'sulucontent/components/copy-locale-overlay/main'
+], function(BaseSnippet, Snippet, CopyLocale) {
 
     'use strict';
 
-    var SnippetForm = function() {
+    var constants = {
+            localizationUrl: '/admin/api/localizations'
+        },
+
+        SnippetForm = function() {
         BaseSnippet.call(this);
 
         return this;
@@ -46,14 +51,24 @@ define([
             },
 
             toolbar: {
-                parentTemplate: 'default',
-
                 languageChanger: {
                     url: '/admin/api/languages',
                     preSelected: this.options.language
                 },
 
                 template: [
+                    {
+                        id: 'save-button',
+                        icon: 'floppy-o',
+                        iconSize: 'large',
+                        class: 'highlight',
+                        position: 1,
+                        group: 'left',
+                        disabled: true,
+                        callback: function() {
+                            this.sandbox.emit('sulu.header.toolbar.save');
+                        }.bind(this)
+                    },
                     {
                         id: 'template',
                         icon: 'pencil',
@@ -77,6 +92,29 @@ define([
                                 this.template = item.template;
                             }.bind(this)
                         }
+                    },
+                    {
+                        icon: 'gear',
+                        iconSize: 'large',
+                        group: 'left',
+                        id: 'options-button',
+                        position: 30,
+                        items: [
+                            {
+                                title: this.sandbox.translate('toolbar.delete'),
+                                callback: function() {
+                                    this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
+                                }.bind(this)
+                            },
+                            {
+                                title: this.sandbox.translate('toolbar.copy-locale'),
+                                callback: function() {
+                                    CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                        this.load(this.data.id, this.options.language);
+                                    }.bind(this));
+                                }.bind(this)
+                            }
+                        ]
                     }
                 ]
             }
@@ -92,7 +130,27 @@ define([
         this.bindModelEvents();
         this.bindCustomEvents();
 
+        this.loadLocalizations();
+
         this.loadData();
+    };
+
+    SnippetForm.prototype.loadLocalizations = function() {
+        this.sandbox.util.load(constants.localizationUrl)
+            .then(function(data) {
+                this.localizations = data._embedded.localizations.map(function(localization) {
+                    return {
+                        id: localization.localization,
+                        title: localization.localization
+                    };
+                });
+            }.bind(this));
+    };
+
+    SnippetForm.prototype.getCopyLocaleUrl = function(id, src, dest) {
+        return [
+            '/admin/api/snippets/', id, '?language=', src, '&dest=', dest, '&action=copy-locale'
+        ].join('');
     };
 
     SnippetForm.prototype.bindCustomEvents = function() {
@@ -131,11 +189,6 @@ define([
         this.sandbox.on('sulu.snippets.snippet.save-error', function() {
             this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
             this.setHeaderBar(false);
-        }, this);
-
-        // content delete
-        this.sandbox.on('sulu.header.toolbar.delete', function() {
-            this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
         }, this);
     };
 
