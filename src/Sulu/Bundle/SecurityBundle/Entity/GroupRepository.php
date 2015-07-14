@@ -39,7 +39,6 @@ class GroupRepository extends EntityRepository
                 ->where('grp.id=:groupId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('groupId', $id);
 
             return $query->getSingleResult();
@@ -57,9 +56,7 @@ class GroupRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('grp');
-
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
             $result = $query->getResult();
 

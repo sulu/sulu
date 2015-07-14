@@ -41,7 +41,6 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->where('role.id=:roleId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('roleId', $id);
 
             return $query->getSingleResult();
@@ -70,7 +69,6 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->andWhere('role.system=:roleSystem');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('roleName', $name);
             $query->setParameter('roleSystem', $system);
 
@@ -93,11 +91,8 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->addSelect('permissions');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-            $result = $query->getResult();
-
-            return $result;
+            return $query->getResult();
         } catch (NoResultException $ex) {
             return;
         }

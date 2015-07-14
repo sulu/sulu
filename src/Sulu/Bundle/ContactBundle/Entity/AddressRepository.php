@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 
 /**
@@ -37,7 +38,6 @@ class AddressRepository extends EntityRepository
                 ->where('address.id = :id');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('id', $id);
 
             return $query->getSingleResult();
@@ -62,7 +62,6 @@ class AddressRepository extends EntityRepository
                 ->where('account.id = :id');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('id', $id);
 
             return $query->getResult();
