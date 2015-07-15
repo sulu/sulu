@@ -116,6 +116,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         $event = new ListBuilderCreateEvent($this);
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
 
+        $subquery = $this->createSubQuery();
+
         $this->queryBuilder = $this->createQueryBuilder();
 
         foreach ($this->selectFields as $field) {
@@ -187,7 +189,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createQueryBuilder($joins = null)
+    private function createQueryBuilder($joins = null, $subquery = null)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
