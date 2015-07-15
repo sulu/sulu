@@ -1424,6 +1424,33 @@ class NodeControllerTest extends SuluTestCase
         $this->assertContains('en', $result['concreteLanguages']);
     }
 
+    public function testGetWithPermissions()
+    {
+        $permissions = array('ROLE_SULU_USER' => array('view', 'edit'));
+
+        // create secured page
+        $securedPage = $this->documentManager->create('page');
+        $securedPage->setTitle('secured');
+        $securedPage->setResourceSegment('/secured');
+        $securedPage->setStructureType('default');
+        $securedPage->setPermissions($permissions);
+        $this->documentManager->persist($securedPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+        $this->documentManager->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/nodes?id=' . $securedPage->getUuid() . '&tree=true&webspace=sulu_io&language=en');
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($permissions, $response['_embedded']['nodes'][0]['permissions']);
+
+        $client->request('GET', '/api/nodes/' . $securedPage->getUuid() . '?language=en&webspace=sulu_io');
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($permissions, $response['permissions']);
+    }
+
     private function setUpContent($data)
     {
         /** @var ContentMapperInterface $mapper */

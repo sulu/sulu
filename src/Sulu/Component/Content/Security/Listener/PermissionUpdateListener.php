@@ -35,11 +35,33 @@ class PermissionUpdateListener
             return;
         }
 
+        $allowedPermissions = array();
+        foreach ($event->getPermissions() as $roleName => $permissions) {
+            $allowedPermissions[$roleName] = $this->getAllowedPermissions($permissions);
+        }
+
         /** @var BasePageDocument $document */
         $document = $this->documentManager->find($event->getIdentifier());
-        $document->setPermissions($event->getPermissions());
+        $document->setPermissions($allowedPermissions);
 
         $this->documentManager->persist($document, 'en'); // TODO use correct language
         $this->documentManager->flush();
+    }
+
+    /**
+     * Extracts the keys of the allowed permissions into an own array
+     * @param $permissions
+     * @return array
+     */
+    private function getAllowedPermissions($permissions)
+    {
+        $allowedPermissions = array();
+        foreach ($permissions as $permission => $allowed) {
+            if ($allowed) {
+                $allowedPermissions[] = $permission;
+            }
+        }
+
+        return $allowedPermissions;
     }
 }

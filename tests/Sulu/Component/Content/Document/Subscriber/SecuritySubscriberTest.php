@@ -31,7 +31,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         /** @var SecurityBehavior $document */
         $document = $this->prophesize(SecurityBehavior::class);
         $document->getPermissions()->willReturn(
-            array('ROLE_SULU_USER' => array('view' => true, 'add' => true, 'edit' => true, 'delete' => false))
+            array('ROLE_SULU_USER' => array('view', 'add', 'edit'))
         );
 
         $this->persistEvent->getDocument()->willReturn($document);

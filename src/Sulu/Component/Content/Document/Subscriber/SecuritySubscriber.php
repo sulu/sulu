@@ -9,7 +9,9 @@
  */
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\PropertyInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,6 +28,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     {
         return array(
             Events::PERSIST => 'handlePersist',
+            Events::HYDRATE => 'handleHydrate'
         );
     }
 
@@ -34,7 +37,8 @@ class SecuritySubscriber implements EventSubscriberInterface
      * @param $document
      * @return bool
      */
-    public function supports($document) {
+    public function supports($document)
+    {
         return $document instanceof SecurityBehavior;
     }
 
@@ -55,23 +59,26 @@ class SecuritySubscriber implements EventSubscriberInterface
 
         foreach ($document->getPermissions() as $roleName => $permission) {
             $roleName = str_replace('_', '-', strtolower(substr($roleName, 5))); // TODO extract this functionality
-            $node->setProperty('sec:' . $roleName, $this->getAllowedPermissions($permission)); // TODO use PropertyEncoder, once it is refactored
+            $node->setProperty('sec:' . $roleName, $permission); // TODO use PropertyEncoder, once it is refactored
         }
     }
 
-    /**
-     * Extracts the keys of the allowed permissions into an own array
-     * @param $permissions
-     * @return array
-     */
-    private function getAllowedPermissions($permissions) {
-        $allowedPermissions = array();
-        foreach ($permissions as $permission => $allowed) {
-            if ($allowed) {
-                $allowedPermissions[] = $permission;
-            }
+    public function handleHydrate(HydrateEvent $event)
+    {
+        $document = $event->getDocument();
+        $node = $event->getNode();
+
+        if (!$this->supports($document)) {
+            return;
         }
 
-        return $allowedPermissions;
+        $permissions = array();
+        foreach ($node->getProperties('sec:*') as $property) {
+            /** @var PropertyInterface $property */
+            $roleName = 'ROLE_' . strtoupper(str_replace('-', '_', substr($property->getName(), 4)));
+            $permissions[$roleName] = $property->getValue();
+        }
+
+        $document->setPermissions($permissions);
     }
 }

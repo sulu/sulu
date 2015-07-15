@@ -42,10 +42,14 @@ class PermissionUpdateListenerTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->flush()->shouldBeCalled();
 
         $this->permissionUpdateListener->onPermissionUpdate(
-            new PermissionUpdateEvent(WebspaceBehavior::class, 'id', array(''))
+            new PermissionUpdateEvent(
+                WebspaceBehavior::class,
+                'id',
+                array('ROLE_SULU_USER' => array('view' => true, 'edit' => false))
+            )
         );
 
-        $this->assertEquals(array(''), $document->getPermissions());
+        $this->assertEquals(array('ROLE_SULU_USER' => array('view')), $document->getPermissions());
     }
 
     public function testOnPermissionUpdateWithoutWebspaceBehavior()
