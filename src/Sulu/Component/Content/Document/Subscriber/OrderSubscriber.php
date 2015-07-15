@@ -12,8 +12,9 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -27,6 +28,9 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
 
+    /**
+     * @var PropertyEncoder
+     */
     private $encoder;
 
     public function __construct(PropertyEncoder $encoder)
@@ -34,6 +38,11 @@ class OrderSubscriber implements EventSubscriberInterface
         $this->encoder = $encoder;
     }
 
+    /**
+     * Checks if the given document is supported by this subscriber
+     * @param $document
+     * @return bool
+     */
     public function supports($document)
     {
         return $document instanceof OrderBehavior;
@@ -51,6 +60,7 @@ class OrderSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Adjusts the order of the document and its siblings
      * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
@@ -64,19 +74,18 @@ class OrderSubscriber implements EventSubscriberInterface
 
         $propertyName = $this->encoder->systemName(self::FIELD);
 
-        if ($node->hasProperty($propertyName)) {
-            return;
+        $parent = $node->getParent();
+        $count = 0;
+        foreach ($parent->getNodes() as $childNode) {
+            $childNode->setProperty($propertyName, ($count + 1) * 10, PropertyType::LONG);
+            ++$count;
         }
 
-        $parent = $node->getParent();
-        $nodeCount = count($parent->getNodes());
-        $order = ($nodeCount + 1) * 10;
-
-        $node->setProperty($propertyName, $order, PropertyType::LONG);
         $this->handleHydrate($event);
     }
 
     /**
+     * Adds the order to the document
      * @param HydrateEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
