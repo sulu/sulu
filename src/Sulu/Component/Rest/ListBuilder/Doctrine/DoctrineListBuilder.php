@@ -135,10 +135,19 @@ class DoctrineListBuilder extends AbstractListBuilder
             ->from($this->entityName, $this->entityName);
         $this->addJoins($this->queryBuilder);
 
+        // add all select fields
         foreach ($this->selectFields as $field) {
             $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
 
+        // group
+        if (!empty($this->groupByFields)) {
+            foreach ($this->groupByFields as $fields) {
+                $this->queryBuilder->groupBy($fields->getSelect());
+            }
+        }
+
+        // sort
         if ($this->sortField != null) {
             $this->queryBuilder->orderBy($this->sortField->getSelect(), $this->sortOrder);
         }
