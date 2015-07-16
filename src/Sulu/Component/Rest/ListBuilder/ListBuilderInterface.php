@@ -116,6 +116,16 @@ interface ListBuilderInterface
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC);
 
     /**
+     * Adds an ORDER BY clause to sort-list
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param string $order
+     *
+     * @return ListBuilderInterface
+     */
+    public function addOrderBy(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC);
+
+    /**
      * Defines how many items should be returned.
      *
      * @param int $limit
@@ -179,7 +189,7 @@ interface ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Defines a in constraint.
+     * Defines an IN constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
