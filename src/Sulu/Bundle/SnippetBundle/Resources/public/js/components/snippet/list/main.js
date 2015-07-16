@@ -90,6 +90,23 @@ define([
                 resultKey: 'snippets',
                 viewOptions: {
                     table: {
+                        batches: [
+                            {
+                                column: 'title',
+                                callback: function(item, batch) {
+                                    if (!!item.type &&
+                                        item.type.name === 'ghost' &&
+                                        item.type.value !== this.options.language
+                                    ) {
+                                        batch.title = item.type.value;
+
+                                        return batch;
+                                    }
+
+                                    return false;
+                                }.bind(this)
+                            }
+                        ],
                         icons: [
                             {
                                 icon: 'pencil',
