@@ -363,7 +363,7 @@ define(function() {
                             id: 'settings',
                             icon: 'gear',
                             position: 30,
-                            items: [
+                            dropdownItems: [
                                 {
                                     id: 'media-move',
                                     title: this.sandbox.translate('sulu.media.move'),
@@ -379,10 +379,10 @@ define(function() {
                         {
                             id: 'change',
                             icon: 'th-large',
-                            itemsOption: {
-                                markable: true
+                            dropdownOptions: {
+                                markSelected: true
                             },
-                            items: [
+                            dropdownItems: [
                                 {
                                     id: 'small-thumbnails',
                                     title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),

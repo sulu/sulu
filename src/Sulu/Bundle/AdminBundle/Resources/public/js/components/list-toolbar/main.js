@@ -35,8 +35,6 @@ define([], function() {
                     {
                         id: 'add',
                         icon: 'plus-circle',
-                        class: 'highlight-white',
-                        title: 'add',
                         position: 10,
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.add');
@@ -45,7 +43,6 @@ define([], function() {
                     {
                         id: 'delete',
                         icon: 'trash-o',
-                        title: 'delete',
                         position: 20,
                         disabled: true,
                         callback: function() {
@@ -56,7 +53,7 @@ define([], function() {
                         id: 'settings',
                         icon: 'gear',
                         position: 30,
-                        items: [
+                        dropdownItems: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
                                 disabled: true
@@ -77,7 +74,6 @@ define([], function() {
                     {
                         id: 'edit',
                         icon: 'pencil',
-                        title: 'edit',
                         position: 25,
                         disabled: true,
                         callback: function() {
@@ -101,10 +97,10 @@ define([], function() {
                     {
                         id: 'change',
                         icon: 'th-large',
-                        itemsOption: {
-                            markable: true
+                        dropdownOptions: {
+                            markSelected: true
                         },
-                        items: [
+                        dropdownItems: [
                             {
                                 id: 'small-thumbnails',
                                 title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
@@ -134,10 +130,8 @@ define([], function() {
                 var defaults = templates.default.call(this);
                 defaults.splice(1, 0, {
                     icon: 'floppy-o',
-                    iconSize: 'large',
                     disabled: true,
                     id: 'save',
-                    title: this.sandbox.translate('sulu.list-toolbar.save'),
                     callback: function() {
                         this.sandbox.emit('sulu.list-toolbar.save');
                     }.bind(this)
@@ -263,9 +257,9 @@ define([], function() {
 
             for (i = -1, len = template.length; ++i < len;) {
                 item = template[i];
-                if (item.hasOwnProperty('items')) {
+                if (item.hasOwnProperty('dropdownItems')) {
                     // call recursively
-                    item.items = parseTemplateTypes.call(this, item.items);
+                    item.dropdownItems = parseTemplateTypes.call(this, item.dropdownItems);
                 }
                 if (item.hasOwnProperty('type')) {
                     if (item.type === 'columnOptions') {
@@ -332,12 +326,9 @@ define([], function() {
                 options = {
                     groups: this.options.groups,
                     hasSearch: true,
-                    data: this.options.template,
+                    buttons: this.options.template,
                     instanceName: this.options.instanceName,
-                    showTitleAsTooltip: this.options.showTitleAsTooltip,
-                    searchOptions: {
-                        placeholderText: 'public.search'
-                    }
+                    showTitleAsTooltip: this.options.showTitleAsTooltip
                 };
 
             if (this.options.hasOwnProperty('hasSearch')) {

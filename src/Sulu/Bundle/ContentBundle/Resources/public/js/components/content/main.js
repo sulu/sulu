@@ -1276,8 +1276,6 @@ define([
                                 {
                                     id: 'save-button',
                                     icon: 'floppy-o',
-                                    iconSize: 'large',
-                                    class: 'highlight',
                                     position: 1,
                                     group: 'left',
                                     disabled: true,
@@ -1288,18 +1286,16 @@ define([
                                 {
                                     id: 'template',
                                     icon: 'pencil',
-                                    iconSize: 'large',
                                     group: 'left',
                                     position: 10,
-                                    type: 'select',
                                     title: '',
                                     hidden: false,
-                                    itemsOption: {
+                                    dropdownOptions: {
                                         url: '/admin/content/template?webspace=' + this.options.webspace,
                                         titleAttribute: 'title',
                                         idAttribute: 'template',
-                                        translate: false,
-                                        markable: true,
+                                        markSelected: true,
+                                        changeButton: true,
                                         callback: function(item) {
                                             this.template = item.template;
                                             this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
@@ -1308,11 +1304,10 @@ define([
                                 },
                                 {
                                     icon: 'gear',
-                                    iconSize: 'large',
                                     group: 'left',
                                     id: 'options-button',
                                     position: 30,
-                                    items: [
+                                    dropdownItems: [
                                         {
                                             title: this.sandbox.translate('toolbar.delete'),
                                             disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
@@ -1332,11 +1327,11 @@ define([
                                     id: 'state',
                                     group: 'left',
                                     position: 100,
-                                    type: 'select',
-                                    itemsOption: {
-                                        markable: true
+                                    dropdownOptions: {
+                                        markSelected: true,
+                                        changeButton: true
                                     },
-                                    items: [
+                                    dropdownItems: [
                                         {
                                             id: 2,
                                             title: this.sandbox.translate('toolbar.state-publish'),

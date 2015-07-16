@@ -131,9 +131,7 @@ define([
                 {
                     id: 'add',
                     icon: 'plus-circle',
-                    class: 'highlight-white',
                     position: 1,
-                    title: this.sandbox.translate('sulu.list-toolbar.add'),
                     callback: function() {
                         this.sandbox.emit('sulu.list-toolbar.add');
                     }.bind(this)

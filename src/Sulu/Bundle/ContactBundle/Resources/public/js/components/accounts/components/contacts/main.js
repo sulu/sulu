@@ -222,10 +222,8 @@ define([
                 {
                     id: 'add',
                     icon: 'plus-circle',
-                    class: 'highlight-white',
                     position: 1,
-                    title: this.sandbox.translate('sulu.list-toolbar.add'),
-                    items: [
+                    dropdownItems: [
                         {
                             id: 'add-account-contact',
                             title: this.sandbox.translate('contact.account.add-account-contact'),
@@ -244,7 +242,7 @@ define([
                 {
                     id: 'settings',
                     icon: 'gear',
-                    items: [
+                    dropdownItems: [
                         {
                             id: 'delete',
                             title: this.sandbox.translate('contact.accounts.contact-remove'),
