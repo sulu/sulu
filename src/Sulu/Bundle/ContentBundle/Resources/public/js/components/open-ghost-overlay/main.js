@@ -100,26 +100,21 @@ define(function() {
 
     return {
         openGhost: function(item) {
+            var def = this.sandbox.data.deferred();
+
             startOverlay.call(
                 this,
                 'content.contents.settings.copy-locale.title',
                 templates.openGhost.call(this), true, 'copy-locale-overlay',
                 function() {
                     var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
-                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues'),
-                        dest = this.options.language;
+                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues');
 
-                    if (!!copy) {
-                        if (!src || src.length === 0) {
-                            return false;
-                        }
-
-                        this.sandbox.emit('sulu.content.contents.copy-locale', item.id, src[0], [dest], function() {
-                            this.sandbox.emit('sulu.content.contents.load', item);
-                        }.bind(this));
-                    } else {
-                        this.sandbox.emit('sulu.content.contents.load', item);
+                    if (!src || src.length === 0) {
+                        return false;
                     }
+
+                    def.resolve(copy, src[0]);
                 }.bind(this)
             );
 
@@ -138,6 +133,8 @@ define(function() {
                     }
                 }
             ]);
+
+            return def.promise();
         }
     };
 });

@@ -98,15 +98,21 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
                 } else {
-                    OpenGhost.openGhost.call(this, item);
-                /*.then(function() {
-                        this.sandbox.emit(
-                            'sulu.content.contents.copy-locale', item.id, src[0], [this.options.language],
-                            function() {
-                                this.sandbox.emit('sulu.content.contents.load', item);
-                            }.bind(this)
-                        );
-                    }.bind(this));*/
+                    OpenGhost.openGhost.call(this, item).then(function(copy, src) {
+                        if (!!copy) {
+                            this.sandbox.emit(
+                                'sulu.content.contents.copy-locale',
+                                item.id,
+                                src,
+                                [this.options.language],
+                                function() {
+                                    this.sandbox.emit('sulu.content.contents.load', item);
+                                }.bind(this)
+                            );
+                        } else {
+                            this.sandbox.emit('sulu.content.contents.load', item);
+                        }
+                    }.bind(this));
                 }
             }, this);
 
