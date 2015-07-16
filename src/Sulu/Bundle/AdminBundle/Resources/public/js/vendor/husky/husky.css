@@ -867,7 +867,7 @@ h1 {
 }
 /* line 32, ../scss/typo.scss */
 h1.bright {
-  color: #b4dfe8;
+  color: #74C4D4;
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -991,9 +991,9 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   line-height: 18px;
   height: 20px;
   text-decoration: none;
-  color: #b4dfe8;
+  color: #74C4D4;
   border-style: solid;
-  border-color: #b4dfe8;
+  border-color: #74C4D4;
   border-width: 1px 0;
   vertical-align: top;
   padding: 0 5px 0 13px;
@@ -2955,7 +2955,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-style: normal;
 }
 /* line 4, ../scss/fontsawesome/_core.scss */
-.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .husky-matcher.overflow .wrapper:after, .sortable .text-block > .move::before {
+.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3041,11 +3041,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .husky-matcher.overflow .pull-left.wrapper:after, .sortable .text-block > .pull-left.move::before {
+.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .husky-matcher.overflow .pull-right.wrapper:after, .sortable .text-block > .pull-right.move::before {
+.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before {
   margin-left: .3em;
 }
 
@@ -8275,96 +8275,96 @@ a.btn-black, a.btn-highlight {
 }
 
 /*styles related to the whole container*/
+/* line 10, ../scss/modules/toolbar.scss */
+.husky-toolbar {
+  /*group specific styles*/
+  /** styles for the toolbar-items **/
+  /**  dropdown styles **/
+}
 /* line 32, ../scss/mixins.scss */
 .husky-toolbar:after {
   clear: both;
   content: ' ';
   display: block;
 }
-/* line 12, ../scss/modules/toolbar.scss */
+/* line 13, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-search {
   display: inline-block;
   float: left;
 }
-/* line 18, ../scss/modules/toolbar.scss */
+/* line 19, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .group {
   height: 20px;
 }
-/* line 22, ../scss/modules/toolbar.scss */
+/* line 23, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .toolbar-item {
   line-height: 20px;
   min-width: 30px;
 }
-/* line 26, ../scss/modules/toolbar.scss */
-.husky-toolbar.small .toolbar-item a {
-  line-height: 17px;
-  min-width: 30px;
-}
-/* line 30, ../scss/modules/toolbar.scss */
-.husky-toolbar.small .toolbar-item a .icon, .husky-toolbar.small .toolbar-item a.icon {
+/* line 27, ../scss/modules/toolbar.scss */
+.husky-toolbar.small .toolbar-item .icon {
   font-size: 10px;
+  position: relative;
+  top: -2px;
 }
-/* line 33, ../scss/modules/toolbar.scss */
-.husky-toolbar.small .toolbar-item a .title {
+/* line 32, ../scss/modules/toolbar.scss */
+.husky-toolbar.small .toolbar-item .title {
   font-size: 9px;
 }
-/* line 38, ../scss/modules/toolbar.scss */
+/* line 35, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .toolbar-item .item-loader {
   height: 14px;
   margin-top: 2px;
+  margin-left: -2px;
 }
-
-/*group specific styles*/
-/* line 47, ../scss/modules/toolbar.scss */
-.group {
+/* line 44, ../scss/modules/toolbar.scss */
+.husky-toolbar .group {
   padding-left: 0;
   margin: 0;
   list-style: none;
   height: 30px;
 }
-/* line 53, ../scss/modules/toolbar.scss */
-.group.right {
+/* line 50, ../scss/modules/toolbar.scss */
+.husky-toolbar .group.right {
   float: right;
   padding-left: 10px;
 }
-/* line 57, ../scss/modules/toolbar.scss */
-.group.right .toolbar-dropdown-menu {
+/* line 54, ../scss/modules/toolbar.scss */
+.husky-toolbar .group.right .toolbar-dropdown-menu {
   left: auto;
   right: 0;
 }
-/* line 62, ../scss/modules/toolbar.scss */
-.group.left {
+/* line 59, ../scss/modules/toolbar.scss */
+.husky-toolbar .group.left {
   float: left;
   padding-right: 10px;
 }
-/* line 65, ../scss/modules/toolbar.scss */
-.group.left.last {
+/* line 62, ../scss/modules/toolbar.scss */
+.husky-toolbar .group.left.last {
   padding-right: 0;
 }
-/* line 70, ../scss/modules/toolbar.scss */
-.group .toolbar-item {
+/* line 67, ../scss/modules/toolbar.scss */
+.husky-toolbar .group .toolbar-item {
   border-style: solid;
   border-color: #CACACA;
   border-width: 1px 1px 1px 0;
 }
-/* line 75, ../scss/modules/toolbar.scss */
-.group .toolbar-item:first-child, .group .toolbar-item:first-child.hidden + .toolbar-item {
+/* line 72, ../scss/modules/toolbar.scss */
+.husky-toolbar .group .toolbar-item:first-child, .husky-toolbar .group .toolbar-item:first-child.hidden + .toolbar-item {
   border-radius: 3px 0 0 3px;
   border-width: 1px;
 }
-/* line 80, ../scss/modules/toolbar.scss */
-.group .toolbar-item:last-child {
-  border-top-right-radius: 3px !important;
-  border-bottom-right-radius: 3px !important;
+/* line 77, ../scss/modules/toolbar.scss */
+.husky-toolbar .group .toolbar-item:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
-/* line 84, ../scss/modules/toolbar.scss */
-.group .toolbar-item:only-child {
+/* line 81, ../scss/modules/toolbar.scss */
+.husky-toolbar .group .toolbar-item:only-child {
   border-radius: 3px;
 }
-
-/** styles for the toolbar-items **/
-/* line 91, ../scss/modules/toolbar.scss */
-.toolbar-item {
+/* line 88, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item {
   min-width: 50px;
   float: left;
   position: relative;
@@ -8372,165 +8372,152 @@ a.btn-black, a.btn-highlight {
   list-style: none;
   height: 100%;
   line-height: 30px;
-  text-align: center;
-  /** link styling **/
-}
-/* line 101, ../scss/modules/toolbar.scss */
-.toolbar-item.dropdown {
-  position: relative;
-  display: block;
-  list-style: none;
-  float: left;
-}
-/* line 108, ../scss/modules/toolbar.scss */
-.toolbar-item .dropdown-toggle::after {
-  top: -3px;
-}
-/* line 112, ../scss/modules/toolbar.scss */
-.toolbar-item .item-loader {
-  display: inline-block;
-  height: 20px;
-  margin-top: 4px;
-}
-/* line 118, ../scss/modules/toolbar.scss */
-.toolbar-item.disabled:hover, .toolbar-item.disabled {
-  background-color: inherit;
-  cursor: default;
-}
-/* line 122, ../scss/modules/toolbar.scss */
-.toolbar-item.disabled:hover a, .toolbar-item.disabled a {
-  cursor: default;
-  color: #999;
-}
-/* line 128, ../scss/modules/toolbar.scss */
-.toolbar-item.hidden {
-  display: none;
-}
-/* line 132, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight {
-  background-color: #52B6CA;
-  border-color: transparent;
-}
-/* line 136, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight.disabled:hover, .toolbar-item.highlight.disabled {
-  background-color: #ccc;
-  border-color: transparent;
-  cursor: default;
-}
-/* line 141, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight.disabled:hover a, .toolbar-item.highlight.disabled a {
-  cursor: default;
-  color: #1e1e1e;
-}
-/* line 147, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight:hover {
-  background-color: #5ebbce;
-}
-/* line 150, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight:active {
-  background-color: #66bed0;
-}
-/* line 154, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight > a {
-  color: #fff;
-}
-/* line 157, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight > a.dropdown-toggle::after {
-  border-top-color: #fff;
-}
-/* line 162, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight.is-expanded {
-  background-color: #52B6CA;
-}
-/* line 167, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight-gray {
-  background-color: #ccc;
-  border-color: transparent;
-}
-/* line 171, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight-gray:hover {
-  background-color: #ccc;
-}
-/* line 174, ../scss/modules/toolbar.scss */
-.toolbar-item.highlight-gray:active {
-  background-color: #ccc;
-}
-/* line 180, ../scss/modules/toolbar.scss */
-.toolbar-item.is-expanded {
-  background-color: #ccc;
-}
-/* line 183, ../scss/modules/toolbar.scss */
-.toolbar-item.is-expanded ul.toolbar-dropdown-menu {
-  display: block;
-}
-/* line 188, ../scss/modules/toolbar.scss */
-.toolbar-item:hover {
-  background-color: #ccc;
-}
-/* line 191, ../scss/modules/toolbar.scss */
-.toolbar-item:active {
-  background-color: #c4c4c4;
-}
-/* line 196, ../scss/modules/toolbar.scss */
-.toolbar-item a {
   text-align: center;
   color: black;
-  padding: 0 10px 0 8px;
-  display: table;
-  text-decoration: none;
-  height: 100%;
-  line-height: 30px;
-  outline: none;
-  width: 100%;
-  min-width: 50px;
+  cursor: pointer;
+  padding: 0 10px;
 }
-/* line 208, ../scss/modules/toolbar.scss */
-.toolbar-item a .icon, .toolbar-item a.icon {
+/* line 101, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .icon {
   font-size: 16px;
   padding-right: 0px;
   display: inline-block;
 }
-/* line 214, ../scss/modules/toolbar.scss */
-.toolbar-item a .title {
+/* line 106, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .icon + .title {
+  margin-top: -4px;
+}
+/* line 110, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .title {
   font-size: 12px;
-  display: table-cell;
+  display: inline-block;
   vertical-align: middle;
 }
-
-/* line 223, ../scss/modules/toolbar.scss */
-.toolbar-item .icon + .title:not(:empty) {
+/* line 116, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .dropdown-toggle {
+  display: inline-block;
+  top: 0;
+  padding-right: 5px;
+  margin-right: -5px;
+}
+/* line 122, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .icon ~ .dropdown-toggle {
+  top: -3px;
+}
+/* line 126, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.dropdown {
+  position: relative;
+  display: block;
+  list-style: none;
+  float: left;
+}
+/* line 133, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .item-loader {
+  display: inline-block;
+  height: 20px;
+  margin-top: 4px;
+}
+/* line 139, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.disabled:hover, .husky-toolbar .toolbar-item.disabled {
+  background-color: inherit;
+  cursor: default;
+  color: #999;
+}
+/* line 146, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight {
+  background-color: #52B6CA;
+  border-color: transparent;
+}
+/* line 150, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight.disabled:hover, .husky-toolbar .toolbar-item.highlight.disabled {
+  background-color: #ccc;
+  border-color: transparent;
+  color: #1e1e1e;
+}
+/* line 157, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight:hover {
+  background-color: #5ebbce;
+}
+/* line 160, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight:active {
+  background-color: #66bed0;
+}
+/* line 164, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight > span {
+  color: #fff;
+}
+/* line 167, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight > span.dropdown-toggle::after {
+  border-top-color: #fff;
+}
+/* line 172, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight.is-expanded {
+  background-color: #52B6CA;
+}
+/* line 177, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight-gray {
+  background-color: #ccc;
+  border-color: transparent;
+}
+/* line 181, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight-gray:hover {
+  background-color: #ccc;
+}
+/* line 184, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.highlight-gray:active {
+  background-color: #ccc;
+}
+/* line 190, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.is-expanded {
+  background-color: #ccc;
+}
+/* line 193, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.is-expanded ul.toolbar-dropdown-menu {
+  display: block;
+}
+/* line 199, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.is-loading .title, .husky-toolbar .toolbar-item.is-loading .icon, .husky-toolbar .toolbar-item.is-loading .dropdown-toggle, .husky-toolbar .toolbar-item.is-loading .dropdown-toggle::after {
+  display: none;
+}
+/* line 204, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item:hover {
+  background-color: #ccc;
+}
+/* line 207, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item:active {
+  background-color: #c4c4c4;
+}
+/* line 213, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item .icon + .title:not(:empty) {
   padding-left: 10px;
 }
-
-/**  dropdown styles **/
-/* line 228, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu {
+/* line 218, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu {
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 2px;
   display: none;
   position: absolute;
   top: 100%;
-  z-index: 1000;
   left: 0;
   min-width: 160px;
   list-style: none;
   font-size: 12px;
   padding: 5px 0;
   margin-top: -7px;
-  margin-left: 0px;
+  margin-left: 0;
   z-index: 2000;
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
-/* line 249, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu.right-aligned {
+/* line 238, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 254, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li {
+/* line 243, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li {
   display: list-item;
   float: none;
   height: 30px;
@@ -8541,24 +8528,25 @@ a.btn-black, a.btn-highlight {
   top: 0;
   left: 0;
   padding: 0 20px;
+  text-align: left;
 }
-/* line 267, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li a {
+/* line 256, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li a {
   color: black;
   text-decoration: none;
   padding: 0;
 }
-/* line 273, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li.is-selected, .toolbar-dropdown-menu li:hover {
+/* line 262, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.is-selected, .husky-toolbar .toolbar-dropdown-menu li:hover {
   background-color: #52B6CA;
   color: #fff;
 }
-/* line 277, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li.is-selected a, .toolbar-dropdown-menu li:hover a {
+/* line 266, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.is-selected a, .husky-toolbar .toolbar-dropdown-menu li:hover a {
   color: #fff;
 }
-/* line 283, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li.marked::before {
+/* line 272, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.marked::before {
   content: "";
   display: block;
   position: absolute;
@@ -8566,66 +8554,126 @@ a.btn-black, a.btn-highlight {
   left: 7px;
   font-size: 12px;
 }
-/* line 294, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li.disabled:hover, .toolbar-dropdown-menu li.disabled {
+/* line 283, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.disabled:hover, .husky-toolbar .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 298, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li.disabled:hover a, .toolbar-dropdown-menu li.disabled a {
+/* line 287, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.disabled:hover a, .husky-toolbar .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 304, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li:active {
+/* line 293, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li:active {
   background-color: #66bed0;
 }
-/* line 308, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li.divider {
+/* line 297, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #ddd;
 }
-/* line 315, ../scss/modules/toolbar.scss */
-.toolbar-dropdown-menu li a {
+/* line 304, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 329, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item {
-  background-color: #b4dfe8;
-  border-color: #52B6CA;
+/* line 316, ../scss/modules/toolbar.scss */
+.husky-toolbar.big {
+  height: 50px;
 }
-/* line 333, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.highlight {
-  background-color: #E8CE33;
+/* line 319, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .group {
+  height: 50px;
+}
+/* line 321, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .group .toolbar-item:first-child {
+  border-left: 1px solid #74C4D4;
+  border-radius: 0;
+}
+/* line 325, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .group .toolbar-item:last-child {
+  border-radius: 0;
+}
+/* line 330, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item {
+  border: none;
+  border-right: 1px solid #74C4D4;
+  padding: 0 20px;
+  border-radius: 0;
 }
 /* line 335, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.highlight > a {
-  color: #000;
+.husky-toolbar.big .toolbar-item .icon, .husky-toolbar.big .toolbar-item .title {
+  color: #fff;
+  line-height: 50px;
 }
-/* line 340, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.highlight-white {
-  background-color: #fff;
+/* line 339, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item .icon {
+  font-size: 20px;
 }
 /* line 342, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.highlight-white .title {
-  text-align: left;
+.husky-toolbar.big .toolbar-item .icon + .title {
+  margin-top: -6px;
 }
-/* line 347, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.disabled, .blueish .toolbar-item.disabled:hover {
-  background-color: #b4dfe8;
-  border-color: #52B6CA;
+/* line 345, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item .dropdown-toggle::after {
+  border-top-color: #fff;
 }
-/* line 351, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.disabled a, .blueish .toolbar-item.disabled:hover a {
-  color: #fff;
+/* line 348, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item .dropdown-toggle {
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: -20px;
 }
 /* line 353, ../scss/modules/toolbar.scss */
-.blueish .toolbar-item.disabled a.dropdown-toggle::after, .blueish .toolbar-item.disabled:hover a.dropdown-toggle::after {
-  border-top-color: #fff;
+.husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item:hover {
+  background: #74C4D4;
+}
+/* line 359, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:hover {
+  background: transparent;
+}
+/* line 362, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.disabled .icon, .husky-toolbar.big .toolbar-item.disabled .title, .husky-toolbar.big .toolbar-item.disabled:hover .icon, .husky-toolbar.big .toolbar-item.disabled:hover .title {
+  color: #74C4D4;
+}
+/* line 365, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.disabled .dropdown-toggle::after, .husky-toolbar.big .toolbar-item.disabled:hover .dropdown-toggle::after {
+  border-top-color: #74C4D4;
+}
+/* line 370, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.highlight-white {
+  background-color: #fff;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px;
+  border-radius: 3px;
+  margin-top: 10px;
+}
+/* line 377, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.highlight-white .title {
+  text-align: left;
+  color: #000;
+  line-height: 30px;
+}
+/* line 382, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.highlight-white .dropdown-toggle::after {
+  border-top-color: #000;
+}
+/* line 385, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.highlight-white:last-child, .husky-toolbar.big .toolbar-item.highlight-white:first-child {
+  border-radius: 3px;
+}
+/* line 391, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-search {
+  padding-top: 10px;
+}
+/* line 395, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .item-loader {
+  margin-top: 15px;
 }
 
 /* line 5, ../scss/modules/matrix.scss */
@@ -9903,268 +9951,6 @@ a.btn-black, a.btn-highlight {
 /* line 40, ../scss/modules/label.scss */
 .husky-label-success {
   background: #5DC774;
-}
-
-/* line 7, ../scss/modules/matcher.scss */
-.husky-matcher {
-  height: auto;
-  position: relative;
-  top: 0px;
-  left: 0px;
-}
-/* line 13, ../scss/modules/matcher.scss */
-.husky-matcher .wrapper {
-  overflow-x: auto;
-  width: 100%;
-  white-space: nowrap;
-  padding-bottom: 15px;
-}
-/* line 20, ../scss/modules/matcher.scss */
-.husky-matcher.overflow .wrapper:after {
-  color: #ccc;
-  font-size: 22px;
-  content: "";
-  position: absolute;
-  right: -35px;
-  top: 110px;
-}
-/* line 30, ../scss/modules/matcher.scss */
-.husky-matcher .column {
-  width: 258px;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 3px;
-  display: inline-block;
-  margin-right: 20px;
-  -moz-transition: border-color 0.3s;
-  -o-transition: border-color 0.3s;
-  -webkit-transition: border-color 0.3s;
-  transition: border-color 0.3s;
-}
-/* line 39, ../scss/modules/matcher.scss */
-.husky-matcher .column:last-child {
-  margin-right: 0;
-}
-/* line 43, ../scss/modules/matcher.scss */
-.husky-matcher .column .match-header {
-  height: 138px;
-  background: #fff;
-  position: relative;
-  top: 0px;
-  left: 0px;
-}
-/* line 50, ../scss/modules/matcher.scss */
-.husky-matcher .column .match-header .inner {
-  width: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
-  position: absolute;
-  left: 0px;
-  bottom: 20px;
-}
-/* line 58, ../scss/modules/matcher.scss */
-.husky-matcher .column .match-header .title {
-  display: block;
-  font-weight: bold;
-  line-height: 18px;
-}
-/* line 63, ../scss/modules/matcher.scss */
-.husky-matcher .column .match-header .matched-desc {
-  display: block;
-  color: #999;
-  line-height: 18px;
-}
-/* line 68, ../scss/modules/matcher.scss */
-.husky-matcher .column .match-header .button {
-  float: left;
-  clear: both;
-  background: #ccc;
-  height: 30px;
-  line-height: 30px;
-  padding: 0 20px;
-  border-radius: 3px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-/* line 80, ../scss/modules/matcher.scss */
-.husky-matcher .column .column-title {
-  height: 40px;
-  line-height: 40px;
-  font-weight: bold;
-  color: #fff;
-  padding-left: 10px;
-  -moz-transition: background 0.3s;
-  -o-transition: background 0.3s;
-  -webkit-transition: background 0.3s;
-  transition: background 0.3s;
-}
-/* line 88, ../scss/modules/matcher.scss */
-.husky-matcher .column .samples span {
-  display: block;
-  height: 40px;
-  line-height: 40px;
-  padding-left: 10px;
-  -moz-transition: background 0.3s;
-  -o-transition: background 0.3s;
-  -webkit-transition: background 0.3s;
-  transition: background 0.3s;
-}
-/* line 95, ../scss/modules/matcher.scss */
-.husky-matcher .column .samples span:first-child {
-  border-bottom: 1px solid #fff;
-}
-/* line 100, ../scss/modules/matcher.scss */
-.husky-matcher .column.unmatched {
-  border-color: #EA524E;
-}
-/* line 103, ../scss/modules/matcher.scss */
-.husky-matcher .column.unmatched .column-title {
-  background: #EA524E;
-}
-/* line 106, ../scss/modules/matcher.scss */
-.husky-matcher .column.unmatched .samples span {
-  background: #f8c1c0;
-}
-/* line 110, ../scss/modules/matcher.scss */
-.husky-matcher .column.matched {
-  border-color: #5DC774;
-}
-/* line 113, ../scss/modules/matcher.scss */
-.husky-matcher .column.matched .column-title {
-  background: #5DC774;
-}
-/* line 116, ../scss/modules/matcher.scss */
-.husky-matcher .column.matched .samples span {
-  background: #bce8c5;
-}
-/* line 120, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit {
-  border-color: #52B6CA;
-}
-/* line 123, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit .column-title {
-  background: #52B6CA;
-}
-/* line 126, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit .samples span {
-  background: #b4dfe8;
-}
-/* line 130, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit .match-header .headline {
-  color: #999;
-}
-/* line 133, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit .match-header .ok-button {
-  display: block;
-  position: absolute;
-  bottom: 0;
-  left: 10px;
-  width: 70px;
-  height: 30px;
-  line-height: 27px;
-  margin-top: 10px;
-}
-/* line 143, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit .match-header .button {
-  position: absolute;
-  bottom: 0;
-  right: 10px;
-}
-/* line 148, ../scss/modules/matcher.scss */
-.husky-matcher .column.edit .match-header .column-dropdown {
-  margin-bottom: 50px;
-  margin-top: 5px;
-}
-/* line 154, ../scss/modules/matcher.scss */
-.husky-matcher .column.skipped {
-  border-color: #666;
-}
-/* line 157, ../scss/modules/matcher.scss */
-.husky-matcher .column.skipped .column-title {
-  background: #666;
-}
-/* line 160, ../scss/modules/matcher.scss */
-.husky-matcher .column.skipped .samples span {
-  background: #999;
-}
-
-/* line 11, ../scss/modules/process.scss */
-.husky-process {
-  clear: both;
-  overflow: hidden;
-}
-/* line 15, ../scss/modules/process.scss */
-.husky-process .process {
-  float: left;
-  height: 50px;
-  min-width: 115px;
-  margin-bottom: 10px;
-}
-/* line 22, ../scss/modules/process.scss */
-.husky-process .process.first .back {
-  background: #CACACA;
-  border-radius: 3px 0 0 3px;
-}
-/* line 28, ../scss/modules/process.scss */
-.husky-process .process.last .front {
-  background: #CACACA;
-  border-radius: 0 3px 3px 0;
-}
-/* line 33, ../scss/modules/process.scss */
-.husky-process .process:after {
-  clear: both;
-}
-/* line 37, ../scss/modules/process.scss */
-.husky-process .process .back, .husky-process .process .name, .husky-process .process .front {
-  height: 100%;
-}
-/* line 40, ../scss/modules/process.scss */
-.husky-process .process .name {
-  background: #CACACA;
-  float: left;
-  text-align: center;
-  line-height: 20px;
-  min-width: 75px;
-  display: table;
-}
-/* line 47, ../scss/modules/process.scss */
-.husky-process .process .name p {
-  display: table-cell;
-  text-align: center;
-  vertical-align: middle;
-}
-/* line 53, ../scss/modules/process.scss */
-.husky-process .process .back {
-  float: left;
-  width: 18px;
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjE4cHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDE4IDUwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDx0aXRsZT5VbnRpdGxlZDwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNMi4wMDIyOTk4MiwwIEMwLjM0MjUwNzg3NywwIC0wLjE3OTE4MzQxNSwxLjA0OTkyNDEgMC44NDY5MTY4ODYsMi4zNTc2MjA3IEwxNi45MDUzODE5LDIyLjgyMzA2NjQgQzE3LjkyNzA3MzQsMjQuMTI1MTQ0NCAxNy45MTg5NDcxLDI2LjIzMTI4OTMgMTYuODg3NjAzOSwyNy41MjY4MDQ2IEwwLjg2NDY5NDgyMyw0Ny42NTM4ODI0IEMtMC4xNjY4MTUyMjcsNDguOTQ5NjA3NCAwLjM0NzQwNzEwNyw1MCAyLjAwMjI5OTgyLDUwIEwxODMuNjk1ODY3LDUwIEMxODUuMzU1NjU5LDUwIDE4Ny41Mzc1NTcsNDguOTQ3NzM5MyAxODguNTY4OTAxLDQ3LjY1MDE3OSBMMjA0LjU5MTgxLDI3LjQ5MTMyOTYgQzIwNS42MjMzMiwyNi4xOTM1NTkzIDIwNS42MzU2ODgsMjQuMDkzMjE4IDIwNC42MDA3MDcsMjIuNzc2MjU2NSBMMTg4LjU2MDAwMywyLjM2NTI1MjA5IEMxODcuNTMzNDA3LDEuMDU4OTU5NDMgMTg1LjM1MDc2LDAgMTgzLjY5NTg2NywwIEwyLjAwMjI5OTgyLDAgWiIgaWQ9IlJlY3RhbmdsZS03NCIgc3Ryb2tlPSIjQ0FDQUNBIiBmaWxsPSIjQ0FDQUNBIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==);
-}
-/* line 58, ../scss/modules/process.scss */
-.husky-process .process .front {
-  float: right;
-  width: 22px;
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjIycHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDIyIDUwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDx0aXRsZT5VbnRpdGxlZDwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNLTE4MS45OTc3LDAgQy0xODMuNjU3NDkyLDAgLTE4NC4xNzkxODMsMS4wNDk5MjQxIC0xODMuMTUzMDgzLDIuMzU3NjIwNyBMLTE2Ny4wOTQ2MTgsMjIuODIzMDY2NCBDLTE2Ni4wNzI5MjcsMjQuMTI1MTQ0NCAtMTY2LjA4MTA1MywyNi4yMzEyODkzIC0xNjcuMTEyMzk2LDI3LjUyNjgwNDYgTC0xODMuMTM1MzA1LDQ3LjY1Mzg4MjQgQy0xODQuMTY2ODE1LDQ4Ljk0OTYwNzQgLTE4My42NTI1OTMsNTAgLTE4MS45OTc3LDUwIEwtMC4zMDQxMzI3NDcsNTAgQzEuMzU1NjU5MTksNTAgMy41Mzc1NTc0LDQ4Ljk0NzczOTMgNC41Njg5MDA1Nyw0Ny42NTAxNzkgTDIwLjU5MTgwOTcsMjcuNDkxMzI5NiBDMjEuNjIzMzE5NywyNi4xOTM1NTkzIDIxLjYzNTY4NzksMjQuMDkzMjE4IDIwLjYwMDcwNzQsMjIuNzc2MjU2NSBMNC41NjAwMDI4MywyLjM2NTI1MjA5IEMzLjUzMzQwNjg3LDEuMDU4OTU5NDMgMS4zNTA3NTk5NiwwIC0wLjMwNDEzMjc0NywwIEwtMTgxLjk5NzcsMCBaIiBpZD0iUmVjdGFuZ2xlLTc0IiBzdHJva2U9IiNDQUNBQ0EiIGZpbGw9IiNDQUNBQ0EiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+);
-}
-/* line 67, ../scss/modules/process.scss */
-.husky-process .process.active.first .back {
-  background: #52B6CA;
-}
-/* line 72, ../scss/modules/process.scss */
-.husky-process .process.active.last .front {
-  background: #52B6CA;
-}
-/* line 76, ../scss/modules/process.scss */
-.husky-process .process.active .name {
-  background: #52B6CA;
-  color: #fff;
-}
-/* line 80, ../scss/modules/process.scss */
-.husky-process .process.active .back {
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjE4cHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDE4IDUwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDx0aXRsZT5VbnRpdGxlZDwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNMi4wMDIyOTk4MiwwIEMwLjM0MjUwNzg3NywwIC0wLjE3OTE4MzQxNSwxLjA0OTkyNDEgMC44NDY5MTY4ODYsMi4zNTc2MjA3IEwxNi45MDUzODE5LDIyLjgyMzA2NjQgQzE3LjkyNzA3MzQsMjQuMTI1MTQ0NCAxNy45MTg5NDcxLDI2LjIzMTI4OTMgMTYuODg3NjAzOSwyNy41MjY4MDQ2IEwwLjg2NDY5NDgyMyw0Ny42NTM4ODI0IEMtMC4xNjY4MTUyMjcsNDguOTQ5NjA3NCAwLjM0NzQwNzEwNyw1MCAyLjAwMjI5OTgyLDUwIEwxODMuNjk1ODY3LDUwIEMxODUuMzU1NjU5LDUwIDE4Ny41Mzc1NTcsNDguOTQ3NzM5MyAxODguNTY4OTAxLDQ3LjY1MDE3OSBMMjA0LjU5MTgxLDI3LjQ5MTMyOTYgQzIwNS42MjMzMiwyNi4xOTM1NTkzIDIwNS42MzU2ODgsMjQuMDkzMjE4IDIwNC42MDA3MDcsMjIuNzc2MjU2NSBMMTg4LjU2MDAwMywyLjM2NTI1MjA5IEMxODcuNTMzNDA3LDEuMDU4OTU5NDMgMTg1LjM1MDc2LDAgMTgzLjY5NTg2NywwIEwyLjAwMjI5OTgyLDAgWiIgaWQ9IlJlY3RhbmdsZS03NCIgc3Ryb2tlPSIjMkQ5RkJDIiBmaWxsPSIjMkQ5RkJDIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==);
-}
-/* line 83, ../scss/modules/process.scss */
-.husky-process .process.active .front {
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjIycHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDIyIDUwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDx0aXRsZT5VbnRpdGxlZDwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNLTE4MS45OTc3LDAgQy0xODMuNjU3NDkyLDAgLTE4NC4xNzkxODMsMS4wNDk5MjQxIC0xODMuMTUzMDgzLDIuMzU3NjIwNyBMLTE2Ny4wOTQ2MTgsMjIuODIzMDY2NCBDLTE2Ni4wNzI5MjcsMjQuMTI1MTQ0NCAtMTY2LjA4MTA1MywyNi4yMzEyODkzIC0xNjcuMTEyMzk2LDI3LjUyNjgwNDYgTC0xODMuMTM1MzA1LDQ3LjY1Mzg4MjQgQy0xODQuMTY2ODE1LDQ4Ljk0OTYwNzQgLTE4My42NTI1OTMsNTAgLTE4MS45OTc3LDUwIEwtMC4zMDQxMzI3NDcsNTAgQzEuMzU1NjU5MTksNTAgMy41Mzc1NTc0LDQ4Ljk0NzczOTMgNC41Njg5MDA1Nyw0Ny42NTAxNzkgTDIwLjU5MTgwOTcsMjcuNDkxMzI5NiBDMjEuNjIzMzE5NywyNi4xOTM1NTkzIDIxLjYzNTY4NzksMjQuMDkzMjE4IDIwLjYwMDcwNzQsMjIuNzc2MjU2NSBMNC41NjAwMDI4MywyLjM2NTI1MjA5IEMzLjUzMzQwNjg3LDEuMDU4OTU5NDMgMS4zNTA3NTk5NiwwIC0wLjMwNDEzMjc0NywwIEwtMTgxLjk5NzcsMCBaIiBpZD0iUmVjdGFuZ2xlLTc0IiBzdHJva2U9IiMyRDlGQkMiIGZpbGw9IiMyRDlGQkMiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+);
 }
 
 /* line 5, ../scss/modules/toggler.scss */

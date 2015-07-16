@@ -35,7 +35,6 @@ define(['app-config'], function(AppConfig) {
             var items = [],
                 options = {
                     icon: 'gear',
-                    iconSize: 'large',
                     group: 'left',
                     id: 'options-button',
                     position: 30,
@@ -46,8 +45,6 @@ define(['app-config'], function(AppConfig) {
             items.push({
                 id: 'save-button',
                 icon: 'floppy-o',
-                iconSize: 'large',
-                class: 'highlight',
                 position: 1,
                 group: 'left',
                 disabled: true,

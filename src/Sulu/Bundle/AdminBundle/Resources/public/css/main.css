@@ -464,148 +464,84 @@ input, select {
   left: 0;
   z-index: 90;
 }
-/* line 10, ../scss/modules/header.scss */
-.sulu-header .inner {
-  position: relative;
-  top: 0px;
-  left: 0px;
-  margin: 0 50px;
-  height: 150px;
-  -moz-transition: margin 700ms;
-  -o-transition: margin 700ms;
-  -webkit-transition: margin 700ms;
-  transition: margin 700ms;
-}
-/* line 19, ../scss/modules/header.scss */
-.sulu-header .headline {
-  position: absolute;
-  top: 45px;
-  left: 0;
-}
-/* line 24, ../scss/modules/header.scss */
-.sulu-header .headline::after {
-  display: table;
-  content: "";
+/* line 32, ../js/vendor/husky/scss/mixins.scss */
+.sulu-header .toolbar-row:after {
   clear: both;
-}
-/* line 30, ../scss/modules/header.scss */
-.sulu-header .headline .back {
-  display: block;
-  padding: 10px;
-  position: absolute;
-  top: 12px;
-  left: -30px;
-  font-size: 16px;
-  color: #fff;
-  cursor: pointer;
-  opacity: 1;
-  -moz-transition: opacity 0.5s;
-  -o-transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
-  transition: opacity 0.5s;
-}
-/* line 42, ../scss/modules/header.scss */
-.sulu-header .headline .h1 {
-  float: left;
-}
-/* line 45, ../scss/modules/header.scss */
-.sulu-header .headline .title-color {
-  display: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  float: left;
-  margin-top: 19px;
-  margin-right: 10px;
-}
-/* line 53, ../scss/modules/header.scss */
-.sulu-header .headline .title-color.color-set {
+  content: ' ';
   display: block;
 }
-/* line 59, ../scss/modules/header.scss */
-.sulu-header .bottom-row {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  width: 100%;
-}
-/* line 65, ../scss/modules/header.scss */
-.sulu-header .bottom-row::after {
-  content: ".";
-  display: block;
-  clear: both;
-  visibility: hidden;
-  line-height: 0;
-  height: 0;
-}
-/* line 74, ../scss/modules/header.scss */
-.sulu-header .bottom-row .bottom-content {
+/* line 12, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .left-container {
   float: left;
-  line-height: 29px;
-}
-/* line 77, ../scss/modules/header.scss */
-.sulu-header .bottom-row .bottom-content * {
-  color: #fff;
-}
-/* line 83, ../scss/modules/header.scss */
-.sulu-header .tabs {
+  width: 50px;
   height: 50px;
 }
-/* line 85, ../scss/modules/header.scss */
-.sulu-header .tabs .tabs-container {
+/* line 17, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .toolbar-container {
+  float: left;
+}
+/* line 20, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .right-container {
+  float: right;
+}
+/* line 23, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .back {
+  display: block;
+  height: 100%;
+  color: #fff;
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+}
+/* line 33, ../scss/modules/header.scss */
+.sulu-header .tabs-row .tabs-container {
   -moz-transition: padding 700ms;
   -o-transition: padding 700ms;
   -webkit-transition: padding 700ms;
   transition: padding 700ms;
 }
-/* line 90, ../scss/modules/header.scss */
-.sulu-header .info {
-  position: absolute;
-  top: 10px;
-  left: 0px;
-}
-/* line 97, ../scss/modules/header.scss */
+/* line 39, ../scss/modules/header.scss */
 .sulu-header + .page {
-  margin-top: 150px;
-  padding-bottom: 150px;
+  margin-top: 50px;
+  padding-bottom: 50px;
 }
-/* line 101, ../scss/modules/header.scss */
+/* line 43, ../scss/modules/header.scss */
 .sulu-header.has-tabs + .page {
-  margin-top: 200px;
-  padding-bottom: 200px;
+  margin-top: 100px;
+  padding-bottom: 100px;
 }
-/* line 105, ../scss/modules/header.scss */
+/* line 47, ../scss/modules/header.scss */
 .sulu-header.invisible + .page {
   margin-top: 0;
   padding-bottom: 0;
 }
 
-/* line 111, ../scss/modules/header.scss */
+/* line 53, ../scss/modules/header.scss */
 .sulu-header-background {
   position: absolute;
   top: 0px;
   left: 0px;
   background: #52B6CA;
-  height: 150px;
+  height: 50px;
   width: 100%;
   z-index: -1;
 }
-/* line 120, ../scss/modules/header.scss */
+/* line 62, ../scss/modules/header.scss */
 .sulu-header-background.has-tabs {
-  height: 200px;
+  height: 100px;
   border-bottom: 50px solid #fff;
 }
 
-/* line 127, ../scss/modules/header.scss */
+/* line 69, ../scss/modules/header.scss */
 .small-fixed .sulu-header .inner {
   margin-left: 10px;
   margin-right: 10px;
 }
-/* line 131, ../scss/modules/header.scss */
+/* line 73, ../scss/modules/header.scss */
 .small-fixed .tabs-container {
   padding-left: 10px;
 }
-/* line 134, ../scss/modules/header.scss */
+/* line 76, ../scss/modules/header.scss */
 .small-fixed .sulu-header .back {
   opacity: 0;
 }
@@ -680,60 +616,6 @@ input, select {
 /* line 70, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
-}
-
-/* line 5, ../scss/modules/gridgroup.scss */
-.sulu-grid-group {
-  border-bottom: 2px solid #cccccc;
-}
-/* line 8, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .group-slide {
-  width: 100%;
-  overflow-x: hidden;
-  padding-bottom: 1px;
-}
-/* line 15, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity:last-child {
-  margin-bottom: -1px;
-}
-/* line 19, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .head {
-  height: 50px;
-  line-height: 50px;
-  border-bottom: 1px solid #cccccc;
-  cursor: pointer;
-}
-/* line 25, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .head .icon {
-  float: left;
-  font-size: 16px;
-  padding: 0 10px 0 5px;
-  color: #3E3E3E;
-  line-height: 50px;
-  text-align: center;
-}
-/* line 33, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .head::after {
-  display: table;
-  content: "";
-  clear: both;
-}
-/* line 39, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .color {
-  float: left;
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-/* line 46, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .entity-title {
-  float: left;
-  font-size: 14px;
-  margin-top: 5px;
-  padding-right: 5px;
-  border-radius: 3px;
-  line-height: 38px;
 }
 
 /** header options menu toggle **/

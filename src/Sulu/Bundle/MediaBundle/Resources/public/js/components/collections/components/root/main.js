@@ -162,10 +162,10 @@ define(['sulumedia/model/media'], function(Media) {
                         {
                             id: 'change',
                             icon: 'th-large',
-                            itemsOption: {
-                                markable: true
+                            dropdownOptions: {
+                                markSelected: true
                             },
-                            items: [
+                            dropdownItems: [
                                 {
                                     id: 'small-thumbnails',
                                     title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),

@@ -57,18 +57,16 @@ define([
                     {
                         id: 'template',
                         icon: 'pencil',
-                        iconSize: 'large',
                         group: 'left',
                         position: 10,
-                        type: 'select',
                         title: '',
                         hidden: false,
-                        itemsOption: {
+                        dropdownOptions: {
                             url: '/admin/api/snippet/types',
                             titleAttribute: 'title',
                             idAttribute: 'template',
-                            translate: false,
-                            markable: true,
+                            markSelected: true,
+                            changeButton: true,
                             callback: function(item) {
                                 if (!!this.template) {
                                     this.setHeaderBar(false);
