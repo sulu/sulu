@@ -13,6 +13,8 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
@@ -184,9 +186,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
         $filterFields = array_merge($this->whereFields, $this->inFields, $this->betweenFields, $this->searchFields);
         // get entity names
-        $filterFields = array_map(function($field) {
-            return $field->getEntityName();
-        }, $filterFields);
+        $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
         $joins = $this->getJoins();
 
         $addJoins = array();
@@ -202,6 +202,29 @@ class DoctrineListBuilder extends AbstractListBuilder
             ->select($select);
 
         return $queryBuilder;
+    }
+
+    private function getEntityNamesOfFieldDescriptors($filterFields)
+    {
+        $fields = array();
+
+        // filter array for DoctrineFieldDescriptors
+        foreach ($filterFields as $field) {
+            $fields = array_merge($fields, $field->getJoins());
+            if (!($field instanceof DoctrineConcatenationFieldDescriptor) &&
+                !($field instanceof DoctrineGroupConcatFieldDescriptor)
+            ) {
+                $fields[] = $field;
+            }
+        }
+
+        // get entity names
+        $fields = array_map(function($field) {
+            return $field->getEntityName();
+        }, $fields);
+
+        // unify result
+        return array_unique(array_values($fields));
     }
 
     /**
