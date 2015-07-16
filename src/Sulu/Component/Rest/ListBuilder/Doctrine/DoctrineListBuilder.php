@@ -164,7 +164,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     *
+     * Sets group by fields to querybuilder
      *
      * @param QueryBuilder $queryBuilder
      */
@@ -172,7 +172,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         if (!empty($this->groupByFields)) {
             foreach ($this->groupByFields as $fields) {
-                $this->queryBuilder->groupBy($fields->getSelect());
+                $queryBuilder->groupBy($fields->getSelect());
             }
         }
     }
