@@ -29695,7 +29695,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     icon: this.options.actionIcon,
                     column: this.options.actionIconColumn || this.datagrid.matchings[0].attribute,
                     align: 'left',
-                    callback: this.datagrid.itemAction.bind(this.datagrid)
+                    actionIcon: true
                 });
             }
         },
@@ -29979,7 +29979,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         renderBodyCell: function(record, column, index) {
             var $cell = this.sandbox.dom.createElement(templates.cell),
-                content = this.getCellContent(record, column),
+                content = this.getCellContent(record, column, $cell),
                 selectItem, isCroppable = false;
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
@@ -30028,9 +30028,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Gets the actual content for a cell
          * @param record {Object} the record to get the content for
          * @param column {Object} the column for which the content should be returned
+         * @param $cell {Object} the cell-dom-element
          * @returns {String|Object} the dom object for the cell content or html
          */
-        getCellContent: function(record, column) {
+        getCellContent: function(record, column, $cell) {
             var content = record[column.attribute];
             if (!!column.type && column.type === this.datagrid.types.THUMBNAILS) {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
@@ -30055,7 +30056,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 });
             }
             if (!!this.icons) {
-                content = this.addIconsToCellContent(content, column);
+                content = this.addIconsToCellContent(content, column, $cell);
             }
             return content;
         },
@@ -30115,9 +30116,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds icons to a cell content
          * @param content {String|Object} html or a dom object. If its a string icons get added to the string, if its an object it gets appended
          * @param column {Object} the column data object
+         * @param $cell {Object} the cell-dom-element
          * @returns content {String|Object} html or a dom object
          */
-        addIconsToCellContent: function(content, column) {
+        addIconsToCellContent: function(content, column, $cell) {
             var iconStr;
             this.sandbox.util.foreach(this.icons, function(icon, index) {
                 if (icon.column === column.attribute) {
@@ -30130,6 +30132,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         this.sandbox.dom.append(content, iconStr);
                     } else if (typeof content === 'string') {
                         content += iconStr;
+                    }
+                    if (icon.actionIcon === true) {
+                        this.sandbox.dom.addClass($cell, constants.actionClass);
                     }
                 }
             }.bind(this));
@@ -30233,6 +30238,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
             // handle dblclick on body row
             this.sandbox.dom.on(this.table.$body, 'dblclick', this.bodyRowDblClickHandler.bind(this), '.' + constants.rowClass);
+            // action callback on click on table-cell with has-action class
+            this.sandbox.dom.on(this.table.$body, 'click', this.cellActionCallback.bind(this), 'td.' + constants.actionClass);
 
             // remove row event
             if (this.options.removeRow === true) {
@@ -30285,10 +30292,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         iconClickHandler: function(event) {
-            event.stopPropagation();
             var icon = this.icons[this.sandbox.dom.data(event.currentTarget, 'icon-index')],
                 recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
             if (typeof recordId !== 'undefined' && !!icon && typeof icon.callback === 'function') {
+                event.stopPropagation();
                 icon.callback(recordId);
             }
         },
@@ -30525,6 +30532,15 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         rowActionCallback: function(event) {
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
+            this.datagrid.itemAction.call(this.datagrid, recordId);
+        },
+
+        /**
+         * Calls the row-action callback
+         * @param event {Object} the original event
+         */
+        cellActionCallback: function(event) {
+            var recordId = this.sandbox.dom.data(this.sandbox.dom.parent(event.currentTarget), 'id');
             this.datagrid.itemAction.call(this.datagrid, recordId);
         },
 
@@ -32135,7 +32151,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
                 this.sandbox.util.load(params.url)
                     .then(function(response) {
-                        this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
+                        this.updateSelectedCounter();
                         if (this.isLoading === true) {
                             this.stopLoading();
                         }
@@ -32217,7 +32233,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.dom.append(this.$element, this.sandbox.util.template(templates.selectedCounter)({
                     text: this.sandbox.translate(this.options.selectedCounterText)
                 }));
-                this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
+                this.updateSelectedCounter();
             },
 
             /**
@@ -32225,7 +32241,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             renderView: function() {
                 this.gridViews[this.viewId].render(this.data, this.$element);
-                this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
+                this.updateSelectedCounter();
                 this.sandbox.emit(VIEW_RENDERED.call(this));
             },
 
@@ -32898,11 +32914,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             /**
              * Updates the selected-elements counter
-             * @param {String|number} number - the number of selected items
              */
-            updateSelectedCounter: function(number) {
+            updateSelectedCounter: function() {
                 if (this.options.selectedCounter === true) {
-                    this.sandbox.dom.html(this.$find('.selected-elements .number'), number);
+                    this.sandbox.dom.html(this.$find('.selected-elements .number'), this.getSelectedItemIds().length);
+                    if (this.getSelectedItemIds().length === 0) {
+                        this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
+                    } else {
+                        this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
+                    }
                 }
             },
 
@@ -34331,10 +34351,14 @@ define('__component__$tabs@husky',[],function() {
 
         showItem = function(item) {
             this.sandbox.dom.show(this.domItems[item]);
+            this.sandbox.dom.removeClass(this.$marker, 'animate');
+            setMarker.call(this);
         },
 
         hideItem = function(item) {
             this.sandbox.dom.hide(this.domItems[item]);
+            this.sandbox.dom.removeClass(this.$marker, 'animate');
+            setMarker.call(this);
         },
 
         bindDOMEvents = function() {
@@ -34511,7 +34535,6 @@ define('__component__$tabs@husky',[],function() {
  * @param {Object} [options.searchOptions] options to pass to search component
  * @param {Object} [options.small] if true the toolbar is displayed smaller
  * @param {boolean} [options.hasSearch] if true a search item gets inserted in its own group at the end. A search item can also be added manually through the data
- * @param {String} [options.searchAlign] "right" or "left" to align the search if it's added automatically via the hasSearch option
  * @param {String} [options.skin] custom skin-class to add to the component
  * @param {Boolean} [options.showTitleAsTooltip] shows the title of the button only as tooltip
  *
@@ -34546,7 +34569,6 @@ define('__component__$toolbar@husky',[],function() {
             dropdownItemsKey: '_embedded',
             searchOptions: null,
             hasSearch: false,
-            searchAlign: 'right',
             groups: [
                 {
                     id: 1,
@@ -34582,10 +34604,29 @@ define('__component__$toolbar@husky',[],function() {
         /**
          * triggered when toolbar is initialized and ready to use
          *
-         * @event husky.toolbar.[INSTANCE_NAME.]initialized
+         * @event husky.toolbar.[INSTANCE_NAME].initialized
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
+        },
+
+
+        /**
+         * triggered when when a dropdown gets opened
+         *
+         * @event husky.toolbar.[INSTANCE_NAME].dropdown-opened
+         */
+        DROPDOWN_OPENED = function() {
+            return createEventName.call(this, 'dropdown.opened');
+        },
+
+        /**
+         * triggered when when a dropdown gets opened
+         *
+         * @event husky.toolbar.[INSTANCE_NAME].dropdown-opened
+         */
+        DROPDOWN_CLOSED = function() {
+            return createEventName.call(this, 'dropdown.closed');
         },
 
         /**
@@ -34938,6 +34979,8 @@ define('__component__$toolbar@husky',[],function() {
 
                     // on every click remove sub-menu
                     this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
+
+                    this.sandbox.emit(DROPDOWN_OPENED.call(this));
                 }
             }
         },
@@ -34962,6 +35005,7 @@ define('__component__$toolbar@husky',[],function() {
          */
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
+            this.sandbox.emit(DROPDOWN_CLOSED.call(this));
         },
 
         /**
@@ -35166,6 +35210,9 @@ define('__component__$toolbar@husky',[],function() {
                 } else if (!!requestedItems[i].title) {
                     title = requestedItems[i].title;
                 }
+                if (!!this.items[buttonId].dropdownOptions.languageNamespace) {
+                    title += this.items[buttonId].dropdownOptions.languageNamespace + title;
+                }
                 title = this.sandbox.translate(title);
 
                 if (!!requestedItems[i].icon) {
@@ -35337,15 +35384,10 @@ define('__component__$toolbar@husky',[],function() {
             // add own group for search item
             var searchGroup = {
                 id: 'search',
-                align: this.options.searchAlign
+                align: 'right'
             };
 
-            // this statement ensures that the the automatically added search always floats on the right of the rest
-            if (this.options.searchAlign === 'left') {
-                this.options.groups.push(searchGroup);
-            } else {
-                this.options.groups.unshift(searchGroup);
-            }
+            this.options.groups.push(searchGroup);
 
             // push search item
             data.push({

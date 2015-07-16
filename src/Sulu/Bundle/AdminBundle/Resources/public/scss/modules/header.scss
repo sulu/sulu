@@ -12,13 +12,29 @@
         .left-container {
             float: left;
             width: 50px;
-            height: $tabsHeight
+            @include single-transition(width, $shrinkAnimationDuration);
+            background: $blue;
         }
         .toolbar-container {
-            float: left;
+            position: relative;
+            overflow: auto;
+            border-color: $milkeyBlue;
+            border-style: solid;
+            border-width: 0 1px 0 1px;
+            @include clear-float;
+
+            .toolbar-wrapper {
+                float: left;
+                white-space: nowrap;
+            }
+
+            &.overflown {
+              @include standard-inset-box-shadow;
+            }
         }
         .right-container {
             float: right;
+            width: 120px;
         }
         .back {
             display: block;
@@ -30,7 +46,10 @@
         }
     }
     .tabs-row {
-        .tabs-container {
+        .tabs {
+            padding: 0 50px;
+            overflow: auto;
+            background: $white;
             @include single-transition(padding, $shrinkAnimationDuration);
         }
     }
@@ -70,8 +89,11 @@
         margin-left: $contentPaddingLeftSmall;
         margin-right: $contentPaddingRightSmall;
     }
-    .tabs-container {
+    .tabs-row .tabs {
         padding-left: $contentPaddingLeftSmall;
+    }
+    .sulu-header .left-container {
+      width: 0px;
     }
     .sulu-header .back {
         opacity: 0;

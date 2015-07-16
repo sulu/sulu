@@ -5,11 +5,15 @@
     &:-moz-placeholder { @content; }
     &::-moz-placeholder { @content; }
     &:-ms-input-placeholder { @content; }
-    &::-webkit-input-placeholder { @content; } 
+    &::-webkit-input-placeholder { @content; }
 }
 
 @mixin standard-box-shadow($borderSize:3px, $color:rgba(0,0,0,0.08), $blur:0px){
     @include box-shadow($color $borderSize $borderSize $blur 0px);
+}
+
+@mixin standard-inset-box-shadow($borderSize:0px, $color:rgba(0,0,0,0.08), $blur:6px){
+    @include box-shadow(inset $color $borderSize $borderSize $blur 3px);
 }
 
 @mixin user-select($value:none){

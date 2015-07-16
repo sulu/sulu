@@ -61,8 +61,9 @@ define([], function () {
             backIcon: 'chevron-left',
             toolbarClass: 'toolbar',
             tabsClass: 'tabs',
-            innerSelector: '.inner',
             tabsSelector: '.tabs-container',
+            toolbarSelector: '.toolbar-container',
+            overflownClass: 'overflown',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'},
@@ -88,7 +89,9 @@ define([], function () {
                 '       <span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
                 '   </div>',
                 '   <div class="toolbar-container">',
-                '       <div class="' + constants.toolbarClass + '"></div>',
+                '       <div class="toolbar-wrapper">',
+                '           <div class="' + constants.toolbarClass + '"></div>',
+                '       </div>',
                 '   </div>',
                 '   <div class="right-container">',
                 '   </div>',
@@ -562,7 +565,7 @@ define([], function () {
          */
         startTabsComponent: function (def) {
             if (!!this.options.tabsData || !!this.options.tabsOptions.data) {
-                this.sandbox.stop(this.$find('.' + constants.tabsClass));
+                this.removeTabsComponent();
                 var $container = this.sandbox.dom.createElement('<div/>'),
                     options = {
                         el: $container,
@@ -599,7 +602,7 @@ define([], function () {
          */
         removeTabsComponent: function () {
             var $tabs = this.$find('.' + constants.tabsClass);
-            this.sandbox.stop($tabs);
+            this.sandbox.stop(this.sandbox.dom.children($tabs));
             this.sandbox.dom.removeClass(constants.headerBackgroundSelector, constants.hasTabsClass);
             this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
         },
@@ -697,6 +700,10 @@ define([], function () {
                 }
             }.bind(this));
 
+            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.opened', this.lockToolbarScroll.bind(this));
+            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.closed', this.unlockToolbarScroll.bind(this));
+            this.sandbox.on('husky.navigation.size.changed', this.updateToolbarOverflow.bind(this));
+
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
 
@@ -714,6 +721,28 @@ define([], function () {
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
+        },
+
+        /**
+         * Makes the toolbar unscrollable and makes the toolbar-overflow's overflow visible
+         * so the dropdown can be seen
+         */
+        lockToolbarScroll: function() {
+            var $container = this.$find(constants.toolbarSelector),
+                scrollPos = this.sandbox.dom.scrollLeft($container);
+            this.sandbox.dom.css($container, {overflow: 'visible'});
+            this.sandbox.dom.css(this.sandbox.dom.children($container), {
+                'margin-left': ((-1) * scrollPos) + 'px'
+            })
+        },
+
+        /**
+         * Makes the toolbar-container's overflow hidden and the wrapper itself scrollable
+         */
+        unlockToolbarScroll: function() {
+            var $container = this.$find(constants.toolbarSelector);
+            this.sandbox.dom.removeAttr($container, 'style');
+            this.sandbox.dom.removeAttr(this.sandbox.dom.children($container), 'style');
         },
 
         /**
@@ -782,6 +811,17 @@ define([], function () {
             this.sandbox.dom.on(this.$el, 'click', function () {
                 this.sandbox.emit(BACK.call(this));
             }.bind(this), '.' + constants.backClass);
+
+            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.updateToolbarOverflow.bind(this));
+        },
+
+        updateToolbarOverflow: function() {
+            var $container = this.$find(constants.toolbarSelector);
+            if (this.sandbox.dom.width($container) < $container[0].scrollWidth) {
+                this.sandbox.dom.addClass($container, constants.overflownClass);
+            } else {
+                this.sandbox.dom.removeClass($container, constants.overflownClass);
+            }
         },
 
         /**

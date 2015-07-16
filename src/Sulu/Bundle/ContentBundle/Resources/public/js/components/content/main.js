@@ -1208,20 +1208,7 @@ define([
                 var header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
 
                 if (this.options.display === 'column') {
-                    header = {
-                        title: this.options.webspace.replace(/_/g, '.'),
-                        noBack: true,
-                        breadcrumb: [
-                            {title: this.options.webspace.replace(/_/g, '.')}
-                        ],
-                        toolbar: {
-                            template: [],
-                            languageChanger: {
-                                data: localizations,
-                                preSelected: this.options.language
-                            }
-                        }
-                    };
+                    header = null;
                 } else {
                     // object to array
                     for (var i in this.data.concreteLanguages) {

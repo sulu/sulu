@@ -278,11 +278,15 @@ define(function() {
         handleHeader = function(header) {
             var $content, changeHeader, options;
 
+            if (!header) {
+                return false;
+            }
+
             header.hidden = (typeof header.hidden !== 'undefined') ? header.hidden : false;
 
             if (true === header.hidden) {
                 this.sandbox.emit('sulu.header.hide');
-                return;
+                return false;
             }
 
             // insert the content-container
