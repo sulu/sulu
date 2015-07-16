@@ -66,6 +66,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->em->expects($this->once())->method('createQueryBuilder')->willReturn($this->queryBuilder);
         $this->queryBuilder->expects($this->any())->method('select')->willReturnSelf();
         $this->queryBuilder->expects($this->any())->method('addGroupBy')->willReturnSelf();
+        $this->queryBuilder->expects($this->any())->method('where')->willReturnSelf();
 
         $this->queryBuilder->expects($this->any())->method('setMaxResults')->willReturnSelf();
         $this->queryBuilder->expects($this->any())->method('getQuery')->willReturn($this->query);
@@ -78,7 +79,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->doctrineListBuilder = new DoctrineListBuilder($this->em, self::$entityName, $this->eventDispatcher);
+        $this->doctrineListBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder')
+            ->setConstructorArgs(array($this->em, self::$entityName, $this->eventDispatcher))
+            ->setMethods(array('findIdsByGivenCriteria'))
+            ->getMock();
+        $this->doctrineListBuilder->expects($this->any())->method('findIdsByGivenCriteria')->willReturn(array('1'));
 
         $event = new ListBuilderCreateEvent($this->doctrineListBuilder);
         $this->eventDispatcher->expects($this->any())->method('dispatch')->with(
