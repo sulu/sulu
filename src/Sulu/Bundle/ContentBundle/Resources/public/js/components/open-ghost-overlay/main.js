@@ -110,7 +110,7 @@ define(function() {
                     var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
                         src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues');
 
-                    if (!src || src.length === 0) {
+                    if (copy && (!src || src.length === 0)) {
                         return false;
                     }
 
