@@ -54,7 +54,7 @@ class MediaTwigExtension extends \Twig_Extension
     public function resolveMediaFunction($media, $locale)
     {
         if (is_object($media) && $media instanceof MediaEntity) {
-            $media = $media->getId();
+            return $this->mediaManager->addFormatsAndUrl(new MediaApi($media, $locale));
         }
 
         return $this->mediaManager->getById($media, $locale);
@@ -75,15 +75,30 @@ class MediaTwigExtension extends \Twig_Extension
         }
 
         $ids = array();
-        foreach ($medias as $media) {
+        $entities = array();
+        $entitiesIndex =array();
+        for ($i = 0; $i < count($medias); $i++) {
+            $media = $medias[$i];
+
             if (is_object($media) && $media instanceof MediaEntity) {
-                $ids[] = $media->getId();
+                $entities[$i] = $this->mediaManager->addFormatsAndUrl(
+                    new MediaApi($media, $locale)
+                );
             } else {
                 $ids[] = $media;
+                $entitiesIndex[$media] = $i;
             }
         }
 
-        return $this->mediaManager->getByIds($ids, $locale);
+        if (count($ids) > 0) {
+            foreach ($this->mediaManager->getByIds($ids, $locale) as $media) {
+                $entities[$entitiesIndex[$media->getId()]] = $media;
+            }
+        }
+
+        ksort($entities);
+
+        return array_values($entities);
     }
 
     /**
