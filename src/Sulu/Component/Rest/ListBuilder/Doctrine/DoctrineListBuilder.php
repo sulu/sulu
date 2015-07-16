@@ -11,17 +11,17 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
 /**
  * The listbuilder implementation for doctrine.
@@ -66,11 +66,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $inFields = array();
 
     /**
-     * @var AbstractDoctrineFieldDescriptor
-     */
-    protected $sortField;
-
-    /**
      * @var \Doctrine\ORM\QueryBuilder
      */
     protected $queryBuilder;
@@ -111,40 +106,37 @@ class DoctrineListBuilder extends AbstractListBuilder
         $event = new ListBuilderCreateEvent($this);
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
 
-        // select ids with all neccessary filter data
+        // first create simplified id query
+        // select ids with all necessary filter data
         $subquerybuilder = $this->createSubQueryBuilder();
         if ($this->limit != null) {
             $subquerybuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
-        if ($this->sortField != null) {
-            $subquerybuilder->orderBy($this->sortField->getSelect(), $this->sortOrder);
-        }
+        $this->assignSortFields($subquerybuilder);
         $ids = $subquerybuilder->getQuery()->getArrayResult();
-        $ids = array_map(function($array){
-            return $array['id'];
-        }, $ids);
+        // if no results are found - return
+        if (count($ids) < 1) {
+            return $ids;
+        }
+        $ids = array_map(
+            function ($array) {
+                return $array['id'];
+            }, $ids
+        );
 
         // now select all data
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
-        $this->addJoins($this->queryBuilder);
+        $this->assignJoins($this->queryBuilder);
 
-        // add all select fields
+        // Add all select fields
         foreach ($this->selectFields as $field) {
             $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
-
-        // group
-        if (!empty($this->groupByFields)) {
-            foreach ($this->groupByFields as $fields) {
-                $this->queryBuilder->groupBy($fields->getSelect());
-            }
-        }
-
-        // sort
-        if ($this->sortField != null) {
-            $this->queryBuilder->orderBy($this->sortField->getSelect(), $this->sortOrder);
-        }
+        // group by
+        $this->assignGroupBy($this->queryBuilder);
+        // assign sort-fields
+        $this->assignSortFields($this->queryBuilder);
 
         // use ids previously selected ids for query
         $this->queryBuilder->where($this->entityName . '.id IN (:ids)')
@@ -154,16 +146,42 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
+     * Assigns ORDER BY clauses to querybuilder
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function assignSortFields($queryBuilder)
+    {
+        foreach ($this->sortFields as $index => $sortField) {
+            $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
+        }
+    }
+
+    /**
+     *
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function assignGroupBy($queryBuilder)
+    {
+        if (!empty($this->groupByFields)) {
+            foreach ($this->groupByFields as $fields) {
+                $this->queryBuilder->groupBy($fields->getSelect());
+            }
+        }
+    }
+
+    /**
      * Returns all the joins required for the query.
      *
      * @return DoctrineJoinDescriptor[]
      */
-    private function getJoins()
+    protected function getJoins()
     {
         $joins = array();
 
-        if ($this->sortField != null) {
-            $joins = array_merge($joins, $this->sortField->getJoins());
+        foreach ($this->sortFields as $sortField) {
+            $joins = array_merge($joins, $sortField->getJoins());
         }
 
         foreach ($this->selectFields as $field) {
@@ -186,22 +204,32 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * Creates a query-builder for sub-selecting ID's
+     *
+     * @param null|string $select
+     *
+     * @return QueryBuilder
      */
-    private function createSubQueryBuilder($select = null)
+    protected function createSubQueryBuilder($select = null)
     {
         if (!$select) {
             $select = $this->entityName . '.id';
         }
-        $filterFields = array_merge($this->whereFields, $this->inFields, $this->betweenFields, $this->searchFields);
+        $filterFields = array_merge(
+            $this->sortFields,
+            $this->whereFields,
+            $this->inFields,
+            $this->betweenFields,
+            $this->searchFields
+        );
         // get entity names
         $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
-        $joins = $this->getJoins();
 
+        // use fields that have filter functionality or have an inner join
         $addJoins = array();
-        foreach ($joins as $entity => $join) {
+        foreach ($this->getJoins() as $entity => $join) {
             if (array_search($entity, $filterFields) !== false ||
-                $join->getJoinConditionMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
             ) {
                 $addJoins[$entity] = $join;
             }
@@ -213,7 +241,14 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $queryBuilder;
     }
 
-    private function getEntityNamesOfFieldDescriptors($filterFields)
+    /**
+     * Returns filtered list of array of field-descriptors
+     *
+     * @param array $filterFields
+     *
+     * @return string[]
+     */
+    protected function getEntityNamesOfFieldDescriptors($filterFields)
     {
         $fields = array();
 
@@ -226,11 +261,12 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $fields[] = $field;
             }
         }
-
         // get entity names
-        $fields = array_map(function($field) {
-            return $field->getEntityName();
-        }, $fields);
+        $fields = array_map(
+            function ($field) {
+                return $field->getEntityName();
+            }, $fields
+        );
 
         // unify result
         return array_unique(array_values($fields));
@@ -243,23 +279,20 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createQueryBuilder($joins = null)
+    protected function createQueryBuilder($joins = null)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
 
-        $this->addJoins($this->queryBuilder, $joins);
+        $this->assignJoins($this->queryBuilder, $joins);
 
         // set where
         if (!empty($this->whereFields)) {
             $this->addWheres($this->whereFields, $this->whereValues, $this->whereComparators, $this->whereConjunctions);
         }
 
-        if (!empty($this->groupByFields)) {
-            foreach ($this->groupByFields as $fields) {
-                $this->queryBuilder->groupBy($fields->getSelect());
-            }
-        }
+        // group by
+        $this->assignGroupBy($this->queryBuilder);
 
         // set in
         if (!empty($this->inFields)) {
@@ -290,7 +323,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      * @param QueryBuilder $queryBuilder
      * @param array $joins
      */
-    protected function addJoins(QueryBuilder $queryBuilder, array $joins = null)
+    protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
     {
         if ($joins === null) {
             $joins = $this->getJoins();
