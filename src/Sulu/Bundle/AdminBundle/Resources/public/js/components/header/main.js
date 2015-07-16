@@ -85,8 +85,8 @@ define([], function () {
         templates = {
             toolbarRow: [
                 '<div class="toolbar-row">',
-                '   <div class="left-container">',
-                '       <span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
+                '   <div class="left-container ' + constants.backClass + '">',
+                '       <span class="fa-' + constants.backIcon + '"></span>',
                 '   </div>',
                 '   <div class="toolbar-container">',
                 '       <div class="toolbar-wrapper">',
@@ -702,7 +702,6 @@ define([], function () {
 
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.opened', this.lockToolbarScroll.bind(this));
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.closed', this.unlockToolbarScroll.bind(this));
-            this.sandbox.on('husky.navigation.size.changed', this.updateToolbarOverflow.bind(this));
 
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));

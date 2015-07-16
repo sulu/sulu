@@ -12,10 +12,6 @@
     @include box-shadow($color $borderSize $borderSize $blur 0px);
 }
 
-@mixin standard-inset-box-shadow($borderSize:0px, $color:rgba(0,0,0,0.08), $blur:6px){
-    @include box-shadow(inset $color $borderSize $borderSize $blur 3px);
-}
-
 @mixin user-select($value:none){
     user-select: $value;
     -moz-user-select: $value;

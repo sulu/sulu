@@ -8,37 +8,49 @@
     z-index: 90;
 
     .toolbar-row {
+        display: table;
+        table-layout: fixed;
+        height: $headerHeight;
+        width: 100%;
         @include clear-float;
         .left-container {
-            float: left;
+            display: table-cell;
             width: 50px;
+            min-width: 50px;
             @include single-transition(width, $shrinkAnimationDuration);
+            @include single-transition(min-width, $shrinkAnimationDuration);
             background: $blue;
+            vertical-align: top;
+            position: relative;
+            z-index: 500;
         }
         .toolbar-container {
-            position: relative;
+            display: table-cell;
             overflow: auto;
-            border-color: $milkeyBlue;
-            border-style: solid;
-            border-width: 0 1px 0 1px;
-            @include clear-float;
+            vertical-align: top;
+            width: 100%;
+            position: relative;
+            z-index: 100;
 
             .toolbar-wrapper {
-                float: left;
+                display: inline-block;
                 white-space: nowrap;
             }
 
             &.overflown {
-              @include standard-inset-box-shadow;
+              @include box-shadow(inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08));
             }
         }
         .right-container {
-            float: right;
-            width: 120px;
+            display: table-cell;
+            min-width: 120px;
+            height: $headerHeight;
+            vertical-align: top;
+            position: relative;
+            z-index: 500;
+            background: $blue;
         }
         .back {
-            display: block;
-            height: 100%;
             color: $white;
             text-align: center;
             line-height: $headerHeight;
@@ -93,9 +105,10 @@
         padding-left: $contentPaddingLeftSmall;
     }
     .sulu-header .left-container {
-      width: 0px;
+        width: 0px;
+        min-width: 0px;
     }
     .sulu-header .back {
-        opacity: 0;
+        display: none;
     }
 }
