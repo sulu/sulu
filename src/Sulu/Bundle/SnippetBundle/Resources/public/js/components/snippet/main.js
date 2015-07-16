@@ -231,6 +231,19 @@ define([
                 callbackFunction.bind(this, false),
                 callbackFunction.bind(this, true)
             );
+        },
+
+        /**
+         * Returns copy snippet from a given locale to a array of other locales url
+         * @param {string} id
+         * @param {string} src
+         * @param {string[]} dest
+         * @returns {string}
+         */
+        getCopyLocaleUrl: function(id, src, dest) {
+            return [
+                '/admin/api/snippets/', id, '?language=', src, '&dest=', dest, '&action=copy-locale'
+            ].join('');
         }
     };
 

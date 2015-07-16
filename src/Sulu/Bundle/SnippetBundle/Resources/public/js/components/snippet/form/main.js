@@ -147,12 +147,6 @@ define([
             }.bind(this));
     };
 
-    SnippetForm.prototype.getCopyLocaleUrl = function(id, src, dest) {
-        return [
-            '/admin/api/snippets/', id, '?language=', src, '&dest=', dest, '&action=copy-locale'
-        ].join('');
-    };
-
     SnippetForm.prototype.bindCustomEvents = function() {
         // back button
         this.sandbox.on('sulu.header.back', function() {
