@@ -114,21 +114,11 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // first create simplified id query
         // select ids with all necessary filter data
-        $subquerybuilder = $this->createSubQueryBuilder();
-        if ($this->limit != null) {
-            $subquerybuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
-        }
-        $this->assignSortFields($subquerybuilder);
-        $ids = $subquerybuilder->getQuery()->getArrayResult();
+        $ids = $this->findIdsByGivenCriteria();
         // if no results are found - return
         if (count($ids) < 1) {
-            return $ids;
+            return array();
         }
-        $ids = array_map(
-            function ($array) {
-                return $array['id'];
-            }, $ids
-        );
 
         // now select all data
         $this->queryBuilder = $this->em->createQueryBuilder()
@@ -149,6 +139,33 @@ class DoctrineListBuilder extends AbstractListBuilder
             ->setParameter('ids', $ids);
 
         return $this->queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Function that finds all IDs of entities that match the
+     * search criteria
+     *
+     * @return array
+     */
+    protected function findIdsByGivenCriteria()
+    {
+        $subquerybuilder = $this->createSubQueryBuilder();
+        if ($this->limit != null) {
+            $subquerybuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+        }
+        $this->assignSortFields($subquerybuilder);
+        $ids = $subquerybuilder->getQuery()->getArrayResult();
+        // if no results are found - return
+        if (count($ids) < 1) {
+            return array();
+        }
+        $ids = array_map(
+            function ($array) {
+                return $array['id'];
+            }, $ids
+        );
+
+        return $ids;
     }
 
     /**
