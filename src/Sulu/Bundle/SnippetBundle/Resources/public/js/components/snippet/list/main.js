@@ -90,17 +90,17 @@ define([
                 resultKey: 'snippets',
                 viewOptions: {
                     table: {
-                        batches: [
+                        badges: [
                             {
                                 column: 'title',
-                                callback: function(item, batch) {
+                                callback: function(item, badge) {
                                     if (!!item.type &&
                                         item.type.name === 'ghost' &&
                                         item.type.value !== this.options.language
                                     ) {
-                                        batch.title = item.type.value;
+                                        badge.title = item.type.value;
 
-                                        return batch;
+                                        return badge;
                                     }
 
                                     return false;
