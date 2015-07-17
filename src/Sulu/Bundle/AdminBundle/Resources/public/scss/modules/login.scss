@@ -5,183 +5,157 @@
     height: 100%;
     background: $baseBackgroundColor;
     overflow: hidden;
-    position: relative;
 
-    .box {
-        $boxWidth: 400px;
-        $boxHeight: 430px;
-        $boxHeight2: 450px;
-        width: $boxWidth;
-        height: $boxHeight;
-        background-color: $grayLightMedium2;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        @include transform(translate(-50%, -50%));
-        z-index: 30;
-        border-radius: $borderRadius;
-        @include standard-box-shadow;
-        overflow: hidden;
-        transition: height 200ms;
+    .media-container, .content-container{
+        width: 50%;
+        height: 100%;
+        position: relative;
+    }
+    .media-container {
+        float: left;
+        background: $black;
 
-        &.larger {
-          height: $boxHeight2;
+        .media-logo {
+            width: 200px;
+            height: 200px;
+            z-index: 20;
+
+            @include centerHorizontalAndVertical;
+
+            background: url("../img/logo.svg") no-repeat center center;
+            @include background-size(contain);
         }
 
-        .husky-validate-error {
-            .error-message {
-                height: 50px;
-            }
-            &.login .bottom-container span:not(.website-switch) {
-              color: $black;
-            }
-        }
-
-        .frames {
-            height: 100%;
-            width: 50px;
-            white-space: nowrap;
-            position: relative;
-            top: 0px;
-            left: 0px;
-            transition: left 300ms;
-        }
-
-        .frame {
-            height: 100%;
-            width: $boxWidth;
-            display: inline-block;
-            vertical-align: top;
-            white-space: normal;
-            position: relative;
-            padding: 0 50px;
-
-            &.hide {
-                display: none;
-            }
-        }
-
-        .inputs {
-            .form-element {
-                padding-left: 5px;
-
-            }
-        }
-
-        .error-message {
-            color: $red;
-            display: block;
-            height: 0px;
-            overflow: hidden;
-            transition: height 200ms;
-        }
-
-        .login-logo {
+        .media-background {
             width: 100%;
-            height: 180px;
-            background: url("../img/logo.png") no-repeat center center;
-            background-size: auto 122px;
-            margin-bottom: 10px;
-        }
-        .login-loader {
-            float: right;
-            margin: 20px 15px 0 0;
-        }
-        .reset-mail-message .login-loader {
-            float: none;
-            margin-right: 0;
-            margin-left: 0;
-        }
-        .btn.action {
-            float: right;
-            margin-top: 10px;
-            padding-left: 45px;
-            padding-right: 45px;
+            height: 100%;
+            z-index: 10;
+
+            background: no-repeat center center;
+            @include background-size(cover);
+
+            transition: opacity 500ms;
+            opacity: 0.5;
+
+            //@include blur;
         }
 
-        .bottom-container {
+        //flare effect
+        &.flare {
+            .background {
+                opacity: 0.6;
+            }
+        }
+    }
+
+    .content-container {
+        float: right;
+        //background-color: #28B6CA;
+        background-color: $blue;
+
+        .content-box {
+            $boxWidth: 450px;
+
+            width: $boxWidth;
+            z-index: 10;
+            overflow: hidden;
+
+            @include centerHorizontalAndVertical;
+
+            transition: height 200ms;
+
+
+
+            .frame-slider {
+                transition: left 300ms;
+                display: table; //vertical centering
+                position: relative;
+            }
+
+            .box-frame {
+                display: table-cell;
+                min-width: $boxWidth;
+                max-width: $boxWidth;
+                vertical-align: middle;
+
+                padding: 0 50px;
+                white-space: normal;
+
+                .message, .error-message {
+                    display: block;
+                }
+
+                .message {
+                    color: $white;
+                    padding-bottom: 10px;
+
+                    text-align: center;
+
+                    span.to-mail {
+                        display: block;
+                        padding-top: 10px;
+                        font-weight: bold;
+                    }
+                }
+
+                .error-message {
+                    color: $grayDarkLighter;
+
+                    max-height: 0px; //use max-height to enable css animation non-static height
+                    transition: max-height 200ms;
+                    overflow: hidden;
+                }
+
+                &.login-error {
+                    .error-message {
+                        max-height: 100px;
+                        padding-bottom: 10px;
+                    }
+
+                    .husky-validate {
+                        color: $red;
+                    }
+                }
+
+                .box-frame-footer{
+                    .btn.action {
+                        border: 1px solid $white;
+                        float: right;
+
+                        &:hover {
+                            border: 1px solid $grayDarkLighter;
+                            color: $grayDarkLighter;
+                        }
+                    }
+
+                    span {
+                        line-height: 40px;
+                    }
+                }
+            }
+
+            .login-loader {
+                float: right;
+                margin: 20px 15px 0 0;
+                overflow: hidden;
+            }
+        }
+
+        span.navigator {
+            color: $white;
+            cursor: pointer;
+            &:hover {
+                color: $grayDarkLighter; //testing
+            }
+        }
+
+        .login-content-footer {
             position: absolute;
             bottom: 0px;
             left: 0px;
             width: 100%;
-            padding: 0 50px;
+            text-align: center;
             @include clear-float;
-
-            span {
-                display: block;
-                padding: 10px 0 10px 10px;
-                cursor: pointer;
-                color: $grayLight;
-                float: right;
-                &:hover {
-                  color: $black;
-                }
-            }
-            .website-switch {
-                float: left;
-                padding-left: 0;
-            }
-        }
-
-        .reset-mail {
-            .bottom-container span:not(.website-switch) {
-                color: $black;
-            }
-        }
-
-        .reset-mail-message {
-            text-align: center;
-            .message {
-                display: block;
-                color: $grayLight;
-                padding-bottom: 20px;
-            }
-            .btn.action {
-              float: none;
-              margin: 0;
-              padding: 0 15px;
-            }
-        }
-
-        label {
-            text-align: center;
-            padding-bottom: 5px;
-        }
-    }
-
-    .background {
-        display: none;
-        position: absolute;
-
-        .image {
-            position: relative;
-            display: block;
-            width: 100%;
-            height: 100%;
-            @include background-size(cover);
-            background-repeat: no-repeat;
-            background-position: center center;
-            @include blur;
-            z-index: 10;
-        }
-
-        .darkener {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            opacity: 0.35;
-            transition: opacity 450ms;
-            z-index: 20;
-        }
-
-        &.active {
-            .darkener {
-                opacity: 0.15;
-            }
         }
     }
 }
