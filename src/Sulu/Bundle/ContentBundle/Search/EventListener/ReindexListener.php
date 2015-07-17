@@ -85,12 +85,16 @@ class ReindexListener
         $documents = $query->execute();
         $progress = new ProgressHelper();
         $progress->start($output, count($documents));
+        $errors = array();
 
-        foreach ($documents as $document) {
-            $locales = $this->inspector->getLocales($document);
+        while ($documents->valid()) {
+            $document = null;
+            try {
+                $document = $documents->current();
+                $documents->next();
+                $locales = $this->inspector->getLocales($document);
 
-            foreach ($locales as $locale) {
-                try {
+                foreach ($locales as $locale) {
                     $this->documentManager->find($document->getUuid(), $locale);
                     $documentClass = get_class($document);
 
@@ -103,20 +107,32 @@ class ReindexListener
                         $count[$documentClass] = 0;
                     }
                     $count[$documentClass]++;
-                } catch (\Exception $e) {
-                    $output->writeln(sprintf(
+                }
+            } catch (\Exception $e) {
+                if (null === $document) {
+                    $errors[] = sprintf(
+                        '<error>Error hydrating document</error>: %s',
+                        $e->getMessage()
+                    );
+                } else {
+                    $errors[] = sprintf(
                         '<error>Error indexing or de-indexing page (path: %s locale: %s)</error>: %s',
                         $this->inspector->getPath($document),
                         $locale,
                         $e->getMessage()
-                    ));
+                    );
                 }
+                $documents->next();
             }
 
             $progress->advance();
         }
 
         $output->writeln('');
+
+        foreach ($errors as $error) {
+            $output->writeln($error);
+        }
 
         foreach ($count as $className => $count) {
             if ($count == 0) {
