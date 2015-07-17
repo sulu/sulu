@@ -120,7 +120,7 @@ define(['sulumedia/model/media'], function(Media) {
             this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
 
             // language change
-            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
         },
 
         render: function() {

@@ -1,7 +1,6 @@
 .sulu-header {
-    background-color: $blue;
     width: 100%;
-
+    height: $headerHeight;
     position: absolute;
     top: 0;
     left: 0;
@@ -12,17 +11,18 @@
         table-layout: fixed;
         height: $headerHeight;
         width: 100%;
-        @include clear-float;
+        background: $blue;
+        position: relative;
+        z-index: 1000;
+
         .left-container {
             display: table-cell;
             width: 50px;
-            min-width: 50px;
-            @include single-transition(width, $shrinkAnimationDuration);
-            @include single-transition(min-width, $shrinkAnimationDuration);
             background: $blue;
             vertical-align: top;
             position: relative;
             z-index: 500;
+            @include single-transition(width, $shrinkAnimationDuration);
         }
         .toolbar-container {
             display: table-cell;
@@ -38,12 +38,15 @@
             }
 
             &.overflown {
-              @include box-shadow(inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08));
+                @include box-shadow(inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08));
+                .husky-toolbar .toolbar-dropdown-menu {
+                    margin-top: 0;
+                }
             }
         }
         .right-container {
             display: table-cell;
-            min-width: 120px;
+            width: 120px;
             height: $headerHeight;
             vertical-align: top;
             position: relative;
@@ -56,8 +59,38 @@
             line-height: $headerHeight;
             cursor: pointer;
         }
+        .language-changer {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 10px;
+            line-height: 30px;
+            padding-left: 8px;
+            background: $white;
+            border-radius: $borderRadius;
+            font-size: $smallFontSize;
+            position: relative;
+            cursor: pointer;
+            .dropdown-toggle {
+                display: inline-block;
+                vertical-align: top;
+                padding: 0 8px 0 10px;
+            }
+            .dropdown-menu {
+                right: 0;
+                left: auto;
+                margin-top: 0;
+                display: inline-block;
+                min-width: 160px;
+                width: auto;
+            }
+        }
     }
     .tabs-row {
+        position: relative;
+        top: 0px;
+        z-index: 500;
+        @include single-transition(top, $tabsHideAnimationDuration, $tabsHideAnimationDelay, ease);
+
         .tabs {
             padding: 0 50px;
             overflow: auto;
@@ -66,14 +99,19 @@
         }
     }
 
+    &.tabs-hidden {
+        .tabs-row {
+            top: (-1) * $tabsHeight;
+        }
+    }
+
     // add top space to the content-container beneath the header
     & + .page {
         margin-top: $headerHeight;
         padding-bottom: $headerHeight
     }
-    &.has-tabs + .page {
-        margin-top: $headerHeight + $tabsHeight;
-        padding-bottom: $headerHeight + $tabsHeight;
+    &.has-tabs + .page #content {
+        padding-top: $contentPaddingTop + $tabsHeight;
     }
     &.invisible + .page {
         margin-top: 0;
@@ -89,10 +127,15 @@
     height: $headerHeight;
     width: 100%;
     z-index: -1;
+    @include transition(height $tabsHideAnimationDuration ease $tabsHideAnimationDelay, border-bottom-width $tabsHideAnimationDuration ease $tabsHideAnimationDelay);
 
     &.has-tabs {
         height: $headerHeight + $tabsHeight;
         border-bottom: $tabsHeight solid $white;
+    }
+    &.tabs-hidden {
+      height: $headerHeight;
+      border-bottom-width: 0;
     }
 }
 
@@ -106,9 +149,8 @@
     }
     .sulu-header .left-container {
         width: 0px;
-        min-width: 0px;
-    }
-    .sulu-header .back {
-        display: none;
+        * {
+            display: none;
+        }
     }
 }

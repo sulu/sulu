@@ -106,7 +106,6 @@ define(function() {
         initialize: function() {
             this.title = document.title;
             this.$shrinker = null;
-            this.currentRoute = null;
 
             this.initializeRouter();
             this.render();
@@ -373,6 +372,9 @@ define(function() {
         toggleShrinkColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
+            this.sandbox.dom.on($column, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function() {
+                this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
+            }.bind(this));
             if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
                 // expand
                 this.sandbox.emit('husky.navigation.show');

@@ -23,13 +23,14 @@
  * @param {Object} [options.contentEl] element for the content-component
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
  * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a default-language changer will be displayed. Can be an object to build a custom language changer
- * @param {String} [options.toolbarLanguageChanger.url] url to fetch the dropdown-data from
  * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
  * @param {String} [options.toolbarLanguageChanger.preselected] id of the language selected at the beginning
  * @param {Object} [options.tabsOptions] options to pass to the tabs-component. For valid data-structure see husky
  * @param {Boolean} [options.tabsFullControl] If true the content-component won't be initialized. Allowes you to fully take over the handling of the tab events
  * @param {Boolean} [options.toolbarDisabled] if true the toolbar-component won't be initialized
  * @param {Boolean} [options.noBack] if true the back icon won't be displayed
+ * @param {String} [options.scrollContainerSelector] determines the box which gets observed for hiding the tabs on scroll
+ * @param {String} [options.scrollDelta] this much pixels must be scrolled before the tabs get hidden or shown
  */
 
 define([], function () {
@@ -46,11 +47,13 @@ define([], function () {
             contentComponentOptions: {},
             contentEl: null,
             toolbarOptions: {},
-            toolbarLanguageChanger: true,
+            toolbarLanguageChanger: false,
             tabsOptions: {},
             tabsFullControl: false,
             toolbarDisabled: false,
-            noBack: false
+            noBack: false,
+            scrollContainerSelector: '#content',
+            scrollDelta: 50 //px
         },
 
         constants = {
@@ -63,22 +66,19 @@ define([], function () {
             tabsClass: 'tabs',
             tabsSelector: '.tabs-container',
             toolbarSelector: '.toolbar-container',
+            rightSelector: '.right-container',
+            languageChangerTitleSelector: '.language-changer .title',
             overflownClass: 'overflown',
+            hideTabsClass: 'tabs-hidden',
             toolbarDefaults: {
                 groups: [
-                    {id: 'left', align: 'left'},
-                    {id: 'right', align: 'right'}
+                    {id: 'left', align: 'left'}
                 ]
             },
             languageChangerDefaults: {
-                id: 'language',
-                group: 'right',
-                position: 10,
-                title: '',
-                class: 'highlight-white',
-                dropdownOptions: {
-                    changeButton: true
-                }
+                instanceName: 'header-language',
+                alignment: 'right',
+                valueName: 'title'
             }
         },
 
@@ -100,6 +100,12 @@ define([], function () {
             tabsRow: [
                 '<div class="tabs-row">',
                 '    <div class="' + constants.tabsClass + '"></div>',
+                '</div>'
+            ].join(''),
+            languageChanger: [
+                '<div class="language-changer">',
+                '   <span class="title"><%= title %></span>',
+                '   <span class="dropdown-toggle"></span>',
                 '</div>'
             ].join('')
         },
@@ -283,7 +289,7 @@ define([], function () {
         /**
          * Predefined toolbar templates
          * each function must return a an array with items for the toolbar
-         * @type {{default: function, languageChanger: function, defaultLanguageChanger: function}}
+         * @type {{default: function}}
          */
         toolbarTemplates = {
             default: function () {
@@ -322,78 +328,6 @@ define([], function () {
 
             save: function () {
                 return [toolbarTemplates.default.call(this)[0]];
-            },
-
-            languageChanger: function(url, callback, resultKey, titleAttribute) {
-                var button;
-
-                // default callback for language dropdown
-                if (typeof callback !== 'function') {
-                    callback = function (item) {
-                        this.sandbox.emit('sulu.header.toolbar.language-changed', item);
-                    }.bind(this);
-                }
-
-                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                    hidden: true,
-                    dropdownOptions: {
-                        url: url,
-                        resultKey: resultKey,
-                        titleAttribute: titleAttribute || 'name',
-                        idAttribute: 'localization',
-                        markSelected: true,
-                        callback: callback
-                    }
-                });
-
-                return [button];
-            },
-
-            languageChangerData: function(data, callback) {
-                // default callback for language dropdown
-                if (typeof callback !== 'function') {
-                    callback = function(item) {
-                        this.sandbox.emit('sulu.header.toolbar.language-changed', item);
-                    }.bind(this);
-                }
-
-                var button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                    id: 'language',
-                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale,
-                    dropdownItems: data,
-                    dropdownOptions: {
-                        markSelected: true,
-                        callback: callback
-                    }
-                });
-
-                return [button];
-            },
-
-            defaultLanguageChanger: function() {
-                var button, items = [], i, length;
-
-                // generate dropdown-items
-                for (i = -1, length = this.sandbox.sulu.locales.length; ++i < length;) {
-                    items.push({
-                        title: this.sandbox.sulu.locales[i],
-                        locale: this.sandbox.sulu.locales[i]
-                    });
-                }
-
-                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                    id: 'language',
-                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale,
-                    dropdownItems: items,
-                    dropdownOptions: {
-                        markSelected: true,
-                        callback: function(item) {
-                            this.sandbox.emit(LANGUAGE_CHANGED.call(this), item.locale);
-                        }.bind(this)
-                    }
-                });
-
-                return [button];
             }
         },
 
@@ -463,6 +397,9 @@ define([], function () {
 
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
+            this.toolbarCollapsed = false;
+            this.toolbarExpandedWidth = 0;
+            this.oldScrollPosition = 0;
 
             this.bindCustomEvents();
             this.bindDomEvents();
@@ -487,8 +424,6 @@ define([], function () {
          * Builds the template of items for the Toolbar
          */
         buildToolbarTemplate: function (template, parentTemplate) {
-            var languageChanger = [];
-
             this.options.toolbarTemplate = getToolbarTemplate.call(this, template);
             if (!this.options.changeStateCallback || typeof this.options.changeStateCallback !== 'function') {
                 this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, template);
@@ -507,27 +442,6 @@ define([], function () {
 
                 this.options.toolbarTemplate = this.options.toolbarTemplate.concat(this.options.toolbarParentTemplate);
             }
-
-            // if language-changer is desired add it to the current template
-            if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.url) {
-                languageChanger = toolbarTemplates.languageChanger.call(
-                    this,
-                    this.options.toolbarLanguageChanger.url,
-                    this.options.toolbarLanguageChanger.callback,
-                    this.options.toolbarLanguageChanger.resultKey || null,
-                    this.options.toolbarLanguageChanger.titleAttribute || null
-                );
-            } else if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.data) {
-                languageChanger = toolbarTemplates.languageChangerData.call(
-                    this,
-                    this.options.toolbarLanguageChanger.data,
-                    this.options.toolbarLanguageChanger.callback
-                );
-            } else if (!!this.options.toolbarLanguageChanger) {
-                languageChanger = toolbarTemplates.defaultLanguageChanger.call(this);
-            }
-
-            this.options.toolbarTemplate = this.options.toolbarTemplate.concat(languageChanger);
         },
 
         /**
@@ -620,7 +534,6 @@ define([], function () {
                 this.options.toolbarTemplate = options.template;
                 this.options.toolbarParentTemplate = (!!options.parentTemplate) ? options.parentTemplate : null;
                 this.options.toolbarOptions = (!!options.toolbarOptions) ? options.toolbarOptions : {};
-                this.options.toolbarLanguageChanger = (!!options.languageChanger) ? options.languageChanger : null;
             }
             this.options.toolbarDisabled = false;
             this.startToolbar();
@@ -652,6 +565,40 @@ define([], function () {
             }
 
             return def;
+        },
+
+        /**
+         * Renderes and starts the language-changer dropdown
+         */
+        startLanguageChanger: function() {
+            this.sandbox.stop(this.$find(constants.rightSelector + ' *'));
+            if (!!this.options.toolbarLanguageChanger) {
+                var $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.languageChanger)({
+                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale
+                })),
+                    options = constants.languageChangerDefaults;
+                this.sandbox.dom.show(this.$find(constants.rightSelector));
+                this.sandbox.dom.append(this.$find(constants.rightSelector), $element);
+                options.el = $element;
+                options.data = this.options.toolbarLanguageChanger.data || this.getDefaultLanguages();
+                this.sandbox.start([{
+                    name: 'dropdown@husky',
+                    options: options
+                }]);
+            } else {
+                this.sandbox.dom.hide(this.$find(constants.rightSelector));
+            }
+        },
+
+        getDefaultLanguages: function() {
+            var items = [], i, length;
+            for (i = -1, length = this.sandbox.sulu.locales.length; ++i < length;) {
+                items.push({
+                    id: this.sandbox.sulu.locales[i],
+                    title: this.sandbox.sulu.locales[i]
+                });
+            }
+            return items;
         },
 
         /**
@@ -693,15 +640,9 @@ define([], function () {
          * listens to tab events
          */
         bindCustomEvents: function () {
-            // enable langauge-dropdown after loading the language items
-            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.items.set', function (id) {
-                if (id === 'language') {
-                    this.enableLanguageChanger();
-                }
-            }.bind(this));
-
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.opened', this.lockToolbarScroll.bind(this));
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.closed', this.unlockToolbarScroll.bind(this));
+            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.button.changed', this.updateToolbarOverflow.bind(this));
 
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
@@ -710,6 +651,8 @@ define([], function () {
             this.sandbox.on(GET_HEIGHT.call(this), function (callback) {
                 callback(this.sandbox.dom.outerHeight(this.$el));
             }.bind(this));
+
+            this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
 
             // set or reset a toolbar
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
@@ -720,6 +663,15 @@ define([], function () {
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
+        },
+
+        /**
+         * Handles the change of the language-changer
+         * @param item
+         */
+        languageChanged: function(item) {
+            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), item.title);
+            this.sandbox.emit(LANGUAGE_CHANGED.call(this), item);
         },
 
         /**
@@ -791,19 +743,6 @@ define([], function () {
         },
 
         /**
-         * Gets called after the language dropdown has loaded its items.
-         * Shows the dropdown and eventually sets the default value
-         */
-        enableLanguageChanger: function () {
-            if (!!this.options.toolbarLanguageChanger.preSelected) {
-                this.sandbox.emit(
-                    TOOLBAR_ITEM_CHANGE.call(this), 'language', this.options.toolbarLanguageChanger.preSelected
-                );
-            }
-            this.sandbox.emit(TOOLBAR_ITEM_SHOW.call(this), 'language');
-        },
-
-        /**
          * Bind Dom-events
          */
         bindDomEvents: function () {
@@ -812,15 +751,83 @@ define([], function () {
             }.bind(this), '.' + constants.backClass);
 
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.updateToolbarOverflow.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', this.updateToolbarOverflow.bind(this));
+            //if (!!this.options.tabsData || !!this.options.tabsOptions.data) {
+                this.sandbox.dom.on(this.options.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
+            //}
         },
 
+        /**
+         * Handles the scroll event to hide or show the tabs
+         */
+        scrollHandler: function() {
+            var scrollTop = this.sandbox.dom.scrollTop(this.options.scrollContainerSelector);
+            if (scrollTop <= this.oldScrollPosition - this.options.scrollDelta || scrollTop < this.options.scrollDelta) {
+                this.showTabs();
+                this.oldScrollPosition = scrollTop;
+            } else if (scrollTop >= this.oldScrollPosition + this.options.scrollDelta) {
+                this.hideTabs();
+                this.oldScrollPosition = scrollTop;
+            }
+        },
+
+        /**
+         * Depending on if the toolbar overflows or not collapses or expands the toolbar
+         * collapsing - if the toolbar is expanded and overflown
+         * expanding - if the toolbar is underflown and collapsed and the expanded version has enough space
+         */
         updateToolbarOverflow: function() {
+            var $container = this.$find(constants.toolbarSelector);
+            if (this.sandbox.dom.width($container) < $container[0].scrollWidth) {
+                if (this.toolbarCollapsed === false) {
+                    this.toolbarExpandedWidth = this.sandbox.dom.outerWidth(this.sandbox.dom.children($container));
+                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.collapse', function() {
+                        this.toolbarCollapsed = true;
+                        this.updatedToolbarOverflowClass();
+                    }.bind(this));
+                } else {
+                    this.updatedToolbarOverflowClass();
+                }
+            } else {
+                if (this.toolbarCollapsed === true && this.sandbox.dom.width($container) >= this.toolbarExpandedWidth) {
+                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.expand', function() {
+                        this.toolbarExpandedWidth = this.sandbox.dom.outerWidth(this.sandbox.dom.children($container));
+                        this.toolbarCollapsed = false;
+                        this.updatedToolbarOverflowClass();
+                    }.bind(this));
+                } else {
+                    this.updatedToolbarOverflowClass();
+                }
+            }
+        },
+
+        /**
+         * Sets an overflow-class on the toolbar, depending on whether or ot
+         * the toolbar overflows
+         */
+        updatedToolbarOverflowClass: function() {
             var $container = this.$find(constants.toolbarSelector);
             if (this.sandbox.dom.width($container) < $container[0].scrollWidth) {
                 this.sandbox.dom.addClass($container, constants.overflownClass);
             } else {
                 this.sandbox.dom.removeClass($container, constants.overflownClass);
             }
+        },
+
+        /**
+         * Hides the tabs
+         */
+        hideTabs: function() {
+            this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hideTabsClass);
+            this.sandbox.dom.addClass(this.$el, constants.hideTabsClass);
+        },
+
+        /**
+         * Shows the tabs
+         */
+        showTabs: function() {
+            this.sandbox.dom.removeClass(constants.headerBackgroundSelector, constants.hideTabsClass);
+            this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
         },
 
         /**
@@ -879,11 +886,13 @@ define([], function () {
             this.render();
 
             toolbarDef = this.startToolbar();
+            this.startLanguageChanger();
             tabsDef = this.startTabs();
 
             this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
                 this.sandbox.emit(INITIALIZED.call(this));
                 this.show();
+                this.oldScrollPosition = this.sandbox.dom.scrollTop(this.options.scrollContainerSelector);
             }.bind(this));
         },
 

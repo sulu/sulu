@@ -457,43 +457,35 @@ input, select {
 
 /* line 1, ../scss/modules/header.scss */
 .sulu-header {
-  background-color: #52B6CA;
   width: 100%;
+  height: 50px;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 90;
 }
-/* line 10, ../scss/modules/header.scss */
+/* line 9, ../scss/modules/header.scss */
 .sulu-header .toolbar-row {
   display: table;
   table-layout: fixed;
   height: 50px;
   width: 100%;
+  background: #52B6CA;
+  position: relative;
+  z-index: 1000;
 }
-/* line 32, ../js/vendor/husky/scss/mixins.scss */
-.sulu-header .toolbar-row:after {
-  clear: both;
-  content: ' ';
-  display: block;
-}
-/* line 16, ../scss/modules/header.scss */
+/* line 18, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .left-container {
   display: table-cell;
   width: 50px;
-  min-width: 50px;
-  -moz-transition: width 700ms;
-  -o-transition: width 700ms;
-  -webkit-transition: width 700ms;
-  transition: width 700ms;
-  -moz-transition: min-width 700ms;
-  -o-transition: min-width 700ms;
-  -webkit-transition: min-width 700ms;
-  transition: min-width 700ms;
   background: #52B6CA;
   vertical-align: top;
   position: relative;
   z-index: 500;
+  -moz-transition: width 700ms;
+  -o-transition: width 700ms;
+  -webkit-transition: width 700ms;
+  transition: width 700ms;
 }
 /* line 27, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .toolbar-container {
@@ -515,24 +507,67 @@ input, select {
   -webkit-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
 }
-/* line 44, ../scss/modules/header.scss */
+/* line 42, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .toolbar-container.overflown .husky-toolbar .toolbar-dropdown-menu {
+  margin-top: 0;
+}
+/* line 47, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .right-container {
   display: table-cell;
-  min-width: 120px;
+  width: 120px;
   height: 50px;
   vertical-align: top;
   position: relative;
   z-index: 500;
   background: #52B6CA;
 }
-/* line 53, ../scss/modules/header.scss */
+/* line 56, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .back {
   color: #fff;
   text-align: center;
   line-height: 50px;
   cursor: pointer;
 }
-/* line 61, ../scss/modules/header.scss */
+/* line 62, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .language-changer {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 10px;
+  line-height: 30px;
+  padding-left: 8px;
+  background: #fff;
+  border-radius: 3px;
+  font-size: 12px;
+  position: relative;
+  cursor: pointer;
+}
+/* line 73, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .language-changer .dropdown-toggle {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 8px 0 10px;
+}
+/* line 78, ../scss/modules/header.scss */
+.sulu-header .toolbar-row .language-changer .dropdown-menu {
+  right: 0;
+  left: auto;
+  margin-top: 0;
+  display: inline-block;
+  min-width: 160px;
+  width: auto;
+}
+/* line 88, ../scss/modules/header.scss */
+.sulu-header .tabs-row {
+  position: relative;
+  top: 0px;
+  z-index: 500;
+  -moz-transition: top 200ms ease 150ms;
+  -o-transition: top 200ms ease 150ms;
+  -webkit-transition: top 200ms ease;
+  -webkit-transition-delay: 150ms;
+  transition: top 200ms ease 150ms;
+}
+/* line 94, ../scss/modules/header.scss */
 .sulu-header .tabs-row .tabs {
   padding: 0 50px;
   overflow: auto;
@@ -542,23 +577,26 @@ input, select {
   -webkit-transition: padding 700ms;
   transition: padding 700ms;
 }
-/* line 70, ../scss/modules/header.scss */
+/* line 103, ../scss/modules/header.scss */
+.sulu-header.tabs-hidden .tabs-row {
+  top: -50px;
+}
+/* line 109, ../scss/modules/header.scss */
 .sulu-header + .page {
   margin-top: 50px;
   padding-bottom: 50px;
 }
-/* line 74, ../scss/modules/header.scss */
-.sulu-header.has-tabs + .page {
-  margin-top: 100px;
-  padding-bottom: 100px;
+/* line 113, ../scss/modules/header.scss */
+.sulu-header.has-tabs + .page #content {
+  padding-top: 90px;
 }
-/* line 78, ../scss/modules/header.scss */
+/* line 116, ../scss/modules/header.scss */
 .sulu-header.invisible + .page {
   margin-top: 0;
   padding-bottom: 0;
 }
 
-/* line 84, ../scss/modules/header.scss */
+/* line 122, ../scss/modules/header.scss */
 .sulu-header-background {
   position: absolute;
   top: 0px;
@@ -567,29 +605,38 @@ input, select {
   height: 50px;
   width: 100%;
   z-index: -1;
+  -moz-transition: height 200ms ease 150ms, border-bottom-width 200ms ease 150ms;
+  -o-transition: height 200ms ease 150ms, border-bottom-width 200ms ease 150ms;
+  -webkit-transition: height 200ms ease, border-bottom-width 200ms ease;
+  -webkit-transition-delay: 150ms, 150ms;
+  transition: height 200ms ease 150ms, border-bottom-width 200ms ease 150ms;
 }
-/* line 93, ../scss/modules/header.scss */
+/* line 132, ../scss/modules/header.scss */
 .sulu-header-background.has-tabs {
   height: 100px;
   border-bottom: 50px solid #fff;
 }
+/* line 136, ../scss/modules/header.scss */
+.sulu-header-background.tabs-hidden {
+  height: 50px;
+  border-bottom-width: 0;
+}
 
-/* line 100, ../scss/modules/header.scss */
+/* line 143, ../scss/modules/header.scss */
 .small-fixed .sulu-header .inner {
   margin-left: 10px;
   margin-right: 10px;
 }
-/* line 104, ../scss/modules/header.scss */
+/* line 147, ../scss/modules/header.scss */
 .small-fixed .tabs-row .tabs {
   padding-left: 10px;
 }
-/* line 107, ../scss/modules/header.scss */
+/* line 150, ../scss/modules/header.scss */
 .small-fixed .sulu-header .left-container {
   width: 0px;
-  min-width: 0px;
 }
-/* line 111, ../scss/modules/header.scss */
-.small-fixed .sulu-header .back {
+/* line 152, ../scss/modules/header.scss */
+.small-fixed .sulu-header .left-container * {
   display: none;
 }
 
