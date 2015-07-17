@@ -296,7 +296,7 @@ define(function() {
              */
             changeHeader = function(tabsData) {
                 // set the variables for the header-component-options properties
-                var toolbarLanguageChanger = true;
+                var toolbarLanguageChanger = false;
 
                 if (!!header.toolbar) {
                     toolbarLanguageChanger = !!header.toolbar.languageChanger ?

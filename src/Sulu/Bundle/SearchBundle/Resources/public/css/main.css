@@ -192,16 +192,16 @@
 .dropdown-input-trigger-container {
   width: 25%;
   background-color: #28B6CA;
-  color: #fff;
   vertical-align: middle;
   border-radius: 2px 0 0 2px;
   cursor: pointer;
 }
-/* line 37, ../scss/modules/dropdown-input.scss */
+/* line 36, ../scss/modules/dropdown-input.scss */
 .dropdown-input-trigger-container .dropdown-label {
   font-size: 14px;
   line-height: 40px;
   background-color: transparent;
+  color: #fff;
 }
 /* line 42, ../scss/modules/dropdown-input.scss */
 .dropdown-input-trigger-container .dropdown-label .toggle-icon {

@@ -252,11 +252,11 @@ define(['sulucategory/model/category',
 
         /**
          * Renders the from for add and edit
-         * @param locale {String} the locale in which the category gets loaded. can be undefined
+         * @param language {Object} the language object from the header language changer
          */
-        renderForm: function (locale) {
+        renderForm: function (language) {
             this.sandbox.stop('#' + constants.formContainerId);
-
+            var locale = (!!language) ? language.id : undefined;
             var category,
                 action = function (data) {
                     this.sandbox.start([

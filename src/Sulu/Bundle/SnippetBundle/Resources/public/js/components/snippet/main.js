@@ -60,7 +60,7 @@ define([
             }, this);
 
             // change language
-            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
+            this.sandbox.on('sulu.header.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 var data = this.model.toJSON();
 
