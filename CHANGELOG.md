@@ -2,8 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1367 [AdminBundle]     Added new tabs design
     * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
+    * ENHANCEMENT #1368 [ResourceBundle]  Changed handling of conjunctions for filters
     * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
     * ENHANCEMENT #1363 [ContactBundle]   Removed old config from filter config
     * ENHANCEMENT #1353 [ContactBundle]   Integrated custom filters for account-list 

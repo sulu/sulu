@@ -68,22 +68,21 @@ define([], function() {
             mediaFlareClass: 'flare',
 
             contentContainerClass: 'content-container',
+            //blurClass: 'blur',
+            loadingClass: 'content-loading',
             contentBoxClass: 'content-box',
-            frameSliderClass: 'frame-slider',
             websiteSwitchClass: 'website-switch',
-
             contentFooterClass: 'login-content-footer',
             navigatorSpanClass: 'navigator',
+            successOverlayClass: 'success-overlay',
+            successIconClass: 'success-icon',
 
-
-            successContainerClass: 'success-container',
-
+            frameSliderClass: 'frame-slider',
             frameClass: 'box-frame',
             loginFrameClass: 'login',
             forgotPasswordFrameClass: 'forgot-password',
             resendMailFrameClass: 'resend-mail',
             resetPasswordFrameClass: 'reset-password',
-
 
             forgotPasswordSwitchClass: 'forgot-password-switch',
             loginSwitchClass: 'login-switch-span',
@@ -99,7 +98,7 @@ define([], function() {
             frameFooterClass: 'box-frame-footer',
             errorMessageClass: 'error-message',
             errorClass: 'login-error',
-            loaderClass: 'login-loader',
+            loaderClass: 'login-loader'
         },
 
         templates = {
@@ -111,22 +110,21 @@ define([], function() {
                 '   <div class="'+ constants.contentBoxClass +'">',
                 '       <div class="'+ constants.frameSliderClass +'"></div>',
                 '   </div>',
-                '   <div class="grid-row'+ constants.contentFooterClass +'">',
+                '   <div class="grid-row '+ constants.contentFooterClass +'">',
                 '       <span class="'+ [constants.websiteSwitchClass, constants.navigatorSpanClass].join(" ") +'"><%= backWebsiteMessage %></span>',
                 '   </div>',
-                '</div>'].join(''),
-            successContainer: ['<div class="'+ constants.successContainerClass +'">',
-                '    <div class="'+ constants.mediaBackgroundClass+'"></div>',
-                '    <div class="'+ constants.darkenerClass +'"></div>',
+                '   <div class="'+ constants.successOverlayClass +'">',
+                '       <span class="fa-check '+ constants.successIconClass+'"></span>', //testing
+                '   </div>',
                 '</div>'].join(''),
 
 
             loginFrame: ['<div class="'+ [constants.frameClass, constants.loginFrameClass].join(" ") +'">',
                         '   <form class="grid inputs">',
-                        '       <div class="grid-row small">',
+                        '       <div class="grid-row">',
                         '           <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= emailUser %>"/>',
                         '       </div>',
-                        '       <div class="grid-row small">',
+                        '       <div class="grid-row">',
                         '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                         '       </div>',
                         '       <span class="'+ constants.errorMessageClass +'"><%= errorMessage %></span>',
@@ -138,8 +136,8 @@ define([], function() {
                         '</div>'].join(''),
             forgotPasswordFrame: ['<div class="'+ [constants.frameClass, constants.forgotPasswordFrameClass].join(" ") +'">',
                             '   <div class="grid inputs">',
-                            '       <div class="grid-row small">',
-                            '           <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>"/>',
+                            '       <div class="grid-row">',
+                            '           <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>" tabindex="-1"/>',
                             '       </div>',
                             '       <span class="'+ constants.errorMessageClass +'"></span>',
                             '   </div>',
@@ -149,7 +147,7 @@ define([], function() {
                             '   </div>',
                             '</div>'].join(''),
             resendMailFrame: ['<div class="'+ [constants.frameClass, constants.resendMailFrameClass].join(" ") +'">',
-                            '   <div class="grid-row small">',
+                            '   <div class="grid-row">',
                             '       <span class="message"><%= sentMessage %> <span class="to-mail"></span></span>',
                             '   </div>',
                             '   <div class="grid-row small '+ constants.frameFooterClass +'">',
@@ -159,10 +157,10 @@ define([], function() {
                             '</div>'].join(''),
             resetPasswordFrame: ['<div class="'+ [constants.frameClass, constants.resetPasswordFrameClass].join(" ") +'">',
                                 '   <div class="grid inputs">',
-                                '       <div class="grid-row small">',
+                                '       <div class="grid-row">',
                                 '           <input id="password1" class="form-element input-large husky-validate" type="password" placeholder="<%= password1Label %>"/>',
                                 '       </div>',
-                                '       <div class="grid-row small">',
+                                '       <div class="grid-row">',
                                 '           <input id="password2" class="form-element input-large husky-validate" type="password" placeholder="<%= password2Label %>"/>',
                                 '       </div>',
                                 '   </div>',
@@ -206,10 +204,10 @@ define([], function() {
          */
         initProperties: function() {
             this.dom = {
-                $mediaFrame: null,
-                $contentFrame: null,
+                $mediaContainer: null,
+                $contentContainer: null,
 
-                $mediaContent: null,
+                $mediaBackground: null,
                 $frameSlider: null,
                 $loginFrame: null,
                 $forgotPasswordFrame: null,
@@ -225,7 +223,7 @@ define([], function() {
                 $resendResetMailButton: null,
                 $resetPasswordButton: null
             };
-            this.resetMailUser = null;
+            this.resetMailUser = null
         },
 
         /**
@@ -245,33 +243,33 @@ define([], function() {
             this.sandbox.dom.one($img, 'load', this.showBackground.bind(this));
             this.sandbox.dom.attr($img, 'src', this.options.backgroundImg);
 
-            this.dom.$mediaFrame = this.sandbox.dom.createElement(templates.mediaContainer);
-            this.dom.$mediaContent = this.sandbox.dom.find('.' + constants.mediaBackgroundClass, this.dom.$mediaFrame);
+            this.dom.$mediaContainer = this.sandbox.dom.createElement(templates.mediaContainer);
+            this.dom.$mediaBackground = this.sandbox.dom.find('.' + constants.mediaBackgroundClass, this.dom.$mediaContainer);
 
             this.sandbox.dom.css(
-                this.dom.$mediaContent, 'background-image', 'url("'+ this.options.backgroundImg +'")'
+                this.dom.$mediaBackground, 'background-image', 'url("'+ this.options.backgroundImg +'")'
             );
-            this.sandbox.dom.hide(this.dom.$mediaContent); //fade in later
-            this.sandbox.dom.append(this.$el, this.dom.$mediaFrame);
+            this.sandbox.dom.hide(this.dom.$mediaBackground); //fade in later
+            this.sandbox.dom.append(this.$el, this.dom.$mediaContainer);
         },
 
         /**
          * Fades the background in
          */
         showBackground: function() {
-            this.sandbox.dom.fadeIn(this.dom.$mediaContent, this.options.fadeInDuration);
+            this.sandbox.dom.fadeIn(this.dom.$mediaBackground, this.options.fadeInDuration);
         },
 
         /**
          * Renders the content-box
          */
         renderContentFrame: function() {
-            this.dom.$contentFrame = this.sandbox.dom.createElement(this.sandbox.util.template(templates.contentContainer)({
+            this.dom.$contentContainer = this.sandbox.dom.createElement(this.sandbox.util.template(templates.contentContainer)({
                 backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite)
             }));
 
-            this.dom.$box = this.sandbox.dom.find('.' + constants.contentBoxClass, this.dom.$contentFrame);
-            this.dom.$frameSlider = this.sandbox.dom.find('.' + constants.frameSliderClass, this.dom.$contentFrame);
+            this.dom.$box = this.sandbox.dom.find('.' + constants.contentBoxClass, this.dom.$contentContainer);
+            this.dom.$frameSlider = this.sandbox.dom.find('.' + constants.frameSliderClass, this.dom.$contentContainer);
 
             if (this.options.resetMode === false) {
                 this.renderLoginFrame();
@@ -282,7 +280,7 @@ define([], function() {
             }
 
             this.renderLoader();
-            this.sandbox.dom.append(this.$el, this.dom.$contentFrame);
+            this.sandbox.dom.append(this.$el, this.dom.$contentContainer);
 
             this.moveFrameSliderTo(this.sandbox.dom.find('.' + constants.frameClass, this.dom.$frameSlider)[0]);
         },
@@ -311,25 +309,17 @@ define([], function() {
          */
         renderLoader: function() {
             this.dom.$loader = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'"/>');
-            this.sandbox.dom.hide(this.dom.$loader);
-            this.sandbox.dom.append(this.dom.$box, this.dom.$loader);
+            this.sandbox.dom.append(this.dom.$contentContainer, this.dom.$loader);
             this.sandbox.start([
                 {
                     name: 'loader@husky',
                     options: {
                         el: this.dom.$loader,
-                        size: '20px',
-                        color: '#666666'
+                        size: '200px',
+                        color: '#fff'
                     }
                 }
             ]);
-        },
-
-        /**
-         * Sets the focus to the username input
-         */
-        focusUsername: function() {
-            this.sandbox.dom.select(this.sandbox.dom.find('#username', this.dom.$loginForm)); //maybe always focus first input?
         },
 
         /**
@@ -396,8 +386,9 @@ define([], function() {
         },
 
         bindGeneralDomEvents: function() {
-            this.sandbox.dom.on(this.dom.$contentFrame, 'click',
+            this.sandbox.dom.on(this.dom.$contentContainer, 'click',
                 this.redirectTo.bind(this, this.sandbox.dom.window.location.origin), '.' + constants.websiteSwitchClass);
+
             this.sandbox.dom.on(this.sandbox.dom.window, 'mousedown', this.toggleMediaFrameFlare.bind(this, true));
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleMediaFrameFlare.bind(this, false));
         },
@@ -407,12 +398,17 @@ define([], function() {
             this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
             this.sandbox.dom.on(this.dom.$forgotPasswordSwitch, 'click', this.moveToForgotPasswordFrame.bind(this));
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
+
+            // reset errorstatus on input-change
+            this.sandbox.dom.on(this.dom.$box, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
         },
 
         bindForgotPasswordDomEvents: function() {
             this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keydown', this.forgotPasswordKeyHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginSwitchForgotFrame, 'click', this.moveToLoginFrame.bind(this));
             this.sandbox.dom.on(this.dom.$requestResetMailButton, 'click', this.requestResetMailButtonClickHandler.bind(this));
+
+            this.sandbox.dom.on(this.dom.$box, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
         },
 
         bindResendMailDomEvents: function() {
@@ -424,6 +420,8 @@ define([], function() {
             this.sandbox.dom.on(this.dom.$resetPasswordButton, 'click', this.resetPasswordButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keydown', this.resetPasswordKeyHandler.bind(this));
             this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click', this.loginRouteClickHandler.bind(this));
+
+            this.sandbox.dom.on(this.dom.$box, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
         },
 
         /**
@@ -432,9 +430,9 @@ define([], function() {
          */
         toggleMediaFrameFlare: function(active) {
             if (active === true) {
-                this.sandbox.dom.addClass(this.dom.$mediaFrame, constants.mediaFlareClass);
+                this.sandbox.dom.addClass(this.dom.$mediaContainer, constants.mediaFlareClass);
             } else {
-                this.sandbox.dom.removeClass(this.dom.$mediaFrame, constants.mediaFlareClass);
+                this.sandbox.dom.removeClass(this.dom.$mediaContainer, constants.mediaFlareClass);
             }
         },
 
@@ -443,6 +441,13 @@ define([], function() {
          */
         loginButtonClickHandler: function() {
             this.sandbox.dom.submit(this.dom.$loginForm);
+        },
+
+        /**
+         * Handles a click on the login-button
+         */
+        validationInputChangeHandler: function($frame) {
+            this.sandbox.dom.removeClass($frame, constants.errorClass);
         },
 
         /**
@@ -464,13 +469,13 @@ define([], function() {
          * Handles the click on the reset button
          */
         resetPasswordButtonClickHandler: function() {
-            var password1 = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#password1', this.dom.$resetPasswordFrame))),
-                password2 = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#password2', this.dom.$resetPasswordFrame)));
+            var password1 = this.sandbox.dom.val(this.sandbox.dom.find('#password1', this.dom.$resetPasswordFrame)),
+                password2 = this.sandbox.dom.val(this.sandbox.dom.find('#password2', this.dom.$resetPasswordFrame));
             if (password1 !== password2 || password1.length === 0) {
                 this.sandbox.dom.addClass(this.dom.$resetPasswordFrame, constants.errorClass);
+                this.focusFirstInput(this.dom.$resetPasswordFrame);
                 return false;
             }
-            this.sandbox.dom.removeClass(this.dom.$resetPasswordFrame, constants.errorClass);
             this.resetPassword(password1);
         },
 
@@ -488,8 +493,8 @@ define([], function() {
          * Handles the submit event of the login-form
          */
         loginFormSubmitHandler: function() {
-            var username = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm))),
-                password = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm)));
+            var username = this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm)),
+                password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm));
             if (username.length === 0 || password.length === 0) {
                 this.displayLoginError();
             } else {
@@ -534,15 +539,14 @@ define([], function() {
          * @param password
          */
         login: function(username, password) {
-            this.sandbox.dom.after(this.dom.$loginButton, this.dom.$loader);
-            this.sandbox.dom.show(this.dom.$loader);
+            this.showLoader();
             this.sandbox.util.save(this.options.loginCheck, 'POST', {
                 '_username': username,
                 '_password': password
             }).then(function(data) {
                 this.redirectTo(data.url + this.sandbox.dom.window.location.hash);
             }.bind(this)).fail(function() {
-                this.sandbox.dom.hide(this.dom.$loader);
+                this.hideLoader();
                 this.displayLoginError();
             }.bind(this));
         },
@@ -552,17 +556,16 @@ define([], function() {
          * @param user
          */
         requestResetMail: function(user) {
-            this.sandbox.dom.after(this.dom.$requestResetMailButton, this.dom.$loader);
-            this.sandbox.dom.show(this.dom.$loader);
+            this.showLoader();
             this.sandbox.util.save(this.options.resetMailUrl, 'POST', {
                 'user': user
             }).then(function(data) {
                 this.resetMailUser = user;
-                this.sandbox.dom.hide(this.dom.$loader);
+                this.hideLoader();
                 this.showEmailSentLabel();
                 this.moveToResendMailFrame(data.email);
             }.bind(this)).fail(function(data) {
-                this.sandbox.dom.hide(this.dom.$loader);
+                this.hideLoader();
                 this.displayRequestResetMailError(data.responseJSON.code);
             }.bind(this));
         },
@@ -572,15 +575,14 @@ define([], function() {
          * @param newPassword - string
          */
         resetPassword: function(newPassword) {
-            this.sandbox.dom.after(this.dom.$resetPasswordButton, this.dom.$loader);
-            this.sandbox.dom.show(this.dom.$loader);
+            this.showLoader();
             this.sandbox.util.save(this.options.resetUrl, 'POST', {
                 'password': newPassword,
                 'token': this.options.resetToken
             }).then(function(data) {
                 this.redirectTo(data.url);
             }.bind(this)).fail(function(data) {
-                this.sandbox.dom.hide(this.dom.$loader);
+                this.hideLoader();
                 this.displayResetPasswordError(data.responseJSON.code);
             }.bind(this));
         },
@@ -590,20 +592,26 @@ define([], function() {
          * to the server to resend the mail
          */
         resendResetMail: function() {
-            this.sandbox.dom.after(this.dom.$resendResetMailButton, this.dom.$loader);
-            this.sandbox.dom.show(this.dom.$loader);
+            this.showLoader();
             this.sandbox.util.save(this.options.resendUrl, 'POST', {
                 'user': this.resetMailUser
             }).then(function() {
-               this.sandbox.dom.hide(this.dom.$loader);
+                this.hideLoader();
                 this.showEmailSentLabel();
             }.bind(this)).fail(function(data) {
-                this.sandbox.dom.hide(this.dom.$loader);
+                this.hideLoader();
                 this.displayResendResetMailError(data.responseJSON.code);
             }.bind(this));
         },
 
 
+        showLoader: function() {
+            this.sandbox.dom.addClass(this.dom.$contentContainer, constants.loadingClass);
+        },
+
+        hideLoader: function() {
+            this.sandbox.dom.removeClass(this.dom.$contentContainer, constants.loadingClass);
+        },
 
         /**
          * Shows an email-sent success-label
@@ -613,14 +621,22 @@ define([], function() {
         },
 
         /**
+         * Adds a css class -> inputs become red..
+         */
+        displayLoginError: function() {
+            this.sandbox.dom.addClass(this.dom.$loginFrame, constants.errorClass);
+            this.focusFirstInput(this.dom.$loginFrame);
+        },
+
+        /**
          * Displays a reset-mail error
          * @param code - integer - the code for the reset-mail-message
          */
         displayRequestResetMailError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
             this.sandbox.dom.html(this.sandbox.dom.find('.'+ constants.errorMessageClass, this.dom.$forgotPasswordFrame), this.sandbox.translate(errorTransKey));
-            this.sandbox.dom.addClass(this.dom.$box, constants.boxLargerClass);
             this.sandbox.dom.addClass(this.dom.$forgotPasswordFrame, constants.errorClass);
+            this.focusFirstInput(this.dom.$forgotPasswordFrame);
         },
 
         /**
@@ -630,8 +646,7 @@ define([], function() {
         displayResendResetMailError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
             this.sandbox.emit('sulu.labels.error.show', this.sandbox.translate(errorTransKey), 'labels.error');
-            this.sandbox.dom.removeClass(this.dom.$resendResetMailButton, 'action');
-            this.sandbox.dom.addClass(this.dom.$resendResetMailButton, 'inactive gray-dark');
+            this.sandbox.dom.addClass(this.dom.$resendResetMailButton, 'inactive');
         },
 
         /**
@@ -651,12 +666,6 @@ define([], function() {
             this.sandbox.dom.window.location = url;
         },
 
-        /**
-         * Adds a css class -> inputs become red..
-         */
-        displayLoginError: function() {
-            this.sandbox.dom.addClass(this.dom.$loginFrame, constants.errorClass);
-        },
 
         moveToForgotPasswordFrame: function() {
             this.moveFrameSliderTo(this.dom.$forgotPasswordFrame);

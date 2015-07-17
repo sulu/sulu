@@ -16,11 +16,15 @@
         background: $black;
 
         .media-logo {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             z-index: 20;
 
-            @include centerHorizontalAndVertical;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -75px;
+            margin-top: -75px;
 
             background: url("../img/logo.svg") no-repeat center center;
             @include background-size(contain);
@@ -42,7 +46,7 @@
 
         //flare effect
         &.flare {
-            .background {
+            .media-background {
                 opacity: 0.6;
             }
         }
@@ -54,7 +58,7 @@
         background-color: $blue;
 
         .content-box {
-            $boxWidth: 450px;
+            $boxWidth: 400px;
 
             width: $boxWidth;
             z-index: 10;
@@ -118,11 +122,19 @@
                 }
 
                 .box-frame-footer{
-                    .btn.action {
+                    margin: 0; //overwrite grid-row
+
+                    .btn {
                         border: 1px solid $white;
                         float: right;
+                        padding: 0 45px;
 
                         &:hover {
+                            border: 1px solid $grayDarkLighter;
+                            color: $grayDarkLighter;
+                        }
+
+                        &.inactive {
                             border: 1px solid $grayDarkLighter;
                             color: $grayDarkLighter;
                         }
@@ -133,16 +145,11 @@
                     }
                 }
             }
-
-            .login-loader {
-                float: right;
-                margin: 20px 15px 0 0;
-                overflow: hidden;
-            }
         }
 
         span.navigator {
             color: $white;
+            font-size: 12px; //as in sketch
             cursor: pointer;
             &:hover {
                 color: $grayDarkLighter; //testing
@@ -154,8 +161,54 @@
             bottom: 0px;
             left: 0px;
             width: 100%;
+            z-index: 20;
             text-align: center;
+
+            opacity: 1;
+            transition: opacity 200ms;
+
             @include clear-float;
         }
+
+        .login-loader {
+            z-index: 10;
+            @include centerHorizontalAndVertical;
+            top: 100%;
+
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+
+        &.content-loading{
+            .login-content-footer {
+                opacity: 0;
+            }
+
+            .login-loader {
+                opacity: 1;
+            }
+        }
+
+        .success-overlay {
+            display: none;  //hide on start
+            opacity: 0;     //fade in when needed
+            transition: opacity 500ms;
+
+            position: relative;
+            height: 100%;
+            width: 100%;
+            z-index: 40;
+            background-color: $green;
+
+            .success-icon {
+                @include centerHorizontalAndVertical;
+                font-size: 200px;
+                color: $white;
+            }
+        }
     }
+}
+
+.login-label-container {
+    left: 75% !important;
 }

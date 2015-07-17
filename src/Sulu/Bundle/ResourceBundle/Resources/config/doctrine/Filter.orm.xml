@@ -9,7 +9,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="conjunction" type="string" length="10" column="conjunction" nullable="false"/>
+        <field name="conjunction" type="string" length="10" column="conjunction" nullable="true"/>
         <field name="context" type="string" column="context" length="255" nullable="false"/>
         <field name="private" type="boolean" column="private" nullable="false"/>
         <field name="created" type="datetime" length="255"/>

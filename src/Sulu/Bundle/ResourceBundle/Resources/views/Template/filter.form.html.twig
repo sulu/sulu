@@ -11,7 +11,7 @@
 
     <div class="grid-row">
         <div class="grid-col-4 form-group">
-            <label for="conjunction" class="required"><%= translate('resource.filter.conjunction') %></label>
+            <label for="conjunction"><%= translate('resource.filter.conjunction') %></label>
             <div id="conjunction"
                  data-aura-component="select@husky"
                  data-aura-data="{{ conjunctions|json_encode() }}"
@@ -23,8 +23,7 @@
                  data-type-required="conjunction"
                  data-mapper-property="conjunction"
                  data-type="husky-select"
-                 data-validation-required="true"
-                 data-aura-pre-selected-elements='["or"]'
+                 data-validation-required="false"
                  data-form="true">
             </div>
         </div>
@@ -40,7 +39,7 @@
         </div>
     </div>
 
-    <div class="grid-row">
+    <div class="grid-row" id="conditions-wrapper">
         <h2 class="divider"><%= translate('resource.filter.conditions') %></h2>
         <div class="grid-row small">
             <div class="grid-col-12">

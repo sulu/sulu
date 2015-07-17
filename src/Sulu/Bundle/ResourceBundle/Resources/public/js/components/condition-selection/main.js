@@ -690,7 +690,7 @@ define([], function() {
         /**
          * Triggers updte of input field
          */
-        operatorChangedEventHandler = function() {
+        operatorChangedEventHandler = function(event) {
             var operatorId = event.target.value,
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 operator = getOperatorById.call(this, operatorId),

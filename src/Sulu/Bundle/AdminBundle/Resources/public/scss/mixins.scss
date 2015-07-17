@@ -14,9 +14,10 @@
   @include transform(translate(-50%, -50%));
 }
 
-@mixin blur {
-  filter: url(../img/blur.svg#blur);
-  -webkit-filter: blur(3px);
-  filter: blur(3px);
-  filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='3');
+@mixin blur($size) {
+  -webkit-filter: blur($size);
+  -moz-filter: blur($size);
+  -ms-filter: blur($size);
+  -o-filter: blur($size);
+  filter: blur($size);
 }
