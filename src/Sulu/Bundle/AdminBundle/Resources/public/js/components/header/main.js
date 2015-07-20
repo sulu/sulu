@@ -544,6 +544,8 @@ define([], function () {
         startToolbar: function () {
             var def = this.sandbox.data.deferred();
 
+            this.sandbox.stop(this.$find('.' + constants.toolbarClass + ' *'));
+
             if (this.options.toolbarDisabled !== true) {
                 var options = this.options.toolbarOptions;
 
@@ -621,7 +623,6 @@ define([], function () {
                 }.bind(this));
             }
 
-            this.sandbox.stop(this.$find('.' + constants.toolbarClass));
             this.sandbox.dom.html(this.$find('.' + constants.toolbarClass), $container);
 
             // merge default tabs-options with passed ones
