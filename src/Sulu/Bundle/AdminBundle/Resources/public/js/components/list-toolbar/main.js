@@ -271,18 +271,11 @@ define([], function() {
         },
 
         /**
-         * Delegates the start of the toolbar to the header
-         */
-        startToolbarInHeader = function(options) {
-            // remove configured el (let header decide which container to use)
-            this.sandbox.emit('sulu.header.set-toolbar', options);
-        },
-
-        /**
          * Starts the husky-toolbar with given options
          * @param options {object} options The options to pass to the toolbar-component
          */
         startToolbarComponent = function(options) {
+            this.sandbox.dom.addClass(options.el, 'list-toolbar');
             this.sandbox.start([
                 {
                     name: 'toolbar@husky',
@@ -310,16 +303,6 @@ define([], function() {
 
             }
 
-            // emit event to extend toolbar
-            this.sandbox.emit(
-                'sulu.header.toolbar.extend',
-                this.options.context,
-                this.options.template,
-                this.options.instanceName,
-                this.options.datagridInstanceName,
-                this.options.listInfoContainerSelector
-            );
-
             this.options.template = parseTemplateTypes.call(this, this.options.template);
 
             var $container,
@@ -343,18 +326,10 @@ define([], function() {
             if (this.options.parentListener) {
                 this.options.parentListener.call(this);
             }
-
-            // start the toolbar right ahead or delegate the initialization to the header
-            if (this.options.inHeader !== true) {
-                $container = this.sandbox.dom.createElement('<div />');
-                this.html($container);
-                options.el = $container;
-                startToolbarComponent.call(this, options);
-            } else {
-                // hide element-container, because toolbar gets rendered in header
-                this.sandbox.dom.hide(this.$el);
-                startToolbarInHeader.call(this, options);
-            }
+            $container = this.sandbox.dom.createElement('<div />');
+            this.html($container);
+            options.el = $container;
+            startToolbarComponent.call(this, options);
         }
     };
 });

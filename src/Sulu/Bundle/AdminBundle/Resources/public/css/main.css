@@ -36,6 +36,12 @@ input, select {
 }
 
 /*----------------------------------------*/
+/* line 45, ../scss/modules/base.scss */
+.list-toolbar {
+  padding-bottom: 20px;
+}
+
+/*----------------------------------------*/
 /* line 4, ../scss/modules/layout.scss */
 #main {
   height: 100%;

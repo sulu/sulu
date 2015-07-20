@@ -31701,7 +31701,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     '</div>'
                 ].join(''),
                 selectedCounter: [
-                    '<span class="selected-elements smaller-font grey-font"><span class="number">0</span> <%= text %></span>'
+                    '<span class="selected-elements invisible smaller-font grey-font"><span class="number">0</span> <%= text %></span>'
                 ].join('')
             },
 
