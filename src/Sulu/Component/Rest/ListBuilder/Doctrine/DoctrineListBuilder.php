@@ -115,6 +115,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         // first create simplified id query
         // select ids with all necessary filter data
         $ids = $this->findIdsByGivenCriteria();
+
         // if no results are found - return
         if (count($ids) < 1) {
             return array();
@@ -162,7 +163,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         $ids = array_map(
             function ($array) {
                 return $array['id'];
-            }, $ids
+            },
+            $ids
         );
 
         return $ids;
@@ -238,6 +240,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         if (!$select) {
             $select = $this->entityName . '.id';
         }
+
         $filterFields = array_merge(
             $this->sortFields,
             $this->whereFields,
@@ -245,14 +248,15 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->betweenFields,
             $this->searchFields
         );
+
         // get entity names
         $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
 
         // use fields that have filter functionality or have an inner join
         $addJoins = array();
         foreach ($this->getJoins() as $entity => $join) {
-            if (array_search($entity, $filterFields) !== false ||
-                $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
+            if (array_search($entity, $filterFields) !== false
+                || $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
             ) {
                 $addJoins[$entity] = $join;
             }
@@ -265,7 +269,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns filtered list of array of field-descriptors
+     * Returns array of field-descriptor aliases
      *
      * @param array $filterFields
      *
@@ -277,22 +281,26 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // filter array for DoctrineFieldDescriptors
         foreach ($filterFields as $field) {
+            // add joins of field
             $fields = array_merge($fields, $field->getJoins());
-            if (!($field instanceof DoctrineConcatenationFieldDescriptor) &&
-                !($field instanceof DoctrineGroupConcatFieldDescriptor)
+
+            if ($field instanceof DoctrineFieldDescriptor
+                || $field instanceof DoctrineJoinDescriptor
             ) {
                 $fields[] = $field;
             }
         }
+
         // get entity names
         $fields = array_map(
             function ($field) {
                 return $field->getEntityName();
-            }, $fields
+            },
+            $fields
         );
 
         // unify result
-        return array_unique(array_values($fields));
+        return array_unique($fields);
     }
 
     /**
@@ -351,6 +359,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         if ($joins === null) {
             $joins = $this->getJoins();
         }
+
         foreach ($joins as $entity => $join) {
             switch ($join->getJoinMethod()) {
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
