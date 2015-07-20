@@ -207,17 +207,10 @@ define(function() {
          *
          * @param {Object|Function} header The header property found in the started component.
          *        If it's function it must return an object.
-         * @param {Boolean} [header.hidden} If true header gets hidden. Default is false.
-         * @param {String} [header.title] Title in the header.
-         * @param {Array} [header.breadcrumb] Breadcrumb object which gets passed to the header-component.
          * @param {Boolean} [header.noBack] If true the back icon won't be displayed.
          * @param {Object} [header.tabs] Object that contains configurations for the tabs.
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
-         * @param {Boolean} [header.tabs.fullControl] If true the header just displays the tabs,
-         *        but doesn't start the content-component.
-         * @param {Object} [header.tabs.options] Options to pass to the tabs-component.
-         *        Often used together with the fullControl-option.
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
          *        If not set no toolbar will be displayed.
          * @param {Array|String} [header.toolbar.template] Array of toolbar items to pass to the header component,
@@ -231,15 +224,9 @@ define(function() {
          * @example
          *
          *      header: {
-         *          hidden: false,
          *          tabs: {
          *              url: 'url/to/tabsData',
          *          },
-         *          title: 'My title',
-         *          breadcrumb: [
-         *              {title: 'Crumb 1', link: 'contacts/contact'},
-         *              {title: 'Crumb 2', event: 'sulu.navigation.clicked}
-         *          ],
          *          toolbar {
          *              languageChanger: true
          *              template: 'default'

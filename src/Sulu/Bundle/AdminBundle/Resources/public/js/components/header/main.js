@@ -25,8 +25,6 @@
  * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a default-language changer will be displayed. Can be an object to build a custom language changer
  * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
  * @param {String} [options.toolbarLanguageChanger.preselected] id of the language selected at the beginning
- * @param {Object} [options.tabsOptions] options to pass to the tabs-component. For valid data-structure see husky
- * @param {Boolean} [options.tabsFullControl] If true the content-component won't be initialized. Allowes you to fully take over the handling of the tab events
  * @param {Boolean} [options.toolbarDisabled] if true the toolbar-component won't be initialized
  * @param {Boolean} [options.noBack] if true the back icon won't be displayed
  * @param {String} [options.scrollContainerSelector] determines the box which gets observed for hiding the tabs on scroll
@@ -48,8 +46,6 @@ define([], function () {
             contentEl: null,
             toolbarOptions: {},
             toolbarLanguageChanger: false,
-            tabsOptions: {},
-            tabsFullControl: false,
             toolbarDisabled: false,
             noBack: false,
             scrollContainerSelector: '#content',
@@ -70,6 +66,7 @@ define([], function () {
             languageChangerTitleSelector: '.language-changer .title',
             overflownClass: 'overflown',
             hideTabsClass: 'tabs-hidden',
+            backgroundClass: 'sulu-header-background',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'}
@@ -107,6 +104,9 @@ define([], function () {
                 '   <span class="title"><%= title %></span>',
                 '   <span class="dropdown-toggle"></span>',
                 '</div>'
+            ].join(''),
+            background: [
+                '<div class="' + constants.backgroundClass + '"></div>'
             ].join('')
         },
 
@@ -124,29 +124,12 @@ define([], function () {
         },
 
         /**
-         * listens on and hides the header
-         *
-         * @event sulu.header.[INSTANCE_NAME].hide
-         */
-        HIDE = function () {
-            return createEventName.call(this, 'hide');
-        },
-
-        /**
          * emitted when the back-icon gets clicked
          *
          * @event sulu.header.[INSTANCE_NAME].back
          */
         BACK = function () {
             return createEventName.call(this, 'back');
-        },
-
-        /**
-         * listens on changes of the header
-         * @event sulu.header.[INSTANCE_NAME].change
-         */
-        CHANGE = function () {
-            return createEventName.call(this, 'change');
         },
 
         /**
@@ -159,26 +142,6 @@ define([], function () {
          */
         TOOLBAR_STATE_CHANGE = function () {
             return createEventName.call(this, 'toolbar.state.change');
-        },
-
-        /**
-         * listens on and passes the outer height of the components element to a callback
-         *
-         * @event sulu.header.[INSTANCE_NAME].get-height
-         * @param {function} callback to pass the outer-height to
-         */
-        GET_HEIGHT = function () {
-            return createEventName.call(this, 'get-height');
-        },
-
-        /**
-         * listens on and initializes a blank toolbar with given options
-         *
-         * @event sulu.header.[INSTANCE_NAME].set-toolbar
-         * @param {object} The options to pass to the toolbar-component
-         */
-        SET_TOOLBAR = function () {
-            return createEventName.call(this, 'set-toolbar');
         },
 
         /**
@@ -418,7 +381,6 @@ define([], function () {
 
             this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
                 this.sandbox.emit(INITIALIZED.call(this));
-                this.show();
                 this.oldScrollPosition = this.sandbox.dom.scrollTop(this.options.scrollContainerSelector);
             }.bind(this));
         },
@@ -429,6 +391,8 @@ define([], function () {
         render: function () {
             // add component-class
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
+
+            this.sandbox.dom.append('body', templates.background);
 
             // hide back if configured
             if (this.options.noBack === true) {
@@ -468,21 +432,15 @@ define([], function () {
         startTabs: function () {
             var def = this.sandbox.data.deferred();
 
-            if (!this.options.tabsOptions) {
-                def.resolve();
-            } else if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
+            if (this.options.tabsData !== null) {
                 this.removeTabsComponent();
 
-                if (this.options.tabsFullControl !== true) {
-                    // first start the content-component responsible for the tabs-content-handling
-                    this.startContentTabsComponent();
-                    // wait for content-component to initialize
-                    this.sandbox.once('sulu.content-tabs.content.initialized', function () {
-                        this.startTabsComponent(def);
-                    }.bind(this));
-                } else {
+                // first start the content-component responsible for the tabs-content-handling
+                this.startContentTabsComponent();
+                // wait for content-component to initialize
+                this.sandbox.once('sulu.content-tabs.content.initialized', function () {
                     this.startTabsComponent(def);
-                }
+                }.bind(this));
             } else {
                 this.removeTabsComponent();
                 def.resolve();
@@ -496,7 +454,7 @@ define([], function () {
          * @param {deferred} def
          */
         startTabsComponent: function (def) {
-            if (!!this.options.tabsData || !!this.options.tabsOptions.data) {
+            if (!!this.options.tabsData) {
                 this.removeTabsComponent();
                 var $container = this.sandbox.dom.createElement('<div/>'),
                     options = {
@@ -517,8 +475,6 @@ define([], function () {
                 }.bind(this));
 
                 this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
-                // merge default tabs-options with passed ones
-                options = this.sandbox.util.extend(true, {}, options, this.options.tabsOptions);
 
                 this.sandbox.start([
                     {
@@ -610,6 +566,10 @@ define([], function () {
             }
         },
 
+        /**
+         * Returns an array of objects with id and title property containing the system locales
+         * @returns {Array}
+         */
         getDefaultLanguages: function() {
             var items = [], i, length;
             for (i = -1, length = this.sandbox.sulu.locales.length; ++i < length;) {
@@ -666,19 +626,7 @@ define([], function () {
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
 
-            // get height event
-            this.sandbox.on(GET_HEIGHT.call(this), function (callback) {
-                callback(this.sandbox.dom.outerHeight(this.$el));
-            }.bind(this));
-
             this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
-
-            // set or reset a toolbar
-            this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
-
-            this.sandbox.on(CHANGE.call(this), this.change.bind(this));
-
-            this.sandbox.on(HIDE.call(this), this.hide.bind(this));
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
@@ -771,9 +719,9 @@ define([], function () {
 
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.updateToolbarOverflow.bind(this));
             this.sandbox.dom.on(this.$el, 'click', this.updateToolbarOverflow.bind(this));
-            //if (!!this.options.tabsData || !!this.options.tabsOptions.data) {
+            if (!!this.options.tabsData) {
                 this.sandbox.dom.on(this.options.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
-            //}
+            }
         },
 
         /**
@@ -883,30 +831,6 @@ define([], function () {
                     }
                 ]);
             }
-        },
-
-        /**
-         * changes the entire header
-         * @param options {object} The new options
-         */
-        change: function (options) {
-
-        },
-
-        /**
-         * Hides the header
-         */
-        hide: function () {
-            this.sandbox.dom.addClass(this.$el, 'invisible');
-            this.sandbox.dom.hide(constants.headerBackgroundSelector);
-        },
-
-        /**
-         * Shows the header
-         */
-        show: function () {
-            this.sandbox.dom.removeClass(this.$el, 'invisible');
-            this.sandbox.dom.show(constants.headerBackgroundSelector);
         }
     };
 });

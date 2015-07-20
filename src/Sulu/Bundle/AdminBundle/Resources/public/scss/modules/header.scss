@@ -113,14 +113,10 @@
     &.has-tabs + .page #content {
         padding-top: $contentPaddingTop + $tabsHeight;
     }
-    &.invisible + .page {
-        margin-top: 0;
-        padding-bottom: 0;
-    }
 }
 
 .sulu-header-background {
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     background: $blue;
