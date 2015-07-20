@@ -96,12 +96,11 @@
 
                 .message, .error-message {
                     display: block;
+                    color: $white;
                 }
 
                 .message {
-                    color: $white;
-                    padding-bottom: 10px;
-
+                    padding-bottom: 20px;
                     text-align: center;
 
                     span.to-mail {
@@ -112,8 +111,6 @@
                 }
 
                 .error-message {
-                    color: $grayDarkLighter;
-
                     // use max-height to enable css animation non-static height
                     max-height: 0px;
                     transition: max-height 200ms;
@@ -123,7 +120,7 @@
                 &.login-error {
                     .error-message {
                         max-height: 100px;
-                        padding-bottom: 10px;
+                        padding-bottom: 20px;
                     }
 
                     .husky-validate {
@@ -138,11 +135,6 @@
                         border: 1px solid $white;
                         float: right;
                         padding: 0 45px;
-
-                        &:hover {
-                            border: 1px solid $grayDarkLighter;
-                            color: $grayDarkLighter;
-                        }
 
                         &.inactive {
                             border: 1px solid $grayDarkLighter;
@@ -161,17 +153,13 @@
             color: $white;
             font-size: 12px; // as in sketch
             cursor: pointer;
-
-            &:hover {
-                color: $grayDarkLighter;
-            }
         }
 
         .login-content-footer {
             width: 100%;
 
             position: absolute;
-            z-index: 20;
+            z-index: 10;
             bottom: 0px;
             left: 0px;
 
@@ -194,17 +182,16 @@
         }
 
         .success-overlay {
-            display: none;  // fade in on login success
             height: 100%;
             width: 100%;
 
             position: relative;
-            z-index: 40;
+            z-index: -10;
+
+            background-color: $green;
 
             opacity: 0;
             transition: opacity 300ms;
-
-            background-color: $green;
 
             .success-icon {
                 @include centerBlock;
@@ -226,7 +213,6 @@
 
     &.content-success{
         .success-overlay {
-            display: block;
             opacity: 1;
         }
 

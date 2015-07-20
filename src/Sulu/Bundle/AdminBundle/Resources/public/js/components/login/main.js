@@ -124,13 +124,13 @@ define([], function () {
 
             loginFrame: ['<div class="' + [constants.frameClass, constants.loginFrameClass].join(" ") + '">',
                 '   <form class="grid inputs">',
+                '       <span class="' + constants.errorMessageClass + '"><%= errorMessage %></span>',
                 '       <div class="grid-row">',
                 '           <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= emailUser %>"/>',
                 '       </div>',
                 '       <div class="grid-row">',
                 '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                 '       </div>',
-                '       <span class="' + constants.errorMessageClass + '"><%= errorMessage %></span>',
                 '   </form>',
                 '   <div class="grid-row small ' + constants.frameFooterClass + '">',
                 '       <span class="' + [constants.forgotPasswordSwitchClass, constants.navigatorSpanClass].join(" ") + '"><%= forgotPasswordMessage %></span>',
@@ -139,10 +139,10 @@ define([], function () {
                 '</div>'].join(''),
             forgotPasswordFrame: ['<div class="' + [constants.frameClass, constants.forgotPasswordFrameClass].join(" ") + '">',
                 '   <div class="grid inputs">',
+                '       <span class="' + constants.errorMessageClass + '"></span>',
                 '       <div class="grid-row">',
                 '           <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>" tabindex="-1"/>',
                 '       </div>',
-                '       <span class="' + constants.errorMessageClass + '"></span>',
                 '   </div>',
                 '   <div class="grid-row small ' + constants.frameFooterClass + '">',
                 '       <span class="' + [constants.loginSwitchClass, constants.navigatorSpanClass].join(" ") + '"><%= backLoginMessage %></span>',
@@ -415,7 +415,7 @@ define([], function () {
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
 
             // reset error-status on user input-element-change, using keyup because change is only fired when loosing focus
-            this.sandbox.dom.on(this.dom.$contentBox, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$loginFrame, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
         },
 
         /**
@@ -426,7 +426,7 @@ define([], function () {
             this.sandbox.dom.on(this.dom.$requestResetMailButton, 'click', this.requestResetMailButtonClickHandler.bind(this));
 
             // reset error-status on user input-element-change
-            this.sandbox.dom.on(this.dom.$contentBox, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
         },
 
         /**
@@ -445,7 +445,7 @@ define([], function () {
             this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click', this.loginRouteClickHandler.bind(this));
 
             // reset error-status on user input-element-change
-            this.sandbox.dom.on(this.dom.$contentBox, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
         },
 
 
@@ -576,7 +576,7 @@ define([], function () {
         displaySuccessAndRedirect: function (redirectUrl) {
             this.sandbox.dom.css(this.dom.$loader, 'opacity', '0');
             // fade in green success-overlay (css animated)
-            this.sandbox.dom.show(this.dom.$successOverlay);
+            this.sandbox.dom.css(this.dom.$successOverlay, 'z-index', '20');
             // slide out both side-containers (css animated)
             this.sandbox.dom.addClass(this.$el, constants.successClass);
 
