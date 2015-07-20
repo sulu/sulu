@@ -400,9 +400,27 @@ define([], function () {
             this.toolbarCollapsed = false;
             this.toolbarExpandedWidth = 0;
             this.oldScrollPosition = 0;
+            this.$tabs = null;
 
             this.bindCustomEvents();
             this.bindDomEvents();
+            this.render();
+
+            // set default callback when no callback is provided
+            if (!this.options.changeStateCallback) {
+                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
+            }
+
+            var toolbarDef, tabsDef;
+            toolbarDef = this.startToolbar();
+            this.startLanguageChanger();
+            tabsDef = this.startTabs();
+
+            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
+                this.sandbox.emit(INITIALIZED.call(this));
+                this.show();
+                this.oldScrollPosition = this.sandbox.dom.scrollTop(this.options.scrollContainerSelector);
+            }.bind(this));
         },
 
         /**
@@ -872,29 +890,7 @@ define([], function () {
          * @param options {object} The new options
          */
         change: function (options) {
-            // initialize deferreds
-            var toolbarDef, tabsDef;
 
-            this.options = this.sandbox.util.extend(true, {}, defaults, options);
-
-            // set default callback when no callback is provided
-            if (!this.options.changeStateCallback) {
-                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
-            }
-
-            this.$tabs = null;
-
-            this.render();
-
-            toolbarDef = this.startToolbar();
-            this.startLanguageChanger();
-            tabsDef = this.startTabs();
-
-            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
-                this.sandbox.emit(INITIALIZED.call(this));
-                this.show();
-                this.oldScrollPosition = this.sandbox.dom.scrollTop(this.options.scrollContainerSelector);
-            }.bind(this));
         },
 
         /**
