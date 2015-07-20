@@ -99,6 +99,11 @@ define(function() {
         };
 
     return {
+        /**
+         * starts a copy ghost overlay
+         * @param {Object} item
+         * @returns {Object}
+         */
         openGhost: function(item) {
             var def = this.sandbox.data.deferred();
 

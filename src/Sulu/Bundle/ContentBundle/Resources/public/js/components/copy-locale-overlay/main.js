@@ -79,6 +79,14 @@ define(function() {
             }
         },
 
+        /**
+         * private method to copy locale from src language to dest languages for given id
+         * @param {String} id
+         * @param {String} src
+         * @param {String[]} dest
+         * @param {function} successCallback
+         * @param {function} errorCallback
+         */
         copyLocale = function(id, src, dest, successCallback, errorCallback) {
             var url = this.getCopyLocaleUrl(id, src, dest.join(','));
 
@@ -93,45 +101,39 @@ define(function() {
                         errorCallback(error);
                     }
                 }.bind(this));
-        };
-
-    return {
-        copyLocale: function(id, src, dest, successCallback, errorCallback) {
-            copyLocale.call(this, id, src, dest, successCallback, errorCallback);
         },
 
-        startCopyLocalesOverlay: function() {
-            var def = this.sandbox.data.deferred(),
-                $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
-                languages = [],
-                currentLocaleText = this.sandbox.translate('content.contents.settings.copy-locales.current-language'),
-                deselectHandler = function(item) {
-                    var id = 'copy-locales-to-' + item;
+        /**
+         * callback for overlay
+         * @param {Object} def
+         */
+        okCallback = function(def) {
+            var src = this.sandbox.dom.data('#copy-locales-select', 'selection'),
+                $dest = this.sandbox.dom.find(
+                    '.copy-locales-to-container input:checked:not(input[disabled="disabled"])'
+                ),
+                dest = [];
 
-                    // enable checkbox and label
-                    this.sandbox.dom.prop('#' + id, 'disabled', '');
-                    this.sandbox.dom.removeClass('label[for="' + id + '"]', 'disabled');
-                }.bind(this),
-                selectHandler = function(item) {
-                    var id = 'copy-locales-to-' + item;
-
-                    // disable checkbox and label
-                    this.sandbox.dom.prop('#' + id, 'disabled', 'disabled');
-                    this.sandbox.dom.addClass('label[for="' + id + '"]', 'disabled');
-                }.bind(this);
-
-            this.sandbox.dom.append(this.$el, $element);
-
-            this.sandbox.util.foreach(this.data.concreteLanguages, function(locale) {
-                languages.push({
-                    id: locale,
-                    name: locale + (locale === this.options.language ? ' (' + currentLocaleText + ')' : '')
-                });
+            this.sandbox.util.foreach($dest, function($item) {
+                dest.push(this.sandbox.dom.val($item));
             }.bind(this));
 
-            this.sandbox.on('husky.select.copy-locale-to.deselected.item', deselectHandler);
-            this.sandbox.on('husky.select.copy-locale-to.selected.item', selectHandler);
+            if (!src || src.length === 0 || dest.length === 0) {
+                return false;
+            }
 
+            this.sandbox.off('husky.select.copy-locale-to.deselected.item', deselectHandler.bind(this));
+            this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler.bind(this));
+            copyLocale.call(this, this.data.id, src[0], dest);
+
+            def.resolve();
+        },
+
+        /**
+         * starts overlay
+         * @param {Object} def
+         */
+        startOverlay = function(def) {
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -158,32 +160,22 @@ define(function() {
                                     }
                                 ],
                                 okCallback: function() {
-                                    var src = this.sandbox.dom.data('#copy-locales-select', 'selection'),
-                                        $dest = this.sandbox.dom.find(
-                                            '.copy-locales-to-container input:checked:not(input[disabled="disabled"])'
-                                        ),
-                                        dest = [];
-
-                                    this.sandbox.util.foreach($dest, function($item) {
-                                        dest.push(this.sandbox.dom.val($item));
-                                    }.bind(this));
-
-                                    if (!src || src.length === 0 || dest.length === 0) {
-                                        return false;
-                                    }
-
-                                    this.sandbox.off('husky.select.copy-locale-to.deselected.item', deselectHandler);
-                                    this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler);
-                                    copyLocale.call(this, this.data.id, src[0], dest);
-
-                                    def.resolve();
+                                    okCallback.call(this, def);
                                 }.bind(this)
                             }
                         ]
                     }
                 }
             ]);
+        },
 
+        /**
+         * start select in overlay
+         * @param {String[]} languages
+         * @param {Object} def
+         * @returns {*}
+         */
+        startSelect = function(languages, def) {
             this.sandbox.start([
                 {
                     name: 'select@husky',
@@ -198,6 +190,68 @@ define(function() {
             ]);
 
             return def.promise();
+        },
+
+        /**
+         * handler for select
+         * @param {String} item
+         */
+        deselectHandler = function(item) {
+            var id = 'copy-locales-to-' + item;
+
+            // enable checkbox and label
+            this.sandbox.dom.prop('#' + id, 'disabled', '');
+            this.sandbox.dom.removeClass('label[for="' + id + '"]', 'disabled');
+        },
+
+        /**
+         * handler for deselect
+         * @param {String} item
+         */
+        selectHandler = function(item) {
+            var id = 'copy-locales-to-' + item;
+
+            // disable checkbox and label
+            this.sandbox.dom.prop('#' + id, 'disabled', 'disabled');
+            this.sandbox.dom.addClass('label[for="' + id + '"]', 'disabled');
+        };
+
+    return {
+        /**
+         * public method to copy locale from src language to dest languages for given id
+         * @param {String} id
+         * @param {String} src
+         * @param {String[]} dest
+         * @param {function} successCallback
+         * @param {function} errorCallback
+         */
+        copyLocale: function(id, src, dest, successCallback, errorCallback) {
+            copyLocale.call(this, id, src, dest, successCallback, errorCallback);
+        },
+
+        /**
+         * start overlay with selects to choose src and dest languages
+         */
+        startCopyLocalesOverlay: function() {
+            var def = this.sandbox.data.deferred(),
+                $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+                languages = [],
+                currentLocaleText = this.sandbox.translate('content.contents.settings.copy-locales.current-language');
+
+            this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.util.foreach(this.data.concreteLanguages, function(locale) {
+                languages.push({
+                    id: locale,
+                    name: locale + (locale === this.options.language ? ' (' + currentLocaleText + ')' : '')
+                });
+            }.bind(this));
+
+            this.sandbox.on('husky.select.copy-locale-to.deselected.item', deselectHandler.bind(this));
+            this.sandbox.on('husky.select.copy-locale-to.selected.item', selectHandler.bind(this));
+
+            startOverlay.call(this, def);
+            startSelect.call(languages, def);
         }
     };
 });
