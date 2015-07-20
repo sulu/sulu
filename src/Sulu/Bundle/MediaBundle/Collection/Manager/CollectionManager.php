@@ -523,7 +523,6 @@ class CollectionManager implements CollectionManagerInterface
      */
     protected function getPreview($id, $locale)
     {
-        $media = null;
         $medias = $this->mediaRepository
             ->findMedia(['collection' => $id, 'paginator' => false], 1);
 
