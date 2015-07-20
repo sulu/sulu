@@ -246,17 +246,6 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortFields = array($fieldDescriptor);
-        $this->sortOrders = array($order);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addOrderBy(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
-    {
         $this->sortFields[] = $fieldDescriptor;
         $this->sortOrders[] = $order;
 
