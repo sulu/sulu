@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Twig;
 
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -66,9 +67,13 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         }
 
-        $snippet = $this->contentMapper->load($uuid, $this->requestAnalyzer->getWebspace()->getKey(), $locale);
+        try {
+            $snippet = $this->contentMapper->load($uuid, $this->requestAnalyzer->getWebspace()->getKey(), $locale);
 
-        return $this->structureResolver->resolve($snippet);
+            return $this->structureResolver->resolve($snippet);
+        } catch (DocumentNotFoundException $ex) {
+            return null;
+        }
     }
 
     /**
