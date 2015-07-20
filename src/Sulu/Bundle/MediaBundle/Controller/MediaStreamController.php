@@ -20,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -121,10 +120,12 @@ class MediaStreamController extends Controller
             fclose($handle);
         });
 
+        $pathInfo = pathinfo($fileName);
+
         // Prepare headers
         $disposition = $response->headers->makeDisposition(
             $dispositionType,
-            basename($fileName)
+            preg_replace('/[^A-Za-z0-9\-]/', '', $pathInfo['filename']) . '.' . $pathInfo['extension']
         );
 
         // Set headers
