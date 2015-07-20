@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1367 [AdminBundle]     Added new tabs design
     * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
