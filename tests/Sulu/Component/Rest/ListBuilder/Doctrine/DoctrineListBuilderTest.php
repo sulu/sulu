@@ -45,6 +45,17 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
      */
     private $query;
 
+    /**
+     * Result of id subquery
+     *
+     * @var array
+     */
+    private $idResult = array(
+        array('id' => '1'),
+        array('id' => '2'),
+        array('id' => '3'),
+    );
+
     private static $entityName = 'SuluCoreBundle:Example';
     private static $translationEntityName = 'SuluCoreBundle:ExampleTranslation';
 
@@ -60,17 +71,21 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
             ->disableOriginalConstructor()
-            ->setMethods(array('execute', 'getSingleScalarResult'))
+            ->setMethods(array('execute', 'getSingleScalarResult','getArrayResult'))
             ->getMockForAbstractClass();
 
-        $this->em->expects($this->once())->method('createQueryBuilder')->willReturn($this->queryBuilder);
+        $this->em->expects($this->any())->method('createQueryBuilder')->willReturn($this->queryBuilder);
+
         $this->queryBuilder->expects($this->any())->method('select')->willReturnSelf();
         $this->queryBuilder->expects($this->any())->method('addGroupBy')->willReturnSelf();
+        $this->queryBuilder->expects($this->any())->method('where')->willReturnSelf();
 
         $this->queryBuilder->expects($this->any())->method('setMaxResults')->willReturnSelf();
         $this->queryBuilder->expects($this->any())->method('getQuery')->willReturn($this->query);
 
-        $this->queryBuilder->expects($this->once())->method('from')->with(
+        $this->query->expects($this->any())->method('getArrayResult')->willReturn($this->idResult);
+
+        $this->queryBuilder->expects($this->any())->method('from')->with(
             self::$entityName, self::$entityName
         )->willReturnSelf();
 
@@ -96,12 +111,26 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->queryBuilder->expects($this->at(1))->method('addSelect')->with(
-            self::$entityName . '.name AS name_alias'
+        $this->queryBuilder->expects($this->exactly(2))->method('addSelect')->withConsecutive(
+            array(
+                self::$entityName . '.name AS name_alias',
+            ),
+            array(
+                self::$entityName . '.desc AS desc_alias',
+            )
         );
 
-        $this->queryBuilder->expects($this->at(2))->method('addSelect')->with(
-            self::$entityName . '.desc AS desc_alias'
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testIdSelect()
+    {
+        $this->queryBuilder->expects($this->at(1))->method('select')->with(
+            self::$entityName . '.id'
+        );
+
+        $this->queryBuilder->expects($this->exactly(1))->method('setParameter')->withConsecutive(
+            array('ids', array('1','2','3'))
         );
 
         $this->doctrineListBuilder->execute();
@@ -112,12 +141,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
 
-        $this->queryBuilder->expects($this->at(1))->method('addSelect')->with(
-            self::$entityName . '.name AS name_alias'
-        );
-
-        $this->queryBuilder->expects($this->at(2))->method('addSelect')->with(
-            self::$entityName . '.desc AS desc_alias'
+        $this->queryBuilder->expects($this->exactly(2))->method('addSelect')->withConsecutive(
+            array(
+                self::$entityName . '.name AS name_alias',
+            ),
+            array(
+                self::$entityName . '.desc AS desc_alias',
+            )
         );
 
         $this->doctrineListBuilder->execute();
@@ -158,7 +188,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->queryBuilder->expects($this->once())->method('leftJoin')->with(
+        $this->queryBuilder->expects($this->exactly(2))->method('leftJoin')->with(
             self::$entityName . '.translations', self::$translationEntityName
         );
 
@@ -177,7 +207,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->queryBuilder->expects($this->once())->method('leftJoin')->with(
+        $this->queryBuilder->expects($this->exactly(2))->method('leftJoin')->with(
             self::$entityName . '.translations', self::$translationEntityName
         );
 
@@ -197,7 +227,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->expects($this->once())->method('andWhere')->with(
             '(' . self::$translationEntityName . '.desc LIKE :search OR ' . self::$entityName . '.name LIKE :search)'
         );
-        $this->queryBuilder->expects($this->once())->method('setParameter')->with('search', '%value%');
+        // 2 calls: one for setting IDs in subquery and one for setting values
+        $this->queryBuilder->expects($this->exactly(2))->method('setParameter')->withConsecutive(
+            array('search', '%value%')
+        );
 
         $this->doctrineListBuilder->execute();
     }
@@ -206,7 +239,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
-        $this->queryBuilder->expects($this->once())->method('orderBy')->with(self::$entityName . '.desc', 'ASC');
+        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.desc', 'ASC');
 
         $this->doctrineListBuilder->execute();
     }
@@ -383,8 +416,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
+        // not necessary for id join
         $this->queryBuilder->expects($this->once())->method('leftJoin');
-        $this->queryBuilder->expects($this->once())->method('innerJoin');
+        // called when select ids and for selecting data
+        $this->queryBuilder->expects($this->exactly(2))->method('innerJoin');
 
         $this->doctrineListBuilder->execute();
     }
@@ -431,7 +466,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
             'field1 = value1'
         );
-        $this->queryBuilder->expects($this->once())->method('innerJoin')->with(
+        $this->queryBuilder->expects($this->exactly(2))->method('innerJoin')->with(
             null,
             self::$entityName . '2',
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON,
