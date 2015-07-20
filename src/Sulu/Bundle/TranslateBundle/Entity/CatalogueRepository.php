@@ -38,7 +38,6 @@ class CatalogueRepository extends EntityRepository
                 ->where('catalogue.id=:catalogueId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('catalogueId', $id);
 
             return $query->getSingleResult();
