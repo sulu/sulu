@@ -143,7 +143,7 @@ class StructureProvider implements ProviderInterface
                                 'field' => $this->factory->createMetadataProperty(
                                     '[' . $componentProperty->getName() . ']'
                                 ),
-                                'indexed' => $tagAttributes['index'],
+                                'indexed' => !isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false',
                             ]
                         );
                     }
