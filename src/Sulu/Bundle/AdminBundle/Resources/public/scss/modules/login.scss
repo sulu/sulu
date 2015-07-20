@@ -10,51 +10,67 @@
         width: 50%;
         height: 100%;
         position: relative;
+
+        // success slide animation
+        left: 0;
+        transition: left 300ms;
+        transition-delay: 500ms;
     }
     .media-container {
         float: left;
-        background: $black;
+        background: $grayDarkLighter;
 
         .media-logo {
-            width: 150px;
-            height: 150px;
+            $logoSize: 150px;
+
+            width: $logoSize;
+            height: $logoSize;
             z-index: 20;
 
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-left: -75px;
-            margin-top: -75px;
-
+            @include centerFixedSizeBlock($logoSize, $logoSize);
             background: url("../img/logo.svg") no-repeat center center;
             @include background-size(contain);
+        }
+
+        // do not display background-image until loading finished
+        &.media-loading {
+            .media-background {
+                opacity: 0;
+            }
         }
 
         .media-background {
             width: 100%;
             height: 100%;
-            z-index: 10;
+
+            opacity: 1;
+            transition: opacity 300ms;
 
             background: no-repeat center center;
             @include background-size(cover);
 
-            transition: opacity 500ms;
-            opacity: 0.5;
+            .darkener {
+                width: 100%;
+                height: 100%;
+                background: $black;
 
-            //@include blur;
+                transition: opacity 500ms;
+                opacity: 0.5;
+            }
         }
 
         //flare effect
-        &.flare {
+        &:hover {
             .media-background {
-                opacity: 0.6;
+                .darkener {
+                    opacity: 0.4;
+                }
             }
         }
     }
 
     .content-container {
         float: right;
-        //background-color: #28B6CA;
         background-color: $blue;
 
         .content-box {
@@ -63,12 +79,7 @@
             width: $boxWidth;
             z-index: 10;
             overflow: hidden;
-
-            @include centerHorizontalAndVertical;
-
-            transition: height 200ms;
-
-
+            @include centerBlock;
 
             .frame-slider {
                 transition: left 300ms;
@@ -81,9 +92,7 @@
                 min-width: $boxWidth;
                 max-width: $boxWidth;
                 vertical-align: middle;
-
                 padding: 0 50px;
-                white-space: normal;
 
                 .message, .error-message {
                     display: block;
@@ -105,7 +114,8 @@
                 .error-message {
                     color: $grayDarkLighter;
 
-                    max-height: 0px; //use max-height to enable css animation non-static height
+                    // use max-height to enable css animation non-static height
+                    max-height: 0px;
                     transition: max-height 200ms;
                     overflow: hidden;
                 }
@@ -122,7 +132,7 @@
                 }
 
                 .box-frame-footer{
-                    margin: 0; //overwrite grid-row
+                    margin: 0; // overwrite grid-row
 
                     .btn {
                         border: 1px solid $white;
@@ -149,21 +159,25 @@
 
         span.navigator {
             color: $white;
-            font-size: 12px; //as in sketch
+            font-size: 12px; // as in sketch
             cursor: pointer;
+
             &:hover {
-                color: $grayDarkLighter; //testing
+                color: $grayDarkLighter;
             }
         }
 
         .login-content-footer {
+            width: 100%;
+
             position: absolute;
+            z-index: 20;
             bottom: 0px;
             left: 0px;
-            width: 100%;
-            z-index: 20;
+
             text-align: center;
 
+            // animate fade out fot loader animation
             opacity: 1;
             transition: opacity 200ms;
 
@@ -171,12 +185,32 @@
         }
 
         .login-loader {
-            z-index: 10;
-            @include centerHorizontalAndVertical;
+            @include centerBlock;
             top: 100%;
+            z-index: 10;
 
             opacity: 0;
             transition: opacity 200ms;
+        }
+
+        .success-overlay {
+            display: none;  // fade in on login success
+            height: 100%;
+            width: 100%;
+
+            position: relative;
+            z-index: 40;
+
+            opacity: 0;
+            transition: opacity 300ms;
+
+            background-color: $green;
+
+            .success-icon {
+                @include centerBlock;
+                font-size: 200px;
+                color: $white;
+            }
         }
 
         &.content-loading{
@@ -188,27 +222,25 @@
                 opacity: 1;
             }
         }
+    }
 
+    &.content-success{
         .success-overlay {
-            display: none;  //hide on start
-            opacity: 0;     //fade in when needed
-            transition: opacity 500ms;
+            display: block;
+            opacity: 1;
+        }
 
-            position: relative;
-            height: 100%;
-            width: 100%;
-            z-index: 40;
-            background-color: $green;
+        .media-container {
+            left: -50%;
+        }
 
-            .success-icon {
-                @include centerHorizontalAndVertical;
-                font-size: 200px;
-                color: $white;
-            }
+        .content-container {
+            left: 50%;
         }
     }
 }
 
 .login-label-container {
+    // center labels in content-container
     left: 75% !important;
 }
