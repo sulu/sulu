@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
     * FEATURE     #1398 [SecurityBundle]  Integrated filters for roles
     * FEATURE     #1398 [TagBundle]       Integrated filters for tags
+    * FEATURE     #1370 [SnippetBundle]   Added copy-locale for snippet UI 
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
                                           then select data
