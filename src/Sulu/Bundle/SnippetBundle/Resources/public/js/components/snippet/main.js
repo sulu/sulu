@@ -173,13 +173,18 @@ define([
             });
         },
 
-        load: function(id, language) {
+        load: function(id, language, forceReload) {
             if (!language) {
                 language = this.options.language;
             }
 
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language + '/edit:' + id);
+            this.sandbox.emit(
+                'sulu.router.navigate',
+                'snippet/snippets/' + language + '/edit:' + id,
+                undefined, undefined,
+                forceReload
+            );
         },
 
         add: function(language) {

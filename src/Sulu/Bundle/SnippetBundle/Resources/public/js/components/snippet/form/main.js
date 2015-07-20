@@ -110,7 +110,7 @@ define([
                                 title: this.sandbox.translate('toolbar.copy-locale'),
                                 callback: function() {
                                     CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
-                                        this.load(this.data.id, this.options.language);
+                                        this.load(this.data.id, this.options.language, true);
                                     }.bind(this));
                                 }.bind(this)
                             }
