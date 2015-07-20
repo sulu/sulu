@@ -105,7 +105,7 @@ interface ListBuilderInterface
     public function search($search);
 
     /**
-     * Defines the field by which the table is sorted.
+     * Adds a field by which the table is sorted.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param string $order
@@ -113,16 +113,6 @@ interface ListBuilderInterface
      * @return ListBuilderInterface
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC);
-
-    /**
-     * Adds an ORDER BY clause to sort-list
-     *
-     * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string $order
-     *
-     * @return ListBuilderInterface
-     */
-    public function addOrderBy(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC);
 
     /**
      * Defines how many items should be returned.
