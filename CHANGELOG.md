@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
     * HOTFIX      #1391 [All]            Removed partial load hints
+    * HOTFIX      #1395 [ContentBundle]  Fixed cache-lifetime is required bug for lifetime "0"
 
 * 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document
