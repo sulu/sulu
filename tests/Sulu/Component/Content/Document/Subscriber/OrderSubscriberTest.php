@@ -15,6 +15,8 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\ReorderEvent;
 
 class OrderSubscriberTest extends SubscriberTestCase
 {
@@ -32,7 +34,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
     }
 
-    public function testPersistNewNode()
+    public function testPersist()
     {
         $document = $this->prophesize(OrderBehavior::class);
         $this->persistEvent->getDocument()->willReturn($document);
@@ -43,11 +45,9 @@ class OrderSubscriberTest extends SubscriberTestCase
         $node3 = $this->prophesize(NodeInterface::class);
 
         $parentNode = $this->prophesize(NodeInterface::class);
-        $parentNode->getNodes()->willReturn(array($node1, $node2, $node3, $this->node));
+        $parentNode->getNodes()->willReturn(array($node1, $node2, $node3));
+        $this->node->hasProperty('sys:order')->willReturn(false);
         $this->node->getParent()->willReturn($parentNode);
-        $node1->setProperty('sys:order', 10, PropertyType::LONG)->shouldBeCalled();
-        $node2->setProperty('sys:order', 20, PropertyType::LONG)->shouldBeCalled();
-        $node3->setProperty('sys:order', 30, PropertyType::LONG)->shouldBeCalled();
         $this->node->setProperty('sys:order', 40, PropertyType::LONG)->shouldBeCalled();
         $this->node->getPropertyValueWithDefault('sys:order', null)->willReturn(40);
         $this->accessor->set('suluOrder', 40)->shouldBeCalled();
@@ -55,10 +55,13 @@ class OrderSubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testPersistExistingNode()
+    public function testReorder()
     {
         $document = $this->prophesize(OrderBehavior::class);
-        $this->persistEvent->getDocument()->willReturn($document);
+        $reorderEvent = $this->prophesize(ReorderEvent::class);
+        $reorderEvent->getDocument()->willReturn($document);
+        $reorderEvent->getNode()->willReturn($this->node);
+        $reorderEvent->getAccessor()->willReturn($this->accessor);
         $this->encoder->systemName('order')->willReturn('sys:order');
 
         $node2 = $this->prophesize(NodeInterface::class);
@@ -73,7 +76,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $this->node->getPropertyValueWithDefault('sys:order', null)->willReturn(40);
         $this->accessor->set('suluOrder', 40)->shouldBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->handleReorder($reorderEvent->reveal());
     }
 
     /**
