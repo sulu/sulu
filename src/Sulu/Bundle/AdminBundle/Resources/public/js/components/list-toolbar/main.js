@@ -35,6 +35,7 @@ define([], function() {
                     {
                         id: 'add',
                         icon: 'plus-circle',
+                        class: 'highlight',
                         position: 10,
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.add');

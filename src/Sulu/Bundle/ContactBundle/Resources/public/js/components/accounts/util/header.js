@@ -38,7 +38,7 @@ define(['app-config'], function(AppConfig) {
                     group: 'left',
                     id: 'options-button',
                     position: 30,
-                    items: []
+                    dropdownItems: []
                 };
 
             // save button
@@ -54,7 +54,7 @@ define(['app-config'], function(AppConfig) {
             });
 
             // delete select item
-            options.items.push({
+            options.dropdownItems.push({
                 title: this.sandbox.translate('toolbar.delete'),
                 callback: function() {
                     this.sandbox.emit('sulu.header.toolbar.delete');
@@ -62,7 +62,7 @@ define(['app-config'], function(AppConfig) {
             });
 
             items.push(options);
-            this.sandbox.emit('sulu.header.set-toolbar', {data: items});
+            this.sandbox.emit('sulu.header.set-toolbar', {buttons: items});
         };
 
     return {
