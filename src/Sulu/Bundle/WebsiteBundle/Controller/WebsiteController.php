@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,7 +27,7 @@ abstract class WebsiteController extends Controller
      */
     protected function renderStructure(
         StructureInterface $structure,
-        $attributes = array(),
+        $attributes = [],
         $preview = false,
         $partial = false
     ) {
@@ -86,7 +87,7 @@ abstract class WebsiteController extends Controller
     /**
      * Returns rendered part of template specified by block.
      */
-    protected function renderBlock($template, $block, $attributes = array())
+    protected function renderBlock($template, $block, $attributes = [])
     {
         $twig = $this->get('twig');
         $template = $twig->loadTemplate($template);

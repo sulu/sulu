@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -126,7 +127,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
 
     public function testIterator()
     {
-        $array = array();
+        $array = [];
         foreach ($this->item2 as $key => $value) {
             $array[$key] = $value;
         }

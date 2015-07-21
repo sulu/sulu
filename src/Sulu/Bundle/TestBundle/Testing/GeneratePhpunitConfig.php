@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -9,14 +10,14 @@
  */
 
 $source = __DIR__ . '/../../../../../../../phpunit.xml.dist';
-$config = array(
-    'mysql' => array(
+$config = [
+    'mysql' => [
         'APP_DB' => 'mysql',
-    ),
-    'pgsql' => array(
+    ],
+    'pgsql' => [
         'APP_DB' => 'pgsql',
-    ),
-);
+    ],
+];
 
 if (!in_array(@$argv[1], array_keys($config))) {
     die('Error:' . "\n\t" . 'Database "' . @$argv[1] . '" not supported.' . "\n" .

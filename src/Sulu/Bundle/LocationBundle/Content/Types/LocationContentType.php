@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -68,14 +69,14 @@ class LocationContentType extends ComplexContentType
     public function getDefaultParams()
     {
         // Need a service to provide countries, see: https://github.com/sulu-cmf/SuluContactBundle/issues/121
-        return array(
+        return [
             'countries' => new PropertyParameter(
                 'countries',
-                array(
+                [
                     'at' => new PropertyParameter('at', 'Austria'),
                     'fr' => new PropertyParameter('fr', 'France'),
                     'gb' => new PropertyParameter('gb', 'Great Britain'),
-                ),
+                ],
                 'collection'
             ),
             'mapProviders' => new PropertyParameter(
@@ -88,7 +89,7 @@ class LocationContentType extends ComplexContentType
                 $this->mapManager->getDefaultProviderName()
             ),
             'geolocatorName' => new PropertyParameter('geolocatorName', $this->geolocatorName),
-        );
+        ];
     }
 
     /**
@@ -102,10 +103,10 @@ class LocationContentType extends ComplexContentType
     /**
      * @param $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @param bool $preview
+     * @param string            $webspaceKey
+     * @param string            $languageCode
+     * @param string            $segmentKey
+     * @param bool              $preview
      */
     protected function setData(
         $data,

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,7 +48,7 @@ class SecurityChecker extends AbstractSecurityChecker
             return true;
         }
 
-        $attributes = array($permission);
+        $attributes = [$permission];
 
         if (is_string($subject)) {
             $subject = new SecurityCondition($subject);

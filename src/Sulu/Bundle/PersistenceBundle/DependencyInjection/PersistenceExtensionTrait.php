@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 trait PersistenceExtensionTrait
 {
     /**
-     * @param array $objects
+     * @param array            $objects
      * @param ContainerBuilder $container
      */
     protected function configurePersistence(array $objects, ContainerBuilder $container)
@@ -30,7 +31,7 @@ trait PersistenceExtensionTrait
 
         $this->remapObjectParameters($objects, $container);
 
-        $configObjects = array('sulu' => $objects);
+        $configObjects = ['sulu' => $objects];
 
         if ($container->hasParameter('sulu.persistence.objects')) {
             $configObjects = array_merge_recursive(
@@ -45,7 +46,7 @@ trait PersistenceExtensionTrait
     /**
      * Define repositories.
      *
-     * @param array $objects
+     * @param array            $objects
      * @param ContainerBuilder $container
      */
     private function defineRepositories(array $objects, ContainerBuilder $container)
@@ -65,8 +66,8 @@ trait PersistenceExtensionTrait
     /**
      * Get the repository service definition.
      *
-     * @param string $object
-     * @param array $services
+     * @param string           $object
+     * @param array            $services
      * @param ContainerBuilder $container
      *
      * @return Definition
@@ -87,10 +88,10 @@ trait PersistenceExtensionTrait
         }
 
         $definition = new Definition($repositoryClass);
-        $definition->setArguments(array(
+        $definition->setArguments([
             new Reference($this->getEntityManagerServiceKey()),
             $this->getClassMetadataDefinition($services['model']),
-        ));
+        ]);
 
         return $definition;
     }
@@ -104,11 +105,11 @@ trait PersistenceExtensionTrait
     {
         $definition = new Definition('Doctrine\ORM\Mapping\ClassMetadata');
         $definition
-            ->setFactory(array(
+            ->setFactory([
                 new Reference($this->getEntityManagerServiceKey()),
                 'getClassMetadata',
-            ))
-            ->setArguments(array($model))
+            ])
+            ->setArguments([$model])
             ->setPublic(false);
 
         return $definition;
@@ -117,7 +118,7 @@ trait PersistenceExtensionTrait
     /**
      * Remap object parameters.
      *
-     * @param array $objects
+     * @param array            $objects
      * @param ContainerBuilder $container
      */
     private function remapObjectParameters(array $objects, ContainerBuilder $container)
@@ -139,8 +140,8 @@ trait PersistenceExtensionTrait
     /**
      * Get container key.
      *
-     * @param string $key
-     * @param string $object
+     * @param string      $key
+     * @param string      $object
      * @param string|null $suffix
      *
      * @return string

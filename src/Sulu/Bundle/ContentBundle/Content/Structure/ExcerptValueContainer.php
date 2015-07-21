@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ class ExcerptValueContainer implements ArrayableInterface
     /**
      * @var array
      */
-    private $data = array();
+    private $data = [];
 
     public function __construct($data)
     {
@@ -43,7 +44,7 @@ class ExcerptValueContainer implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        $result = array();
+        $result = [];
         foreach ($this->data as $key => $value) {
             if ($value instanceof ArrayableInterface) {
                 $result[$key] = $value->toArray($depth);

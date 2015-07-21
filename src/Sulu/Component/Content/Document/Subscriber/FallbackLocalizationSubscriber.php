@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -66,11 +67,11 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // needs to happen after the node and document has been initially registered
             // but before any mapping takes place.
-            Events::HYDRATE => array('handleHydrate', 400),
-        );
+            Events::HYDRATE => ['handleHydrate', 400],
+        ];
     }
 
     /**
@@ -112,7 +113,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      * Return available localizations.
      *
      * @param StructureBehavior $document
-     * @param string $locale
+     * @param string            $locale
      *
      * @return string
      */
@@ -146,9 +147,9 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param string $webspaceName
+     * @param string   $webspaceName
      * @param string[] $availableLocales
-     * @param string $locale
+     * @param string   $locale
      *
      * @return string
      */
@@ -200,8 +201,8 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds the next available parent-localization in which the node has a translation.
      *
-     * @param string[] $availableLocales
-     * @param Localization $localization The localization to start the search for
+     * @param string[]     $availableLocales
+     * @param Localization $localization     The localization to start the search for
      *
      * @return null|Localization
      */
@@ -224,8 +225,8 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds the next available child-localization in which the node has a translation.
      *
-     * @param string[] $availableLocales
-     * @param Localization $localization The localization to start the search for
+     * @param string[]     $availableLocales
+     * @param Localization $localization     The localization to start the search for
      *
      * @return null|Localization
      */
@@ -254,8 +255,8 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds any localization, in which the node is translated.
      *
-     * @param string[] $availableLocales
-     * @param Localization[] $localizations The available localizations
+     * @param string[]       $availableLocales
+     * @param Localization[] $localizations    The available localizations
      *
      * @return null|Localization
      */

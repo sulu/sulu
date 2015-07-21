@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,7 +46,7 @@ class NodeRepositoryTest extends SuluTestCase
     protected function setUp()
     {
         $this->initPhpcr();
-        $this->extensions = array(new TestExtension('test1', 'test1'));
+        $this->extensions = [new TestExtension('test1', 'test1')];
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->nodeRepository = $this->getContainer()->get('sulu_content.node_repository');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
@@ -54,15 +55,15 @@ class NodeRepositoryTest extends SuluTestCase
 
     private function prepareGetTestData()
     {
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
             'article' => 'Test',
-        );
+        ];
 
         return $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
@@ -92,10 +93,10 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $this->prepareGetTestData();
 
         $this->nodeRepository->saveNode(
-            array(
+            [
                 'title' => 'asdf',
                 'url' => '/foo',
-            ),
+            ],
             'overview',
             'sulu_io',
             'en',
@@ -114,15 +115,15 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $this->prepareGetTestData();
 
         $node = $this->nodeRepository->saveNode(
-            array(
+            [
                 'title' => 'asdf',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test/asdf',
                 'article' => 'Test',
-            ),
+            ],
             'overview',
             'sulu_io',
             'en',
@@ -137,15 +138,15 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/news/test/asdf', $result['url']);
 
         $node = $this->nodeRepository->saveNode(
-            array(
+            [
                 'title' => 'asdf',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/asdf',
                 'article' => 'Test',
-            ),
+            ],
             'overview',
             'sulu_io',
             'en',
@@ -160,10 +161,10 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testIndexNode()
     {
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
             'url' => '/',
-        );
+        ];
         $this->nodeRepository->saveIndexNode(
             $data,
             'overview',
@@ -260,17 +261,17 @@ class NodeRepositoryTest extends SuluTestCase
 
     private function prepareGetTreeTestData()
     {
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
             'article' => 'Test',
-        );
+        ];
 
-        $structures = array();
+        $structures = [];
         $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
 
         $data['title'] = 'Other title';
@@ -289,7 +290,7 @@ class NodeRepositoryTest extends SuluTestCase
     public function testExtensionData()
     {
         $data = $this->prepareGetTestData();
-        $extData = array('a' => 'A', 'b' => 'B');
+        $extData = ['a' => 'A', 'b' => 'B'];
 
         $result = $this->nodeRepository->loadExtensionData($data->getUuid(), 'test1', 'sulu_io', 'en');
         $this->assertEquals('', $result['a']);
@@ -311,14 +312,14 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareGetTestData();
 
-        $result = $this->nodeRepository->getNodesByIds(array(), 'sulu_io', 'en');
+        $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
         $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
-            array(
+            [
                 $data->getUuid(),
-            ),
+            ],
             'sulu_io',
             'en'
         );
@@ -332,15 +333,15 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareGetTestData();
 
-        $result = $this->nodeRepository->getNodesByIds(array(), 'sulu_io', 'en');
+        $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
         $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
-            array(
+            [
                 $data->getUuid(),
                 '556ce63c-97a3-4a03-81a9-719bc01234e6',
-            ),
+            ],
             'sulu_io',
             'en'
         );
@@ -352,26 +353,26 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetFilteredNodesInOrder()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Testtitle1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Testtitle2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test2',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         foreach ($data as &$element) {
             $element = $this->mapper->save(
@@ -389,7 +390,7 @@ class NodeRepositoryTest extends SuluTestCase
         }
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            array('sortBy' => array('published'), 'sortMethod' => 'asc'),
+            ['sortBy' => ['published'], 'sortMethod' => 'asc'],
             'en',
             'sulu_io'
         );
@@ -398,7 +399,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Testtitle2', $nodes[1]['title']);
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            array('sortBy' => array('published'), 'sortMethod' => 'desc'),
+            ['sortBy' => ['published'], 'sortMethod' => 'desc'],
             'en',
             'sulu_io'
         );
@@ -409,35 +410,35 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetFilteredNodesInOrderByTitle()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'hello you',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Hello me',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test2',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Test',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test3',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         foreach ($data as &$element) {
             $element = $this->mapper->save(
@@ -455,7 +456,7 @@ class NodeRepositoryTest extends SuluTestCase
         }
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            array('sortBy' => array('title'), 'sortMethod' => 'asc'),
+            ['sortBy' => ['title'], 'sortMethod' => 'asc'],
             'en',
             'sulu_io'
         );
@@ -465,7 +466,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Test', $nodes[2]['title']);
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            array('sortBy' => array('title'), 'sortMethod' => 'desc'),
+            ['sortBy' => ['title'], 'sortMethod' => 'desc'],
             'en',
             'sulu_io'
         );
@@ -480,26 +481,26 @@ class NodeRepositoryTest extends SuluTestCase
      */
     private function prepareTestDataMoveCopy()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Testtitle1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Testtitle2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test2',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         foreach ($data as &$element) {
             $element = $this->mapper->save(
@@ -573,11 +574,11 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareTestDataMoveCopy();
 
-        $newData = array(
+        $newData = [
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        );
+        ];
 
         $data[0] = $this->mapper->save(
             $newData,
@@ -623,11 +624,11 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareTestDataMoveCopy();
 
-        $newData = array(
+        $newData = [
             'title' => 'Testtitle1',
             'external' => 'www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        );
+        ];
 
         $data[0] = $this->mapper->save(
             $newData,
@@ -722,11 +723,11 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareTestDataMoveCopy();
 
-        $newData = array(
+        $newData = [
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        );
+        ];
 
         $data[0] = $this->mapper->save(
             $newData,
@@ -774,11 +775,11 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareTestDataMoveCopy();
 
-        $newData = array(
+        $newData = [
             'title' => 'Testtitle1',
             'external' => 'www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        );
+        ];
 
         $data[0] = $this->mapper->save(
             $newData,
@@ -827,24 +828,24 @@ class NodeRepositoryTest extends SuluTestCase
      */
     private function prepareOrderBeforeData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Test1',
                 'url' => '/news/test1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Test2',
                 'url' => '/news/test2',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Test3',
                 'url' => '/news/test3',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Test4',
                 'url' => '/news/test4',
-            ),
-        );
+            ],
+        ];
 
         foreach ($data as &$element) {
             $element = $this->mapper->save(
@@ -935,11 +936,11 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $data = $this->prepareOrderBeforeData();
 
-        $newData = array(
+        $newData = [
             'title' => 'Test4',
             'external' => 'www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        );
+        ];
 
         $data[3] = $this->mapper->save(
             $newData,
@@ -953,11 +954,11 @@ class NodeRepositoryTest extends SuluTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $newData = array(
+        $newData = [
             'title' => 'Test3',
             'internal_link' => $data[0]->getUuid(),
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        );
+        ];
 
         $data[2] = $this->mapper->save(
             $newData,
@@ -999,12 +1000,12 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testCopyLocale()
     {
-        $data = array(
-            'en' => array(
+        $data = [
+            'en' => [
                 'title' => 'Example',
                 'url' => '/example',
-            ),
-        );
+            ],
+        ];
 
         $data['en'] = $this->mapper->save(
             $data['en'],
@@ -1030,12 +1031,12 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testCopyMultipleLocales()
     {
-        $data = array(
-            'en' => array(
+        $data = [
+            'en' => [
                 'title' => 'Example',
                 'url' => '/example',
-            ),
-        );
+            ],
+        ];
 
         $data['en'] = $this->mapper->save(
             $data['en'],
@@ -1049,7 +1050,7 @@ class NodeRepositoryTest extends SuluTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'sulu_io', 'en', array('de', 'de_at'));
+        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'sulu_io', 'en', ['de', 'de_at']);
 
         $result = $this->mapper->load($data['en']->getUuid(), 'sulu_io', 'de')->toArray();
         $this->assertEquals($data['en']->getUuid(), $result['id']);
@@ -1069,10 +1070,10 @@ class NodeRepositoryTest extends SuluTestCase
 
 class TestExtension extends AbstractExtension
 {
-    protected $properties = array(
+    protected $properties = [
         'a',
         'b',
-    );
+    ];
 
     public function __construct($name, $additionalPrefix = null)
     {
@@ -1094,9 +1095,9 @@ class TestExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        return array(
+        return [
             'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
             'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), ''),
-        );
+        ];
     }
 }

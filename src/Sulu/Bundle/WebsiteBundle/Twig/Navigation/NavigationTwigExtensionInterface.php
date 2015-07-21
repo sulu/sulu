@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,8 +22,8 @@ interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
      * Returns a flat navigation of first layer.
      *
      * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
+     * @param int    $depth
+     * @param bool   $loadExcerpt
      *
      * @return NavigationItem[]
      */
@@ -32,8 +33,8 @@ interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
      * Returns a tree navigation of first layer.
      *
      * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
+     * @param int    $depth
+     * @param bool   $loadExcerpt
      *
      * @return NavigationItem[]
      */
@@ -44,9 +45,9 @@ interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
      *
      * @param string $uuid
      * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
-     * @param int $level
+     * @param int    $depth
+     * @param bool   $loadExcerpt
+     * @param int    $level
      *
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
@@ -57,9 +58,9 @@ interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
      *
      * @param string $uuid
      * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
-     * @param int $level
+     * @param int    $depth
+     * @param bool   $loadExcerpt
+     * @param int    $level
      *
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */

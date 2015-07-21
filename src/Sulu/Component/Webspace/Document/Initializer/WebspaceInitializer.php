@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Webspace\Document\Initializer;
 
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
@@ -46,27 +55,27 @@ class WebspaceInitializer implements InitializerInterface
 
     private function initializeWebspace(OutputInterface $output, Webspace $webspace)
     {
-        $homePath = $this->pathBuilder->build(array('%base%', $webspace->getKey(), '%content%'));
-        $routesPath = $this->pathBuilder->build(array('%base%', $webspace->getKey(), '%route%'));
+        $homePath = $this->pathBuilder->build(['%base%', $webspace->getKey(), '%content%']);
+        $routesPath = $this->pathBuilder->build(['%base%', $webspace->getKey(), '%route%']);
 
-        $webspaceLocales = array();
+        $webspaceLocales = [];
         foreach ($webspace->getAllLocalizations() as $localization) {
             $webspaceLocales[] = $localization->getLocalization();
         }
 
         if ($this->nodeManager->has($homePath)) {
-            $homeDocument = $this->documentManager->find($homePath, 'fr', array(
+            $homeDocument = $this->documentManager->find($homePath, 'fr', [
                 'load_ghost_content' => false,
                 'auto_create' => true,
                 'path' => $homePath,
-            ));
+            ]);
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
             $homeDocument = new HomeDocument();
             $homeDocument->setTitle('Homepage');
             $homeDocument->setStructureType($webspace->getTheme()->getDefaultTemplate('homepage'));
             $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
-            $existingLocales = array();
+            $existingLocales = [];
         }
 
         foreach ($webspaceLocales as $webspaceLocale) {
@@ -76,9 +85,9 @@ class WebspaceInitializer implements InitializerInterface
             }
 
             $this->nodeManager->createPath($routesPath . '/' . $webspaceLocale);
-            $this->documentManager->persist($homeDocument, $webspaceLocale, array(
+            $this->documentManager->persist($homeDocument, $webspaceLocale, [
                 'path' => $homePath,
-            ));
+            ]);
         }
     }
 }

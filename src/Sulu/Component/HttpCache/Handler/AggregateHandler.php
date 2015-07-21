@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,7 +42,7 @@ class AggregateHandler implements
     /**
      * @param HandlerInterface[] $handlers
      */
-    public function __construct($handlers = array(), LoggerInterface $logger = null)
+    public function __construct($handlers = [], LoggerInterface $logger = null)
     {
         $this->handlers = $handlers;
         $this->logger = $logger ?: new NullLogger();

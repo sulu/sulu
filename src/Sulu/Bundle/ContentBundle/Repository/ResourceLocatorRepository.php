@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,11 +46,11 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     /**
      * @var string[]
      */
-    private $apiBasePath = array(
+    private $apiBasePath = [
         '/admin/api/node/resourcelocator',
         '/admin/api/nodes/resourcelocators',
         '/admin/api/nodes/{uuid}/resourcelocators',
-    );
+    ];
 
     /**
      * Constructor.
@@ -85,12 +86,12 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
             $result = $this->strategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         }
 
-        return array(
+        return [
             'resourceLocator' => $result,
-            '_links' => array(
+            '_links' => [
                 'self' => $this->getBasePath() . '/generates',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -100,33 +101,33 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     {
         $urls = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
 
-        $result = array();
+        $result = [];
         /** @var ResourceLocatorInformation $url */
         foreach ($urls as $url) {
             $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
             $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;
             $restoreParameter = '/restore?path=' . $url->getResourceLocator() . $defaultParameter;
 
-            $result[] = array(
+            $result[] = [
                 'id' => $url->getId(),
                 'resourceLocator' => $url->getResourceLocator(),
                 'created' => $url->getCreated(),
-                '_links' => array(
+                '_links' => [
                     'delete' => $this->getBasePath(null, 0) . $deleteParameter,
                     'restore' => $this->getBasePath(null, 0) . $restoreParameter,
-                ),
-            );
+                ],
+            ];
         }
 
-        return array(
-            '_embedded' => array(
+        return [
+            '_embedded' => [
                 'resourcelocators' => $result,
-            ),
-            '_links' => array(
+            ],
+            '_links' => [
                 'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey,
-            ),
+            ],
             'total' => sizeof($result),
-        );
+        ];
     }
 
     /**
@@ -144,14 +145,14 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     {
         $this->contentMapper->restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey);
 
-        return array('resourceLocator' => $path, '_links' => array());
+        return ['resourceLocator' => $path, '_links' => []];
     }
 
     /**
      * returns base path fo given uuid.
      *
      * @param null|string $uuid
-     * @param int $default
+     * @param int         $default
      *
      * @return string
      */
@@ -166,8 +167,8 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
     /**
      * @param StructureInterface $structure
-     * @param array $parts
-     * @param string $separator default '-'
+     * @param array              $parts
+     * @param string             $separator default '-'
      *
      * @return string
      */

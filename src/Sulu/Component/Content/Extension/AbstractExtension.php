@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ abstract class AbstractExtension implements ExtensionInterface
     public function setLanguageCode($languageCode, $languageNamespace, $namespace)
     {
         // build namespace
-        $namespaces = array();
+        $namespaces = [];
         if (!empty($namespace)) {
             $namespaces[] = $namespace;
         }
@@ -86,10 +87,10 @@ abstract class AbstractExtension implements ExtensionInterface
      * save a single property value.
      *
      * @param NodeInterface $node
-     * @param array $data data array
-     * @param string $name name of property in node an data array
-     * @param string $default value if no data exists with given name
-     * @param string $default
+     * @param array         $data    data array
+     * @param string        $name    name of property in node an data array
+     * @param string        $default value if no data exists with given name
+     * @param string        $default
      */
     protected function saveProperty(NodeInterface $node, $data, $name, $default = '')
     {
@@ -101,8 +102,8 @@ abstract class AbstractExtension implements ExtensionInterface
      * load a single property value.
      *
      * @param NodeInterface $node
-     * @param string $name name of property in node
-     * @param string $default value if no property exists with given name
+     * @param string        $name    name of property in node
+     * @param string        $default value if no property exists with given name
      *
      * @return mixed
      */

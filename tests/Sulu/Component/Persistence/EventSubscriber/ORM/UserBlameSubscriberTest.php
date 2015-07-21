@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -54,52 +55,52 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function provideLifecycle()
     {
-        return array(
+        return [
             // changer not overridden, creator is not null
             // RESULT: Only set changer
-            array(
-                array(
-                    'changer' => array(0 => 5, 1 => 5),
-                    'creator' => array(0 => 1, 1 => null),
-                ),
-                array(
+            [
+                [
+                    'changer' => [0 => 5, 1 => 5],
+                    'creator' => [0 => 1, 1 => null],
+                ],
+                [
                     'changer',
-                ),
-            ),
+                ],
+            ],
             // changer is null, creator is null
             // RESULT: Set creator and changer
-            array(
-                array(
-                    'changer' => array(0 => null, 1 => null),
-                    'creator' => array(0 => null, 1 => null),
-                ),
-                array(
+            [
+                [
+                    'changer' => [0 => null, 1 => null],
+                    'creator' => [0 => null, 1 => null],
+                ],
+                [
                     'creator',
                     'changer',
-                ),
-            ),
+                ],
+            ],
             // changer has been overridden, creator is null
             // RESULT: Set creator and changer
-            array(
-                array(
-                    'changer' => array(0 => null, 1 => 3),
-                    'creator' => array(0 => null, 1 => null),
-                ),
-                array(
+            [
+                [
+                    'changer' => [0 => null, 1 => 3],
+                    'creator' => [0 => null, 1 => null],
+                ],
+                [
                     'creator',
-                ),
-            ),
+                ],
+            ],
             // changer is has been changed, creator has been changed
             // RESULT: Do not set anything
-            array(
-                array(
-                    'changer' => array(0 => 1, 1 => 2),
-                    'creator' => array(0 => 1, 1 => 2),
-                ),
-                array(
-                ),
-            ),
-        );
+            [
+                [
+                    'changer' => [0 => 1, 1 => 2],
+                    'creator' => [0 => 1, 1 => 2],
+                ],
+                [
+                ],
+            ],
+        ];
     }
 
     /**
@@ -112,15 +113,15 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $entity = $this->userBlameObject->reveal();
 
-        $this->unitOfWork->getScheduledEntityInsertions()->willReturn(array(
+        $this->unitOfWork->getScheduledEntityInsertions()->willReturn([
             $entity,
-        ));
-        $this->unitOfWork->getScheduledEntityUpdates()->willReturn(array());
+        ]);
+        $this->unitOfWork->getScheduledEntityUpdates()->willReturn([]);
 
         $this->entityManager->getClassMetadata(get_class($entity))->willReturn($this->classMetadata);
         $this->unitOfWork->getEntityChangeSet($this->userBlameObject->reveal())->willReturn($changeset);
 
-        foreach (array('creator', 'changer') as $field) {
+        foreach (['creator', 'changer'] as $field) {
             $prophecy = $this->classMetadata->setFieldValue(
                 $this->userBlameObject->reveal(),
                 $field,

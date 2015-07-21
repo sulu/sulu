@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -103,8 +104,8 @@ EOT
      * Cleanup specific node and his children.
      *
      * @param NodeInterface $node
-     * @param string $rootPath
-     * @param bool $dryRun
+     * @param string        $rootPath
+     * @param bool          $dryRun
      */
     private function cleanup(NodeInterface $node, $rootPath, $dryRun)
     {

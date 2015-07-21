@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -66,21 +67,21 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentPath->reveal()
         );
 
-        $urls = $extension->getAlternateLinks(array(
+        $urls = $extension->getAlternateLinks([
             'de' => '/test',
             'en' => '/test-en',
             'en-us' => '/test-en-us',
             'fr' => '/test-fr',
-        ));
+        ]);
 
         $this->assertEquals(
-            array(
+            [
                 '<link rel="alternate" href="/de/test" hreflang="de" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="x-default" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="en" />',
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
-            ),
+            ],
             explode(PHP_EOL, $urls)
         );
     }
@@ -96,28 +97,28 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $metaTags = $extension->getSeoMetaTags(
-            array(
-                'seo' => array(
+            [
+                'seo' => [
                     'title' => 'SEO Title',
                     'description' => 'SEO Description',
                     'noIndex' => true,
                     'noFollow' => true,
                     'keywords' => 'SEO, Keywords',
-                ),
-                'excerpt' => array(
+                ],
+                'excerpt' => [
                     'description' => 'Excerpt Description',
-                ),
-            ), array(
+                ],
+            ], [
                 'title' => 'Page Title',
-            )
+            ]
         );
 
         $this->assertEquals(
-            array(
+            [
                 '<meta name="description" content="SEO Description">',
                 '<meta name="keywords" content="SEO, Keywords">',
                 '<meta name="robots" content="NOINDEX, NOFOLLOW">',
-            ),
+            ],
             explode(PHP_EOL, $metaTags)
         );
     }
@@ -133,27 +134,27 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $metaTags = $extension->getSeoMetaTags(
-            array(
-                'seo' => array(
+            [
+                'seo' => [
                     'title' => 'SEO Title',
                     'noIndex' => false,
                     'noFollow' => false,
                     'keywords' => 'SEO, Keywords',
-                ),
-                'excerpt' => array(
+                ],
+                'excerpt' => [
                     'description' => 'Excerpt Description',
-                ),
-            ), array(
+                ],
+            ], [
                 'title' => 'Page Title',
-            )
+            ]
         );
 
         $this->assertEquals(
-            array(
+            [
                 '<meta name="description" content="Excerpt Description">',
                 '<meta name="keywords" content="SEO, Keywords">',
                 '<meta name="robots" content="INDEX, FOLLOW">',
-            ),
+            ],
             explode(PHP_EOL, $metaTags)
         );
     }

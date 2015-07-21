@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,8 +21,8 @@ interface SitemapXMLGeneratorInterface
      * Returns the generate Sitemap XML.
      *
      * @param WebspaceSitemap[] $webspaceSitemaps
-     * @param string $domain
-     * @param string $renderFile
+     * @param string            $domain
+     * @param string            $renderFile
      *
      * @return string
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ interface AccessControlManagerInterface
     /**
      * Sets the permissions for the object with the given class and id for the given security identity.
      *
-     * @param string $type The name of the class to protect
+     * @param string $type             The name of the class to protect
      * @param string $identifier
      * @param string $securityIdentity
      * @param $permissions
@@ -28,7 +29,7 @@ interface AccessControlManagerInterface
     /**
      * Returns the permissions for all security identities.
      *
-     * @param string $type The type of the protected object
+     * @param string $type       The type of the protected object
      * @param string $identifier The identifier of the protected object
      *
      * @return array

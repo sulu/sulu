@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,8 +28,8 @@ class ListRepository extends EntityRepository
     private $helper;
 
     /**
-     * @param ObjectManager $em
-     * @param ClassMetadata $class
+     * @param ObjectManager  $em
+     * @param ClassMetadata  $class
      * @param ListRestHelper $helper
      */
     public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper)
@@ -40,14 +41,14 @@ class ListRepository extends EntityRepository
     /**
      * Find list with parameter.
      *
-     * @param array $where
+     * @param array  $where
      * @param string $prefix
-     * @param bool $justCount Defines, if find should just return the total number of results
-     * @param array $joinConditions optionally specify conditions on join
+     * @param bool   $justCount      Defines, if find should just return the total number of results
+     * @param array  $joinConditions optionally specify conditions on join
      *
      * @return array|object|int
      */
-    public function find($where = array(), $prefix = 'u', $justCount = false, $joinConditions = array())
+    public function find($where = [], $prefix = 'u', $justCount = false, $joinConditions = [])
     {
         $searchPattern = $this->helper->getSearchPattern();
         $searchFields = $this->helper->getSearchFields();
@@ -57,11 +58,11 @@ class ListRepository extends EntityRepository
             $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
         }
 
-        $textFields = $this->getFieldsWitTypes(array('text', 'string', 'guid'), $searchFields);
+        $textFields = $this->getFieldsWitTypes(['text', 'string', 'guid'], $searchFields);
         if (is_numeric($searchPattern)) {
-            $numberFields = $this->getFieldsWitTypes(array('integer', 'float', 'decimal'), $searchFields);
+            $numberFields = $this->getFieldsWitTypes(['integer', 'float', 'decimal'], $searchFields);
         } else {
-            $numberFields = array();
+            $numberFields = [];
         }
 
         $queryBuilder = new ListQueryBuilder(
@@ -110,10 +111,10 @@ class ListRepository extends EntityRepository
         // check if relational filter was set ( e.g. emails[0]_email)
         // and filter result
         if (sizeof($filters = $queryBuilder->getRelationalFilters()) > 0) {
-            $filteredResults = array();
+            $filteredResults = [];
             // check if fields do contain id, else skip
             if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields) !== false) {
-                $ids = array();
+                $ids = [];
                 foreach ($results as $result) {
                     $id = $result['id'];
                     // check if result already in resultset
@@ -162,13 +163,13 @@ class ListRepository extends EntityRepository
     /**
      * returns the amount of data.
      *
-     * @param array $where
-     * @param array $joinConditions
+     * @param array  $where
+     * @param array  $joinConditions
      * @param string $prefix
      *
      * @return int
      */
-    public function getCount($where = array(), $joinConditions = array(), $prefix = 'u')
+    public function getCount($where = [], $joinConditions = [], $prefix = 'u')
     {
         return $this->find($where, $prefix, true, $joinConditions);
     }
@@ -177,13 +178,13 @@ class ListRepository extends EntityRepository
      * returns all fields with a specified type.
      *
      * @param array $types
-     * @param null $intersectArray only return fields that are defined in this array
+     * @param null  $intersectArray only return fields that are defined in this array
      *
      * @return array
      */
     public function getFieldsWitTypes(array $types, $intersectArray = null)
     {
-        $result = array();
+        $result = [];
         foreach ($this->getClassMetadata()->getFieldNames() as $field) {
             $type = $this->getClassMetadata()->getTypeOfField($field);
             if (in_array($type, $types)) {

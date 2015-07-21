@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -55,7 +56,7 @@ class SingleInternalLink extends SimpleContentType
     {
         $uuid = $property->getValue();
 
-        return $uuid ? array($uuid) : array();
+        return $uuid ? [$uuid] : [];
     }
 
     /**

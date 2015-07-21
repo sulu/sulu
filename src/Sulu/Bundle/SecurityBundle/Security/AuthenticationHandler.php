@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -48,7 +49,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      * Handler for AuthenticationSuccess. Returns a JsonResponse if request is an AJAX-request.
      * Returns a RedirectResponse otherwise.
      *
-     * @param Request $request
+     * @param Request        $request
      * @param TokenInterface $token
      *
      * @return Response
@@ -66,7 +67,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         if ($request->isXmlHttpRequest()) {
             // if AJAX login
-            $array = array('url' => $url);
+            $array = ['url' => $url];
             $response = new JsonResponse($array, 200);
         } else {
             // if form login
@@ -80,7 +81,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      * Handler for AuthenticationFailure. Returns a JsonResponse if request is an AJAX-request.
      * Returns a Redirect-response otherwise.
      *
-     * @param Request $request
+     * @param Request                 $request
      * @param AuthenticationException $exception
      *
      * @return Response
@@ -89,7 +90,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     {
         if ($request->isXmlHttpRequest()) {
             // if AJAX login
-            $array = array('message' => $exception->getMessage());
+            $array = ['message' => $exception->getMessage()];
             $response = new JsonResponse($array, 401);
         } else {
             // if form login

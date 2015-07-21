@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -117,11 +118,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $media2 = $this->createMedia(2);
         $media3 = $this->createMedia(3);
 
-        return array(
-            array(array(1, 2, 3), array($media1, $media2, $media3), array($media1, $media2, $media3)),
-            array(array(2, 1, 3), array($media1, $media2, $media3), array($media2, $media1, $media3)),
-            array(array(4, 1, 2), array($media1, $media2), array($media1, $media2)),
-        );
+        return [
+            [[1, 2, 3], [$media1, $media2, $media3], [$media1, $media2, $media3]],
+            [[2, 1, 3], [$media1, $media2, $media3], [$media2, $media1, $media3]],
+            [[4, 1, 2], [$media1, $media2], [$media1, $media2]],
+        ];
     }
 
     protected function createMedia($id)

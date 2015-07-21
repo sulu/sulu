@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,13 +40,13 @@ class PropertyTag
      * @var array
      * @Type("array")
      */
-    private $attributes = array();
+    private $attributes = [];
 
     /**
      * @param string $name
-     * @param int $priority
+     * @param int    $priority
      */
-    public function __construct($name, $priority, $attributes = array())
+    public function __construct($name, $priority, $attributes = [])
     {
         $this->name = $name;
         $this->priority = $priority;

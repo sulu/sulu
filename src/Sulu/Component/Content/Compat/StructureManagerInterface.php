@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,7 +42,7 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * add dynamically an extension to structures.
      *
      * @param StructureExtensionInterface $extension
-     * @param string $template default is all templates
+     * @param string                      $template  default is all templates
      */
     public function addExtension(ExtensionInterface $extension, $template = 'all');
 

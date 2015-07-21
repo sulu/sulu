@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ class InvalidUrlDefinitionException extends WebspaceException
 
     /**
      * @param Webspace $portal
-     * @param string $urlPattern
+     * @param string   $urlPattern
      */
     public function __construct(Webspace $portal, $urlPattern)
     {

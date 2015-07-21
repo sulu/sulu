@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,10 +57,10 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_content_path', array($this, 'getContentPath')),
-            new \Twig_SimpleFunction('sulu_content_root_path', array($this, 'getContentRootPath')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_content_path', [$this, 'getContentPath']),
+            new \Twig_SimpleFunction('sulu_content_root_path', [$this, 'getContentRootPath']),
+        ];
     }
 
     /**

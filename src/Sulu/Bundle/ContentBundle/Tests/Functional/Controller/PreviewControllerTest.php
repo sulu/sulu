@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -88,7 +89,7 @@ class PreviewControllerTest extends SuluTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(array('de', 'en')));
+        $userRole1->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole1);
         $this->em->flush();
 
@@ -104,15 +105,15 @@ class PreviewControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/test',
             'article' => 'Test',
-        );
+        ];
 
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
@@ -129,15 +130,15 @@ class PreviewControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/test',
             'article' => 'Test',
-        );
+        ];
 
         $client->request('POST', '/api/nodes?template=html5&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
@@ -155,15 +156,15 @@ class PreviewControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/test',
             'article' => 'Test',
-        );
+        ];
 
         $client->request('POST', '/api/nodes?template=invalidhtml&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());

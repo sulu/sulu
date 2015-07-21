@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,18 +16,18 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 class MediaContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
         $files->setComponent('collections@sulumedia');
-        $files->setComponentOptions(array('display' => 'files'));
+        $files->setComponentOptions(['display' => 'files']);
 
         $settings = new ContentNavigationItem('content-navigation.media.settings');
         $settings->setAction('settings');
         $settings->setComponent('collections@sulumedia');
-        $settings->setComponentOptions(array('display' => 'settings'));
+        $settings->setComponentOptions(['display' => 'settings']);
 
-        return array($files, $settings);
+        return [$files, $settings];
     }
 }

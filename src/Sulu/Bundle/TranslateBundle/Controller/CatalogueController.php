@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +33,7 @@ class CatalogueController extends RestController
     /**
      * @var DoctrineFieldDescriptor[]
      */
-    protected $fieldDescriptors = array();
+    protected $fieldDescriptors = [];
 
     /**
      * returns all fields that can be used by list.
@@ -79,7 +80,7 @@ class CatalogueController extends RestController
      */
     public function cgetCataloguesAction(Request $request)
     {
-        $filter = array();
+        $filter = [];
 
         $packageId = $request->get('packageId');
         if (!empty($packageId)) {
@@ -126,9 +127,9 @@ class CatalogueController extends RestController
      */
     protected function getFieldDescriptors()
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, 'id', array(), true, false, '', '50px');
-        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::$entityName, 'locale', array(), true, false, '', '50px');
-        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor('package', 'packageId', self::$entityName, 'package', array(), true, false, '', '50px');
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, 'id', [], true, false, '', '50px');
+        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::$entityName, 'locale', [], true, false, '', '50px');
+        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor('package', 'packageId', self::$entityName, 'package', [], true, false, '', '50px');
         $this->fieldDescriptors['isDefault'] = new DoctrineFieldDescriptor('isDefault', 'isDefault', self::$entityName, 'default');
 
         return $this->fieldDescriptors;

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -68,14 +69,14 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 
     public function provideGetWebspace()
     {
-        return array(
-            array('/cmf/sulu_io/content/articles/article-one', 'sulu_io'),
-            array('/cmfcontent/articles/article-one', null),
-            array('/cmf/webspace_five', null),
-            array('/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'),
-            array('', null),
-            array('asdasd', null),
-        );
+        return [
+            ['/cmf/sulu_io/content/articles/article-one', 'sulu_io'],
+            ['/cmfcontent/articles/article-one', null],
+            ['/cmf/webspace_five', null],
+            ['/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'],
+            ['', null],
+            ['asdasd', null],
+        ];
     }
 
     /**
@@ -99,17 +100,17 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLocales()
     {
-        $propertyNames = array(
+        $propertyNames = [
             'foo:aa-template',
             'foo:bb-template',
             'doo:dd-template',
             'foo:cc-barbar',
             'foo:ee-template',
-        );
+        ];
 
-        $expectedLocales = array('aa', 'bb', 'cc', 'ee');
+        $expectedLocales = ['aa', 'bb', 'cc', 'ee'];
 
-        $properties = array();
+        $properties = [];
         foreach ($propertyNames as $propertyName) {
             $property = $this->prophesize(PropertyInterface::class);
             $property->getName()->willReturn($propertyName);
@@ -146,23 +147,23 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 
     public function provideWebspace()
     {
-        return array(
-            array(
+        return [
+            [
                 '/cmf/sulu.io/contents',
                 'sulu.io',
-            ),
-            array(
+            ],
+            [
                 '/cmf/foobar/bar',
                 'foobar',
-            ),
-            array(
+            ],
+            [
                 '/foo/foo',
                 null,
-            ),
-            array(
+            ],
+            [
                 '/cmf/hello',
                 null,
-            ),
-        );
+            ],
+        ];
     }
 }

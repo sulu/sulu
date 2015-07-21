@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,9 +37,9 @@ class StructureExtensionCompilerPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 if (isset($attributes['template'])) {
-                    $params = array(new Reference($id), $attributes['template']);
+                    $params = [new Reference($id), $attributes['template']];
                 } else {
-                    $params = array(new Reference($id));
+                    $params = [new Reference($id)];
                 }
 
                 $definition->addMethodCall('addExtension', $params);

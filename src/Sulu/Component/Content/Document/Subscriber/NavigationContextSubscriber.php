@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +33,7 @@ class NavigationContextSubscriber extends AbstractMappingSubscriber
         $node = $event->getNode();
         $value = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::FIELD, $event->getLocale()),
-            array()
+            []
         );
         $event->getDocument()->setNavigationContexts($value);
     }

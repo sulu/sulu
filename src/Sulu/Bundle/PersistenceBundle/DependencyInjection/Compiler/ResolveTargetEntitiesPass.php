@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,18 +50,18 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
 
         foreach ($this->interfaces as $interface => $model) {
             $resolveTargetEntityListener
-                ->addMethodCall('addResolveTargetEntity', array(
+                ->addMethodCall('addResolveTargetEntity', [
                         $interface,
                         $this->getClass($container, $model),
-                        array(),
-                    )
+                        [],
+                    ]
                 );
         }
     }
 
     /**
      * @param ContainerBuilder $container
-     * @param string $key
+     * @param string           $key
      *
      * @return string
      *

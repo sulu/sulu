@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,7 +42,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('mode')
                             ->defaultValue('auto')
                             ->validate()
-                                ->ifNotInArray(array('auto', 'on_request', 'off'))
+                                ->ifNotInArray(['auto', 'on_request', 'off'])
                                 ->thenInvalid('Invalid preview mode "%s" use one of [auto, on_request, off]')
                             ->end()
                         ->end()

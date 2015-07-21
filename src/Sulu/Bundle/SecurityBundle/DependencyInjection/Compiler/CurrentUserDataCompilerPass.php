@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,11 +32,11 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                 'sulu_security.user_manager.current_user_data',
                 new Definition(
                     'Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData',
-                    array(
+                    [
                         new Reference('security.context'),
                         new Reference('router'),
                         new Reference('doctrine'),
-                    )
+                    ]
                 )
             );
 
@@ -43,7 +44,7 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                 'sulu_security.user_manager',
                 new Definition(
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
-                    array(
+                    [
                         new Reference('doctrine.orm.entity_manager'),
                         new Reference('security.encoder_factory'),
                         new Reference('sulu.repository.role'),
@@ -52,7 +53,7 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                         new Reference('sulu_security.salt_generator'),
                         new Reference('sulu_security.user_manager.current_user_data'),
                         new Reference('sulu.repository.user'),
-                    )
+                    ]
                 )
             );
         } else {
@@ -60,9 +61,9 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                 'sulu_security.user_manager',
                 new Definition(
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
-                    array(
+                    [
                         new Reference('doctrine.orm.entity_manager'),
-                    )
+                    ]
                 )
             );
         }

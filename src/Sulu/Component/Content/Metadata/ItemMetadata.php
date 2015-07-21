@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,14 +28,14 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $title = array();
+    public $title = [];
 
     /**
      * Description of this property|structure e.g. [["de": "Liste von Artikeln", "en": "List of articles"]].
      *
      * @var array
      */
-    public $description = array();
+    public $description = [];
 
     /**
      * Tags, e.g. 
@@ -48,7 +48,7 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $tags = array();
+    public $tags = [];
 
     /**
      * Parameters applying to the property.
@@ -61,14 +61,14 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $parameters = array();
+    public $parameters = [];
 
     /**
      * Children of this item, f.e. properties, sections or structures.
      *
      * @var Item[]
      */
-    public $children = array();
+    public $children = [];
 
     /**
      * @param mixed $name

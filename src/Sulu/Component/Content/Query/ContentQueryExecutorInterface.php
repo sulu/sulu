@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,14 +19,14 @@ interface ContentQueryExecutorInterface
     /**
      * Executes a query and returns loaded content as array.
      *
-     * @param string $webspaceKey
-     * @param string[] $locales
+     * @param string                       $webspaceKey
+     * @param string[]                     $locales
      * @param ContentQueryBuilderInterface $contentQueryBuilder
-     * @param bool $flat
-     * @param int $depth
-     * @param int $limit
-     * @param int $offset
-     * @param bool $moveUp
+     * @param bool                         $flat
+     * @param int                          $depth
+     * @param int                          $limit
+     * @param int                          $offset
+     * @param bool                         $moveUp
      *
      * @return array
      */

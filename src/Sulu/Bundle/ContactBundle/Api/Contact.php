@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,7 +43,7 @@ class Contact extends ApiWrapper
 {
     /**
      * @param ContactEntity $contact
-     * @param string $locale The locale of this product
+     * @param string        $locale  The locale of this product
      */
     public function __construct(ContactEntity $contact, $locale)
     {
@@ -312,7 +313,7 @@ class Contact extends ApiWrapper
      */
     public function getLocales()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getLocales()) {
             foreach ($this->entity->getLocales() as $locale) {
                 $entities[] = new ContactLocale($locale);
@@ -388,7 +389,7 @@ class Contact extends ApiWrapper
      */
     public function getNotes()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getNotes()) {
             foreach ($this->entity->getNotes() as $note) {
                 $entities[] = $note;
@@ -432,7 +433,7 @@ class Contact extends ApiWrapper
      */
     public function getEmails()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getEmails()) {
             foreach ($this->entity->getEmails() as $email) {
                 $entities[] = $email;
@@ -476,7 +477,7 @@ class Contact extends ApiWrapper
      */
     public function getPhones()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getPhones()) {
             foreach ($this->entity->getPhones() as $phone) {
                 $entities[] = $phone;
@@ -520,7 +521,7 @@ class Contact extends ApiWrapper
      */
     public function getFaxes()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getFaxes()) {
             foreach ($this->entity->getFaxes() as $fax) {
                 $entities[] = $fax;
@@ -564,7 +565,7 @@ class Contact extends ApiWrapper
      */
     public function getUrls()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getUrls()) {
             foreach ($this->entity->getUrls() as $entity) {
                 $entities[] = $entity;
@@ -702,10 +703,10 @@ class Contact extends ApiWrapper
      */
     public function getBankAccounts()
     {
-        $bankAccounts = array();
+        $bankAccounts = [];
         if ($this->entity->getBankAccounts()) {
             foreach ($this->entity->getBankAccounts() as $bankAccount) {
-                /** @var BankAccountEntity $bankAccount */
+                /* @var BankAccountEntity $bankAccount */
                 $bankAccounts[] = new BankAccount($bankAccount);
             }
         }
@@ -794,7 +795,7 @@ class Contact extends ApiWrapper
     public function getAddresses()
     {
         $contactAddresses = $this->entity->getContactAddresses();
-        $addresses = array();
+        $addresses = [];
 
         if (!is_null($contactAddresses)) {
             /** @var ContactAddressEntity $contactAddress */
@@ -972,7 +973,7 @@ class Contact extends ApiWrapper
      */
     public function getMedias()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
                 $entities[] = new Media($media, $this->locale, null);
@@ -1016,7 +1017,7 @@ class Contact extends ApiWrapper
      */
     public function getCategories()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getCategories()) {
             foreach ($this->entity->getCategories() as $category) {
                 $entities[] = new Category($category, $this->locale);
@@ -1031,7 +1032,7 @@ class Contact extends ApiWrapper
      */
     public function toArray()
     {
-        return array(
+        return [
             'id' => $this->getLastName(),
             'firstName' => $this->getFirstName(),
             'middleName' => $this->getMiddleName(),
@@ -1041,6 +1042,6 @@ class Contact extends ApiWrapper
             'birthday' => $this->getBirthday(),
             'created' => $this->getCreated(),
             'changed' => $this->getChanged(),
-        );
+        ];
     }
 }

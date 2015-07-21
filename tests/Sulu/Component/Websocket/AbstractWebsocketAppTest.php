@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +17,7 @@ class AbstractWebsocketAppTest extends \PHPUnit_Framework_TestCase
 {
     public function testOpen()
     {
-        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp', array(new ArrayCache()));
+        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp', [new ArrayCache()]);
 
         $reflectionClass = new \ReflectionClass('Sulu\Component\Websocket\AbstractWebsocketApp');
         $reflectionProperty = $reflectionClass->getProperty('clients');
@@ -35,7 +36,7 @@ class AbstractWebsocketAppTest extends \PHPUnit_Framework_TestCase
 
     public function testClose()
     {
-        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp', array(new ArrayCache()));
+        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp', [new ArrayCache()]);
         $reflectionClass = new \ReflectionClass('Sulu\Component\Websocket\AbstractWebsocketApp');
         $reflectionProperty = $reflectionClass->getProperty('clients');
         $reflectionProperty->setAccessible(true);

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,10 +22,10 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
     {
         $container->addCompilerPass(
             new ResolveTargetEntitiesPass(
-                array(
+                [
                     'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
                     'Sulu\Component\Persistence\Model\BarInterface' => '\stdClass',
-                )
+                ]
             )
         );
 
@@ -42,21 +43,21 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
-            array(
+            [
                 'Sulu\Component\Persistence\Model\FooInterface',
                 '\stdClass',
-                array(),
-            )
+                [],
+            ]
         );
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
-            array(
+            [
                 'Sulu\Component\Persistence\Model\BarInterface',
                 '\stdClass',
-                array(),
-            )
+                [],
+            ]
         );
     }
 }

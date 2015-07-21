@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use Sulu\Component\DocumentManager\Events;
@@ -36,7 +45,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
             list($listener, $methodName) = $listenerTuple;
             $refl = new \ReflectionClass(get_class($listener));
             $priority = $this->getPriority($eventName, $methodName, $listener);
-            $rows[] = array(
+            $rows[] = [
                 sprintf(
                     '<comment>%s</comment>\\%s',
                     $refl->getNamespaceName(),
@@ -44,7 +53,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
                 ),
                 $methodName,
                 $priority,
-            );
+            ];
         }
 
         usort($rows, function ($a, $b) {
@@ -52,7 +61,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
         });
 
         $table = new Table($output);
-        $table->setHeaders(array('Class', 'Method', 'Priority'));
+        $table->setHeaders(['Class', 'Method', 'Priority']);
         $table->setRows($rows);
         $table->render();
     }
@@ -101,11 +110,11 @@ class SubscriberDebugCommand extends ContainerAwareCommand
 
         $table = new Table($output);
 
-        $table->setHeaders(array('Event'));
+        $table->setHeaders(['Event']);
         foreach ($constants as $name => $value) {
-            $table->addRow(array(
+            $table->addRow([
                 substr($value, strlen(self::PREFIX)),
-            ));
+            ]);
         }
         $table->render();
     }

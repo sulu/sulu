@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
 
         $data = $response['_embedded']['localizations'];
 
-        $filterKeys = array('localization');
+        $filterKeys = ['localization'];
 
         $filteredData = array_map(
             function ($value) use ($filterKeys) {
@@ -32,10 +33,10 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
             $data
         );
 
-        $this->assertContains(array('localization' => 'en'), $filteredData);
-        $this->assertContains(array('localization' => 'en_us'), $filteredData);
-        $this->assertContains(array('localization' => 'de'), $filteredData);
-        $this->assertContains(array('localization' => 'de_at'), $filteredData);
+        $this->assertContains(['localization' => 'en'], $filteredData);
+        $this->assertContains(['localization' => 'en_us'], $filteredData);
+        $this->assertContains(['localization' => 'de'], $filteredData);
+        $this->assertContains(['localization' => 'de_at'], $filteredData);
     }
 
     public function testCgetActionWithNotExistingWebspace()

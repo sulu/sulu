@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,7 +45,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
 
         $select = '';
-        $headers = array();
+        $headers = [];
         foreach ($webspace->getAllLocalizations() as $localization) {
             $select .= '[i18n:' . $localization->getLocalization() . '-template] as ' . $localization->getLocalization(
                 ) . ',';
@@ -59,12 +60,12 @@ class ValidatePagesCommand extends ContainerAwareCommand
             $webspaceKey
         );
 
-        $structures = array();
+        $structures = [];
         foreach ($structureManager->getStructures() as $structure) {
             $structures[] = $structure->getKey();
         }
 
-        $availableStructureKeys = array();
+        $availableStructureKeys = [];
         foreach ($structureProvider->getStructures($webspaceKey) as $structure) {
             $availableStructureKeys[] = $structure->getKey();
         }
@@ -73,20 +74,20 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $queryResult = $query->execute();
 
-        $completeHeader = array_merge(array('invalid', 'path'), $headers, array('description'));
+        $completeHeader = array_merge(['invalid', 'path'], $headers, ['description']);
 
         /** @var TableHelper $table */
         $table = $this->getHelper('table');
         $table->setHeaders($completeHeader);
         $result = 0;
-        $messages = array();
+        $messages = [];
 
         /** @var Row $row */
         foreach ($queryResult as $row) {
-            $tableRow = array(' ');
+            $tableRow = [' '];
 
             $tableRow[] = $row->getPath();
-            $descriptions = array();
+            $descriptions = [];
 
             foreach ($headers as $header) {
                 $template = $row->getValue($header);
@@ -114,10 +115,10 @@ class ValidatePagesCommand extends ContainerAwareCommand
         }
         $table->render($output);
 
-        $style = new OutputFormatterStyle('red', null, array('bold', 'blink'));
+        $style = new OutputFormatterStyle('red', null, ['bold', 'blink']);
         $output->getFormatter()->setStyle('error', $style);
 
-        $style = new OutputFormatterStyle('green', null, array('bold', 'blink'));
+        $style = new OutputFormatterStyle('green', null, ['bold', 'blink']);
         $output->getFormatter()->setStyle('ok', $style);
 
         $output->writeln('');

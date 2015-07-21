@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -194,7 +195,7 @@ class Portal
      */
     public function setEnvironments(array $environments)
     {
-        $this->environments = array();
+        $this->environments = [];
 
         foreach ($environments as $environment) {
             $this->addEnvironment($environment);
@@ -250,12 +251,12 @@ class Portal
      */
     public function toArray($depth = null)
     {
-        $res = array();
+        $res = [];
         $res['name'] = $this->getName();
         $res['key'] = $this->getKey();
         $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
 
-        $res['localizations'] = array();
+        $res['localizations'] = [];
 
         foreach ($this->getLocalizations() as $localization) {
             $res['localizations'][] = $localization->toArray();

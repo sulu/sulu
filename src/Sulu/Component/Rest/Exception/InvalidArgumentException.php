@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,9 +31,9 @@ class InvalidArgumentException extends RestException
     protected $argument;
 
     /**
-     * @param string $entity The type of the entity
-     * @param string $argument The argument of the entity, which was invalid
-     * @param null $customMessage
+     * @param string $entity        The type of the entity
+     * @param string $argument      The argument of the entity, which was invalid
+     * @param null   $customMessage
      */
     public function __construct($entity, $argument, $customMessage = null)
     {

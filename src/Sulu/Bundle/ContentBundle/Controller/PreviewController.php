@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,7 +34,7 @@ class PreviewController extends Controller
      * render content for logged in user with data from FORM.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string $contentUuid
+     * @param string                                    $contentUuid
      *
      * @throws \Exception
      * @throws \Sulu\Bundle\ContentBundle\Preview\PreviewNotFoundException

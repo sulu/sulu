@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,7 +37,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     /**
      * @var DoctrineFieldDescriptor[]
      */
-    protected $fieldDescriptors = array();
+    protected $fieldDescriptors = [];
 
     /**
      * returns all fields that can be used by list.
@@ -62,7 +63,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             'id',
             self::$entityName,
             'id',
-            array(),
+            [],
             true,
             false,
             '',
@@ -73,7 +74,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             'value',
             self::$entityName,
             'value',
-            array(),
+            [],
             true,
             false,
             '',
@@ -84,55 +85,55 @@ class TranslationsController extends RestController implements ClassResourceInte
             'suggestion',
             self::$entityName,
             'suggestion',
-            array()
+            []
         );
         $this->fieldDescriptors['code'] = new DoctrineFieldDescriptor(
             'code',
             'code',
             self::$entityNameCode,
             'code',
-            array(
+            [
                 self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
-            )
+            ]
         );
         $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor(
             'backend',
             'backend',
             self::$entityNameCode,
             'backend',
-            array(
+            [
                 self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
-            )
+            ]
         );
         $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor(
             'frontend',
             'frontend',
             self::$entityNameCode,
             'frontend',
-            array(
+            [
                 self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
-            )
+            ]
         );
         $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor(
             'length',
             'length',
             self::$entityNameCode,
             'length',
-            array(
+            [
                 self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
-            )
+            ]
         );
 
         return $this->fieldDescriptors;
@@ -156,7 +157,7 @@ class TranslationsController extends RestController implements ClassResourceInte
                 ->findByCatalogueWithSuggestion($slug);
 
             // construct response array
-            $translations = array();
+            $translations = [];
             for ($i = 0; $i < sizeof($codes); ++$i) {
                 $code = $codes[$i];
 
@@ -179,24 +180,24 @@ class TranslationsController extends RestController implements ClassResourceInte
                     }
                 }
 
-                $translations[] = array(
+                $translations[] = [
                     'id' => $code['id'],
                     'value' => $value,
                     'suggestion' => $defaultValue,
-                    'code' => array(
+                    'code' => [
                         'id' => $code['id'],
                         'code' => $code['code'],
                         'backend' => $code['backend'],
                         'frontend' => $code['frontend'],
                         'length' => $code['length'],
-                    ),
-                );
+                    ],
+                ];
             }
 
-            $response = array(
+            $response = [
                 'total' => sizeof($translations),
-                '_embedded' => array('translations' => $translations),
-            );
+                '_embedded' => ['translations' => $translations],
+            ];
 
             $view = $this->view($response, 200);
         } catch (RestException $ex) {

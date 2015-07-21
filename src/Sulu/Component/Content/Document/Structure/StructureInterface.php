@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -48,7 +49,7 @@ interface StructureInterface extends \ArrayAccess
      * set to NULL.
      *
      * @param array $data
-     * @param bool $clearMissing
+     * @param bool  $clearMissing
      */
     public function bind($data, $clearMissing = false);
 

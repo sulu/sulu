@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -68,12 +69,12 @@ class MapperRemoveSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            Events::REMOVE => array(
-                array('handlePreRemove', 500),
-                array('handlePostRemove', -100),
-            ),
-        );
+        return [
+            Events::REMOVE => [
+                ['handlePreRemove', 500],
+                ['handlePostRemove', -100],
+            ],
+        ];
     }
 
     public function handlePreRemove(RemoveEvent $event)

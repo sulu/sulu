@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,8 +33,8 @@ class StructureTag
     protected $attributes;
 
     /**
-     * @param string $name Name of tag
-     * @param array $attributes Tag attributes
+     * @param string $name       Name of tag
+     * @param array  $attributes Tag attributes
      */
     public function __construct($name, $attributes)
     {

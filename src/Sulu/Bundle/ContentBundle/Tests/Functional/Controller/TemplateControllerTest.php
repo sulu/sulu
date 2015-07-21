@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,11 +23,11 @@ class TemplateControllerTest extends SuluTestCase
     public function testContentForm()
     {
         $client = $this->createClient(
-            array(),
-            array(
+            [],
+            [
                 'PHP_AUTH_USER' => 'test',
                 'PHP_AUTH_PW' => 'test',
-            )
+            ]
         );
         $crawler = $client->request('GET', '/content/template/form/default.html');
 

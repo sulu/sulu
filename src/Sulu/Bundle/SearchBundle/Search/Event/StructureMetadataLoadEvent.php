@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,7 +37,7 @@ class StructureMetadataLoadEvent extends Event
 
     /**
      * @param StructureInterface $structure
-     * @param IndexMetadata $indexMetadata
+     * @param IndexMetadata      $indexMetadata
      */
     public function __construct(StructureInterface $structure, IndexMetadata $indexMetadata)
     {

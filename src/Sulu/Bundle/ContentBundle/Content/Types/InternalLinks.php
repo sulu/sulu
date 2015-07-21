@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -75,7 +76,7 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = array();
+        $data = [];
         if ($node->hasProperty($property->getName())) {
             $data = $node->getProperty($property->getName())->getString();
         }
@@ -105,7 +106,7 @@ class InternalLinks extends ComplexContentType
     public function getReferencedUuids(PropertyInterface $property)
     {
         $data = $property->getValue();
-        $uuids = isset($data) ? $data : array();
+        $uuids = isset($data) ? $data : [];
 
         return $uuids;
     }
@@ -113,12 +114,12 @@ class InternalLinks extends ComplexContentType
     /**
      * set data to property.
      *
-     * @param string[] $data ids of images
+     * @param string[]          $data     ids of images
      * @param PropertyInterface $property
      */
     private function setData($data, PropertyInterface $property)
     {
-        $refs = isset($data) ? $data : array();
+        $refs = isset($data) ? $data : [];
         $property->setValue($refs);
     }
 
@@ -127,7 +128,7 @@ class InternalLinks extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array('properties' => new PropertyParameter('properties', array(), 'collection'));
+        return ['properties' => new PropertyParameter('properties', [], 'collection')];
     }
 
     /**
@@ -150,7 +151,7 @@ class InternalLinks extends ComplexContentType
             // remove not existing ids
             $session = $node->getSession();
             $selectedNodes = $session->getNodesByIdentifier($value);
-            $ids = array();
+            $ids = [];
             foreach ($selectedNodes as $selectedNode) {
                 if ($selectedNode->getIdentifier() === $node->getIdentifier()) {
                     throw new \InvalidArgumentException('You are not allowed to link a page to itself!');
@@ -194,7 +195,7 @@ class InternalLinks extends ComplexContentType
     {
         $data = $property->getValue();
         $container = new InternalLinksContainer(
-            isset($data) ? $data : array(),
+            isset($data) ? $data : [],
             $this->contentQueryExecutor,
             $this->contentQueryBuilder,
             array_merge($this->getDefaultParams(), $property->getParams()),

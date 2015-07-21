@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -134,6 +135,6 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return ($searchFields != null) ? explode(',', $searchFields) : array();
+        return ($searchFields != null) ? explode(',', $searchFields) : [];
     }
 }

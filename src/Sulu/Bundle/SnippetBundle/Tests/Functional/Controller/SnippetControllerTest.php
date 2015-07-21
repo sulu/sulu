@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -100,45 +101,45 @@ class SnippetControllerTest extends SuluTestCase
 
     public function provideIndex()
     {
-        return array(
-            array(
-                array(),
+        return [
+            [
+                [],
                 6,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'type' => 'car',
-                ),
+                ],
                 4,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'type' => 'hotel',
-                ),
+                ],
                 2,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'limit' => 2,
                     'page' => 1,
-                ),
+                ],
                 2,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'limit' => 2,
                     'page' => 2,
-                ),
+                ],
                 2,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'limit' => 2,
                     'page' => 3,
-                ),
+                ],
                 2,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -146,9 +147,9 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testIndex($params, $expectedNbResults)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
-        ), $params);
+        ], $params);
 
         $query = http_build_query($params);
         $this->client->request('GET', '/snippets?' . $query);
@@ -166,24 +167,24 @@ class SnippetControllerTest extends SuluTestCase
 
     public function providePost()
     {
-        return array(
-            array(
-                array(),
-                array(
+        return [
+            [
+                [],
+                [
                     'template' => 'car',
                     'data' => 'My New Car',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'language' => 'en',
-                ),
-                array(
+                ],
+                [
                     'template' => 'hotel',
                     'data' => 'Some Hotel Yeah',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -191,14 +192,14 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testPost($params, $data)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
-        ), $params);
+        ], $params);
 
-        $data = array(
+        $data = [
             'template' => 'car',
             'title' => 'My New Car',
-        );
+        ];
 
         $query = http_build_query($params);
         $this->client->request('POST', '/snippets?' . $query, $data);
@@ -216,15 +217,15 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testPostPublished($params, $data)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
             'state' => StructureInterface::STATE_PUBLISHED,
-        ), $params);
+        ], $params);
 
-        $data = array(
+        $data = [
             'template' => 'car',
             'title' => 'My New Car',
-        );
+        ];
 
         $query = http_build_query($params);
         $this->client->request('POST', '/snippets?' . $query, $data);
@@ -242,15 +243,15 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testPostTest($params, $data)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
             'state' => StructureInterface::STATE_TEST,
-        ), $params);
+        ], $params);
 
-        $data = array(
+        $data = [
             'template' => 'car',
             'title' => 'My New Car',
-        );
+        ];
 
         $query = http_build_query($params);
         $this->client->request('POST', '/snippets?' . $query, $data);
@@ -265,15 +266,15 @@ class SnippetControllerTest extends SuluTestCase
 
     public function providePut()
     {
-        return array(
-            array(
-                array(),
-                array(
+        return [
+            [
+                [],
+                [
                     'template' => 'hotel',
                     'title' => 'Renamed Hotel',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -281,9 +282,9 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testPut($params, $data)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
-        ), $params);
+        ], $params);
 
         $query = http_build_query($params);
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
@@ -302,10 +303,10 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testPutPublished($params, $data)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
             'state' => StructureInterface::STATE_PUBLISHED,
-        ), $params);
+        ], $params);
 
         $query = http_build_query($params);
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
@@ -324,10 +325,10 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testPutTest($params, $data)
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'language' => 'de',
             'state' => StructureInterface::STATE_TEST,
-        ), $params);
+        ], $params);
 
         $query = http_build_query($params);
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
@@ -347,8 +348,8 @@ class SnippetControllerTest extends SuluTestCase
         $page->setStructureType('hotel_page');
         $page->setTitle('Hotels page');
         $page->setResourceSegment('/hotels');
-        $page->getStructure()->bind(array('hotels' => array($this->hotel1->getUuid(), $this->hotel2->getUuid())));
-        $this->documentManager->persist($page, 'de', array('parent_path' => '/cmf/sulu_io/contents'));
+        $page->getStructure()->bind(['hotels' => [$this->hotel1->getUuid(), $this->hotel2->getUuid()]]);
+        $this->documentManager->persist($page, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
         $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');

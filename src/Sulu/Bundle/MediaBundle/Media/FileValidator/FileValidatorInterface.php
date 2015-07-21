@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,9 +28,9 @@ interface FileValidatorInterface
      * Validated a given file.
      *
      * @param UploadedFile $file
-     * @param array $methods
+     * @param array        $methods
      *
      * @return mixed
      */
-    public function validate(UploadedFile $file, $methods = array());
+    public function validate(UploadedFile $file, $methods = []);
 }

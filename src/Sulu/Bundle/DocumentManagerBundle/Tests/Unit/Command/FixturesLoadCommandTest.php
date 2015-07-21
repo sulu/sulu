@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
 use Prophecy\Argument;
@@ -32,9 +41,9 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         $command = $application->find('sulu:document:fixtures:load');
         $this->commandTester = new CommandTester($command);
 
-        $this->kernel->getBundles()->willReturn(array(
+        $this->kernel->getBundles()->willReturn([
             $this->fixtures->reveal(),
-        ));
+        ]);
         $this->fixtures->getPath()->willReturn(
             __DIR__ . '/fixtures'
         );
@@ -45,10 +54,10 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoFixtures()
     {
-        $this->kernel->getBundles()->willReturn(array());
-        $tester = $this->execute(array(
+        $this->kernel->getBundles()->willReturn([]);
+        $tester = $this->execute([
             '--no-interaction' => true,
-        ));
+        ]);
         $this->assertContains('Could not find any candidate fixture paths', $tester->getDisplay());
     }
 
@@ -57,23 +66,23 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadFixtures()
     {
-        $this->loader->load(array(
+        $this->loader->load([
             __DIR__ . '/fixtures/DataFixtures/Document',
-        ))->willReturn(array(
+        ])->willReturn([
             $this->fixture1->reveal(),
-        ));
+        ]);
 
         $this->executor->execute(
-            array(
+            [
                 $this->fixture1->reveal(),
-            ),
+            ],
             true,
             true,
             Argument::type(OutputInterface::class)
         )->shouldBeCalled();
 
-        $tester = $this->execute(array(
-        ));
+        $tester = $this->execute([
+        ]);
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
@@ -82,23 +91,23 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadFixturesAppend()
     {
-        $this->loader->load(array(
+        $this->loader->load([
             __DIR__ . '/fixtures/DataFixtures/Document',
-        ))->willReturn(array(
+        ])->willReturn([
             $this->fixture1->reveal(),
-        ));
+        ]);
         $this->executor->execute(
-            array(
+            [
                 $this->fixture1->reveal(),
-            ),
+            ],
             false,
             true,
             Argument::type(OutputInterface::class)
         )->shouldBeCalled();
 
-        $tester = $this->execute(array(
+        $tester = $this->execute([
             '--append' => true,
-        ));
+        ]);
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
@@ -107,23 +116,23 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadFixturesNoInitialize()
     {
-        $this->loader->load(array(
+        $this->loader->load([
             __DIR__ . '/fixtures/DataFixtures/Document',
-        ))->willReturn(array(
+        ])->willReturn([
             $this->fixture1->reveal(),
-        ));
+        ]);
         $this->executor->execute(
-            array(
+            [
                 $this->fixture1->reveal(),
-            ),
+            ],
             true,
             false,
             Argument::type(OutputInterface::class)
         )->shouldBeCalled();
 
-        $tester = $this->execute(array(
+        $tester = $this->execute([
             '--no-initialize' => true,
-        ));
+        ]);
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
@@ -132,32 +141,32 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadSpecified()
     {
-        $this->loader->load(array(
+        $this->loader->load([
             __DIR__ . '/foo',
-        ))->willReturn(array(
+        ])->willReturn([
             $this->fixture1->reveal(),
-        ));
+        ]);
 
         $this->executor->execute(
-            array(
+            [
                 $this->fixture1->reveal(),
-            ),
+            ],
             true,
             true,
             Argument::type(OutputInterface::class)
         )->shouldBeCalled();
 
-        $tester = $this->execute(array(
-            '--fixtures' => array(__DIR__ . '/foo'),
-        ));
+        $tester = $this->execute([
+            '--fixtures' => [__DIR__ . '/foo'],
+        ]);
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
     private function execute(array $args)
     {
-        $this->commandTester->execute($args, array(
+        $this->commandTester->execute($args, [
             'interactive' => false,
-        ));
+        ]);
 
         return $this->commandTester;
     }

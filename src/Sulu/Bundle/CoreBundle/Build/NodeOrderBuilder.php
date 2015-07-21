@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -64,7 +65,7 @@ class NodeOrderBuilder implements BuilderInterface
      */
     public function getDependencies()
     {
-        return array();
+        return [];
     }
 
     /**

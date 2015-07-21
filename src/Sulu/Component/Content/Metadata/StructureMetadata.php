@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -103,7 +103,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function burnProperties()
     {
-        $properties = array();
+        $properties = [];
         foreach ($this->children as $child) {
             if ($child instanceof SectionMetadata) {
                 $properties = array_merge($properties, $child->getChildren());
@@ -170,7 +170,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function getPropertiesByTagName($tagName)
     {
-        $properties = array();
+        $properties = [];
 
         foreach ($this->properties as $property) {
             foreach ($property->tags as $tag) {

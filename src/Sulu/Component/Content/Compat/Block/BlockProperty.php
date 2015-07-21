@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,12 +26,12 @@ class BlockProperty extends Property implements BlockPropertyInterface
      *
      * @var BlockPropertyType[]
      */
-    private $types = array();
+    private $types = [];
 
     /**
      * @var BlockPropertyType[]
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * @var string
@@ -45,8 +46,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $params = array(),
-        $tags = array(),
+        $params = [],
+        $tags = [],
         $col = null
     ) {
         parent::__construct(
@@ -134,7 +135,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     /**
      * initiate new child with given type name.
      *
-     * @param int $index
+     * @param int    $index
      * @param string $typeName
      *
      * @return BlockPropertyType
@@ -152,7 +153,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function clearProperties()
     {
-        $this->properties = array();
+        $this->properties = [];
     }
 
     /**
@@ -219,10 +220,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         // check value for single value
         if (array_keys($items) !== range(0, count($items) - 1)) {
-            $items = array($items);
+            $items = [$items];
         }
 
-        $this->properties = array();
+        $this->properties = [];
 
         for ($i = 0; $i < count($items); ++$i) {
             $item = $items[$i];
@@ -268,9 +269,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
             }
         }
 
-        $data = array();
+        $data = [];
         foreach ($this->properties as $type) {
-            $result = array('type' => $type->getName());
+            $result = ['type' => $type->getName()];
             foreach ($type->getChildProperties() as $property) {
                 $result[$property->getName()] = $property->getValue();
             }
@@ -303,7 +304,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $this->getParams()
         );
 
-        $clone->types = array();
+        $clone->types = [];
         foreach ($this->types as $type) {
             $clone->addType(clone($type));
         }

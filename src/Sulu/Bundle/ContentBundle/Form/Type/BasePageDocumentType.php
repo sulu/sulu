@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,7 +32,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
 
     /**
      * @param SessionManagerInterface $sessionManager
-     * @param DocumentManager $documentManager
+     * @param DocumentManager         $documentManager
      */
     public function __construct(
         SessionManagerInterface $sessionManager,
@@ -47,9 +48,9 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
         parent::setDefaultOptions($options);
-        $options->setRequired(array(
+        $options->setRequired([
             'webspace_key',
-        ));
+        ]);
     }
 
     /**
@@ -60,13 +61,13 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
         parent::buildForm($builder, $options);
 
         $builder->add('parent', 'document_object');
-        $builder->add('extensions', 'text', array('property_path' => 'extensionsData'));
+        $builder->add('extensions', 'text', ['property_path' => 'extensionsData']);
         $builder->add('resourceSegment', 'text');
-        $builder->add('navigationContexts', 'collection', array(
+        $builder->add('navigationContexts', 'collection', [
             'type' => 'text',
             'allow_add' => true,
             'allow_delete' => true,
-        ));
+        ]);
         $builder->add('redirectType', 'text');
         $builder->add('redirectTarget', 'document_object');
         $builder->add('redirectExternal', 'text');
@@ -76,7 +77,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
         $builder->setAttribute('webspace_key', $options['webspace_key']);
         $builder->setAttribute('clear_missing_content', $options['clear_missing_content']);
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitDocumentParent'));
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'postSubmitDocumentParent']);
     }
 
     /**

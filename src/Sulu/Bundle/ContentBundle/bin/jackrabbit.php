@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,14 +11,14 @@
 
 include_once 'vendor/autoload.php';
 
-$options = array(
+$options = [
     'url' => 'http://localhost:8080/server',
     'username' => 'admin',
     'password' => 'admin',
     'workspace' => 'default',
-);
+];
 
-$parameters = array('jackalope.jackrabbit_uri' => $options['url']);
+$parameters = ['jackalope.jackrabbit_uri' => $options['url']];
 $factory = new \Jackalope\RepositoryFactoryJackrabbit();
 $repository = $factory->getRepository($parameters);
 $credentials = new PHPCR\SimpleCredentials($options['username'], $options['password']);

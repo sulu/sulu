@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,7 +38,7 @@ class SnippetRepository
 
     /**
      * @param SessionManager $sessionManager
-     * @param ContentMapper $contentMapper
+     * @param ContentMapper  $contentMapper
      */
     public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper)
     {
@@ -66,14 +67,14 @@ class SnippetRepository
      *
      * UUIDs which fail to resolve to a snippet will be ignored.
      *
-     * @param array $uuids
+     * @param array  $uuids
      * @param string $languageCode
      *
      * @return Snippet[]
      */
-    public function getSnippetsByUuids(array $uuids = array(), $languageCode)
+    public function getSnippetsByUuids(array $uuids = [], $languageCode)
     {
-        $snippets = array();
+        $snippets = [];
 
         foreach ($uuids as $uuid) {
             try {
@@ -93,9 +94,9 @@ class SnippetRepository
      * If $type is given then only return the snippets of that type.
      *
      * @param string $languageCode
-     * @param string $type Optional snippet type
-     * @param int $offset Optional offset
-     * @param int $max Optional max
+     * @param string $type         Optional snippet type
+     * @param int    $offset       Optional offset
+     * @param int    $max          Optional max
      * @param string $search
      * @param string $sortBy
      * @param string $sortOrder
@@ -124,7 +125,7 @@ class SnippetRepository
      * If $type is given then only return the snippets of that type.
      *
      * @param string $languageCode
-     * @param string $type Optional snippet type
+     * @param string $type         Optional snippet type
      * @param string $search
      * @param string $sortBy
      * @param string $sortOrder
@@ -152,9 +153,9 @@ class SnippetRepository
      * If $type is given then only return the snippets of that type.
      *
      * @param string $languageCode
-     * @param string $type Optional snippet type
-     * @param int $offset Optional offset
-     * @param int $max Optional max
+     * @param string $type         Optional snippet type
+     * @param int    $offset       Optional offset
+     * @param int    $max          Optional max
      * @param string $search
      * @param string $sortBy
      * @param string $sortOrder

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use Guzzle\Http\ClientInterface;
@@ -28,13 +37,13 @@ class NominatimGeolocator implements GeolocatorInterface
      */
     public function locate($query)
     {
-        $request = $this->client->get($this->baseUrl, array(), array(
-            'query' => array(
+        $request = $this->client->get($this->baseUrl, [], [
+            'query' => [
                 'q' => $query,
                 'format' => 'json',
                 'addressdetails' => 1,
-            ),
-        ));
+            ],
+        ]);
 
         $this->client->send($request);
         $response = $request->getResponse();
@@ -51,13 +60,13 @@ class NominatimGeolocator implements GeolocatorInterface
         foreach ($results as $result) {
             $location = new GeolocatorLocation();
 
-            foreach (array(
+            foreach ([
                 'setStreet' => 'road',
                 'setNumber' => 'house_number',
                 'setCode' => 'postcode',
                 'setTown' => 'city',
                 'setCountry' => 'country_code',
-            ) as $method => $key) {
+            ] as $method => $key) {
                 if (isset($result['address'][$key])) {
                     $location->$method($result['address'][$key]);
                 }

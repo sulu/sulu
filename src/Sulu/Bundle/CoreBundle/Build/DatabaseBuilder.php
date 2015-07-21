@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,7 +31,7 @@ class DatabaseBuilder extends SuluBuilder
      */
     public function getDependencies()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -51,9 +52,9 @@ class DatabaseBuilder extends SuluBuilder
 
         if ($this->input->getOption('destroy')) {
             if ($databaseExists) {
-                $this->execCommand('Dropping the database', 'doctrine:database:drop', array(
+                $this->execCommand('Dropping the database', 'doctrine:database:drop', [
                     '--force' => true,
-                ));
+                ]);
             }
             $this->execCommand('Creating the database', 'doctrine:database:create');
 
@@ -71,6 +72,6 @@ class DatabaseBuilder extends SuluBuilder
             $this->execCommand('Creating the schema', 'doctrine:schema:create');
         }
 
-        $this->execCommand('Updating the schema', 'doctrine:schema:update', array('--force' => true));
+        $this->execCommand('Updating the schema', 'doctrine:schema:update', ['--force' => true]);
     }
 }

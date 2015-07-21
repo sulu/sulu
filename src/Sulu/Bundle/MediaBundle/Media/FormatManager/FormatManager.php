@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -69,17 +70,17 @@ class FormatManager implements FormatManagerInterface
     /**
      * @var array
      */
-    private $previewMimeTypes = array();
+    private $previewMimeTypes = [];
 
     /**
      * @var array
      */
-    private $responseHeaders = array();
+    private $responseHeaders = [];
 
     /**
      * @var array
      */
-    private $tempFiles = array();
+    private $tempFiles = [];
 
     /**
      * @var Filesystem
@@ -92,15 +93,15 @@ class FormatManager implements FormatManagerInterface
     private $formats;
 
     /**
-     * @param MediaRepository $mediaRepository
-     * @param StorageInterface $originalStorage
-     * @param FormatCacheInterface $formatCache
+     * @param MediaRepository         $mediaRepository
+     * @param StorageInterface        $originalStorage
+     * @param FormatCacheInterface    $formatCache
      * @param ImageConverterInterface $converter
-     * @param string $ghostScriptPath
-     * @param string $saveImage
-     * @param array $previewMimeTypes
-     * @param array $responseHeaders
-     * @param array $formats
+     * @param string                  $ghostScriptPath
+     * @param string                  $saveImage
+     * @param array                   $previewMimeTypes
+     * @param array                   $responseHeaders
+     * @param array                   $formats
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -254,7 +255,7 @@ class FormatManager implements FormatManagerInterface
 
         $image = $image->get($imageExtension);
 
-        return array($image, 200, $imageExtension);
+        return [$image, 200, $imageExtension];
     }
 
     /**
@@ -264,7 +265,7 @@ class FormatManager implements FormatManagerInterface
      */
     protected function getResponseHeaders($mimeType = '')
     {
-        $headers = array();
+        $headers = [];
 
         if (!empty($this->responseHeaders)) {
             $headers = $this->responseHeaders;
@@ -284,14 +285,14 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param ImageInterface $image
-     * @param string $imageExtension
-     * @param array $formatOptions
+     * @param string         $imageExtension
+     * @param array          $formatOptions
      *
      * @return array
      */
     protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
     {
-        $options = array();
+        $options = [];
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {
             $options['animated'] = true;
         }
@@ -496,7 +497,7 @@ class FormatManager implements FormatManagerInterface
             throw new ImageProxyMediaNotFoundException('Media file version was not found');
         }
 
-        return array($fileName, $version, $storageOptions, $mimeType);
+        return [$fileName, $version, $storageOptions, $mimeType];
     }
 
     /**
@@ -504,7 +505,7 @@ class FormatManager implements FormatManagerInterface
      */
     public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
     {
-        $formats = array();
+        $formats = [];
         if (in_array($mimeType, $this->previewMimeTypes)) {
             foreach ($this->formats as $format) {
                 $formats[$format['name']] = $this->formatCache->getMediaUrl(

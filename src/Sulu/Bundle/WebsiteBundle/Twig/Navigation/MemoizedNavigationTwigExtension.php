@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,7 +48,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'flatRootNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'flatRootNavigationFunction'], $this->lifeTime);
     }
 
     /**
@@ -55,7 +56,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'treeRootNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'treeRootNavigationFunction'], $this->lifeTime);
     }
 
     /**
@@ -63,7 +64,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'treeNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'treeNavigationFunction'], $this->lifeTime);
     }
 
     /**
@@ -71,7 +72,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'flatNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'flatNavigationFunction'], $this->lifeTime);
     }
 
     /**
@@ -79,7 +80,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function breadcrumbFunction($uuid)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'breadcrumbFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'breadcrumbFunction'], $this->lifeTime);
     }
 
     /**

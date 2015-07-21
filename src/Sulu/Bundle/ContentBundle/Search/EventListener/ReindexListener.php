@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,7 +47,7 @@ class ReindexListener
         DocumentManager $documentManager,
         DocumentInspector $inspector,
         SearchManagerInterface $searchManager,
-        array $mapping = array()
+        array $mapping = []
     ) {
         $this->searchManager = $searchManager;
         $this->mapping = $mapping;
@@ -72,7 +73,7 @@ class ReindexListener
             'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"'
         );
 
-        $count = array();
+        $count = [];
 
         if ($purge) {
             $this->purgeContentIndexes($output);

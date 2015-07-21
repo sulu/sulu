@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,10 +36,10 @@ class TokenAlreadyRequestedException extends SecurityException
 
     public function toArray()
     {
-        return array(
+        return [
             'code' => $this->code,
             'message' => $this->message,
             'interval' => (new \DateTime('@0'))->add($this->interval)->getTimestamp(), // interval in seconds
-        );
+        ];
     }
 }

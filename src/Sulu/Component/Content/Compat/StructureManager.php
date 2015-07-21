@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,16 +31,16 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $inspector;
     private $propertyFactory;
 
-    private $typeMap = array(
+    private $typeMap = [
         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
         'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
-    );
+    ];
 
     /**
-     * @param StructureMetadataFactory  $structureFactory
-     * @param ExtensionManager  $extensionManager
-     * @param DocumentInspector $inspector
+     * @param StructureMetadataFactory $structureFactory
+     * @param ExtensionManager         $extensionManager
+     * @param DocumentInspector        $inspector
      */
     public function __construct(
         StructureMetadataFactory $structureFactory,
@@ -66,7 +67,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructures($type = Structure::TYPE_PAGE)
     {
-        $wrappedStructures = array();
+        $wrappedStructures = [];
         $structures = $this->structureFactory->getStructures($type);
 
         foreach ($structures as $structure) {

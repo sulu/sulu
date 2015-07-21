@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ class InvalidFormException extends \Exception
 {
     public function __construct(FormInterface $form)
     {
-        $message = array();
+        $message = [];
 
         foreach ($form->getErrors(true, true) as $error) {
             $message[] = sprintf(

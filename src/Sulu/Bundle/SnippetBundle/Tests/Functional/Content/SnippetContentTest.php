@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -103,7 +104,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
     {
         $this->property->expects($this->once())
             ->method('getValue')
-            ->will($this->returnValue(array('ids' => 'this-aint-nuffin')));
+            ->will($this->returnValue(['ids' => 'this-aint-nuffin']));
 
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->write($pageNode, $this->property, 0, 'sulu_io', 'de', null);

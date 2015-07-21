@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,9 +32,9 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $webspaces = array();
-        $portals = array();
-        $portalInformations = array('prod' => array(), 'dev' => array());
+        $webspaces = [];
+        $portals = [];
+        $portalInformations = ['prod' => [], 'dev' => []];
 
         $this->webspaceCollection = new WebspaceCollection();
 
@@ -98,7 +99,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspace->setName('Default');
         $webspace->addPortal($portal);
 
-        $webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
+        $webspace->setNavigation(new Navigation([new NavigationContext('main', [])]));
 
         $portals[] = $portal;
         $webspaces[] = $webspace;
@@ -154,7 +155,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($webspace['navigation']));
         $this->assertEquals(1, count($webspace['navigation']['contexts']));
         $this->assertEquals('main', $webspace['navigation']['contexts'][0]['key']);
-        $this->assertEquals(array(), $webspace['navigation']['contexts'][0]['metadata']);
+        $this->assertEquals([], $webspace['navigation']['contexts'][0]['metadata']);
 
         $portal = $webspace['portals'][0];
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,7 +25,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     /**
      * @var array
      */
-    private $typePaths = array();
+    private $typePaths = [];
 
     /**
      * @var string
@@ -50,14 +50,14 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     /**
      * @var array
      */
-    private $cache = array();
+    private $cache = [];
 
     /**
      * @param LoaderInterface $loader
-     * @param array $typePaths
-     * @param array $defaultTypes
-     * @param mixed $cachePath
-     * @param mixed $debug
+     * @param array           $typePaths
+     * @param array           $defaultTypes
+     * @param mixed           $cachePath
+     * @param mixed           $debug
      */
     public function __construct(
         LoaderInterface $loader,
@@ -128,7 +128,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
             $metadata = $this->loader->load($filePath, $type);
 
-            $resources = array(new FileResource($filePath));
+            $resources = [new FileResource($filePath)];
 
             $cache->write(
                 sprintf('<?php $metadata = \'%s\';', serialize($metadata)),
@@ -151,7 +151,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     public function getStructures($type)
     {
         $structureNames = $this->getStructureNames($type);
-        $structures = array();
+        $structures = [];
 
         foreach ($structureNames as $structureName) {
             $structures[] = $this->getStructureMetadata($type, $structureName);
@@ -179,7 +179,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private function getStructureNames($type)
     {
         $this->assertExists($type);
-        $structureNames = array();
+        $structureNames = [];
 
         foreach ($this->typePaths[$type] as $pathConfig) {
             $structurePath = $pathConfig['path'];
@@ -232,7 +232,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private function getPaths($type)
     {
         $typeConfigs = $this->typePaths[$type];
-        $paths = array();
+        $paths = [];
 
         foreach ($typeConfigs as $typeConfig) {
             $paths[] = $typeConfig['path'];

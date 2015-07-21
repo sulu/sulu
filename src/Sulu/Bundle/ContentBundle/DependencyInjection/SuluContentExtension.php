@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,37 +30,37 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $extensions = $container->getExtensions();
 
         if (isset($extensions['sulu_core'])) {
-            $prepend = array(
-                'content' => array(
-                    'structure' => array(
-                        'paths' => array(
-                            array(
+            $prepend = [
+                'content' => [
+                    'structure' => [
+                        'paths' => [
+                            [
                                 'path' => __DIR__ . '/../Content/templates',
                                 'type' => 'page',
-                            ),
-                        ),
-                    ),
-                ),
-            );
+                            ],
+                        ],
+                    ],
+                ],
+            ];
 
             $container->prependExtensionConfig('sulu_core', $prepend);
         }
 
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', array(
-                'metadata' => array(
-                    'directories' => array(
-                        array(
+            $container->prependExtensionConfig('jms_serializer', [
+                'metadata' => [
+                    'directories' => [
+                        [
                             'path' => __DIR__ . '/../Resources/config/serializer',
                             'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
-                        ),
-                        array(
+                        ],
+                        [
                             'path' => __DIR__ . '/../Resources/config/serializer',
                             'namespace_prefix' => 'Sulu\Component\Content',
-                        ),
-                    ),
-                ),
-            ));
+                        ],
+                    ],
+                ],
+            ]);
         }
     }
 

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ class MultipleTranslatedProperties
     /**
      * @var PropertyInterface[]
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * @var PropertyInterface[]
@@ -46,10 +47,10 @@ class MultipleTranslatedProperties
         $namespace = ''
     ) {
         $this->languageNamespace = $languageNamespace;
-        $this->properties = array();
+        $this->properties = [];
         foreach ($names as $name) {
             $propertyName = (!empty($namespace) ? $namespace . '-' : '') . $name;
-            $this->properties[$name] = new Property($propertyName, array(), 'none', false, true);
+            $this->properties[$name] = new Property($propertyName, [], 'none', false, true);
         }
     }
 
@@ -60,7 +61,7 @@ class MultipleTranslatedProperties
      */
     public function setLanguage($languageKey)
     {
-        $this->translatedProperties = array();
+        $this->translatedProperties = [];
         foreach ($this->properties as $key => $property) {
             $this->translatedProperties[$key] = new TranslatedProperty(
                 $property,

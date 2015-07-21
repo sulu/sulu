@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,10 +41,10 @@ abstract class DatabaseTestCase extends WebTestCase
 
         self::$tool = new SchemaTool(self::$em);
 
-        self::$userClasses = array(
+        self::$userClasses = [
             self::$em->getClassMetaData('Sulu\Bundle\TestBundle\Entity\TestContact'),
             self::$em->getClassMetaData('Sulu\Bundle\TestBundle\Entity\TestUser'),
-        );
+        ];
 
         self::$tool->dropSchema(self::$userClasses);
         self::$tool->createSchema(self::$userClasses);

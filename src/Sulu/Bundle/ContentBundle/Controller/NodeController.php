@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ class NodeController extends RestController
      * returns webspace key from request.
      *
      * @param Request $request
-     * @param bool $force
+     * @param bool    $force
      *
      * @return string
      */
@@ -107,7 +108,7 @@ class NodeController extends RestController
      * returns a content item with given UUID as JSON String.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -120,7 +121,7 @@ class NodeController extends RestController
 
     /**
      * @param Request $request
-     * @param string $uuid
+     * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -158,7 +159,7 @@ class NodeController extends RestController
      * This functionality is required for preloading the content navigation.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string $uuid
+     * @param string                                    $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -189,13 +190,13 @@ class NodeController extends RestController
             return $this->redirect(
                 $this->generateUrl(
                     'get_nodes',
-                    array(
+                    [
                         'tree' => 'false',
                         'depth' => 1,
                         'language' => $language,
                         'webspace' => $webspace,
                         'exclude-ghosts' => $excludeGhosts,
-                    )
+                    ]
                 )
             );
         }
@@ -209,7 +210,7 @@ class NodeController extends RestController
      * Returns nodes by given ids.
      *
      * @param Request $request
-     * @param array $idString
+     * @param array   $idString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -310,7 +311,7 @@ class NodeController extends RestController
         $languageCode = $this->getLanguage($request);
 
         // resolve tag names
-        $resolvedTags = array();
+        $resolvedTags = [];
 
         /** @var TagManagerInterface $tagManager */
         $tagManager = $this->get('sulu_tag.tag_manager');
@@ -326,7 +327,7 @@ class NodeController extends RestController
         }
 
         // get sort columns
-        $sortColumns = array();
+        $sortColumns = [];
         if (isset($sortBy)) {
             $columns = explode(',', $sortBy);
             foreach ($columns as $column) {
@@ -336,7 +337,7 @@ class NodeController extends RestController
             }
         }
 
-        $filterConfig = array(
+        $filterConfig = [
             'dataSource' => $dataSource,
             'includeSubFolders' => $includeSubFolders,
             'limitResult' => $limitResult,
@@ -344,7 +345,7 @@ class NodeController extends RestController
             'tagOperator' => $tagOperator,
             'sortBy' => $sortColumns,
             'sortMethod' => $sortMethod,
-        );
+        ];
 
         /** @var NodeRepository $repository */
         $repository = $this->get('sulu_content.node_repository');
@@ -354,7 +355,7 @@ class NodeController extends RestController
             $webspaceKey,
             true,
             true,
-            $exclude !== null ? array($exclude) : array()
+            $exclude !== null ? [$exclude] : []
         );
 
         return $this->handleView($this->view($content));
@@ -364,7 +365,7 @@ class NodeController extends RestController
      * saves node with given uuid and data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string $uuid
+     * @param string                                    $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -495,7 +496,7 @@ class NodeController extends RestController
      * deletes node with given uuid.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string $uuid
+     * @param string                                    $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -527,7 +528,7 @@ class NodeController extends RestController
      *
      * @Post("/nodes/{uuid}")
      *
-     * @param string $uuid
+     * @param string  $uuid
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response

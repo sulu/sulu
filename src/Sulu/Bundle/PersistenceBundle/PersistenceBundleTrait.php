@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,8 +23,8 @@ trait PersistenceBundleTrait
     /**
      * Build persistence adds a `ResolveTargetEntitiesPass` for the given interfaces.
      *
-     * @param array $interfaces Target entities resolver configuration.
-     *                          Mapping interfaces to a concrete implementation.
+     * @param array            $interfaces Target entities resolver configuration.
+     *                                     Mapping interfaces to a concrete implementation.
      * @param ContainerBuilder $container
      */
     public function buildPersistence(array $interfaces, ContainerBuilder $container)

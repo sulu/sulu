@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -57,7 +58,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet($depth = 0, $filter = array(), CollectionInterface $collection = null, $sortBy = array())
+    public function findCollectionSet($depth = 0, $filter = [], CollectionInterface $collection = null, $sortBy = [])
     {
         try {
             $dql = sprintf(
@@ -86,7 +87,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
-                $orderBy = array();
+                $orderBy = [];
                 foreach ($sortBy as $column => $order) {
                     $orderBy[] = 'collectionMeta.' . $column . ' ' . (strtolower($order) === 'asc' ? 'ASC' : 'DESC');
                 }
@@ -125,20 +126,20 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
             return new Paginator($query);
         } catch (NoResultException $ex) {
-            return array();
+            return [];
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = array())
+    public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = [])
     {
-        list($parent, $depth, $search) = array(
+        list($parent, $depth, $search) = [
             isset($filter['parent']) ? $filter['parent'] : null,
             isset($filter['depth']) ? $filter['depth'] : null,
             isset($filter['search']) ? $filter['search'] : null,
-        );
+        ];
 
         try {
             $qb = $this->createQueryBuilder('collection')
@@ -231,7 +232,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
             return $query->getResult();
         } catch (NoResultException $ex) {
-            return array();
+            return [];
         }
     }
 }

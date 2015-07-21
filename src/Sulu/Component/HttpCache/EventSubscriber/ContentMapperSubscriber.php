@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,18 +30,18 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     /**
      * @var StructureInterface[]
      */
-    private $structureInvalidationStack = array();
+    private $structureInvalidationStack = [];
 
     /**
      * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             ContentEvents::NODE_POST_SAVE => 'onContentNodePostSave',
             ContentEvents::NODE_PRE_DELETE => 'onContentNodePreDelete',
             ContentEvents::NODE_POST_DELETE => 'onContentNodePostDelete',
-        );
+        ];
     }
 
     /**

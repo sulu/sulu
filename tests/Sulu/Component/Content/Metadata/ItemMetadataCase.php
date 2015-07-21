@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Metadata;
 
 abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
@@ -23,8 +32,8 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetTag()
     {
         $metadata = $this->getMetadata();
-        $tag = array('name' => 'foo');
-        $metadata->tags = array($tag);
+        $tag = ['name' => 'foo'];
+        $metadata->tags = [$tag];
         $this->assertEquals($tag, $metadata->getTag('foo'));
     }
 
@@ -54,9 +63,9 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetParameters()
     {
         $metadata = $this->getMetadata();
-        $metadata->parameters = array(
+        $metadata->parameters = [
             'param1' => 'param',
-        );
+        ];
         $this->assertEquals('param', $metadata->getParameter('param1'));
     }
 
@@ -69,9 +78,9 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetParametersInvalid()
     {
         $metadata = $this->getMetadata();
-        $metadata->parameters = array(
+        $metadata->parameters = [
             'param1' => 'param',
-        );
+        ];
         $metadata->getParameter('param5');
     }
 }

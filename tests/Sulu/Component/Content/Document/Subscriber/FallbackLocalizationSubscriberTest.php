@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -92,7 +101,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
     public function testAvailableLocale()
     {
-        $this->inspector->getLocales($this->document)->willReturn(array('de', 'en'));
+        $this->inspector->getLocales($this->document)->willReturn(['de', 'en']);
         $this->hydrateEvent->setLocale('en')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
@@ -103,7 +112,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public function testNoWebspace()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
+        $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
         $this->registry->updateLocale(
             $this->document->reveal(),
             'de',
@@ -120,7 +129,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public function testNoWebspaceDoNotLoadGhostContent()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
+        $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
 
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(false);
@@ -140,7 +149,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public function testNoLocale()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn(array());
+        $this->inspector->getLocales($this->document)->willReturn([]);
         $this->node->getPath()->willReturn('/path/to');
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
@@ -151,7 +160,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public function testWebspaceParentLocalization()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
-        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
+        $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
         $this->localization1->getLocalization()->willReturn('en');
         $this->localization2->getLocalization()->willReturn('de');
@@ -173,7 +182,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public function testWebspaceChildrenLocalization()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
-        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
+        $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
         $this->localization1->getLocalization()->willReturn('en');
@@ -181,9 +190,9 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
-        $this->localization1->getChildren()->willReturn(array(
+        $this->localization1->getChildren()->willReturn([
             $this->localization2->reveal(),
-        ));
+        ]);
 
         $this->registry->updateLocale(
             $this->document->reveal(),
@@ -200,7 +209,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public function testWebspaceAnyLocalization()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
-        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
+        $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
         $this->localization1->getLocalization()->willReturn('en');
@@ -209,11 +218,11 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
-        $this->localization1->getChildren()->willReturn(array());
+        $this->localization1->getChildren()->willReturn([]);
 
-        $this->webspace->getLocalizations()->willReturn(array(
+        $this->webspace->getLocalizations()->willReturn([
             $this->localization2->reveal(),
-        ));
+        ]);
 
         $this->registry->updateLocale(
             $this->document->reveal(),

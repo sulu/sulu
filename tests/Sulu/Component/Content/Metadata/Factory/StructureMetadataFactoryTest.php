@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -52,23 +52,23 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
         $this->factory = new StructureMetadataFactory(
             $this->loader->reveal(),
-            array(
-                'page' => array(
-                    array(
+            [
+                'page' => [
+                    [
                         'type' => 'page',
                         'path' => __DIR__ . '/data/page',
-                    ),
-                ),
-                'snoopet' => array(
-                    array(
+                    ],
+                ],
+                'snoopet' => [
+                    [
                         'type' => 'page',
                         'path' => __DIR__ . '/data/snoops',
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'page' => 'something',
-            ),
+            ],
             $this->cacheDir
         );
     }

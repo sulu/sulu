@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ namespace Sulu\Component\Content\Metadata;
  */
 class BlockMetadata extends PropertyMetadata
 {
-    public $components = array();
+    public $components = [];
     public $defaultComponentName;
 
     /**

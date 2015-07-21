@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Component\Content\Compat\Block\BlockProperty;
@@ -70,28 +79,28 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateProperty()
     {
         $name = 'foo';
-        $title = array('de' => 'Tite');
-        $description = array('de' => 'Description');
-        $placeholder = array('de' => 'Placehodler');
+        $title = ['de' => 'Tite'];
+        $description = ['de' => 'Description'];
+        $placeholder = ['de' => 'Placehodler'];
         $type = 'type';
         $required = true;
         $localized = true;
         $maxOccurs = 1;
         $minOccurs = 1;
-        $parameters = array(
-            array(
+        $parameters = [
+            [
                 'name' => 'prop',
                 'type' => 'type',
                 'value' => 'value',
-                'meta' => array(),
-            ),
-            array(
+                'meta' => [],
+            ],
+            [
                 'name' => 'propfoo',
                 'type' => 'type',
                 'value' => 'value',
-                'meta' => array(),
-            ),
-        );
+                'meta' => [],
+            ],
+        ];
         $colSpan = 6;
 
         $this->property1->getType()->willReturn($type);
@@ -148,19 +157,19 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateSection($property)
     {
         $name = 'foo';
-        $parameters = array('foo', 'bar');
+        $parameters = ['foo', 'bar'];
         $colSpan = 6;
-        $title = array('de' => 'Tite');
-        $description = array('de' => 'Description');
+        $title = ['de' => 'Tite'];
+        $description = ['de' => 'Description'];
 
         $this->section->getName()->willReturn($name);
         $this->section->getColSpan()->willReturn($colSpan);
         $this->section->getParameters()->willReturn($parameters);
         $this->section->title = $title;
         $this->section->description = $description;
-        $this->section->getChildren()->willReturn(array(
+        $this->section->getChildren()->willReturn([
             $property->reveal(),
-        ));
+        ]);
 
         $legacyProperty = $this->factory->createProperty($this->section->reveal());
 
@@ -182,16 +191,16 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->setUpProperty($this->block);
 
         $this->component->getName()->willReturn('hai');
-        $this->component->getChildren()->willReturn(array(
+        $this->component->getChildren()->willReturn([
             $property->reveal(),
-        ));
-        $this->component->title = array(
+        ]);
+        $this->component->title = [
             'de' => 'Testtitel',
             'en' => 'Test title',
-        );
-        $this->block->getComponents()->willReturn(array(
+        ];
+        $this->block->getComponents()->willReturn([
             $this->component->reveal(),
-        ));
+        ]);
         $this->block->getDefaultComponentName()->willReturn('foobar');
 
         /** @var BlockProperty $blockProperty */
@@ -209,28 +218,28 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     private function setUpProperty($property)
     {
         $name = 'name';
-        $title = array('de' => 'Tite');
-        $description = array('de' => 'Description');
-        $placeholder = array('de' => 'Placehodler');
+        $title = ['de' => 'Tite'];
+        $description = ['de' => 'Description'];
+        $placeholder = ['de' => 'Placehodler'];
         $type = 'type';
         $required = true;
         $localized = true;
         $maxOccurs = 1;
         $minOccurs = 1;
-        $parameters = array(
-            array(
+        $parameters = [
+            [
                 'name' => 'prop',
                 'type' => 'type',
                 'value' => 'value',
-                'meta' => array(),
-            ),
-            array(
+                'meta' => [],
+            ],
+            [
                 'name' => 'propfoo',
                 'type' => 'type',
                 'value' => 'value',
-                'meta' => array(),
-            ),
-        );
+                'meta' => [],
+            ],
+        ];
         $colSpan = 6;
 
         $property->getType()->willReturn($type);
@@ -244,8 +253,8 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $property->title = $title;
         $property->description = $description;
         $property->placeholder = $placeholder;
-        $property->getChildren()->willReturn(array(
+        $property->getChildren()->willReturn([
             $this->component->reveal(),
-        ));
+        ]);
     }
 }

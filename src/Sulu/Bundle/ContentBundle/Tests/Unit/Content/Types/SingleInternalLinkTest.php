@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,20 +38,20 @@ class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
 
     public function provideGetReferencedUuids()
     {
-        return array(
-            array(
+        return [
+            [
                 '4234-2345-2345-3245',
-                array('4234-2345-2345-3245'),
-            ),
-            array(
+                ['4234-2345-2345-3245'],
+            ],
+            [
                 null,
-                array(),
-            ),
-            array(
+                [],
+            ],
+            [
                 '',
-                array(),
-            ),
-        );
+                [],
+            ],
+        ];
     }
 
     /**

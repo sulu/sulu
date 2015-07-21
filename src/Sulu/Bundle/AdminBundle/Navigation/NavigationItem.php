@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,7 +64,7 @@ class NavigationItem implements \Iterator
      *
      * @var array
      */
-    protected $children = array();
+    protected $children = [];
 
     /**
      * The title of the head area of the NavigationItem.
@@ -108,7 +109,7 @@ class NavigationItem implements \Iterator
     protected $disabled;
 
     /**
-     * @param string $name The name of the item
+     * @param string         $name   The name of the item
      * @param NavigationItem $parent The parent of the item
      */
     public function __construct($name, $parent = null)
@@ -403,7 +404,7 @@ class NavigationItem implements \Iterator
      */
     public function find($navigationItem)
     {
-        $stack = array($this);
+        $stack = [$this];
         while (!empty($stack)) {
             /** @var NavigationItem $item */
             $item = array_pop($stack);
@@ -411,7 +412,7 @@ class NavigationItem implements \Iterator
                 return $item;
             }
             foreach ($item->getChildren() as $child) {
-                /** @var NavigationItem $child */
+                /* @var NavigationItem $child */
                 $stack[] = $child;
             }
         }
@@ -453,7 +454,7 @@ class NavigationItem implements \Iterator
 
         // Add all children from this item
         foreach ($this->getChildren() as $child) {
-            /** @var NavigationItem $child */
+            /* @var NavigationItem $child */
             $new->addChild($child->merge(($other != null) ? $other->findChildren($child) : null));
         }
 
@@ -510,7 +511,7 @@ class NavigationItem implements \Iterator
      * @link http://php.net/manual/en/iterator.valid.php
      *
      * @return bool The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
+     *              Returns true on success or false on failure.
      */
     public function valid()
     {
@@ -534,7 +535,7 @@ class NavigationItem implements \Iterator
      */
     public function toArray()
     {
-        $array = array(
+        $array = [
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
@@ -543,17 +544,17 @@ class NavigationItem implements \Iterator
             'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
-        );
+        ];
 
         if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
-            $array['header'] = array(
+            $array['header'] = [
                 'title' => $this->getHeaderTitle(),
                 'logo' => $this->getHeaderIcon(),
-            );
+            ];
         }
 
         foreach ($this->getChildren() as $key => $child) {
-            /** @var NavigationItem $child */
+            /* @var NavigationItem $child */
             $array['items'][$key] = $child->toArray();
         }
 

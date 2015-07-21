@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -52,14 +53,14 @@ class PHPCRInitCommand extends ContainerAwareCommand
         );
 
         $output->writeln('Register node types');
-        foreach (array(
+        foreach ([
             new SuluNodeType(),
             new PathNodeType(),
             new ContentNodeType(),
             new SnippetNodeType(),
             new PageNodeType(),
             new HomeNodeType(),
-        ) as $nodeType) {
+        ] as $nodeType) {
             $output->writeln('  - ' . $nodeType->getName());
             $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);
         }

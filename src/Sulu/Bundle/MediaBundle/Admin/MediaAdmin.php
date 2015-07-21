@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ class MediaAdmin extends Admin
      */
     public function getCommands()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -73,13 +74,13 @@ class MediaAdmin extends Admin
 
     public function getSecurityContexts()
     {
-        return array(
-            'Sulu' => array(
-                'Media' => array(
+        return [
+            'Sulu' => [
+                'Media' => [
                     'sulu.media.collections',
                     'sulu.media.files',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 }

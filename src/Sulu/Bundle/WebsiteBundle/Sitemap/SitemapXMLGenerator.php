@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,10 +44,10 @@ class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
 
         return $this->twig->render(
             $renderFile,
-            array(
+            [
                 'webspaceSitemaps' => $webspaceSitemaps,
                 'domain' => $domain,
-            )
+            ]
         );
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,12 +45,12 @@ class TextEditor extends SimpleContentType
      */
     public function getDefaultParams()
     {
-        return array(
+        return [
             'table' => new PropertyParameter('table', true),
             'link' => new PropertyParameter('link', true),
             'height' => new PropertyParameter('height', 300),
             'max_height' => new PropertyParameter('max_height', 500),
             'paste_from_word' => new PropertyParameter('paste_from_word', true),
-        );
+        ];
     }
 }

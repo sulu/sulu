@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -55,16 +56,16 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            Events::PERSIST => array(
+        return [
+            Events::PERSIST => [
                 // before resourceSegment and content
-                array('handlePersistUpdateUrl', 20),
-                array('handlePersist', 15),
-            ),
-            Events::HYDRATE => array(
-                array('handleHydrate', 390),
-            ),
-        );
+                ['handlePersistUpdateUrl', 20],
+                ['handlePersist', 15],
+            ],
+            Events::HYDRATE => [
+                ['handleHydrate', 390],
+            ],
+        ];
     }
 
     /**

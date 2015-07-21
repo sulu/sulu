@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,9 +21,9 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
     public function testModelInterfaceMapping()
     {
         $bundle = new UsingPersistenceBundleTrait();
-        $bundle->modelInterfaces = array(
+        $bundle->modelInterfaces = [
             'Sulu\Component\Persistence\Model\BarInterface' => '\stdClass',
-        );
+        ];
         $bundle->build($this->container);
 
         $this->setDefinition(
@@ -35,20 +36,20 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
-            array(
+            [
                 'Sulu\Component\Persistence\Model\BarInterface',
                 '\stdClass',
-                array(),
-            )
+                [],
+            ]
         );
     }
 
     public function testModelInterfaceMappingWithParameter()
     {
         $bundle = new UsingPersistenceBundleTrait();
-        $bundle->modelInterfaces = array(
+        $bundle->modelInterfaces = [
             'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
-        );
+        ];
         $bundle->build($this->container);
 
         $this->setParameter('sulu.model.foo.class', '\stdClass');
@@ -62,11 +63,11 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
-            array(
+            [
                 'Sulu\Component\Persistence\Model\FooInterface',
                 '\stdClass',
-                array(),
-            )
+                [],
+            ]
         );
     }
 
@@ -76,9 +77,9 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
     public function testInvalidModelInterfaceMapping()
     {
         $bundle = new UsingPersistenceBundleTrait();
-        $bundle->modelInterfaces = array(
+        $bundle->modelInterfaces = [
             'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
-        );
+        ];
         $bundle->build($this->container);
 
         $this->container->setDefinition(

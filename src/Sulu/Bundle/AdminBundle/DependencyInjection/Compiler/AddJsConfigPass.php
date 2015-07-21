@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,7 +32,7 @@ class AddJsConfigPass implements CompilerPassInterface
 
         foreach ($taggedServices as $id => $attributes) {
             $config = $container->getDefinition($id);
-            $pool->addMethodCall('addConfigParams', array($config));
+            $pool->addMethodCall('addConfigParams', [$config]);
         }
     }
 }

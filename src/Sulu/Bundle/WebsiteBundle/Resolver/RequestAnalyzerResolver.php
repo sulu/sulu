@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,12 +35,12 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $previewDefaults;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment, $previewDefaults = array())
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment, $previewDefaults = [])
     {
         $this->environment = $environment;
         $this->webspaceManager = $webspaceManager;
 
-        $this->previewDefaults = array_merge(array('analyticsKey' => ''), $previewDefaults);
+        $this->previewDefaults = array_merge(['analyticsKey' => ''], $previewDefaults);
     }
 
     /**
@@ -51,8 +52,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
         $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
 
-        return array(
-            'request' => array(
+        return [
+            'request' => [
                 'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
                 'defaultLocale' => $defaultLocale,
                 'locale' => $requestAnalyzer->getCurrentLocalization()->getLocalization(),
@@ -62,8 +63,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -75,18 +76,18 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $portalInformation = $this->webspaceManager->getPortalInformations($this->environment);
         $portalUrl = array_keys($portalInformation)[0];
 
-        return array(
-            'request' => array(
+        return [
+            'request' => [
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
                 'defaultLocale' => $locale,
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
-                'get' => array(),
-                'post' => array(),
+                'get' => [],
+                'post' => [],
                 'analyticsKey' => $this->previewDefaults['analyticsKey'],
-            ),
-        );
+            ],
+        ];
     }
 }

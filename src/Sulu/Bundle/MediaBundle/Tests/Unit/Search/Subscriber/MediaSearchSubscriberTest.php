@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,7 +51,7 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->mediaManager->reveal(),
             $this->factory->reveal(),
             $this->logger->reveal(),
-            array('image/jpeg'),
+            ['image/jpeg'],
             'test_format'
         );
 
@@ -106,9 +107,9 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) use ($imageUrl) {
             $mediaApi = $args[0];
-            $mediaApi->setFormats(array(
+            $mediaApi->setFormats([
                 'test_format' => $imageUrl,
-            ));
+            ]);
         });
 
         $this->document->setImageUrl($imageUrl)->shouldBeCalled();
@@ -132,9 +133,9 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
             $mediaApi = $args[0];
-            $mediaApi->setFormats(array(
+            $mediaApi->setFormats([
                 'for' => '/fo',
-            ));
+            ]);
         });
 
         $this->document->setImageUrl(null)->shouldBeCalled();
@@ -160,7 +161,7 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
             $mediaApi = $args[0];
-            $mediaApi->setFormats(array());
+            $mediaApi->setFormats([]);
         });
 
         $this->document->setImageUrl(Argument::any())->shouldNotBeCalled();

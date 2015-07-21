@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
@@ -35,7 +44,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
         $this->nodeManager->purgeWorkspace()->shouldBeCalled();
         $this->initializer->initialize($this->output)->shouldNotBeCalled();
         $this->nodeManager->save()->shouldBeCalled();
-        $this->executer->execute(array(), true, false, $this->output);
+        $this->executer->execute([], true, false, $this->output);
     }
 
     /**
@@ -46,7 +55,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
         $this->nodeManager->purgeWorkspace()->shouldNotBeCalled();
         $this->nodeManager->save()->shouldNotBeCalled();
         $this->initializer->initialize($this->output)->shouldBeCalled();
-        $this->executer->execute(array(), false, true, $this->output);
+        $this->executer->execute([], false, true, $this->output);
     }
 
     /**
@@ -55,6 +64,6 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
     public function testLoadFixtures()
     {
         $this->fixture1->load($this->documentManager->reveal())->shouldBeCalled();
-        $this->executer->execute(array($this->fixture1->reveal()), false, false, $this->output);
+        $this->executer->execute([$this->fixture1->reveal()], false, false, $this->output);
     }
 }

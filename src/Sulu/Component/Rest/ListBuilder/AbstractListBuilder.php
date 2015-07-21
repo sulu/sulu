@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,14 +18,14 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * The field descriptors for the field, which will be used for the search.
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $searchFields = array();
+    protected $searchFields = [];
 
     /**
      * The value for which the searchfields will be searched.
@@ -59,63 +60,63 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var array
      */
-    protected $whereFields = array();
+    protected $whereFields = [];
 
     /**
      * The values the where fields should have.
      *
      * @var array
      */
-    protected $whereValues = array();
+    protected $whereValues = [];
 
     /**
      * The where-not fields to be checked.
      *
      * @var array
      */
-    protected $whereNotFields = array();
+    protected $whereNotFields = [];
 
     /**
      * The values the where-not fields should have.
      *
      * @var array
      */
-    protected $whereNotValues = array();
+    protected $whereNotValues = [];
 
     /**
      * group by fields.
      *
      * @var array
      */
-    protected $groupByFields = array();
+    protected $groupByFields = [];
 
     /**
      * The fields which will be used for in-clauses.
      *
      * @var array
      */
-    protected $inFields = array();
+    protected $inFields = [];
 
     /**
      * The fields which will be used for between-clauses.
      *
      * @var array
      */
-    protected $betweenFields = array();
+    protected $betweenFields = [];
 
     /**
      * The values for the in-clauses.
      *
      * @var array
      */
-    protected $inValues = array();
+    protected $inValues = [];
 
     /**
      * The values for the between-clauses.
      *
      * @var array
      */
-    protected $betweenValues = array();
+    protected $betweenValues = [];
 
     /**
      * The page the resulting query will be returning.

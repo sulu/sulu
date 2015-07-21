@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ class ProfileControllerTest extends SuluTestCase
     public function testChangeLanguageAction()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('PUT', '/security/profile/language', array('locale' => 'de'));
+        $client->request('PUT', '/security/profile/language', ['locale' => 'de']);
 
         // check current instance
         $user = $client->getContainer()->get('security.token_storage')->getToken()->getUser();
@@ -34,14 +35,14 @@ class ProfileControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/security/profile/settings',
-            array('key' => 'setting-key', 'value' => 'setting-value')
+            ['key' => 'setting-key', 'value' => 'setting-value']
         );
 
         $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
-            array(
+            [
                 'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
                 'key' => 'setting-key',
-            )
+            ]
         );
 
         $this->assertEquals('setting-key', $userSetting->getKey());

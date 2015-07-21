@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,7 +50,7 @@ class PermissionUpdateEvent extends Event
      * @param string $type
      * @param string $identifier
      * @param string $securityIdentity
-     * @param array $permissions
+     * @param array  $permissions
      */
     public function __construct($type, $identifier, $securityIdentity, $permissions)
     {

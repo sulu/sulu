@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ class UploadFileException extends MediaException
 {
     /**
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct($message, $code)
     {
@@ -29,9 +30,9 @@ class UploadFileException extends MediaException
      */
     public function toArray()
     {
-        return array(
+        return [
             'code' => $this->code,
             'message' => $this->message,
-        );
+        ];
     }
 }

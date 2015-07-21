@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,11 +21,11 @@ class CommandManager implements ManagerInterface
     /**
      * @var CommandInterface[]
      */
-    private $commands = array();
+    private $commands = [];
 
     /**
      * @param CommandInterface $command
-     * @param string $alias
+     * @param string           $alias
      */
     public function add(CommandInterface $command, $alias)
     {

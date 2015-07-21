@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ abstract class ComplexContentType implements ContentTypeInterface
      */
     public function getDefaultParams()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -64,7 +65,7 @@ abstract class ComplexContentType implements ContentTypeInterface
      */
     public function getViewData(PropertyInterface $property)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -80,6 +81,6 @@ abstract class ComplexContentType implements ContentTypeInterface
      */
     public function getReferencedUuids(PropertyInterface $property)
     {
-        return array();
+        return [];
     }
 }

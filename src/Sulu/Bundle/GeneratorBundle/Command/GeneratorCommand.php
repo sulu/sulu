@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,7 +43,7 @@ abstract class GeneratorCommand extends ContainerAwareCommand
 
     protected function getSkeletonDirs(BundleInterface $bundle = null)
     {
-        $skeletonDirs = array();
+        $skeletonDirs = [];
 
         if (isset($bundle) && is_dir($dir = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton')) {
             $skeletonDirs[] = $dir;

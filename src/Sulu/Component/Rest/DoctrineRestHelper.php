@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,7 +35,7 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
         callable $update = null,
         callable $delete = null
     ) {
-        /** @var Collection $entities */
+        /* @var Collection $entities */
         $success = parent::processSubEntities($entities, $requestEntities, $get, $add, $update, $delete);
 
         if (count($entities) > 0) {

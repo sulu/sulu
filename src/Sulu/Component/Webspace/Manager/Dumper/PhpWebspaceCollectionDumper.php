@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,15 +32,15 @@ class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
      *
      * @return string
      */
-    public function dump($options = array())
+    public function dump($options = [])
     {
         return $this->render(
             'WebspaceCollectionClass.php.twig',
-            array(
+            [
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
                 'collection' => $this->webspaceCollection->toArray(),
-            )
+            ]
         );
     }
 }
