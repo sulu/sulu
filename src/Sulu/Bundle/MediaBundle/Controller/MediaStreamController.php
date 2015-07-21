@@ -42,7 +42,9 @@ class MediaStreamController extends Controller
     protected $storage = null;
 
     /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getImageAction(Request $request)
     {
@@ -62,7 +64,10 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param Request $request
+     * @param int $id
+     *
+     * @return StreamedResponse
      */
     public function downloadAction(Request $request, $id)
     {
@@ -85,7 +90,7 @@ class MediaStreamController extends Controller
                 $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
             }
 
-            $response = $this->getFileResponse($fileVersion, $dispositionType);
+            $response = $this->getFileResponse($fileVersion, $request->getLocale(), $dispositionType);
 
             return $response;
         } catch (MediaException $e) {
@@ -95,12 +100,18 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
-     * @param string      $dispositionType
+     * @param string $locale
+     * @param string $dispositionType
      *
      * @return StreamedResponse
      */
-    protected function getFileResponse($fileVersion, $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT)
-    {
+    protected function getFileResponse(
+        $fileVersion,
+        $locale,
+        $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
+    ) {
+        $cleaner = $this->get('sulu.content.path_cleaner');
+
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
@@ -125,7 +136,8 @@ class MediaStreamController extends Controller
         // Prepare headers
         $disposition = $response->headers->makeDisposition(
             $dispositionType,
-            preg_replace('/[^A-Za-z0-9\-]/', '', $pathInfo['filename']) . '.' . $pathInfo['extension']
+            $fileName,
+            $cleaner->cleanup($pathInfo['filename'], $locale) . '.' . $pathInfo['extension']
         );
 
         // Set headers

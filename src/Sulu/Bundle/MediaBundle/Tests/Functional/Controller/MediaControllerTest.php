@@ -288,6 +288,25 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
+     * Test Header dispositionType umlauts in name
+     */
+    public function testDownloadHeaderUmlauts()
+    {
+        $media = $this->createMedia('wöchentlich');
+
+        $client = $this->createAuthenticatedClient();
+
+        ob_start();
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
+        );
+        ob_end_clean();
+
+        $this->assertEquals('inline; filename="wöchentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg', $client->getResponse()->headers->get('Content-Disposition'));
+    }
+
+    /**
      * Test Media GET by ID.
      */
     public function testGetById()
