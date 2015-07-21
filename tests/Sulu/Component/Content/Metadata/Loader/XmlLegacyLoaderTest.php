@@ -235,6 +235,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_title_in_section.xml');
@@ -260,6 +262,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
             'properties' => [],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $this->setExpectedException(
@@ -551,6 +555,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_block.xml');
@@ -761,6 +767,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_block_types.xml');
@@ -956,6 +964,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_sections.xml');
@@ -1027,6 +1037,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_nesting_params.xml');
@@ -1086,6 +1098,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_meta_params.xml');

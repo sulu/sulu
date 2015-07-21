@@ -147,10 +147,6 @@ class XmlLegacyLoader implements LoaderInterface
             $result = array_filter(
                 $result,
                 function ($value) {
-                    if (is_array($value)) {
-                        return $value != null;
-                    }
-
                     return $value !== null;
                 }
             );
