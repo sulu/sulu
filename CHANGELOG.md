@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1367 [AdminBundle]     Added new tabs design
     * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
