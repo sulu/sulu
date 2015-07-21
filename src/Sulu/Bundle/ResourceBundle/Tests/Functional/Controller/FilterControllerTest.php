@@ -19,7 +19,6 @@ use Sulu\Bundle\ResourceBundle\Entity\FilterTranslation;
 use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpKernel\Client;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class FilterControllerTest extends SuluTestCase
 {
@@ -135,7 +134,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test Filter GET by ID
+     * Test Filter GET by ID.
      */
     public function testGetById()
     {
@@ -172,6 +171,7 @@ class FilterControllerTest extends SuluTestCase
     /**
      * @param $id
      * @param array $group
+     *
      * @return null|stdClass
      */
     protected function getElementById($id, array $group)
@@ -182,7 +182,7 @@ class FilterControllerTest extends SuluTestCase
             }
         }
 
-        return null;
+        return;
     }
 
     public function testCget()
@@ -212,7 +212,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test GET for non existing filter (404)
+     * Test GET for non existing filter (404).
      */
     public function testGetByIdNotExisting()
     {
@@ -224,7 +224,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test POST to create a new filter with details
+     * Test POST to create a new filter with details.
      */
     public function testPost()
     {
@@ -249,7 +249,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test POST to create a new filter with details
+     * Test POST to create a new filter with details.
      */
     public function testPostWithNotDefinedContext()
     {
@@ -259,30 +259,30 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test POST to create a new filter with invalid data
+     * Test POST to create a new filter with invalid data.
      */
     public function testInvalidPost()
     {
-        $filter = array(
+        $filter = [
             'conjunction' => false,
             'context' => 'contact',
-        );
+        ];
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $filter = array(
+        $filter = [
             'name' => 'name',
             'context' => 'contact',
-        );
+        ];
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $filter = array(
+        $filter = [
             'name' => 'name',
             'conjunction' => false,
-        );
+        ];
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
@@ -290,38 +290,38 @@ class FilterControllerTest extends SuluTestCase
 
     public function createFilterAsArray($name, $conjunction, $context, $partial = false)
     {
-        $result = array(
+        $result = [
             'name' => $name,
             'conjunction' => $conjunction,
             'context' => $context,
-        );
+        ];
 
         if (!$partial) {
-            $result['conditionGroups'] = array(
-                array(
-                    'conditions' => array(
-                        array(
+            $result['conditionGroups'] = [
+                [
+                    'conditions' => [
+                        [
                             'value' => '5',
                             'field' => 'id',
                             'operator' => '>',
                             'type' => Condition::TYPE_NUMBER,
-                        ),
-                        array(
+                        ],
+                        [
                             'value' => 'test',
                             'field' => 'name',
                             'operator' => 'LIKE',
                             'type' => Condition::TYPE_STRING,
-                        ),
-                    ),
-                ),
-            );
+                        ],
+                    ],
+                ],
+            ];
         }
 
         return $result;
     }
 
     /**
-     * Test POST to create a new filter without conditions
+     * Test POST to create a new filter without conditions.
      */
     public function testPostWithoutConditions()
     {
@@ -340,7 +340,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test PUT to update an existing filter
+     * Test PUT to update an existing filter.
      */
     public function testPut()
     {
@@ -352,29 +352,29 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request(
             'PUT',
             '/api/filters/' . $this->filter1->getId(),
-            array(
+            [
                 'name' => $newName,
                 'conjunction' => $conjunction,
                 'context' => $newContext,
-                'conditionGroups' => array(
-                    array(
-                        'conditions' => array(
-                            array(
+                'conditionGroups' => [
+                    [
+                        'conditions' => [
+                            [
                                 'value' => '6',
                                 'field' => 'nr',
                                 'operator' => '<',
                                 'type' => Condition::TYPE_NUMBER,
-                            ),
-                            array(
+                            ],
+                            [
                                 'value' => 'test',
                                 'field' => 'comment',
                                 'operator' => '%LIKE%',
                                 'type' => Condition::TYPE_STRING,
-                            ),
-                        ),
-                    ),
-                ),
-            )
+                            ],
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -391,43 +391,43 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request(
             'PUT',
             '/api/filters/' . $this->filter1->getId(),
-            array(
-                'conditionGroups' => array(
-                    array(
+            [
+                'conditionGroups' => [
+                    [
                         'id' => $conditionGroupId,
-                        'conditions' => array(
-                            array(
+                        'conditions' => [
+                            [
                                 'value' => '7',
                                 'field' => 'id',
                                 'operator' => 'LIKE',
                                 'type' => Condition::TYPE_STRING,
-                            ),
-                            array(
+                            ],
+                            [
                                 'value' => 'test2',
                                 'field' => 'nr',
                                 'operator' => '>',
                                 'type' => Condition::TYPE_NUMBER,
-                            ),
-                        ),
-                    ),
-                    array(
-                        'conditions' => array(
-                            array(
+                            ],
+                        ],
+                    ],
+                    [
+                        'conditions' => [
+                            [
                                 'value' => '123',
                                 'field' => 'nr',
                                 'operator' => '=<',
                                 'type' => Condition::TYPE_NUMBER,
-                            ),
-                            array(
+                            ],
+                            [
                                 'value' => 'test17',
                                 'field' => 'comment',
                                 'operator' => '%LIKE%',
                                 'type' => Condition::TYPE_STRING,
-                            ),
-                        ),
-                    ),
-                ),
-            )
+                            ],
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -440,7 +440,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test PUT to update an existing condition group
+     * Test PUT to update an existing condition group.
      */
     public function testPutNewConditionExistingConditionGroup()
     {
@@ -452,24 +452,24 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request(
             'PUT',
             '/api/filters/' . $this->filter1->getId(),
-            array(
+            [
                 'name' => $newName,
                 'conjunction' => $conjunction,
                 'context' => $newContext,
-                'conditionGroups' => array(
-                    array(
+                'conditionGroups' => [
+                    [
                         'id' => $this->filter1->getConditionGroups()[0]->getId(),
-                        'conditions' => array(
-                            array(
+                        'conditions' => [
+                            [
                                 'value' => '6',
                                 'field' => 'nr',
                                 'operator' => '<',
                                 'type' => Condition::TYPE_NUMBER,
-                            )
-                        ),
-                    ),
-                ),
-            )
+                            ],
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -486,7 +486,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test PUT to update an existing filter without conditions
+     * Test PUT to update an existing filter without conditions.
      */
     public function testPutWithoutConditions()
     {
@@ -497,11 +497,11 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request(
             'PUT',
             '/api/filters/' . $this->filter1->getId(),
-            array(
+            [
                 'name' => $newName,
                 'conjunction' => $conjunction,
                 'context' => $newContext,
-            )
+            ]
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -512,11 +512,11 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test PUT to update a not existing filter
+     * Test PUT to update a not existing filter.
      */
     public function testPutNotExisting()
     {
-        $this->client->request('PUT', '/api/filters/666', array('code' => 'Missing filter'));
+        $this->client->request('PUT', '/api/filters/666', ['code' => 'Missing filter']);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(
@@ -526,7 +526,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test DELETE
+     * Test DELETE.
      */
     public function testDeleteById()
     {
@@ -538,7 +538,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test CDELETE
+     * Test CDELETE.
      */
     public function testCDeleteByIds()
     {
@@ -555,7 +555,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test CDELETE with non existent ids
+     * Test CDELETE with non existent ids.
      */
     public function testCDeleteByIdsNotExisting()
     {
@@ -569,7 +569,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test CDELETE with partially existent ids
+     * Test CDELETE with partially existent ids.
      */
     public function testCDeleteByIdsPartialExistent()
     {
@@ -583,7 +583,7 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
-     * Test DELETE on none existing Object
+     * Test DELETE on none existing Object.
      */
     public function testDeleteByIdNotExisting()
     {

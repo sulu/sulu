@@ -70,19 +70,22 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereValues = [];
 
     /**
-     * The comparators the where fields should use
+     * The comparators the where fields should use.
+     *
      * @var array
      */
     protected $whereComparators = [];
 
     /**
-     * The conjunctions for the where clauses
+     * The conjunctions for the where clauses.
+     *
      * @var array
      */
     protected $whereConjunctions = [];
 
     /**
-     * group by fields
+     * group by fields.
+     *
      * @var array
      */
     protected $groupByFields = [];
@@ -116,14 +119,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $betweenValues = [];
 
     /**
-     * The conjunctions for the between clauses
+     * The conjunctions for the between clauses.
+     *
      * @var array
      */
-    protected $betweenConjunctions = array();
+    protected $betweenConjunctions = [];
 
     /**
-     * The page the resulting query will be returning
-     * @var integer
+     * The page the resulting query will be returning.
+     *
+     * @var int
      */
     protected $page = 1;
 
@@ -145,7 +150,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use setSelectFields instead
      */
-    public function setFields($fieldDescriptors){
+    public function setFields($fieldDescriptors)
+    {
         $this->selectFields = $fieldDescriptors;
     }
 
@@ -178,7 +184,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->selectFields[$fieldName];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -192,7 +198,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use hasSelectField instead
      */
-    public function hasField($name){
+    public function hasField($name)
+    {
         return array_key_exists($name, $this->selectFields);
     }
 
@@ -213,7 +220,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->fieldDescriptors[$fieldName];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -295,7 +302,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use where instead
      */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value){
+    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
+    {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
         $this->whereComparators[$fieldDescriptor->getName()] = self::WHERE_COMPARATOR_UNEQUAL;

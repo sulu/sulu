@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
-use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFeatureException;
@@ -26,14 +25,13 @@ use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes filters available through a REST API
+ * Makes filters available through a REST API.
  */
 class FilterController extends RestController implements ClassResourceInterface
 {
@@ -44,7 +42,7 @@ class FilterController extends RestController implements ClassResourceInterface
     protected static $entityKey = 'filters';
 
     /**
-     * Retrieves a filter by id
+     * Retrieves a filter by id.
      *
      * @param Request $request
      * @param $id
@@ -65,7 +63,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns a list of filters
+     * Returns a list of filters.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -98,7 +96,6 @@ class FilterController extends RestController implements ClassResourceInterface
                 );
             }
             $view = $this->view($list, 200);
-
         } catch (UnknownContextException $exc) {
             $exception = new RestException($exc->getMessage());
             $view = $this->view($exception->toArray(), 400);
@@ -111,7 +108,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns a list representation
+     * Returns a list representation.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -136,7 +133,7 @@ class FilterController extends RestController implements ClassResourceInterface
         }
 
         // return all filters created by the user or without user
-        $userCondition = array($this->getUser()->getId(), null);
+        $userCondition = [$this->getUser()->getId(), null];
         $listBuilder->in($fieldDescriptors['user'], $userCondition);
 
         $list = new ListRepresentation(
@@ -192,7 +189,7 @@ class FilterController extends RestController implements ClassResourceInterface
      * Change a filter by the given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $id the attribute id
+     * @param int $id the attribute id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -229,7 +226,7 @@ class FilterController extends RestController implements ClassResourceInterface
     /**
      * Delete an filter with the given id.
      *
-     * @param integer $id the attribute id
+     * @param int $id the attribute id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -273,7 +270,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns all fields that can be used by list
+     * returns all fields that can be used by list.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -287,7 +284,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns the manager for filters
+     * Returns the manager for filters.
      *
      * @return FilterManagerInterface
      */

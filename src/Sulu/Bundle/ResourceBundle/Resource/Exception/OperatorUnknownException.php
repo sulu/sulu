@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
-use Exception;
-
 /**
- * OperatorUnknownException is thrown when the given operator is unknown
+ * OperatorUnknownException is thrown when the given operator is unknown.
  */
 class OperatorUnknownException extends OperatorException
 {

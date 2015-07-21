@@ -1300,7 +1300,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'mainPhone',
             $this->getAccountEntityName(),
             'public.phone',
-            array(),
+            [],
             false,
             false,
             'string'

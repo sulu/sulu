@@ -65,7 +65,7 @@ interface ListBuilderInterface
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Gets a field descriptor used by the ListBuilder to retrieve and return the list
+     * Gets a field descriptor used by the ListBuilder to retrieve and return the list.
      *
      * @param string $fieldName
      *
@@ -74,7 +74,7 @@ interface ListBuilderInterface
     public function getSelectField($fieldName);
 
     /**
-     * Checks if field by name has been already added
+     * Checks if field by name has been already added.
      *
      * @param $name
      *
@@ -212,15 +212,14 @@ interface ListBuilderInterface
     public function execute();
 
     /**
-     * Sets an array of field descriptors
+     * Sets an array of field descriptors.
      *
      * @param AbstractFieldDescriptor[] $fieldDescriptors
-     *
      */
     public function setFieldDescriptors(array $fieldDescriptors);
 
     /**
-     * Returns a field descriptor by name
+     * Returns a field descriptor by name.
      *
      * @param string $name
      *

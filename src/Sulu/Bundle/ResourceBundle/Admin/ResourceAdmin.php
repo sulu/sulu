@@ -15,12 +15,10 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
- * Class SuluResourceAdmin
- * @package Sulu\Bundle\ResourceBundle\Admin
+ * Class SuluResourceAdmin.
  */
 class ResourceAdmin extends Admin
 {
-
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
@@ -32,7 +30,7 @@ class ResourceAdmin extends Admin
      */
     public function getCommands()
     {
-        return array();
+        return [];
     }
 
     /**

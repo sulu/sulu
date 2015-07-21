@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Component which triggers the generation of additional statements from the conditions of a filter
- * and applies them to the list builder
+ * and applies them to the list builder.
  */
 class FilterListBuilder implements FilterListBuilderInterface
 {
@@ -79,7 +79,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Creates a conditions for a condition group
+     * Creates a conditions for a condition group.
      *
      * @param ConditionGroup $conditionGroup
      * @param string         $conjunction
@@ -105,7 +105,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Creates and adds a simple where condition to the listbuilder
+     * Creates and adds a simple where condition to the listbuilder.
      *
      * @param Condition               $condition
      * @param AbstractFieldDescriptor $fieldDescriptor
@@ -124,11 +124,12 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Parses and returns the value of a condition
+     * Parses and returns the value of a condition.
      *
      * @param Condition $condition
      *
      * @return mixed
+     *
      * @throws ConditionTypeMismatchException
      */
     protected function getValue(Condition $condition)
@@ -159,11 +160,11 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Returns boolean value if value is 1, true or "true" otherwise false is returned
+     * Returns boolean value if value is 1, true or "true" otherwise false is returned.
      *
      * @param $value
      *
-     * @return boolean
+     * @return bool
      */
     protected function getBoolean($value)
     {

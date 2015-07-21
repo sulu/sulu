@@ -17,7 +17,8 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 class MissingFilterAttributeException extends FilterException
 {
     /**
-     * The name of the attribute which is missing
+     * The name of the attribute which is missing.
+     *
      * @var string
      */
     private $attribute;
@@ -29,7 +30,8 @@ class MissingFilterAttributeException extends FilterException
     }
 
     /**
-     * Returns the name of the missing attribute
+     * Returns the name of the missing attribute.
+     *
      * @return string
      */
     public function getAttribute()

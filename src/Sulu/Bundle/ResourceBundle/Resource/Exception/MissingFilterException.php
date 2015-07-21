@@ -17,7 +17,8 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 class MissingFilterException extends FilterException
 {
     /**
-     * The name of the filter which is missing
+     * The name of the filter which is missing.
+     *
      * @var string
      */
     private $filter;
@@ -29,7 +30,8 @@ class MissingFilterException extends FilterException
     }
 
     /**
-     * Returns the name of the missing filter
+     * Returns the name of the missing filter.
+     *
      * @return string
      */
     public function getFilter()

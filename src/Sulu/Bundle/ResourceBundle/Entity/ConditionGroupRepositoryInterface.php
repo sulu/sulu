@@ -12,15 +12,15 @@ namespace Sulu\Bundle\ResourceBundle\Entity;
 
 /**
  * The interface for the condition group entity repository
- * Interface ConditionGroupRepositoryInterface
- * @package Sulu\Bundle\ResourceBundle\Entity
+ * Interface ConditionGroupRepositoryInterface.
  */
 interface ConditionGroupRepositoryInterface
 {
     /**
-     * Finds an entity by id
+     * Finds an entity by id.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function findById($id);

@@ -296,7 +296,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * sets where statement
+     * sets where statement.
      *
      * @param array $whereFields
      * @param array $whereValues
@@ -334,7 +334,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Creates a partial where statement
+     * Creates a partial where statement.
      *
      * @param $value
      * @param $whereField
@@ -346,7 +346,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function createWherePart($value, $whereField, $conjunction, $comparator)
     {
         if ($value === null) {
-
             return $conjunction . $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
         } elseif ($comparator === 'LIKE') {
             $this->queryBuilder->setParameter($whereField->getName(), '%' . $value . '%');

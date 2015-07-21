@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * OperatorValueTranslation
+ * OperatorValueTranslation.
  */
 class OperatorValueTranslation
 {
@@ -38,7 +36,7 @@ class OperatorValueTranslation
     private $longDescription;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -48,9 +46,10 @@ class OperatorValueTranslation
     private $operatorValue;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return OperatorValueTranslation
      */
     public function setName($name)
@@ -61,7 +60,7 @@ class OperatorValueTranslation
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string 
      */
@@ -71,9 +70,10 @@ class OperatorValueTranslation
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return OperatorValueTranslation
      */
     public function setLocale($locale)
@@ -84,7 +84,7 @@ class OperatorValueTranslation
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string 
      */
@@ -94,9 +94,10 @@ class OperatorValueTranslation
     }
 
     /**
-     * Set shortDescription
+     * Set shortDescription.
      *
      * @param string $shortDescription
+     *
      * @return OperatorValueTranslation
      */
     public function setShortDescription($shortDescription)
@@ -107,7 +108,7 @@ class OperatorValueTranslation
     }
 
     /**
-     * Get shortDescription
+     * Get shortDescription.
      *
      * @return string 
      */
@@ -117,9 +118,10 @@ class OperatorValueTranslation
     }
 
     /**
-     * Set longDescription
+     * Set longDescription.
      *
      * @param string $longDescription
+     *
      * @return OperatorValueTranslation
      */
     public function setLongDescription($longDescription)
@@ -130,7 +132,7 @@ class OperatorValueTranslation
     }
 
     /**
-     * Get longDescription
+     * Get longDescription.
      *
      * @return string 
      */
@@ -140,9 +142,9 @@ class OperatorValueTranslation
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int 
      */
     public function getId()
     {
@@ -150,9 +152,10 @@ class OperatorValueTranslation
     }
 
     /**
-     * Set operatorValue
+     * Set operatorValue.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValue $operatorValue
+     *
      * @return OperatorValueTranslation
      */
     public function setOperatorValue(\Sulu\Bundle\ResourceBundle\Entity\OperatorValue $operatorValue)
@@ -163,7 +166,7 @@ class OperatorValueTranslation
     }
 
     /**
-     * Get operatorValue
+     * Get operatorValue.
      *
      * @return \Sulu\Bundle\ResourceBundle\Entity\OperatorValue 
      */

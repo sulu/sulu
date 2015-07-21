@@ -7,11 +7,12 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Exception which is thrown when feature for a context is not enabled
- * Class MissingFeatureException
+ * Class MissingFeatureException.
  */
 class MissingFeatureException extends FilterException
 {
@@ -21,14 +22,14 @@ class MissingFeatureException extends FilterException
     private $context;
 
     /**
-     * The name of the context not found
+     * The name of the context not found.
+     *
      * @var string
      */
     private $featureName;
 
     public function __construct($context, $featureName)
     {
-
         $this->featureName = $featureName;
         $this->context = $context;
         parent::__construct(

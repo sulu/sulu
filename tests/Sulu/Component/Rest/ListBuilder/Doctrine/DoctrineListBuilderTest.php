@@ -17,7 +17,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -85,7 +84,6 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->expects($this->any())->method('dispatch')->with(
             ListBuilderEvents::LISTBUILDER_CREATE, $event
         )->willReturn($event);
-
     }
 
     public function testSetField()
@@ -248,7 +246,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->expects($this->exactly(1))->method('setParameter');
         $this->queryBuilder->expects($this->never())->method('setMaxResults');
         $this->queryBuilder->expects($this->never())->method('setFirstResult');
-        
+
         $this->doctrineListBuilder->count();
     }
 

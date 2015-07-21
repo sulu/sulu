@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * FilterTranslation
+ * FilterTranslation.
  */
 class FilterTranslation
 {
@@ -38,7 +36,7 @@ class FilterTranslation
     private $longDescription;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -48,9 +46,10 @@ class FilterTranslation
     private $filter;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return FilterTranslation
      */
     public function setName($name)
@@ -61,7 +60,7 @@ class FilterTranslation
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string 
      */
@@ -71,9 +70,10 @@ class FilterTranslation
     }
 
     /**
-     * Set locale
+     * Set locale.
      *
      * @param string $locale
+     *
      * @return FilterTranslation
      */
     public function setLocale($locale)
@@ -84,7 +84,7 @@ class FilterTranslation
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return string 
      */
@@ -94,9 +94,10 @@ class FilterTranslation
     }
 
     /**
-     * Set shortDescription
+     * Set shortDescription.
      *
      * @param string $shortDescription
+     *
      * @return FilterTranslation
      */
     public function setShortDescription($shortDescription)
@@ -107,7 +108,7 @@ class FilterTranslation
     }
 
     /**
-     * Get shortDescription
+     * Get shortDescription.
      *
      * @return string 
      */
@@ -117,9 +118,10 @@ class FilterTranslation
     }
 
     /**
-     * Set longDescription
+     * Set longDescription.
      *
      * @param string $longDescription
+     *
      * @return FilterTranslation
      */
     public function setLongDescription($longDescription)
@@ -130,7 +132,7 @@ class FilterTranslation
     }
 
     /**
-     * Get longDescription
+     * Get longDescription.
      *
      * @return string 
      */
@@ -140,9 +142,9 @@ class FilterTranslation
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int 
      */
     public function getId()
     {
@@ -150,9 +152,10 @@ class FilterTranslation
     }
 
     /**
-     * Set filter
+     * Set filter.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\Filter $filter
+     *
      * @return FilterTranslation
      */
     public function setFilter(\Sulu\Bundle\ResourceBundle\Entity\Filter $filter)
@@ -163,7 +166,7 @@ class FilterTranslation
     }
 
     /**
-     * Get filter
+     * Get filter.
      *
      * @return \Sulu\Bundle\ResourceBundle\Entity\Filter 
      */

@@ -15,10 +15,10 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -112,7 +112,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         // set serialization groups
         $view->setSerializationContext(
             SerializationContext::create()->setGroups(
-                array('Default', 'partialContact')
+                ['Default', 'partialContact']
             )
         );
 
@@ -327,7 +327,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         // set serialization groups
         $view->setSerializationContext(
             SerializationContext::create()->setGroups(
-                array('Default', 'partialContact')
+                ['Default', 'partialContact']
             )
         );
 

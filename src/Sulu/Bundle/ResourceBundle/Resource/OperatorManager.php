@@ -15,8 +15,7 @@ use Sulu\Bundle\ResourceBundle\Entity\OperatorRepositoryInterface;
 
 /**
  * Manager responsible for operators
- * Class OperatorManager
- * @package Sulu\Bundle\ResourceBundle\Resource
+ * Class OperatorManager.
  */
 class OperatorManager implements OperatorManagerInterface
 {
@@ -25,7 +24,7 @@ class OperatorManager implements OperatorManagerInterface
      */
     protected $operatorRepo;
 
-    function __construct(OperatorRepositoryInterface $operatorRepo)
+    public function __construct(OperatorRepositoryInterface $operatorRepo)
     {
         $this->operatorRepo = $operatorRepo;
     }
