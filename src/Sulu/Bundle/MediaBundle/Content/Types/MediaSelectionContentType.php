@@ -13,9 +13,9 @@ namespace Sulu\Bundle\MediaBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -146,7 +146,6 @@ class MediaSelectionContentType extends ComplexContentType
         if (isset($value['data'])) {
             unset($value['data']);
         }
-
 
         // set value to node
         $node->setProperty($property->getName(), json_encode($value));

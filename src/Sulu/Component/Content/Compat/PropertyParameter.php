@@ -10,13 +10,7 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use JMS\Serializer\Annotation\HandlerCallback;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Context;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
-use JMS\Serializer\Metadata\PropertyMetadata;
-use JMS\Serializer\Metadata\StaticPropertyMetadata;
 
 /**
  * Represents a parameter of a property.

@@ -10,15 +10,15 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Handler;
 
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
+use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
- * Handle serializeation and deserialization of document content
+ * Handle serializeation and deserialization of document content.
  */
 class StructureHandler implements SubscribingHandlerInterface
 {
@@ -80,5 +80,4 @@ class StructureHandler implements SubscribingHandlerInterface
 
         return $container;
     }
-
 }

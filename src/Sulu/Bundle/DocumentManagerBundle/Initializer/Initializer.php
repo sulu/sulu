@@ -3,8 +3,8 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Initializer;
 
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Initializer
 {
@@ -19,7 +19,7 @@ class Initializer
 
     public function initialize(OutputInterface $output = null)
     {
-        $output = $output ? : new NullOutput();
+        $output = $output ?: new NullOutput();
         arsort($this->initializerMap);
 
         foreach (array_keys($this->initializerMap) as $initializerId) {

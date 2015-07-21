@@ -74,7 +74,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
             $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
                 $url,
                 $this->environment,
-                $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 $webspaceKey,
                 $domain
             );

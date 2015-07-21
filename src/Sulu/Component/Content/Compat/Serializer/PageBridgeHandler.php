@@ -22,7 +22,7 @@ use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 
 /**
- * Handle serialization and deserialization of the PageBridge
+ * Handle serialization and deserialization of the PageBridge.
  */
 class PageBridgeHandler implements SubscribingHandlerInterface
 {
@@ -82,7 +82,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         $context->accept(
             array(
                 'document' => $document,
-                'structure' => $structure->name
+                'structure' => $structure->name,
             )
         );
     }

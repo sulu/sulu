@@ -2,12 +2,12 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class FixturesLoadCommand extends Command
@@ -46,7 +46,7 @@ class FixturesLoadCommand extends Command
         $this
             ->setName('sulu:document:fixtures:load')
             ->setDescription('Load Sulu document fixtures')
-            ->addOption('fixtures', null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.')
+            ->addOption('fixtures', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures to the existing data - will not purge the workspace.')
             ->addOption('no-initialize', null, InputOption::VALUE_NONE, 'Do not run the repository initializers after purging the repository.')
             ->setHelp(<<<EOT
@@ -82,8 +82,8 @@ EOT
         if ($input->isInteractive() && !$append) {
             $dialog = $this->getHelperSet()->get('dialog');
             $confirmed = $dialog->askConfirmation(
-                $output, 
-                '<question>Careful, database will be purged. Do you want to continue Y/N ?</question>', 
+                $output,
+                '<question>Careful, database will be purged. Do you want to continue Y/N ?</question>',
                 false
             );
 
@@ -110,9 +110,9 @@ EOT
             $output->writeln(
                 '<info>Could not find any candidate fixture paths.</info>'
             );
-           
+
             if ($input->getOption('verbose')) {
-               $output->writeln(sprintf('Looked for: </comment>%s<comment>"</comment>', 
+                $output->writeln(sprintf('Looked for: </comment>%s<comment>"</comment>',
                    implode('"<comment>", "</comment>', $candidatePaths)
                ));
             }

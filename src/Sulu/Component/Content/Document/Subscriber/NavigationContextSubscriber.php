@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class NavigationContextSubscriber extends AbstractMappingSubscriber
 {
@@ -46,7 +45,7 @@ class NavigationContextSubscriber extends AbstractMappingSubscriber
         $node = $event->getNode();
         $node->setProperty(
             $this->encoder->localizedSystemName(self::FIELD, $event->getLocale()),
-            $event->getDocument()->getNavigationContexts() ? : null
+            $event->getDocument()->getNavigationContexts() ?: null
         );
     }
 }

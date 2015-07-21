@@ -19,7 +19,7 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
- * Defines a section for properties
+ * Defines a section for properties.
  */
 class SectionProperty extends Property implements SectionPropertyInterface
 {

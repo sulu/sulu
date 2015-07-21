@@ -15,17 +15,17 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 /**
  * repository for node objects.
@@ -483,7 +483,7 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true, $excludeGhosts = false, $maxDepth = 1, $currentDepth = 0)
     {
-        $currentDepth++;
+        ++$currentDepth;
 
         if ($maxDepth !== null && $currentDepth > $maxDepth) {
             return array();
@@ -505,6 +505,7 @@ class NodeRepository implements NodeRepositoryInterface
             }
             $results[] = $result;
         }
+
         return $results;
     }
 
@@ -603,9 +604,8 @@ class NodeRepository implements NodeRepositoryInterface
         return $result;
     }
 
-
     /**
-     * Load the node and its ancestors and convert them into a HATEOAS representation
+     * Load the node and its ancestors and convert them into a HATEOAS representation.
      *
      * @param mixed $uuid
      * @param mixed $webspaceKey
@@ -635,7 +635,7 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * Iterate over the ancestor tiers and build up the result
+     * Iterate over the ancestor tiers and build up the result.
      *
      * @param array $tiers
      * @param array $result (by rereference)

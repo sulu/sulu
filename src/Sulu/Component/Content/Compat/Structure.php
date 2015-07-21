@@ -13,8 +13,8 @@ namespace Sulu\Component\Content\Compat;
 use DateTime;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
-use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 /**
  * The Structure class represenets content structure and is the super type
@@ -471,9 +471,9 @@ abstract class Structure implements StructureInterface
      * @param string $tagName
      * @param bool $highest
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     *
      * @return PropertyInterface
+     *
+     * @throws NoSuchPropertyException
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
@@ -489,9 +489,9 @@ abstract class Structure implements StructureInterface
      *
      * @param string $tagName
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     *
      * @return PropertyInterface
+     *
+     * @throws NoSuchPropertyException
      */
     public function getPropertiesByTagName($tagName)
     {
@@ -1004,6 +1004,8 @@ abstract class Structure implements StructureInterface
      * Return the tag with the given name.
      *
      * @param string $name
+     *
+     * @return StructureTag
      *
      * @throws \InvalidArgumentException
      */

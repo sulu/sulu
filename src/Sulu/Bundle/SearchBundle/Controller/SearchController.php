@@ -155,7 +155,7 @@ class SearchController
 
         foreach ($hits as $hit) {
             $category = $hit->getDocument()->getCategory();
-            $categoryCount[$category]++;
+            ++$categoryCount[$category];
         }
 
         return $categoryCount;

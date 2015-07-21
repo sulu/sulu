@@ -12,9 +12,9 @@ namespace Sulu\Bundle\ContentBundle\Command;
 
 use Jackalope\Query\QueryManager;
 use Jackalope\Session;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

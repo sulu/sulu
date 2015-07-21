@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Content\Document;
 
-use Sulu\Component\Content\Document\WorkflowStage;
-
 /**
  * Simple constants class for representing workflow stages.
  *
@@ -20,12 +18,12 @@ use Sulu\Component\Content\Document\WorkflowStage;
 final class WorkflowStage
 {
     /**
-     * Document is published
+     * Document is published.
      */
     const PUBLISHED = 2;
 
     /**
-     * Document is not published
+     * Document is not published.
      */
     const TEST = 1;
 }

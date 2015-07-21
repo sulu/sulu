@@ -65,7 +65,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should create standard properties from "new" properties
+     * It should create standard properties from "new" properties.
      */
     public function testCreateProperty()
     {
@@ -127,7 +127,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should create a translated property
+     * It should create a translated property.
      *
      * @depends testCreateProperty
      */
@@ -141,7 +141,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should create a section property
+     * It should create a section property.
      *
      * @depends testCreateProperty
      */
@@ -159,7 +159,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->section->title = $title;
         $this->section->description = $description;
         $this->section->getChildren()->willReturn(array(
-            $property->reveal()
+            $property->reveal(),
         ));
 
         $legacyProperty = $this->factory->createProperty($this->section->reveal());
@@ -173,7 +173,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should create a block property
+     * It should create a block property.
      *
      * @depends testCreateProperty
      */
@@ -183,7 +183,7 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->component->getName()->willReturn('hai');
         $this->component->getChildren()->willReturn(array(
-            $property->reveal()
+            $property->reveal(),
         ));
         $this->component->title = array(
             'de' => 'Testtitel',

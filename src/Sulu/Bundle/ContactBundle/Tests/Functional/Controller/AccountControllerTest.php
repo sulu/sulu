@@ -1386,7 +1386,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($acc);
 
         // add 5 contacts to account
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $contact = new Contact();
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
@@ -1443,7 +1443,7 @@ class AccountControllerTest extends SuluTestCase
     {
         // modify test data
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $contact = new Contact();
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
@@ -1488,7 +1488,7 @@ class AccountControllerTest extends SuluTestCase
     {
 
         // changing test data: adding child accounts
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $childAccount = new Account();
             $childAccount->setName('child num#' . $i);
             $childAccount->setParent($this->account);

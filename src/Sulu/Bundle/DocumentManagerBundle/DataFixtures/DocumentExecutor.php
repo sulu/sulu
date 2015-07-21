@@ -2,10 +2,10 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
-use Symfony\Component\Console\Output\NullOutput;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
-use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\NodeManager;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -41,8 +41,7 @@ class DocumentExecutor
         DocumentManager $documentManager,
         NodeManager $nodeManager,
         Initializer $initializer
-    )
-    {
+    ) {
         $this->documentManager = $documentManager;
         $this->nodeManager = $nodeManager;
         $this->initializer = $initializer;
@@ -58,7 +57,7 @@ class DocumentExecutor
      */
     public function execute(array $fixtures, $purge = true, $initialize = true, OutputInterface $output = null)
     {
-        $output = $output ? : new NullOutput();
+        $output = $output ?: new NullOutput();
 
         if (true === $purge) {
             $output->writeln('<comment>Purging workspace</comment>');

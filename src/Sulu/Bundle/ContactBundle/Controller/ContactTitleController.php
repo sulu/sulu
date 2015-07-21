@@ -211,7 +211,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 }
 
                 $data[] = $this->addAndUpdateTitles($item);
-                $i++;
+                ++$i;
             }
 
             $this->getDoctrine()->getManager()->flush();

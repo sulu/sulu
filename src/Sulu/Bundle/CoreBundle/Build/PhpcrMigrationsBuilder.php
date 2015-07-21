@@ -11,10 +11,6 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
-use DTL\PhpcrMigrations\MigratorFactory;
-use DTL\PhpcrMigrations\VersionStorage;
-use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
-
 /**
  * Initialize the migrations when Sulu is built.
  *

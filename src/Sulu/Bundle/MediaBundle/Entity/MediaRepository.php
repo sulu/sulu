@@ -154,7 +154,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * Extracts filter vars
+     * Extracts filter vars.
      *
      * @param array $filter
      *
@@ -234,7 +234,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * create a query for ids with given filter
+     * create a query for ids with given filter.
+     *
      * @param string $collection
      * @param array $types
      * @param string $search
@@ -243,6 +244,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * @param int $limit
      * @param int $offset
      * @param string $select
+     *
      * @return Query
      */
     private function getIdsQuery(
@@ -299,7 +301,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * returns ids with given filters
+     * returns ids with given filters.
+     *
      * @param string $collection
      * @param array $types
      * @param string $search
@@ -307,6 +310,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * @param string $orderSort
      * @param int $limit
      * @param int $offset
+     *
      * @return array
      */
     private function getIds(

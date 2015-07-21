@@ -28,7 +28,7 @@ class MetadataSubscriber implements EventSubscriber
     protected $objects;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $objects
      */

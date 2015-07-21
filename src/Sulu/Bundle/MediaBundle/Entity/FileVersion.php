@@ -308,7 +308,7 @@ class FileVersion implements AuditableInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
-        
+
         return $this;
     }
 
@@ -619,9 +619,10 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set storageType
+     * Set storageType.
      *
      * @param string $storageType
+     *
      * @return FileVersion
      */
     public function setStorageType($storageType)
@@ -632,7 +633,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get storageType
+     * Get storageType.
      *
      * @return string 
      */

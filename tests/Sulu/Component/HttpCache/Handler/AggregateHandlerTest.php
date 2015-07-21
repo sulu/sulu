@@ -12,7 +12,6 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
-use Sulu\Component\HttpCache\Handler\AggregateHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 class AggregateHandlerTest extends \PHPUnit_Framework_TestCase

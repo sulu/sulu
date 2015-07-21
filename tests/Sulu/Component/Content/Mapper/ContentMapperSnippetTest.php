@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Mapper;
 
 use Behat\Behat\Snippet\Snippet;
-use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
@@ -278,7 +277,6 @@ class ContentMapperSnippetTest extends SuluTestCase
     /**
      * @expectedException Sulu\Component\DocumentManager\Exception\DocumentNotFoundException
      * @expectedExceptionMessage Requested document of type "page" but got
-     *
      */
     public function testUpdatePageWrongType()
     {
@@ -313,7 +311,7 @@ class ContentMapperSnippetTest extends SuluTestCase
                 $position = $index;
                 break;
             }
-            $index++;
+            ++$index;
         }
 
         if (null === $position) {

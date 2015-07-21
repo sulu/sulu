@@ -18,14 +18,14 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface RouteBehavior
 {
     /**
-     * Get the route target document
+     * Get the route target document.
      *
      * @return object
      */
     public function getTargetDocument();
 
     /**
-     * Set the target document
+     * Set the target document.
      *
      * @param object $targetDocument
      */

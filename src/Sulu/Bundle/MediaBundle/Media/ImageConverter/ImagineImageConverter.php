@@ -109,7 +109,7 @@ class ImagineImageConverter implements ImageConverterInterface
             $counter = 0;
             $this->image->layers()->coalesce();
             foreach ($this->image->layers() as $layer) {
-                $counter++;
+                ++$counter;
                 $this->commandManager->get($command)->execute($layer, $parameters);
                 if ($counter == 1) {
                     /** @var \Imagine\Imagick\Image|\Imagine\Gd\Image $image */

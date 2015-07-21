@@ -231,7 +231,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
             ),
         );
@@ -838,7 +838,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                 '0' => array(
                                     'name' => 'sulu.rlp',
                                     'priority' => '1',
-                                    'attributes' => array()
+                                    'attributes' => array(),
                                 ),
                             ),
                             'params' => array(),
@@ -1023,9 +1023,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
-            )
+            ),
         );
 
         $result = $this->loadFixture('template_nesting_params.xml');
@@ -1082,9 +1082,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(),
                 ),
-            )
+            ),
         );
 
         $result = $this->loadFixture('template_meta_params.xml');

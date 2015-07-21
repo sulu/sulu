@@ -2,20 +2,20 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Bundle\ContentBundle\Document\RouteDocument;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\Event\RemoveEvent;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
+use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Remove routes and references associated with content
+ * Remove routes and references associated with content.
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
@@ -105,6 +105,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     {
         if (false === $property->isMultiple()) {
             $property->remove();
+
             return;
         }
 

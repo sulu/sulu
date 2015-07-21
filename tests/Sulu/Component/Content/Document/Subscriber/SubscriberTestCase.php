@@ -7,14 +7,14 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\PropertyEncoder;
+use PHPCR\NodeInterface;
+use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\DocumentAccessor;
-use PHPCR\NodeInterface;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class SubscriberTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +52,7 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
-        $this->notImplementing = new \stdClass;
+        $this->notImplementing = new \stdClass();
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->accessor = $this->prophesize(DocumentAccessor::class);

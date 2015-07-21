@@ -2,22 +2,15 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
+use PHPCR\PropertyType;
 use Prophecy\Argument;
-use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
-use PHPCR\PropertyInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\DocumentAccessor;
-use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class WorkflowStageSubscriberTest extends SubscriberTestCase
 {
@@ -35,7 +28,7 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should set the published date when the stage changes to published
+     * It should set the published date when the stage changes to published.
      */
     public function testPublishedTransition()
     {
@@ -57,7 +50,7 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should NOT set the published date when the stage has not changed
+     * It should NOT set the published date when the stage has not changed.
      */
     public function testPublishedNoTransition()
     {
@@ -88,7 +81,7 @@ class TestWorkflowStageDocument implements WorkflowStageBehavior
         $this->workflowStage = $stage;
     }
 
-    public function getWorkflowStage() 
+    public function getWorkflowStage()
     {
         return $this->workflowStage;
     }
@@ -97,9 +90,8 @@ class TestWorkflowStageDocument implements WorkflowStageBehavior
     {
         $this->workflowStage = $workflowStage;
     }
-    
 
-    public function getPublished() 
+    public function getPublished()
     {
         return $this->published;
     }

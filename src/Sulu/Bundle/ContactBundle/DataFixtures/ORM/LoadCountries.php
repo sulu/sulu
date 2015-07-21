@@ -51,7 +51,7 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
                 }
                 $manager->persist($country);
 
-                $i++;
+                ++$i;
             }
         }
 

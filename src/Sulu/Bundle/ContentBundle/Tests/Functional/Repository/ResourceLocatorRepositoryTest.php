@@ -10,18 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
-use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\PHPCR\PathCleanup;
-use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Theme;
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
@@ -50,8 +39,8 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         return $this->mapper->save(
             array(
                 'title' => 'test',
-                'url' => '/test'
-            ), 
+                'url' => '/test',
+            ),
             'overview',
             'sulu_io',
             'en',
@@ -65,7 +54,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
 
         $result = $this->repository->generate(
             array(
-                'title' => 'test'
+                'title' => 'test',
             ),
             $structure->getUuid(),
             null,
@@ -84,9 +73,9 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
     {
         $structure = $this->mapper->save(
             array(
-                'title' => 'test-1', 
-                'url' => '/test'
-            ), 
+                'title' => 'test-1',
+                'url' => '/test',
+            ),
             'overview',
             'sulu_io',
             'en',
@@ -97,7 +86,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $structure = $this->mapper->save(
             array(
                 'title' => 'test-1',
-                'url' => '/test-1'
+                'url' => '/test-1',
             ),
             'overview',
             'sulu_io',
@@ -112,7 +101,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $structure = $this->mapper->save(
             array(
                 'title' => 'test-1',
-                'url' => '/test-2'
+                'url' => '/test-2',
             ),
             'overview',
             'sulu_io',

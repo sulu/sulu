@@ -10,12 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondDocumentCache;
-use Sulu\Component\Content\Compat\DocumentInterface;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\Document;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-
 class DeleteDocumentTest extends BaseTestCase
 {
     public function testDeleteDocument()

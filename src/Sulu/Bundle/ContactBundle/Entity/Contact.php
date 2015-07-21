@@ -357,7 +357,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getPosition();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -762,7 +762,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getAccount();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -781,7 +781,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -918,7 +918,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**

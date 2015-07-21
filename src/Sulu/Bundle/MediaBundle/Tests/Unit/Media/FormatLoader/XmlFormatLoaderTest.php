@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
-
-
 class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testValid()

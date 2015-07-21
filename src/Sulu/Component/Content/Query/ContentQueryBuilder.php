@@ -10,12 +10,12 @@
 
 namespace Sulu\Component\Content\Query;
 
-use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 
 /**
  * Basic class for content query builder.

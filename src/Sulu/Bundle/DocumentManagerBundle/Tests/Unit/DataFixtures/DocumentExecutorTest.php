@@ -2,13 +2,12 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NodeManager;
-use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\FixtureLoader;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 
 class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +28,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should purge the workspace if required
+     * It should purge the workspace if required.
      */
     public function testPurge()
     {
@@ -40,7 +39,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should initialize the workspace if required
+     * It should initialize the workspace if required.
      */
     public function testInitialize()
     {
@@ -51,7 +50,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should execute the fixtures
+     * It should execute the fixtures.
      */
     public function testLoadFixtures()
     {

@@ -12,7 +12,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
@@ -462,7 +461,7 @@ class MediaManager implements MediaManagerInterface
 
         if ($uploadedFile) {
             // new uploaded file
-            $version++;
+            ++$version;
             $this->validator->validate($uploadedFile);
 
             $data['storageOptions'] = $this->storage->save(

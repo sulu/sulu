@@ -3,20 +3,18 @@
 namespace Sulu\Component\Content\Document\Property;
 
 use PHPCR\NodeInterface;
-use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
-use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 
 class ManagedStructureTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +43,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It shuld lazily initialize a localized property
+     * It shuld lazily initialize a localized property.
      */
     public function testGetLocalizedProperty()
     {
@@ -59,7 +57,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should lazily initialize a non-localized property
+     * It should lazily initialize a non-localized property.
      */
     public function testGetNonLocalizedProperty()
     {
@@ -73,7 +71,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should act as an array
+     * It should act as an array.
      */
     public function testArrayAccess()
     {
@@ -97,7 +95,6 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         } else {
             $this->propertyFactory->createProperty($this->structureMetadataProperty->reveal(), $locale)->willReturn($this->legacyProperty->reveal());
         }
-
 
         $this->contentType->read(
             $this->node->reveal(),

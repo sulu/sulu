@@ -14,7 +14,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultTemplatesException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
@@ -322,7 +321,7 @@ class XmlFileLoader extends FileLoader
                 if (!$default) {
                     throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
                 }
-                $defaultErrorTemplates++;
+                ++$defaultErrorTemplates;
                 $code = 'default';
             } else {
                 throw new InvalidErrorTemplateException($template, $this->webspace->getKey());

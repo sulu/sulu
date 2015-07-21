@@ -10,35 +10,24 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use ReflectionMethod;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
-use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Section\SectionProperty;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\MetadataExtension\StructureExtension;
-use Sulu\Component\Content\MetadataExtension\StructureExtensionInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
-use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\MetadataExtension\StructureExtensionInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Webspace\NavigationContext;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
- * tests content mapper with tree strategy and phpcr mapper
+ * tests content mapper with tree strategy and phpcr mapper.
  */
 class ContentMapperTest extends SuluTestCase
 {
@@ -77,7 +66,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         $result = $this->mapper->saveRequest(
@@ -215,7 +204,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         if (isset($expectations['exception'])) {
@@ -273,7 +262,7 @@ class ContentMapperTest extends SuluTestCase
                         'tag2',
                     ),
                     'url' => '/news/test',
-                    'article' => 'sulu_io'
+                    'article' => 'sulu_io',
                 )
             )
             ->setWebspaceKey('sulu_io')
@@ -307,7 +296,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         $contentBefore = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -345,7 +334,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -370,7 +359,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -428,7 +417,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -480,7 +469,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -532,7 +521,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -583,7 +572,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -640,7 +629,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -696,7 +685,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -744,7 +733,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         // save content
@@ -822,7 +811,7 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'sulu_io'
+                'article' => 'sulu_io',
             ),
             array(
                 'title' => 'Testnews-2',
@@ -831,7 +820,7 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-2',
-                'article' => 'sulu_io'
+                'article' => 'sulu_io',
             ),
             array(
                 'title' => 'Testnews-2-1',
@@ -840,8 +829,8 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'sulu_io'
-            )
+                'article' => 'sulu_io',
+            ),
         );
 
         // save root content
@@ -907,7 +896,7 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'sulu_io'
+                'article' => 'sulu_io',
             ),
             array(
                 'title' => 'Testnews-2',
@@ -916,7 +905,7 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-2',
-                'article' => 'sulu_io'
+                'article' => 'sulu_io',
             ),
             array(
                 'title' => 'Testnews-2-1',
@@ -925,8 +914,8 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'sulu_io'
-            )
+                'article' => 'sulu_io',
+            ),
         );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
@@ -1145,7 +1134,7 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-1',
-                'article' => 'sulu_io'
+                'article' => 'sulu_io',
             ),
             array(
                 'title' => 'Testnews-2',
@@ -1154,7 +1143,7 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-2',
-                'article' => 'sulu_io'
+                'article' => 'sulu_io',
             ),
             array(
                 'title' => 'Testnews-2-1',
@@ -1163,8 +1152,8 @@ class ContentMapperTest extends SuluTestCase
                     'tag2',
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'sulu_io'
-            )
+                'article' => 'sulu_io',
+            ),
         );
 
         // save root content
@@ -1230,7 +1219,7 @@ class ContentMapperTest extends SuluTestCase
         // save with state PUBLISHED
         $data2 = array(
             'url' => '/url1',
-            'title' => 't2'
+            'title' => 't2',
         );
         $data2 = $this->mapper->save($data2, 'overview', 'sulu_io', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
@@ -1269,7 +1258,7 @@ class ContentMapperTest extends SuluTestCase
             ),
             'url' => '/news/test',
             'article' => 'sulu_io',
-            'navContexts' => $navContexts
+            'navContexts' => $navContexts,
         );
 
         $result = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -1337,7 +1326,7 @@ class ContentMapperTest extends SuluTestCase
             'title' => 'Test',
             'tags' => array('tag1'),
             'url' => '/test-1',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         $d1 = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -1693,7 +1682,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
         $content = $this->mapper->load($structure->getUuid(), 'sulu_io', 'en');
@@ -1983,7 +1972,6 @@ class ContentMapperTest extends SuluTestCase
         foreach ($ancestors as $ancestor) {
             $documentNames[] = $ancestor->getPath();
         }
-
 
         $this->assertEquals(array(
             '/news/news-1/subnews-3/subsubnews-2',
@@ -3023,7 +3011,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag2',
             ),
             'url' => '/news/test.xml',
-            'article' => 'sulu_io'
+            'article' => 'sulu_io',
         );
 
         $this->setExpectedException(
@@ -3136,7 +3124,7 @@ class ContentMapperTest extends SuluTestCase
         $internalLinkData = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
+            'blog' => 'Thats a good test',
         );
         $internalLink = $this->mapper->save($internalLinkData, 'default', 'sulu_io', 'en', 1);
 
@@ -3144,7 +3132,7 @@ class ContentMapperTest extends SuluTestCase
         $snippetData = array(
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
+            'blog' => 'Thats a good test',
         );
         $snippet = $this->mapper->save(
             $snippetData,
@@ -3161,13 +3149,12 @@ class ContentMapperTest extends SuluTestCase
             Structure::TYPE_SNIPPET
         );
 
-
         // Internal Link with String Type
         $testSiteData = array(
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'url' => '/test/123',
-            'the_internal_link' => $internalLink->getUuid()
+            'the_internal_link' => $internalLink->getUuid(),
         );
         $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link_page', 'sulu_io', 'en', 1);
 
@@ -3176,7 +3163,7 @@ class ContentMapperTest extends SuluTestCase
         // Change to Snippet Array
         $testSiteData['internal'] = array(
             $snippet->getUuid(),
-            $snippet->getUuid()
+            $snippet->getUuid(),
         );
         $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
@@ -3190,7 +3177,7 @@ class ContentMapperTest extends SuluTestCase
 
     /**
      * It should delete a node which has children with history.
-     * It should not throw an exception
+     * It should not throw an exception.
      */
     public function testDeleteWithChildrenHistory()
     {
@@ -3237,7 +3224,7 @@ class ContentMapperTest extends SuluTestCase
     }
 
     /**
-     * It should copy a language with an internal link
+     * It should copy a language with an internal link.
      */
     public function testLanguageCopyInternalLink()
     {
@@ -3246,7 +3233,7 @@ class ContentMapperTest extends SuluTestCase
         $page->setTitle('Hallo');
         $page->setResourceSegment('/hallo');
         $this->documentManager->persist($page, 'de', array(
-            'parent_path' => '/cmf/sulu_io/contents'
+            'parent_path' => '/cmf/sulu_io/contents',
         ));
         $this->documentManager->flush();
 

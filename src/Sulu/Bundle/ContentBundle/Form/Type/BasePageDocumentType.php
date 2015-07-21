@@ -10,13 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Form\Type;
 
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
-use Symfony\Component\Form\FormEvents;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 abstract class BasePageDocumentType extends AbstractStructureBehaviorType
 {
@@ -37,8 +36,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     public function __construct(
         SessionManagerInterface $sessionManager,
         DocumentManager $documentManager
-    )
-    {
+    ) {
         $this->sessionManager = $sessionManager;
         $this->documentManager = $documentManager;
     }

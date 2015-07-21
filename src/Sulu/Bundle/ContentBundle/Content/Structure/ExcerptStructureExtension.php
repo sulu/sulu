@@ -17,7 +17,6 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * extends structure with seo content.
@@ -179,7 +178,6 @@ class ExcerptStructureExtension extends AbstractExtension
             $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
             $this->excerptStructure->setLanguageCode($this->languageCode);
         }
-
 
         return $this->excerptStructure;
     }

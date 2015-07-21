@@ -2,17 +2,16 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
-use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
-use Symfony\Component\Console\Tester\CommandTester;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Console\Application;
-use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\fixtures\TestBundle;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Prophecy\Argument;
+use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +33,7 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester = new CommandTester($command);
 
         $this->kernel->getBundles()->willReturn(array(
-            $this->fixtures->reveal()
+            $this->fixtures->reveal(),
         ));
         $this->fixtures->getPath()->willReturn(
             __DIR__ . '/fixtures'
@@ -42,26 +41,26 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should show a message if no fixtures are found
+     * It should show a message if no fixtures are found.
      */
     public function testNoFixtures()
     {
         $this->kernel->getBundles()->willReturn(array());
         $tester = $this->execute(array(
-            '--no-interaction' => true
+            '--no-interaction' => true,
         ));
         $this->assertContains('Could not find any candidate fixture paths', $tester->getDisplay());
     }
 
     /**
-     * It should load fixtures
+     * It should load fixtures.
      */
     public function testLoadFixtures()
     {
         $this->loader->load(array(
-            __DIR__ . '/fixtures/DataFixtures/Document'
+            __DIR__ . '/fixtures/DataFixtures/Document',
         ))->willReturn(array(
-            $this->fixture1->reveal()
+            $this->fixture1->reveal(),
         ));
 
         $this->executor->execute(
@@ -79,14 +78,14 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should not purge the database when --purge is given
+     * It should not purge the database when --purge is given.
      */
     public function testLoadFixturesAppend()
     {
         $this->loader->load(array(
-            __DIR__ . '/fixtures/DataFixtures/Document'
+            __DIR__ . '/fixtures/DataFixtures/Document',
         ))->willReturn(array(
-            $this->fixture1->reveal()
+            $this->fixture1->reveal(),
         ));
         $this->executor->execute(
             array(
@@ -98,20 +97,20 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $tester = $this->execute(array(
-            '--append' => true
+            '--append' => true,
         ));
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
     /**
-     * It should not initialize when --no-initialize is specified
+     * It should not initialize when --no-initialize is specified.
      */
     public function testLoadFixturesNoInitialize()
     {
         $this->loader->load(array(
-            __DIR__ . '/fixtures/DataFixtures/Document'
+            __DIR__ . '/fixtures/DataFixtures/Document',
         ))->willReturn(array(
-            $this->fixture1->reveal()
+            $this->fixture1->reveal(),
         ));
         $this->executor->execute(
             array(
@@ -123,20 +122,20 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $tester = $this->execute(array(
-            '--no-initialize' => true
+            '--no-initialize' => true,
         ));
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
     /**
-     * It should load specified fixtures
+     * It should load specified fixtures.
      */
     public function testLoadSpecified()
     {
         $this->loader->load(array(
-            __DIR__ . '/foo'
+            __DIR__ . '/foo',
         ))->willReturn(array(
-            $this->fixture1->reveal()
+            $this->fixture1->reveal(),
         ));
 
         $this->executor->execute(
@@ -149,7 +148,7 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $tester = $this->execute(array(
-            '--fixtures' => array(__DIR__ . '/foo')
+            '--fixtures' => array(__DIR__ . '/foo'),
         ));
         $this->assertEquals(0, $tester->getStatusCode());
     }
@@ -157,7 +156,7 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
     private function execute(array $args)
     {
         $this->commandTester->execute($args, array(
-            'interactive' => false
+            'interactive' => false,
         ));
 
         return $this->commandTester;

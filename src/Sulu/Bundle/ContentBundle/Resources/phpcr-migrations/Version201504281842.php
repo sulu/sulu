@@ -4,7 +4,6 @@ namespace Sulu\Bundle\ContentBundle;
 
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\SessionInterface;
-use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,7 +47,6 @@ EOT;
                 $rows = $query->execute();
 
                 foreach ($rows as $row) {
-
                     $node = $row->getNode();
                     $internalLinkName = $propertyEncoder->localizedSystemName('internal_link', $locale);
 

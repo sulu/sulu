@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Component\Content\Compat\StructureInterface;

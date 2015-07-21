@@ -55,7 +55,7 @@ class BaseTestCase extends SuluTestCase
     public function generateDocumentIndex($count, $urlPrefix = '/test-')
     {
         $documents = array();
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $count; ++$i) {
             $pageDocument = new PageDocument();
             $pageDocument->setStructureType('default');
             $pageDocument->setParent($this->homeDocument);

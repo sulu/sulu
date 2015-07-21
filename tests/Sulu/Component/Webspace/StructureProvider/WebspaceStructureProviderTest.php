@@ -113,6 +113,7 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $key
      * @param string $view
+     *
      * @return StructureInterface
      */
     private function generateStructure($key, $view)

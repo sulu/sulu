@@ -7,23 +7,22 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Bridge;
 
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use PHPCR\NodeInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\DocumentManager\Metadata;
-use Sulu\Component\DocumentManager\ProxyFactory;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
 use PHPCR\PropertyInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Sulu\Component\DocumentManager\ProxyFactory;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,7 +31,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->pathRegistry = $this->prophesize(PathSegmentRegistry::class);
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
-        $this->document = new \stdClass;
+        $this->document = new \stdClass();
         $this->node = $this->prophesize(NodeInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
@@ -53,7 +52,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the webspace for the given document
+     * It should return the webspace for the given document.
      *
      * @dataProvider provideGetWebspace
      */
@@ -80,11 +79,11 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the Structure for a document implementing StructureBehavior
+     * It should return the Structure for a document implementing StructureBehavior.
      */
     public function testGetStructure()
     {
-        $structure = new \stdClass;
+        $structure = new \stdClass();
         $document = $this->prophesize(StructureBehavior::class);
         $document->getStructureType()->willReturn('foo');
 
@@ -96,7 +95,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the available localizations for the document
+     * It should return the available localizations for the document.
      */
     public function testGetLocales()
     {
@@ -131,7 +130,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the webspace name for a given node
+     * It should return the webspace name for a given node.
      *
      * @dataProvider provideWebspace
      */
@@ -162,7 +161,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 '/cmf/hello',
-                null
+                null,
             ),
         );
     }

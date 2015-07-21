@@ -2,10 +2,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
 
 class SnippetType extends AbstractStructureBehaviorType
 {

@@ -92,7 +92,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             self::$entityNameCode,
             'code',
             array(
-                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
@@ -104,7 +104,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             self::$entityNameCode,
             'backend',
             array(
-                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
@@ -116,7 +116,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             self::$entityNameCode,
             'frontend',
             array(
-                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
@@ -128,7 +128,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             self::$entityNameCode,
             'length',
             array(
-                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                self::$entityNameCode => new DoctrineJoinDescriptor(
                         self::$entityNameCode,
                         self::$entityName . '.code'
                     ),
@@ -157,7 +157,7 @@ class TranslationsController extends RestController implements ClassResourceInte
 
             // construct response array
             $translations = array();
-            for ($i = 0; $i < sizeof($codes); $i++) {
+            for ($i = 0; $i < sizeof($codes); ++$i) {
                 $code = $codes[$i];
 
                 // if no translation available set value null
@@ -219,7 +219,7 @@ class TranslationsController extends RestController implements ClassResourceInte
         $i = 0;
         while ($item = $request->get($i)) {
             $this->saveTranslation($slug, $item);
-            $i++;
+            ++$i;
         }
         $this->getDoctrine()->getManager()->flush();
         $view = $this->view(null, 204);

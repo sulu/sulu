@@ -2,13 +2,13 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +30,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should get a legacy structure bridge
+     * It should get a legacy structure bridge.
      */
     public function testGetStructure()
     {
@@ -43,7 +43,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should add extensions
+     * It should add extensions.
      */
     public function testAddExtension()
     {
@@ -52,19 +52,19 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return extensions
+     * It should return extensions.
      */
     public function testGetExtensions()
     {
         $this->extensionManager->getExtensions('content')->willReturn(array(
-            $this->extension->reveal()
+            $this->extension->reveal(),
         ));
         $extensions = $this->structureManager->getExtensions('content');
         $this->assertCount(1, $extensions);
     }
 
     /**
-     * It can say if it has an extension
+     * It can say if it has an extension.
      */
     public function testHasExtension()
     {
@@ -74,7 +74,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should get an extension
+     * It should get an extension.
      */
     public function testGetExtension()
     {

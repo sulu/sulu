@@ -68,7 +68,7 @@ class ProfileController implements ClassResourceInterface
     }
 
     /**
-     * Sets the given language on the current user
+     * Sets the given language on the current user.
      *
      * @param Request $request
      *
@@ -85,7 +85,7 @@ class ProfileController implements ClassResourceInterface
     }
 
     /**
-     * Takes a key, value pair and stores it as settings for the user
+     * Takes a key, value pair and stores it as settings for the user.
      *
      * @param Request $request
      *

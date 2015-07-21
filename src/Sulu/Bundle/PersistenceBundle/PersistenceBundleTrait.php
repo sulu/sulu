@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 trait PersistenceBundleTrait
 {
-
     /**
      * Build persistence adds a `ResolveTargetEntitiesPass` for the given interfaces.
      *

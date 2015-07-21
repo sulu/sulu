@@ -6,7 +6,7 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
- * This property wraps the "new" PropertyValue class
+ * This property wraps the "new" PropertyValue class.
  */
 class PropertyValueProperty extends Property
 {

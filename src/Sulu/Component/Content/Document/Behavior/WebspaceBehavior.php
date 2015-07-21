@@ -11,12 +11,12 @@
 namespace Sulu\Component\Content\Document\Behavior;
 
 /**
- * Document is contained within a webspace
+ * Document is contained within a webspace.
  */
 interface WebspaceBehavior
 {
     /**
-     * Return the webspace name
+     * Return the webspace name.
      */
     public function getWebspaceName();
 }

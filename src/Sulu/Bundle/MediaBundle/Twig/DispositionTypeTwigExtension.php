@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class DispositionTypeTwigExtension extends \Twig_Extension
 {
-
     /**
      * @var string
      */
@@ -78,7 +77,7 @@ class DispositionTypeTwigExtension extends \Twig_Extension
             return ResponseHeaderBag::DISPOSITION_ATTACHMENT;
         }
 
-        return null;
+        return;
     }
 
     /**

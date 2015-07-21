@@ -57,7 +57,7 @@ class RdfaCrawler
                     $parents->each(
                         function ($node) use (&$count) {
                             if ($node->attr('property')) {
-                                $count++;
+                                ++$count;
                             }
                         }
                     );
@@ -95,7 +95,7 @@ class RdfaCrawler
             $propertyPath = array();
             $indexSequence = array();
             $propertyInstance = $content->getProperty($sequence[0]);
-            for ($i = 1; $i < sizeof($sequence); $i++) {
+            for ($i = 1; $i < sizeof($sequence); ++$i) {
                 // is not integer
                 if (!ctype_digit(strval($sequence[$i]))) {
                     $propertyPath[] = $sequence[$i];

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
@@ -54,6 +53,7 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
 
     /**
      * @param AbstractMappingEvent|HydrateEvent $event
+     *
      * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function doHydrate(AbstractMappingEvent $event)

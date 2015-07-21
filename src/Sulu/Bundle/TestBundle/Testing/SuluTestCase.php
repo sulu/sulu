@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Metadata;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;

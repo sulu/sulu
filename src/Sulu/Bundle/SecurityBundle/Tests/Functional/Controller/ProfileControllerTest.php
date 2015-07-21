@@ -40,7 +40,7 @@ class ProfileControllerTest extends SuluTestCase
         $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
             array(
                 'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
-                'key' => 'setting-key'
+                'key' => 'setting-key',
             )
         );
 

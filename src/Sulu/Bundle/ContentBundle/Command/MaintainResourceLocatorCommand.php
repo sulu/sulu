@@ -10,11 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\Localization\Localization;
@@ -139,7 +139,7 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
             $session->save();
 
             $prefix = '   ';
-            for ($i = 0; $i < $depth; $i++) {
+            for ($i = 0; $i < $depth; ++$i) {
                 $prefix .= '-';
             }
 

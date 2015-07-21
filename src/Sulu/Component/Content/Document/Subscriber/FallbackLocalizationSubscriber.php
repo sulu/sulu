@@ -10,20 +10,19 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Set a fallback locale for the document if necessary
+ * Set a fallback locale for the document if necessary.
  *
  * TODO: Most of this code is legacy. It seems to me that this could be
  *       much simpler and more efficient.
@@ -110,7 +109,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Return available localizations
+     * Return available localizations.
      *
      * @param StructureBehavior $document
      * @param string $locale
@@ -156,7 +155,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     private function getWebspaceLocale($webspaceName, array $availableLocales, $locale)
     {
         if (!$webspaceName) {
-            return null;
+            return;
         }
 
         // get localization object for querying parent localizations
@@ -164,7 +163,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $localization = $webspace->getLocalization($locale);
 
         if (null === $localization) {
-            return null;
+            return;
         }
 
         $resultLocalization = null;
@@ -192,14 +191,14 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$resultLocalization) {
-            return null;
+            return;
         }
 
         return $resultLocalization->getLocalization();
     }
 
     /**
-     * Finds the next available parent-localization in which the node has a translation
+     * Finds the next available parent-localization in which the node has a translation.
      *
      * @param string[] $availableLocales
      * @param Localization $localization The localization to start the search for
@@ -219,11 +218,11 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             $localization = $localization->getParent();
         } while ($localization != null);
 
-        return null;
+        return;
     }
 
     /**
-     * Finds the next available child-localization in which the node has a translation
+     * Finds the next available child-localization in which the node has a translation.
      *
      * @param string[] $availableLocales
      * @param Localization $localization The localization to start the search for
@@ -249,11 +248,11 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         // return null if nothing was found
-        return null;
+        return;
     }
 
     /**
-     * Finds any localization, in which the node is translated
+     * Finds any localization, in which the node is translated.
      *
      * @param string[] $availableLocales
      * @param Localization[] $localizations The available localizations
@@ -265,7 +264,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         array $localizations
     ) {
         foreach ($localizations as $localization) {
-
             if (in_array($localization->getLocalization(), $availableLocales)) {
                 return $localization;
             }
@@ -277,6 +275,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             }
         }
 
-        return null;
+        return;
     }
 }

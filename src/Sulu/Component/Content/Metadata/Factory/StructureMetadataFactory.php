@@ -38,7 +38,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private $loader;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $debug;
 
@@ -136,7 +136,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             );
         }
 
-        require($cachePath);
+        require $cachePath;
 
         $structure = unserialize($metadata);
 
@@ -205,7 +205,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     }
 
     /**
-     * Assert type exists
+     * Assert type exists.
      *
      * @param string $type
      */
@@ -220,11 +220,10 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
                 )
             );
         }
-
     }
 
     /**
-     * Get the paths from the type path configuration
+     * Get the paths from the type path configuration.
      *
      * @param string $type
      *
@@ -243,7 +242,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     }
 
     /**
-     * Return the default structure type for the the given document type
+     * Return the default structure type for the the given document type.
      *
      * @param string $type
      *

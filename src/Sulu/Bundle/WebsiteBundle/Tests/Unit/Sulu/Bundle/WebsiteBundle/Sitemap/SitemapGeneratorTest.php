@@ -11,24 +11,20 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
-use ReflectionMethod;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Compat\Property;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\MetadataExtension\StructureExtension;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SitemapGeneratorTest extends SuluTestCase
 {

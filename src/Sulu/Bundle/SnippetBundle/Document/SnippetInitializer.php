@@ -22,8 +22,7 @@ class SnippetInitializer
     public function __construct(
         NodeManager $nodeManager,
         PathBuilder $pathBuilder
-    )
-    {
+    ) {
         $this->nodeManager = $nodeManager;
         $this->pathBuilder = $pathBuilder;
     }

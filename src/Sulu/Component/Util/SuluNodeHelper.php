@@ -14,8 +14,8 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 
 /**
  * Utility class for extracting Sulu-centric properties from nodes.

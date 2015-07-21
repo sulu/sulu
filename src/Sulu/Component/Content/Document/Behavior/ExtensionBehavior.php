@@ -16,12 +16,12 @@ interface ExtensionBehavior extends StructureBehavior
     public function getExtensionsData();
 
     /**
-     * Set all the extension data
+     * Set all the extension data.
      */
     public function setExtensionsData($extensionData);
 
     /**
-     * Set data for a specific extension
+     * Set data for a specific extension.
      *
      * @param string $name Extension name
      * @param array $data Extension data

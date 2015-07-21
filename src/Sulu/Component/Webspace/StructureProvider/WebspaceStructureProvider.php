@@ -17,7 +17,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Provide templates which are implemented in a single webspace
+ * Provide templates which are implemented in a single webspace.
  */
 class WebspaceStructureProvider implements WebspaceStructureProviderInterface
 {
@@ -110,7 +110,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     }
 
     /**
-     * checks if a template with given name exists
+     * checks if a template with given name exists.
      *
      * @param string $template
      *

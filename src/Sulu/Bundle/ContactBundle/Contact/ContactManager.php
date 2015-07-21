@@ -65,7 +65,7 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Find a contact by it's id
+     * Find a contact by it's id.
      *
      * @param int $id
      *
@@ -75,14 +75,14 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->findById($id);
         if (!$contact) {
-            return null;
+            return;
         }
 
         return $contact;
     }
 
     /**
-     * Deletes the contact for the given id
+     * Deletes the contact for the given id.
      *
      * @return \Closure
      */
@@ -149,7 +149,7 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Creates a new contact for the given data
+     * Creates a new contact for the given data.
      *
      * @param array $data
      * @param int|null $id
@@ -157,6 +157,7 @@ class ContactManager extends AbstractContactManager
      * @param bool $flush
      *
      * @return Contact
+     *
      * @throws EntityNotFoundException
      */
     public function save(
@@ -380,7 +381,7 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return null;
+            return;
         }
 
         return new ContactApi($contact, $locale, $this->tagManager);
@@ -399,7 +400,7 @@ class ContactManager extends AbstractContactManager
         if ($contact) {
             return new ContactApi($contact, $locale, $this->tagManager);
         } else {
-            return null;
+            return;
         }
     }
 
@@ -465,7 +466,7 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Return property for key or given default value
+     * Return property for key or given default value.
      *
      * @param array $data
      * @param string $key

@@ -57,7 +57,7 @@ interface MediaRepositoryInterface
     public function findMediaByCollectionId($collectionId, $limit, $offset);
 
     /**
-     * Returns amount of affected rows
+     * Returns amount of affected rows.
      *
      * @param array $filter
      *

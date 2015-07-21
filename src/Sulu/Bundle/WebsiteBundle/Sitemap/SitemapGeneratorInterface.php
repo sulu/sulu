@@ -23,7 +23,7 @@ interface SitemapGeneratorInterface
     public function generateAllLocals($webspaceKey, $flat = false);
 
     /**
-     * Generates a sitemap for given webspace
+     * Generates a sitemap for given webspace.
      *
      * @param string $webspaceKey
      * @param string $locale

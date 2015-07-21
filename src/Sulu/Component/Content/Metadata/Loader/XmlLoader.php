@@ -11,18 +11,16 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Exception;
-use Sulu\Exception\FeatureNotImplementedException;
-use Symfony\Component\Config\Loader\LoaderResolverInterface;
-use Symfony\Component\Config\Util\XmlUtils;
-use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Exception\FeatureNotImplementedException;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
- * Load structure structure from an XML file
+ * Load structure structure from an XML file.
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
@@ -129,8 +127,8 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = $data['minOccurs'] ? : 1;
-        $property->maxOccurs = $data['maxOccurs'] ? : 999;
+        $property->minOccurs = $data['minOccurs'] ?: 1;
+        $property->maxOccurs = $data['maxOccurs'] ?: 999;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }
@@ -159,7 +157,6 @@ class XmlLoader extends XmlLegacyLoader
             'internal' => false,
             'cacheLifetime' => null,
         ), $this->normalizeItem($data));
-
 
         return $data;
     }

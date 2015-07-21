@@ -70,7 +70,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             $response = new JsonResponse($array, 200);
         } else {
             // if form login
-            $response =  new RedirectResponse($url);
+            $response = new RedirectResponse($url);
         }
 
         return $response;

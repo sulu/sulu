@@ -424,7 +424,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             array(
                 'cache_dir' => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both',
-                'cache_class' => 'WebspaceCollectionCache' . uniqid()
+                'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             )
         );
 

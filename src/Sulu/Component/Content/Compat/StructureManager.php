@@ -10,18 +10,18 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Extension\ExtensionManager;
-use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
-use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  * generates subclasses of structure to match template definitions.
- * this classes will be cached in Symfony cache
+ * this classes will be cached in Symfony cache.
  */
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
@@ -109,7 +109,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Wrap the given Structure with a legacy (bridge) structure
+     * Wrap the given Structure with a legacy (bridge) structure.
      *
      * @param Structure
      *

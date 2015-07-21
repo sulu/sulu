@@ -2,8 +2,8 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures\fixtures;
 
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
+use Sulu\Component\DocumentManager\DocumentManager;
 
 class BarfooFixture implements DocumentFixtureInterface
 {

@@ -781,7 +781,7 @@ class Contact extends ApiWrapper
             return new Account($mainAccount, $this->locale);
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -937,7 +937,7 @@ class Contact extends ApiWrapper
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -983,7 +983,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add category
+     * Add category.
      *
      * @param CategoryEntity $category
      *

@@ -252,7 +252,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                         'article' => 'Test-Sub-Article 3',
                     ),
                 ),
-            )
+            ),
         );
 
         $this->blockContentType->readForPreview(

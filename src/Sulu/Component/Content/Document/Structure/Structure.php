@@ -7,15 +7,10 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Structure;
 
-use Sulu\Component\Content\Types\ContentTypeManagerInterface;
-use PHPCR\NodeInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
-use Sulu\Component\Content\Document\Structure\StructureInterface;
 
 /**
  * Lazy loading container for content properties.
@@ -35,11 +30,11 @@ class Structure implements StructureInterface
     /**
      * {@inheritDoc}
      */
-    public function getStagedData() 
+    public function getStagedData()
     {
         return $this->stagedData;
     }
-    
+
     /**
      * {@inheritDoc}
      */

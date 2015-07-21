@@ -38,7 +38,8 @@ class XmlLegacyLoader implements LoaderInterface
 
     /**
      * tags that are required in template
-     * TODO should be possible to inject from config
+     * TODO should be possible to inject from config.
+     *
      * @var array
      */
     private $requiredTagNames = array(
@@ -506,4 +507,3 @@ class XmlLegacyLoader implements LoaderInterface
         throw new FeatureNotImplementedException();
     }
 }
-

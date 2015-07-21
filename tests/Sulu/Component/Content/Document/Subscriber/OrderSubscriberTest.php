@@ -2,16 +2,8 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
-use PHPCR\PropertyInterface;
-
-use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Document\Subscriber\OrderSubscriber;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Component\Content\Document\Subscriber\SubscriberTestCase;
 
 class OrderSubscriberTest extends SubscriberTestCase
 {

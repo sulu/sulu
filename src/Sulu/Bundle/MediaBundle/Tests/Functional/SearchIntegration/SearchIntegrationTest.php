@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
-use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -15,7 +14,7 @@ class SearchIntegrationTest extends SuluTestCase
     protected function getKernelConfiguration()
     {
         return array(
-            'sulu_context' => 'website'
+            'sulu_context' => 'website',
         );
     }
 
@@ -64,7 +63,7 @@ class SearchIntegrationTest extends SuluTestCase
         $document->setStructureType('images');
         $document->setParent($this->webspaceDocument);
         $document->getStructure()->bind(array(
-            'images' => $this->mediaSelectionContainer->reveal()
+            'images' => $this->mediaSelectionContainer->reveal(),
         ), false);
         $this->documentManager->persist($document, 'de');
         $this->documentManager->flush();

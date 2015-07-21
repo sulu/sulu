@@ -29,7 +29,7 @@ class SecondStructureCache extends Page
         $prop1 = new Property(
             'title',
             array(
-                'title' =>             array(
+                'title' => array(
                 'de' => 'Titel',
                 'en' => 'Title',
             ),
@@ -52,7 +52,7 @@ class SecondStructureCache extends Page
         $prop1 = new Property(
             'url',
             array(
-                'title' =>             array(
+                'title' => array(
                 'de' => 'Adresse',
                 'en' => 'Resourcelocator',
             ),
@@ -74,7 +74,7 @@ class SecondStructureCache extends Page
         $prop1 = new Property(
             'links',
             array(
-                'title' =>             array(
+                'title' => array(
                 'de' => 'Interne Links',
                 'en' => 'Internal links',
             ),
@@ -95,7 +95,7 @@ class SecondStructureCache extends Page
         $prop1 = new Property(
             'images',
             array(
-                'title' =>             array(
+                'title' => array(
                 'de' => 'Bilder',
                 'en' => 'Images',
             ),
@@ -114,11 +114,11 @@ class SecondStructureCache extends Page
                 $section1 = new SectionProperty(
             'content',
                         array(
-                'title' =>             array(
+                'title' => array(
                 'de' => 'Inhalt',
                 'en' => 'Content',
             ),
-                'info_text' =>             array(
+                'info_text' => array(
                 'de' => 'Bereich für den Inhalt',
                 'en' => 'Content Section',
             ),
@@ -128,7 +128,7 @@ class SecondStructureCache extends Page
         $prop1 = new Property(
             'article',
             array(
-                'title' =>             array(
+                'title' => array(
                 'de' => 'Artikel',
                 'en' => 'Article',
             ),

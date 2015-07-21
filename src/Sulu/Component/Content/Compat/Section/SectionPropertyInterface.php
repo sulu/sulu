@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Compat\Section;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
- * Defines a section for properties
+ * Defines a section for properties.
  */
 interface SectionPropertyInterface extends PropertyInterface
 {

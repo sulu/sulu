@@ -12,9 +12,9 @@ namespace Sulu\Bundle\TagBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.

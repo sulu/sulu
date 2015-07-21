@@ -2,11 +2,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Compat\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.
@@ -68,7 +67,6 @@ class StructureResolver implements StructureResolverInterface
             $data['view'][$property->getName()] = $contentType->getViewData($property);
             $data['content'][$property->getName()] = $contentType->getContentData($property);
         }
-
 
         return $data;
     }

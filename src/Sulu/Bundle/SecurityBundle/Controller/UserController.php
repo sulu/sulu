@@ -10,37 +10,34 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use JMS\Serializer\SerializationContext;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
-use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
-use Sulu\Component\Security\SecuredControllerInterface;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes the users accessible through a rest api
- * @package Sulu\Bundle\SecurityBundle\Controller
+ * Makes the users accessible through a rest api.
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityKey = 'users';
 
     /**
-     * Contains the field descriptors used by the list response
+     * Contains the field descriptors used by the list response.
      *
      * @var DoctrineFieldDescriptor[]
      */
@@ -97,7 +94,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the user with the given id
+     * Returns the user with the given id.
      *
      * @param int $id
      *
@@ -122,7 +119,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Creates a new user in the system
+     * Creates a new user in the system.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -180,7 +177,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates the given user with the given data
+     * Updates the given user with the given data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id
@@ -208,7 +205,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Partly updates a user entity for a given id
+     * Partly updates a user entity for a given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id
@@ -235,7 +232,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Deletes the user with the given id
+     * Deletes the user with the given id.
      *
      * @param int $id
      *
@@ -250,7 +247,8 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Checks if all the arguments are given, and throws an exception if one is missing
+     * Checks if all the arguments are given, and throws an exception if one is missing.
+     *
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      */
 
@@ -274,7 +272,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Returns a user with a specific contact id or all users
-     * optional parameter 'flat' calls listAction
+     * optional parameter 'flat' calls listAction.
      *
      * @param Request $request
      *
@@ -344,7 +342,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the UserManager
+     * Returns the UserManager.
      *
      * @return UserManager
      */

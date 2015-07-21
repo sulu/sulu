@@ -75,7 +75,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 

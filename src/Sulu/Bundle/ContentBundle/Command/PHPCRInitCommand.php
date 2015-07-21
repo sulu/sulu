@@ -58,7 +58,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
             new ContentNodeType(),
             new SnippetNodeType(),
             new PageNodeType(),
-            new HomeNodeType()
+            new HomeNodeType(),
         ) as $nodeType) {
             $output->writeln('  - ' . $nodeType->getName());
             $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);

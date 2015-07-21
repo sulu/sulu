@@ -50,7 +50,7 @@ class MediaTypeUpdateCommand extends ContainerAwareCommand
                             $newType = $typeManager->get($mediaTypeId);
                             $media->setType($newType);
                             $em->persist($media);
-                            $counter++;
+                            ++$counter;
                             $output->writeln(sprintf('Media with id <comment>%s</comment> change from type <comment>%s</comment> to <comment>%s</comment>', $media->getId(), $oldType->getName(), $newType->getName()));
                         }
                     }

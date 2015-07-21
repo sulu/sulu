@@ -13,24 +13,30 @@ namespace Sulu\Component\Content\Extension;
 interface ExtensionManagerInterface
 {
     /**
-     * Returns extensions for structure
+     * Returns extensions for structure.
+     *
      * @param string $key
+     *
      * @return ExtensionInterface[]
      */
     public function getExtensions($key);
 
     /**
-     * Indicates that the structure has a extension
+     * Indicates that the structure has a extension.
+     *
      * @param string $key
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasExtension($key, $name);
 
     /**
-     * Returns a extension
+     * Returns a extension.
+     *
      * @param string $key
      * @param string $name
+     *
      * @return ExtensionInterface
      */
     public function getExtension($key, $name);

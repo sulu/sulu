@@ -6,7 +6,6 @@ use Jackalope\Property;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
-use PHPCR\Util\UUIDHelper;
 use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

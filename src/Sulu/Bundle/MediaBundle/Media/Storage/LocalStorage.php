@@ -147,7 +147,7 @@ class LocalStorage implements StorageInterface
             return $newFileName;
         }
 
-        $counter++;
+        ++$counter;
 
         return $this->getUniqueFileName($folder, $fileName, $counter);
     }
