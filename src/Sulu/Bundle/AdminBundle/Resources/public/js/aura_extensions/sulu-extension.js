@@ -410,6 +410,7 @@
 
                         // replace default order by custom order settings
                         gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
+                        this.sandbox.emit('sulu.list.preload', gridOptions);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =
