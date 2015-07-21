@@ -29404,6 +29404,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             editedErrorClass: 'server-validation-error',
             newRecordId: 'newrecord',
             gridIconClass: 'grid-icon',
+            gridBadgeClass: 'grid-badge',
             gridImageClass: 'grid-image',
             childWrapperClass: 'child-wrapper',
             parentClass: 'children-toggler',
@@ -29460,6 +29461,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             icon: [
                 '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
                 '   <span class="fa-<%= icon %>"></span>',
+                '</span>'
+            ].join(''),
+            badge: [
+                '<span class="' + constants.gridBadgeClass + ' <%= cssClass %>">',
+                '   <% if(!!icon) { %><span class="fa-<%= icon %>"></span><% } %>',
+                '   <% if(!!title) { %><%= title %><% } %>',
                 '</span>'
             ].join(''),
             checkbox: [
@@ -29672,6 +29679,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.tableCropped = false;
             this.cropBreakPoint = null;
             this.icons = this.sandbox.util.extend(true, [], this.options.icons);
+            this.badges = this.sandbox.util.extend(true, [], this.options.badges);
         },
 
         /**
@@ -29689,8 +29697,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds an action-icon to into the first column
          */
         addActionIcon: function() {
-            if (typeof this.datagrid.options.actionCallback === 'function' &&
-                !!this.datagrid.matchings && this.datagrid.matchings.length > 0) {
+            if (typeof this.datagrid.options.actionCallback === 'function' && !!this.datagrid.matchings && this.datagrid.matchings.length > 0) {
                 this.icons.push({
                     icon: this.options.actionIcon,
                     column: this.options.actionIconColumn || this.datagrid.matchings[0].attribute,
@@ -30058,6 +30065,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.icons) {
                 content = this.addIconsToCellContent(content, column, $cell);
             }
+
+            if (!!this.badges) {
+                content = this.addBadgesToCellContent(content, column, record);
+            }
+
             return content;
         },
 
@@ -30138,6 +30150,40 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     }
                 }
             }.bind(this));
+
+            return content;
+        },
+
+        /**
+         * Adds badges to a cell content
+         * @param content {String|Object} html or a dom object. If its a string icons get added to the string, if its an object it gets appended
+         * @param column {Object} the column data object
+         * @param record {Object} record which will be rendered
+         * @returns content {String|Object} html or a dom object
+         */
+        addBadgesToCellContent: function(content, column, record) {
+            var badgeStr;
+            this.sandbox.util.foreach(this.badges, function(badge) {
+                if (badge.column === column.attribute) {
+                    if (!!badge.callback) {
+                        badge = badge.callback(record, badge);
+                    }
+
+                    if (!badge) {
+                        return;
+                    }
+
+                    badgeStr = this.sandbox.util.template(templates.badge)(
+                        this.sandbox.util.extend(true, {cssClass: null, title: null, icon: null}, badge)
+                    );
+                    if (typeof content === 'object') {
+                        this.sandbox.dom.prepend(content, badgeStr);
+                    } else if (typeof content === 'string') {
+                        content = badgeStr + content;
+                    }
+                }
+            }.bind(this));
+
             return content;
         },
 
@@ -30294,9 +30340,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         iconClickHandler: function(event) {
             var icon = this.icons[this.sandbox.dom.data(event.currentTarget, 'icon-index')],
                 recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
+
             if (typeof recordId !== 'undefined' && !!icon && typeof icon.callback === 'function') {
                 event.stopPropagation();
-                icon.callback(recordId);
+                icon.callback(recordId, this.datagrid.getRecordById(recordId));
             }
         },
 
@@ -30517,7 +30564,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         rowClickCallback: function(event) {
             if (this.rowClicked === false) {
                 this.rowClicked = true;
-                var recordId = this.sandbox.dom.data(event.currentTarget, 'id');;
+                var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
+                ;
                 this.datagrid.itemClicked.call(this.datagrid, recordId);
                 // delay to prevent multiple emits on double click
                 this.sandbox.util.delay(function() {
@@ -32320,6 +32368,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         }
                         this.destroy();
                         this.parseData(response);
+                        this.getSortingFromUrl(this.currentUrl);
                         this.render();
                         if (!!params.success && typeof params.success === 'function') {
                             params.success(response);
@@ -32328,6 +32377,22 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     .fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
+            },
+
+            /**
+             * Parses the sorting params from the url
+             * @param url
+             */
+            getSortingFromUrl: function(url) {
+                if (url.indexOf('sortOrder') > -1 && url.indexOf('sortBy') > -1) {
+                    var attribute = this.sandbox.util.getParameterByName('sortBy', url),
+                        direction = this.sandbox.util.getParameterByName('sortOrder', url);
+
+                    if (!!attribute && !!direction) {
+                        this.sort.attribute = attribute;
+                        this.sort.direction = direction;
+                    }
+                }
             },
 
             /**
@@ -51074,6 +51139,19 @@ define('husky_extensions/util',[],function() {
                     parent = [];
                 }
                 return $.extend(true, parent, object);
+            };
+
+            /**
+             * Returns a parameter value from a given url
+             * @param name {string} name of the parameter to search for
+             * @param url {string}
+             * @returns {string}
+             */
+            app.core.util.getParameterByName =  function(name, url) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(url);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
             };
 
 			app.core.util.template = _.template;
