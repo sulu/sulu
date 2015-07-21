@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -81,7 +82,7 @@ class Environment
      */
     public function toArray($depth = null)
     {
-        $res = array();
+        $res = [];
         $res['type'] = $this->getType();
 
         foreach ($this->getUrls() as $url) {

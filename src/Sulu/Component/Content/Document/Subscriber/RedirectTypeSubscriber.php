@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,9 +31,9 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     private $documentRegistry;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder  $encoder
      * @param DocumentAccessor $accessor
-     * @param ProxyFactory $proxyFactory
+     * @param ProxyFactory     $proxyFactory
      */
     public function __construct(
         PropertyEncoder $encoder,

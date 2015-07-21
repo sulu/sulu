@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\TestBundle\Kernel;
 
 use Sulu\Bundle\TestBundle\SuluTestBundle;
@@ -10,7 +19,7 @@ class SuluTestKernel extends SuluKernel
 {
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             // Dependencies
             new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
@@ -42,7 +51,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
-        );
+        ];
 
         return $bundles;
     }

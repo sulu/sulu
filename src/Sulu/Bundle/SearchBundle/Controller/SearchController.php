@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -70,10 +71,10 @@ class SearchController
 
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
-        $aggregateHits = array();
+        $aggregateHits = [];
         $startTime = microtime(true);
 
-        $categories = $category ? array($category) : $this->searchManager->getCategoryNames();
+        $categories = $category ? [$category] : $this->searchManager->getCategoryNames();
 
         foreach ($categories as $category) {
             $query = $this->searchManager->createSearch($queryString);
@@ -101,11 +102,11 @@ class SearchController
         $representation = new SearchResultRepresentation(
             new CollectionRepresentation($pager->getCurrentPageResults(), 'result'),
             'sulu_search_search',
-            array(
+            [
                 'locale' => $locale,
                 'query' => $query,
                 'category' => $category,
-            ),
+            ],
             (integer) $page,
             (integer) $limit,
             $pager->getNbPages(),

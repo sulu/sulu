@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -503,22 +504,22 @@ class CodeControllerTest extends SuluTestCase
 
     public function testPost()
     {
-        $request = array(
+        $request = [
             'code' => 'test.code.4',
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-            'translations' => array(
-                array('value' => 'Translation 1', 'catalogue' => array('id' => $this->catalogue1->getId())),
-                array('value' => 'Translation 2', 'catalogue' => array('id' => $this->catalogue2->getId())),
-            ),
-        );
+            ],
+            'translations' => [
+                ['value' => 'Translation 1', 'catalogue' => ['id' => $this->catalogue1->getId()]],
+                ['value' => 'Translation 2', 'catalogue' => ['id' => $this->catalogue2->getId()]],
+            ],
+        ];
         $this->client->request(
             'POST',
             '/api/codes',
@@ -543,17 +544,17 @@ class CodeControllerTest extends SuluTestCase
 
     public function testPostNullValues()
     {
-        $r1 = array(
+        $r1 = [
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'POST',
             '/api/codes',
@@ -561,17 +562,17 @@ class CodeControllerTest extends SuluTestCase
         );
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $r2 = array(
+        $r2 = [
             'code' => 'test.code.5',
             'frontend' => '0',
             'length' => '12',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'POST',
             '/api/codes',
@@ -580,15 +581,15 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $r3 = array(
+        $r3 = [
             'code' => 'test.code.6',
             'backend' => '0',
             'frontend' => '0',
             'length' => '12',
-            'location' => array(
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'POST',
             '/api/codes',
@@ -597,15 +598,15 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $r4 = array(
+        $r4 = [
             'code' => 'test.code.7',
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'POST',
             '/api/codes',
@@ -614,17 +615,17 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $r5 = array(
+        $r5 = [
             'code' => 'test.code.8',
             'frontend' => '0',
             'backend' => '0',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'POST',
             '/api/codes',
@@ -636,23 +637,23 @@ class CodeControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        $request = array(
+        $request = [
             'code' => 'test.code.4',
             'frontend' => '1',
             'backend' => '0',
             'length' => '20',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-            'translations' => array(
-                array('value' => 'Test Code 1.1', 'catalogue' => array('id' => $this->catalogue1->getId())),
-                array('value' => 'Test Code 1.2', 'catalogue' => array('id' => $this->catalogue2->getId())),
-                array('value' => 'Test Code 1.3', 'catalogue' => array('id' => $this->catalogue3->getId())),
-            ),
-        );
+            ],
+            'translations' => [
+                ['value' => 'Test Code 1.1', 'catalogue' => ['id' => $this->catalogue1->getId()]],
+                ['value' => 'Test Code 1.2', 'catalogue' => ['id' => $this->catalogue2->getId()]],
+                ['value' => 'Test Code 1.3', 'catalogue' => ['id' => $this->catalogue3->getId()]],
+            ],
+        ];
         $this->client->request(
             'PUT',
             '/api/codes/' . $this->code1->getId(),
@@ -672,34 +673,34 @@ class CodeControllerTest extends SuluTestCase
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
         $this->assertEquals(3, sizeof($response->translations));
-        $values = array(
+        $values = [
             $request['translations'][0]['value'],
             $request['translations'][1]['value'],
             $request['translations'][2]['value'],
-        );
+        ];
         $this->assertTrue(in_array($response->translations[0]->value, $values));
-        $values = array_diff($values, array($response->translations[0]->value));
+        $values = array_diff($values, [$response->translations[0]->value]);
         $this->assertTrue(in_array($response->translations[1]->value, $values));
-        $values = array_diff($values, array($response->translations[1]->value));
+        $values = array_diff($values, [$response->translations[1]->value]);
         $this->assertTrue(in_array($response->translations[2]->value, $values));
-        $values = array_diff($values, array($response->translations[2]->value));
+        $values = array_diff($values, [$response->translations[2]->value]);
         $this->assertEquals(0, sizeof($values));
     }
 
     public function testPutNotExisting()
     {
-        $request = array(
+        $request = [
             'code' => 'test.code.4',
             'frontend' => '1',
             'backend' => '0',
             'length' => '20',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'PUT',
             '/api/codes/125',
@@ -710,18 +711,18 @@ class CodeControllerTest extends SuluTestCase
 
     public function testPutNotExistingPackage()
     {
-        $request = array(
+        $request = [
             'code' => 'test.code.1',
             'frontend' => '1',
             'backend' => '0',
             'length' => '20',
-            'package' => array(
+            'package' => [
                 'id' => 512312,
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => $this->location2->getId(),
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'PUT',
             '/api/codes/' . $this->code1->getId(),
@@ -741,18 +742,18 @@ class CodeControllerTest extends SuluTestCase
 
     public function testPutNotExistingLocation()
     {
-        $request = array(
+        $request = [
             'code' => 'test.code.4',
             'frontend' => '1',
             'backend' => '0',
             'length' => '20',
-            'package' => array(
+            'package' => [
                 'id' => $this->package2->getId(),
-            ),
-            'location' => array(
+            ],
+            'location' => [
                 'id' => 5123,
-            ),
-        );
+            ],
+        ];
         $this->client->request(
             'PUT',
             '/api/codes/' . $this->code1->getId(),

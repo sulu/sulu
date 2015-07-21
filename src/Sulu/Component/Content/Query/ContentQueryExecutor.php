@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -80,7 +81,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         // this preloads all node which should are selected in the statement before
         // prevent the system to load each node individual
         $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
-        $paths = array();
+        $paths = [];
         /** @var Row $row */
         foreach ($queryResult as $row) {
             $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;

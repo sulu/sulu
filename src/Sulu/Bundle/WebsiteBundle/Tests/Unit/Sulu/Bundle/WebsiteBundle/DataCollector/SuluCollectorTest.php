@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\DataCollector;
 
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
@@ -42,7 +51,7 @@ class SuluCollectorTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getCurrentLocalization()->willReturn('de_de');
         $this->requestAnalyzer->getResourceLocator()->willReturn('/asd');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/asd/');
-        $this->request->attributes->set('_route_params', array('structure' => $this->structure->reveal()));
+        $this->request->attributes->set('_route_params', ['structure' => $this->structure->reveal()]);
 
         $this->dataCollector->collect($this->request, $this->response->reveal());
 

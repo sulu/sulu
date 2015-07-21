@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,22 +35,22 @@ class InternalLinksContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testOrder()
     {
-        $this->executor->execute('default', array('en'), $this->builder)->willReturn(
-            array(array('uuid' => 1), array('uuid' => 2), array('uuid' => 3))
+        $this->executor->execute('default', ['en'], $this->builder)->willReturn(
+            [['uuid' => 1], ['uuid' => 2], ['uuid' => 3]]
         );
 
         $this->container = new InternalLinksContainer(
-            array(2, 3, 1),
+            [2, 3, 1],
             $this->executor->reveal(),
             $this->builder->reveal(),
-            array(),
+            [],
             new NullLogger(),
             'default',
             'en'
         );
 
         $result = $this->container->getData();
-        $this->assertEquals(array(array('uuid' => 2), array('uuid' => 3), array('uuid' => 1)), $result);
+        $this->assertEquals([['uuid' => 2], ['uuid' => 3], ['uuid' => 1]], $result);
     }
 
     protected function setUp()

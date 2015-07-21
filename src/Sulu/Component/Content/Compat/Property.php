@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -117,8 +118,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $multilingual = true,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $params = array(),
-        $tags = array(),
+        $params = [],
+        $tags = [],
         $col = null
     ) {
         $this->contentTypeName = $contentTypeName;
@@ -212,7 +213,7 @@ class Property implements PropertyInterface, \JsonSerializable
      * returns tags defined in xml.
      *
      * @return \Sulu\Component\Content\PropertyTag[]
-=======
+     =======
      * returns tags defined in xml
      * @return \Sulu\Component\Content\Compat\PropertyTag[]
      */
@@ -417,7 +418,7 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $result = array(
+        $result = [
             'name' => $this->getName(),
             'metadata' => $this->getMetadata()->getData(),
             'mandatory' => $this->getMandatory(),
@@ -426,13 +427,13 @@ class Property implements PropertyInterface, \JsonSerializable
             'maxOccurs' => $this->getMaxOccurs(),
             'contentTypeName' => $this->getContentTypeName(),
             'params' => $this->getParams(),
-            'tags' => array(),
-        );
+            'tags' => [],
+        ];
         foreach ($this->getTags() as $tag) {
-            $result['tags'][] = array(
+            $result['tags'][] = [
                 'name' => $tag->getName(),
                 'priority' => $tag->getPriority(),
-            );
+            ];
         }
 
         return $result;

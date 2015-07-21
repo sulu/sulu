@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ interface PreviewCacheProviderInterface
     /**
      * returns TRUE if cache contains the content for user.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -32,7 +33,7 @@ interface PreviewCacheProviderInterface
     /**
      * deletes cache for given user.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -44,7 +45,7 @@ interface PreviewCacheProviderInterface
     /**
      * clones original node and prepare cache node.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -56,7 +57,7 @@ interface PreviewCacheProviderInterface
     /**
      * returns cached structure.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -69,21 +70,21 @@ interface PreviewCacheProviderInterface
      * saves given structure in cache.
      *
      * @param StructureInterface $content
-     * @param int $userId
-     * @param string string $contentUuid
-     * @param string string $webspaceKey
-     * @param string string $locale
+     * @param int                $userId
+     * @param string string      $contentUuid
+     * @param string string      $webspaceKey
+     * @param string string      $locale
      */
     public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * returns cached changes.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool $remove if TRUE remove changes after read (singleton)
+     * @param bool   $remove      if TRUE remove changes after read (singleton)
      *
      * @return array
      */
@@ -92,8 +93,8 @@ interface PreviewCacheProviderInterface
     /**
      * save changes in cache.
      *
-     * @param array $changes
-     * @param int $userId
+     * @param array  $changes
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -105,8 +106,8 @@ interface PreviewCacheProviderInterface
     /**
      * appends changes to existing changes in cache and returns new array.
      *
-     * @param array $newChanges
-     * @param int $userId
+     * @param array  $newChanges
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -119,7 +120,7 @@ interface PreviewCacheProviderInterface
      * changes template of cached node.
      *
      * @param string $template
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale

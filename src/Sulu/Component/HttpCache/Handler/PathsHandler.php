@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,12 +44,12 @@ class PathsHandler implements
     /**
      * @var array
      */
-    private $structuresToInvalidate = array();
+    private $structuresToInvalidate = [];
 
     /**
      * @param WebspaceManagerInterface $webspaceManager
-     * @param ProxyClientInterface $proxyClient
-     * @param string $environment - kernel envionment, dev, prod, etc.
+     * @param ProxyClientInterface     $proxyClient
+     * @param string                   $environment     - kernel envionment, dev, prod, etc.
      */
     public function __construct(
         WebspaceManagerInterface $webspaceManager,

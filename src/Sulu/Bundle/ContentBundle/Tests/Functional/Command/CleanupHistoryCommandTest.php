@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -85,32 +86,32 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $webspaceKey = 'sulu_io';
         $locale = 'de';
 
-        return array(
-            array(
+        return [
+            [
                 $webspaceKey,
                 $locale,
                 true,
                 null,
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/' => false,
-                    ),
-                    'not-contains' => array(),
-                ),
-            ),
-            array(
+                    ],
+                    'not-contains' => [],
+                ],
+            ],
+            [
                 $webspaceKey,
                 $locale,
                 false,
                 null,
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/' => false,
-                    ),
-                    'not-contains' => array(),
-                ),
-            ),
-        );
+                    ],
+                    'not-contains' => [],
+                ],
+            ],
+        ];
     }
 
     public function dataProviderNoHistory()
@@ -118,38 +119,38 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $webspaceKey = 'sulu_io';
         $locale = 'de';
 
-        return array(
-            array(
+        return [
+            [
                 $webspaceKey,
                 $locale,
                 true,
                 null,
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/' => false,
                         '/team' => false,
                         '/team/daniel' => false,
                         '/team/johannes' => false,
-                    ),
-                    'not-contains' => array(),
-                ),
-            ),
-            array(
+                    ],
+                    'not-contains' => [],
+                ],
+            ],
+            [
                 $webspaceKey,
                 $locale,
                 false,
                 null,
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/' => false,
                         '/team' => false,
                         '/team/daniel' => false,
                         '/team/johannes' => false,
-                    ),
-                    'not-contains' => array(),
-                ),
-            ),
-        );
+                    ],
+                    'not-contains' => [],
+                ],
+            ],
+        ];
     }
 
     public function dataProviderHistory()
@@ -157,14 +158,14 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $webspaceKey = 'sulu_io';
         $locale = 'de';
 
-        return array(
-            array(
+        return [
+            [
                 $webspaceKey,
                 $locale,
                 true,
                 null,
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/' => false,
                         '/my-test' => false,
                         '/my-test/daniel' => false,
@@ -172,17 +173,17 @@ class CleanupHistoryCommandTest extends SuluTestCase
                         '/team' => true,
                         '/team/daniel' => true,
                         '/team/johannes' => true,
-                    ),
-                    'not-contains' => array(),
-                ),
-            ),
-            array(
+                    ],
+                    'not-contains' => [],
+                ],
+            ],
+            [
                 $webspaceKey,
                 $locale,
                 false,
                 null,
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/' => false,
                         '/my-test' => false,
                         '/my-test/daniel' => false,
@@ -190,49 +191,49 @@ class CleanupHistoryCommandTest extends SuluTestCase
                         '/team' => true,
                         '/team/daniel' => true,
                         '/team/johannes' => true,
-                    ),
-                    'not-contains' => array(),
-                ),
-            ),
-            array(
+                    ],
+                    'not-contains' => [],
+                ],
+            ],
+            [
                 $webspaceKey,
                 $locale,
                 false,
                 '/my-test',
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/my-test' => false,
                         '/my-test/daniel' => false,
                         '/my-test/johannes' => false,
-                    ),
-                    'not-contains' => array(
+                    ],
+                    'not-contains' => [
                         '/',
                         '/team',
                         '/team/daniel',
                         '/team/johannes',
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 $webspaceKey,
                 $locale,
                 false,
                 '/team',
-                array(
-                    'contains' => array(
+                [
+                    'contains' => [
                         '/team' => true,
                         '/team/daniel' => true,
                         '/team/johannes' => true,
-                    ),
-                    'not-contains' => array(
+                    ],
+                    'not-contains' => [
                         '/',
                         '/my-test',
                         '/my-test/daniel',
                         '/my-test/johannes',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function dataProviderException()
@@ -240,10 +241,10 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $webspaceKey = 'sulu_io';
         $locale = 'de';
 
-        return array(
-            array($webspaceKey, $locale, false, '/team'),
-            array($webspaceKey, $locale, true, '/team'),
-        );
+        return [
+            [$webspaceKey, $locale, false, '/team'],
+            [$webspaceKey, $locale, true, '/team'],
+        ];
     }
 
     /**
@@ -282,12 +283,12 @@ class CleanupHistoryCommandTest extends SuluTestCase
     public function testRunException($webspaceKey, $locale, $dryRun, $basePath)
     {
         $this->tester->execute(
-            array(
+            [
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
                 '--dry-run' => $dryRun,
                 '--base-path' => $basePath,
-            )
+            ]
         );
         $output = $this->tester->getDisplay();
 
@@ -297,12 +298,12 @@ class CleanupHistoryCommandTest extends SuluTestCase
     private function runCommandTest($webspaceKey, $locale, $dryRun, $basePath, $urls)
     {
         $this->tester->execute(
-            array(
+            [
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
                 '--dry-run' => $dryRun,
                 '--base-path' => $basePath,
-            )
+            ]
         );
         $output = $this->tester->getDisplay();
 

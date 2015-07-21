@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -178,7 +179,7 @@ class Preview implements PreviewInterface
             $changes = $this->renderStructure($content, true, $property);
             if ($changes !== false) {
                 $this->previewCache->appendChanges(
-                    array($property => $changes),
+                    [$property => $changes],
                     $userId,
                     $content->getUuid(),
                     $webspaceKey,

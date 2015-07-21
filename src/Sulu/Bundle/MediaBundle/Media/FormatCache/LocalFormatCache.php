@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,7 +48,7 @@ class LocalFormatCache implements FormatCacheInterface
 
     public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
     {
-        /**
+        /*
          * @var Route
          */
         $this->filesystem = $filesystem;
@@ -99,7 +100,7 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * @param string $prePath
-     * @param int $id
+     * @param int    $id
      * @param string $fileName
      * @param string $format
      *
@@ -115,7 +116,7 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * @param string $prePath
-     * @param int $id
+     * @param int    $id
      * @param string $fileName
      * @param string $format
      * @param string $version
@@ -142,7 +143,7 @@ class LocalFormatCache implements FormatCacheInterface
         $id = $this->getIdFromUrl($url);
         $format = $this->getFormatFromUrl($url);
 
-        return array($id, $format);
+        return [$id, $format];
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -97,7 +98,7 @@ class BasePageDocument implements
     /**
      * @var string[]
      */
-    protected $navigationContexts = array();
+    protected $navigationContexts = [];
 
     /**
      * @var int
@@ -287,7 +288,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function setNavigationContexts(array $navigationContexts = array())
+    public function setNavigationContexts(array $navigationContexts = [])
     {
         $this->navigationContexts = $navigationContexts;
     }

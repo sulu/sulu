@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -109,7 +110,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $view->setSerializationContext(
                 SerializationContext::create()->setGroups(
-                    array('fullAccount', 'partialContact', 'partialMedia', 'partialTag', 'fullCategory')
+                    ['fullAccount', 'partialContact', 'partialMedia', 'partialTag', 'fullCategory']
                 )
             );
         } catch (EntityNotFoundException $enfe) {
@@ -166,7 +167,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $values,
                 'contacts',
                 'get_account_contacts',
-                array_merge(array('id' => $id), $request->query->all()),
+                array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
                 $listBuilder->count()
@@ -213,7 +214,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $values,
                 'addresses',
                 'get_account_addresses',
-                array_merge(array('id' => $id), $request->query->all()),
+                array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
                 $listBuilder->count()
@@ -259,7 +260,7 @@ class AccountController extends RestController implements ClassResourceInterface
             // check if relation already exists
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
-                ->findOneBy(array('contact' => $contact, 'account' => $account));
+                ->findOneBy(['contact' => $contact, 'account' => $account]);
             if ($accountContact) {
                 throw new \Exception('Relation already exists');
             }
@@ -285,11 +286,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 $isMainContact = $account->getMainContact()->getId() === $contact->getId();
             }
 
-            $contactArray = array(
+            $contactArray = [
                 'id' => $contact->getId(),
                 'fullName' => $contact->getFullName(),
                 'isMainContact' => $isMainContact,
-            );
+            ];
 
             if ($position) {
                 $contactArray['position'] = $position->getPosition();
@@ -362,7 +363,7 @@ class AccountController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         // define filters
-        $filter = array();
+        $filter = [];
         $ids = $request->get('ids');
         if ($ids) {
             if (is_array($ids)) {
@@ -449,7 +450,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'parent',
             $this->getAccountEntityName(),
             'contact.accounts.company',
-            array(),
+            [],
             true,
             false
         );
@@ -485,7 +486,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $acc = $accountManager->getAccount($account, $locale);
             $view = $this->view($acc, 200);
             $view->setSerializationContext(
-                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+                SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'partialMedia'])
             );
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -526,7 +527,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
         // process categories
         $accountManager = $this->getContactManager();
-        $accountManager->processCategories($account, $request->get('categories', array()));
+        $accountManager->processCategories($account, $request->get('categories', []));
 
         // set creator / changer
         $account->setCreator($this->getUser());
@@ -541,7 +542,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Edits the existing contact with the given id.
      *
-     * @param int $id The id of the contact to update
+     * @param int     $id      The id of the contact to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -572,7 +573,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 $view = $this->view($acc, 200);
                 $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+                    SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'partialMedia'])
                 );
             }
         } catch (EntityNotFoundException $enfe) {
@@ -588,7 +589,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * processes given entity for put.
      *
      * @param AccountInterface $account
-     * @param Request $request
+     * @param Request          $request
      *
      * @throws EntityNotFoundException
      * @throws RestException
@@ -619,15 +620,15 @@ class AccountController extends RestController implements ClassResourceInterface
         $accountManager = $this->getContactManager();
 
         // process details
-        if (!($accountManager->processUrls($account, $request->get('urls', array()))
-            && $accountManager->processEmails($account, $request->get('emails', array()))
-            && $accountManager->processFaxes($account, $request->get('faxes', array()))
-            && $accountManager->processPhones($account, $request->get('phones', array()))
-            && $accountManager->processAddresses($account, $request->get('addresses', array()))
-            && $accountManager->processTags($account, $request->get('tags', array()))
-            && $accountManager->processNotes($account, $request->get('notes', array()))
-            && $accountManager->processCategories($account, $request->get('categories', array()))
-            && $accountManager->processBankAccounts($account, $request->get('bankAccounts', array())))
+        if (!($accountManager->processUrls($account, $request->get('urls', []))
+            && $accountManager->processEmails($account, $request->get('emails', []))
+            && $accountManager->processFaxes($account, $request->get('faxes', []))
+            && $accountManager->processPhones($account, $request->get('phones', []))
+            && $accountManager->processAddresses($account, $request->get('addresses', []))
+            && $accountManager->processTags($account, $request->get('tags', []))
+            && $accountManager->processNotes($account, $request->get('notes', []))
+            && $accountManager->processCategories($account, $request->get('categories', []))
+            && $accountManager->processBankAccounts($account, $request->get('bankAccounts', [])))
         ) {
             throw new RestException('Updating dependencies is not possible', 0);
         }
@@ -636,7 +637,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * set parent to account.
      *
-     * @param array $parentData
+     * @param array            $parentData
      * @param AccountInterface $account
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -687,7 +688,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 $view = $this->view($acc, 200);
                 $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+                    SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'partialMedia'])
                 );
             }
         } catch (EntityNotFoundException $enfe) {
@@ -703,8 +704,8 @@ class AccountController extends RestController implements ClassResourceInterface
      * process geiven entity for patch.
      *
      * @param AccountInterface $account
-     * @param Request $request
-     * @param ObjectManager $entityManager
+     * @param Request          $request
+     * @param ObjectManager    $entityManager
      */
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
@@ -733,7 +734,7 @@ class AccountController extends RestController implements ClassResourceInterface
         // process details
         if ($request->get('bankAccounts') !== null) {
             $accountManager = $this->getContactManager();
-            $accountManager->processBankAccounts($account, $request->get('bankAccounts', array()));
+            $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }
     }
 
@@ -801,7 +802,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $ids = $request->get('ids');
 
-        $response = array();
+        $response = [];
         $numContacts = 0;
         $numChildren = 0;
 
@@ -837,8 +838,8 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function getDeleteinfoAction($id)
     {
-        $response = array();
-        $response['contacts'] = array();
+        $response = [];
+        $response['contacts'] = [];
 
         /** @var AccountInterface $account */
         $account = $this->getDoctrine()
@@ -847,12 +848,12 @@ class AccountController extends RestController implements ClassResourceInterface
 
         if ($account != null) {
             // return a maximum of 3 accounts
-            $slicedContacts = array();
+            $slicedContacts = [];
             $accountContacts = $account->getAccountContacts();
             $numContacts = 0;
             if ($accountContacts !== null) {
                 foreach ($accountContacts as $accountContact) {
-                    /** @var AccountContactEntity $accountContact */
+                    /* @var AccountContactEntity $accountContact */
                     $contactId = $accountContact->getContact()->getId();
                     if (!array_key_exists($contactId, $slicedContacts)) {
                         if ($numContacts++ < 3) {
@@ -863,13 +864,13 @@ class AccountController extends RestController implements ClassResourceInterface
             }
 
             foreach ($slicedContacts as $contact) {
-                /** @var ContactEntity $contact */
-                $response['contacts'][] = array(
+                /* @var ContactEntity $contact */
+                $response['contacts'][] = [
                     'id' => $contact->getId(),
                     'firstName' => $contact->getFirstName(),
                     'middleName' => $contact->getMiddleName(),
                     'lastName' => $contact->getLastName(),
-                );
+                ];
             }
 
             // return number of contact
@@ -884,7 +885,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 /* @var AccountInterface $sc */
                 foreach ($slicedChildren as $sc) {
-                    $child = array();
+                    $child = [];
                     $child['id'] = $sc->getId();
                     $child['name'] = $sc->getName();
 
@@ -946,8 +947,8 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function initAccountContactFieldDescriptors()
     {
-        $this->accountContactFieldDescriptors = array();
-        $contactJoin = array(
+        $this->accountContactFieldDescriptors = [];
+        $contactJoin = [
             self::$accountContactEntityName => new DoctrineJoinDescriptor(
                 self::$accountContactEntityName,
                 $this->getAccountEntityName() . '.accountContacts',
@@ -958,7 +959,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $this->container->getParameter('sulu.model.contact.class'),
                 self::$accountContactEntityName . '.contact'
             ),
-        );
+        ];
 
         $this->accountContactFieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
@@ -1003,7 +1004,7 @@ class AccountController extends RestController implements ClassResourceInterface
         );
 
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'mainContact',
@@ -1018,7 +1019,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     'contact.contacts.main-contact',
                     $contactJoin
                 ),
-            ),
+            ],
             'fullName',
             'public.name',
             ' ',
@@ -1035,12 +1036,12 @@ class AccountController extends RestController implements ClassResourceInterface
             'position',
             self::$positionEntityName,
             'contact.contacts.position',
-            array(
+            [
                 self::$positionEntityName => new DoctrineJoinDescriptor(
                     self::$positionEntityName,
                     self::$accountContactEntityName . '.position'
                 ),
-            ),
+            ],
             false,
             true,
             '',
@@ -1055,14 +1056,14 @@ class AccountController extends RestController implements ClassResourceInterface
             'isMainContact',
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
-            array(
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->getAccountEntityName() . '.accountContacts',
                     null,
                     DoctrineJoinDescriptor::JOIN_METHOD_INNER
                 ),
-            ),
+            ],
             false,
             true,
             'radio',
@@ -1077,9 +1078,9 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function initAccountAddressesFieldDescriptors()
     {
-        $this->accountAddressesFieldDescriptors = array();
+        $this->accountAddressesFieldDescriptors = [];
 
-        $addressJoin = array(
+        $addressJoin = [
             self::$accountAddressEntityName => new DoctrineJoinDescriptor(
                 self::$accountAddressEntityName,
                 $this->getAccountEntityName() . '.accountAddresses'
@@ -1088,8 +1089,8 @@ class AccountController extends RestController implements ClassResourceInterface
                 self::$addressEntityName,
                 self::$accountAddressEntityName . '.address'
             ),
-        );
-        $countryJoin = array(
+        ];
+        $countryJoin = [
             self::$countryEntityName => new DoctrineJoinDescriptor(
                 self::$countryEntityName,
                 self::$addressEntityName . '.country'
@@ -1102,7 +1103,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 self::$addressEntityName,
                 self::$accountAddressEntityName . '.address'
             ),
-        );
+        ];
 
         $this->accountAddressesFieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
@@ -1119,9 +1120,9 @@ class AccountController extends RestController implements ClassResourceInterface
         );
 
         $this->accountAddressesFieldDescriptors['address'] = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineConcatenationFieldDescriptor(
-                    array(
+                    [
                         new DoctrineFieldDescriptor(
                             'street',
                             'address',
@@ -1143,7 +1144,7 @@ class AccountController extends RestController implements ClassResourceInterface
                             '',
                             $addressJoin
                         ),
-                    ),
+                    ],
                     'street',
                     ' '
                 ),
@@ -1182,7 +1183,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     '',
                     $addressJoin
                 ),
-            ),
+            ],
             'address',
             'public.address',
             ', ',
@@ -1196,13 +1197,13 @@ class AccountController extends RestController implements ClassResourceInterface
 
     protected function initFieldDescriptors()
     {
-        $this->fieldDescriptors = array();
+        $this->fieldDescriptors = [];
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
             'number',
             'number',
             $this->getAccountEntityName(),
             'contact.accounts.number',
-            array(),
+            [],
             false,
             false,
             'string',
@@ -1214,7 +1215,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'name',
             $this->getAccountEntityName(),
             'public.name',
-            array(),
+            [],
             false,
             true,
             'string',
@@ -1226,7 +1227,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'corporation',
             $this->getAccountEntityName(),
             'contact.accounts.corporation',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -1237,7 +1238,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'city',
             self::$addressEntityName,
             'contact.address.city',
-            array(
+            [
                 self::$accountAddressEntityName => new DoctrineJoinDescriptor(
                     self::$accountAddressEntityName,
                     $this->getAccountEntityName() .
@@ -1248,41 +1249,41 @@ class AccountController extends RestController implements ClassResourceInterface
                     self::$addressEntityName,
                     self::$accountAddressEntityName . '.address'
                 ),
-            ),
+            ],
             false,
             true,
             'string'
         );
 
         $this->fieldDescriptors['mainContact'] = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'mainContact',
                     $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
-                    array(
+                    [
                         $this->container->getParameter('sulu.model.contact.class') => new DoctrineJoinDescriptor(
                             $this->container->getParameter('sulu.model.contact.class'),
                             $this->getAccountEntityName() .
                             '.mainContact'
                         ),
-                    )
+                    ]
                 ),
                 new DoctrineFieldDescriptor(
                     'lastName',
                     'mainContact',
                     $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
-                    array(
+                    [
                         $this->container->getParameter('sulu.model.contact.class') => new DoctrineJoinDescriptor(
                             $this->container->getParameter('sulu.model.contact.class'),
                             $this->getAccountEntityName() .
                             '.mainContact'
                         ),
-                    )
+                    ]
                 ),
-            ),
+            ],
             'mainContact',
             'contact.contacts.main-contact',
             ' ',
@@ -1310,7 +1311,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'mainEmail',
             $this->getAccountEntityName(),
             'public.email',
-            array(),
+            [],
             false,
             true,
             'string',
@@ -1323,7 +1324,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'id',
             $this->getAccountEntityName(),
             'public.id',
-            array(),
+            [],
             true,
             false,
             'number',
@@ -1335,7 +1336,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'created',
             $this->getAccountEntityName(),
             'public.created',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -1346,7 +1347,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'changed',
             $this->getAccountEntityName(),
             'public.changed',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -1357,7 +1358,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'disabled',
             $this->getAccountEntityName(),
             'public.locked',
-            array(),
+            [],
             true,
             false,
             'boolean'
@@ -1368,7 +1369,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'uid',
             $this->getAccountEntityName(),
             'contact.accounts.uid',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -1379,7 +1380,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'registerNumber',
             $this->getAccountEntityName(),
             'contact.accounts.registerNumber',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -1390,7 +1391,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'mainFax',
             $this->getAccountEntityName(),
             'public.phone',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -1401,7 +1402,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'mainUrl',
             $this->getAccountEntityName(),
             'public.url',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -1412,7 +1413,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'placeOfJurisdiction',
             $this->getAccountEntityName(),
             'contact.accounts.placeOfJurisdiction',
-            array(),
+            [],
             true,
             false,
             'string'

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
@@ -20,17 +29,17 @@ class GeolocatorPassTest extends AbstractCompilerPassTestCase
         $this->setDefinition('sulu_location.geolocator.manager', $managerDef);
 
         $geolocatorDef = new Definition();
-        $geolocatorDef->addTag('sulu_location.geolocator', array('alias' => 'my_alias'));
+        $geolocatorDef->addTag('sulu_location.geolocator', ['alias' => 'my_alias']);
         $this->setDefinition('geolocator_id', $geolocatorDef);
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'sulu_location.geolocator.manager',
             'register',
-            array(
+            [
                 'my_alias',
                 'geolocator_id',
-            )
+            ]
         );
     }
 }

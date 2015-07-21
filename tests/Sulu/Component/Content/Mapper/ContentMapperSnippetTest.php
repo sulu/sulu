@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -62,9 +63,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'ElePHPant',
-            ))
+            ])
             ->setState(StructureInterface::STATE_PUBLISHED);
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
@@ -74,9 +75,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setTemplateKey('animal')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'Penguin',
-            ))
+            ])
             ->setState(StructureInterface::STATE_PUBLISHED);
 
         $this->snippet2 = $this->contentMapper->saveRequest($req);
@@ -90,9 +91,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setTemplateKey('animal')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'English ElePHPant',
-            ))
+            ])
             ->setState(StructureInterface::STATE_PUBLISHED);
         $this->contentMapper->saveRequest($req);
 
@@ -101,9 +102,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'Some other animal',
-            ))
+            ])
             ->setState(StructureInterface::STATE_PUBLISHED);
         $this->contentMapper->saveRequest($req);
     }
@@ -117,9 +118,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setLocale('de')
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'ElePHPant',
-            ));
+            ]);
         $this->contentMapper->saveRequest($req);
 
         try {
@@ -144,9 +145,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setLocale('de')
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'ElePHPant FOOBAR',
-            ));
+            ]);
         $this->contentMapper->saveRequest($req);
         $node = $this->session->getNode('/cmf/snippets/animal/elephpant');
         $node->getPropertyValue('template');
@@ -172,9 +173,9 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $document = $this->documentManager->create('page');
         $document->setTitle('Hello');
-        $document->getStructure()->bind(array(
-            'animals' => array($this->snippet1->getUuid()),
-        ), false);
+        $document->getStructure()->bind([
+            'animals' => [$this->snippet1->getUuid()],
+        ], false);
         $document->setParent($this->parent);
         $document->setStructureType('test_page');
         $document->setResourceSegment('/url/foo');
@@ -193,10 +194,10 @@ class ContentMapperSnippetTest extends SuluTestCase
 
     public function provideRemoveSnippetWithReferencesDereference()
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
     /**
@@ -209,13 +210,13 @@ class ContentMapperSnippetTest extends SuluTestCase
         $document->setResourceSegment('/url/foo');
 
         if ($multiple) {
-            $document->getStructure()->bind(array(
-                'animals' => array($this->snippet1->getUuid(), $this->snippet2->getUuid()),
-            ), false);
+            $document->getStructure()->bind([
+                'animals' => [$this->snippet1->getUuid(), $this->snippet2->getUuid()],
+            ], false);
         } else {
-            $document->getStructure()->bind(array(
+            $document->getStructure()->bind([
                 'animals' => $this->snippet1->getUuid(),
-            ), false);
+            ], false);
         }
 
         $document->setParent($this->parent);
@@ -288,7 +289,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setLocale('de')
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setUserId(1)
-            ->setData(array('title' => 'Foo'));
+            ->setData(['title' => 'Foo']);
 
         $this->contentMapper->saveRequest($req);
     }

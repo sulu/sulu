@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,24 +28,24 @@ class TypeManagerTest extends SuluTestCase
      */
     private $em;
 
-    private $mediaTypes = array(
-        array(
+    private $mediaTypes = [
+        [
             'type' => 'document',
-            'mimeTypes' => array('*'),
-        ),
-        array(
+            'mimeTypes' => ['*'],
+        ],
+        [
             'type' => 'image',
-            'mimeTypes' => array('image/*'),
-        ),
-        array(
+            'mimeTypes' => ['image/*'],
+        ],
+        [
             'type' => 'video',
-            'mimeTypes' => array('video/*'),
-        ),
-        array(
+            'mimeTypes' => ['video/*'],
+        ],
+        [
             'type' => 'audio',
-            'mimeTypes' => array('audio/*'),
-        ),
-    );
+            'mimeTypes' => ['audio/*'],
+        ],
+    ];
 
     public function setUp()
     {
@@ -64,13 +65,13 @@ class TypeManagerTest extends SuluTestCase
         $this->typeManager = new TypeManager(
             $em,
             $this->mediaTypes,
-            array('file/exe')
+            ['file/exe']
         );
     }
 
     public function testMediaTypes()
     {
-        $data = array(
+        $data = [
             // documents
             'application/pdf' => 'document',
             'application/msword' => 'document',
@@ -89,7 +90,7 @@ class TypeManagerTest extends SuluTestCase
             // audios
             'audio/mpeg' => 'audio',
             'audio/mp3' => 'audio',
-        );
+        ];
 
         foreach ($data as $mimeType => $mediaType) {
             $mediaTypeName = null;

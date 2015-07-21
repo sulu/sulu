@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,7 +42,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
      *
-     * @param string $url The url to search for
+     * @param string $url         The url to search for
      * @param string $environment The environment in which the url should be searched
      *
      * @return PortalInformation|null
@@ -51,9 +52,9 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     /**
      * Returns all possible urls for resourcelocator.
      *
-     * @param string $resourceLocator
-     * @param string $environment
-     * @param string $languageCode
+     * @param string      $resourceLocator
+     * @param string      $environment
+     * @param string      $languageCode
      * @param null|string $webspaceKey
      * @param null|string $domain
      *

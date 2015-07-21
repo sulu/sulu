@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,26 +34,26 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
 
         $ghostScriptPath = '';
         $saveImage = true;
-        $previewMimeTypes = array('gif');
-        $responseHeaders = array();
-        $formats = array(
-            '640x480' => array(
+        $previewMimeTypes = ['gif'];
+        $responseHeaders = [];
+        $formats = [
+            '640x480' => [
                 'name' => '640x480',
-                'commands' => array(
-                    array(
+                'commands' => [
+                    [
                         'action' => 'resize',
-                        'parameters' => array(
+                        'parameters' => [
                             'x' => 640,
                             'y' => 480,
-                        ),
-                    ),
-                ),
-                'options' => array(
+                        ],
+                    ],
+                ],
+                'options' => [
                     'jpeg_quality' => 70,
                     'png_compression_level' => 6,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $image = $this->prophesize('Imagine\Image\ImageInterface');
         $image->strip()->willReturn(null);
@@ -72,13 +73,13 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setVersion(1);
         $fileVersion->setName('dummy.gif');
         $fileVersion->setMimeType('gif');
-        $fileVersion->setStorageOptions(array('a' => 'b'));
+        $fileVersion->setStorageOptions(['a' => 'b']);
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 
         $mediaRepository->findMediaById(1)->willReturn($media);
 
-        $originalStorage->load('dummy.gif', 1, array('a' => 'b'))->willReturn(
+        $originalStorage->load('dummy.gif', 1, ['a' => 'b'])->willReturn(
             dirname(__DIR__) . '/../../Fixtures/image/data/dummy.gif'
         );
 
@@ -88,7 +89,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             Argument::type('string'),
             1,
             'dummy.gif',
-            array('a' => 'b'),
+            ['a' => 'b'],
             '640x480'
         )->willReturn(null);
 
@@ -119,28 +120,28 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
 
         $ghostScriptPath = '';
         $saveImage = true;
-        $previewMimeTypes = array('gif');
-        $responseHeaders = array();
-        $formats = array(
-            '640x480' => array(
+        $previewMimeTypes = ['gif'];
+        $responseHeaders = [];
+        $formats = [
+            '640x480' => [
                 'name' => '640x480',
-                'commands' => array(
-                    array(
+                'commands' => [
+                    [
                         'action' => 'resize',
-                        'parameters' => array(
+                        'parameters' => [
                             'x' => 640,
                             'y' => 480,
-                        ),
-                    ),
-                ),
-                'options' => array(
+                        ],
+                    ],
+                ],
+                'options' => [
                     'jpeg_quality' => 70,
                     'png_compression_level' => 6,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
-        $formatCache->getMediaUrl(1, 'dummy.gif', array('a' => 'b'), '640x480', 1)->willReturn('/my-url.gif');
+        $formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '640x480', 1)->willReturn('/my-url.gif');
 
         $formatManager = new FormatManager(
             $mediaRepository->reveal(),
@@ -157,12 +158,12 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $result = $formatManager->getFormats(
             1,
             'dummy.gif',
-            array('a' => 'b'),
+            ['a' => 'b'],
             1,
             'gif'
         );
 
-        $this->assertEquals(array('640x480' => '/my-url.gif'), $result);
+        $this->assertEquals(['640x480' => '/my-url.gif'], $result);
     }
 
     public function testGetFormatsNotSupportedMimeType()
@@ -174,28 +175,28 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
 
         $ghostScriptPath = '';
         $saveImage = true;
-        $previewMimeTypes = array('gif');
-        $responseHeaders = array();
-        $formats = array(
-            '640x480' => array(
+        $previewMimeTypes = ['gif'];
+        $responseHeaders = [];
+        $formats = [
+            '640x480' => [
                 'name' => '640x480',
-                'commands' => array(
-                    array(
+                'commands' => [
+                    [
                         'action' => 'resize',
-                        'parameters' => array(
+                        'parameters' => [
                             'x' => 640,
                             'y' => 480,
-                        ),
-                    ),
-                ),
-                'options' => array(
+                        ],
+                    ],
+                ],
+                'options' => [
                     'jpeg_quality' => 70,
                     'png_compression_level' => 6,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
-        $formatCache->getMediaUrl(1, 'dummy.mp3', array('a' => 'b'), '640x480', 1)->should(new NoCallsPrediction());
+        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1)->should(new NoCallsPrediction());
 
         $formatManager = new FormatManager(
             $mediaRepository->reveal(),
@@ -212,11 +213,11 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $result = $formatManager->getFormats(
             1,
             'dummy.mp3',
-            array('a' => 'b'),
+            ['a' => 'b'],
             1,
             'mp3'
         );
 
-        $this->assertEquals(array(), $result);
+        $this->assertEquals([], $result);
     }
 }

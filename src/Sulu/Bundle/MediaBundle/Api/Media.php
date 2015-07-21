@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,12 +64,12 @@ class Media extends ApiWrapper
     /**
      * @var array
      */
-    protected $formats = array();
+    protected $formats = [];
 
     /**
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * @var string
@@ -83,7 +84,7 @@ class Media extends ApiWrapper
     /**
      * @var array
      */
-    protected $additionalVersionData = array();
+    protected $additionalVersionData = [];
 
     /**
      * @var FileVersion
@@ -314,10 +315,10 @@ class Media extends ApiWrapper
      */
     public function getVersions()
     {
-        $versions = array();
+        $versions = [];
         /** @var FileVersion $fileVersion */
         foreach ($this->getFile()->getFileVersions() as $fileVersion) {
-            $versionData = array();
+            $versionData = [];
             if (isset($this->additionalVersionData[$fileVersion->getVersion()])) {
                 $versionData = $this->additionalVersionData[$fileVersion->getVersion()];
             }
@@ -483,7 +484,7 @@ class Media extends ApiWrapper
      */
     public function getPublishLanguages()
     {
-        $publishLanguages = array();
+        $publishLanguages = [];
         /** @var FileVersionPublishLanguage $publishLanguage */
         foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
             $publishLanguages[] = $publishLanguage->getLocale();
@@ -521,7 +522,7 @@ class Media extends ApiWrapper
      */
     public function getContentLanguages()
     {
-        $contentLanguages = array();
+        $contentLanguages = [];
         /** @var FileVersionContentLanguage $contentLanguage */
         foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
             $contentLanguages[] = $contentLanguage->getLocale();
@@ -564,9 +565,9 @@ class Media extends ApiWrapper
      */
     public function getTags()
     {
-        $tags = array();
+        $tags = [];
         foreach ($this->getFileVersion()->getTags() as $tag) {
-            /** @var Tag $tag */
+            /* @var Tag $tag */
             array_push($tags, $tag->getName());
         }
 
@@ -763,7 +764,7 @@ class Media extends ApiWrapper
      */
     public function toArray()
     {
-        return array(
+        return [
             'id' => $this->getId(),
             'locale' => $this->getLocale(),
             'collection' => $this->getCollection(),
@@ -783,7 +784,7 @@ class Media extends ApiWrapper
             'created' => $this->getCreated(),
             'creator' => $this->getCreator(),
             'downloadCounter' => $this->getDownloadCounter(),
-        );
+        ];
     }
 
     /**

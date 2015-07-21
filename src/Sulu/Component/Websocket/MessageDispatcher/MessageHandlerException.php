@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,10 +31,10 @@ class MessageHandlerException extends \Exception
      */
     public function getResponseMessage()
     {
-        return array(
+        return [
             'code' => $this->getPrevious()->getCode(),
             'message' => $this->getPrevious()->getMessage(),
             'type' => get_class($this->getPrevious()),
-        );
+        ];
     }
 }

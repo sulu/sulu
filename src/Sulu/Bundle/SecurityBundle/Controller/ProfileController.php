@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,9 +51,9 @@ class ProfileController implements ClassResourceInterface
     private $userSettingRepository;
 
     /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager $objectManager
-     * @param ViewHandlerInterface $viewHandler
+     * @param TokenStorageInterface          $tokenStorage
+     * @param ObjectManager                  $objectManager
+     * @param ViewHandlerInterface           $viewHandler
      * @param UserSettingRepositoryInterface $userSettingRepository
      */
     public function __construct(
@@ -81,7 +82,7 @@ class ProfileController implements ClassResourceInterface
 
         $this->objectManager->flush();
 
-        return $this->viewHandler->handle(View::create(array('locale' => $user->getLocale())));
+        return $this->viewHandler->handle(View::create(['locale' => $user->getLocale()]));
     }
 
     /**
@@ -112,7 +113,7 @@ class ProfileController implements ClassResourceInterface
 
             // get setting
             // TODO: move this logic into own service (UserSettingManager?)
-            $setting = $this->userSettingRepository->findOneBy(array('user' => $user, 'key' => $key));
+            $setting = $this->userSettingRepository->findOneBy(['user' => $user, 'key' => $key]);
 
             // or create new one
             if (!$setting) {

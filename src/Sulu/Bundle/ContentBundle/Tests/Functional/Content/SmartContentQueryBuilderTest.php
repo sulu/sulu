@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -115,35 +116,35 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
     public function propertiesProvider()
     {
-        $nodes = array();
+        $nodes = [];
         $max = 15;
         for ($i = 0; $i < $max; ++$i) {
-            $data = array(
+            $data = [
                 'title' => 'News ' . $i,
                 'url' => '/news/news-' . $i,
-                'ext' => array(
-                    'excerpt' => array(
+                'ext' => [
+                    'excerpt' => [
                         'title' => 'Excerpt Title ' . $i,
-                        'tags' => array(),
-                    ),
-                ),
-            );
+                        'tags' => [],
+                    ],
+                ],
+            ];
             $template = 'simple';
 
             if ($i > 2 * $max / 3) {
                 $template = 'block';
-                $data['article'] = array(
-                    array(
+                $data['article'] = [
+                    [
                         'title' => 'Block Title ' . $i,
                         'article' => 'Blockarticle ' . $i,
                         'type' => 'test',
-                    ),
-                    array(
+                    ],
+                    [
                         'title' => 'Block Title 2 ' . $i,
                         'article' => 'Blockarticle2 ' . $i,
                         'type' => 'test',
-                    ),
-                );
+                    ],
+                ];
             } elseif ($i > $max / 3) {
                 $template = 'article';
                 $data['article'] = 'Text article ' . $i;
@@ -176,15 +177,15 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->languageNamespace
         );
         $builder->init(
-            array(
-                'properties' => array(
+            [
+                'properties' => [
                     'my_article' => new PropertyParameter('my_article', 'article'),
-                ),
-            )
+                ],
+            ]
         );
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
         foreach ($result as $item) {
@@ -213,7 +214,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     public function datasourceProvider()
     {
         $news = $this->mapper->save(
-            array('title' => 'News', 'url' => '/news'),
+            ['title' => 'News', 'url' => '/news'],
             'simple',
             'sulu_io',
             'en',
@@ -224,7 +225,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             Structure::STATE_PUBLISHED
         );
         $products = $this->mapper->save(
-            array('title' => 'Products', 'url' => '/products'),
+            ['title' => 'Products', 'url' => '/products'],
             'simple',
             'sulu_io',
             'en',
@@ -235,13 +236,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             Structure::STATE_PUBLISHED
         );
 
-        $nodes = array();
+        $nodes = [];
         $max = 15;
         for ($i = 0; $i < $max; ++$i) {
-            $data = array(
+            $data = [
                 'title' => 'News ' . $i,
                 'url' => '/news/news-' . $i,
-            );
+            ];
             $template = 'simple';
             $node = $this->mapper->save(
                 $data,
@@ -257,7 +258,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $nodes[$node->getUuid()] = $node;
         }
 
-        return array($news, $products, $nodes);
+        return [$news, $products, $nodes];
     }
 
     public function testDatasource()
@@ -271,10 +272,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->languageNamespace
         );
         // test news
-        $builder->init(array('config' => array('dataSource' => $news->getUuid())));
+        $builder->init(['config' => ['dataSource' => $news->getUuid()]]);
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(sizeof($nodes), sizeof($result));
@@ -289,10 +290,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         }
 
         // test products
-        $builder->init(array('config' => array('dataSource' => $products->getUuid())));
+        $builder->init(['config' => ['dataSource' => $products->getUuid()]]);
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(0, sizeof($result));
@@ -308,10 +309,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(array('config' => array('dataSource' => $root->getIdentifier(), 'includeSubFolders' => true)));
+        $builder->init(['config' => ['dataSource' => $root->getIdentifier(), 'includeSubFolders' => true]]);
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
         // nodes + news + products
@@ -335,29 +336,29 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
     public function tagsProvider()
     {
-        $nodes = array();
+        $nodes = [];
         $max = 15;
         $t1t2 = 0;
         $t1 = 0;
         $t2 = 0;
         for ($i = 0; $i < $max; ++$i) {
             if ($i % 2 === 1) {
-                $tags = array($this->tag1->getName(), $this->tag2->getName());
+                $tags = [$this->tag1->getName(), $this->tag2->getName()];
                 ++$t1t2;
             } else {
-                $tags = array($this->tag2->getName());
+                $tags = [$this->tag2->getName()];
                 ++$t2;
             }
 
-            $data = array(
+            $data = [
                 'title' => 'News ' . rand(1, 100),
                 'url' => '/news/news-' . $i,
-                'ext' => array(
-                    'excerpt' => array(
+                'ext' => [
+                    'excerpt' => [
                         'tags' => $tags,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
             $template = 'simple';
             $node = $this->mapper->save(
                 $data,
@@ -373,7 +374,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $nodes[$node->getUuid()] = $node;
         }
 
-        return array($nodes, $t1, $t2, $t1t2);
+        return [$nodes, $t1, $t2, $t1t2];
     }
 
     public function testTags()
@@ -389,46 +390,46 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // tag 1, 2
         $builder->init(
-            array(
-                'config' => array(
+            [
+                'config' => [
                     'dataSource' => $root->getIdentifier(),
-                    'tags' => array($this->tag1->getId(), $this->tag2->getId()),
+                    'tags' => [$this->tag1->getId(), $this->tag2->getId()],
                     'tagOperator' => 'and',
-                ),
-            )
+                ],
+            ]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertEquals($t1t2, sizeof($result));
 
         // tag 1
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag1->getId()), 'tagOperator' => 'and'))
+            ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag1->getId()], 'tagOperator' => 'and']]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertEquals($t1t2 + $t1, sizeof($result));
 
         // tag 2
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag2->getId()), 'tagOperator' => 'and'))
+            ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag2->getId()], 'tagOperator' => 'and']]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertEquals($t1t2 + $t2, sizeof($result));
 
         // tag 3
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag3->getId()), 'tagOperator' => 'and'))
+            ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag3->getId()], 'tagOperator' => 'and']]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertEquals(0, sizeof($result));
     }
 
     public function orderByProvider()
     {
         $node = $this->mapper->save(
-            array(
+            [
                 'title' => 'ASDF',
                 'url' => '/asdf-1',
-            ),
+            ],
             'simple',
             'sulu_io',
             'en',
@@ -440,10 +441,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $nodes[$node->url] = $node;
         $node = $this->mapper->save(
-            array(
+            [
                 'title' => 'QWERTZ',
                 'url' => '/qwertz-1',
-            ),
+            ],
             'simple',
             'sulu_io',
             'en',
@@ -455,10 +456,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $nodes[$node->url] = $node;
         $node = $this->mapper->save(
-            array(
+            [
                 'title' => 'qwertz',
                 'url' => '/qwertz',
-            ),
+            ],
             'simple',
             'sulu_io',
             'en',
@@ -470,10 +471,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $nodes[$node->url] = $node;
         $node = $this->mapper->save(
-            array(
+            [
                 'title' => 'asdf',
                 'url' => '/asdf',
-            ),
+            ],
             'simple',
             'sulu_io',
             'en',
@@ -485,7 +486,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $nodes[$node->url] = $node;
 
-        return array($nodes);
+        return [$nodes];
     }
 
     public function testOrderBy()
@@ -502,9 +503,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // order by title
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'sortBy' => array('title')))
+            ['config' => ['dataSource' => $root->getIdentifier(), 'sortBy' => ['title']]]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $this->assertEquals('ASDF', $result[0]['title']);
         $this->assertEquals('asdf', $result[1]['title']);
@@ -513,15 +514,15 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // order by title and desc
         $builder->init(
-            array(
-                'config' => array(
+            [
+                'config' => [
                     'dataSource' => $root->getIdentifier(),
-                    'sortBy' => array('title'),
+                    'sortBy' => ['title'],
                     'sortMethod' => 'desc',
-                ),
-            )
+                ],
+            ]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $this->assertEquals('QWERTZ', $result[0]['title']);
         $this->assertEquals('qwertz', $result[1]['title']);
@@ -555,15 +556,15 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // order by default
         $builder->init(
-            array(
-                'config' => array(
+            [
+                'config' => [
                     'dataSource' => $root->getIdentifier(),
-                    'orderBy' => array(),
+                    'orderBy' => [],
                     'sortMethod' => 'asc',
-                ),
-            )
+                ],
+            ]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $this->assertEquals('qwertz', $result[0]['title']);
         $this->assertEquals('asdf', $result[1]['title']);
@@ -572,15 +573,15 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // order by default
         $builder->init(
-            array(
-                'config' => array(
+            [
+                'config' => [
                     'dataSource' => $root->getIdentifier(),
-                    'orderBy' => array(),
+                    'orderBy' => [],
                     'sortMethod' => 'desc',
-                ),
-            )
+                ],
+            ]
         );
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $this->assertEquals('QWERTZ', $result[0]['title']);
         $this->assertEquals('ASDF', $result[1]['title']);
@@ -599,17 +600,17 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->languageNamespace
         );
         $builder->init(
-            array(
-                'properties' => array(
+            [
+                'properties' => [
                     'my_title' => new PropertyParameter('my_title', 'title'),
                     'ext_title' => new PropertyParameter('ext_title', 'excerpt.title'),
                     'ext_tags' => new PropertyParameter('ext_tags', 'excerpt.tags'),
-                ),
-            )
+                ],
+            ]
         );
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
         foreach ($result as $item) {
@@ -632,10 +633,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(array('ids' => array(array_keys($nodes)[0], array_keys($nodes)[1])));
+        $builder->init(['ids' => [array_keys($nodes)[0], array_keys($nodes)[1]]]);
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(2, sizeof($result));
@@ -654,9 +655,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(array('excluded' => array($uuids[0])));
+        $builder->init(['excluded' => [$uuids[0]]]);
 
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $this->assertEquals(14, sizeof($result));
         unset($uuids[0]);
@@ -667,25 +668,25 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
     private function shadowProvider()
     {
-        $nodesEn = array();
-        $nodesDe = array();
+        $nodesEn = [];
+        $nodesDe = [];
         $nodesEn = array_merge(
             $nodesEn,
             $this->save(
-                array(
+                [
                     'title' => 'Team',
                     'url' => '/team',
-                ),
+                ],
                 'en'
             )
         );
         $nodesEn = array_merge(
             $nodesEn,
             $this->save(
-                array(
+                [
                     'title' => 'Thomas',
                     'url' => '/team/thomas',
-                ),
+                ],
                 'en',
                 null,
                 $nodesEn['/team']->getUuid(),
@@ -697,10 +698,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodesEn = array_merge(
             $nodesEn,
             $this->save(
-                array(
+                [
                     'title' => 'Daniel',
                     'url' => '/team/daniel',
-                ),
+                ],
                 'en',
                 null,
                 $nodesEn['/team']->getUuid()
@@ -709,10 +710,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodesEn = array_merge(
             $nodesEn,
             $this->save(
-                array(
+                [
                     'title' => 'Johannes',
                     'url' => '/team/johannes',
-                ),
+                ],
                 'en',
                 null,
                 $nodesEn['/team']->getUuid(),
@@ -725,10 +726,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodesDe = array_merge(
             $nodesDe,
             $this->save(
-                array(
+                [
                     'title' => 'Team',
                     'url' => '/team',
-                ),
+                ],
                 'de',
                 $nodesEn['/team']->getUuid(),
                 null,
@@ -739,10 +740,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodesDe = array_merge(
             $nodesDe,
             $this->save(
-                array(
+                [
                     'title' => 'not-important',
                     'url' => '/team/thomas',
-                ),
+                ],
                 'de',
                 $nodesEn['/team/thomas']->getUuid(),
                 null,
@@ -753,10 +754,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodesDe = array_merge(
             $nodesDe,
             $this->save(
-                array(
+                [
                     'title' => 'not-important',
                     'url' => '/team/daniel',
-                ),
+                ],
                 'de',
                 $nodesEn['/team/daniel']->getUuid(),
                 null,
@@ -767,16 +768,16 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodesDe = array_merge(
             $nodesDe,
             $this->save(
-                array(
+                [
                     'title' => 'Johannes DE',
                     'url' => '/team/johannes',
-                ),
+                ],
                 'de',
                 $nodesEn['/team/johannes']->getUuid()
             )
         );
 
-        return array('en' => $nodesEn, 'de' => $nodesDe);
+        return ['en' => $nodesEn, 'de' => $nodesDe];
     }
 
     private function save(
@@ -802,7 +803,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         if ($isShadow) {
             $node = $this->mapper->save(
-                array('title' => $data['title']),
+                ['title' => $data['title']],
                 'simple',
                 'sulu_io',
                 $locale,
@@ -816,7 +817,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             );
         }
 
-        return array($node->getPropertyValue('url') => $node);
+        return [$node->getPropertyValue('url') => $node];
     }
 
     public function testShadow()
@@ -830,22 +831,22 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->languageNamespace
         );
         $builder->init(
-            array(
-                'ids' => array(
+            [
+                'ids' => [
                     $data['en']['/team/thomas']->getUuid(),
                     $data['en']['/team/daniel']->getUuid(),
                     $data['en']['/team/johannes']->getUuid(),
-                ),
-            )
+                ],
+            ]
         );
 
-        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $this->assertEquals(1, sizeof($result));
         $this->assertEquals('/team/daniel', $result[0]['url']);
         $this->assertEquals('Daniel', $result[0]['title']);
 
-        $result = $this->contentQuery->execute('sulu_io', array('de'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', ['de'], $builder);
 
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('/team/daniel', $result[0]['url']);

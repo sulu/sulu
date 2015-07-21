@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,8 +44,8 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
 
     /**
      * @param MutableAclProviderInterface $aclProvider
-     * @param MaskConverterInterface $maskConverter
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param MaskConverterInterface      $maskConverter
+     * @param EventDispatcherInterface    $eventDispatcher
      */
     public function __construct(
         MutableAclProviderInterface $aclProvider,
@@ -107,13 +108,13 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         try {
             $acl = $this->aclProvider->findAcl($oid);
         } catch (AclNotFoundException $exc) {
-            return array();
+            return [];
         }
 
-        $permissions = array();
+        $permissions = [];
 
         foreach ($acl->getObjectAces() as $ace) {
-            /** @var EntryInterface $ace */
+            /* @var EntryInterface $ace */
             $permissions[$ace->getSecurityIdentity()->getRole()] =
                 $this->maskConverter->convertPermissionsToArray($ace->getMask());
         }

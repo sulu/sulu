@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -95,13 +96,13 @@ class UserRepositoryTest extends SuluTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(array('de', 'en')));
+        $userRole1->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
         $userRole2->setUser($user2);
-        $userRole2->setLocale(json_encode(array('de', 'en')));
+        $userRole2->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole2);
 
         $permission1 = new Permission();

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,7 +64,7 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
      */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'sitemapUrlFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'sitemapUrlFunction'], $this->lifeTime);
     }
 
     /**
@@ -71,6 +72,6 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
      */
     public function sitemapFunction($locale = null, $webspaceKey = null)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'sitemapFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'sitemapFunction'], $this->lifeTime);
     }
 }

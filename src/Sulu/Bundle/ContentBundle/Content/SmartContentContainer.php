@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -68,7 +69,7 @@ class SmartContentContainer implements ArrayableInterface
      *
      * @var array
      */
-    private $config = array();
+    private $config = [];
 
     /**
      * Stores all the structure meeting the filter criteria in the config.
@@ -145,12 +146,12 @@ class SmartContentContainer implements ArrayableInterface
      * Lazy loads the data based on the filter criteria from the config.
      *
      * @param array $excludeUuids
-     * @param int $limit
-     * @param int $offset
+     * @param int   $limit
+     * @param int   $offset
      *
      * @return StructureInterface[]
      */
-    public function getData($excludeUuids = array(), $limit = null, $offset = null)
+    public function getData($excludeUuids = [], $limit = null, $offset = null)
     {
         if ($this->data === null) {
             // resolve tagNames to ids for loading data
@@ -178,14 +179,14 @@ class SmartContentContainer implements ArrayableInterface
         if ($this->stopwatch) {
             $this->stopwatch->start('SmartContent:loadData');
         }
-        $result = array();
+        $result = [];
         if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
             $this->contentQueryBuilder->init(
-                array('config' => $config, 'properties' => $this->params['properties']->getValue(), 'excluded' => $excludeUuids)
+                ['config' => $config, 'properties' => $this->params['properties']->getValue(), 'excluded' => $excludeUuids]
             );
             $result = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,
-                array($this->languageCode),
+                [$this->languageCode],
                 $this->contentQueryBuilder,
                 true,
                 -1,

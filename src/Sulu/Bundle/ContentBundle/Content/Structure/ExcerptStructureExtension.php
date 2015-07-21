@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +33,7 @@ class ExcerptStructureExtension extends AbstractExtension
      * will be filled with data in constructor
      * {@inheritdoc}
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * {@inheritdoc}
@@ -109,7 +110,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $data = array();
+        $data = [];
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
@@ -155,7 +156,7 @@ class ExcerptStructureExtension extends AbstractExtension
     {
         $container = new ExcerptValueContainer($container);
 
-        $data = array();
+        $data = [];
         foreach ($this->getExcerptStructure()->getProperties() as $property) {
             if ($container->__isset($property->getName())) {
                 $property->setValue($container->__get($property->getName()));

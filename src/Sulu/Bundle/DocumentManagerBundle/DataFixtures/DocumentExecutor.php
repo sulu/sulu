@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
@@ -34,8 +43,8 @@ class DocumentExecutor
 
     /**
      * @param DocumentManager $documentManager
-     * @param NodeManager $nodeManager
-     * @param Initializer $initializer
+     * @param NodeManager     $nodeManager
+     * @param Initializer     $initializer
      */
     public function __construct(
         DocumentManager $documentManager,
@@ -50,9 +59,9 @@ class DocumentExecutor
     /**
      * Load the given fixture classes.
      *
-     * @param array $fixtures
-     * @param mixed $purge
-     * @param mixed $initialize
+     * @param array           $fixtures
+     * @param mixed           $purge
+     * @param mixed           $initialize
      * @param OutputInterface $output
      */
     public function execute(array $fixtures, $purge = true, $initialize = true, OutputInterface $output = null)

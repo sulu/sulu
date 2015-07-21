@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,27 +50,27 @@ class PortalTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $expected = array(
+        $expected = [
             'name' => 'foo',
             'key' => 'bar',
-            'resourceLocator' => array(
+            'resourceLocator' => [
                 'strategy' => 'hello',
-            ),
-            'localizations' => array(
-                array('foo'),
-            ),
-            'environments' => array(
-                array(
+            ],
+            'localizations' => [
+                ['foo'],
+            ],
+            'environments' => [
+                [
                     'type' => 'd',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->environment->toArray()->willReturn($expected['environments'][0]);
         $this->environment->getType()->willReturn('d');
         $this->localization->toArray()->willReturn($expected['localizations'][0]);
         $this->localization->isDefault()->willReturn(true);
-        $this->environment->getUrls()->willReturn(array());
+        $this->environment->getUrls()->willReturn([]);
 
         $this->portal->addEnvironment($this->environment->reveal());
         $this->portal->addLocalization($this->localization->reveal());

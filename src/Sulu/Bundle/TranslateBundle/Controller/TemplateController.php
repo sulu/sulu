@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,16 +17,16 @@ class TemplateController extends Controller
 {
     public function packageFormAction()
     {
-        return $this->render('SuluTranslateBundle:Template:package.form.html.twig', array());
+        return $this->render('SuluTranslateBundle:Template:package.form.html.twig', []);
     }
 
     public function translationFormAction()
     {
-        return $this->render('SuluTranslateBundle:Template:translation.form.html.twig', array());
+        return $this->render('SuluTranslateBundle:Template:translation.form.html.twig', []);
     }
 
     public function packageListAction()
     {
-        return $this->render('SuluTranslateBundle:Template:package.list.html.twig', array());
+        return $this->render('SuluTranslateBundle:Template:package.list.html.twig', []);
     }
 }

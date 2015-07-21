@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -165,11 +166,11 @@ class SmartContent extends ComplexContentType
     /**
      * remove property from given node.
      *
-     * @param NodeInterface $node
+     * @param NodeInterface     $node
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param string            $webspaceKey
+     * @param string            $languageCode
+     * @param string            $segmentKey
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
@@ -185,8 +186,8 @@ class SmartContent extends ComplexContentType
     {
         $params = parent::getDefaultParams();
         $params['page_parameter'] = new PropertyParameter('page_parameter', 'p');
-        $params['properties'] = new PropertyParameter('properties', array(), 'collection');
-        $params['present_as'] = new PropertyParameter('present_as', array(), 'collection');
+        $params['properties'] = new PropertyParameter('properties', [], 'collection');
+        $params['present_as'] = new PropertyParameter('present_as', [], 'collection');
 
         return $params;
     }
@@ -200,18 +201,18 @@ class SmartContent extends ComplexContentType
         $config = $property->getValue();
 
         $config = array_merge(
-            array(
+            [
                 'dataSource' => null,
                 'includeSubFolders' => null,
                 'category' => null,
-                'tags' => array(),
+                'tags' => [],
                 'sortBy' => null,
                 'sortMethod' => null,
                 'presentAs' => null,
                 'limitResult' => null,
                 'page' => null,
                 'hasNextPage' => null,
-            ),
+            ],
             $config
         );
 
@@ -241,7 +242,7 @@ class SmartContent extends ComplexContentType
             null,
             $this->stopwatch
         );
-        $container->setConfig($data === null || !is_array($data) ? array() : $data);
+        $container->setConfig($data === null || !is_array($data) ? [] : $data);
         $pages = $this->loadData($container, $property, $params);
 
         $data['page'] = $container->getPage();
@@ -257,7 +258,7 @@ class SmartContent extends ComplexContentType
     public function getReferencedUuids(PropertyInterface $property)
     {
         $content = $this->getContentData($property);
-        $uuids = array();
+        $uuids = [];
 
         foreach ($content as $page) {
             $uuids[] = $page['uuid'];
@@ -270,8 +271,8 @@ class SmartContent extends ComplexContentType
      * load data from container.
      *
      * @param SmartContentContainer $container
-     * @param PropertyInterface $property
-     * @param PropertyParameter[] $params
+     * @param PropertyInterface     $property
+     * @param PropertyParameter[]   $params
      *
      * @return array|\Sulu\Component\Content\Compat\StructureInterface[]
      */
@@ -341,10 +342,10 @@ class SmartContent extends ComplexContentType
         if ($limit < 0) {
             $container->setHasNextPage(false);
 
-            return array();
+            return [];
         }
 
-        $data = $container->getData(array($excludeUuid), $loadLimit, $offset);
+        $data = $container->getData([$excludeUuid], $loadLimit, $offset);
 
         if (sizeof($data) > $limit) {
             $container->setHasNextPage(true);
@@ -360,12 +361,12 @@ class SmartContent extends ComplexContentType
      * Returns not paged content.
      *
      * @param SmartContentContainer $container
-     * @param string $excludeUuid
+     * @param string                $excludeUuid
      *
      * @return \Sulu\Component\Content\Compat\StructureInterface[]
      */
     private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)
     {
-        return $container->getData(array($excludeUuid));
+        return $container->getData([$excludeUuid]);
     }
 }

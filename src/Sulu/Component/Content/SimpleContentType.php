@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -101,11 +102,11 @@ abstract class SimpleContentType implements ContentTypeInterface
     /**
      * remove property from given node.
      *
-     * @param NodeInterface $node
+     * @param NodeInterface     $node
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param string            $webspaceKey
+     * @param string            $languageCode
+     * @param string            $segmentKey
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
@@ -147,7 +148,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     public function getDefaultParams()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -163,7 +164,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     public function getViewData(PropertyInterface $property)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -179,6 +180,6 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     public function getReferencedUuids(PropertyInterface $property)
     {
-        return array();
+        return [];
     }
 }

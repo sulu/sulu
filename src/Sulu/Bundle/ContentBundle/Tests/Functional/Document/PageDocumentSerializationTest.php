@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,15 +61,15 @@ class PageDocumentSerializationTest extends SuluTestCase
         $internalLink = new PageDocument();
         $internalLink->setTitle('Hello');
 
-        $page = $this->createPage(array(
+        $page = $this->createPage([
             'title' => 'Foobar',
             'object' => $internalLink,
-            'arrayOfObjects' => array(
+            'arrayOfObjects' => [
                 $internalLink,
                 $internalLink,
-            ),
+            ],
             'integer' => 1234,
-        ));
+        ]);
 
         $result = $this->serializer->serialize($page, 'json');
 
@@ -100,9 +101,9 @@ class PageDocumentSerializationTest extends SuluTestCase
      */
     public function testSerializationPersisted()
     {
-        $page = $this->createPage(array(
+        $page = $this->createPage([
             'title' => 'Hello',
-        ));
+        ]);
         $this->manager->persist($page, 'de');
         $this->manager->flush();
 
@@ -116,9 +117,9 @@ class PageDocumentSerializationTest extends SuluTestCase
      */
     public function testDeserializationPersisted()
     {
-        $page = $this->createPage(array(
+        $page = $this->createPage([
             'title' => 'Hello',
-        ));
+        ]);
         $this->manager->persist($page, 'de');
         $this->manager->flush();
 

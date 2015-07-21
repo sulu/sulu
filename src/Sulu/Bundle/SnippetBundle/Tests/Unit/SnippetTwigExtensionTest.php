@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
 
     public function loadProvider()
     {
-        $data = array('title' => 'test-title', 'description' => 'test-description');
+        $data = ['title' => 'test-title', 'description' => 'test-description'];
         $data = $this->getContainer()->get('sulu.content.mapper')->save(
             $data,
             'car',
@@ -76,12 +77,12 @@ class SnippetTwigExtensionTest extends SuluTestCase
             Structure::TYPE_SNIPPET
         );
 
-        return array(array($data));
+        return [[$data]];
     }
 
     public function testLoadSnippet()
     {
-        $data = array('title' => 'test-title', 'description' => 'test-description');
+        $data = ['title' => 'test-title', 'description' => 'test-description'];
         $data = $this->getContainer()->get('sulu.content.mapper')->save(
             $data,
             'car',
@@ -113,13 +114,13 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals('test-title', $snippet['content']['title']);
         $this->assertEquals('test-description', $snippet['content']['description']);
 
-        $this->assertEquals(array(), $snippet['view']['title']);
-        $this->assertEquals(array(), $snippet['view']['description']);
+        $this->assertEquals([], $snippet['view']['title']);
+        $this->assertEquals([], $snippet['view']['description']);
     }
 
     public function testLoadSnippetLocale()
     {
-        $dataDe = array('title' => 'de-test-title', 'description' => 'de-test-description');
+        $dataDe = ['title' => 'de-test-title', 'description' => 'de-test-description'];
         $dataDe = $this->contentMapper->save(
             $dataDe,
             'car',
@@ -134,7 +135,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
             null,
             Structure::TYPE_SNIPPET
         );
-        $dataEn = array('title' => 'en-test-title', 'description' => 'en-test-description');
+        $dataEn = ['title' => 'en-test-title', 'description' => 'en-test-description'];
         $dataEn = $this->contentMapper->save(
             $dataEn,
             'car',
@@ -166,8 +167,8 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals('en-test-title', $snippet['content']['title']);
         $this->assertEquals('en-test-description', $snippet['content']['description']);
 
-        $this->assertEquals(array(), $snippet['view']['title']);
-        $this->assertEquals(array(), $snippet['view']['description']);
+        $this->assertEquals([], $snippet['view']['title']);
+        $this->assertEquals([], $snippet['view']['description']);
 
         $snippet = $this->extension->loadSnippet($dataDe->getUuid(), 'de');
 
@@ -185,7 +186,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals('de-test-title', $snippet['content']['title']);
         $this->assertEquals('de-test-description', $snippet['content']['description']);
 
-        $this->assertEquals(array(), $snippet['view']['title']);
-        $this->assertEquals(array(), $snippet['view']['description']);
+        $this->assertEquals([], $snippet['view']['title']);
+        $this->assertEquals([], $snippet['view']['description']);
     }
 }

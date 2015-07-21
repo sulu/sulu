@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ class UsingPersistenceBundleTrait extends Bundle
 {
     use PersistenceBundleTrait;
 
-    public $modelInterfaces = array();
+    public $modelInterfaces = [];
 
     /**
      * {@inheritDoc}

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,7 +38,7 @@ class AdminController extends Controller
         // get user data
         $userDataServiceId = $this->container->getParameter(self::USER_DATA_ID);
 
-        $user = array();
+        $user = [];
         if ($this->has($userDataServiceId)) {
             /** @var UserManagerInterface $userManager */
             $userManager = $this->get($userDataServiceId);
@@ -45,7 +46,7 @@ class AdminController extends Controller
                 $user = $userManager->getCurrentUserData()->toArray();
 
                 // get js config from bundles
-                $jsconfig = array();
+                $jsconfig = [];
                 if ($this->has(self::JS_CONFIG_ID)) {
                     $jsconfig = $this->get(self::JS_CONFIG_ID);
                     $jsconfig = $jsconfig->getConfigParams();
@@ -60,13 +61,13 @@ class AdminController extends Controller
 
                 return $this->render(
                     $template,
-                    array(
+                    [
                         'name' => $this->container->getParameter('sulu_admin.name'),
                         'locales' => $this->container->getParameter('sulu_core.locales'),
                         'suluVersion' => $this->container->getParameter('sulu.version'),
                         'user' => $user,
                         'config' => $jsconfig,
-                    )
+                    ]
                 );
             } else {
                 return $this->redirect($this->generateUrl('sulu_admin.login'));
@@ -84,7 +85,7 @@ class AdminController extends Controller
         /** @var AdminPool $pool */
         $pool = $this->get('sulu_admin.admin_pool');
 
-        $admins = array();
+        $admins = [];
 
         foreach ($pool->getAdmins() as $admin) {
             $name = $admin->getJsBundleName();
@@ -119,7 +120,7 @@ class AdminController extends Controller
     public function configAction()
     {
         // get js config from bundles
-        $jsconfig = array();
+        $jsconfig = [];
         if ($this->has(self::JS_CONFIG_ID)) {
             $jsconfig = $this->get(self::JS_CONFIG_ID);
             $jsconfig = $jsconfig->getConfigParams();

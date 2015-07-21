@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -274,21 +275,21 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/categories',
-            array(
+            [
                 'name' => 'New Category',
                 'key' => 'new-category-key',
-                'meta' => array(
-                    array(
+                'meta' => [
+                    [
                         'key' => 'myKey',
                         'value' => 'myValue',
-                    ),
-                    array(
+                    ],
+                    [
                         'key' => 'anotherKey',
                         'value' => 'should not be visible due to locale',
                         'locale' => 'de-ch',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -322,22 +323,22 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId(),
-            array(
+            [
                 'name' => 'Modified Category',
                 'key' => 'modified-category-key',
-                'meta' => array(
-                    array(
+                'meta' => [
+                    [
                         'id' => $this->meta1->getId(),
                         'key' => 'modifiedKey',
                         'value' => 'This meta got overriden',
                         'locale' => null,
-                    ),
-                    array(
+                    ],
+                    [
                         'key' => 'newMeta',
                         'value' => 'This meta got added',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -374,9 +375,9 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '?locale=cn',
-            array(
+            [
                 'name' => 'Imagine this is chinese',
-            )
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -408,14 +409,14 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId(),
-            array(
-                'meta' => array(
-                    array(
+            [
+                'meta' => [
+                    [
                         'key' => 'newMeta',
                         'value' => 'This meta got added',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -427,9 +428,9 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/categories/' . $this->category1->getId(),
-            array(
+            [
                 'name' => 'Name changed through patch',
-            )
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -454,9 +455,9 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/categories/' . $this->category3->getId(),
-            array(
+            [
                 'key' => 'first-category-key',
-            )
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());

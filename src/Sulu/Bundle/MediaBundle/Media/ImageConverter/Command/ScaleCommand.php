@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,13 +21,13 @@ class ScaleCommand implements CommandInterface
      */
     public function execute(ImageInterface &$image, $parameters)
     {
-        $parameters = array_merge(array(
+        $parameters = array_merge([
             'retina' => false,
             'forceRatio' => true,
             'x' => null,
             'y' => null,
             'mode' => $image::THUMBNAIL_OUTBOUND,
-        ), $parameters);
+        ], $parameters);
 
         list($newWidth, $newHeight) = $this->getHeightWidth($parameters, $image->getSize());
 
@@ -81,7 +82,7 @@ class ScaleCommand implements CommandInterface
             }
         }
 
-        return array($newWidth, $newHeight);
+        return [$newWidth, $newHeight];
     }
 
     /**
@@ -99,6 +100,6 @@ class ScaleCommand implements CommandInterface
 
         $size2 = $originalSize;
 
-        return array($size1, $size2);
+        return [$size1, $size2];
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,7 +29,7 @@ class AccountContact extends ApiWrapper
 {
     /**
      * @param AccountContactEntity $accountContact
-     * @param string $locale The locale of this product
+     * @param string               $locale         The locale of this product
      */
     public function __construct(AccountContactEntity $accountContact, $locale)
     {
@@ -102,10 +103,10 @@ class AccountContact extends ApiWrapper
     {
         $contact = $this->entity->getContact();
 
-        return array(
+        return [
             'id' => $contact->getId(),
             'fullName' => $contact->getFullName(),
-        );
+        ];
     }
 
     /**
@@ -134,10 +135,10 @@ class AccountContact extends ApiWrapper
     {
         $account = $this->entity->getAccount();
 
-        return array(
+        return [
             'id' => $account->getId(),
             'name' => $account->getName(),
-        );
+        ];
     }
 
     /**

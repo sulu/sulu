@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
             ->disableOriginalConstructor()
-            ->setMethods(array('execute', 'getSingleScalarResult'))
+            ->setMethods(['execute', 'getSingleScalarResult'])
             ->getMockForAbstractClass();
 
         $this->em->expects($this->once())->method('createQueryBuilder')->willReturn($this->queryBuilder);
@@ -90,10 +91,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSetField()
     {
         $this->doctrineListBuilder->setSelectFields(
-            array(
+            [
                 new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
                 new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName),
-            )
+            ]
         );
 
         $this->queryBuilder->expects($this->at(1))->method('addSelect')->with(
@@ -127,11 +128,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->addSelectField(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
+                'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
                         ),
-                )
+                ]
             )
         );
 
@@ -150,11 +151,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
+                'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
                         ),
-                )
+                ]
             )
         );
 
@@ -169,11 +170,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->sort(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
+                'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
                         ),
-                )
+                ]
             )
         );
 
@@ -223,16 +224,16 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     public function testCount()
     {
         $this->doctrineListBuilder->setSelectFields(
-            array(
+            [
                 new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
                 new DoctrineFieldDescriptor(
-                    'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
+                    'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                         self::$translationEntityName => new DoctrineJoinDescriptor(
                                 self::$translationEntityName, self::$entityName . '.translations'
                             ),
-                    )
+                    ]
                 ),
-            )
+            ]
         );
 
         $this->doctrineListBuilder->addSearchField(
@@ -253,15 +254,15 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSetWhereWithSameName()
     {
-        $fieldDescriptors = array(
+        $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
             'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName),
-        );
+        ];
 
-        $filter = array(
+        $filter = [
             'title_id' => 3,
             'desc_id' => 1,
-        );
+        ];
 
         foreach ($filter as $key => $value) {
             $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
@@ -283,13 +284,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSetWhereWithNull()
     {
-        $fieldDescriptors = array(
+        $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
-        );
+        ];
 
-        $filter = array(
+        $filter = [
             'title_id' => null,
-        );
+        ];
 
         foreach ($filter as $key => $value) {
             $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
@@ -303,13 +304,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSetWhereWithNotNull()
     {
-        $fieldDescriptors = array(
+        $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
-        );
+        ];
 
-        $filter = array(
+        $filter = [
             'title_id' => null,
-        );
+        ];
 
         foreach ($filter as $key => $value) {
             $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
@@ -323,15 +324,15 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSetWhereNot()
     {
-        $fieldDescriptors = array(
+        $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
             'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName),
-        );
+        ];
 
-        $filter = array(
+        $filter = [
             'title_id' => 3,
             'desc_id' => 1,
-        );
+        ];
 
         foreach ($filter as $key => $value) {
             $this->doctrineListBuilder->addSelectField($fieldDescriptors[$key]);
@@ -356,7 +357,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $fieldDescriptor = new DoctrineFieldDescriptor('id', 'title_id', self::$entityName);
 
         $this->doctrineListBuilder->addSelectField($fieldDescriptor);
-        $this->doctrineListBuilder->in($fieldDescriptor, array(1, 2));
+        $this->doctrineListBuilder->in($fieldDescriptor, [1, 2]);
 
         $this->queryBuilder
             ->expects($this->once())
@@ -368,18 +369,18 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testJoinMethods()
     {
-        $fieldDescriptors = array(
+        $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                    null, null, null, null, array(
+                    null, null, null, null, [
                         new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
-                    )
+                    ]
                 ),
             'id2' => new DoctrineFieldDescriptor(
-                    null, null, null, null, array(
+                    null, null, null, null, [
                         new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_INNER),
-                    )
+                    ]
                 ),
-        );
+        ];
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
@@ -391,27 +392,27 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testJoinConditions()
     {
-        $fieldDescriptors = array(
+        $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
                     null,
                     null,
                     null,
                     null,
-                    array(
+                    [
                         self::$entityName . '1' => new DoctrineJoinDescriptor(
                             self::$entityName,
                             null,
                             'field1 = value1',
                             DoctrineJoinDescriptor::JOIN_METHOD_LEFT
                         ),
-                    )
+                    ]
                 ),
             'id2' => new DoctrineFieldDescriptor(
                     null,
                     null,
                     null,
                     null,
-                    array(
+                    [
                         self::$entityName . '2' => new DoctrineJoinDescriptor(
                             self::$entityName,
                             null,
@@ -419,9 +420,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                             DoctrineJoinDescriptor::JOIN_METHOD_INNER,
                             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON
                         ),
-                    )
+                    ]
                 ),
-        );
+        ];
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
@@ -446,9 +447,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
         $this->doctrineListBuilder->setSelectFields(
-            array(
+            [
                 $nameFieldDescriptor,
-            )
+            ]
         );
 
         $this->doctrineListBuilder->addGroupBy($nameFieldDescriptor);
@@ -463,12 +464,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
         $this->doctrineListBuilder->setSelectFields(
-            array(
+            [
                 $nameFieldDescriptor,
-            )
+            ]
         );
 
-        $this->doctrineListBuilder->between($nameFieldDescriptor, array(0, 1));
+        $this->doctrineListBuilder->between($nameFieldDescriptor, [0, 1]);
 
         $this->queryBuilder->expects($this->once())->method('andWhere')->with(
             '(SuluCoreBundle:Example.name BETWEEN :name_alias1 AND :name_alias2)'

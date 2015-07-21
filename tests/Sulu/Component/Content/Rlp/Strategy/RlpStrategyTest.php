@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,22 +52,22 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array(),
-            array('test-mapper'),
+            [],
+            ['test-mapper'],
             'TestMapper'
         );
         $this->mapper->expects($this->any())
             ->method('unique')
-            ->will($this->returnCallback(array($this, 'uniqueCallback')));
+            ->will($this->returnCallback([$this, 'uniqueCallback']));
         $this->mapper->expects($this->any())
             ->method('getUniquePath')
-            ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
+            ->will($this->returnCallback([$this, 'getUniquePathCallback']));
         $this->mapper->expects($this->any())
             ->method('save')
-            ->will($this->returnCallback(array($this, 'saveCallback')));
+            ->will($this->returnCallback([$this, 'saveCallback']));
         $this->mapper->expects($this->any())
             ->method('move')
-            ->will($this->returnCallback(array($this, 'moveCallback')));
+            ->will($this->returnCallback([$this, 'moveCallback']));
         $this->mapper->expects($this->any())
             ->method('loadByContent')
             ->will($this->returnValue('/test'));
@@ -82,23 +83,23 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\Compat\StructureManagerInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
-        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', array(), array(), '', false);
+        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', [], [], '', false);
 
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,
-            array(
+            [
                 'test-strategy',
                 $this->mapper,
                 new PathCleanup(),
                 $structureManager,
                 $contentTypeManager,
                 $nodeHelper,
-            ),
+            ],
             'TestStrategy'
         );
         $this->strategy->expects($this->any())
             ->method('generatePath')
-            ->will($this->returnCallback(array($this, 'generateCallback')));
+            ->will($this->returnCallback([$this, 'generateCallback']));
     }
 
     public function uniqueCallback()
@@ -201,7 +202,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private function getNodeMock()
     {
-        return $this->getMockForAbstractClass('\Jackalope\Node', array(), 'MockNode', false);
+        return $this->getMockForAbstractClass('\Jackalope\Node', [], 'MockNode', false);
     }
 
     public function testSave()
@@ -231,10 +232,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testMove()
     {
-        $contentNode = $this->getMock('Sulu\Component\Content\Rlp\Strategy\NodeInterface', array(), array(), '', false);
+        $contentNode = $this->getMock('Sulu\Component\Content\Rlp\Strategy\NodeInterface', [], [], '', false);
         $contentNode->expects($this->any())
             ->method('getNodes')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->isMoved = false;
         // its a delegate

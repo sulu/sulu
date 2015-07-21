@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -82,6 +83,6 @@ class StructureType
      */
     public function toArray()
     {
-        return array('name' => $this->getName(), 'value' => $this->getValue());
+        return ['name' => $this->getName(), 'value' => $this->getValue()];
     }
 }

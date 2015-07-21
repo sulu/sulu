@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,12 +45,12 @@ class PropertyParameter
     /**
      * Constructor.
      *
-     * @param string $name
-     * @param string|null $type
+     * @param string            $name
+     * @param string|null       $type
      * @param string|bool|array $value
-     * @param array $metadata
+     * @param array             $metadata
      */
-    public function __construct($name, $value, $type = null, $metadata = array())
+    public function __construct($name, $value, $type = null, $metadata = [])
     {
         $this->name = $name;
         $this->value = $value;

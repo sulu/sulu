@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,10 +39,10 @@ class StructureSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            Events::PERSIST => array('handlePersist', -10),
-            Events::REMOVE => array('handlePreRemove', 600),
-        );
+        return [
+            Events::PERSIST => ['handlePersist', -10],
+            Events::REMOVE => ['handlePreRemove', 600],
+        ];
     }
 
     /**

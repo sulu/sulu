@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,12 +21,12 @@ class Structure implements StructureInterface
     /**
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * @var array
      */
-    protected $stagedData = array();
+    protected $stagedData = [];
 
     /**
      * {@inheritDoc}
@@ -49,7 +50,7 @@ class Structure implements StructureInterface
     public function commitStagedData($clearMissingContent)
     {
         $this->bind($this->stagedData, $clearMissingContent);
-        $this->stagedData = array();
+        $this->stagedData = [];
     }
 
     /**
@@ -122,7 +123,7 @@ class Structure implements StructureInterface
      */
     public function toArray()
     {
-        $values = array();
+        $values = [];
         foreach ($this->properties as $name => $property) {
             $values[$name] = $this->normalize($property->getValue());
         }
@@ -156,7 +157,7 @@ class Structure implements StructureInterface
             return $value;
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($value as $key => $value) {
             $ret[$key] = $this->normalize($value);
         }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,13 +36,13 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // persist should happen before content is mapped
-            Events::PERSIST => array('handlePersist', 10),
+            Events::PERSIST => ['handlePersist', 10],
 
             // hydrate should happen afterwards
-            Events::HYDRATE => array('handleHydrate', -10),
-        );
+            Events::HYDRATE => ['handleHydrate', -10],
+        ];
     }
 
     public function supports($document)

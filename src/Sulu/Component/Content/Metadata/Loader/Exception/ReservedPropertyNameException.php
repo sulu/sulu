@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ class ReservedPropertyNameException extends InvalidXmlException
     protected $propertyName;
 
     /**
-     * @param string $template The template causing the problem
+     * @param string $template     The template causing the problem
      * @param string $propertyName The name of the property, which has been used
      */
     public function __construct($template, $propertyName)

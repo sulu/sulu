@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,8 +19,8 @@ interface PathCleanupInterface
     /**
      * returns a clean string.
      *
-     * @param string $dirty dirty string to cleanup
-     * @param  string $languageCode
+     * @param string $dirty        dirty string to cleanup
+     * @param string $languageCode
      *
      * @return string clean string
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,14 +28,14 @@ class ManagedStructure extends Structure
     private $inspector;
     private $structure;
     private $node;
-    private $legacyProperties = array();
-    private $contentViewProperties = array();
+    private $legacyProperties = [];
+    private $contentViewProperties = [];
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param DocumentInspector $inspector
-     * @param object $document
+     * @param LegacyPropertyFactory       $legacyPropertyFactory
+     * @param DocumentInspector           $inspector
+     * @param object                      $document
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
@@ -137,7 +138,7 @@ class ManagedStructure extends Structure
     public function toArray()
     {
         $this->init();
-        $values = array();
+        $values = [];
         foreach (array_keys($this->structure->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }

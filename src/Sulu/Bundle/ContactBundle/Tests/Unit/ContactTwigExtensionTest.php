@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,8 +41,8 @@ class ContactTwigExtensionTest extends PHPUnit_Framework_TestCase
         $this->cache = new ArrayCache();
         $this->userRepository = $this->getMock(
             'Sulu\Bundle\SecurityBundle\Entity\UserRepository',
-            array('findUserById'),
-            array(),
+            ['findUserById'],
+            [],
             'UserRepositoryMock',
             false,
             false
@@ -69,10 +70,10 @@ class ContactTwigExtensionTest extends PHPUnit_Framework_TestCase
             ->method('findUserById')
             ->will(
                 $this->returnValueMap(
-                    array(
-                        array(1, $user1),
-                        array(2, $user2),
-                    )
+                    [
+                        [1, $user1],
+                        [2, $user2],
+                    ]
                 )
             );
 

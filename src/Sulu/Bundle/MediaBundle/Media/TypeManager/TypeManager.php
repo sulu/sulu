@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,8 +43,8 @@ class TypeManager implements TypeManagerInterface
 
     /**
      * @param ObjectManager $objectManager
-     * @param array $mediaTypes
-     * @param array $blockedMimeTypes
+     * @param array         $mediaTypes
+     * @param array         $blockedMimeTypes
      */
     public function __construct(
         ObjectManager $objectManager,

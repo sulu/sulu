@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,10 +39,10 @@ class ContentTypesDumpCommand extends ContainerAwareCommand
         $contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
 
         $table = $this->getHelper('table');
-        $table->setHeaders(array('Alias', 'Service ID'));
+        $table->setHeaders(['Alias', 'Service ID']);
 
         foreach ($contentTypeManager->getAll() as $alias => $service) {
-            $table->addRow(array($alias, $service['id']));
+            $table->addRow([$alias, $service['id']]);
         }
         $table->render($output);
     }

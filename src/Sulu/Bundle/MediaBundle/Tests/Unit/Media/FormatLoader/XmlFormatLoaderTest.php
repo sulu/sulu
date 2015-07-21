@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,40 +27,40 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid.xml');
         $this->assertEquals(
-            array(
-                '640x480' => array(
+            [
+                '640x480' => [
                     'name' => '640x480',
-                    'commands' => array(
-                        array(
+                    'commands' => [
+                        [
                             'action' => 'scale',
-                            'parameters' => array(
+                            'parameters' => [
                                 'x' => 640,
                                 'y' => 480,
                                 'forceRatio' => true,
-                            ),
-                        ),
-                    ),
-                    'options' => array(
+                            ],
+                        ],
+                    ],
+                    'options' => [
                         'jpeg_quality' => 70,
                         'png_compression_level' => 6,
-                    ),
-                ),
-                '300x300' => array(
+                    ],
+                ],
+                '300x300' => [
                     'name' => '300x300',
-                    'commands' => array(
-                        array(
+                    'commands' => [
+                        [
                             'action' => 'resize',
-                            'parameters' => array(
+                            'parameters' => [
                                 'x' => 300,
                                 'y' => 300,
-                            ),
-                        ),
-                    ),
-                    'options' => array(
+                            ],
+                        ],
+                    ],
+                    'options' => [
                         'png_compression_level' => 3,
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             $result
         );
     }
@@ -78,22 +79,22 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid_no_options.xml');
         $this->assertEquals(
-            array(
-                '640x480' => array(
+            [
+                '640x480' => [
                     'name' => '640x480',
-                    'commands' => array(
-                        array(
+                    'commands' => [
+                        [
                             'action' => 'scale',
-                            'parameters' => array(
+                            'parameters' => [
                                 'x' => 640,
                                 'y' => 480,
                                 'forceRatio' => false,
-                            ),
-                        ),
-                    ),
-                    'options' => array(),
-                ),
-            ),
+                            ],
+                        ],
+                    ],
+                    'options' => [],
+                ],
+            ],
             $result
         );
     }
@@ -112,16 +113,16 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid_no_commands.xml');
         $this->assertEquals(
-            array(
-                '640x480' => array(
+            [
+                '640x480' => [
                     'name' => '640x480',
-                    'commands' => array(),
-                    'options' => array(
+                    'commands' => [],
+                    'options' => [
                         'jpeg_quality' => 70,
                         'png_compression_level' => 6,
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             $result
         );
     }
@@ -137,47 +138,47 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
             ->willReturnArgument(0);
 
         $loader = new XmlFormatLoader($fileLocator);
-        $loader->setDefaultOptions(array('jpeg_quality' => 10, 'a' => 'test'));
+        $loader->setDefaultOptions(['jpeg_quality' => 10, 'a' => 'test']);
 
         $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid.xml');
         $this->assertEquals(
-            array(
-                '640x480' => array(
+            [
+                '640x480' => [
                     'name' => '640x480',
-                    'commands' => array(
-                        array(
+                    'commands' => [
+                        [
                             'action' => 'scale',
-                            'parameters' => array(
+                            'parameters' => [
                                 'x' => 640,
                                 'y' => 480,
                                 'forceRatio' => true,
-                            ),
-                        ),
-                    ),
-                    'options' => array(
+                            ],
+                        ],
+                    ],
+                    'options' => [
                         'jpeg_quality' => 70,
                         'png_compression_level' => 6,
                         'a' => 'test',
-                    ),
-                ),
-                '300x300' => array(
+                    ],
+                ],
+                '300x300' => [
                     'name' => '300x300',
-                    'commands' => array(
-                        array(
+                    'commands' => [
+                        [
                             'action' => 'resize',
-                            'parameters' => array(
+                            'parameters' => [
                                 'x' => 300,
                                 'y' => 300,
-                            ),
-                        ),
-                    ),
-                    'options' => array(
+                            ],
+                        ],
+                    ],
+                    'options' => [
                         'png_compression_level' => 3,
                         'jpeg_quality' => 10,
                         'a' => 'test',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             $result
         );
     }

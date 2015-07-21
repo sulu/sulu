@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,7 +40,7 @@ class XmlFileLoader extends FileLoader
     const SCHEME_PATH = '/schema/webspace/webspace-1.0.xsd';
 
     /**
-     * @var  \DOMXPath
+     * @var \DOMXPath
      */
     private $xpath;
 
@@ -53,8 +54,8 @@ class XmlFileLoader extends FileLoader
     /**
      * Loads a webspace from a xml file.
      *
-     * @param mixed $resource The resource
-     * @param string $type The resource type
+     * @param mixed  $resource The resource
+     * @param string $type     The resource type
      *
      * @return Webspace The webspace object for the given resource
      */
@@ -71,8 +72,8 @@ class XmlFileLoader extends FileLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param mixed $resource A resource
-     * @param string $type The resource type
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
      *
      * @return Boolean true if this class supports the given resource, false otherwise
      */
@@ -153,7 +154,7 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMNode $portalNode
-     * @param Portal $portal
+     * @param Portal   $portal
      */
     private function generatePortalLocalizations(\DOMNode $portalNode, Portal $portal)
     {
@@ -170,8 +171,8 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMNodeList $localizationNodes
-     * @param Portal $portal
-     * @param bool $flat
+     * @param Portal       $portal
+     * @param bool         $flat
      *
      * @internal param \DOMXpath $xpath
      */
@@ -186,8 +187,8 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMElement|\DOMNode $localizationNode
-     * @param bool $flat
-     * @param null $parent
+     * @param bool                 $flat
+     * @param null                 $parent
      *
      * @internal param \DOMXPath $xpath
      *
@@ -312,7 +313,7 @@ class XmlFileLoader extends FileLoader
         $defaultErrorTemplates = 0;
 
         foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
-            /** @var \DOMNode $errorTemplateNode */
+            /* @var \DOMNode $errorTemplateNode */
             $template = $errorTemplateNode->nodeValue;
             if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
                 $code = $codeNode->nodeValue;
@@ -340,12 +341,12 @@ class XmlFileLoader extends FileLoader
 
     private function generateDefaultTemplates(Theme $theme)
     {
-        $expected = array('page', 'homepage');
-        $found = array();
+        $expected = ['page', 'homepage'];
+        $found = [];
         $nodes = $this->xpath->query('/x:webspace/x:theme/x:default-templates/x:default-template');
 
         foreach ($nodes as $node) {
-            /** @var \DOMNode $node */
+            /* @var \DOMNode $node */
             $template = $node->nodeValue;
             $type = $node->attributes->getNamedItem('type')->nodeValue;
 
@@ -364,10 +365,10 @@ class XmlFileLoader extends FileLoader
 
     private function generateNavigation()
     {
-        $contexts = array();
+        $contexts = [];
 
         foreach ($this->xpath->query('/x:webspace/x:navigation/x:contexts/x:context') as $contextNode) {
-            /** @var \DOMNode $contextNode */
+            /* @var \DOMNode $contextNode */
             $contexts[] = new NavigationContext(
                 $contextNode->attributes->getNamedItem('key')->nodeValue,
                 $this->loadMeta('x:meta/x:*', $contextNode)
@@ -379,7 +380,7 @@ class XmlFileLoader extends FileLoader
 
     private function loadMeta($path, \DOMNode $context = null)
     {
-        $result = array();
+        $result = [];
 
         /** @var \DOMElement $node */
         foreach ($this->xpath->query($path, $context) as $node) {
@@ -387,7 +388,7 @@ class XmlFileLoader extends FileLoader
             $lang = $this->xpath->query('@lang', $node)->item(0)->nodeValue;
 
             if (!isset($result[$node->tagName])) {
-                $result[$attribute] = array();
+                $result[$attribute] = [];
             }
             $result[$attribute][$lang] = $node->textContent;
         }
@@ -397,7 +398,7 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMNode $portalNode
-     * @param Portal $portal
+     * @param Portal   $portal
      */
     private function generateEnvironments(\DOMNode $portalNode, Portal $portal)
     {
@@ -413,7 +414,7 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param \DOMNode $environmentNode
+     * @param \DOMNode    $environmentNode
      * @param Environment $environment
      *
      * @throws Exception\InvalidUrlDefinitionException

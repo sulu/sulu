@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,11 +31,11 @@ class TimestampableSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::loadClassMetadata,
             Events::preUpdate,
             Events::prePersist,
-        );
+        ];
     }
 
     /**
@@ -50,19 +51,19 @@ class TimestampableSubscriber implements EventSubscriber
 
         if ($reflection !== null && $reflection->implementsInterface('Sulu\Component\Persistence\Model\TimestampableInterface')) {
             if (!$metadata->hasField(self::CREATED_FIELD)) {
-                $metadata->mapField(array(
+                $metadata->mapField([
                     'fieldName' => self::CREATED_FIELD,
                     'type' => 'datetime',
                     'notnull' => true,
-                ));
+                ]);
             }
 
             if (!$metadata->hasField(self::CHANGED_FIELD)) {
-                $metadata->mapField(array(
+                $metadata->mapField([
                     'fieldName' => self::CHANGED_FIELD,
                     'type' => 'datetime',
                     'notnull' => true,
-                ));
+                ]);
             }
         }
     }

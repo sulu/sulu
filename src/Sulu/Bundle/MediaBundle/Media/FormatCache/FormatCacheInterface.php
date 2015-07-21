@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,9 +21,9 @@ interface FormatCacheInterface
      * Save image and return the url to the image.
      *
      * @param string $tmpPath
-     * @param int $id
+     * @param int    $id
      * @param string $fileName
-     * @param array $options
+     * @param array  $options
      * @param string $format
      *
      * @return bool
@@ -32,9 +33,9 @@ interface FormatCacheInterface
     /**
      * Delete the image by the given parameters.
      *
-     * @param int $id
+     * @param int    $id
      * @param string $fileName
-     * @param array $options
+     * @param array  $options
      *
      * @return bool
      */
@@ -43,11 +44,11 @@ interface FormatCacheInterface
     /**
      * Return the url to an specific format of an media.
      *
-     * @param int $id
+     * @param int    $id
      * @param string $fileName
-     * @param array $options
+     * @param array  $options
      * @param string $format
-     * @param int $version
+     * @param int    $version
      *
      * @return string
      */

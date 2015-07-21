@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,14 +37,14 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function provideContentNavigationMappings()
     {
-        return array(
-            array(
-                array(
-                    'alias1' => array('service1', 'service2'),
-                    'alias2' => array('service3'),
-                ),
-            ),
-        );
+        return [
+            [
+                [
+                    'alias1' => ['service1', 'service2'],
+                    'alias2' => ['service3'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -62,26 +63,26 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function provideContentNavigationItems()
     {
-        return array(
-            array(
-                array(
-                    'alias1' => array('service1', 'service2'),
-                    'alias2' => array('service3'),
-                ),
-                array(
+        return [
+            [
+                [
+                    'alias1' => ['service1', 'service2'],
+                    'alias2' => ['service3'],
+                ],
+                [
                     'option1' => 'value1',
-                ),
-                array(
-                    'service1' => array('tab1', 'tab2'),
-                    'service2' => array('tab3'),
-                    'service3' => array('tab4'),
-                ),
-                array(
-                    'alias1' => array('tab1', 'tab2', 'tab3'),
-                    'alias2' => array('tab4'),
-                ),
-            ),
-        );
+                ],
+                [
+                    'service1' => ['tab1', 'tab2'],
+                    'service2' => ['tab3'],
+                    'service3' => ['tab4'],
+                ],
+                [
+                    'alias1' => ['tab1', 'tab2', 'tab3'],
+                    'alias2' => ['tab4'],
+                ],
+            ],
+        ];
     }
 
     /**

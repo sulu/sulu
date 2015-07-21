@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,11 +16,11 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
     public function testSelect()
     {
         $doctrineConcatenationFieldDescriptor = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineFieldDescriptor('test1', null, 'TestEntity1'),
                 new DoctrineFieldDescriptor('test2', null, 'TestEntity2'),
                 new DoctrineFieldDescriptor('test3', null, 'TestEntity3'),
-            ),
+            ],
             'test'
         );
 
@@ -32,11 +33,11 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
     public function testSelectWithGlue()
     {
         $doctrineConcatenationFieldDescriptor = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineFieldDescriptor('test1', null, 'TestEntity1'),
                 new DoctrineFieldDescriptor('test2', null, 'TestEntity2'),
                 new DoctrineFieldDescriptor('test3', null, 'TestEntity3'),
-            ),
+            ],
             'test',
             'translation',
             ', '

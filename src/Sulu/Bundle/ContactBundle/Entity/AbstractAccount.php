@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -528,7 +529,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
      */
     public function getTagNameArray()
     {
-        $tags = array();
+        $tags = [];
         if (!is_null($this->getTags())) {
             foreach ($this->getTags() as $tag) {
                 $tags[] = $tag->getName();
@@ -612,10 +613,10 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     public function getAddresses()
     {
         $accountAddresses = $this->getAccountAddresses();
-        $addresses = array();
+        $addresses = [];
 
         if (!is_null($accountAddresses)) {
-            /** @var ContactAddress $contactAddress */
+            /* @var ContactAddress $contactAddress */
             foreach ($accountAddresses as $accountAddress) {
                 $address = $accountAddress->getAddress();
                 $address->setPrimaryAddress($accountAddress->getMain());

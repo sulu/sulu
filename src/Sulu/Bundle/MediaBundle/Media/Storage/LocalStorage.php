@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,8 +40,8 @@ class LocalStorage implements StorageInterface
 
     /**
      * @param string $uploadPath
-     * @param int $segments
-     * @param null $logger
+     * @param int    $segments
+     * @param null   $logger
      */
     public function __construct($uploadPath, $segments, $logger = null)
     {

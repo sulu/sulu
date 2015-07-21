@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -239,7 +240,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getAllLocalizations()
     {
-        $localizations = array();
+        $localizations = [];
         if ($this->getChildren() !== null && sizeof($this->getChildren()) > 0) {
             foreach ($this->getChildren() as $child) {
                 $localizations[] = $child;
@@ -263,10 +264,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function jsonSerialize()
     {
-        return array(
+        return [
             'localization' => $this->getLocalization(),
             'name' => $this->getLocalization(),
-        );
+        ];
     }
 
     /**
@@ -274,12 +275,12 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        $res = array();
+        $res = [];
         $res['country'] = $this->getCountry();
         $res['language'] = $this->getLanguage();
         $res['localization'] = $this->getLocalization();
         $res['default'] = $this->isDefault();
-        $res['children'] = array();
+        $res['children'] = [];
 
         $children = $this->getChildren();
         if ($children) {

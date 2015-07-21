@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -570,14 +571,14 @@ class FileVersion implements AuditableInterface
         if ($this->id) {
             $this->id = null;
             /** @var FileVersionMeta[] $newMetaList */
-            $newMetaList = array();
+            $newMetaList = [];
             $defaultMetaLocale = $this->getDefaultMeta()->getLocale();
 
             /** @var FileVersionContentLanguage[] $newContentLanguageList */
-            $newContentLanguageList = array();
+            $newContentLanguageList = [];
 
             /** @var FileVersionPublishLanguage[] $newPublishLanguageList */
-            $newPublishLanguageList = array();
+            $newPublishLanguageList = [];
 
             /** @var FileVersionMeta $meta */
             foreach ($this->meta as $meta) {
@@ -635,7 +636,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get storageType.
      *
-     * @return string 
+     * @return string
      */
     public function getStorageType()
     {

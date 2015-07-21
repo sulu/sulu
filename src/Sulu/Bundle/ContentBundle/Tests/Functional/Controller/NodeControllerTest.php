@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use Doctrine\ORM\EntityManager;
@@ -87,7 +96,7 @@ class NodeControllerTest extends SuluTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(array('de', 'en')));
+        $userRole1->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole1);
         $this->em->flush();
 
@@ -121,14 +130,14 @@ class NodeControllerTest extends SuluTestCase
 
     public function providePost()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'template' => 'default',
                     'webspace' => 'sulu_io',
                     'language' => 'en',
-                ),
-            ),
+                ],
+            ],
         //    array(
         //        array(
         //            'template' => 'hotel',
@@ -137,7 +146,7 @@ class NodeControllerTest extends SuluTestCase
         //            'type' => 'snippet',
         //        ),
         //    ),
-        );
+        ];
     }
 
     /**
@@ -145,15 +154,15 @@ class NodeControllerTest extends SuluTestCase
      */
     public function testPost($params)
     {
-        $data = array(
+        $data = [
             'title' => 'Testtitle',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/test',
             'article' => 'Test',
-        );
+        ];
 
         $client = $this->createAuthenticatedClient();
 
@@ -167,7 +176,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('Testtitle', $response->title);
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/test', $response->url);
-        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals(['tag1', 'tag2'], $response->tags);
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->changer);
 
@@ -186,24 +195,24 @@ class NodeControllerTest extends SuluTestCase
 
     public function testPostTree()
     {
-        $data1 = array(
+        $data1 = [
             'title' => 'news',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news',
             'article' => 'Test',
-        );
-        $data2 = array(
+        ];
+        $data2 = [
             'title' => 'test-1',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
             'article' => 'Test',
-        );
+        ];
 
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data1);
@@ -222,7 +231,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('test-1', $response->title);
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/news/test', $response->url);
-        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals(['tag1', 'tag2'], $response->tags);
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->changer);
 
@@ -246,28 +255,28 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
-            array(
+        $data = [
+            [
                 'template' => 'default',
                 'title' => 'test1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'template' => 'default',
                 'title' => 'test2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test2',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         $data = $this->setUpContent($data);
 
@@ -291,7 +300,7 @@ class NodeControllerTest extends SuluTestCase
         $targetPage->setTitle('target');
         $targetPage->setResourceSegment('/target');
         $targetPage->setStructureType('default');
-        $this->documentManager->persist($targetPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+        $this->documentManager->persist($targetPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
 
         $this->documentManager->flush();
 
@@ -301,7 +310,7 @@ class NodeControllerTest extends SuluTestCase
         $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
         $internalLinkPage->setRedirectTarget($targetPage);
         $internalLinkPage->setResourceSegment('/test');
-        $this->documentManager->persist($internalLinkPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+        $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
 
         $this->documentManager->flush();
 
@@ -322,7 +331,7 @@ class NodeControllerTest extends SuluTestCase
         $externalLinkPage->setRedirectType(RedirectType::EXTERNAL);
         $externalLinkPage->setRedirectExternal('http://www.sulu.io');
         $externalLinkPage->setResourceSegment('/test');
-        $this->documentManager->persist($externalLinkPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+        $this->documentManager->persist($externalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
 
         $this->documentManager->flush();
 
@@ -337,28 +346,28 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
-            array(
+        $data = [
+            [
                 'template' => 'default',
                 'title' => 'test1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'template' => 'default',
                 'title' => 'test2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test2',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         $data = $this->setUpContent($data);
 
@@ -373,26 +382,26 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $deleteData = array(
-            array(
+        $deleteData = [
+            [
                 'template' => 'simple',
                 'title' => 'test1',
                 'url' => '/test1',
-            ),
-        );
+            ],
+        ];
 
         $deleteData = $this->setUpContent($deleteData);
 
-        $linkData = array(
-            array(
+        $linkData = [
+            [
                 'template' => 'internallinks',
                 'title' => 'test2',
                 'url' => '/test2',
-                'internalLinks' => array(
+                'internalLinks' => [
                     $deleteData[0]['id'],
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $linkData = $this->setupContent($linkData);
 
@@ -407,33 +416,33 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
-            array(
+        $data = [
+            [
                 'template' => 'default',
                 'title' => 'test1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'template' => 'default',
                 'title' => 'test2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test2',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         $data = $this->setUpContent($data);
 
         $data[0]['title'] = 'test123';
-        $data[0]['tags'] = array('new tag');
+        $data[0]['tags'] = ['new tag'];
         $data[0]['article'] = 'thats a new article';
 
         $client->request(
@@ -471,70 +480,70 @@ class NodeControllerTest extends SuluTestCase
 
     private function buildTree()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'test1',
                 'url' => '/test1',
                 'article' => 'Test',
-                'ext' => array(
-                    'excerpt' => array(
-                        'tags' => array(
+                'ext' => [
+                    'excerpt' => [
+                        'tags' => [
                             'tag1',
-                        ),
-                    ),
-                ),
-            ),
-            array(
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'title' => 'test2',
                 'url' => '/test2',
                 'article' => 'Test',
-                'ext' => array(
-                    'excerpt' => array(
-                        'tags' => array(
+                'ext' => [
+                    'excerpt' => [
+                        'tags' => [
                             'tag2',
-                        ),
-                    ),
-                ),
-            ),
-            array(
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'title' => 'test3',
                 'url' => '/test3',
                 'article' => 'Test',
-                'ext' => array(
-                    'excerpt' => array(
-                        'tags' => array(
+                'ext' => [
+                    'excerpt' => [
+                        'tags' => [
                             'tag1',
                             'tag2',
-                        ),
-                    ),
-                ),
-            ),
-            array(
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'title' => 'test4',
                 'url' => '/test4',
                 'article' => 'Test',
-                'ext' => array(
-                    'excerpt' => array(
-                        'tags' => array(
+                'ext' => [
+                    'excerpt' => [
+                        'tags' => [
                             'tag1',
-                        ),
-                    ),
-                ),
-            ),
-            array(
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'title' => 'test5',
                 'url' => '/test5',
                 'article' => 'Test',
-                'ext' => array(
-                    'excerpt' => array(
-                        'tags' => array(
+                'ext' => [
+                    'excerpt' => [
+                        'tags' => [
                             'tag1',
                             'tag2',
-                        ),
-                    ),
-                ),
-            ),
-        );
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
@@ -930,7 +939,7 @@ class NodeControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
-        $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'en', 1);
+        $mapper->saveStartPage(['title' => 'Start Page'], 'default', 'sulu_io', 'en', 1);
 
         $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
 
@@ -951,28 +960,28 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $data = array(
-            array(
+        $data = [
+            [
                 'template' => 'default',
                 'title' => 'test1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'template' => 'default',
                 'title' => 'test2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/test2',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         $data = $this->setUpContent($data);
 
@@ -1028,40 +1037,40 @@ class NodeControllerTest extends SuluTestCase
     public function testHistory()
     {
         $client = $this->createAuthenticatedClient();
-        $data = array(
+        $data = [
             'title' => 'news',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/a1',
             'article' => 'Test',
-        );
+        ];
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent(), true);
         $uuid = $response['id'];
-        $data = array(
+        $data = [
             'title' => 'news',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/a2',
             'article' => 'Test',
-        );
+        ];
 
         sleep(1);
 
         $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
-        $data = array(
+        $data = [
             'title' => 'news',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/a3',
             'article' => 'Test',
-        );
+        ];
         $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
 
         $client->request(
@@ -1181,24 +1190,24 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrder()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'test1',
                 'url' => '/test1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'test2',
                 'url' => '/test2',
-            ),
-            array(
+            ],
+            [
                 'title' => 'test3',
                 'url' => '/test3',
-            ),
-            array(
+            ],
+            [
                 'title' => 'test4',
                 'url' => '/test4',
-            ),
-        );
+            ],
+        ];
 
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
@@ -1213,9 +1222,9 @@ class NodeControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/nodes/' . $data[1]['id'] . '?webspace=sulu_io&language=en&action=order',
-            array(
+            [
                 'position' => 3,
-            )
+            ]
         );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -1229,9 +1238,9 @@ class NodeControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/nodes/' . $data[3]['id'] . '?webspace=sulu_io&language=en&action=order',
-            array(
+            [
                 'position' => 1,
-            )
+            ]
         );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -1257,12 +1266,12 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrderNonExistingSource()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'test1',
                 'url' => '/test1',
-            ),
-        );
+            ],
+        ];
 
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
@@ -1271,21 +1280,21 @@ class NodeControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/nodes/123-123-123?webspace=sulu_io&language=en&action=order',
-            array(
+            [
                 'position' => 1,
-            )
+            ]
         );
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
     public function testOrderNonExistingPosition()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'test1',
                 'url' => '/test1',
-            ),
-        );
+            ],
+        ];
 
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
@@ -1294,9 +1303,9 @@ class NodeControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&action=order',
-            array(
+            [
                 'position' => 42,
-            )
+            ]
         );
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
@@ -1304,15 +1313,15 @@ class NodeControllerTest extends SuluTestCase
     public function testNavContexts()
     {
         $client = $this->createAuthenticatedClient();
-        $data = array(
+        $data = [
             'title' => 'test1',
-            'tags' => array(
+            'tags' => [
                 'tag1',
-            ),
+            ],
             'url' => '/test1',
             'article' => 'Test',
-            'navContexts' => array('main', 'footer'),
-        );
+            'navContexts' => ['main', 'footer'],
+        ];
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
@@ -1321,7 +1330,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('/test1', $data['path']);
         $this->assertEquals(1, $data['nodeState']);
         $this->assertFalse($data['publishedState']);
-        $this->assertEquals(array('main', 'footer'), $data['navContexts']);
+        $this->assertEquals(['main', 'footer'], $data['navContexts']);
         $this->assertFalse($data['hasSub']);
         $this->assertEquals(0, sizeof($data['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $data);
@@ -1339,7 +1348,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('/test1', $items[0]['path']);
         $this->assertEquals(1, $items[0]['nodeState']);
         $this->assertFalse($items[0]['publishedState']);
-        $this->assertEquals(array('main', 'footer'), $items[0]['navContexts']);
+        $this->assertEquals(['main', 'footer'], $items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
         $this->assertEquals(0, sizeof($items[0]['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $items[0]);
@@ -1348,11 +1357,11 @@ class NodeControllerTest extends SuluTestCase
     public function testCopyLocale()
     {
         $client = $this->createAuthenticatedClient();
-        $data = array(
+        $data = [
             'title' => 'test1',
             'url' => '/test1',
             'article' => 'Test',
-        );
+        ];
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
@@ -1378,11 +1387,11 @@ class NodeControllerTest extends SuluTestCase
     public function testCopyMultipleLocales()
     {
         $client = $this->createAuthenticatedClient();
-        $data = array(
+        $data = [
             'title' => 'test1',
             'url' => '/test1',
             'article' => 'Test',
-        );
+        ];
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
@@ -1420,7 +1429,7 @@ class NodeControllerTest extends SuluTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'de', 1);
+        $mapper->saveStartPage(['title' => 'Start Page'], 'default', 'sulu_io', 'de', 1);
 
         $client = $this->createAuthenticatedClient();
 

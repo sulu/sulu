@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -290,7 +291,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        $res = array();
+        $res = [];
         $res['type'] = $this->getType();
         $res['webspace'] = $this->getWebspace()->getKey();
         $res['url'] = $this->getUrl();

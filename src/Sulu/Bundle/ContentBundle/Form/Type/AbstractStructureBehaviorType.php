@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,9 +28,9 @@ abstract class AbstractStructureBehaviorType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
-        $options->setDefaults(array(
+        $options->setDefaults([
             'clear_missing_content' => false,
-        ));
+        ]);
     }
 
     /**
@@ -40,11 +40,11 @@ abstract class AbstractStructureBehaviorType extends AbstractType
     {
         $builder->add('title', 'text');
         $builder->add('structureType', 'text');
-        $builder->add('structure', 'text', array('property_path' => 'structure.stagedData'));
+        $builder->add('structure', 'text', ['property_path' => 'structure.stagedData']);
         $builder->setAttribute('clear_missing_content', $options['clear_missing_content']);
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array('Sulu\Component\Content\Compat\DataNormalizer', 'normalize'));
-        $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitMapContent'));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, ['Sulu\Component\Content\Compat\DataNormalizer', 'normalize']);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'postSubmitMapContent']);
     }
 
     public function postSubmitMapContent(FormEvent $event)

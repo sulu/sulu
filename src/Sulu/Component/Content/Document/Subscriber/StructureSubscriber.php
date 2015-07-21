@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,9 +38,9 @@ class StructureSubscriber extends AbstractMappingSubscriber
     private $legacyPropertyFactory;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder             $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureMetadataFactory $structureFactory
+     * @param StructureMetadataFactory    $structureFactory
      */
     public function __construct(
         PropertyEncoder $encoder,
@@ -58,17 +59,17 @@ class StructureSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            Events::PERSIST => array(
+        return [
+            Events::PERSIST => [
                 // persist should happen before content is mapped
-                array('handlePersist', 0),
+                ['handlePersist', 0],
                 // setting the structure should happen very early
-                array('handlePersistStructureType', 100),
-            ),
+                ['handlePersistStructureType', 100],
+            ],
             // hydrate should happen afterwards
-            Events::HYDRATE => array('handleHydrate', 0),
+            Events::HYDRATE => ['handleHydrate', 0],
             Events::CONFIGURE_OPTIONS => 'configureOptions',
-        );
+        ];
     }
 
     /**
@@ -78,14 +79,14 @@ class StructureSubscriber extends AbstractMappingSubscriber
     {
         $options = $event->getOptions();
         $options->setDefaults(
-            array(
+            [
                 'load_ghost_content' => true,
-            )
+            ]
         );
         $options->setAllowedTypes(
-            array(
+            [
                 'load_ghost_content' => 'bool',
-            )
+            ]
         );
     }
 
@@ -185,7 +186,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param mixed $document
+     * @param mixed         $document
      * @param NodeInterface $node
      */
     private function createStructure($document)
@@ -201,7 +202,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
     /**
      * Map to the content properties to the node using the content types.
      *
-     * @param mixed $document
+     * @param mixed         $document
      * @param NodeInterface $node
      */
     private function mapContentToNode($document, NodeInterface $node, $locale)

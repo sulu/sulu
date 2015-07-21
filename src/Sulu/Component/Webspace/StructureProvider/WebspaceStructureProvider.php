@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,11 +48,11 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     private $cache;
 
     /**
-     * @param \Twig_Environment $twig
+     * @param \Twig_Environment         $twig
      * @param StructureManagerInterface $structureManager
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param ActiveTheme $activeTheme
-     * @param Cache $cache
+     * @param WebspaceManagerInterface  $webspaceManager
+     * @param ActiveTheme               $activeTheme
+     * @param Cache                     $cache
      */
     public function __construct(
         \Twig_Environment $twig,
@@ -92,10 +93,10 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $this->activeTheme->setName($webspace->getTheme()->getKey());
 
-        $structures = array();
-        $keys = array();
+        $structures = [];
+        $keys = [];
         foreach ($this->structureManager->getStructures() as $page) {
-            /** @var PageBridge $page */
+            /* @var PageBridge $page */
             $template = sprintf('%s.html.twig', $page->getView());
             if ($this->templateExists($template)) {
                 $keys[] = $page->getKey();

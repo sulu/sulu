@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,13 +52,13 @@ class ContactController extends RestController implements ClassResourceInterface
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
     // serialization groups for contact
-    protected static $contactSerializationGroups = array(
+    protected static $contactSerializationGroups = [
         'fullContact',
         'partialAccount',
         'partialTag',
         'partialMedia',
         'partialCategory',
-    );
+    ];
 
     /**
      * @var string
@@ -105,10 +106,10 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = array();
+        $this->fieldDescriptors = [];
 
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'firstName',
@@ -119,7 +120,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     'lastName',
                     $this->container->getParameter('sulu.model.contact.class')
                 ),
-            ),
+            ],
             'fullName',
             'public.name',
             ' ',
@@ -136,7 +137,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'firstName',
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.firstName',
-            array(),
+            [],
             false,
             true,
             'string',
@@ -149,7 +150,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'lastName',
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.lastName',
-            array(),
+            [],
             false,
             true,
             'string',
@@ -162,7 +163,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'mainEmail',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.email',
-            array(),
+            [],
             false,
             true,
             'string',
@@ -175,7 +176,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'account',
             $this->getAccountEntityName(),
             'contact.contacts.company',
-            array(
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts',
@@ -186,7 +187,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     $this->getAccountEntityName(),
                     self::$accountContactEntityName . '.account'
                 ),
-            ),
+            ],
             false,
             true,
             'string'
@@ -197,7 +198,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'city',
             self::$addressEntityName,
             'contact.address.city',
-            array(
+            [
                 self::$contactAddressEntityName => new DoctrineJoinDescriptor(
                     self::$contactAddressEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
@@ -208,7 +209,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     self::$addressEntityName,
                     self::$contactAddressEntityName . '.address'
                 ),
-            ),
+            ],
             false,
             true,
             'string'
@@ -219,7 +220,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'mainPhone',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.phone',
-            array(),
+            [],
             false,
             true,
             'string'
@@ -230,7 +231,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'id',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.id',
-            array(),
+            [],
             true,
             false,
             'integer',
@@ -242,7 +243,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'mainFax',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.fax',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -253,7 +254,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'mainUrl',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.url',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -264,7 +265,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'created',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.created',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -275,7 +276,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'changed',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.changed',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -286,7 +287,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'disabled',
             $this->container->getParameter('sulu.model.contact.class'),
             'public.deactivate',
-            array(),
+            [],
             true,
             false,
             'boolean'
@@ -297,7 +298,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'birthday',
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.birthday',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -308,12 +309,12 @@ class ContactController extends RestController implements ClassResourceInterface
             'title',
             self::$titleEntityName,
             'public.title',
-            array(
+            [
                 self::$titleEntityName => new DoctrineJoinDescriptor(
                     self::$titleEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.title'
                 ),
-            ),
+            ],
             true,
             false,
             'string'
@@ -324,7 +325,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'salutation',
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.salutation',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -335,7 +336,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'formOfAddress',
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.formOfAddress',
-            array(),
+            [],
             true,
             false,
             'string'
@@ -346,7 +347,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'position',
             self::$positionEntityName,
             'contact.contacts.position',
-            array(
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
@@ -355,7 +356,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     self::$positionEntityName,
                     self::$accountContactEntityName . '.position'
                 ),
-            ),
+            ],
             true,
             false,
             'string',
@@ -365,10 +366,10 @@ class ContactController extends RestController implements ClassResourceInterface
         );
 
         // field descriptors for the account contact list
-        $this->accountContactFieldDescriptors = array();
+        $this->accountContactFieldDescriptors = [];
         $this->accountContactFieldDescriptors['id'] = $this->fieldDescriptors['id'];
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-            array(
+            [
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'firstName',
@@ -379,7 +380,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     'lastName',
                     $this->container->getParameter('sulu.model.contact.class')
                 ),
-            ),
+            ],
             'fullName',
             'public.name',
             ' ',
@@ -395,7 +396,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'position',
             self::$positionEntityName,
             'contact.contacts.position',
-            array(
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
@@ -404,7 +405,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     self::$positionEntityName,
                     self::$accountContactEntityName . '.position'
                 ),
-            ),
+            ],
             false,
             true,
             'string',
@@ -419,12 +420,12 @@ class ContactController extends RestController implements ClassResourceInterface
             'isMainContact',
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
-            array(
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
-            ),
+            ],
             false,
             true,
             'radio',
@@ -461,7 +462,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $serializationGroups = array();
+        $serializationGroups = [];
         $locale = $this->getLocale($request);
 
         if ($request->get('flat') == 'true') {
@@ -498,7 +499,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 );
             }
             // convert to api-contacts
-            $apiContacts = array();
+            $apiContacts = [];
             foreach ($contacts as $contact) {
                 $apiContacts[] = new ApiContact($contact, $locale);
             }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContentBundle;
 
 use Jackalope\Property;
@@ -61,9 +70,9 @@ class Version201504271608 implements VersionInterface, ContainerAwareInterface
             $session->save();
 
             $homeNodeReferences = $homeNode->getReferences();
-            $homeNodeReferenceValues = array();
+            $homeNodeReferenceValues = [];
             foreach ($homeNodeReferences as $homeNodeReference) {
-                /** @var Property $homeNodeReference */
+                /* @var Property $homeNodeReference */
                 $homeNodeReferenceValues[$homeNodeReference->getPath()] = $homeNodeReference->getValue();
                 $homeNodeReference->setValue($tmpNode);
             }

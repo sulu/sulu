@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -98,10 +99,10 @@ EOT;
             ->setUserId($this->getUserId())
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setLocale('de')
-            ->setData(array(
+            ->setData([
                 'title' => 'Behat Test Content',
                 'url' => '/behat-test-content',
-            ));
+            ]);
 
         $page = $this->getContentMapper()->saveRequest($request);
         $this->visitPath('/admin/#content/contents/sulu_io/de/edit:' . $page->getUuid() . '/content');

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,12 +27,12 @@ class ProxySubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            array(
+        return [
+            [
                 'event' => Events::PRE_SERIALIZE,
                 'method' => 'onPreSerialize',
-            ),
-        );
+            ],
+        ];
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +30,7 @@ class SnippetInitializer
 
     public function initialize(OutputInterface $output)
     {
-        $snippetPath = $this->pathBuilder->build(array('%base%', '%snippet%'));
+        $snippetPath = $this->pathBuilder->build(['%base%', '%snippet%']);
         $output->writeln(sprintf('<info>Snippets</info>: %s ', $snippetPath));
 
         if (true === $this->nodeManager->has($snippetPath)) {

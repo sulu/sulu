@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,28 +35,28 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      *
      * @var array
      */
-    private $propertiesConfig = array();
+    private $propertiesConfig = [];
 
     /**
      * configuration of.
      *
      * @var array
      */
-    private $config = array();
+    private $config = [];
 
     /**
      * array of ids to load.
      *
      * @var array
      */
-    private $ids = array();
+    private $ids = [];
 
     /**
      * array of excluded pages.
      *
      * @var array
      */
-    private $excluded = array();
+    private $excluded = [];
 
     /**
      * @var WebspaceManagerInterface
@@ -84,7 +85,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildWhere($webspaceKey, $locale)
     {
-        $sql2Where = array();
+        $sql2Where = [];
         // build where clause for datasource
         if ($this->hasConfig('dataSource')) {
             $sql2Where[] = $this->buildDatasourceWhere();
@@ -118,7 +119,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildSelect($webspaceKey, $locale, &$additionalFields)
     {
-        $select = array();
+        $select = [];
 
         if (sizeof($this->propertiesConfig) > 0) {
             $this->buildPropertiesSelect($locale, $additionalFields);
@@ -135,14 +136,14 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         $sortOrder = (isset($this->config['sortMethod']) && strtolower($this->config['sortMethod']) === 'desc')
             ? 'DESC' : 'ASC';
 
-        $sql2Order = array();
-        $sortBy = $this->getConfig('sortBy', array());
+        $sql2Order = [];
+        $sortBy = $this->getConfig('sortBy', []);
 
         if (!empty($sortBy) && is_array($sortBy)) {
             foreach ($sortBy as $sortColumn) {
                 // TODO implement more generic
                 $order = 'page.[i18n:' . $locale . '-' . $sortColumn . '] ';
-                if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
+                if (!in_array($sortColumn, ['published', 'created', 'changed'])) {
                     $order = sprintf('lower(%s)', $order);
                 }
 
@@ -160,10 +161,10 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     public function init(array $options)
     {
-        $this->propertiesConfig = isset($options['properties']) ? $options['properties'] : array();
-        $this->ids = isset($options['ids']) ? $options['ids'] : array();
-        $this->config = isset($options['config']) ? $options['config'] : array();
-        $this->excluded = isset($options['excluded']) ? $options['excluded'] : array();
+        $this->propertiesConfig = isset($options['properties']) ? $options['properties'] : [];
+        $this->ids = isset($options['ids']) ? $options['ids'] : [];
+        $this->config = isset($options['config']) ? $options['config'] : [];
+        $this->excluded = isset($options['excluded']) ? $options['excluded'] : [];
     }
 
     /**
@@ -193,11 +194,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         foreach ($this->structureManager->getStructures(Structure::TYPE_PAGE) as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
-                $additionalFields[$locale][] = array(
+                $additionalFields[$locale][] = [
                     'name' => $alias,
                     'property' => $property,
                     'templateKey' => $structure->getKey(),
-                );
+                ];
             }
         }
     }
@@ -208,11 +209,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
         $extension = $this->structureManager->getExtension('all', $extension);
-        $additionalFields[$locale][] = array(
+        $additionalFields[$locale][] = [
             'name' => $alias,
             'extension' => $extension,
             'property' => $propertyName,
-        );
+        ];
     }
 
     /**
@@ -240,7 +241,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     {
         $structure = $this->structureManager->getStructure('excerpt');
 
-        $sql2Where = array();
+        $sql2Where = [];
         if ($structure->hasProperty('tags')) {
             $tagOperator = $this->getConfig('tagOperator', 'OR');
             $property = new TranslatedProperty(
@@ -249,7 +250,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
                 $this->languageNamespace,
                 'excerpt'
             );
-            foreach ($this->getConfig('tags', array()) as $tag) {
+            foreach ($this->getConfig('tags', []) as $tag) {
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
             }
 
@@ -276,8 +277,8 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     /**
      * returns config value.
      *
-     * @param string $name config name
-     * @param mixed $default
+     * @param string $name    config name
+     * @param mixed  $default
      *
      * @return mixed config value
      */
@@ -295,7 +296,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildPageSelector()
     {
-        $idsWhere = array();
+        $idsWhere = [];
         foreach ($this->ids as $id) {
             $idsWhere[] = sprintf("page.[jcr:uuid] = '%s'", $id);
         }
@@ -308,7 +309,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPageExclude()
     {
-        $idsWhere = array();
+        $idsWhere = [];
         foreach ($this->excluded as $id) {
             $idsWhere[] = sprintf("NOT (page.[jcr:uuid] = '%s')", $id);
         }

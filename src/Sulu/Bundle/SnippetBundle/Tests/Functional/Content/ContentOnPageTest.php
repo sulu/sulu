@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,10 +39,10 @@ class ContentOnPageTest extends BaseFunctionalTestCase
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'ElePHPant',
                 'description' => 'Elephants are large mammals of the family Elephantidae and the order Proboscidea.',
-            ))
+            ])
             ->setState(StructureInterface::STATE_PUBLISHED);
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
@@ -51,10 +52,10 @@ class ContentOnPageTest extends BaseFunctionalTestCase
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'Penguin',
                 'Penguins (order Sphenisciformes, family Spheniscidae) are a group of aquatic, flightless birds living almost exclusively in the Southern Hemisphere, especially in Antarctica.',
-            ))
+            ])
             ->setState(StructureInterface::STATE_PUBLISHED);
 
         $this->snippet2 = $this->contentMapper->saveRequest($req);
@@ -62,28 +63,28 @@ class ContentOnPageTest extends BaseFunctionalTestCase
 
     public function provideSaveSnippetPage()
     {
-        return array(
-            array(
+        return [
+            [
                 'sulu_io',
                 'hotel_page',
                 'de',
-                array(
+                [
                     'title' => 'My new snippet page',
                     'url' => '/snippetpage',
-                    'hotels' => array(),
-                ),
-            ),
-            array(
+                    'hotels' => [],
+                ],
+            ],
+            [
                 'sulu_io',
                 'hotel_page',
                 'de',
-                array(
+                [
                     'title' => 'Another snippet page',
                     'url' => '/anothersnippetpage',
-                    'hotels' => array('snippet1'),
-                ),
-            ),
-        );
+                    'hotels' => ['snippet1'],
+                ],
+            ],
+        ];
     }
 
     /**

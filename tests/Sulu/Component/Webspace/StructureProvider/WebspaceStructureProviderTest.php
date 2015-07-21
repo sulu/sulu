@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,11 +20,11 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cache = new ArrayCache();
 
-        $structures = array(
+        $structures = [
             $this->generateStructure('t1', 'MyBundle:default:t1'),
             $this->generateStructure('t2', 'MyBundle:default:t2'),
             $this->generateStructure('t3', 'MyBundle:default:t3'),
-        );
+        ];
 
         $theme = $this->prophesize('Sulu\Component\Webspace\Theme');
         $theme->getKey()->willReturn('test');
@@ -64,19 +65,19 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($structures[1], $result[0]);
 
         $this->assertTrue($cache->contains('sulu_io'));
-        $this->assertEquals(array('t2'), $cache->fetch('sulu_io'));
+        $this->assertEquals(['t2'], $cache->fetch('sulu_io'));
     }
 
     public function testGetStructuresCached()
     {
         $cache = new ArrayCache();
-        $cache->save('sulu_io', array('t1', 't3'));
+        $cache->save('sulu_io', ['t1', 't3']);
 
-        $structures = array(
+        $structures = [
             $this->generateStructure('t1', 'MyBundle:default:t1'),
             $this->generateStructure('t2', 'MyBundle:default:t2'),
             $this->generateStructure('t3', 'MyBundle:default:t3'),
-        );
+        ];
 
         $twig = $this->prophesize('\Twig_Environment');
         $twig->getLoader()->shouldNotBeCalled();

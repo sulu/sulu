@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -211,7 +212,7 @@ class BlockContentType extends ComplexContentType
             $data = $blockProperty->getValue();
 
             if (!$blockProperty->getIsMultiple()) {
-                $data = array($data);
+                $data = [$data];
             }
 
             $data = array_filter($data);
@@ -358,8 +359,8 @@ class BlockContentType extends ComplexContentType
      * use callback to prepare data foreach property function($contentType, $property).
      *
      * @param PropertyInterface $property
-     * @param callable $dataCallback
-     * @param bool $returnType
+     * @param callable          $dataCallback
+     * @param bool              $returnType
      *
      * @return array
      */
@@ -371,13 +372,13 @@ class BlockContentType extends ComplexContentType
             $blockProperty = $blockProperty->getProperty();
         }
 
-        $data = array();
+        $data = [];
         for ($i = 0; $i < $blockProperty->getLength(); ++$i) {
             $blockPropertyType = $blockProperty->getProperties($i);
 
             if ($returnType) {
                 $type = $blockPropertyType->getName();
-                $data[$i] = array('type' => $type);
+                $data[$i] = ['type' => $type];
             }
 
             foreach ($blockPropertyType->getChildProperties() as $childProperty) {

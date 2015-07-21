@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
@@ -46,9 +55,9 @@ class ExtensionSubscriberTest extends SubscriberTestCase
      */
     public function testHydrateExtensionsData()
     {
-        $expectedData = array(
+        $expectedData = [
             'foo' => 'bar',
-        );
+        ];
 
         $document = new TestExtensionDocument();
 
@@ -80,24 +89,24 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     public function testPersistExtensionsData()
     {
         $document = new TestExtensionDocument(
-            array(
-                'ext_1' => array(
+            [
+                'ext_1' => [
                     'foo' => 'bar',
-                ),
-            )
+                ],
+            ]
         );
 
         $this->persistEvent->getDocument()->willReturn($document);
         $this->inspector->getWebspace($document)->willReturn('sulu_io');
         $this->namespaceRegistry->getPrefix('extension_localized')->willReturn('ext_prefix');
-        $this->extensionManager->getExtensions('foobar')->willReturn(array(
+        $this->extensionManager->getExtensions('foobar')->willReturn([
             'ext_1' => $this->extension->reveal(),
-        ));
+        ]);
         $this->extension->getName()->willReturn('ext_1');
         $this->extension->setLanguageCode('de', 'ext_prefix', '')->shouldBeCalled();
         $this->extension->save(
             $this->node->reveal(),
-            array('foo' => 'bar'),
+            ['foo' => 'bar'],
             'sulu_io',
             'de'
         )->shouldBeCalled();
@@ -110,7 +119,7 @@ class TestExtensionDocument implements ExtensionBehavior
 {
     private $extensions;
 
-    public function __construct(array $extensions = array())
+    public function __construct(array $extensions = [])
     {
         $this->extensions = $extensions;
     }

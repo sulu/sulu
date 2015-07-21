@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -139,11 +140,11 @@ class UserManager implements UserManagerInterface
     /**
      * Creates a new user with the given data.
      *
-     * @param array $data
-     * @param string $locale
+     * @param array    $data
+     * @param string   $locale
      * @param null|int $id
-     * @param bool $patch
-     * @param bool $flush
+     * @param bool     $patch
+     * @param bool     $flush
      *
      * @return null|UserInterface
      *
@@ -203,13 +204,13 @@ class UserManager implements UserManagerInterface
             }
 
             if (!$patch || $this->getProperty($data, 'userRoles') !== null) {
-                if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', array()))) {
+                if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', []))) {
                     throw new \Exception('Could not update dependencies!');
                 }
             }
 
             if (!$patch || $this->getProperty($data, 'userGroups') !== null) {
-                if (!$this->processUserGroups($user, $this->getProperty($data, 'userGroups', array()))) {
+                if (!$this->processUserGroups($user, $this->getProperty($data, 'userGroups', []))) {
                     throw new \Exception('Could not update dependencies!');
                 }
             }
@@ -352,14 +353,14 @@ class UserManager implements UserManagerInterface
      * Process all user roles from request.
      *
      * @param UserInterface $user
-     * @param array $userRoles
+     * @param array         $userRoles
      *
      * @return bool True if the processing was successful, otherwise false
      */
     public function processUserRoles(UserInterface $user, $userRoles)
     {
         $get = function ($entity) {
-            /** @var UserInterface $entity */
+            /* @var UserInterface $entity */
             return $entity->getId();
         };
 
@@ -403,7 +404,7 @@ class UserManager implements UserManagerInterface
     protected function processUserGroups(UserInterface $user, $userGroups)
     {
         $get = function ($entity) {
-            /** @var UserInterface $entity */
+            /* @var UserInterface $entity */
             return $entity->getId();
         };
 
@@ -596,8 +597,8 @@ class UserManager implements UserManagerInterface
      * Encodes the given password, for the given passwort, with he given salt and returns the result.
      *
      * @param UserInterface $user
-     * @param string $password
-     * @param string $salt
+     * @param string        $password
+     * @param string        $salt
      *
      * @return string
      */
@@ -611,7 +612,7 @@ class UserManager implements UserManagerInterface
     /**
      * Return property for key or given default value.
      *
-     * @param array $data
+     * @param array  $data
      * @param string $key
      * @param string $default
      *
@@ -630,8 +631,8 @@ class UserManager implements UserManagerInterface
      * Processes the email and adds it to the user.
      *
      * @param UserInterface $user
-     * @param string $email
-     * @param null|array $contact
+     * @param string        $email
+     * @param null|array    $contact
      *
      * @throws EmailNotUniqueException
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -82,17 +83,17 @@ class NavigationMapper implements NavigationMapperInterface
         $depth = $depth + substr_count($parent, '/') - $rootDepth;
 
         $this->queryBuilder->init(
-            array(
+            [
                 'context' => $context,
                 'parent' => $parent,
                 'excerpt' => $loadExcerpt,
-            )
+            ]
         );
-        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
+        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
 
         foreach ($result as $item) {
             if (!isset($item['children'])) {
-                $item['children'] = array();
+                $item['children'] = [];
             }
         }
 
@@ -118,12 +119,12 @@ class NavigationMapper implements NavigationMapperInterface
             $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
         }
 
-        $this->queryBuilder->init(array('context' => $context, 'excerpt' => $loadExcerpt));
-        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
+        $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt]);
+        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
 
         for ($i = 0; $i < sizeof($result); ++$i) {
             if (!isset($result[$i]['children'])) {
-                $result[$i]['children'] = array();
+                $result[$i]['children'] = [];
             }
         }
 
@@ -141,7 +142,7 @@ class NavigationMapper implements NavigationMapperInterface
     {
         $breadcrumbItems = $this->contentMapper->loadBreadcrumb($uuid, $language, $webspace);
 
-        $result = array();
+        $result = [];
         foreach ($breadcrumbItems as $item) {
             $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
         }
@@ -162,14 +163,14 @@ class NavigationMapper implements NavigationMapperInterface
         $breakOnNotInNavigation = false,
         $recursive = true
     ) {
-        $result = array();
+        $result = [];
 
         /** @var StructureInterface $content */
         foreach ($contents as $content) {
             if ($this->inNavigation($content, $context)) {
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
-                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : array();
+                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : [];
 
                 if (false === $flat) {
                     $result[] = new NavigationItem(
@@ -192,7 +193,7 @@ class NavigationMapper implements NavigationMapperInterface
                     $result = array_merge($result, $children);
                 }
             } elseif (true === $flat) {
-                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : array();
+                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : [];
                 $result = array_merge($result, $children);
             } elseif ($breakOnNotInNavigation) {
                 break;
@@ -212,7 +213,7 @@ class NavigationMapper implements NavigationMapperInterface
         $flat = false,
         $context = null
     ) {
-        $children = array();
+        $children = [];
         if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
             $children = $this->generateNavigation(
                 $content->getChildren(),
@@ -230,7 +231,7 @@ class NavigationMapper implements NavigationMapperInterface
      * checks if content should be displayed.
      *
      * @param StructureInterface $content
-     * @param string|null $context
+     * @param string|null        $context
      *
      * @return bool
      */

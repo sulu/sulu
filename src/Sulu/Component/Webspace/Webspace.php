@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -149,7 +150,7 @@ class Webspace implements ArrayableInterface
      */
     public function getAllLocalizations()
     {
-        $localizations = array();
+        $localizations = [];
         foreach ($this->getLocalizations() as $child) {
             $localizations[] = $child;
             $localizations = array_merge($localizations, $child->getAllLocalizations());
@@ -366,10 +367,10 @@ class Webspace implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        $res = array();
+        $res = [];
         $res['key'] = $this->getKey();
         $res['name'] = $this->getName();
-        $res['localizations'] = array();
+        $res['localizations'] = [];
 
         foreach ($this->getLocalizations() as $localization) {
             $res['localizations'][] = $localization->toArray();
@@ -380,7 +381,7 @@ class Webspace implements ArrayableInterface
             $res['security']['system'] = $thisSecurity->getSystem();
         }
 
-        $res['segments'] = array();
+        $res['segments'] = [];
         $segments = $this->getSegments();
 
         if (!empty($segments)) {
@@ -391,20 +392,20 @@ class Webspace implements ArrayableInterface
 
         $res['theme'] = $this->getTheme()->toArray();
 
-        $res['portals'] = array();
+        $res['portals'] = [];
 
         foreach ($this->getPortals() as $portal) {
             $res['portals'][] = $portal->toArray();
         }
 
-        $res['navigation'] = array();
-        $res['navigation']['contexts'] = array();
+        $res['navigation'] = [];
+        $res['navigation']['contexts'] = [];
         if ($navigation = $this->getNavigation()) {
             foreach ($this->getNavigation()->getContexts() as $context) {
-                $res['navigation']['contexts'][] = array(
+                $res['navigation']['contexts'][] = [
                     'key' => $context->getKey(),
                     'metadata' => $context->getMetadata(),
-                );
+                ];
             }
         }
 

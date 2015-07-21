@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -54,8 +55,8 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
     /**
      * @param MediaManagerInterface $mediaManager
-     * @param Factory $factory Massive search factory
-     * @param LoggerInterface $logger
+     * @param Factory               $factory      Massive search factory
+     * @param LoggerInterface       $logger
      * @param $thumbnailMimeTypes
      * @param $searchImageFormat
      */
@@ -78,9 +79,9 @@ class MediaSearchSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             SearchEvents::PRE_INDEX => 'handlePreIndex',
-        );
+        ];
     }
 
     /**

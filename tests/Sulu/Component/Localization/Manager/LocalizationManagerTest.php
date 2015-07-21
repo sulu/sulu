@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,8 +36,8 @@ class LocalizationManagerTest extends \PHPUnit_Framework_TestCase
         $localization3 = new Localization();
         $localization3->setLanguage('fr');
 
-        $this->addLocalizationProvider(array($localization1, $localization2));
-        $this->addLocalizationProvider(array($localization3));
+        $this->addLocalizationProvider([$localization1, $localization2]);
+        $this->addLocalizationProvider([$localization3]);
 
         $localizations = $this->localizationManager->getLocalizations();
 
@@ -53,8 +54,8 @@ class LocalizationManagerTest extends \PHPUnit_Framework_TestCase
         $localization2 = new Localization();
         $localization2->setLanguage('en');
 
-        $this->addLocalizationProvider(array($localization1, $localization2));
-        $this->addLocalizationProvider(array($localization2));
+        $this->addLocalizationProvider([$localization1, $localization2]);
+        $this->addLocalizationProvider([$localization2]);
 
         $localizations = $this->localizationManager->getLocalizations();
 

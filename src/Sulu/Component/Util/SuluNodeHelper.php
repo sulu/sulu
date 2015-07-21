@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,19 +41,19 @@ class SuluNodeHelper
 
     /**
      * @param SessionInterface $session
-     * @param string $languageNamespace
-     * @param array $paths Path segments from configuration
+     * @param string           $languageNamespace
+     * @param array            $paths             Path segments from configuration
      */
     public function __construct(SessionInterface $session, $languageNamespace, $paths)
     {
         $this->languageNamespace = $languageNamespace;
         $this->paths = array_merge(
-            array(
+            [
                 'base' => null,
                 'content' => null,
                 'route' => null,
                 'snippet' => null,
-            ),
+            ],
             $paths
         );
         $this->session = $session;
@@ -68,9 +69,9 @@ class SuluNodeHelper
      */
     public function getLanguagesForNode(NodeInterface $node)
     {
-        $languages = array();
+        $languages = [];
         foreach ($node->getProperties() as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-changer/', $property->getName(), $matches);
 
             if ($matches) {
@@ -90,7 +91,7 @@ class SuluNodeHelper
      */
     public function getStructureTypeForNode(NodeInterface $node)
     {
-        $mixinTypes = $node->getPropertyValueWithDefault('jcr:mixinTypes', array());
+        $mixinTypes = $node->getPropertyValueWithDefault('jcr:mixinTypes', []);
 
         if (in_array('sulu:' . Structure::TYPE_PAGE, $mixinTypes)) {
             return Structure::TYPE_PAGE;
@@ -108,13 +109,13 @@ class SuluNodeHelper
      * by $name.
      *
      * @param NodeInterface $node
-     * @param string $name  Name of localized property
+     * @param string        $name Name of localized property
      */
     public function getLocalizedPropertyValues(NodeInterface $node, $name)
     {
-        $values = array();
+        $values = [];
         foreach ($node->getProperties() as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-' . $name . '/', $property->getName(), $matches);
 
             if ($matches) {
@@ -137,14 +138,14 @@ class SuluNodeHelper
      *   snippet is the Sulu node type
      *
      * @param NodeInterface $node
-     * @param string|array $suluNodeTypes One or more node sulu types
+     * @param string|array  $suluNodeTypes One or more node sulu types
      *
      * @return bool
      */
     public function hasSuluNodeType($node, $suluNodeTypes)
     {
         foreach ((array) $suluNodeTypes as $suluNodeType) {
-            if (in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', array()))) {
+            if (in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', []))) {
                 return true;
             }
         }
@@ -245,8 +246,8 @@ class SuluNodeHelper
      * Return translated property.
      *
      * @param \Sulu\Component\Content\Compat\PropertyInterface $property
-     * @param string $locale
-     * @param string $prefix
+     * @param string                                           $locale
+     * @param string                                           $prefix
      *
      * @return \Sulu\Component\Content\Compat\PropertyInterface
      */
@@ -260,7 +261,7 @@ class SuluNodeHelper
      * according to the $previous flag.
      *
      * @param NodeInterface $node
-     * @param bool $previous
+     * @param bool          $previous
      *
      * @return NodeInterface|null
      *

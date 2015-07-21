@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -86,9 +87,9 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structureMetadata->getProperties()->willReturn(array(
+        $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
-        ));
+        ]);
         $this->structureProperty->isRequired()->willReturn(true);
         $this->structureProperty->getContentTypeName()->willReturn('content_type');
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
@@ -125,9 +126,9 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structureMetadata->getProperties()->willReturn(array(
+        $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
-        ));
+        ]);
         $this->structureProperty->isRequired()->willReturn(true);
         $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn(null);

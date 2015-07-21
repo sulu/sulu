@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -104,18 +105,18 @@ class GroupControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/groups',
-            array(
+            [
                 'name' => 'Group3',
-                'parent' => array('id' => $this->group1->getId()),
-                'roles' => array(
-                    array(
+                'parent' => ['id' => $this->group1->getId()],
+                'roles' => [
+                    [
                         'id' => $this->role1->getId(),
-                    ),
-                    array(
+                    ],
+                    [
                         'id' => $this->role2->getId(),
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -147,15 +148,15 @@ class GroupControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/groups/' . $this->group1->getId(),
-            array(
+            [
                 'name' => 'Updated Group1',
-                'parent' => array('id' => $this->group2->getId()),
-                'roles' => array(
-                    array(
+                'parent' => ['id' => $this->group2->getId()],
+                'roles' => [
+                    [
                         'id' => $this->role1->getId(),
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());

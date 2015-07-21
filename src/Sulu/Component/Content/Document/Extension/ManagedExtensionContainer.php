@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Extension;
 
 use PHPCR\NodeInterface;
@@ -55,13 +64,13 @@ class ManagedExtensionContainer extends ExtensionContainer
     private $webspaceName;
 
     /**
-     * @param string $structureType
+     * @param string                    $structureType
      * @param ExtensionManagerInterface $extensionManager
-     * @param NodeInterface $node
-     * @param string $locale
-     * @param string $prefix
-     * @param string $internalPrefix
-     * @param string $webspaceName
+     * @param NodeInterface             $node
+     * @param string                    $locale
+     * @param string                    $prefix
+     * @param string                    $internalPrefix
+     * @param string                    $webspaceName
      */
     public function __construct(
         $structureType,
@@ -115,7 +124,7 @@ class ManagedExtensionContainer extends ExtensionContainer
      */
     public function toArray()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->extensionManager->getExtensions($this->structureType) as $extension) {
             $result[$extension->getName()] = $this->offsetGet($extension->getName());

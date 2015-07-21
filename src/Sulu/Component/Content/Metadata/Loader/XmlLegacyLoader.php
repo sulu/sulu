@@ -1,12 +1,13 @@
 <?php
+
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
@@ -32,9 +33,9 @@ class XmlLegacyLoader implements LoaderInterface
      *
      * @var array
      */
-    private $requiredPropertyNames = array(
+    private $requiredPropertyNames = [
         'title',
-    );
+    ];
 
     /**
      * tags that are required in template
@@ -42,11 +43,11 @@ class XmlLegacyLoader implements LoaderInterface
      *
      * @var array
      */
-    private $requiredTagNames = array(
-        'page' => array('sulu.rlp'),
-        'home' => array('sulu.rlp'),
-        'snippet' => array(),
-    );
+    private $requiredTagNames = [
+        'page' => ['sulu.rlp'],
+        'home' => ['sulu.rlp'],
+        'snippet' => [],
+    ];
 
     /**
      * reserved names for sulu internals
@@ -54,7 +55,7 @@ class XmlLegacyLoader implements LoaderInterface
      *
      * @var array
      */
-    private $reservedPropertyNames = array(
+    private $reservedPropertyNames = [
         'template',
         'changer',
         'changed',
@@ -67,7 +68,7 @@ class XmlLegacyLoader implements LoaderInterface
         'navContexts',
         'shadow-on',
         'shadow-base',
-    );
+    ];
 
     /**
      * {@inheritdoc}
@@ -75,7 +76,7 @@ class XmlLegacyLoader implements LoaderInterface
     public function load($resource, $type = 'page')
     {
         // init running vars
-        $tags = array();
+        $tags = [];
 
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
@@ -133,7 +134,7 @@ class XmlLegacyLoader implements LoaderInterface
     private function loadTemplateAttributes($resource, \DOMXPath $xpath, $type)
     {
         if ($type === 'page' || $type === 'home') {
-            $result = array(
+            $result = [
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
@@ -141,11 +142,11 @@ class XmlLegacyLoader implements LoaderInterface
                 'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-            );
+            ];
 
             $result = array_filter($result);
 
-            foreach (array('key', 'view', 'controller', 'cacheLifetime') as $requiredProperty) {
+            foreach (['key', 'view', 'controller', 'cacheLifetime'] as $requiredProperty) {
                 if (!isset($result[$requiredProperty])) {
                     throw new InvalidXmlException($type, sprintf(
                         'Property "%s" is required in XML template file "%s"', $requiredProperty, $resource
@@ -153,10 +154,10 @@ class XmlLegacyLoader implements LoaderInterface
                 }
             }
         } else {
-            $result = array(
+            $result = [
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-            );
+            ];
 
             $result = array_filter($result);
 
@@ -173,7 +174,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadProperties($templateKey, $path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
-        $result = array();
+        $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
@@ -200,7 +201,7 @@ class XmlLegacyLoader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
+            ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass']
         );
 
         if (in_array($result['name'], $this->reservedPropertyNames)) {
@@ -224,7 +225,7 @@ class XmlLegacyLoader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
+            ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass']
         );
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
@@ -245,7 +246,7 @@ class XmlLegacyLoader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'colspan', 'cssClass')
+            ['name', 'colspan', 'cssClass']
         );
 
         $result['type'] = 'section';
@@ -261,7 +262,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadTags($path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
-        $result = array();
+        $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
@@ -286,16 +287,16 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadStructureTags($path, $xpath)
     {
-        $result = array();
+        $result = [];
 
         foreach ($xpath->query($path) as $node) {
-            $tag = array(
+            $tag = [
                 'name' => null,
-                'attributes' => array(),
-            );
+                'attributes' => [],
+            ];
 
             foreach ($node->attributes as $key => $attr) {
-                if (in_array($key, array('name'))) {
+                if (in_array($key, ['name'])) {
                     $tag[$key] = $attr->value;
                 } else {
                     $tag['attributes'][$key] = $attr->value;
@@ -319,7 +320,7 @@ class XmlLegacyLoader implements LoaderInterface
     private function validateTag($tag, &$tags)
     {
         if (!isset($tags[$tag['name']])) {
-            $tags[$tag['name']] = array();
+            $tags[$tag['name']] = [];
         }
 
         $tags[$tag['name']][] = $tag['priority'];
@@ -330,14 +331,14 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
     {
-        $tag = array(
+        $tag = [
             'name' => null,
             'priority' => null,
-            'attributes' => array(),
-        );
+            'attributes' => [],
+        ];
 
         foreach ($node->attributes as $key => $attr) {
-            if (in_array($key, array('name', 'priority'))) {
+            if (in_array($key, ['name', 'priority'])) {
                 $tag[$key] = $attr->value;
             } else {
                 $tag['attributes'][$key] = $attr->value;
@@ -352,7 +353,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadParams($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
-        $result = array();
+        $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
@@ -380,12 +381,12 @@ class XmlLegacyLoader implements LoaderInterface
                 break;
         }
 
-        return array(
+        return [
             'name' => $name,
             'value' => $value,
             'type' => $type,
             'meta' => $meta,
-        );
+        ];
     }
 
     /**
@@ -393,7 +394,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadTypes($templateKey, $path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
-        $result = array();
+        $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
@@ -409,7 +410,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadType($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
-        $result = $this->loadValues($xpath, $node, array('name'));
+        $result = $this->loadValues($xpath, $node, ['name']);
 
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['properties'] = $this->loadProperties($templateKey, 'x:properties/x:*', $tags, $xpath, $node);
@@ -419,7 +420,7 @@ class XmlLegacyLoader implements LoaderInterface
 
     private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
-        $result = array();
+        $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
@@ -427,7 +428,7 @@ class XmlLegacyLoader implements LoaderInterface
             $lang = $this->getValueFromXPath('@lang', $xpath, $node);
 
             if (!isset($result[$node->tagName])) {
-                $result[$attribute] = array();
+                $result[$attribute] = [];
             }
             $result[$attribute][$lang] = $node->textContent;
         }
@@ -440,7 +441,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
     {
-        $result = array();
+        $result = [];
 
         foreach ($keys as $key) {
             $result[$key] = $this->getValueFromXPath($prefix . $key, $xpath, $node);

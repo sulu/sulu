@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,14 +28,14 @@ class FallbackControllerTest extends \PHPUnit_Framework_TestCase
         $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
 
-        $request->get('message')->willReturn(array('test' => 1));
-        $request->reveal()->cookies = new ParameterBag(array('PHPSESSID' => '123-123-123'));
+        $request->get('message')->willReturn(['test' => 1]);
+        $request->reveal()->cookies = new ParameterBag(['PHPSESSID' => '123-123-123']);
 
         $appManager->getApp('test')->willReturn($app->reveal());
 
-        $app->onMessage(Argument::type('Ratchet\ConnectionInterface'), array('test' => 1))->will(
+        $app->onMessage(Argument::type('Ratchet\ConnectionInterface'), ['test' => 1])->will(
             function ($args) {
-                $return = array('test' => $args[1]['test'] + 1);
+                $return = ['test' => $args[1]['test'] + 1];
                 $args[0]->send(json_encode($return));
             }
         );
@@ -42,6 +43,6 @@ class FallbackControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new FallbackController($appManager->reveal());
         $response = $controller->send('test', $request->reveal());
 
-        $this->assertEquals(array('test' => 2), json_decode($response->getContent(), true));
+        $this->assertEquals(['test' => 2], json_decode($response->getContent(), true));
     }
 }

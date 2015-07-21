@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,7 +64,7 @@ abstract class Admin
      */
     public function getCommands()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -73,6 +74,6 @@ abstract class Admin
      */
     public function getSecurityContexts()
     {
-        return array();
+        return [];
     }
 }

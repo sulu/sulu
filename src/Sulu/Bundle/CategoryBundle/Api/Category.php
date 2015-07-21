@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\CategoryBundle\Api;
 
 use JMS\Serializer\Annotation\Groups;
@@ -313,7 +322,7 @@ class Category extends ApiEntityWrapper
      */
     public function toArray()
     {
-        return array(
+        return [
             'id' => $this->getId(),
             'key' => $this->getKey(),
             'name' => $this->getName(),
@@ -322,7 +331,7 @@ class Category extends ApiEntityWrapper
             'changer' => $this->getChanger(),
             'created' => $this->getCreated(),
             'changed' => $this->getChanged(),
-        );
+        ];
     }
 
     /**

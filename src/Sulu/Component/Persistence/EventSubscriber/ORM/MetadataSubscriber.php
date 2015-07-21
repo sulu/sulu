@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,9 +43,9 @@ class MetadataSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::loadClassMetadata,
-        );
+        ];
     }
 
     /**
@@ -84,7 +85,7 @@ class MetadataSubscriber implements EventSubscriber
 
     /**
      * @param ClassMetadataInfo $metadata
-     * @param Configuration $configuration
+     * @param Configuration     $configuration
      */
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {
@@ -134,11 +135,11 @@ class MetadataSubscriber implements EventSubscriber
     {
         return in_array(
             $type,
-            array(
+            [
                 ClassMetadataInfo::MANY_TO_MANY,
                 ClassMetadataInfo::ONE_TO_MANY,
                 ClassMetadataInfo::ONE_TO_ONE,
-            ),
+            ],
             true
         );
     }

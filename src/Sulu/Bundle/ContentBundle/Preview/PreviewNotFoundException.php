@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -68,6 +69,6 @@ class PreviewNotFoundException extends RestException
     {
         $result = parent::toArray();
 
-        return array_merge($result, array('userid' => $this->userId, 'contentuuid' => $this->contentUuid));
+        return array_merge($result, ['userid' => $this->userId, 'contentuuid' => $this->contentUuid]);
     }
 }

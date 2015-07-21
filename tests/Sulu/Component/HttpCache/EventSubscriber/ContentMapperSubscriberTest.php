@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,7 +57,7 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testNodeDelete()
     {
-        $this->deleteEvent->getStructures()->willReturn(array($this->structure));
+        $this->deleteEvent->getStructures()->willReturn([$this->structure]);
         $this->handler->invalidateStructure($this->structure->reveal())->shouldBeCalled();
         $this->subscriber->onContentNodePreDelete($this->deleteEvent->reveal());
         $this->subscriber->onContentNodePostDelete($this->deleteEvent->reveal());

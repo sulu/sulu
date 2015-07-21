@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -19,7 +28,7 @@ use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
  */
 abstract class SuluTestCase extends BaseTestCase
 {
-    protected static $kernels = array();
+    protected static $kernels = [];
     protected static $currentKernel = 'admin';
 
     /**
@@ -28,9 +37,9 @@ abstract class SuluTestCase extends BaseTestCase
      * {@inheritDoc}
      *
      * @throws InvalidArgumentException If the found kernel does
-     *   not extend SuluTestKernel
+     *                                  not extend SuluTestKernel
      */
-    protected static function createKernel(array $options = array())
+    protected static function createKernel(array $options = [])
     {
         if (null === static::$class) {
             static::$class = static::getKernelClass();
@@ -93,13 +102,13 @@ abstract class SuluTestCase extends BaseTestCase
     protected function createAuthenticatedClient()
     {
         return $this->createClient(
-            array(
+            [
                 'environment' => 'dev',
-            ),
-            array(
+            ],
+            [
                 'PHP_AUTH_USER' => 'test',
                 'PHP_AUTH_PW' => 'test',
-            )
+            ]
         );
     }
 
@@ -110,10 +119,10 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function createWebsiteClient()
     {
-        return $this->createClient(array(
+        return $this->createClient([
             'sulu_context' => 'website',
             'environment' => 'dev',
-        ));
+        ]);
     }
 
     /**
@@ -156,7 +165,7 @@ abstract class SuluTestCase extends BaseTestCase
 
         $session->save();
         $nodes = $webspace->addNode('routes');
-        foreach (array('de', 'de_at', 'en', 'en_us', 'fr') as $locale) {
+        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
             $localeNode = $nodes->addNode($locale);
             $localeNode->setProperty('sulu:content', $content);
             $localeNode->setProperty('sulu:history', false);

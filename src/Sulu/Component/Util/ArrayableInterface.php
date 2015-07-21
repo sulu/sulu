@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ interface ArrayableInterface
      * Return a representation of this object as an array.
      *
      * @param int $depth - Optional depth parameter. May or may not be used
-     *                         by the implementing object
+     *                   by the implementing object
      */
     public function toArray($depth = null);
 }

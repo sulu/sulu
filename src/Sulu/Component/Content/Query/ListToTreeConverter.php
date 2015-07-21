@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,10 +41,10 @@ class ListToTreeConverter
     public function convert($data)
     {
         if (empty($data)) {
-            return array();
+            return [];
         }
 
-        $map = array();
+        $map = [];
         $minDepth = 99;
         foreach ($data as $item) {
             $path = rtrim('/root' . $item['path'], '/');
@@ -79,7 +80,7 @@ class ListToTreeConverter
         for ($i = 0; $i < $minDepth - 1; ++$i) {
             $tree['children'] = array_values($tree['children']);
             if (!array_key_exists('children', $tree) || !array_key_exists(0, $tree['children'])) {
-                return array();
+                return [];
             }
 
             $tree = $tree['children'][0];
@@ -97,7 +98,7 @@ class ListToTreeConverter
 
             // search for empty nodes
             for ($i = 0; $i < sizeof($tree['children']); ++$i) {
-                if (array_keys($tree['children'][$i]) === array('children')) {
+                if (array_keys($tree['children'][$i]) === ['children']) {
                     if ($this->moveUp) {
                         array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
                     }
@@ -113,7 +114,7 @@ class ListToTreeConverter
                 $tree['children'][$i] = $this->toArray($tree['children'][$i]);
             }
         } else {
-            $tree['children'] = array();
+            $tree['children'] = [];
         }
 
         return $tree;
@@ -157,9 +158,9 @@ class ListToTreeConverter
      *
      * @link      http://kevin.vanzonneveld.net/
      *
-     * @param array $array
+     * @param array  $array
      * @param string $delimiter
-     * @param bool $baseval
+     * @param bool   $baseval
      *
      * @return array
      */
@@ -169,7 +170,7 @@ class ListToTreeConverter
             return false;
         }
         $splitRE = '/' . preg_quote($delimiter, '/') . '/';
-        $returnArr = array();
+        $returnArr = [];
         foreach ($array as $key => $val) {
             // Get parent parts and the current leaf
             $parts = preg_split($splitRE, $key, -1, PREG_SPLIT_NO_EMPTY);
@@ -182,14 +183,14 @@ class ListToTreeConverter
                 if (isset($parentArr['children'][$part])) {
                     if (!is_array($parentArr['children'][$part])) {
                         if ($baseval) {
-                            $parentArr['children'][$part] = array('__base_val' => $parentArr[$part]);
+                            $parentArr['children'][$part] = ['__base_val' => $parentArr[$part]];
                         } else {
-                            $parentArr['children'][$part] = array();
+                            $parentArr['children'][$part] = [];
                         }
                     }
                     $parentArr = &$parentArr['children'][$part];
                 } else {
-                    $parentArr['children'][$part] = array();
+                    $parentArr['children'][$part] = [];
                     $parentArr = &$parentArr['children'][$part];
                 }
             }

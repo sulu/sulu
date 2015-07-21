@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -108,7 +109,7 @@ interface ListBuilderInterface
      * Defines the field by which the table is sorted.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string $order
+     * @param string                  $order
      *
      * @return ListBuilderInterface
      */

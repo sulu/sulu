@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
@@ -173,7 +182,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getLocales(StructureBehavior $document)
     {
-        $locales = array();
+        $locales = [];
         $node = $this->getNode($document);
         $prefix = $this->namespaceRegistry->getPrefix('system_localized');
 
@@ -213,7 +222,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getShadowLocales(ShadowLocaleBehavior $document)
     {
-        $shadowLocales = array();
+        $shadowLocales = [];
         $locales = $this->getLocales($document);
         $node = $this->getNode($document);
         foreach ($locales as $locale) {
@@ -245,7 +254,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getLocalizedUrlsForPage(BasePageDocument $page)
     {
-        $localizedUrls = array();
+        $localizedUrls = [];
         $webspaceKey = $this->getWebspace($page);
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $node = $this->getNode($page);

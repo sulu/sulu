@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,7 +48,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
      */
     public function loadParent($uuid)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'loadParent'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'loadParent'], $this->lifeTime);
     }
 
     /**
@@ -55,7 +56,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
      */
     public function load($uuid)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'load'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'load'], $this->lifeTime);
     }
 
     /**

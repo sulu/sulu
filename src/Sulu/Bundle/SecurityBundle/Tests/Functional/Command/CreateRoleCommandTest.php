@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +30,7 @@ class CreateRoleCommandTest extends SuluTestCase
         $loadFixturesCommand = new LoadDataFixturesDoctrineCommand();
         $loadFixturesCommand->setApplication($application);
         $loadFixturesCommandTester = new CommandTester($loadFixturesCommand);
-        $loadFixturesCommandTester->execute(array(), array('interactive' => false));
+        $loadFixturesCommandTester->execute([], ['interactive' => false]);
 
         $createUserCommand = new CreateRoleCommand();
         $createUserCommand->setApplication($application);
@@ -53,11 +54,11 @@ class CreateRoleCommandTest extends SuluTestCase
     private function createRole($name)
     {
         $this->tester->execute(
-            array(
+            [
                 'name' => $name,
                 'system' => 'Sulu',
-            ),
-            array('interactive' => false)
+            ],
+            ['interactive' => false]
         );
     }
 }

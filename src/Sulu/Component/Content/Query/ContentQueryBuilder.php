@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,7 +41,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * @var string[]
      */
-    private $defaultProperties = array(
+    private $defaultProperties = [
         'template',
         'changed',
         'changer',
@@ -50,12 +51,12 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         'nodeType',
         'state',
         'shadow-on',
-    );
+    ];
 
     /**
      * @var string[]
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * Only published content.
@@ -103,15 +104,15 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     public function build($webspaceKey, $locales)
     {
-        $additionalFields = array();
+        $additionalFields = [];
 
         $where = '';
-        $select = array('page.*');
-        $order = array();
+        $select = ['page.*'];
+        $order = [];
 
         foreach ($locales as $locale) {
             $this->setLocale($locale);
-            $additionalFields[$locale] = array();
+            $additionalFields[$locale] = [];
 
             if ($this->excerpt) {
                 $this->buildSelectorForExcerpt($locale, $additionalFields);
@@ -161,7 +162,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             implode(', ', $order)
         );
 
-        return array($sql2, $additionalFields);
+        return [$sql2, $additionalFields];
     }
 
     /**
@@ -233,12 +234,12 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $extension = $this->structureManager->getExtension('', 'excerpt');
 
         foreach ($excerptStructure->getProperties(true) as $property) {
-            $additionalFields[$locale][] = array(
+            $additionalFields[$locale][] = [
                 'extension' => $extension,
                 'target' => 'excerpt',
                 'property' => $property->getName(),
                 'name' => $property->getName(),
-            );
+            ];
         }
     }
 

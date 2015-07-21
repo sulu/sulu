@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,8 +29,8 @@ class PageNodeType extends ContentNodeType
      */
     public function getDeclaredSupertypeNames()
     {
-        return array(
+        return [
             'sulu:content',
-        );
+        ];
     }
 }

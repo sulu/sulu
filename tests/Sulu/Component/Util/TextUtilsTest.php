@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,17 +15,17 @@ class TextUtilsTest extends \PHPUnit_Framework_TestCase
 {
     public function provideTruncate()
     {
-        return array(
-            array('Hello', 10, null, 'Hello'),
-            array('Hello this is some text', 10, '...', 'Hello t...'),
-            array('Hello this is some text', 10, '-', 'Hello thi-'),
-            array(
+        return [
+            ['Hello', 10, null, 'Hello'],
+            ['Hello this is some text', 10, '...', 'Hello t...'],
+            ['Hello this is some text', 10, '-', 'Hello thi-'],
+            [
                 'Dorn, Oberbergischer Kreis, Regierungsbezirk Köln, Nordrhein-Westfalen, Deutschland, European Union',
                 50,
                 '...',
                 'Dorn, Oberbergischer Kreis, Regierungsbezirk Kö...',
-            ),
-        );
+            ],
+        ];
     }
 
     /**

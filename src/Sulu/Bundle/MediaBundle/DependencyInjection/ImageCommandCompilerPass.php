@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,7 +36,7 @@ class ImageCommandCompilerPass implements CompilerPassInterface
             foreach ($tags as $attributes) {
                 $definition->addMethodCall(
                     'add',
-                    array(new Reference($id), $attributes['alias'])
+                    [new Reference($id), $attributes['alias']]
                 );
             }
         }
