@@ -297,7 +297,7 @@ class TagManager implements TagManagerInterface
             [],
             true,
             false,
-            'number',
+            'integer',
             '50px'
         );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
