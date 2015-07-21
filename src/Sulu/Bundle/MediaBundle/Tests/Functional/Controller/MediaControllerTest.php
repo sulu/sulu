@@ -303,7 +303,10 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
 
-        $this->assertEquals('inline; filename="wöchentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals(
+            'inline; filename="woechentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
