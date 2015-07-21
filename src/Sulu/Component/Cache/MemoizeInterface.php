@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ interface MemoizeInterface
      * This function uses the callstack to generate a unique key for the caching mechanism.
      *
      * @param callable $compute
-     * @param int $lifeTime cache lifetime
+     * @param int      $lifeTime cache lifetime
      *
      * @throws \InvalidArgumentException
      *
@@ -32,10 +33,10 @@ interface MemoizeInterface
      * Returns the value stored in the cache or uses the passed function to compute the value and save to cache
      * This function uses the given key for the caching mechanism.
      *
-     * @param mixed $id
-     * @param array $arguments array of parameter to call compute function
+     * @param mixed    $id
+     * @param array    $arguments array of parameter to call compute function
      * @param callable $compute
-     * @param int $lifeTime cache lifetime
+     * @param int      $lifeTime  cache lifetime
      *
      * @return mixed
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,7 +26,7 @@ class FileValidator implements FileValidatorInterface
     /**
      * @var array
      */
-    protected $blockedMimeTypes = array();
+    protected $blockedMimeTypes = [];
 
     /**
      * @var int
@@ -34,7 +35,7 @@ class FileValidator implements FileValidatorInterface
 
     /**
      * @param UploadedFile $file
-     * @param array $methods
+     * @param array        $methods
      *
      * @return mixed|void
      *
@@ -43,12 +44,12 @@ class FileValidator implements FileValidatorInterface
      * @throws UploadFileNotSetException
      * @throws MaxFileSizeExceededException
      */
-    public function validate(UploadedFile $file, $methods = array(
+    public function validate(UploadedFile $file, $methods = [
             self::VALIDATOR_FILE_SET,
             self::VALIDATOR_FILE_ERRORS,
             self::VALIDATOR_BLOCK_FILE_TYPES,
             self::VALIDATOR_MAX_FILE_SIZE,
-        ))
+        ])
     {
         if (in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
             throw new InvalidFileException(sprintf('The file upload had an error("%s: %s")', $file->getError(), $file->getErrorMessage()));
@@ -72,13 +73,13 @@ class FileValidator implements FileValidatorInterface
      */
     public function setMaxFileSize($maxFileSize)
     {
-        $digitalUnits = array(
-            'B'  => 1,
+        $digitalUnits = [
+            'B' => 1,
             'KB' => 1024,
             'MB' => 1048576,
             'GB' => 1073741824,
             'TB' => 1099511627776,
-        );
+        ];
         $defaultUnit = 'B';
 
         $value = intval($maxFileSize);

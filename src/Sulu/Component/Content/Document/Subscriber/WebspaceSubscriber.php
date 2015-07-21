@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,7 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
@@ -40,11 +40,11 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // should happen after content is hydrated
-            Events::HYDRATE => array('handleHydrate', -10),
-            Events::PERSIST => array('handlePersist', 10),
-        );
+            Events::HYDRATE => ['handleHydrate', -10],
+            Events::PERSIST => ['handlePersist', 10],
+        ];
     }
 
     public function supports($document)
@@ -54,6 +54,7 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
 
     /**
      * @param AbstractMappingEvent|HydrateEvent $event
+     *
      * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function doHydrate(AbstractMappingEvent $event)

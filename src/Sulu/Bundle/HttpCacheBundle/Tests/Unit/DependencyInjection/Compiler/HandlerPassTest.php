@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,80 +19,80 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
 {
     public function provideHandlerServices()
     {
-        return array(
-            array(
-                array(
-                    array('service' => 'service1', 'alias' => 'foo'),
-                    array('service' => 'service2', 'alias' => 'bar'),
-                    array('service' => 'service3', 'alias' => 'baz'),
-                ),
-                array(
+        return [
+            [
+                [
+                    ['service' => 'service1', 'alias' => 'foo'],
+                    ['service' => 'service2', 'alias' => 'bar'],
+                    ['service' => 'service3', 'alias' => 'baz'],
+                ],
+                [
                     'foo', 'bar', 'baz',
-                ),
-                array(
+                ],
+                [
                     'service1', 'service2', 'service3',
-                ),
+                ],
                 'Sulu\Component\HttpCache\HandlerInterface',
-            ),
-            array(
-                array(
-                    array('service' => 'service1', 'alias' => 'foo'),
-                    array('service' => 'service2', 'alias' => 'bar'),
-                    array('service' => 'service3', 'alias' => 'baz'),
-                ),
-                array(
+            ],
+            [
+                [
+                    ['service' => 'service1', 'alias' => 'foo'],
+                    ['service' => 'service2', 'alias' => 'bar'],
+                    ['service' => 'service3', 'alias' => 'baz'],
+                ],
+                [
                     'foo', 'baz',
-                ),
-                array(
+                ],
+                [
                     'service1', 'service3',
-                ),
+                ],
                 'Sulu\Component\HttpCache\HandlerInterface',
-            ),
-            array(
-                array(
-                    array('service' => 'service3', 'alias' => 'ball'),
-                ),
-                array(
+            ],
+            [
+                [
+                    ['service' => 'service3', 'alias' => 'ball'],
+                ],
+                [
                     'foo', 'baz',
-                ),
-                array(
-                ),
+                ],
+                [
+                ],
                 'Sulu\Component\HttpCache\HandlerInterface',
                 'Could not find the following cache handlers: "foo", "baz"',
-            ),
-            array(
-                array(
-                    array('service' => 'service3', 'alias' => 'ball'),
-                    array('service' => 'service4', 'alias' => 'ball'),
-                ),
-                array(
-                ),
-                array(
-                ),
+            ],
+            [
+                [
+                    ['service' => 'service3', 'alias' => 'ball'],
+                    ['service' => 'service4', 'alias' => 'ball'],
+                ],
+                [
+                ],
+                [
+                ],
                 'Sulu\Component\HttpCache\HandlerInterface',
                 'Cache handler with alias "ball" has already been registered',
-            ),
-            array(
-                array(
-                ),
-                array(
-                ),
-                array(
-                ),
+            ],
+            [
+                [
+                ],
+                [
+                ],
+                [
+                ],
                 'Sulu\Component\HttpCache\HandlerInterface',
-            ),
-            array(
-                array(
-                    array('service' => 'service3', 'alias' => 'ball'),
-                ),
-                array(
-                ),
-                array(
-                ),
+            ],
+            [
+                [
+                    ['service' => 'service3', 'alias' => 'ball'],
+                ],
+                [
+                ],
+                [
+                ],
                 'stdClass',
                 'Service ID "service3" was tagged as a cache handler, but it does not implement the "HandlerInterface"',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -105,7 +106,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
 
         foreach ($services as $service) {
             $definition = new Definition($this->getMock($handlerClass));
-            $definition->addTag('sulu_http_cache.handler', array('alias' => $service['alias']));
+            $definition->addTag('sulu_http_cache.handler', ['alias' => $service['alias']]);
             $this->setDefinition($service['service'], $definition);
         }
 

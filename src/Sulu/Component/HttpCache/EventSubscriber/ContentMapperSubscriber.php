@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,12 +11,11 @@
 
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
-use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
-use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\HttpCache\HandlerInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\Content\Mapper\ContentEvents;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
+use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Listen to the content mapper and invalidate structures.
@@ -30,18 +30,18 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     /**
      * @var StructureInterface[]
      */
-    private $structureInvalidationStack = array();
+    private $structureInvalidationStack = [];
 
     /**
      * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             ContentEvents::NODE_POST_SAVE => 'onContentNodePostSave',
             ContentEvents::NODE_PRE_DELETE => 'onContentNodePreDelete',
             ContentEvents::NODE_POST_DELETE => 'onContentNodePostDelete',
-        );
+        ];
     }
 
     /**

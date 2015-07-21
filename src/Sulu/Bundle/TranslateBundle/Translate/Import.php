@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -323,7 +324,7 @@ class Import
     /**
      * Executes the import. Imports a single file.
      *
-     * @param bool $backend True to make translations available in the backend
+     * @param bool $backend  True to make translations available in the backend
      * @param bool $frontend True to make translations available in the frontend
      */
     public function executeFromFile($backend = true, $frontend = false)
@@ -343,7 +344,7 @@ class Import
     /**
      * Executes the import. All translations found in the bundles get imported.
      *
-     * @param bool $backend True to import the backend file
+     * @param bool $backend  True to import the backend file
      * @param bool $frontend True to import the frontend file
      */
     public function executeFromBundles($backend = true, $frontend = true)
@@ -363,7 +364,7 @@ class Import
      *
      * @param BundleInterface $bundle
      * @param $path
-     * @param bool $backend True to import the backend file
+     * @param bool $backend  True to import the backend file
      * @param bool $frontend True to import the frontend file
      */
     private function importBundle($bundle, $path, $backend, $frontend)
@@ -469,13 +470,13 @@ class Import
     /**
      * Imports a single file.
      *
-     * @param Package $package the package to import the file into
+     * @param Package         $package  the package to import the file into
      * @param LoaderInterface $loader
-     * @param string $path The path to the file
-     * @param string $filename The filename
-     * @param bool $backend True to make the file available in the backend
-     * @param bool $frontend True to make the file available in the frontend
-     * @param bool $throw If true the methods throws exception if the a file cannot be found
+     * @param string          $path     The path to the file
+     * @param string          $filename The filename
+     * @param bool            $backend  True to make the file available in the backend
+     * @param bool            $frontend True to make the file available in the frontend
+     * @param bool            $throw    If true the methods throws exception if the a file cannot be found
      *
      * @throws \Exception
      * @throws \InvalidArgumentException

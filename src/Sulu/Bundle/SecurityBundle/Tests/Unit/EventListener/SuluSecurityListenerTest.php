@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal()]);
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
 
         $this->securityChecker->checkPermission(
@@ -85,7 +86,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal()]);
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
 
         $this->securityChecker->checkPermission(
@@ -107,7 +108,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller));
+        $this->filterControllerEvent->getController()->willReturn([$controller]);
         $this->filterControllerEvent->getRequest()->willReturn($request);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
@@ -123,7 +124,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
 
         $request = $this->prophesize(Request::class);
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal()]);
         $this->filterControllerEvent->getRequest()->willReturn($request);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
@@ -140,7 +141,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $request->get('id')->willReturn('1');
 
         $this->filterControllerEvent->getRequest()->willReturn($request);
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal(), 'getAction']);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
@@ -161,7 +162,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $controller->getLocale(Argument::any())->willReturn('de');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), $action));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal(), $action]);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
@@ -180,7 +181,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $controller->getLocale(Argument::any())->willReturn('de');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal(), 'getAction']);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
@@ -198,7 +199,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $controller->getLocale(Argument::any())->willReturn('de');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
-        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal(), 'getAction']);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
@@ -207,13 +208,13 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
 
     public static function provideMethodActionMapping()
     {
-        return array(
-            array('GET', 'getAction', 'view'),
-            array('POST', 'postAction', 'add'),
-            array('POST', 'postMergeAction', 'edit'),
-            array('PUT', 'putAction', 'edit'),
-            array('PATCH', 'patchAction', 'edit'),
-            array('DELETE', 'deleteAction', 'delete'),
-        );
+        return [
+            ['GET', 'getAction', 'view'],
+            ['POST', 'postAction', 'add'],
+            ['POST', 'postMergeAction', 'edit'],
+            ['PUT', 'putAction', 'edit'],
+            ['PATCH', 'patchAction', 'edit'],
+            ['DELETE', 'deleteAction', 'delete'],
+        ];
     }
 }

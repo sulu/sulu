@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,7 +40,7 @@ class ContentNavigationPass implements CompilerPassInterface
 
             $contentNavigationCollector->addMethodCall(
                 'addContentNavigationProvider',
-                array($attributes[0]['alias'], $id)
+                [$attributes[0]['alias'], $id]
             );
         }
     }

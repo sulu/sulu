@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use Guzzle\Http\ClientInterface;
@@ -40,11 +49,11 @@ class GoogleGeolocator implements GeolocatorInterface
             $endpoint .= '?key=' . $this->apiKey;
         }
 
-        $request = $this->client->get($endpoint, array(), array(
-            'query' => array(
+        $request = $this->client->get($endpoint, [], [
+            'query' => [
                 'address' => $query,
-            ),
-        ));
+            ],
+        ]);
 
         $this->client->send($request);
         $response = $request->getResponse();
@@ -67,13 +76,13 @@ class GoogleGeolocator implements GeolocatorInterface
         foreach ($results as $result) {
             $location = new GeolocatorLocation();
 
-            $map = array();
+            $map = [];
             foreach ($result['address_components'] as $component) {
                 foreach ($component['types'] as $type) {
                     if (isset($map[$type])) {
                         $map[$type][] = $component;
                     } else {
-                        $map[$type] = array($component);
+                        $map[$type] = [$component];
                     }
                 }
             }
@@ -82,15 +91,15 @@ class GoogleGeolocator implements GeolocatorInterface
             $location->setId(md5(serialize($result)));
             $location->setDisplayTitle($result['formatted_address']);
 
-            foreach (array(
+            foreach ([
                 'route' => 'setStreet',
                 'street_number' => 'setNumber',
                 'postal_code' => 'setCode',
                 'locality' => 'setTown',
                 'country' => 'setCountry',
-            ) as $field => $method) {
+            ] as $field => $method) {
                 if (isset($map[$field])) {
-                    $parts = array();
+                    $parts = [];
                     foreach ($map[$field] as $fieldValue) {
                         $parts[] = $fieldValue['long_name'];
                     }

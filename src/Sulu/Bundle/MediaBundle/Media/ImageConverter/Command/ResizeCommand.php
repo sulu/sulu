@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ class ResizeCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface & $image, $parameters)
+    public function execute(ImageInterface &$image, $parameters)
     {
         $size = $image->getSize();
 

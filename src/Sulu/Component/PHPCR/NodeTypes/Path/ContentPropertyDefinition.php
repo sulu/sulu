@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -77,7 +78,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * will return false.
      *
      * @return bool True, if the item is automatically created when its
-     *      parent node is created, else false.
+     *              parent node is created, else false.
      *
      * @api
      */
@@ -343,7 +344,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getValueConstraints()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -379,7 +380,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getDefaultValues()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -397,7 +398,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplate, then this method will return false.
      *
      * @return bool True, if this property may have multiple values, else
-     *      false.
+     *              false.
      *
      * @api
      */
@@ -431,7 +432,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * Comparison of Values).
      *
      * @return array an array of query operator constants as defined in
-     *      \PHPCR\Query\QueryObjectModelConstantsInterface
+     *               \PHPCR\Query\QueryObjectModelConstantsInterface
      *
      * @see \PHPCR\Query\QueryObjectModelConstantsInterface
      *
@@ -439,7 +440,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getAvailableQueryOperators()
     {
-        return array();
+        return [];
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,11 +29,11 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
 
     public function provideUrl()
     {
-        return array(
-            array('sulu.lo', 'sulu.lo', ''),
-            array('sulu.io/', 'sulu.io', '/'),
-            array('sulu.com/example', 'sulu.com', '/example'),
-        );
+        return [
+            ['sulu.lo', 'sulu.lo', ''],
+            ['sulu.io/', 'sulu.io', '/'],
+            ['sulu.com/example', 'sulu.com', '/example'],
+        ];
     }
 
     /**
@@ -48,15 +49,15 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $expected = array(
+        $expected = [
             'type' => 'foo',
             'portal' => 'portal_key',
             'webspace' => 'my_webspace',
             'url' => 'http://example.emp',
             'portal' => 'portal',
-            'localization' => array('foo'),
+            'localization' => ['foo'],
             'redirect' => true,
-        );
+        ];
 
         $this->portal->getKey()->willReturn($expected['portal']);
         $this->webspace->getKey()->willReturn($expected['webspace']);

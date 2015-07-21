@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,11 +14,9 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
  * provides a cache for preview with phpcr.
@@ -126,7 +125,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         $page = $this->contentMapper->load($contentUuid, $webspaceKey, $locale);
 
         $this->saveStructure($page, $userId, $contentUuid, $webspaceKey, $locale);
-        $this->saveChanges(array(), $userId, $contentUuid, $webspaceKey, $locale);
+        $this->saveChanges([], $userId, $contentUuid, $webspaceKey, $locale);
 
         return $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
     }
@@ -179,10 +178,10 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         $changes = $this->changesCache->fetch($id);
 
         if ($remove) {
-            $this->saveChanges(array(), $userId, $contentUuid, $webspaceKey, $locale);
+            $this->saveChanges([], $userId, $contentUuid, $webspaceKey, $locale);
         }
 
-        return $changes ?: array();
+        return $changes ?: [];
     }
 
     /**

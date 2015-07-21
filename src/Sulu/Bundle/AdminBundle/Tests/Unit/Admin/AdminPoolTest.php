@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,56 +44,56 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $this->adminPool = new AdminPool();
         $this->admin1 = $this->getMockForAbstractClass(
             'Sulu\Bundle\AdminBundle\Admin\Admin',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getCommands', 'getSecurityContexts')
+            ['getCommands', 'getSecurityContexts']
         );
         $this->admin2 = $this->getMockForAbstractClass(
             'Sulu\Bundle\AdminBundle\Admin\Admin',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getCommands', 'getSecurityContexts')
+            ['getCommands', 'getSecurityContexts']
         );
         $this->command = $this->getMock('Command');
         $this->admin1->expects($this->any())
             ->method('getCommands')
-            ->will($this->returnValue(array(new $this->command())));
+            ->will($this->returnValue([new $this->command()]));
         $this->admin2->expects($this->any())
             ->method('getCommands')
-            ->will($this->returnValue(array(new $this->command())));
+            ->will($this->returnValue([new $this->command()]));
         $this->admin1->expects($this->any())
             ->method('getSecurityContexts')
             ->will(
                 $this->returnValue(
-                    array(
-                        'Sulu' => array(
-                            'Assets' => array(
+                    [
+                        'Sulu' => [
+                            'Assets' => [
                                 'assets.videos',
                                 'assets.pictures',
                                 'assets.documents',
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 )
             );
         $this->admin2->expects($this->any())
             ->method('getSecurityContexts')
             ->will(
                 $this->returnValue(
-                    array(
-                        'Sulu' => array(
-                            'Portal' => array(
+                    [
+                        'Sulu' => [
+                            'Portal' => [
                                 'portals.com',
                                 'portals.de',
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 )
             );
         $rootItem1 = new NavigationItem('Root');
@@ -129,18 +130,18 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $contexts = $this->adminPool->getSecurityContexts();
 
         $this->assertEquals(
-            array(
+            [
                 'assets.videos',
                 'assets.pictures',
                 'assets.documents',
-            ),
+            ],
             $contexts['Sulu']['Assets']
         );
         $this->assertEquals(
-            array(
+            [
                 'portals.com',
                 'portals.de',
-            ),
+            ],
             $contexts['Sulu']['Portal']
         );
     }

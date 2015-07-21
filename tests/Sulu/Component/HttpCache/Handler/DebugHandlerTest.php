@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,7 +45,7 @@ class DebugHandlerTest extends \PHPUnit_Framework_TestCase
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->page = $this->prophesize('Sulu\Component\Content\Compat\PageInterface');
 
-        $this->handlerNames = array('one', 'two', 'three');
+        $this->handlerNames = ['one', 'two', 'three'];
         $this->proxyClientName = 'foo';
 
         $this->handler = new DebugHandler(

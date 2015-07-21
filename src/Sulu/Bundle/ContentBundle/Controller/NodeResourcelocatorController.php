@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -114,7 +115,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $webspaceKey = $this->getRequestParameter($this->getRequest(), 'webspace', true);
         $languageCode = $this->getRequestParameter($this->getRequest(), 'language', true);
 
-        return array($webspaceKey, $languageCode);
+        return [$webspaceKey, $languageCode];
     }
 
     /**

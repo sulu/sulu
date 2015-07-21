@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,9 +13,9 @@ namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
@@ -55,7 +56,7 @@ class CategoryList extends ComplexContentType
     /**
      * Sets the given array as values on the property.
      *
-     * @param array $data
+     * @param array             $data
      * @param PropertyInterface $property
      */
     protected function setData($data, PropertyInterface $property)
@@ -68,8 +69,8 @@ class CategoryList extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $data = array();
-        $categoryIds = $node->getPropertyValueWithDefault($property->getName(), array());
+        $data = [];
+        $categoryIds = $node->getPropertyValueWithDefault($property->getName(), []);
         $categories = $this->categoryManager->findByIds($categoryIds);
         $categories = $this->categoryManager->getApiObjects($categories, $languageCode);
 
@@ -99,11 +100,12 @@ class CategoryList extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $categoryIds = array();
+        $categoryIds = [];
         $value = $property->getValue();
 
         if (null === $value) {
             $node->setProperty($property->getName(), null);
+
             return;
         }
 

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,10 +32,10 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
             'sulu_core.webspace.request_analyzer.website',
             new Definition(
                 'Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer',
-                array(
+                [
                     new Reference('sulu_core.webspace.webspace_manager'),
                     $container->getParameter('kernel.environment'),
-                )
+                ]
             )
         );
         // set admin request analyzer
@@ -42,10 +43,10 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
             'sulu_core.webspace.request_analyzer.admin',
             new Definition(
                 'Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer',
-                array(
+                [
                     new Reference('sulu_core.webspace.webspace_manager'),
                     $container->getParameter('kernel.environment'),
-                )
+                ]
             )
         );
 
@@ -60,9 +61,9 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
             'sulu_core.webspace.request_listener',
             new Definition(
                 'Sulu\Component\Webspace\EventListener\RequestListener',
-                array(
+                [
                     new Reference('sulu_core.webspace.request_analyzer'),
-                )
+                ]
             )
         );
 
@@ -70,14 +71,14 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
         $eventDispatcher = $container->findDefinition('event_dispatcher');
         $eventDispatcher->addMethodCall(
             'addListenerService',
-            array(
+            [
                 'kernel.request',
-                array(
+                [
                     'sulu_core.webspace.request_listener',
                     'onKernelRequest',
-                ),
+                ],
                 $container->getParameter('sulu_core.webspace.request_analyzer.priority'),
-            )
+            ]
         );
     }
 }

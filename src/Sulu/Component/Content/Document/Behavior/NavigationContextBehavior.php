@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,17 +20,16 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface NavigationContextBehavior
 {
     /**
-     * Return the navigation contexts
+     * Return the navigation contexts.
      *
      * @return array Array of strings
      */
     public function getNavigationContexts();
 
     /**
-     * Set the navigation contexts
+     * Set the navigation contexts.
      *
      * @param array $navigationContexts
      */
-    public function setNavigationContexts(array $navigationContexts = array());
+    public function setNavigationContexts(array $navigationContexts = []);
 }
-

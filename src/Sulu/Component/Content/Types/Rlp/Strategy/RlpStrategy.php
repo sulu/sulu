@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,10 +12,10 @@
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
@@ -86,9 +87,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * returns whole path for given ContentNode.
      *
-     * @param string $title title of new node
-     * @param string $parentPath parent path of new contentNode
-     * @param string $webspaceKey key of portal
+     * @param string $title        title of new node
+     * @param string $parentPath   parent path of new contentNode
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -114,9 +115,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * returns whole path for given ContentNode.
      *
-     * @param string $title title of new node
-     * @param string $uuid uuid for node to generate rl
-     * @param string $webspaceKey key of portal
+     * @param string $title        title of new node
+     * @param string $uuid         uuid for node to generate rl
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -179,11 +180,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * adopts resource locator of children by iteration.
      *
      * @param NodeInterface $contentNode
-     * @param int $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param bool $iterate
-     * @param string $segmentKey
+     * @param int           $userId
+     * @param string        $webspaceKey
+     * @param string        $languageCode
+     * @param bool          $iterate
+     * @param string        $segmentKey
      */
     private function adaptResourceLocators(
         NodeInterface $contentNode,
@@ -253,10 +254,10 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * returns path for given contentNode.
      *
-     * @param NodeInterface $contentNode reference node
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param NodeInterface $contentNode  reference node
+     * @param string        $webspaceKey  key of portal
+     * @param string        $languageCode
+     * @param string        $segmentKey
      *
      * @return string path
      */
@@ -269,8 +270,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * returns path for given contentNode.
      *
-     * @param string $uuid uuid of contentNode
-     * @param string $webspaceKey key of portal
+     * @param string $uuid         uuid of contentNode
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -294,7 +295,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * returns the uuid of referenced content node.
      *
      * @param string $resourceLocator requested RL
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey     key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -309,8 +310,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * checks if path is valid.
      *
-     * @param string $path path of route
-     * @param string $webspaceKey key of portal
+     * @param string $path         path of route
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -329,8 +330,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * deletes given resource locator node.
      *
-     * @param string $path of resource locator node
-     * @param string $webspaceKey key of portal
+     * @param string $path         of resource locator node
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */
@@ -342,8 +343,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * restore given resource locator.
      *
-     * @param string $path of resource locator
-     * @param string $webspaceKey key of portal
+     * @param string $path         of resource locator
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */

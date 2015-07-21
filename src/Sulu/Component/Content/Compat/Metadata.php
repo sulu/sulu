@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,8 +33,8 @@ class Metadata
     }
 
     /**
-     * @param string $name meta data name
-     * @param string $languageCode
+     * @param string      $name         meta data name
+     * @param string      $languageCode
      * @param string|null $default
      *
      * @return string|null

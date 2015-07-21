@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,8 +41,8 @@ class Theme implements ArrayableInterface
      */
     public function __construct()
     {
-        $this->errorTemplates = array();
-        $this->defaultTemplates = array();
+        $this->errorTemplates = [];
+        $this->defaultTemplates = [];
     }
 
     /**
@@ -147,10 +148,10 @@ class Theme implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        return array(
+        return [
             'key' => $this->getKey(),
             'defaultTemplates' => $this->getDefaultTemplates(),
             'errorTemplates' => $this->getErrorTemplates(),
-        );
+        ];
     }
 }

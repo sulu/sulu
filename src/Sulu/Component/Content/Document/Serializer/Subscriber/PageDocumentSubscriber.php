@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,15 +11,15 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 
-use Sulu\Component\Content\Compat\Structure\Document;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use PHPCR\SessionInterface;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 use JMS\Serializer\EventDispatcher\Events;
-use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use JMS\Serializer\EventDispatcher\ObjectEvent;
 use PHPCR\ItemNotFoundException;
+use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Compat\Structure\Document;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\DocumentRegistry;
 
 /**
  * Handle document re-registration upon deserialization.
@@ -57,12 +58,12 @@ class PageDocumentSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            array(
+        return [
+            [
                 'event' => Events::POST_DESERIALIZE,
                 'method' => 'onPostDeserialize',
-            ),
-        );
+            ],
+        ];
     }
 
     /**

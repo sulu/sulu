@@ -10,16 +10,15 @@
 
 namespace Sulu\Bundle\ResourceBundle\Api;
 
-use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
- * The ConditionGroup class which will be exported to the API
+ * The ConditionGroup class which will be exported to the API.
  *
- * @package Sulu\Bundle\ResourceBundle\Api
  * @ExclusionPolicy("all")
  */
 class ConditionGroup extends ApiWrapper
@@ -35,11 +34,12 @@ class ConditionGroup extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @VirtualProperty
      * @SerializedName("id")
-     * @return integer
+     *
+     * @return int
      */
     public function getId()
     {
@@ -47,10 +47,11 @@ class ConditionGroup extends ApiWrapper
     }
 
     /**
-     * Get conditions
+     * Get conditions.
      *
      * @VirtualProperty
      * @SerializedName("conditions")
+     *
      * @return null|Condition[]
      */
     public function getConditions()
@@ -65,13 +66,14 @@ class ConditionGroup extends ApiWrapper
             return $result;
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Add conditions
+     * Add conditions.
      *
      * @param Condition $condition
+     *
      * @return ConditionGroup
      */
     public function addCondition(Condition $condition)
@@ -80,9 +82,10 @@ class ConditionGroup extends ApiWrapper
     }
 
     /**
-     * Remove condition
+     * Remove condition.
      *
      * @param Condition $condition
+     *
      * @internal param Condition $conditions
      */
     public function removeCondition(Condition $condition)
@@ -91,7 +94,7 @@ class ConditionGroup extends ApiWrapper
     }
 
     /**
-     * Set filter
+     * Set filter.
      *
      * @param Filter $filter
      */
@@ -101,7 +104,7 @@ class ConditionGroup extends ApiWrapper
     }
 
     /**
-     * Get filter
+     * Get filter.
      *
      * @return Filter
      */

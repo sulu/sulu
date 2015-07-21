@@ -10,18 +10,17 @@
 
 namespace Sulu\Bundle\ResourceBundle\Api;
 
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ResourceBundle\Entity\Operator as OperatorEntity;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation;
 use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ResourceBundle\Entity\Operator as OperatorEntity;
 
 /**
- * The Operator class which will be exported to the API
+ * The Operator class which will be exported to the API.
  *
- * @package Sulu\Bundle\ResourceBundle\Api
  * @Relation("self", href="expr('/admin/api/operators/' ~ object.getId())")
  * @ExclusionPolicy("all")
  */
@@ -38,7 +37,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Returns the name of the operator
+     * Returns the name of the operator.
      *
      * @return string The name of the operator
      * @VirtualProperty
@@ -50,7 +49,8 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Sets the name of the operator
+     * Sets the name of the operator.
+     *
      * @param string $name The name of the operator
      */
     public function setName($name)
@@ -59,7 +59,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get translation by locale
+     * Get translation by locale.
      *
      * @return OperatorTranslation
      */
@@ -82,7 +82,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Set operator
+     * Set operator.
      *
      * @param string $operator
      */
@@ -92,7 +92,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get operator
+     * Get operator.
      *
      * @return string
      * @VirtualProperty
@@ -104,7 +104,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      */
@@ -114,9 +114,9 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get type
+     * Get type.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("type")
      */
@@ -126,9 +126,9 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Set inputType
+     * Set inputType.
      *
-     * @param integer $inputType
+     * @param int $inputType
      */
     public function setInputType($inputType)
     {
@@ -136,7 +136,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get inputType
+     * Get inputType.
      *
      * @return string
      * @VirtualProperty
@@ -148,9 +148,9 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("id")
      */
@@ -160,7 +160,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param OperatorTranslation $translations
      */
@@ -170,7 +170,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param OperatorTranslation $translations
      */
@@ -180,7 +180,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -190,7 +190,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Add values
+     * Add values.
      *
      * @param OperatorValue $value
      */
@@ -200,7 +200,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Remove values
+     * Remove values.
      *
      * @param OperatorValue $value
      */
@@ -210,7 +210,7 @@ class Operator extends ApiWrapper
     }
 
     /**
-     * Get values
+     * Get values.
      *
      * @return \Doctrine\Common\Collections\Collection
      * @VirtualProperty
@@ -228,6 +228,6 @@ class Operator extends ApiWrapper
             return $result;
         }
 
-        return null;
+        return;
     }
 }

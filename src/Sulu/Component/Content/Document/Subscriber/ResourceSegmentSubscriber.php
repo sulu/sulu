@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,15 +11,13 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 {
@@ -27,8 +26,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->inspector = $inspector;
     }
@@ -38,13 +36,13 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // persist should happen before content is mapped
-            Events::PERSIST => array('handlePersist', 10),
+            Events::PERSIST => ['handlePersist', 10],
 
             // hydrate should happen afterwards
-            Events::HYDRATE => array('handleHydrate', -10),
-        );
+            Events::HYDRATE => ['handleHydrate', -10],
+        ];
     }
 
     public function supports($document)

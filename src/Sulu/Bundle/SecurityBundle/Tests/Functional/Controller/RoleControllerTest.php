@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -132,13 +133,13 @@ class RoleControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/roles',
-            array(
+            [
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'permissions' => array(
-                    array(
+                'permissions' => [
+                    [
                         'context' => 'portal1',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => false,
                             'add' => false,
                             'edit' => true,
@@ -146,11 +147,11 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => false,
                             'live' => true,
                             'security' => false,
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'context' => 'portal2',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => false,
                             'add' => false,
                             'edit' => false,
@@ -158,13 +159,13 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => false,
                             'live' => false,
                             'security' => false,
-                        ),
-                    ),
-                ),
-                'securityType' => array(
+                        ],
+                    ],
+                ],
+                'securityType' => [
                     'id' => $this->securityType2->getId(),
-                ),
-            )
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -226,14 +227,14 @@ class RoleControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/roles/' . $this->role1->getId(),
-            array(
+            [
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'permissions' => array(
-                    array(
+                'permissions' => [
+                    [
                         'id' => $this->permission1->getId(),
                         'context' => 'portal1',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => true,
                             'add' => true,
                             'edit' => true,
@@ -241,12 +242,12 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => false,
                             'live' => false,
                             'security' => false,
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'id' => $this->permission2->getId(),
                         'context' => 'portal2',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => false,
                             'add' => false,
                             'edit' => false,
@@ -254,11 +255,11 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => true,
                             'live' => true,
                             'security' => true,
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'context' => 'portal3',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => false,
                             'add' => false,
                             'edit' => false,
@@ -266,13 +267,13 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => true,
                             'live' => true,
                             'security' => true,
-                        ),
-                    ),
-                ),
-                'securityType' => array(
+                        ],
+                    ],
+                ],
+                'securityType' => [
                     'id' => $this->securityType2,
-                ),
-            )
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -347,14 +348,14 @@ class RoleControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/roles/' . $this->role1->getId(),
-            array(
+            [
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'permissions' => array(
-                    array(
+                'permissions' => [
+                    [
                         'id' => $this->permission1->getId(),
                         'context' => 'portal1',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => true,
                             'add' => true,
                             'edit' => true,
@@ -362,12 +363,12 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => false,
                             'live' => false,
                             'security' => false,
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'id' => $this->permission2->getId(),
                         'context' => 'portal2',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => false,
                             'add' => false,
                             'edit' => false,
@@ -375,11 +376,11 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => true,
                             'live' => true,
                             'security' => true,
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'context' => 'portal3',
-                        'permissions' => array(
+                        'permissions' => [
                             'view' => false,
                             'add' => false,
                             'edit' => false,
@@ -387,10 +388,10 @@ class RoleControllerTest extends SuluTestCase
                             'archive' => true,
                             'live' => true,
                             'security' => true,
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -465,10 +466,10 @@ class RoleControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/roles/11230',
-            array(
+            [
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-            )
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,5 +25,5 @@ interface CommandInterface
      *
      * @return mixed
      */
-    public function execute(ImageInterface & $image, $parameters);
+    public function execute(ImageInterface &$image, $parameters);
 }

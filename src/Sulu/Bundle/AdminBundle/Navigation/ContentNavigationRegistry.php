@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,7 +22,7 @@ class ContentNavigationRegistry extends ContainerAware implements ContentNavigat
     /**
      * @var array
      */
-    private $providers = array();
+    private $providers = [];
 
     public function __construct(ContainerInterface $container)
     {
@@ -31,13 +32,13 @@ class ContentNavigationRegistry extends ContainerAware implements ContentNavigat
     /**
      * {@inheritdoc}
      */
-    public function getNavigationItems($alias, array $options = array())
+    public function getNavigationItems($alias, array $options = [])
     {
         if (!array_key_exists($alias, $this->providers)) {
             throw new ContentNavigationAliasNotFoundException($alias, array_keys($this->providers));
         }
 
-        $navigationItems = array();
+        $navigationItems = [];
 
         foreach ($this->providers[$alias] as $providerId) {
             $navigationItems = array_merge(
@@ -55,7 +56,7 @@ class ContentNavigationRegistry extends ContainerAware implements ContentNavigat
     public function addContentNavigationProvider($alias, $id)
     {
         if (!array_key_exists($alias, $this->providers)) {
-            $this->providers[$alias] = array();
+            $this->providers[$alias] = [];
         }
 
         $this->providers[$alias][] = $id;

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,43 +40,43 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     protected static $entityKey = 'tags';
 
-    protected $unsortable = array();
+    protected $unsortable = [];
 
-    protected $fieldsDefault = array(
+    protected $fieldsDefault = [
         'name',
-    );
+    ];
 
-    protected $fieldsValidation = array(
-        'name' => array(
+    protected $fieldsValidation = [
+        'name' => [
             'required' => true,
-        ),
-    );
+        ],
+    ];
 
-    protected $fieldsEditable = array(
+    protected $fieldsEditable = [
         'name',
-    );
+    ];
 
-    protected $fieldsExcluded = array();
+    protected $fieldsExcluded = [];
 
-    protected $fieldsHidden = array(
+    protected $fieldsHidden = [
         'created',
         'id',
         'creator_contact_lastName',
         'changed',
-    );
-    protected $fieldsRelations = array(
+    ];
+    protected $fieldsRelations = [
         'creator_contact_lastName',
-    );
-    protected $fieldsSortOrder = array(
+    ];
+    protected $fieldsSortOrder = [
         '0' => 'name',
         '1' => 'creator_contact_lastName',
         '2' => 'changed',
-    );
+    ];
 
-    protected $fieldsTranslationKeys = array(
+    protected $fieldsTranslationKeys = [
         'name' => 'tags.name',
         'creator_contact_lastName' => 'tags.author',
-    );
+    ];
 
     protected $bundlePrefix = 'tags.';
 
@@ -191,7 +192,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save(array('name' => $name), $this->getUser()->getId());
+            $tag = $this->getManager()->save(['name' => $name], $this->getUser()->getId());
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
@@ -228,7 +229,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save(array('name' => $name), $this->getUser()->getId(), $id);
+            $tag = $this->getManager()->save(['name' => $name], $this->getUser()->getId(), $id);
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
@@ -287,7 +288,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
             $destTag = $this->getManager()->merge($srcTagIds, $destTagId);
 
-            $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
+            $view = $this->view(null, 303, ['location' => $destTag->getLinks()['self']]);
         } catch (TagNotFoundException $exc) {
             $entityNotFoundException = new EntityNotFoundException(self::$entityName, $exc->getId());
             $view = $this->view($entityNotFoundException->toArray(), 404);
@@ -310,7 +311,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
     public function patchAction(Request $request)
     {
         try {
-            $tags = array();
+            $tags = [];
 
             $i = 0;
             while ($item = $request->get($i)) {
@@ -319,7 +320,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 } else {
                     $tags[] = $this->getManager()->save($item, null);
                 }
-                $i++;
+                ++$i;
             }
             $this->getDoctrine()->getManager()->flush();
             $view = $this->view($tags, 200);

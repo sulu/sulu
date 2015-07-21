@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,31 +19,30 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface ShadowLocaleBehavior
 {
     /**
-     * Return the activation state of the shadow locale feature
+     * Return the activation state of the shadow locale feature.
      *
-     * @return boolean
+     * @return bool
      */
     public function isShadowLocaleEnabled();
 
     /**
-     * Enable or disable the shadow locale
+     * Enable or disable the shadow locale.
      *
-     * @param boolean
+     * @param bool
      */
     public function setShadowLocaleEnabled($shadowLocaleEnabled);
 
     /**
-     * Return the shadow locale
+     * Return the shadow locale.
      *
      * @return string
      */
     public function getShadowLocale();
 
     /**
-     * Set the shadow locale
+     * Set the shadow locale.
      *
      * @param string
      */
     public function setShadowLocale($shadowLocale);
 }
-

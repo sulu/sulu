@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -54,10 +55,10 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             SearchEvents::PRE_INDEX => 'handleBlameTimestamp',
             SearchEvents::HIT => 'handleBlameTimestampHitMapping',
-        );
+        ];
     }
 
     /**
@@ -122,7 +123,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      *
-     * @param Document $document
+     * @param Document  $document
      * @param \DateTime $created
      * @param \DateTime $changed
      */
@@ -140,7 +141,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map the creator and changer to the document.
      *
-     * @param Document $document
+     * @param Document      $document
      * @param UserInterface $creator
      * @param UserInterface $changer
      */

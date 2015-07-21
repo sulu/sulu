@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,14 +11,13 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class TitleSubscriber extends AbstractMappingSubscriber
 {
@@ -36,11 +36,11 @@ class TitleSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // should happen after content is hydrated
-            Events::HYDRATE => array('handleHydrate', -10),
-            Events::PERSIST => array('handlePersist', 10),
-        );
+            Events::HYDRATE => ['handleHydrate', -10],
+            Events::PERSIST => ['handlePersist', 10],
+        ];
     }
 
     public function supports($document)

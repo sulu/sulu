@@ -13,13 +13,12 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 use Sulu\Component\Rest\RestController;
 
 /**
- * Class TemplateController
- * @package Sulu\Bundle\ResourceBundle\Controller
+ * Class TemplateController.
  */
 class TemplateController extends RestController
 {
     /**
-     * Returns the template for the form of a filter
+     * Returns the template for the form of a filter.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -29,12 +28,12 @@ class TemplateController extends RestController
 
         return $this->render(
             'SuluResourceBundle:Template:filter.form.html.twig',
-            array('conjunctions' => $conjunctions)
+            ['conjunctions' => $conjunctions]
         );
     }
 
     /**
-     * Returns the template for the list of a filter
+     * Returns the template for the list of a filter.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

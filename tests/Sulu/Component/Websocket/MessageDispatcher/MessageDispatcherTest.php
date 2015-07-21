@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,27 +44,27 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $context = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext');
         $conn = $this->prophesize('Ratchet\ConnectionInterface');
-        $message = array('test' => '1');
+        $message = ['test' => '1'];
 
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
-        $handler->handle($conn->reveal(), $message, $context->reveal())->willReturn(array('test' => 2));
+        $handler->handle($conn->reveal(), $message, $context->reveal())->willReturn(['test' => 2]);
 
         $dispatcher = new MessageDispatcher();
         $dispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, array('id' => 'test'), $context->reveal());
+        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
 
         $this->assertEquals(
-            array(
+            [
                 'handler' => 'test',
-                'message' => array(
+                'message' => [
                     'test' => 2,
-                ),
-                'options' => array(
+                ],
+                'options' => [
                     'id' => 'test',
-                ),
+                ],
                 'error' => false,
-            ),
+            ],
             $result
         );
     }
@@ -72,7 +73,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $context = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext');
         $conn = $this->prophesize('Ratchet\ConnectionInterface');
-        $message = array('test' => '1');
+        $message = ['test' => '1'];
 
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
         $handler->handle($conn->reveal(), $message, $context->reveal());
@@ -80,17 +81,17 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $dispatcher = new MessageDispatcher();
         $dispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, array('id' => 'test'), $context->reveal());
+        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
 
         $this->assertEquals(
-            array(
+            [
                 'handler' => 'test',
                 'message' => null,
-                'options' => array(
+                'options' => [
                     'id' => 'test',
-                ),
+                ],
                 'error' => false,
-            ),
+            ],
             $result
         );
     }
@@ -99,7 +100,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $context = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext');
         $conn = $this->prophesize('Ratchet\ConnectionInterface');
-        $message = array('test' => '1');
+        $message = ['test' => '1'];
 
         $ex = new \Exception('Thats my message', 4211);
 
@@ -109,21 +110,21 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $dispatcher = new MessageDispatcher();
         $dispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, array('id' => 'test'), $context->reveal());
+        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
 
         $this->assertEquals(
-            array(
+            [
                 'handler' => 'test',
-                'message' => array(
+                'message' => [
                     'code' => 4211,
                     'message' => 'Thats my message',
                     'type' => 'Exception',
-                ),
-                'options' => array(
+                ],
+                'options' => [
                     'id' => 'test',
-                ),
+                ],
                 'error' => true,
-            ),
+            ],
             $result
         );
     }
@@ -137,11 +138,11 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $context = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext');
         $conn = $this->prophesize('Ratchet\ConnectionInterface');
-        $message = array('test' => '1');
+        $message = ['test' => '1'];
 
         $dispatcher = new MessageDispatcher();
 
-        $dispatcher->dispatch($conn->reveal(), 'test', $message, array('id' => 'test'), $context->reveal());
+        $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
     }
 
     public function testDispatchWrongHandler()
@@ -153,7 +154,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $context = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext');
         $conn = $this->prophesize('Ratchet\ConnectionInterface');
-        $message = array('test' => '1');
+        $message = ['test' => '1'];
 
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
         $handler->handle($conn->reveal(), $message, $context->reveal());
@@ -161,7 +162,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $dispatcher = new MessageDispatcher();
         $dispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test-2', $message, array('id' => 'test'), $context->reveal());
+        $result = $dispatcher->dispatch($conn->reveal(), 'test-2', $message, ['id' => 'test'], $context->reveal());
 
         $this->assertEquals(null, $result);
     }

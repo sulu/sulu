@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,9 +48,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * Constructor.
      *
-     * @param ClientInterface $client  HTTP client (optional). If no HTTP client
-     *                                 is supplied, a default one will be
-     *                                 created.
+     * @param ClientInterface $client HTTP client (optional). If no HTTP client
+     *                                is supplied, a default one will be
+     *                                created.
      */
     public function __construct(ClientInterface $client = null)
     {
@@ -59,7 +60,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * {@inheritdoc}
      */
-    public function purge($url, array $headers = array())
+    public function purge($url, array $headers = [])
     {
         $this->queueRequest(self::HTTP_METHOD_PURGE, $url);
 
@@ -76,7 +77,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
             return 0;
         }
 
-        $this->queue = array();
+        $this->queue = [];
         $this->sendRequests($queue);
 
         return count($queue);
@@ -85,11 +86,11 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * Add a request to the queue.
      *
-     * @param string $method HTTP method
-     * @param string $url URL
-     * @param array $headers HTTP headers
+     * @param string $method  HTTP method
+     * @param string $url     URL
+     * @param array  $headers HTTP headers
      */
-    protected function queueRequest($method, $url, array $headers = array())
+    protected function queueRequest($method, $url, array $headers = [])
     {
         $this->queue[] = $this->createRequest($method, $url, $headers);
     }
@@ -97,13 +98,13 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * Create request.
      *
-     * @param string $method HTTP method
-     * @param string $url URL
-     * @param array $headers HTTP headers
+     * @param string $method  HTTP method
+     * @param string $url     URL
+     * @param array  $headers HTTP headers
      *
      * @return RequestInterface
      */
-    protected function createRequest($method, $url, array $headers = array())
+    protected function createRequest($method, $url, array $headers = [])
     {
         return $this->client->createRequest($method, $url, $headers);
     }
@@ -119,10 +120,10 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      */
     private function sendRequests(array $requests)
     {
-        $allRequests = array();
+        $allRequests = [];
 
         foreach ($requests as $request) {
-            /** @var RequestInterface $request */
+            /* @var RequestInterface $request */
             $proxyRequest = $this->client->createRequest(
                 $request->getMethod(),
                 $request->getUrl(),
@@ -182,7 +183,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      * Prefix the URL with "http://" if it has no scheme, then check the URL
      * for validity. You can specify what parts of the URL are allowed.
      *
-     * @param string $url
+     * @param string   $url
      * @param string[] $allowedParts Array of allowed URL parts (optional)
      *
      * @throws InvalidUrlException If URL is invalid, the scheme is not http or
@@ -190,7 +191,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      *
      * @return string The URL (with default scheme if there was no scheme)
      */
-    protected function filterUrl($url, array $allowedParts = array())
+    protected function filterUrl($url, array $allowedParts = [])
     {
         // parse_url doesn’t work properly when no scheme is supplied, so
         // prefix URL with HTTP scheme if necessary.
@@ -234,6 +235,6 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      */
     protected function getAllowedSchemes()
     {
-        return array('http');
+        return ['http'];
     }
 }

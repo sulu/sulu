@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,21 +30,21 @@ class RouteProviderCompilerPass implements CompilerPassInterface
         if ($container->getParameter('sulu.context') === SuluKernel::CONTEXT_WEBSITE) {
             $container->setDefinition(
                 'sulu_website.provider.content',
-                new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', array(
+                new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', [
                     new Reference('sulu.content.mapper'),
                     new Reference('sulu_core.webspace.request_analyzer'),
-                ))
+                ])
             );
 
-            $setThemeListenerDefinition = new Definition('Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener', array(
+            $setThemeListenerDefinition = new Definition('Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener', [
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('liip_theme.active_theme'),
-            ));
+            ]);
 
-            $setThemeListenerDefinition->addTag('kernel.event_listener', array(
+            $setThemeListenerDefinition->addTag('kernel.event_listener', [
                 'event' => 'kernel.request',
                 'method' => 'onKernelRequest',
-            ));
+            ]);
 
             $container->setDefinition(
                 'sulu_website.event_listener.set_theme',

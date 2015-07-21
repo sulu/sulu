@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Invalidate all the paths (i.e. old and new) for a Sulu Structure.
@@ -44,12 +44,12 @@ class PathsHandler implements
     /**
      * @var array
      */
-    private $structuresToInvalidate = array();
+    private $structuresToInvalidate = [];
 
     /**
      * @param WebspaceManagerInterface $webspaceManager
-     * @param ProxyClientInterface $proxyClient
-     * @param string $environment - kernel envionment, dev, prod, etc.
+     * @param ProxyClientInterface     $proxyClient
+     * @param string                   $environment     - kernel envionment, dev, prod, etc.
      */
     public function __construct(
         WebspaceManagerInterface $webspaceManager,

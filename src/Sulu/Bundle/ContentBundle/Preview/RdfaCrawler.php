@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,9 +23,9 @@ class RdfaCrawler
     /**
      * returns html value of rdfa property.
      *
-     * @param string $html content to crawl
+     * @param string             $html     content to crawl
      * @param StructureInterface $content
-     * @param string $property could be a property sequence like (block,1,title,0)
+     * @param string             $property could be a property sequence like (block,1,title,0)
      *
      * @return bool
      */
@@ -57,7 +58,7 @@ class RdfaCrawler
                     $parents->each(
                         function ($node) use (&$count) {
                             if ($node->attr('property')) {
-                                $count++;
+                                ++$count;
                             }
                         }
                     );
@@ -84,7 +85,7 @@ class RdfaCrawler
      * extracts sequence information from property name.
      *
      * @param StructureInterface $content
-     * @param string $property sequence like (block,1,title,0)
+     * @param string             $property sequence like (block,1,title,0)
      *
      * @return array|bool
      */
@@ -92,10 +93,10 @@ class RdfaCrawler
     {
         if (false !== strpos($property, ',')) {
             $sequence = explode(',', $property);
-            $propertyPath = array();
-            $indexSequence = array();
+            $propertyPath = [];
+            $indexSequence = [];
             $propertyInstance = $content->getProperty($sequence[0]);
-            for ($i = 1; $i < sizeof($sequence); $i++) {
+            for ($i = 1; $i < sizeof($sequence); ++$i) {
                 // is not integer
                 if (!ctype_digit(strval($sequence[$i]))) {
                     $propertyPath[] = $sequence[$i];
@@ -112,12 +113,12 @@ class RdfaCrawler
                 }
             }
 
-            return array(
+            return [
                 'sequence' => $sequence,
                 'propertyPath' => $propertyPath,
                 'property' => $propertyInstance,
                 'index' => $indexSequence,
-            );
+            ];
         }
 
         return false;

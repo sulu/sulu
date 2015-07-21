@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,7 +25,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 {
-    protected $permissions = array(
+    protected $permissions = [
         'view' => 64,
         'add' => 32,
         'edit' => 16,
@@ -32,7 +33,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         'archive' => 4,
         'live' => 2,
         'security' => 1,
-    );
+    ];
 
     /**
      * @var User
@@ -130,7 +131,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -141,7 +142,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles'),
-            array('security')
+            ['security']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
@@ -156,7 +157,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -171,7 +172,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles'),
-            array('security')
+            ['security']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
@@ -182,7 +183,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -193,7 +194,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups'),
-            array('security')
+            ['security']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
@@ -204,7 +205,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups.nested'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -215,7 +216,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups.nested'),
-            array('security')
+            ['security']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
@@ -226,7 +227,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\Security\Entity\Group', '1'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $access);
@@ -239,7 +240,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles', 'de', 'Sulu\Bundle\Security\Entity\Group', '1'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -252,7 +253,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles', 'de', 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
@@ -265,7 +266,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            array('view')
+            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -278,7 +279,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles', null),
-            array('view', 'add')
+            ['view', 'add']
         );
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
@@ -291,7 +292,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles', null),
-            array('view', 'security')
+            ['view', 'security']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);

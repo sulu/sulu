@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Twig;
 
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * Extension for content form generation.
@@ -37,13 +38,13 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_get_type', array($this, 'getTypeFunction')),
-            new \Twig_SimpleFunction('sulu_needs_add_button', array($this, 'needsAddButtonFunction')),
-            new \Twig_SimpleFunction('sulu_get_params', array($this, 'getParamsFunction')),
-            new \Twig_SimpleFunction('sulu_parameter_to_select', array($this, 'convertParameterToSelect')),
-            new \Twig_SimpleFunction('sulu_parameter_to_key_value', array($this, 'convertParameterToKeyValue')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_get_type', [$this, 'getTypeFunction']),
+            new \Twig_SimpleFunction('sulu_needs_add_button', [$this, 'needsAddButtonFunction']),
+            new \Twig_SimpleFunction('sulu_get_params', [$this, 'getParamsFunction']),
+            new \Twig_SimpleFunction('sulu_parameter_to_select', [$this, 'convertParameterToSelect']),
+            new \Twig_SimpleFunction('sulu_parameter_to_key_value', [$this, 'convertParameterToKeyValue']),
+        ];
     }
 
     /**
@@ -53,7 +54,7 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function getParamsFunction($property)
     {
-        $typeParams = array();
+        $typeParams = [];
         if ($this->contentTypeManager->has($property->getContentTypeName())) {
             $type = $this->getTypeFunction($property->getContentTypeName());
             $typeParams = $type->getDefaultParams();
@@ -96,9 +97,9 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function getTests()
     {
-        return array(
-            new \Twig_SimpleTest('multiple', array($this, 'isMultipleTest')),
-        );
+        return [
+            new \Twig_SimpleTest('multiple', [$this, 'isMultipleTest']),
+        ];
     }
 
     /**
@@ -139,19 +140,19 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * @param PropertyParameter[] $parameters
-     * @param string $locale
+     * @param string              $locale
      *
      * @return array
      */
     public function convertParameterToSelect($parameters, $locale)
     {
-        $result = array();
+        $result = [];
 
         foreach ($parameters as $parameter) {
-            $result[] = array(
+            $result[] = [
                 'id' => $parameter->getName(),
                 'name' => $parameter->getTitle($locale),
-            );
+            ];
         }
 
         return $result;
@@ -164,7 +165,7 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function convertParameterToKeyValue($parameters)
     {
-        $result = array();
+        $result = [];
 
         if (is_array($parameters)) {
             foreach ($parameters as $parameter) {

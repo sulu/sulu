@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,9 +23,9 @@ class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $entityManagerMock->expects($this->once())->method('getRepository')->will(
             $this->returnValueMap(
-                array(
-                    array('Sulu\Bundle\SecurityBundle\Entity\User', $userRepositoryMock),
-                )
+                [
+                    ['Sulu\Bundle\SecurityBundle\Entity\User', $userRepositoryMock],
+                ]
             )
         );
 

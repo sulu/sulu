@@ -22,8 +22,7 @@ use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 
 /**
  * Loads fixtures for operators
- * Class LoadOperators
- * @package Sulu\Bundle\ResourceBundle\DataFixtures\ORM\Operators
+ * Class LoadOperators.
  */
 class LoadOperators implements FixtureInterface, OrderedFixtureInterface
 {
@@ -58,14 +57,14 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
                 $this->processValues($manager, $xpath, $operator, $values);
 
                 $manager->persist($operator);
-                $i++;
+                ++$i;
             }
         }
         $manager->flush();
     }
 
     /**
-     * Process translations of an operator
+     * Process translations of an operator.
      *
      * @param ObjectManager $manager
      * @param Operator $operator
@@ -86,7 +85,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     }
 
     /**
-     * Process translations of an operator
+     * Process translations of an operator.
      *
      * @param ObjectManager $manager
      * @param $xpath \DOMXpath
@@ -127,7 +126,8 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     }
 
     /**
-     * Returns integer for string type
+     * Returns integer for string type.
+     *
      * @param string $type
      * @returns integer
      */

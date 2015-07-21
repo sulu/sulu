@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,7 +25,7 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     /**
      * @var array
      */
-    protected $aliasServiceIdMap = array();
+    protected $aliasServiceIdMap = [];
 
     /**
      * @param ContainerInterface $container
@@ -37,7 +38,7 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     /**
      * Map a content type alias to a service ID.
      *
-     * @param string $alias - Alias for content type, e.g. media
+     * @param string $alias     - Alias for content type, e.g. media
      * @param string $serviceId - ID of corresponding service in the DI container
      */
     public function mapAliasToServiceId($alias, $serviceId)
@@ -76,9 +77,9 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
      */
     public function getAll()
     {
-        $result = array();
+        $result = [];
         foreach ($this->aliasServiceIdMap as $alias => $id) {
-            $result[$alias] = array('instance' => $this->get($alias), 'id' => $id);
+            $result[$alias] = ['instance' => $this->get($alias), 'id' => $id];
         }
 
         return $result;

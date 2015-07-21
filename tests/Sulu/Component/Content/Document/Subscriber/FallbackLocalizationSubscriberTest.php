@@ -1,15 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Prophecy\Argument;
-use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Localization\Localization;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
@@ -83,7 +91,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early if not implementing StructureBehavior
+     * It should return early if not implementing StructureBehavior.
      */
     public function testReturnEarly()
     {
@@ -93,18 +101,18 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
     public function testAvailableLocale()
     {
-        $this->inspector->getLocales($this->document)->willReturn(array('de', 'en'));
+        $this->inspector->getLocales($this->document)->willReturn(['de', 'en']);
         $this->hydrateEvent->setLocale('en')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
     /**
-     * If no webspace is available, then return the first available localization for the document
+     * If no webspace is available, then return the first available localization for the document.
      */
     public function testNoWebspace()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
+        $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
         $this->registry->updateLocale(
             $this->document->reveal(),
             'de',
@@ -116,12 +124,12 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should reset the original locale if the load_ghost_content option is false
+     * It should reset the original locale if the load_ghost_content option is false.
      */
     public function testNoWebspaceDoNotLoadGhostContent()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
+        $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
 
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(false);
@@ -133,27 +141,26 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-
     /**
-     * It should throw an exception if no locale can be determined
+     * It should throw an exception if no locale can be determined.
      *
      * @expectedException RuntimeException
      */
     public function testNoLocale()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn(array());
+        $this->inspector->getLocales($this->document)->willReturn([]);
         $this->node->getPath()->willReturn('/path/to');
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
     /**
-     * It should return webspace parent localization
+     * It should return webspace parent localization.
      */
     public function testWebspaceParentLocalization()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
-        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
+        $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
         $this->localization1->getLocalization()->willReturn('en');
         $this->localization2->getLocalization()->willReturn('de');
@@ -170,12 +177,12 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return children localizations
+     * It should return children localizations.
      */
     public function testWebspaceChildrenLocalization()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
-        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
+        $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
         $this->localization1->getLocalization()->willReturn('en');
@@ -183,9 +190,9 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
-        $this->localization1->getChildren()->willReturn(array(
-            $this->localization2->reveal()
-        ));
+        $this->localization1->getChildren()->willReturn([
+            $this->localization2->reveal(),
+        ]);
 
         $this->registry->updateLocale(
             $this->document->reveal(),
@@ -197,12 +204,12 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return any localizations if neither parent nor children
+     * It should return any localizations if neither parent nor children.
      */
     public function testWebspaceAnyLocalization()
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
-        $this->inspector->getLocales($this->document->reveal())->willReturn(array('de'));
+        $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
         $this->localization1->getLocalization()->willReturn('en');
@@ -211,11 +218,11 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
-        $this->localization1->getChildren()->willReturn(array());
+        $this->localization1->getChildren()->willReturn([]);
 
-        $this->webspace->getLocalizations()->willReturn(array(
-            $this->localization2->reveal()
-        ));
+        $this->webspace->getLocalizations()->willReturn([
+            $this->localization2->reveal(),
+        ]);
 
         $this->registry->updateLocale(
             $this->document->reveal(),

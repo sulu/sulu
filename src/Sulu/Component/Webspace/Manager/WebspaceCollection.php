@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -132,7 +133,7 @@ class WebspaceCollection implements \IteratorAggregate
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
      *
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     *                     <b>Traversable</b>
      */
     public function getIterator()
     {
@@ -146,16 +147,16 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function toArray()
     {
-        $collection = array();
+        $collection = [];
 
-        $webspaces = array();
+        $webspaces = [];
         foreach ($this->webspaces as $webspace) {
             $webspaces[] = $webspace->toArray();
         }
 
-        $portalInformations = array();
+        $portalInformations = [];
         foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
-            $portalInformations[$environment] = array();
+            $portalInformations[$environment] = [];
 
             foreach ($environmentPortalInformations as $environmentPortalInformation) {
                 $portalInformations[$environment][$environmentPortalInformation->getUrl()] = $environmentPortalInformation->toArray();

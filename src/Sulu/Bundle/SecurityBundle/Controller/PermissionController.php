@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -74,11 +75,11 @@ class PermissionController implements ClassResourceInterface
             $permissions = $this->accessControlManager->getPermissions($type, $identifier);
 
             return $this->viewHandler->handle(View::create(
-                array(
+                [
                     'id' => $identifier,
                     'type' => $type,
                     'permissions' => $permissions,
-                )
+                ]
             ));
         } catch (RestException $exc) {
             return $this->viewHandler->handle(View::create($exc->toArray(), 400));
@@ -122,11 +123,11 @@ class PermissionController implements ClassResourceInterface
                 );
             }
 
-            return $this->viewHandler->handle(View::create(array(
+            return $this->viewHandler->handle(View::create([
                 'id' => $identifier,
                 'type' => $type,
                 'permissions' => $permissions,
-            )));
+            ]));
         } catch (RestException $exc) {
             return $this->viewHandler->handle(View::create($exc->toArray(), 400));
         }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,7 +27,7 @@ class SeoStructureExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    protected $properties = array(
+    protected $properties = [
         'title',
         'description',
         'keywords',
@@ -34,7 +35,7 @@ class SeoStructureExtension extends AbstractExtension
         'noIndex',
         'noFollow',
         'hideInSitemap',
-    );
+    ];
 
     /**
      * {@inheritdoc}
@@ -65,7 +66,7 @@ class SeoStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        return array(
+        return [
             'title' => $this->loadProperty($node, 'title'),
             'description' => $this->loadProperty($node, 'description'),
             'keywords' => $this->loadProperty($node, 'keywords'),
@@ -73,6 +74,6 @@ class SeoStructureExtension extends AbstractExtension
             'noIndex' => $this->loadProperty($node, 'noIndex', false),
             'noFollow' => $this->loadProperty($node, 'noFollow', false),
             'hideInSitemap' => $this->loadProperty($node, 'hideInSitemap', false),
-        );
+        ];
     }
 }

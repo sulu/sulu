@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -152,14 +153,14 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/packages',
-            array(
+            [
                 'name' => 'Portal',
-                'catalogues' => array(
-                    array('locale' => 'EN'),
-                    array('locale' => 'DE'),
-                    array('locale' => 'ES'),
-                ),
-            )
+                'catalogues' => [
+                    ['locale' => 'EN'],
+                    ['locale' => 'DE'],
+                    ['locale' => 'ES'],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -181,9 +182,9 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/packages',
-            array(
+            [
                 'name' => 'Portal',
-            )
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -207,7 +208,7 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/packages',
-            array()
+            []
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -220,14 +221,14 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/packages/' . $this->package1->getId(),
-            array(
+            [
                 'name' => 'Portal',
-                'catalogues' => array(
-                    array('id' => $this->catalogue1->getId(), 'locale' => 'DE'),
-                    array('locale' => 'EN'),
-                    array('locale' => 'ES'),
-                ),
-            )
+                'catalogues' => [
+                    ['id' => $this->catalogue1->getId(), 'locale' => 'DE'],
+                    ['locale' => 'EN'],
+                    ['locale' => 'ES'],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -241,13 +242,13 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/packages/' . $this->package1->getId(),
-            array(
+            [
                 'name' => 'Portal',
-                'catalogues' => array(
-                    array('id' => $response->catalogues[1]->id, 'locale' => 'ES'),
-                    array('id' => $response->catalogues[2]->id, 'locale' => 'DE'),
-                ),
-            )
+                'catalogues' => [
+                    ['id' => $response->catalogues[1]->id, 'locale' => 'ES'],
+                    ['id' => $response->catalogues[2]->id, 'locale' => 'DE'],
+                ],
+            ]
         );
 
         $response1 = json_decode($client->getResponse()->getContent());
@@ -266,9 +267,9 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/packages/' . $this->package1->getId(),
-            array(
+            [
                 'name' => 'ASDF',
-            )
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -283,7 +284,7 @@ class PackageControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $names = array();
+        $names = [];
         foreach ($response->_embedded->packages as $package) {
             $names[] = $package->name;
         }
@@ -298,7 +299,7 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/packages/10123',
-            array('name' => 'Portal')
+            ['name' => 'Portal']
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -311,12 +312,12 @@ class PackageControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/packages/' . $this->package1->getId(),
-            array(
+            [
                 'name' => 'Portal',
-                'catalogues' => array(
-                    array('id' => 123123, 'locale' => 'DE'),
-                ),
-            )
+                'catalogues' => [
+                    ['id' => 123123, 'locale' => 'DE'],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,18 +12,19 @@
 namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
 /**
- * Thrown when a template does not contain a reserved property name
+ * Thrown when a template does not contain a reserved property name.
  */
 class ReservedPropertyNameException extends InvalidXmlException
 {
     /**
-     * The reserved property name, which has been used
+     * The reserved property name, which has been used.
+     *
      * @var string
      */
     protected $propertyName;
 
     /**
-     * @param string $template The template causing the problem
+     * @param string $template     The template causing the problem
      * @param string $propertyName The name of the property, which has been used
      */
     public function __construct($template, $propertyName)
@@ -40,7 +42,8 @@ class ReservedPropertyNameException extends InvalidXmlException
     }
 
     /**
-     * Returns the name of the property, which was not allowed to be used
+     * Returns the name of the property, which was not allowed to be used.
+     *
      * @return string
      */
     public function getPropertyName()

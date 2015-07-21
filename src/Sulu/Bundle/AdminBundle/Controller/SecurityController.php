@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,10 +44,10 @@ class SecurityController extends Controller
 
         return $this->render(
             $template,
-            array(
+            [
                 'name' => $this->container->getParameter('sulu_admin.name'),
                 'locales' => $this->container->getParameter('sulu_core.locales'),
-            )
+            ]
         );
     }
 
@@ -61,11 +62,11 @@ class SecurityController extends Controller
     {
         return $this->render(
             'SuluAdminBundle:Security:login.html.twig',
-            array(
+            [
                 'name' => $this->container->getParameter('sulu_admin.name'),
                 'locales' => $this->container->getParameter('sulu_core.locales'),
                 'token' => $token,
-            )
+            ]
         );
     }
 }

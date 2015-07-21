@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,14 +25,14 @@ class XmlFormatLoader extends FileLoader
     const XML_NAMESPACE_URI = 'http://schemas.sulu.io/media/formats';
 
     /**
-     * @var  \DOMXPath
+     * @var \DOMXPath
      */
     private $xpath;
 
     /**
      * @var array
      */
-    private $defaultOptions = array();
+    private $defaultOptions = [];
 
     /**
      * @return array
@@ -52,8 +53,8 @@ class XmlFormatLoader extends FileLoader
     /**
      * Load formats from a xml file.
      *
-     * @param mixed $resource The resource
-     * @param string $type The resource type
+     * @param mixed  $resource The resource
+     * @param string $type     The resource type
      *
      * @return array The formats array for the given resource
      */
@@ -73,7 +74,7 @@ class XmlFormatLoader extends FileLoader
      */
     private function parseXml($file)
     {
-        $formats = array();
+        $formats = [];
 
         // load xml file
         $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
@@ -81,16 +82,16 @@ class XmlFormatLoader extends FileLoader
         $this->xpath = new \DOMXPath($xmlDoc);
         $this->xpath->registerNamespace('x', static::XML_NAMESPACE_URI);
 
-        /**
+        /*
          * @var DOMElement
          */
         foreach ($this->xpath->query('/x:formats/x:format') as $formatNode) {
             $name = $this->xpath->query('x:name', $formatNode)->item(0)->nodeValue;
             if (!isset($formats[$name])) {
-                $commands = array();
+                $commands = [];
                 foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
                     $action = $this->xpath->query('x:action', $commandNode)->item(0)->nodeValue;
-                    $parameters = array();
+                    $parameters = [];
                     $parameterNodes = $this->xpath->query('x:parameters/x:parameter', $commandNode);
                     foreach ($parameterNodes as $parameterNode) {
                         $value = $parameterNode->nodeValue;
@@ -102,24 +103,24 @@ class XmlFormatLoader extends FileLoader
                         $parameters[$parameterNode->attributes->getNamedItem('name')->nodeValue] = $value;
                     }
 
-                    $command = array(
+                    $command = [
                         'action' => $action,
                         'parameters' => $parameters,
-                    );
+                    ];
                     $commands[] = $command;
                 }
 
-                $options = array();
+                $options = [];
                 $optionNodes = $this->xpath->query('x:options/x:option', $formatNode);
                 foreach ($optionNodes as $optionNode) {
                     $options[$optionNode->attributes->getNamedItem('name')->nodeValue] = $optionNode->nodeValue;
                 }
 
-                $formats[$name] = array(
+                $formats[$name] = [
                     'name' => $name,
                     'commands' => $commands,
                     'options' => array_merge($this->defaultOptions, $options),
-                );
+                ];
             }
         }
 
@@ -129,10 +130,10 @@ class XmlFormatLoader extends FileLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param mixed $resource A resource
-     * @param string $type The resource type
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
      *
-     * @return bool    true if this class supports the given resource, false otherwise
+     * @return bool true if this class supports the given resource, false otherwise
      */
     public function supports($resource, $type = null)
     {

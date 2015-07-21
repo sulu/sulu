@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,10 +31,10 @@ class CreateRoleCommand extends ContainerAwareCommand
         $this->setName('sulu:security:role:create')
             ->setDescription('Create a role.')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('name', InputArgument::REQUIRED, 'Name of role'),
                     new InputArgument('system', InputArgument::REQUIRED, 'System where role should be valid'),
-                )
+                ]
             );
     }
 
@@ -47,7 +48,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         $name = $input->getArgument('name');
         $system = $input->getArgument('system');
 
-        /** @var RepositoryInterface $roleRepository */
+        /* @var RepositoryInterface $roleRepository */
         $repository = $this->getContainer()->get('sulu.repository.role');
 
         $role = $repository->findOneByName($name);
@@ -70,7 +71,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         $securityContexts = $pool->getSecurityContexts();
 
         // flatten contexts
-        $securityContextsFlat = array();
+        $securityContextsFlat = [];
 
         array_walk_recursive(
             $securityContexts['Sulu'],
@@ -119,7 +120,7 @@ class CreateRoleCommand extends ContainerAwareCommand
                         throw new \InvalidArgumentException('Rolename cannot be empty');
                     }
 
-                    $roles = $this->getContainer()->get('sulu.repository.role')->findBy(array('name' => $name));
+                    $roles = $this->getContainer()->get('sulu.repository.role')->findBy(['name' => $name]);
                     if (count($roles) > 0) {
                         throw new \InvalidArgumentException(sprintf('Rolename "%s" is not unique', $name));
                     }

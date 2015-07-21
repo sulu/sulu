@@ -1,9 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Metadata as LegacyStructure;
-use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Component\Form\FormEvent;
 
@@ -14,7 +21,7 @@ use Symfony\Component\Form\FormEvent;
 class DataNormalizer
 {
     /**
-     * Normalize incoming data from the legacy node controller
+     * Normalize incoming data from the legacy node controller.
      *
      * @param mixed $data
      * @param mixed $state Translates to the workflow state
@@ -48,7 +55,7 @@ class DataNormalizer
             $data['id']
         );
 
-        $normalized = array(
+        $normalized = [
             'title' => self::getAndUnsetValue($data, 'title'),
             'resourceSegment' => isset($data['url']) ? $data['url'] : null,
             'redirectType' => self::getAndUnsetRedirectType($data),
@@ -63,7 +70,7 @@ class DataNormalizer
             'parent' => self::getAndUnsetValue($data, 'parent'),
             'workflowStage' => self::getAndUnsetValue($data, 'workflowStage'),
             'structure' => $data,
-        );
+        ];
 
         foreach ($normalized as $key => $value) {
             if (null === $value) {
@@ -89,7 +96,7 @@ class DataNormalizer
     private static function getAndUnsetRedirectType(&$data)
     {
         if (!isset($data['nodeType'])) {
-            return null;
+            return;
         }
 
         $nodeType = $data['nodeType'];

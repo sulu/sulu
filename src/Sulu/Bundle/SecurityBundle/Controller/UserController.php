@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,37 +11,34 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use JMS\Serializer\SerializationContext;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
-use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
-use Sulu\Component\Security\SecuredControllerInterface;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes the users accessible through a rest api
- * @package Sulu\Bundle\SecurityBundle\Controller
+ * Makes the users accessible through a rest api.
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityKey = 'users';
 
     /**
-     * Contains the field descriptors used by the list response
+     * Contains the field descriptors used by the list response.
      *
      * @var DoctrineFieldDescriptor[]
      */
@@ -58,7 +56,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = array();
+        $this->fieldDescriptors = [];
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
@@ -97,7 +95,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the user with the given id
+     * Returns the user with the given id.
      *
      * @param int $id
      *
@@ -114,7 +112,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         // set serialization groups
         $view->setSerializationContext(
             SerializationContext::create()->setGroups(
-                array('Default', 'partialContact')
+                ['Default', 'partialContact']
             )
         );
 
@@ -122,7 +120,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Creates a new user in the system
+     * Creates a new user in the system.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -152,7 +150,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     /**
      * @Post("/users/{id}")
      *
-     * @param int $id
+     * @param int     $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -180,10 +178,10 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Updates the given user with the given data
+     * Updates the given user with the given data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $id
+     * @param int                                       $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -208,10 +206,10 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Partly updates a user entity for a given id
+     * Partly updates a user entity for a given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $id
+     * @param int                                       $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -235,7 +233,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Deletes the user with the given id
+     * Deletes the user with the given id.
      *
      * @param int $id
      *
@@ -249,10 +247,11 @@ class UserController extends RestController implements ClassResourceInterface, S
         return $this->handleView($view);
     }
 
-    /**
-     * Checks if all the arguments are given, and throws an exception if one is missing
-     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
-     */
+/**
+ * Checks if all the arguments are given, and throws an exception if one is missing.
+ *
+ * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
+ */
 
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
@@ -274,7 +273,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Returns a user with a specific contact id or all users
-     * optional parameter 'flat' calls listAction
+     * optional parameter 'flat' calls listAction.
      *
      * @param Request $request
      *
@@ -307,7 +306,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             $contactId = $request->get('contactId');
 
             if ($contactId != null) {
-                $entities = array();
+                $entities = [];
                 $entities[] = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.user.class')
                 )->findUserByContact($contactId);
@@ -328,7 +327,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         // set serialization groups
         $view->setSerializationContext(
             SerializationContext::create()->setGroups(
-                array('Default', 'partialContact')
+                ['Default', 'partialContact']
             )
         );
 
@@ -344,7 +343,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the UserManager
+     * Returns the UserManager.
      *
      * @return UserManager
      */

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,11 +12,9 @@
 namespace Sulu\Bundle\ContentBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
  * Base context class for Structure based feature contexts.
@@ -26,7 +24,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     /**
      * @var string Temporary structure template paths
      */
-    protected $templatePaths = array();
+    protected $templatePaths = [];
 
     /**
      * Remove the generated templates after the scenario has completed.
@@ -43,7 +41,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
             unlink($templatePath);
         }
 
-        $this->templatePaths = array();
+        $this->templatePaths = [];
     }
 
     /**
@@ -63,19 +61,19 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
      * ),
      *
      * @param string $type
-     * @param array $data
+     * @param array  $data
      */
     protected function createStructures($type, $data)
     {
         foreach ($data as $structureData) {
-            $structureData = array_merge(array(
+            $structureData = array_merge([
                 'title' => null,
                 'url' => null,
                 'template' => null,
                 'locale' => 'de',
                 'data' => '{}',
                 'parent' => null,
-            ), $structureData);
+            ], $structureData);
 
             $parentUuid = null;
 
@@ -85,7 +83,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
                 $parentUuid = $parentNode->getIdentifier();
             }
 
-            $propertyData = array();
+            $propertyData = [];
             if ($structureData['data']) {
                 $propertyData = json_decode($structureData['data'], true);
                 if (null === $propertyData) {
@@ -98,10 +96,10 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
                 ->setType($type)
                 ->setUserId($this->getUserId())
                 ->setLocale('de')
-                ->setData(array_merge(array(
+                ->setData(array_merge([
                     'title' => $structureData['title'],
                     'url' => $structureData['url'],
-                ), $propertyData));
+                ], $propertyData));
 
             if ($type === 'page') {
                 $request->setWebspaceKey('sulu_io');
@@ -137,8 +135,8 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
      * These installed templates will be removed after the scenario has
      * been completed.
      *
-     * @param string $type Type of the structure template
-     * @param string $name Name of the structure template to create
+     * @param string $type     Type of the structure template
+     * @param string $name     Name of the structure template to create
      * @param string $template The contents of the XML template
      */
     protected function createStructureTemplate($type, $name, $template)

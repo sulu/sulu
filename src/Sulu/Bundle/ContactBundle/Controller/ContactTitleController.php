@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -69,7 +70,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     public function cgetAction()
     {
         $list = new CollectionRepresentation(
-            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], array('title' => 'ASC')),
+            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], ['title' => 'ASC']),
             self::$entityKey
         );
 
@@ -118,7 +119,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * Edits the existing contact title for the given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $id The id of the title to update
+     * @param int                                       $id      The id of the title to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -211,7 +212,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 }
 
                 $data[] = $this->addAndUpdateTitles($item);
-                $i++;
+                ++$i;
             }
 
             $this->getDoctrine()->getManager()->flush();

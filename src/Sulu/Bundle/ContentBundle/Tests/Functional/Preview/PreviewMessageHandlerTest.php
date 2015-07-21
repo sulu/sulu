@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,8 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Symfony\Component\HttpKernel\Log\NullLogger;
@@ -61,37 +62,37 @@ class PreviewMessageHandlerTest extends SuluTestCase
      */
     private function prepareData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Test1',
                 'url' => '/test-1',
                 'article' => 'Lorem Ipsum dolorem apsum',
-                'block' => array(
-                    array(
+                'block' => [
+                    [
                         'type' => 'type1',
                         'title' => 'Block-Title-1',
-                        'article' => array('Block-Article-1-1', 'Block-Article-1-2'),
-                    ),
-                    array(
+                        'article' => ['Block-Article-1-1', 'Block-Article-1-2'],
+                    ],
+                    [
                         'type' => 'type1',
                         'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2'),
-                    ),
-                ),
-            ),
-            array(
+                        'article' => ['Block-Article-2-1', 'Block-Article-2-2'],
+                    ],
+                ],
+            ],
+            [
                 'title' => 'Test2',
                 'url' => '/test-2',
                 'article' => 'asdfasdf',
-                'block' => array(
-                    array(
+                'block' => [
+                    [
                         'type' => 'type1',
                         'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2'),
-                    ),
-                ),
-            ),
-        );
+                        'article' => ['Block-Article-2-1', 'Block-Article-2-2'],
+                    ],
+                ],
+            ],
+        ];
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
@@ -142,13 +143,13 @@ class PreviewMessageHandlerTest extends SuluTestCase
 
         $result = $this->component->handle(
             $client,
-            array(
+            [
                 'command' => 'start',
                 'content' => $data[0]->getUuid(),
                 'locale' => 'de',
                 'webspaceKey' => 'sulu_io',
                 'user' => 1,
-            ),
+            ],
             $this->createContext($client)
         );
 
@@ -169,18 +170,17 @@ class PreviewMessageHandlerTest extends SuluTestCase
 
         $result = $this->component->handle(
             $client,
-            array(
+            [
                 'command' => 'start',
                 'content' => $data[0]->getUuid(),
                 'templateKey' => 'overview',
                 'locale' => 'de',
                 'webspaceKey' => 'sulu_io',
                 'user' => 1,
-            ),
+            ],
             $context
         );
         $this->assertEquals('OK', $result['msg']);
-
 
         // NOTE: This test is strange and doesn't do what might be expected.
         //       It fails here, but passes in the develop branch.

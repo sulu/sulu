@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,24 +12,20 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
-use ReflectionMethod;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Compat\Property;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\MetadataExtension\StructureExtension;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SitemapGeneratorTest extends SuluTestCase
 {
@@ -99,7 +96,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $local2->setLanguage('en');
         $local2->setCountry('us');
 
-        $this->webspace->setLocalizations(array($local1, $local2));
+        $this->webspace->setLocalizations([$local1, $local2]);
         $this->webspace->setName('Default');
 
         $theme = new Theme();
@@ -109,10 +106,10 @@ class SitemapGeneratorTest extends SuluTestCase
 
         $this->webspace->setNavigation(
             new Navigation(
-                array(
-                    new NavigationContext('main', array()),
-                    new NavigationContext('footer', array()),
-                )
+                [
+                    new NavigationContext('main', []),
+                    new NavigationContext('footer', []),
+                ]
             )
         );
 
@@ -130,7 +127,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function getExtensionsCallback()
     {
-        return array($this->getExtensionCallback());
+        return [$this->getExtensionCallback()];
     }
 
     /**
@@ -140,53 +137,53 @@ class SitemapGeneratorTest extends SuluTestCase
      */
     private function prepareTestData($locale = 'en')
     {
-        $data = array(
-            'news' => array(
+        $data = [
+            'news' => [
                 'title' => 'News ' . $locale,
                 'url' => '/news',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('footer'),
-            ),
-            'products' => array(
+                'navContexts' => ['footer'],
+            ],
+            'products' => [
                 'title' => 'Products ' . $locale,
                 'url' => '/products',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('main'),
-            ),
-            'news/news-1' => array(
+                'navContexts' => ['main'],
+            ],
+            'news/news-1' => [
                 'title' => 'News-1 ' . $locale,
                 'url' => '/news/news-1',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('main', 'footer'),
-            ),
-            'news/news-2' => array(
+                'navContexts' => ['main', 'footer'],
+            ],
+            'news/news-2' => [
                 'title' => 'News-2 ' . $locale,
                 'url' => '/news/news-2',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => array('main'),
-            ),
-            'products/products-1' => array(
+                'navContexts' => ['main'],
+            ],
+            'products/products-1' => [
                 'title' => 'Products-1 ' . $locale,
                 'external' => '123-123-123',
                 'url' => '/products/product-1',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => array('main', 'footer'),
-            ),
-            'products/products-2' => array(
+                'navContexts' => ['main', 'footer'],
+            ],
+            'products/products-2' => [
                 'title' => 'Products-2 ' . $locale,
                 'url' => '/products/product-2',
                 'external' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-                'navContexts' => array('main'),
-            ),
-            'products/products-3' => array(
+                'navContexts' => ['main'],
+            ],
+            'products/products-3' => [
                 'title' => 'Products-3 ' . $locale,
                 'url' => '/products/product-3',
                 'external' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => array('main'),
-            ),
-        );
+                'navContexts' => ['main'],
+            ],
+        ];
 
         $data['news'] = $this->mapper->save(
             $data['news'],
@@ -391,7 +388,7 @@ class ExcerptStructureExtension extends AbstractExtension
      * will be filled with data in constructor
      * {@inheritdoc}
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * {@inheritdoc}
@@ -462,7 +459,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $data = array();
+        $data = [];
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(

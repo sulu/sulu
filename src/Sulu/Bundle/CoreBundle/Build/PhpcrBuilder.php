@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +33,7 @@ class PhpcrBuilder extends SuluBuilder
      */
     public function getDependencies()
     {
-        return array('database');
+        return ['database'];
     }
 
     /**

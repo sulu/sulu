@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,8 +21,8 @@ class PathCleanup implements PathCleanupInterface
      *
      * @var array
      */
-    protected $replacers = array(
-        'default' => array(
+    protected $replacers = [
+        'default' => [
             ' ' => '-',
             '+' => '-',
             '.' => '-',
@@ -34,14 +35,14 @@ class PathCleanup implements PathCleanupInterface
             'Ü' => 'ue',
             'ß' => 'ss',
             // TODO should be filled
-        ),
-        'de' => array(
+        ],
+        'de' => [
             '&' => 'und',
-        ),
-        'en' => array(
+        ],
+        'en' => [
             '&' => 'and',
-        ),
-    );
+        ],
+    ];
 
     /**
      * valid pattern for path
@@ -58,8 +59,8 @@ class PathCleanup implements PathCleanupInterface
     /**
      * returns a clean string.
      *
-     * @param string $dirty dirty string to cleanup
-     * @param  string $languageCode
+     * @param string $dirty        dirty string to cleanup
+     * @param string $languageCode
      *
      * @return string clean string
      */
@@ -69,7 +70,7 @@ class PathCleanup implements PathCleanupInterface
 
         $replacers = array_merge(
             $this->replacers['default'],
-            (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : array())
+            (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : [])
         );
 
         if (count($replacers) > 0) {

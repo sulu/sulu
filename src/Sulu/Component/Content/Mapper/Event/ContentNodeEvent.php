@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +16,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * An instance of this class is thrown along with the sulu.content.node.save event
+ * An instance of this class is thrown along with the sulu.content.node.save event.
  */
 class ContentNodeEvent extends Event
 {
@@ -30,7 +31,7 @@ class ContentNodeEvent extends Event
     protected $structure;
 
     /**
-     * @param NodeInterface $node
+     * @param NodeInterface      $node
      * @param StructureInterface $structure
      */
     public function __construct(NodeInterface $node, StructureInterface $structure)

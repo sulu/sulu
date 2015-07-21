@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -59,10 +60,10 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
     public function testGetRequestParameter()
     {
         $request = $this->getRequestMock(
-            array(
-                array('test', null, false, 'data'),
-                array('none', 'default', false, 'default'),
-            )
+            [
+                ['test', null, false, 'data'],
+                ['none', 'default', false, 'default'],
+            ]
         );
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
@@ -88,7 +89,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Sulu\Component\Rest\Exception\MissingParameterException');
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
-        $request = $this->getRequestMock(array());
+        $request = $this->getRequestMock([]);
 
         $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
     }
@@ -96,11 +97,11 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
     public function testGetBooleanRequestParameter()
     {
         $request = $this->getRequestMock(
-            array(
-                array('test1', null, false, 'true'),
-                array('test2', null, false, 'false'),
-                array('none', 'default', false, null),
-            )
+            [
+                ['test1', null, false, 'true'],
+                ['test2', null, false, 'false'],
+                ['none', 'default', false, null],
+            ]
         );
 
         $getBooleanRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
@@ -135,7 +136,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Sulu\Component\Rest\Exception\MissingParameterException');
 
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
-        $request = $this->getRequestMock(array());
+        $request = $this->getRequestMock([]);
 
         $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
     }
@@ -146,9 +147,9 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
         $request = $this->getRequestMock(
-            array(
-                array('test', null, false, 'asdf'),
-            )
+            [
+                ['test', null, false, 'asdf'],
+            ]
         );
 
         $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);

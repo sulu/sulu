@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -65,7 +66,7 @@ class SuluCollector extends DataCollector
                 /** @var StructureInterface $structureObject */
                 $structureObject = $params['structure'];
 
-                $structure = array(
+                $structure = [
                     'id' => $structureObject->getUuid(),
                     'path' => $structureObject->getPath(),
                     'nodeType' => $structureObject->getNodeType(),
@@ -85,7 +86,7 @@ class SuluCollector extends DataCollector
                     'changer' => $structureObject->getChanger(),
                     'created' => $structureObject->getCreated(),
                     'changed' => $structureObject->getChanged(),
-                );
+                ];
             }
         }
         $this->data['structure'] = $structure;

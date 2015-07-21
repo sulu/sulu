@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,7 +46,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $name,
         $entityName,
         $translation = null,
-        $joins = array(),
+        $joins = [],
         $disabled = false,
         $default = false,
         $type = '',

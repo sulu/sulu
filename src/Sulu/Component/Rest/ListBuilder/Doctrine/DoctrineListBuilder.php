@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,22 +44,27 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $selectFields = array();
+    protected $selectFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $searchFields = array();
+    protected $searchFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $whereFields = array();
+    protected $whereFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $inFields = array();
+    protected $whereNotFields = [];
+
+    /**
+     * @var AbstractDoctrineFieldDescriptor[]
+     */
+    protected $inFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor
@@ -140,7 +146,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private function getJoins()
     {
-        $joins = array();
+        $joins = [];
 
         if ($this->sortField != null) {
             $joins = array_merge($joins, $this->sortField->getJoins());
@@ -216,7 +222,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         if ($this->search != null) {
-            $searchParts = array();
+            $searchParts = [];
             foreach ($this->searchFields as $searchField) {
                 $searchParts[] = $searchField->getSelect() . ' LIKE :search';
             }
@@ -236,7 +242,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function addIns(array $inFields, array $inValues)
     {
-        $inParts = array();
+        $inParts = [];
         foreach ($inFields as $inField) {
             $inPart = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
             $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
@@ -261,7 +267,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function addBetweens(array $betweenFields, array $betweenValues, array $betweenConjunctions)
     {
-        $betweenParts = array();
+        $betweenParts = [];
         $firstConjunction = null;
 
         foreach ($betweenFields as $betweenField) {
@@ -290,13 +296,12 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * sets where statement
+     * sets where statement.
      *
      * @param array $whereFields
      * @param array $whereValues
      * @param array $whereComparators
      * @param array $whereConjunctions
-     * @internal param string $comparator
      */
     protected function addWheres(
         array $whereFields,
@@ -304,7 +309,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         array $whereComparators,
         array $whereConjunctions
     ) {
-        $whereParts = array();
+        $whereParts = [];
         $firstConjunction = null;
 
         foreach ($whereFields as $whereField) {
@@ -329,7 +334,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Creates a partial where statement
+     * Creates a partial where statement.
      *
      * @param $value
      * @param $whereField
@@ -341,7 +346,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function createWherePart($value, $whereField, $conjunction, $comparator)
     {
         if ($value === null) {
-
             return $conjunction . $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
         } elseif ($comparator === 'LIKE') {
             $this->queryBuilder->setParameter($whereField->getName(), '%' . $value . '%');

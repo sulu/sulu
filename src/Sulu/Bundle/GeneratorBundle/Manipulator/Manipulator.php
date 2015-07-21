@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,8 +22,8 @@ class Manipulator
     /**
      * Sets the code to manipulate.
      *
-     * @param array   $tokens An array of PHP tokens
-     * @param int $line   The start line of the code
+     * @param array $tokens An array of PHP tokens
+     * @param int   $line   The start line of the code
      */
     protected function setCode(array $tokens, $line = 0)
     {
@@ -40,7 +41,7 @@ class Manipulator
         while ($token = array_shift($this->tokens)) {
             $this->line += substr_count($this->value($token), "\n");
 
-            if (is_array($token) && in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT))) {
+            if (is_array($token) && in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
                 continue;
             }
 
@@ -58,7 +59,7 @@ class Manipulator
         $i = 0;
         $tokens = $this->tokens;
         while ($token = array_shift($tokens)) {
-            if (is_array($token) && in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT))) {
+            if (is_array($token) && in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
                 continue;
             }
 

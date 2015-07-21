@@ -1,9 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
@@ -44,7 +52,7 @@ class StructureBridge implements StructureInterface
     /**
      * @var array
      */
-    private $loadedProperties = array();
+    private $loadedProperties = [];
 
     /**
      * Needed by structure extensions when the document has not been set..
@@ -54,10 +62,10 @@ class StructureBridge implements StructureInterface
     private $locale;
 
     /**
-     * @param StructureMetadata $structure
-     * @param DocumentInspector $inspector
+     * @param StructureMetadata     $structure
+     * @param DocumentInspector     $inspector
      * @param LegacyPropertyFactory $propertyFactory
-     * @param object $document
+     * @param object                $document
      */
     public function __construct(
         StructureMetadata $structure,
@@ -244,7 +252,7 @@ class StructureBridge implements StructureInterface
             $items = $this->structure->getChildren();
         }
 
-        $propertyBridges = array();
+        $propertyBridges = [];
         foreach ($items as $property) {
             $propertyBridges[$property->getName()] = $this->createLegacyPropertyFromItem($property);
         }
@@ -281,7 +289,7 @@ class StructureBridge implements StructureInterface
      */
     public function getChildren()
     {
-        $children = array();
+        $children = [];
 
         foreach ($this->getDocument()->getChildren($this->getDocument()) as $child) {
             $children[] = $this->documentToStructure($child);
@@ -399,7 +407,7 @@ class StructureBridge implements StructureInterface
     {
         $document = $this->getDocument();
 
-        $result = array(
+        $result = [
             'id' => $this->inspector->getUuid($document),
             'path' => $this->inspector->getContentPath($document),
             'nodeType' => $this->getNodeType(),
@@ -408,7 +416,7 @@ class StructureBridge implements StructureInterface
             'concreteLanguages' => $this->inspector->getLocales($document),
             'hasSub' => $this->getHasChildren(),
             'title' => $document->getTitle(), // legacy system returns diffent fields for title depending on $complete
-        );
+        ];
 
         if ($document instanceof OrderBehavior) {
             $result['order'] = $document->getSuluOrder();
@@ -431,7 +439,7 @@ class StructureBridge implements StructureInterface
             $result['published'] = $document->getPublished();
         }
 
-        $result['navContexts'] = array();
+        $result['navContexts'] = [];
         if ($document instanceof NavigationContextBehavior) {
             $result['navContexts'] = $document->getNavigationContexts();
         }
@@ -442,14 +450,14 @@ class StructureBridge implements StructureInterface
 
         if ($complete) {
             if ($document instanceof ShadowLocaleBehavior) {
-                $result = array_merge($result, array(
+                $result = array_merge($result, [
                     'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
                     'shadowOn' => $document->isShadowLocaleEnabled(),
                     'shadowBaseLanguage' => $document->getShadowLocale() ?: false,
-                ));
+                ]);
             }
 
-            $result = array_merge($result, array(
+            $result = array_merge($result, [
                 'template' => $this->structure->getName(),
                 'originTemplate' => $this->structure->getName(),
                 'creator' => $document->getCreator(),
@@ -458,7 +466,7 @@ class StructureBridge implements StructureInterface
                 'changed' => $document->getChanged(),
                 'title' => $document->getTitle(),
                 'url' => null,
-            ));
+            ]);
 
             if ($document instanceof ResourceSegmentBehavior) {
                 $result['url'] = $document->getResourceSegment();
@@ -496,7 +504,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPropertiesByTagName($tagName)
     {
-        $properties = array();
+        $properties = [];
         foreach ($this->structure->getPropertiesByTagName($tagName) as $structureProperty) {
             $properties[] = $this->createLegacyPropertyFromItem($structureProperty);
         }
@@ -595,7 +603,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * Magic getter
+     * Magic getter.
      *
      * @deprecated Do not use magic getters. Use ArrayAccess instead.
      */
@@ -617,6 +625,7 @@ class StructureBridge implements StructureInterface
     public function getIsShadow()
     {
         $document = $this->getDocument();
+
         return $document->isShadowLocaleEnabled();
     }
 
@@ -739,5 +748,4 @@ class StructureBridge implements StructureInterface
 
         return $propertyBridge;
     }
-
 }

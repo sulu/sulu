@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,11 +41,11 @@ class PhpcrMapper extends RlpMapper
     /**
      * creates a new route for given path.
      *
-     * @param NodeInterface $contentNode reference node
-     * @param string $path path to generate
-     * @param string $webspaceKey key of webspace
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param NodeInterface $contentNode  reference node
+     * @param string        $path         path to generate
+     * @param string        $webspaceKey  key of webspace
+     * @param string        $languageCode
+     * @param string        $segmentKey
      */
     public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -78,10 +79,10 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns path for given contentNode.
      *
-     * @param NodeInterface $contentNode reference node
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param NodeInterface $contentNode  reference node
+     * @param string        $webspaceKey  key of portal
+     * @param string        $languageCode
+     * @param string        $segmentKey
      *
      * @throws ResourceLocatorNotFoundException
      *
@@ -114,10 +115,10 @@ class PhpcrMapper extends RlpMapper
      * Iterates over all route nodes assigned by the given node, and executes the callback on it.
      *
      * @param NodeInterface $node
-     * @param callable $callback will be called foreach route node (stops and return value if not false)
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param callable      $callback     will be called foreach route node (stops and return value if not false)
+     * @param string        $webspaceKey
+     * @param string        $languageCode
+     * @param string        $segmentKey
      *
      * @return \PHPCR\NodeInterface
      */
@@ -129,7 +130,7 @@ class PhpcrMapper extends RlpMapper
         $segmentKey = null
     ) {
         if ($node->isNew()) {
-            return null;
+            return;
         }
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
@@ -156,8 +157,8 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns path for given contentNode.
      *
-     * @param string $uuid uuid of contentNode
-     * @param string $webspaceKey key of portal
+     * @param string $uuid         uuid of contentNode
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -198,7 +199,7 @@ class PhpcrMapper extends RlpMapper
         );
 
         // iterate over history of path node
-        $result = array();
+        $result = [];
         $this->iterateRouteNodes(
             $pathNode,
             function ($resourceLocator, NodeInterface $node) use (&$result) {
@@ -234,12 +235,13 @@ class PhpcrMapper extends RlpMapper
      * returns the uuid of referenced content node.
      *
      * @param string $resourceLocator requested RL
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey     key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws ResourceLocatorMovedException resourceLocator has been moved
+     * @throws ResourceLocatorMovedException    resourceLocator has been moved
      * @throws ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     *
      * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
@@ -291,7 +293,7 @@ class PhpcrMapper extends RlpMapper
      * checks if given path is unique.
      *
      * @param string $path
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -308,7 +310,7 @@ class PhpcrMapper extends RlpMapper
      * returns a unique path with "-1" if necessary.
      *
      * @param string $path
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -328,7 +330,7 @@ class PhpcrMapper extends RlpMapper
             $i = 1;
             // while $path-$i is not unique raise counter
             while (!$this->isUnique($routes, $path . $i)) {
-                $i++;
+                ++$i;
             }
 
             // result is unique
@@ -339,9 +341,9 @@ class PhpcrMapper extends RlpMapper
     /**
      * creates a new resourcelocator and creates the correct history.
      *
-     * @param string $src old resource locator
-     * @param string $dest new resource locator
-     * @param string $webspaceKey key of portal
+     * @param string $src          old resource locator
+     * @param string $dest         new resource locator
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -525,14 +527,14 @@ class PhpcrMapper extends RlpMapper
     /**
      * create a node recursively.
      *
-     * @param string $path path to node
+     * @param string        $path     path to node
      * @param NodeInterface $rootNode base node to begin
      */
     private function createRecursive($path, $rootNode)
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;
-        for ($i = 0; $i < sizeof($pathParts); $i++) {
+        for ($i = 0; $i < sizeof($pathParts); ++$i) {
             if ($curNode->hasNode($pathParts[$i])) {
                 $curNode = $curNode->getNode($pathParts[$i]);
             } else {
@@ -545,10 +547,10 @@ class PhpcrMapper extends RlpMapper
     /**
      * changes path node to history node.
      *
-     * @param NodeInterface $node
+     * @param NodeInterface    $node
      * @param SessionInterface $session
-     * @param string $absSrcPath
-     * @param string $absDestPath
+     * @param string           $absSrcPath
+     * @param string           $absDestPath
      */
     private function changePathToHistory(NodeInterface $node, SessionInterface $session, $absSrcPath, $absDestPath)
     {
@@ -572,10 +574,11 @@ class PhpcrMapper extends RlpMapper
      * check resourcelocator is unique and points to given content node.
      *
      * @param NodeInterface $routes
-     * @param string $resourceLocator
+     * @param string        $resourceLocator
      * @param $contentNode
      *
      * @return bool
+     *
      * @throws ResourceLocatorAlreadyExistsException
      */
     private function checkResourceLocator(NodeInterface $routeNode, $resourceLocator, $contentNode)
@@ -601,7 +604,7 @@ class PhpcrMapper extends RlpMapper
      * check if path is unique from given $root node.
      *
      * @param NodeInterface $root route node
-     * @param string $path requested path
+     * @param string        $path requested path
      *
      * @return bool path is unique
      */
@@ -614,7 +617,7 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns base node of routes from phpcr.
      *
-     * @param string $webspaceKey current session
+     * @param string $webspaceKey  current session
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -629,7 +632,7 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns base path of routes from phpcr.
      *
-     * @param string $webspaceKey current session
+     * @param string $webspaceKey  current session
      * @param string $languageCode
      * @param string $segmentKey
      *

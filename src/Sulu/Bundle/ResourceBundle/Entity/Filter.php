@@ -11,11 +11,10 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * Filter
+ * Filter.
  */
 class Filter
 {
@@ -25,7 +24,7 @@ class Filter
     private $conjunction;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -70,12 +69,12 @@ class Filter
     private $context;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $private;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -84,9 +83,9 @@ class Filter
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int 
      */
     public function getId()
     {
@@ -94,9 +93,10 @@ class Filter
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param FilterTranslation $translations
+     *
      * @return Filter
      */
     public function addTranslation(FilterTranslation $translations)
@@ -107,7 +107,7 @@ class Filter
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param FilterTranslation $translations
      */
@@ -117,7 +117,7 @@ class Filter
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
@@ -127,9 +127,10 @@ class Filter
     }
 
     /**
-     * Add conditionGroups
+     * Add conditionGroups.
      *
      * @param ConditionGroup $conditionGroups
+     *
      * @return Filter
      */
     public function addConditionGroup(ConditionGroup $conditionGroups)
@@ -140,7 +141,7 @@ class Filter
     }
 
     /**
-     * Remove conditionGroups
+     * Remove conditionGroups.
      *
      * @param ConditionGroup $conditionGroups
      */
@@ -150,7 +151,7 @@ class Filter
     }
 
     /**
-     * Get conditionGroups
+     * Get conditionGroups.
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
@@ -160,9 +161,10 @@ class Filter
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
+     *
      * @return Filter
      */
     public function setCreated($created)
@@ -173,7 +175,7 @@ class Filter
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime 
      */
@@ -183,9 +185,10 @@ class Filter
     }
 
     /**
-     * Set changed
+     * Set changed.
      *
      * @param \DateTime $changed
+     *
      * @return Filter
      */
     public function setChanged($changed)
@@ -196,7 +199,7 @@ class Filter
     }
 
     /**
-     * Get changed
+     * Get changed.
      *
      * @return \DateTime 
      */
@@ -206,9 +209,10 @@ class Filter
     }
 
     /**
-     * Set changer
+     * Set changer.
      *
      * @param UserInterface $changer
+     *
      * @return Filter
      */
     public function setChanger(UserInterface $changer = null)
@@ -219,7 +223,7 @@ class Filter
     }
 
     /**
-     * Get changer
+     * Get changer.
      *
      * @return UserInterface
      */
@@ -229,9 +233,10 @@ class Filter
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
      * @param UserInterface $creator
+     *
      * @return Filter
      */
     public function setCreator(UserInterface $creator = null)
@@ -242,7 +247,7 @@ class Filter
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return UserInterface
      */
@@ -252,9 +257,10 @@ class Filter
     }
 
     /**
-     * Set conjunction
+     * Set conjunction.
      *
      * @param string $conjunction
+     *
      * @return Filter
      */
     public function setConjunction($conjunction)
@@ -265,7 +271,7 @@ class Filter
     }
 
     /**
-     * Get conjunction
+     * Get conjunction.
      *
      * @return string 
      */
@@ -275,9 +281,10 @@ class Filter
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
+     *
      * @return Filter
      */
     public function setUser(UserInterface $user = null)
@@ -288,7 +295,7 @@ class Filter
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface
      */
@@ -298,9 +305,10 @@ class Filter
     }
 
     /**
-     * Set context
+     * Set context.
      *
      * @param string $context
+     *
      * @return Filter
      */
     public function setContext($context)
@@ -311,7 +319,7 @@ class Filter
     }
 
     /**
-     * Get context
+     * Get context.
      *
      * @return string 
      */
@@ -321,9 +329,10 @@ class Filter
     }
 
     /**
-     * Set private
+     * Set private.
      *
-     * @param boolean $private
+     * @param bool $private
+     *
      * @return Filter
      */
     public function setPrivate($private)
@@ -334,9 +343,9 @@ class Filter
     }
 
     /**
-     * Get private
+     * Get private.
      *
-     * @return boolean 
+     * @return bool 
      */
     public function getPrivate()
     {

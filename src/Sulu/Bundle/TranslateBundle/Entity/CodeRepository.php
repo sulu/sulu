@@ -1,12 +1,13 @@
 <?php
+
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
@@ -53,14 +54,14 @@ class CodeRepository extends EntityRepository
     /**
      * Searches Entities by where clauses, pagination and sorted.
      *
-     * @param int|null $limit Page size for Pagination
-     * @param int|null $offset Offset for Pagination
+     * @param int|null   $limit   Page size for Pagination
+     * @param int|null   $offset  Offset for Pagination
      * @param array|null $sorting Columns to sort
-     * @param array|null $where Where clauses
+     * @param array|null $where   Where clauses
      *
      * @return array Results
      */
-    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = array())
+    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = [])
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
@@ -166,8 +167,8 @@ class CodeRepository extends EntityRepository
      * Add sorting to querybuilder.
      *
      * @param QueryBuilder $qb
-     * @param array $sorting
-     * @param string $prefix
+     * @param array        $sorting
+     * @param string       $prefix
      *
      * @return QueryBuilder
      */
@@ -185,8 +186,8 @@ class CodeRepository extends EntityRepository
      * add pagination to querybuilder.
      *
      * @param QueryBuilder $qb
-     * @param int|null $limit Page size for Pagination
-     * @param int|null $offset Offset for Pagination
+     * @param int|null     $limit  Page size for Pagination
+     * @param int|null     $offset Offset for Pagination
      *
      * @return QueryBuilder
      */
@@ -203,7 +204,7 @@ class CodeRepository extends EntityRepository
      * add where to querybuilder.
      *
      * @param QueryBuilder $qb
-     * @param array $where
+     * @param array        $where
      *
      * @return QueryBuilder
      */

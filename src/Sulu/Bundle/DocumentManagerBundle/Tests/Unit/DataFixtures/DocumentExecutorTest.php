@@ -1,14 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NodeManager;
-use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\FixtureLoader;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 
 class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,33 +37,33 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should purge the workspace if required
+     * It should purge the workspace if required.
      */
     public function testPurge()
     {
         $this->nodeManager->purgeWorkspace()->shouldBeCalled();
         $this->initializer->initialize($this->output)->shouldNotBeCalled();
         $this->nodeManager->save()->shouldBeCalled();
-        $this->executer->execute(array(), true, false, $this->output);
+        $this->executer->execute([], true, false, $this->output);
     }
 
     /**
-     * It should initialize the workspace if required
+     * It should initialize the workspace if required.
      */
     public function testInitialize()
     {
         $this->nodeManager->purgeWorkspace()->shouldNotBeCalled();
         $this->nodeManager->save()->shouldNotBeCalled();
         $this->initializer->initialize($this->output)->shouldBeCalled();
-        $this->executer->execute(array(), false, true, $this->output);
+        $this->executer->execute([], false, true, $this->output);
     }
 
     /**
-     * It should execute the fixtures
+     * It should execute the fixtures.
      */
     public function testLoadFixtures()
     {
         $this->fixture1->load($this->documentManager->reveal())->shouldBeCalled();
-        $this->executer->execute(array($this->fixture1->reveal()), false, false, $this->output);
+        $this->executer->execute([$this->fixture1->reveal()], false, false, $this->output);
     }
 }

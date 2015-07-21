@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,7 +11,6 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -48,9 +48,9 @@ class TagsHandler implements
 
     /**
      * @param WebspaceManagerInterface $webspaceManager
-     * @param CacheHandler $cacheInvalidator
-     * @param string $environment - kernel envionment, dev, prod, etc.
-     * @param null $logger
+     * @param CacheHandler             $cacheInvalidator
+     * @param string                   $environment      - kernel envionment, dev, prod, etc.
+     * @param null                     $logger
      */
     public function __construct(
         ProxyClientInterface $proxyClient,
@@ -67,9 +67,9 @@ class TagsHandler implements
 
     public function updateResponse(Response $response, StructureInterface $structure)
     {
-        $tags = array(
+        $tags = [
             $this->getBanKey($structure->getUuid()),
-        );
+        ];
 
         foreach ($structure->getProperties(true) as $property) {
             foreach ($this->getReferencedUuids($property) as $uuid) {
@@ -109,9 +109,9 @@ class TagsHandler implements
         foreach ($this->structuresToInvalidate as $structure) {
             $banKey = $this->getBanKey($structure->getUuid());
 
-            $this->proxyClient->ban(array(
+            $this->proxyClient->ban([
                 self::TAGS_HEADER => sprintf('(%s)(,.+)?$', preg_quote($banKey)),
-            ));
+            ]);
         }
 
         $this->proxyClient->flush();

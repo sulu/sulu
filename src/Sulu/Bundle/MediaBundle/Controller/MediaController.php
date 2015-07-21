@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -117,13 +118,13 @@ class MediaController extends RestController implements ClassResourceInterface, 
                 $ids = explode(',', $ids);
                 $media = $mediaManager->getByIds($ids, $this->getLocale($request));
             } else {
-                $media = $mediaManager->get($this->getLocale($request), array(
+                $media = $mediaManager->get($this->getLocale($request), [
                     'collection' => $collection,
                     'types' => $types,
                     'search' => $search,
                     'orderBy' => $orderBy,
                     'orderSort' => $orderSort,
-                ), $limit, $offset);
+                ], $limit, $offset);
             }
 
             $all = $mediaManager->getCount();
@@ -165,7 +166,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * Edits the existing media with the given id.
      *
-     * @param int $id The id of the media to update
+     * @param int     $id      The id of the media to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -206,7 +207,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
      *
      * @Post("media/{id}")
      *
-     * @param int $id
+     * @param int     $id
      * @param Request $request
      *
      * @return Response
@@ -236,7 +237,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * Move an entity to another collection.
      *
-     * @param int $id
+     * @param int     $id
      * @param Request $request
      *
      * @return Response
@@ -302,13 +303,13 @@ class MediaController extends RestController implements ClassResourceInterface, 
 
     /**
      * @param Request $request
-     * @param bool $fallback
+     * @param bool    $fallback
      *
      * @return array
      */
     protected function getData(Request $request, $fallback = true)
     {
-        return array(
+        return [
             'id' => $request->get('id'),
             'locale' => $request->get('locale', $fallback ? $this->getLocale($request) : null),
             'type' => $request->get('type'),
@@ -316,10 +317,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
             'versions' => $request->get('versions'),
             'version' => $request->get('version'),
             'size' => $request->get('size'),
-            'contentLanguages' => $request->get('contentLanguages', array()),
-            'publishLanguages' => $request->get('publishLanguages', array()),
+            'contentLanguages' => $request->get('contentLanguages', []),
+            'publishLanguages' => $request->get('publishLanguages', []),
             'tags' => $request->get('tags'),
-            'formats' => $request->get('formats', array()),
+            'formats' => $request->get('formats', []),
             'url' => $request->get('url'),
             'name' => $request->get('name'),
             'title' => $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null),
@@ -328,7 +329,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
             'creator' => $request->get('creator'),
             'changed' => $request->get('changed'),
             'created' => $request->get('created'),
-        );
+        ];
     }
 
     /**

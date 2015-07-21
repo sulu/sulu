@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,14 +23,14 @@ class LocalizationManager implements LocalizationManagerInterface
      *
      * @var LocalizationProviderInterface[]
      */
-    private $localizationProviders = array();
+    private $localizationProviders = [];
 
     /**
      * {@inheritDoc}
      */
     public function getLocalizations()
     {
-        $localizations = array();
+        $localizations = [];
 
         foreach ($this->localizationProviders as $localizationProvider) {
             foreach ($localizationProvider->getAllLocalizations() as $localization) {
