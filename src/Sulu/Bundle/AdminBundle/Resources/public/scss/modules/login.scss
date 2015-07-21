@@ -14,14 +14,14 @@
         height: 100%;
         position: relative;
 
-        // success slide animation
+        // properties for success slide animation
         left: 0;
         transition: left 300ms;
         transition-delay: 500ms;
     }
     .media-container {
         float: left;
-        background: $grayDarkLighter;
+        background: $grayDarkLighter; //until image is faded in
 
         .media-logo {
             width: $logoSize;
@@ -50,6 +50,7 @@
             background: no-repeat center center;
             @include background-size(cover);
 
+            // flare effect
             .darkener {
                 width: 100%;
                 height: 100%;
@@ -96,65 +97,80 @@
                 transition: left 300ms;
                 display: table; //vertical centering
                 position: relative;
-            }
 
-            .box-frame {
-                display: table-cell;
-                min-width: $boxWidth;
-                max-width: $boxWidth;
-                vertical-align: middle;
-                padding: 0 50px;
+                .box-frame {
+                    display: table-cell;
+                    min-width: $boxWidth;
+                    max-width: $boxWidth;
+                    vertical-align: middle;
+                    padding: 0 50px;
 
-                .message, .error-message {
-                    display: block;
-                    color: $white;
-                }
-
-                .message {
-                    padding-bottom: 20px;
-                    text-align: center;
-
-                    span.to-mail {
+                    .message, .error-message {
                         display: block;
-                        padding-top: 10px;
-                        font-weight: bold;
+                        color: $white;
                     }
-                }
 
-                .error-message {
-                    // use max-height to enable css animation non-static height
-                    max-height: 0px;
-                    transition: max-height 200ms;
-                    overflow: hidden;
-                }
-
-                &.login-error {
-                    .error-message {
-                        max-height: 100px;
+                    .message {
                         padding-bottom: 20px;
-                    }
+                        text-align: center;
 
-                    .husky-validate {
-                        color: $red;
-                    }
-                }
-
-                .box-frame-footer{
-                    margin: 0; // overwrite grid-row
-
-                    .btn {
-                        border: 1px solid $white;
-                        float: right;
-                        padding: 0 45px;
-
-                        &.inactive {
-                            border: 1px solid $grayDarkLighter;
-                            color: $grayDarkLighter;
+                        span.to-mail {
+                            display: block;
+                            padding-top: 10px;
+                            font-weight: bold;
                         }
                     }
 
-                    span {
-                        line-height: 40px;
+                    .error-message {
+                        // use max-height to enable css animation non-static height
+                        max-height: 0px;
+                        transition: max-height 200ms;
+                        overflow: hidden;
+                    }
+
+                    &.login-error {
+                        .error-message {
+                            max-height: 100px;
+                            padding-bottom: 20px;
+                        }
+
+                        .husky-validate {
+                            color: $red;
+                        }
+                    }
+
+                    .box-frame-footer {
+                        margin: 0; // overwrite grid-row
+                        position: relative; // loader positioning
+
+                        .btn {
+                            border: 1px solid $white;
+                            float: right;
+                            padding: 0 45px;
+
+                            // loader fade-in
+                            opacity: 1;
+                            transition: opacity 300ms;
+
+                            &.inactive {
+                                border: 1px solid $grayDarkLighter;
+                                color: $grayDarkLighter;
+                                cursor: default;
+                            }
+                        }
+
+                        span {
+                            line-height: 40px;
+                        }
+                    }
+
+                    &.content-loading {
+                        .box-frame-footer {
+                            .btn {
+                                opacity: 0;
+                                cursor: default;
+                            }
+                        }
                     }
                 }
             }
@@ -175,32 +191,17 @@
             left: 0px;
 
             text-align: center;
-
-            // animate fade out fot loader animation
-            opacity: 1;
-            transition: opacity 200ms;
-
-            @include clear-float;
-        }
-
-        .login-loader {
-            @include centerBlock;
-            top: 100%;
-            z-index: 10;
-
-            opacity: 0;
-            transition: opacity 200ms;
         }
 
         .success-overlay {
             height: 100%;
             width: 100%;
-
             position: relative;
             z-index: -10;
 
             background-color: $green;
 
+            // success animation
             opacity: 0;
             transition: opacity 300ms;
 
@@ -211,14 +212,12 @@
             }
         }
 
-        &.content-loading{
-            .login-content-footer {
-                opacity: 0;
-            }
-
-            .login-loader {
-                opacity: 1;
-            }
+        .login-loader {
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: -10;
         }
     }
 
@@ -257,5 +256,15 @@
 
     .login-content-footer {
         display: none !important;
+    }
+
+    .content-success{
+        .content-container {
+            left: -100% !important;
+        }
+    }
+
+    .login-label-container {
+        left: 50% !important;
     }
 }

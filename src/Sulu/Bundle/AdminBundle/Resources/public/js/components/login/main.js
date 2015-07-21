@@ -15,8 +15,6 @@
  * @param {Object} [options] Configuration object
  * @param {String} [options.instanceName] The instance name of the sidebar
  * @param {String} [options.backgroundImg] url to the background image
- * @param {String} [options.shiftSpace] numbers of pixels on each edge available for moving the image
- * @param {String} [options.fadeInDuration] fade in duration of the image
  * @param {String} [options.loginCheck] path to post the login-credentials to
  */
 
@@ -94,7 +92,6 @@ define([], function () {
             resendResetMailButtonId: 'resend-mail-button',
 
             resetPasswordButtonId: 'reset-password-button',
-
             loginRouteClass: 'login-route-span',
 
             frameFooterClass: 'box-frame-footer',
@@ -112,7 +109,7 @@ define([], function () {
                 '</div>'].join(''),
             contentContainer: ['<div class="' + constants.contentContainerClass + '">',
                 '   <div class="' + constants.contentBoxClass + '">',
-                '       <div class="' + [constants.contentLogoClass, constants.navigatorSpanClass].join(" ") + '"></div>',
+                '       <div class="' + [constants.contentLogoClass, constants.navigatorSpanClass, constants.websiteSwitchClass].join(" ") + '"></div>',
                 '       <div class="' + constants.frameSliderClass + '"></div>',
                 '   </div>',
                 '   <div class="grid-row ' + constants.contentFooterClass + '">',
@@ -122,7 +119,6 @@ define([], function () {
                 '       <span class="fa-check ' + constants.successIconClass + '"></span>', //testing
                 '   </div>',
                 '</div>'].join(''),
-
 
             loginFrame: ['<div class="' + [constants.frameClass, constants.loginFrameClass].join(" ") + '">',
                 '   <form class="grid inputs">',
@@ -190,13 +186,13 @@ define([], function () {
         };
 
     return {
-
         /**
          * Initialize component
          */
         initialize: function () {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
             this.initProperties();
             this.render();
             this.bindDomEvents();
@@ -373,7 +369,7 @@ define([], function () {
                     name: 'loader@husky',
                     options: {
                         el: this.dom.$loader,
-                        size: '200px',
+                        size: '40px',
                         color: '#fff'
                     }
                 }
@@ -400,7 +396,7 @@ define([], function () {
         },
 
         /**
-         * Bind frame-unspecific related dom events
+         * Bind frame-unspecific dom events
          */
         bindGeneralDomEvents: function () {
             this.sandbox.dom.on(this.dom.$contentContainer, 'click',
@@ -450,7 +446,6 @@ define([], function () {
             this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
         },
 
-
         /**
          * Handle click on login-button in login-frame
          */
@@ -463,7 +458,10 @@ define([], function () {
          * @param $frame parent frame of changed input-element
          */
         validationInputChangeHandler: function ($frame) {
-            if (this.sandbox.dom.hasClass($frame, constants.errorClass)) {
+            if (event.keyCode === 13) {
+                return false; // do not reset error status on enter
+            }
+            else if (this.sandbox.dom.hasClass($frame, constants.errorClass)) {
                 this.sandbox.dom.removeClass($frame, constants.errorClass);
             }
         },
@@ -516,9 +514,10 @@ define([], function () {
                 password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm));
             if (username.length === 0 || password.length === 0) {
                 this.displayLoginError();
-                return false;
+            } else {
+                this.login(username, password);
             }
-            this.login(username, password);
+            return false;
 
         },
 
@@ -558,14 +557,14 @@ define([], function () {
          * @param password
          */
         login: function (username, password) {
-            this.showLoader();
+            this.showLoader(this.dom.$loginFrame);
             this.sandbox.util.save(this.options.loginCheck, 'POST', {
                 '_username': username,
                 '_password': password
             }).then(function (data) {
                 this.displaySuccessAndRedirect(data.url + this.sandbox.dom.window.location.hash);
             }.bind(this)).fail(function () {
-                this.hideLoader();
+                this.hideLoader(this.dom.$loginFrame);
                 this.displayLoginError();
             }.bind(this));
         },
@@ -577,9 +576,10 @@ define([], function () {
          */
         displaySuccessAndRedirect: function (redirectUrl) {
             this.sandbox.dom.css(this.dom.$loader, 'opacity', '0');
-            // fade in green success-overlay (css animated)
+
+            // fade in green success-overlay (css animated, duration: 300ms)
             this.sandbox.dom.css(this.dom.$successOverlay, 'z-index', '20');
-            // slide out both side-containers (css animated)
+            // slide out both side-containers (css animated, delay: 500ms, duration 300ms)
             this.sandbox.dom.addClass(this.$el, constants.successClass);
 
             // css animations are finished after 800ms
@@ -591,17 +591,17 @@ define([], function () {
          * @param user
          */
         requestResetMail: function (user) {
-            this.showLoader();
+            this.showLoader(this.dom.$forgotPasswordFrame);
             this.sandbox.util.save(this.options.resetMailUrl, 'POST', {
                 'user': user
             }).then(function (data) {
-                // save given user for optional resends
+                // save given user for optional resending
                 this.resetMailUser = user;
-                this.hideLoader();
+                this.hideLoader(this.dom.$forgotPasswordFrame);
                 this.showEmailSentLabel();
                 this.moveToResendMailFrame(data.email);
             }.bind(this)).fail(function (data) {
-                this.hideLoader();
+                this.hideLoader(this.dom.$forgotPasswordFrame);
                 this.displayRequestResetMailError(data.responseJSON.code);
             }.bind(this));
         },
@@ -611,14 +611,14 @@ define([], function () {
          * @param newPassword - string
          */
         resetPassword: function (newPassword) {
-            this.showLoader();
+            this.showLoader(this.dom.$resetPasswordFrame);
             this.sandbox.util.save(this.options.resetUrl, 'POST', {
                 'password': newPassword,
                 'token': this.options.resetToken
             }).then(function (data) {
                 this.displaySuccessAndRedirect(data.url);
             }.bind(this)).fail(function (data) {
-                this.hideLoader();
+                this.hideLoader(this.dom.$resetPasswordFrame);
                 this.displayResetPasswordError(data.responseJSON.code);
             }.bind(this));
         },
@@ -627,30 +627,40 @@ define([], function () {
          * Send user which requested a resetting email to the server to resend mail
          */
         resendResetMail: function () {
-            this.showLoader();
+            this.showLoader(this.dom.$resendMailFrame);
             this.sandbox.util.save(this.options.resendUrl, 'POST', {
                 'user': this.resetMailUser
             }).then(function () {
-                this.hideLoader();
+                this.hideLoader(this.dom.$resendMailFrame);
                 this.showEmailSentLabel();
             }.bind(this)).fail(function (data) {
-                this.hideLoader();
+                this.hideLoader(this.dom.$resendMailFrame);
                 this.displayResendResetMailError(data.responseJSON.code);
             }.bind(this));
         },
 
         /**
-         * Show input-loader by adding class to content-container
+         * Show input-loader instead of button in given frame
+         * @param $frame
          */
-        showLoader: function () {
-            this.sandbox.dom.addClass(this.dom.$contentContainer, constants.contentLoadingClass);
+        showLoader: function ($frame) {
+            if (this.sandbox.dom.hasClass($frame, constants.contentLoadingClass)) {
+                return false;
+            }
+
+            var $button = this.sandbox.dom.find('.btn', $frame);
+            this.sandbox.dom.after($button, this.dom.$loader);
+            this.sandbox.dom.css(this.dom.$loader, 'width', this.sandbox.dom.css($button, 'width'));
+
+            this.sandbox.dom.addClass($frame, constants.contentLoadingClass);
         },
 
         /**
-         * Hide input loader
+         * Hide input-loader in given frame. Show button of given frame instead
+         * @param $frame
          */
-        hideLoader: function () {
-            this.sandbox.dom.removeClass(this.dom.$contentContainer, constants.contentLoadingClass);
+        hideLoader: function ($frame) {
+            this.sandbox.dom.removeClass($frame, constants.contentLoadingClass);
         },
 
         /**
@@ -715,7 +725,7 @@ define([], function () {
         },
 
         /**
-         * Move frame-slider to resend-mail-frame display given email-adress
+         * Move frame-slider to resend-mail-frame display given email-address
          * @param email
          */
         moveToResendMailFrame: function (email) {
@@ -730,15 +740,15 @@ define([], function () {
             this.moveFrameSliderTo(this.dom.$loginFrame);
         },
 
-
         /**
          * Move frame-slider to the given frame and focus first input
          * @param $frame
          */
         moveFrameSliderTo: function ($frame) {
-            this.sandbox.dom.one(this.$el, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function() {
-                this.focusFirstInput($frame);
+            this.sandbox.dom.one(this.$el, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function () {
+                this.focusFirstInput($frame); //workaround for ie; focus input after end of transition;
             }.bind(this));
+
             this.sandbox.dom.css(this.dom.$frameSlider, 'left', -this.sandbox.dom.position($frame).left + 'px');
         },
 
@@ -750,11 +760,12 @@ define([], function () {
             if (this.sandbox.dom.find('input', $frame).length < 1) {
                 return false;
             }
-            
+
             var input = this.sandbox.dom.find('input', $frame)[0];
             this.sandbox.dom.select(input);
+
             //set input cursor to end of input-value
-            input.setSelectionRange(this.sandbox.dom.val(input).length,this.sandbox.dom.val(input).length);
+            input.setSelectionRange(this.sandbox.dom.val(input).length, this.sandbox.dom.val(input).length);
 
         }
     };
