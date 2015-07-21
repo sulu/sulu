@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
+    * FEATURE     #1398 [TagBundle]       Integrated filters for tags
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
                                           then select data
