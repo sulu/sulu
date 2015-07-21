@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,7 +40,7 @@ class PublicHandler implements
     private $usePageTtl;
 
     /**
-     * @param int $maxAge Cache max age in seconds
+     * @param int $maxAge       Cache max age in seconds
      * @param int $sharedMaxAge Cache shared max age in seconds
      */
     public function __construct($maxAge = 240, $sharedMaxAge = 960, $usePageTtl = true)

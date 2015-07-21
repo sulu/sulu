@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Sulu\Component\PHPCR\NodeTypes\Content;
 
 /**
- * Node type for representing home pages in the PHPCR
+ * Node type for representing home pages in the PHPCR.
  */
 class HomeNodeType extends ContentNodeType
 {
@@ -28,8 +29,8 @@ class HomeNodeType extends ContentNodeType
      */
     public function getDeclaredSupertypeNames()
     {
-        return array(
-            'sulu:content'
-        );
+        return [
+            'sulu:content',
+        ];
     }
 }

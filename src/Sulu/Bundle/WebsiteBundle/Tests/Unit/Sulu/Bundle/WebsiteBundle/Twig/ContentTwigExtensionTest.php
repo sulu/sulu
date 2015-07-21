@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,11 +16,11 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -36,7 +37,7 @@ class TestStructure extends Structure
         $this->setCreator($userId);
         $this->setChanger($userId);
 
-        $this->addChild(new Property('title', array(), 'text_line'));
+        $this->addChild(new Property('title', [], 'text_line'));
         $this->getProperty('title')->setValue($title);
     }
 }
@@ -164,8 +165,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $result['changer']);
 
         // content
-        $this->assertEquals(array('title' => 'test'), $result['content']);
-        $this->assertEquals(array('title' => array()), $result['view']);
+        $this->assertEquals(['title' => 'test'], $result['content']);
+        $this->assertEquals(['title' => []], $result['view']);
     }
 
     public function testLoadParent()
@@ -192,8 +193,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $result['changer']);
 
         // content
-        $this->assertEquals(array('title' => 'test'), $result['content']);
-        $this->assertEquals(array('title' => array()), $result['view']);
+        $this->assertEquals(['title' => 'test'], $result['content']);
+        $this->assertEquals(['title' => []], $result['view']);
     }
 
     public function testLoadParentStartPage()

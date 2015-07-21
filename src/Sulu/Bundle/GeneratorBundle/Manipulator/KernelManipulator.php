@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -88,8 +89,8 @@ class KernelManipulator extends Manipulator
                 $lines = array_merge(
                     array_slice($src, 0, $this->line - 2),
                     // Appends a separator comma to the current last position of the array
-                    array(rtrim(rtrim($src[$this->line - 2]), ',') . ",\n"),
-                    array(sprintf("            new %s(),\n", $bundle)),
+                    [rtrim(rtrim($src[$this->line - 2]), ',') . ",\n"],
+                    [sprintf("            new %s(),\n", $bundle)],
                     array_slice($src, $this->line - 1)
                 );
 

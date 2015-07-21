@@ -1,21 +1,17 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Structure;
 
-use Sulu\Component\Content\Types\ContentTypeManagerInterface;
-use PHPCR\NodeInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
-use Sulu\Component\Content\Document\Structure\StructureInterface;
 
 /**
  * Lazy loading container for content properties.
@@ -25,21 +21,21 @@ class Structure implements StructureInterface
     /**
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * @var array
      */
-    protected $stagedData = array();
+    protected $stagedData = [];
 
     /**
      * {@inheritDoc}
      */
-    public function getStagedData() 
+    public function getStagedData()
     {
         return $this->stagedData;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -54,7 +50,7 @@ class Structure implements StructureInterface
     public function commitStagedData($clearMissingContent)
     {
         $this->bind($this->stagedData, $clearMissingContent);
-        $this->stagedData = array();
+        $this->stagedData = [];
     }
 
     /**
@@ -127,7 +123,7 @@ class Structure implements StructureInterface
      */
     public function toArray()
     {
-        $values = array();
+        $values = [];
         foreach ($this->properties as $name => $property) {
             $values[$name] = $this->normalize($property->getValue());
         }
@@ -161,7 +157,7 @@ class Structure implements StructureInterface
             return $value;
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($value as $key => $value) {
             $ret[$key] = $this->normalize($value);
         }

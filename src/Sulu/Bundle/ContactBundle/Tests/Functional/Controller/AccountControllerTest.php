@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -272,82 +273,82 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => $this->account->getId()),
-                'urls' => array(
-                    array(
+                'parent' => ['id' => $this->account->getId()],
+                'urls' => [
+                    [
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'phones' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'phones' => [
+                    [
                         'phone' => '123456789',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'phone' => '987654321',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'faxes' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'faxes' => [
+                    [
                         'fax' => '123456789-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'fax' => '987654321-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -355,13 +356,13 @@ class AccountControllerTest extends SuluTestCase
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
                         'note' => 'note',
-                    ),
-                ),
-                'notes' => array(
-                    array('value' => 'Note 1'),
-                    array('value' => 'Note 2'),
-                ),
-            )
+                    ],
+                ],
+                'notes' => [
+                    ['value' => 'Note 1'],
+                    ['value' => 'Note 2'],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -426,82 +427,82 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => $this->account->getId()),
-                'urls' => array(
-                    array(
+                'parent' => ['id' => $this->account->getId()],
+                'urls' => [
+                    [
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'phones' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'phones' => [
+                    [
                         'phone' => '123456789',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'phone' => '987654321',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'faxes' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'faxes' => [
+                    [
                         'fax' => '123456789-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'fax' => '987654321-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -509,13 +510,13 @@ class AccountControllerTest extends SuluTestCase
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
                         'note' => 'note',
-                    ),
-                ),
-                'notes' => array(
-                    array('value' => 'Note 1'),
-                    array('value' => 'Note 2'),
-                ),
-            )
+                    ],
+                ],
+                'notes' => [
+                    ['value' => 'Note 1'],
+                    ['value' => 'Note 2'],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -579,19 +580,19 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'urls' => array(
-                    array(
+                'urls' => [
+                    [
                         'id' => 1512312312313,
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -601,26 +602,26 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'emails' => array(
-                    array(
+                'emails' => [
+                    [
                         'id' => 16,
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => 1,
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => 1,
                             'name' => 'Work',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -630,26 +631,26 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'phones' => array(
-                    array(
+                'phones' => [
+                    [
                         'id' => 17,
                         'phone' => '123456789',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'phone' => '987654321',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -659,28 +660,28 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'addresses' => array(
-                    array(
+                'addresses' => [
+                    [
                         'id' => 18,
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => 1,
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -690,15 +691,15 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'notes' => array(
-                    array(
+                'notes' => [
+                    [
                         'id' => 19,
                         'value' => 'Note',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -712,18 +713,18 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'urls' => array(
-                    array(
+                'urls' => [
+                    [
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => '12312',
                             'name' => 'Work',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -737,25 +738,25 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'emails' => array(
-                    array(
+                'emails' => [
+                    [
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => 1,
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => 2,
                             'name' => 'Work',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -769,25 +770,25 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'phones' => array(
-                    array(
+                'phones' => [
+                    [
                         'phone' => '123456789',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'phone' => '987654321',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => '1233',
                             'name' => 'Work',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -801,27 +802,27 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'addresses' => array(
-                    array(
+                'addresses' => [
+                    [
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => 1,
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => 2,
                             'name' => 'Work',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -835,18 +836,18 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'faxes' => array(
-                    array(
+                'faxes' => [
+                    [
                         'fax' => '12345',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => '123123',
                             'name' => 'Work',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -860,27 +861,27 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'addresses' => array(
-                    array(
+                'addresses' => [
+                    [
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => 12393,
                             'name' => 'Österreich',
                             'code' => 'AT',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => 1,
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -922,89 +923,89 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/accounts/' . $this->account->getId(),
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'urls' => array(
-                    array(
+                'urls' => [
+                    [
                         'id' => $this->url->getId(),
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'url' => 'http://test.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'email' => 'office@company.com',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@company.com',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'phones' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'phones' => [
+                    [
                         'phone' => '4567890',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'phone' => '789456123',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'faxes' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'faxes' => [
+                    [
                         'fax' => '4567890-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'fax' => '789456123-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'street' => 'Bahnhofstraße',
                         'number' => '2',
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1012,30 +1013,30 @@ class AccountControllerTest extends SuluTestCase
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
                         'note' => 'note',
-                    ),
-                    array(
+                    ],
+                    [
                         'street' => 'Rathausgasse',
                         'number' => '3',
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'note' => 'note1',
-                    ),
-                ),
-                'notes' => array(
-                    array('value' => 'Note1'),
-                    array('value' => 'Note2'),
-                ),
-            )
+                    ],
+                ],
+                'notes' => [
+                    ['value' => 'Note1'],
+                    ['value' => 'Note2'],
+                ],
+            ]
         );
 
         //$this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -1233,15 +1234,15 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/accounts/' . $this->account->getId(),
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'urls' => array(),
-                'emails' => array(),
-                'phones' => array(),
-                'addresses' => array(),
-                'faxes' => array(),
-                'notes' => array(),
-            )
+                'urls' => [],
+                'emails' => [],
+                'phones' => [],
+                'addresses' => [],
+                'faxes' => [],
+                'notes' => [],
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -1270,9 +1271,9 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/accounts/4711',
-            array(
+            [
                 'name' => 'TestCompany',
-            )
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -1316,9 +1317,9 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'DELETE',
             '/api/accounts/' . $this->account->getId(),
-            array(
+            [
                 'removeContacts' => 'false',
-            )
+            ]
         );
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
@@ -1351,9 +1352,9 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'DELETE',
             '/api/accounts/' . $this->account->getId(),
-            array(
+            [
                 'removeContacts' => 'true',
-            )
+            ]
         );
         // check if contacts are still there
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
@@ -1386,7 +1387,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($acc);
 
         // add 5 contacts to account
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $contact = new Contact();
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
@@ -1419,9 +1420,9 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/accounts/multipledeleteinfo',
-            array(
-                'ids' => array($this->account->getId(), $acc->getId()),
-            )
+            [
+                'ids' => [$this->account->getId(), $acc->getId()],
+            ]
         );
 
         // asserts
@@ -1443,7 +1444,7 @@ class AccountControllerTest extends SuluTestCase
     {
         // modify test data
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $contact = new Contact();
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
@@ -1488,7 +1489,7 @@ class AccountControllerTest extends SuluTestCase
     {
 
         // changing test data: adding child accounts
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $childAccount = new Account();
             $childAccount->setName('child num#' . $i);
             $childAccount->setParent($this->account);
@@ -1527,95 +1528,95 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => $this->account->getId()),
-                'urls' => array(
-                    array(
+                'parent' => ['id' => $this->account->getId()],
+                'urls' => [
+                    [
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'phones' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'phones' => [
+                    [
                         'phone' => '123456789',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'phone' => '987654321',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'faxes' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'faxes' => [
+                    [
                         'fax' => '123456789-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'fax' => '987654321-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                ),
-                'notes' => array(
-                    array('value' => 'Note 1'),
-                    array('value' => 'Note 2'),
-                ),
-            )
+                    ],
+                ],
+                'notes' => [
+                    ['value' => 'Note 1'],
+                    ['value' => 'Note 2'],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1649,103 +1650,103 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/accounts/' . $account2Id,
-            array(
+            [
                 'id' => $account2Id,
                 'name' => 'ExampleCompany 222',
-                'parent' => array('id' => null),
-                'urls' => array(
-                    array(
+                'parent' => ['id' => null],
+                'urls' => [
+                    [
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'id' => $response->emails[0]->id,
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'id' => $response->emails[1]->id,
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'phones' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'phones' => [
+                    [
                         'id' => $response->phones[0]->id,
                         'phone' => '123456789',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'id' => $response->phones[1]->id,
                         'phone' => '987654321',
-                        'phoneType' => array(
+                        'phoneType' => [
                             'id' => $this->phoneType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'faxes' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'faxes' => [
+                    [
                         'id' => $response->faxes[0]->id,
                         'fax' => '123456789-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'id' => $response->faxes[1]->id,
                         'fax' => '987654321-1',
-                        'faxType' => array(
+                        'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'id' => $response->addresses[0]->id,
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                ),
-                'notes' => array(
-                    array('id' => $response->notes[0]->id, 'value' => 'Note 1'),
-                    array('id' => $response->notes[1]->id, 'value' => 'Note 2'),
-                ),
-            )
+                    ],
+                ],
+                'notes' => [
+                    ['id' => $response->notes[0]->id, 'value' => 'Note 1'],
+                    ['id' => $response->notes[1]->id, 'value' => 'Note 2'],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1788,81 +1789,81 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/accounts',
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => $this->account->getId()),
-                'urls' => array(
-                    array(
+                'parent' => ['id' => $this->account->getId()],
+                'urls' => [
+                    [
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@muster.de',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                    array(
+                    ],
+                    [
                         'street' => 'Musterstraße',
                         'number' => '2',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1889,111 +1890,111 @@ class AccountControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/accounts/' . $this->account->getId(),
-            array(
+            [
                 'name' => 'ExampleCompany',
-                'urls' => array(
-                    array(
+                'urls' => [
+                    [
                         'id' => $this->url->getId(),
                         'url' => 'http://example.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'url' => 'http://test.company.com',
-                        'urlType' => array(
+                        'urlType' => [
                             'id' => $this->urlType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'emails' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'emails' => [
+                    [
                         'email' => 'office@company.com',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'email' => 'erika.mustermann@company.com',
-                        'emailType' => array(
+                        'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
-                        ),
-                    ),
-                ),
-                'addresses' => array(
-                    array(
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
                         'id' => $this->address->getId(),
                         'street' => 'Bahnhofstraße',
                         'number' => '2',
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                    array(
+                    ],
+                    [
                         'street' => 'Rathausgasse 1',
                         'number' => '3',
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                    array(
+                    ],
+                    [
                         'street' => 'Rathausgasse 2',
                         'number' => '3',
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => array(
+                        'country' => [
                             'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
-                        ),
-                        'addressType' => array(
+                        ],
+                        'addressType' => [
                             'id' => $this->addressType->getId(),
                             'name' => 'Private',
-                        ),
+                        ],
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
                         'postboxCity' => 'Dornbirn',
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());

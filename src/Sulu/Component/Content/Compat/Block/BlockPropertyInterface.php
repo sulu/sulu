@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -61,7 +62,7 @@ interface BlockPropertyInterface extends PropertyInterface
     /**
      * initiate new child with given type name.
      *
-     * @param int $index
+     * @param int    $index
      * @param string $typeName
      *
      * @return BlockPropertyType

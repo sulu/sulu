@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -95,7 +96,7 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
-     * @param string $dispositionType
+     * @param string      $dispositionType
      *
      * @return StreamedResponse
      */
@@ -144,7 +145,7 @@ class MediaStreamController extends Controller
      */
     protected function getFileVersion($id, $version)
     {
-        /**
+        /*
          * @var Media
          */
         $mediaEntity = $this->getDoctrine()
@@ -156,7 +157,7 @@ class MediaStreamController extends Controller
 
         $file = $mediaEntity->getFiles()[0];
 
-        /**
+        /*
          * @var FileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,8 +32,8 @@ class LanguageController extends Controller implements ClassResourceInterface
         /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
 
-        $localizations = array();
-        $locales = array();
+        $localizations = [];
+        $locales = [];
 
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
@@ -40,19 +41,19 @@ class LanguageController extends Controller implements ClassResourceInterface
             foreach ($webspace->getAllLocalizations() as $localization) {
                 if (!in_array($localization->getLocalization(), $locales)) {
                     $locales[] = $localization->getLocalization();
-                    $localizations[] = array(
+                    $localizations[] = [
                         'localization' => $localization->getLocalization(),
                         'name' => $localization->getLocalization('-'),
                         'id' => $i++,
-                    );
+                    ];
                 }
             }
         }
 
-        $data = array(
+        $data = [
             '_embedded' => $localizations,
             'total' => sizeof($localizations),
-        );
+        ];
 
         return new JsonResponse($data);
     }

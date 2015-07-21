@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,8 +30,8 @@ class UtilTwigExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
+        return [
             new \Twig_SimpleFilter('sulu_util_multisort', 'Sulu\Component\Util\SortUtils::multisort'),
-        );
+        ];
     }
 }

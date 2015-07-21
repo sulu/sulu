@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,51 +48,51 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     {
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setProperty')
+            ['setProperty']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getValue', 'getParams')
+            ['getValue', 'getParams']
         );
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
         $property->expects($this->any())->method('getValue')->will(
             $this->returnValue(
-                array(
-                    'ids' => array(1, 2, 3, 4),
+                [
+                    'ids' => [1, 2, 3, 4],
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2),
-                )
+                    'config' => ['conf1' => 1, 'conf2' => 2],
+                ]
             )
         );
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
-                )
+                [
+                ]
             )
         );
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
             json_encode(
-                array(
-                    'ids' => array(1, 2, 3, 4),
+                [
+                    'ids' => [1, 2, 3, 4],
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2),
-                )
+                    'config' => ['conf1' => 1, 'conf2' => 2],
+                ]
             )
         );
 
@@ -102,52 +103,52 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     {
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setProperty')
+            ['setProperty']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getValue', 'getParams')
+            ['getValue', 'getParams']
         );
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
         $property->expects($this->any())->method('getValue')->will(
             $this->returnValue(
-                array(
-                    'ids' => array(1, 2, 3, 4),
+                [
+                    'ids' => [1, 2, 3, 4],
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2),
-                    'data' => array('data1', 'data2'),
-                )
+                    'config' => ['conf1' => 1, 'conf2' => 2],
+                    'data' => ['data1', 'data2'],
+                ]
             )
         );
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
-                )
+                [
+                ]
             )
         );
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
             json_encode(
-                array(
-                    'ids' => array(1, 2, 3, 4),
+                [
+                    'ids' => [1, 2, 3, 4],
                     'displayOption' => 'right',
-                    'config' => array('conf1' => 1, 'conf2' => 2),
-                )
+                    'config' => ['conf1' => 1, 'conf2' => 2],
+                ]
             )
         );
 
@@ -160,33 +161,33 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getPropertyValueWithDefault')
+            ['getPropertyValueWithDefault']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setValue', 'getParams')
+            ['setValue', 'getParams']
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
-                array(
-                    array(
+                [
+                    [
                         'property',
                         '{}',
                         $config,
-                    ),
-                )
+                    ],
+                ]
             )
         );
 
@@ -198,8 +199,8 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
-                )
+                [
+                ]
             )
         );
 
@@ -211,33 +212,33 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getPropertyValueWithDefault')
+            ['getPropertyValueWithDefault']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setValue', 'getParams')
+            ['setValue', 'getParams']
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
-                array(
-                    array(
+                [
+                    [
                         'property',
                         '{}',
                         $config,
-                    ),
-                )
+                    ],
+                ]
             )
         );
 
@@ -249,17 +250,17 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
-                )
+                [
+                ]
             )
         );
 
         $this->mediaSelection->readForPreview(
-            array(
-                'config' => array('conf1' => 1, 'conf2' => 2),
+            [
+                'config' => ['conf1' => 1, 'conf2' => 2],
                 'displayOption' => 'right',
-                'ids' => array(1, 2, 3, 4),
-            ),
+                'ids' => [1, 2, 3, 4],
+            ],
             $property,
             'test',
             'en',
@@ -273,33 +274,33 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getPropertyValueWithDefault')
+            ['getPropertyValueWithDefault']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setValue', 'getParams')
+            ['setValue', 'getParams']
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
-                array(
-                    array(
+                [
+                    [
                         'property',
                         '{}',
                         $config,
-                    ),
-                )
+                    ],
+                ]
             )
         );
 
@@ -309,9 +310,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
+                [
                     'types' => 'document',
-                )
+                ]
             )
         );
 
@@ -324,33 +325,33 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getPropertyValueWithDefault')
+            ['getPropertyValueWithDefault']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setValue', 'getParams')
+            ['setValue', 'getParams']
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
-                array(
-                    array(
+                [
+                    [
                         'property',
                         '{}',
                         $config,
-                    ),
-                )
+                    ],
+                ]
             )
         );
 
@@ -360,18 +361,18 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
+                [
                     'types' => 'document',
-                )
+                ]
             )
         );
 
         $this->mediaSelection->readForPreview(
-            array(
-                'config' => array('conf1' => 1, 'conf2' => 2),
+            [
+                'config' => ['conf1' => 1, 'conf2' => 2],
                 'displayOption' => 'right',
-                'ids' => array(1, 2, 3, 4),
-            ),
+                'ids' => [1, 2, 3, 4],
+            ],
             $property,
             'test',
             'en',
@@ -385,33 +386,33 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getPropertyValueWithDefault')
+            ['getPropertyValueWithDefault']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setValue', 'getParams')
+            ['setValue', 'getParams']
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
-                array(
-                    array(
+                [
+                    [
                         'property',
                         '{}',
                         $config,
-                    ),
-                )
+                    ],
+                ]
             )
         );
 
@@ -421,9 +422,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
+                [
                     'types' => 'document,image',
-                )
+                ]
             )
         );
 
@@ -436,33 +437,33 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('getPropertyValueWithDefault')
+            ['getPropertyValueWithDefault']
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setValue', 'getParams')
+            ['setValue', 'getParams']
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
             $this->returnValueMap(
-                array(
-                    array(
+                [
+                    [
                         'property',
                         '{}',
                         $config,
-                    ),
-                )
+                    ],
+                ]
             )
         );
 
@@ -472,18 +473,18 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
-                array(
+                [
                     'types' => 'document,image',
-                )
+                ]
             )
         );
 
         $this->mediaSelection->readForPreview(
-            array(
-                'config' => array('conf1' => 1, 'conf2' => 2),
+            [
+                'config' => ['conf1' => 1, 'conf2' => 2],
                 'displayOption' => 'right',
-                'ids' => array(1, 2, 3, 4),
-            ),
+                'ids' => [1, 2, 3, 4],
+            ],
             $property,
             'test',
             'en',

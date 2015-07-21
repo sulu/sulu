@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,11 +23,11 @@ class DefaultController extends WebsiteController
 {
     /**
      * Loads the content from the request (filled by the route provider) and creates a response with this content and
-     * the appropriate cache headers
+     * the appropriate cache headers.
      *
      * @param \Sulu\Component\Content\Compat\StructureInterface $structure
-     * @param bool $preview
-     * @param bool $partial
+     * @param bool                                              $preview
+     * @param bool                                              $partial
      *
      * @return Response
      */
@@ -34,7 +35,7 @@ class DefaultController extends WebsiteController
     {
         $response = $this->renderStructure(
             $structure,
-            array(),
+            [],
             $preview,
             $partial
         );
@@ -66,9 +67,9 @@ class DefaultController extends WebsiteController
     /**
      * Resolve the redirect URL, appending any additional path data.
      *
-     * @param string $url Original webspace URI
-     * @param string $redirectUrl  Redirect webspace URI
-     * @param string $requestUri The actual incoming request URI
+     * @param string $url         Original webspace URI
+     * @param string $redirectUrl Redirect webspace URI
+     * @param string $requestUri  The actual incoming request URI
      *
      * @return string URL to redirect to
      */

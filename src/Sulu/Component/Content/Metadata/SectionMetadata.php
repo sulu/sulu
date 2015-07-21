@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,20 +18,19 @@ namespace Sulu\Component\Content\Metadata;
 class SectionMetadata extends ItemMetadata
 {
     /**
-     * The number of grid columns the property should use in the admin interface
+     * The number of grid columns the property should use in the admin interface.
      *
-     * @var integer
+     * @var int
      */
     public $colSpan = null;
 
     /**
      * Return the colspan.
      *
-     * @return integer
+     * @return int
      */
-    public function getColSpan() 
+    public function getColSpan()
     {
         return $this->colSpan;
     }
-    
 }

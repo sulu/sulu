@@ -37,10 +37,10 @@ class MediaTwigExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_resolve_media', array($this, 'resolveMediaFunction')),
-            new \Twig_SimpleFunction('sulu_resolve_medias', array($this, 'resolveMediasFunction')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_resolve_media', [$this, 'resolveMediaFunction']),
+            new \Twig_SimpleFunction('sulu_resolve_medias', [$this, 'resolveMediasFunction']),
+        ];
     }
 
     /**
@@ -66,18 +66,19 @@ class MediaTwigExtension extends \Twig_Extension
      * @param int[]|MediaEntity[] $medias ids to resolve
      * @param string $locale
      *z
+     *
      * @return MediaApi
      */
     public function resolveMediasFunction($medias, $locale)
     {
         if (count($medias) === 0) {
-            return array();
+            return [];
         }
 
-        $ids = array();
-        $entities = array();
-        $entitiesIndex =array();
-        for ($i = 0; $i < count($medias); $i++) {
+        $ids = [];
+        $entities = [];
+        $entitiesIndex = [];
+        for ($i = 0; $i < count($medias); ++$i) {
             $media = $medias[$i];
 
             if (is_object($media)) {
@@ -109,7 +110,7 @@ class MediaTwigExtension extends \Twig_Extension
             return $this->mediaManager->addFormatsAndUrl($media);
         }
 
-        return null;
+        return;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -124,22 +125,22 @@ class InternalLinksContainer implements ArrayableInterface
      */
     private function loadData()
     {
-        $result = array();
+        $result = [];
         if ($this->ids !== null && sizeof($this->ids) > 0) {
             $this->contentQueryBuilder->init(
-                array(
+                [
                     'ids' => $this->ids,
-                    'properties' => (isset($this->params['properties']) ? $this->params['properties']->getValue() : array()),
-                )
+                    'properties' => (isset($this->params['properties']) ? $this->params['properties']->getValue() : []),
+                ]
             );
             $pages = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,
-                array($this->languageCode),
+                [$this->languageCode],
                 $this->contentQueryBuilder
             );
 
             // init vars
-            $map = array();
+            $map = [];
 
             // map pages
             foreach ($pages as $page) {
@@ -182,6 +183,6 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        return array('ids' => $this->ids);
+        return ['ids' => $this->ids];
     }
 }

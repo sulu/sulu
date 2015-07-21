@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\ResourceBundle\Resource;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ResourceBundle\Api\Filter;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
-use Sulu\Bundle\ResourceBundle\Api\Filter;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
@@ -31,8 +31,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 /**
  * Manager responsible for filters
- * Class FilterManager
- * @package Sulu\Bundle\ResourceBundle\Filter
+ * Class FilterManager.
  */
 class FilterManager implements FilterManagerInterface
 {
@@ -88,13 +87,13 @@ class FilterManager implements FilterManagerInterface
      */
     public function getFieldDescriptors($locale)
     {
-        $fieldDescriptors = array();
+        $fieldDescriptors = [];
         $fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
             self::$filterEntityName,
             'public.id',
-            array(),
+            [],
             true
         );
 
@@ -103,13 +102,13 @@ class FilterManager implements FilterManagerInterface
             'name',
             self::$filterTranslationEntityName,
             'resource.filter.name',
-            array(
+            [
                 self::$filterTranslationEntityName => new DoctrineJoinDescriptor(
                     self::$filterTranslationEntityName,
                     self::$filterEntityName . '.translations',
                     self::$filterTranslationEntityName . '.locale = \'' . $locale . '\''
                 ),
-            ),
+            ],
             false,
             true
         );
@@ -119,7 +118,7 @@ class FilterManager implements FilterManagerInterface
             'created',
             self::$filterEntityName,
             'public.created',
-            array(),
+            [],
             false,
             true,
             'date'
@@ -130,7 +129,7 @@ class FilterManager implements FilterManagerInterface
             'changed',
             self::$filterEntityName,
             'public.changed',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -151,7 +150,7 @@ class FilterManager implements FilterManagerInterface
             'context',
             self::$filterEntityName,
             'public.context',
-            array(),
+            [],
             true
         );
 
@@ -160,12 +159,12 @@ class FilterManager implements FilterManagerInterface
             'user',
             self::$userEntityName,
             'public.user',
-            array(
+            [
                 self::$userEntityName => new DoctrineJoinDescriptor(
                     self::$userEntityName,
                     self::$filterEntityName . '.user'
                 ),
-            ),
+            ],
             true
         );
 
@@ -181,7 +180,7 @@ class FilterManager implements FilterManagerInterface
         if ($filter) {
             return new Filter($filter, $locale);
         } else {
-            return null;
+            return;
         }
     }
 
@@ -235,7 +234,7 @@ class FilterManager implements FilterManagerInterface
             }
         }
 
-        if(array_key_exists('private', $data) &&  $data['private'] === true){
+        if (array_key_exists('private', $data) &&  $data['private'] === true) {
             $filter->setPrivate($data['private']);
             $filter->setUser($user);
         } else {
@@ -283,18 +282,20 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Updates the given condition group with the values from the given array
+     * Updates the given condition group with the values from the given array.
      *
      * @param ConditionGroupEntity $conditionGroup
      * @param array $matchedEntry
+     *
      * @return bool
+     *
      * @throws ConditionGroupMismatchException
      * @throws FilterDependencyNotFoundException
      */
     protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
         if (array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
-            $conditionIds = array();
+            $conditionIds = [];
             foreach ($matchedEntry['conditions'] as $conditionData) {
                 if (array_key_exists('id', $conditionData)) {
                     /** @var ConditionEntity $conditionEntity */
@@ -316,7 +317,6 @@ class FilterManager implements FilterManagerInterface
                     }
 
                     $conditionIds[] = $conditionEntity->getId();
-
                 } else {
                     $conditionEntity = new ConditionEntity();
                     $conditionEntity->setConditionGroup($conditionGroup);
@@ -345,7 +345,7 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Parses the value for a condition - is mainly used for parsing values with type datetime
-     * but excludes relative values like "-1 week" or "now"
+     * but excludes relative values like "-1 week" or "now".
      *
      * @return string
      */
@@ -353,18 +353,20 @@ class FilterManager implements FilterManagerInterface
     {
         // check if date and not a relative value like -1 week
         if ($type === DataTypes::DATETIME_TYPE && !preg_match('/[A-Za-z]{3,}/', $value)) {
-           return (new \DateTime($value))->format(\DateTime::ISO8601);
+            return (new \DateTime($value))->format(\DateTime::ISO8601);
         }
 
         return $value;
     }
 
     /**
-     * Adds a condition group to the given filter
+     * Adds a condition group to the given filter.
      *
      * @param Filter $filter The filter to add the condition group to
      * @param array $conditionGroupData The array containing the data for the additional condition group
+     *
      * @return bool
+     *
      * @throws EntityIdAlreadySetException
      * @throws FilterDependencyNotFoundException
      */
@@ -404,11 +406,12 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Returns the entry from the data with the given key, or the given default value, if the key does not exist
+     * Returns the entry from the data with the given key, or the given default value, if the key does not exist.
      *
      * @param array $data
      * @param string $key
      * @param string $default
+     *
      * @return mixed
      */
     protected function getProperty(array $data, $key, $default = null)
@@ -417,10 +420,10 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Checks if the given data is correct
+     * Checks if the given data is correct.
      *
      * @param array $data The data to check
-     * @param boolean $create Defines if check is for new or already existing data
+     * @param bool $create Defines if check is for new or already existing data
      */
     protected function checkData($data, $create)
     {
@@ -430,12 +433,14 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Checks if data for the given key is set correctly
+     * Checks if data for the given key is set correctly.
      *
      * @param array $data The array with the data
      * @param string $key The array key to check
      * @param bool $create Defines if the is for new or already existing data
+     *
      * @return bool
+     *
      * @throws Exception\MissingFilterAttributeException
      */
     protected function checkDataSet(array $data, $key, $create)
@@ -449,10 +454,12 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Checks if the given data is correct for a condition
+     * Checks if the given data is correct for a condition.
      *
      * @param array $data The data to check
+     *
      * @return bool
+     *
      * @throws MissingConditionAttributeException
      */
     protected function isValidConditionData($data)
@@ -474,7 +481,7 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Deletes multiple filters at once
+     * Deletes multiple filters at once.
      *
      * @param array $ids
      */
@@ -484,8 +491,10 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Returns the configured features for a context
+     * Returns the configured features for a context.
+     *
      * @param $context
+     *
      * @return array|null
      */
     public function getFeaturesForContext($context)
@@ -494,19 +503,19 @@ class FilterManager implements FilterManagerInterface
             return $this->contextConfiguration[$context]['features'];
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Removes conditions from condition groups when they are not in the given array
+     * Removes conditions from condition groups when they are not in the given array.
+     *
      * @param ConditionGroupEntity $conditionGroup
      * @param array $conditionIds
      */
     protected function removeNonExistentConditions(
         $conditionGroup,
         $conditionIds
-    )
-    {
+    ) {
         foreach ($conditionGroup->getConditions() as $condition) {
             if ($condition->getId() && !in_array($condition->getId(), $conditionIds)) {
                 $conditionGroup->removeCondition($condition);
@@ -516,9 +525,11 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Checks if the context exists
+     * Checks if the context exists.
+     *
      * @param $context
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasContext($context)
     {
@@ -530,10 +541,12 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * Checks if a feature is enabled for a context
+     * Checks if a feature is enabled for a context.
+     *
      * @param $context
      * @param $feature
-     * @return boolean
+     *
+     * @return bool
      */
     public function isFeatureEnabled($context, $feature)
     {
@@ -548,7 +561,7 @@ class FilterManager implements FilterManagerInterface
 
     /**
      * Finds all filters filtered by context and user and
-     * for the given locale
+     * for the given locale.
      *
      * @param string $context
      * @param $userId

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class DispositionTypeTwigExtension extends \Twig_Extension
 {
-
     /**
      * @var string
      */
@@ -48,9 +48,9 @@ class DispositionTypeTwigExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_get_media_url', array($this, 'getMediaUrl')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_get_media_url', [$this, 'getMediaUrl']),
+        ];
     }
 
     public function getMediaUrl(Media $media, $dispositionType = null)
@@ -78,7 +78,7 @@ class DispositionTypeTwigExtension extends \Twig_Extension
             return ResponseHeaderBag::DISPOSITION_ATTACHMENT;
         }
 
-        return null;
+        return;
     }
 
     /**

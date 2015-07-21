@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,11 +38,11 @@ class DoctrineRestHelperTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
 
         $entities->expects($this->once())->method('count')->willReturn(2);
-        $entities->expects($this->once())->method('getValues')->willReturn(array(null, null));
+        $entities->expects($this->once())->method('getValues')->willReturn([null, null]);
         $entities->expects($this->once())->method('clear');
-        $entities->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator(array(null, null)));
+        $entities->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator([null, null]));
         $entities->expects($this->exactly(2))->method('add');
 
-        $this->restHelper->processSubEntities($entities, array(), function () {});
+        $this->restHelper->processSubEntities($entities, [], function () {});
     }
 }

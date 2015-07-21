@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,12 +34,12 @@ class WebspaceCollectionBuilder
     const REPLACER_LOCALIZATION = '{localization}';
     const REPLACER_SEGMENT = '{segment}';
 
-    private $replacers = array(
+    private $replacers = [
         self::REPLACER_LANGUAGE,
         self::REPLACER_COUNTRY,
         self::REPLACER_LOCALIZATION,
         self::REPLACER_SEGMENT,
-    );
+    ];
 
     /**
      * The loader for the xml config files.
@@ -103,12 +104,12 @@ class WebspaceCollectionBuilder
         $collection = new WebspaceCollection();
 
         // reset arrays
-        $this->webspaces = array();
-        $this->portals = array();
-        $this->portalInformations = array();
+        $this->webspaces = [];
+        $this->portals = [];
+        $this->portalInformations = [];
 
         foreach ($finder as $file) {
-            /** @var SplFileInfo $file */
+            /* @var SplFileInfo $file */
             try {
                 // add file resource for cache invalidation
                 $collection->addResource(new FileResource($file->getRealPath()));
@@ -190,11 +191,11 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Webspace $webspace
+     * @param Webspace    $webspace
      * @param Environment $environment
-     * @param string $urlAddress
-     * @param string $urlRedirect
-     * @param string $urlAnalyticsKey
+     * @param string      $urlAddress
+     * @param string      $urlRedirect
+     * @param string      $urlAnalyticsKey
      */
     private function buildUrlRedirect(Webspace $webspace, Environment $environment, $urlAddress, $urlRedirect, $urlAnalyticsKey)
     {
@@ -211,13 +212,13 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Portal $portal
-     * @param Environment $environment
-     * @param Segment[] $segments
-     * @param string[] $replacers
-     * @param string $urlAddress
+     * @param Portal       $portal
+     * @param Environment  $environment
+     * @param Segment[]    $segments
+     * @param string[]     $replacers
+     * @param string       $urlAddress
      * @param Localization $localization
-     * @param string $urlAnalyticsKey
+     * @param string       $urlAnalyticsKey
      */
     private function buildUrlFullMatch(
         Portal $portal,
@@ -259,18 +260,18 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Portal $portal
+     * @param Portal      $portal
      * @param Environment $environment
-     * @param string $urlAddress
-     * @param string $urlAnalyticsKey
+     * @param string      $urlAddress
+     * @param string      $urlAnalyticsKey
      */
     private function buildUrlPartialMatch(Portal $portal, Environment $environment, $urlAddress, $urlAnalyticsKey)
     {
-        $replacers = array(
+        $replacers = [
             self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
             self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
             self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
-        );
+        ];
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
         if ($defaultSegment) {
@@ -297,7 +298,7 @@ class WebspaceCollectionBuilder
     /**
      * Builds the URLs for the portal, which are not a redirect.
      *
-     * @param Portal $portal
+     * @param Portal      $portal
      * @param Environment $environment
      * @param $url
      * @param $segments
@@ -315,7 +316,7 @@ class WebspaceCollectionBuilder
                 $portal,
                 $environment,
                 $segments,
-                array(),
+                [],
                 $urlAddress,
                 $portal->getLocalization($locale),
                 $urlAnalyticsKey
@@ -326,11 +327,11 @@ class WebspaceCollectionBuilder
                 $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
                 $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
 
-                $replacers = array(
+                $replacers = [
                     self::REPLACER_LANGUAGE => $language,
                     self::REPLACER_COUNTRY => $country,
                     self::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
-                );
+                ];
 
                 $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization, $urlAnalyticsKey);
             }
@@ -357,7 +358,7 @@ class WebspaceCollectionBuilder
      * Replaces the given values in the pattern.
      *
      * @param string $pattern
-     * @param array $replacers
+     * @param array  $replacers
      *
      * @return string
      */

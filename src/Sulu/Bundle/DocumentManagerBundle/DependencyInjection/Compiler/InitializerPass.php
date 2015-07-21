@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,7 +28,7 @@ class InitializerPass implements CompilerPassInterface
         $initializerDef = $container->getDefinition('sulu_document_manager.initializer');
 
         $ids = $container->findTaggedServiceIds('sulu_document_manager.initializer');
-        $map = array();
+        $map = [];
 
         foreach ($ids as $id => $attributes) {
             $priority = 0;
@@ -40,4 +41,3 @@ class InitializerPass implements CompilerPassInterface
         $initializerDef->replaceArgument(1, $map);
     }
 }
-

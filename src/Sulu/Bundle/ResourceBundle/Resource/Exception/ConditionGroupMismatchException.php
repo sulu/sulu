@@ -12,12 +12,13 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * This exception is thrown if a the given condition group is not
- * related with the given conditions
+ * related with the given conditions.
  */
 class ConditionGroupMismatchException extends FilterException
 {
     /**
-     * The id of the condition group which is not related to the condition(s)
+     * The id of the condition group which is not related to the condition(s).
+     *
      * @var string
      */
     private $id;
@@ -32,7 +33,8 @@ class ConditionGroupMismatchException extends FilterException
     }
 
     /**
-     * Returns the id of the condition group
+     * Returns the id of the condition group.
+     *
      * @return string
      */
     public function getId()

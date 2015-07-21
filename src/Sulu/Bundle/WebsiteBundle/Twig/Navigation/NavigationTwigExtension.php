@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,13 +50,13 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_navigation_root_flat', array($this, 'flatRootNavigationFunction')),
-            new \Twig_SimpleFunction('sulu_navigation_root_tree', array($this, 'treeRootNavigationFunction')),
-            new \Twig_SimpleFunction('sulu_navigation_flat', array($this, 'flatNavigationFunction')),
-            new \Twig_SimpleFunction('sulu_navigation_tree', array($this, 'treeNavigationFunction')),
-            new \Twig_SimpleFunction('sulu_breadcrumb', array($this, 'breadcrumbFunction')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
+            new \Twig_SimpleFunction('sulu_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
+            new \Twig_SimpleFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
+            new \Twig_SimpleFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
+            new \Twig_SimpleFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
+        ];
     }
 
     /**
@@ -97,7 +98,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
 
             // return empty array if level does not exists
             if (!isset($breadcrumb[$level])) {
-                return array();
+                return [];
             }
 
             $uuid = $breadcrumb[$level]->getUuid();
@@ -123,7 +124,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
 
             // return empty array if level does not exists
             if (!isset($breadcrumb[$level])) {
-                return array();
+                return [];
             }
 
             $uuid = $breadcrumb[$level]->getUuid();

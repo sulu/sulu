@@ -10,14 +10,13 @@
 
 namespace Sulu\Bundle\ResourceBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
@@ -44,7 +43,8 @@ class SuluResourceExtension extends Extension
     }
 
     /**
-     * Sets default values for filter condition conjunction
+     * Sets default values for filter condition conjunction.
+     *
      * @param $config
      */
     private function setDefaultForFilterConditionsConjunction(&$config)
@@ -53,17 +53,17 @@ class SuluResourceExtension extends Extension
             !array_key_exists('conjunctions', $config['filters']) ||
             count($config['filters']['conjunctions']) === 0
         ) {
-            $config['filters'] = array();
-            $config['filters']['conjunctions'] = array(
-                array(
+            $config['filters'] = [];
+            $config['filters']['conjunctions'] = [
+                [
                     'id' => 'and',
                     'translation' => 'resource.filter.conjunction.and',
-                ),
-                array(
+                ],
+                [
                     'id' => 'or',
                     'translation' => 'resource.filter.conjunction.or',
-                )
-            );
+                ],
+            ];
         }
     }
 }

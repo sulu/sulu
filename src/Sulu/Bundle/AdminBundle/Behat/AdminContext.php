@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -179,9 +180,9 @@ EOT;
         $script = "$(\"li[data-id='delete-button']\")";
 
         $this->waitForAuraEvents(
-            array(
+            [
                 'husky.toolbar.header.item.show',
-            )
+            ]
         );
 
         $this->getSession()->executeScript($script . '.click();');
@@ -195,9 +196,9 @@ EOT;
         $script = "$(\"li[data-id='" . $id . "']\")";
 
         $this->waitForAuraEvents(
-            array(
+            [
                 'husky.toolbar.header.item.show',
-            )
+            ]
         );
 
         $this->getSession()->executeScript($script . '.click();');
@@ -324,7 +325,7 @@ EOT;
      */
     public function iExpectTheEvent($eventName)
     {
-        $this->waitForAuraEvents(array($eventName));
+        $this->waitForAuraEvents([$eventName]);
     }
 
     /**
@@ -332,7 +333,7 @@ EOT;
      */
     public function iWaitASecondForTheEvent($eventName)
     {
-        $this->waitForAuraEvents(array($eventName), 1000);
+        $this->waitForAuraEvents([$eventName], 1000);
     }
 
     /**
@@ -385,23 +386,23 @@ EOT;
                 $selector2
             )
         );
-        $this->assertAtLeastOneSelectors(array($selector1, $selector2));
+        $this->assertAtLeastOneSelectors([$selector1, $selector2]);
     }
 
     /**
      * Fill in the named husky field. Husky fields may not use standard HTML
      * inputs, so they need some special handling.
      *
-     * @param string $name Name of field to fill in
-     * @param string $value Value to fill in
+     * @param string $name           Name of field to fill in
+     * @param string $value          Value to fill in
      * @param string $parentSelector Optional parent selector
      */
     private function fillInHuskyField($name, $value, $parentSelector = '')
     {
-        foreach (array(
+        foreach ([
                      'data-aura-instance-name',
                      'data-mapper-property',
-                 ) as $propertyName) {
+                 ] as $propertyName) {
             $script = <<<EOT
 var el = $('%s[%s="%s"]').data('element');
 

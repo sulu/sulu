@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,26 +21,26 @@ class ResizeCommandTest extends AbstractCommandTest
 
     protected function getDataList()
     {
-        return array(
-            array(
+        return [
+            [
                 // Command Options
-                'options' => array(
+                'options' => [
                         'x' => 200,
                         'y' => 100,
-                    ),
+                    ],
                 'width' => 200,
                 'height' => 100,
-            ),
-            array(
+            ],
+            [
                 // Command Options
-                'options' => array(
+                'options' => [
                         'x' => 5000,
                         'y' => 5000,
-                    ),
+                    ],
                 // Tested Result
                 'width' => 5000,
                 'height' => 5000,
-            ),
-        );
+            ],
+        ];
     }
 }

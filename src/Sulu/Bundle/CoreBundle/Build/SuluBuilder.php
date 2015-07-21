@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,7 +37,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
         $this->input = $context->getInput();
         $this->output = $context->getOutput();
         $this->application = $context->getApplication();
-        $style = new OutputFormatterStyle('blue', 'black', array('bold'));
+        $style = new OutputFormatterStyle('blue', 'black', ['bold']);
         $this->output->getFormatter()->setStyle('section', $style);
     }
 
@@ -51,7 +52,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
     /**
      * Execute a command.
      */
-    protected function execCommand($description, $command, $args = array(''))
+    protected function execCommand($description, $command, $args = [''])
     {
         $this->output->getFormatter()->setIndentLevel(1);
         $formatter = new FormatterHelper();

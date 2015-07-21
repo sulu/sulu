@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Sulu\Component\Rest\RestController;
@@ -69,7 +78,7 @@ class TemplateController extends RestController
 
         return $this->render(
             'SuluContactBundle:Template:account.form.html.twig',
-            array_merge(array('categoryUrl' => $this->getCategoryUrl($categoryRoot)), $this->getRenderArray())
+            array_merge(['categoryUrl' => $this->getCategoryUrl($categoryRoot)], $this->getRenderArray())
         );
     }
 
@@ -78,12 +87,12 @@ class TemplateController extends RestController
         if ($key !== null) {
             return $this->generateUrl(
                 'get_category_children',
-                array('key' => $key, 'flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc')
+                ['key' => $key, 'flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc']
             );
         } else {
             return $this->generateUrl(
                 'get_categories',
-                array('flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc')
+                ['flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc']
             );
         }
     }
@@ -108,7 +117,7 @@ class TemplateController extends RestController
         $values = $this->getValues();
         $defaults = $this->getDefaults();
 
-        return array(
+        return [
             'addressTypes' => $values['addressTypes'],
             'phoneTypes' => $values['phoneTypes'],
             'emailTypes' => $values['emailTypes'],
@@ -121,7 +130,7 @@ class TemplateController extends RestController
             'defaultUrlType' => $defaults['urlType'],
             'defaultFaxType' => $defaults['faxType'],
             'defaultCountry' => $defaults['country'],
-        );
+        ];
     }
 
     /**
@@ -131,7 +140,7 @@ class TemplateController extends RestController
      */
     private function getValues()
     {
-        $values = array();
+        $values = [];
 
         $emailTypeEntity = 'SuluContactBundle:EmailType';
         $values['emailTypes'] = $this->getDoctrine($emailTypeEntity)
@@ -171,7 +180,7 @@ class TemplateController extends RestController
     private function getDefaults()
     {
         $config = $this->container->getParameter('sulu_contact.defaults');
-        $defaults = array();
+        $defaults = [];
 
         $emailTypeEntity = 'SuluContactBundle:EmailType';
         $defaults['emailType'] = $this->getDoctrine($emailTypeEntity)

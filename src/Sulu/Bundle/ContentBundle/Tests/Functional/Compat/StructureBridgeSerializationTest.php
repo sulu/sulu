@@ -1,13 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Compat;
 
 use JMS\Serializer\SerializerInterface;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
@@ -80,12 +89,12 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $page->setResourceSegment('/hello');
         $page->setParent($this->contentDocument);
         $page->setStructureType('internallinks');
-        $page->getStructure()->bind(array(
+        $page->getStructure()->bind([
             'title' => 'World',
-            'internalLinks' => array(
+            'internalLinks' => [
                 $this->contentDocument->getUuid(),
-            ),
-        ), true);
+            ],
+        ], true);
 
         $this->documentManager->persist($page, 'fr');
         $this->documentManager->flush();

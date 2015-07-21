@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,20 +64,20 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->object = $this->prophesize('\stdClass')
             ->willExtend(get_class($this->parentObject->reveal()));
 
-        $objects = array(
-            'sulu' => array(
-                'contact' => array(
+        $objects = [
+            'sulu' => [
+                'contact' => [
                     'model' => '\stdClass',
                     'repository' => '\Sulu\Bundle\ContactBundle\Entity\ContactRepository',
-                ),
-                'member' => array(
+                ],
+                'member' => [
                     'model' => '\Closure',
-                ),
-                'user' => array(
+                ],
+                'user' => [
                     'model' => get_class($this->object->reveal()),
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->classMetadata = $this->prophesize('Doctrine\ORM\Mapping\ClassMetadata');
         $this->reflection = $this->prophesize('\ReflectionClass');
@@ -130,7 +131,7 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
         /** @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $mappingDriver */
         $mappingDriver = $this->prophesize('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
-        $mappingDriver->getAllClassNames()->willReturn(array(get_class($this->parentObject->reveal())));
+        $mappingDriver->getAllClassNames()->willReturn([get_class($this->parentObject->reveal())]);
         $mappingDriver->loadMetadataForClass(
             get_class($this->parentObject->reveal()),
             Argument::type('Doctrine\ORM\Mapping\ClassMetadata')

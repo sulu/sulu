@@ -1,18 +1,15 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
-namespace Sulu\Component\Content\Document\Structure;
 
-use Sulu\Component\Content\Types\ContentTypeManagerInterface;
-use PHPCR\NodeInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
+namespace Sulu\Component\Content\Document\Structure;
 
 /**
  * Container for content properties.
@@ -20,7 +17,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 interface StructureInterface extends \ArrayAccess
 {
     /**
-     * Return the named property
+     * Return the named property.
      *
      * @param string $name
      *
@@ -39,46 +36,46 @@ interface StructureInterface extends \ArrayAccess
     public function getContentViewProperty($name);
 
     /**
-     * Return true if the container has the named property
+     * Return true if the container has the named property.
      *
      * @param string $name
      */
     public function hasProperty($name);
 
     /**
-     * Bind data to the container
+     * Bind data to the container.
      *
      * If $clearMissing is true then any missing fields will be
      * set to NULL.
      *
      * @param array $data
-     * @param boolean $clearMissing
+     * @param bool  $clearMissing
      */
     public function bind($data, $clearMissing = false);
 
     /**
-     * Return an array representation of the containers property values
+     * Return an array representation of the containers property values.
      *
      * @return array
      */
     public function toArray();
 
     /**
-     * Get staged data, see documentation for commitStagedData
+     * Get staged data, see documentation for commitStagedData.
      *
      * @return array
      */
     public function getStagedData();
-    
+
     /**
-     * Set staged data, see documentation for commitStagedData
+     * Set staged data, see documentation for commitStagedData.
      *
      * @param array $stagedData
      */
     public function setStagedData(array $stagedData);
 
     /**
-     * Commit the staged content data
+     * Commit the staged content data.
      *
      * This is necessary because:
      *
@@ -92,7 +89,7 @@ interface StructureInterface extends \ArrayAccess
      *
      * If $clearMissingContent is true, then fields will be set to NULL
      *
-     * @param boolean $clearMissingContent
+     * @param bool $clearMissingContent
      */
     public function commitStagedData($clearMissingContent);
 }

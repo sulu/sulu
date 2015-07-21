@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,15 +35,15 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
         $manager->add('/content', $app->reveal());
 
         $this->assertEquals(
-            array(
-                'test' => array(
+            [
+                'test' => [
                     'route' => '/content',
                     'app' => $app->reveal(),
                     'name' => 'test',
-                    'allowedOrigins' => array('*'),
+                    'allowedOrigins' => ['*'],
                     'httpHost' => 'localhost',
-                ),
-            ),
+                ],
+            ],
             $manager->getApps()
         );
     }
@@ -54,18 +55,18 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 
         $manager = new RatchetAppManager(9876);
 
-        $manager->add('/content', $app->reveal(), array('test'));
+        $manager->add('/content', $app->reveal(), ['test']);
 
         $this->assertEquals(
-            array(
-                'test' => array(
+            [
+                'test' => [
                     'route' => '/content',
                     'app' => $app->reveal(),
                     'name' => 'test',
-                    'allowedOrigins' => array('test'),
+                    'allowedOrigins' => ['test'],
                     'httpHost' => 'localhost',
-                ),
-            ),
+                ],
+            ],
             $manager->getApps()
         );
     }
@@ -78,18 +79,18 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 
         $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
 
-        $manager->add('/content', $app->reveal(), array('test'), 'sulu.io');
+        $manager->add('/content', $app->reveal(), ['test'], 'sulu.io');
 
         $this->assertEquals(
-            array(
-                'test' => array(
+            [
+                'test' => [
                     'route' => '/content',
                     'app' => $app->reveal(),
                     'name' => 'test',
-                    'allowedOrigins' => array('test'),
+                    'allowedOrigins' => ['test'],
                     'httpHost' => 'sulu.io',
-                ),
-            ),
+                ],
+            ],
             $manager->getApps()
         );
     }

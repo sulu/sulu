@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
+use Prophecy\Argument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
@@ -21,7 +23,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
-use Prophecy\Argument;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -484,7 +485,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $url = null,
         $redirect = null
     ) {
-        $methods = array(
+        $methods = [
             'getPortal',
             'getCurrentPath',
             'getRedirect',
@@ -492,7 +493,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             'getMatchType',
             'getResourceLocator',
             'getResourceLocatorPrefix',
-        );
+        ];
 
         if ($language != null) {
             $methods[] = 'getCurrentLocalization';
@@ -500,7 +501,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $portalManager = $this->getMockForAbstractClass(
             '\Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer',
-            array(),
+            [],
             '',
             false,
             true,
@@ -530,12 +531,12 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         $contentMapper = $this->getMockForAbstractClass(
             ContentMapperInterface::class,
-            array(),
+            [],
             '',
             false,
             true,
             true,
-            array('loadByResourceLocator')
+            ['loadByResourceLocator']
         );
 
         return $contentMapper;
@@ -546,7 +547,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getActiveThemeMock()
     {
-        return $this->getMock('\Liip\ThemeBundle\ActiveTheme', array(), array(), '', false);
+        return $this->getMock('\Liip\ThemeBundle\ActiveTheme', [], [], '', false);
     }
 
     /**
@@ -557,11 +558,10 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getRequestMock($path, $prefix = null)
     {
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', array('getRequestUri'));
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', ['getRequestUri']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue($path));
         $request->expects($this->any())->method('getResourceLocatorPrefix')->will($this->returnValue($prefix));
 
         return $request;
     }
 }
-

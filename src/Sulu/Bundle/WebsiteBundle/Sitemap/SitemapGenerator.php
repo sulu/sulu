@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,7 +64,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     public function generate($webspaceKey, $locale, $flat = false)
     {
         $webspaceSitemapInformation = $this->getWebspaceSitemap($webspaceKey);
-        $sitemap = $this->generateByLocals($webspaceKey, array($locale), $flat);
+        $sitemap = $this->generateByLocals($webspaceKey, [$locale], $flat);
         if (sizeof($sitemap) === 1 && !$flat) {
             $sitemap = $sitemap[0];
         }
@@ -76,6 +77,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
     /**
      * @param $webspaceKey
+     *
      * @return WebspaceSitemap
      */
     private function getWebspaceSitemap($webspaceKey)
@@ -98,8 +100,9 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
     /**
      * @param string $webspaceKey
-     * @param array $locales
-     * @param bool $flat
+     * @param array  $locales
+     * @param bool   $flat
+     *
      * @return array
      */
     private function generateByLocals($webspaceKey, $locales, $flat = false)

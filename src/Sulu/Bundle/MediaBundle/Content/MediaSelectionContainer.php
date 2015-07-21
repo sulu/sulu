@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -97,7 +98,7 @@ class MediaSelectionContainer implements ArrayableInterface
         if (!empty($this->ids)) {
             return $this->mediaManager->getByIds($this->ids, $locale);
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -163,11 +164,11 @@ class MediaSelectionContainer implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        return array(
+        return [
             'config' => $this->getConfig(),
             'ids' => $this->getIds(),
             'types' => $this->getTypes(),
             'displayOption' => $this->getDisplayOption(),
-        );
+        ];
     }
 }

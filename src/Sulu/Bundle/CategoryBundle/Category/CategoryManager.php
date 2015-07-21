@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -87,7 +88,7 @@ class CategoryManager implements CategoryManagerInterface
                 'id',
                 self::$categoryEntityName,
                 'public.id',
-                array(),
+                [],
                 true
             );
             $this->fieldDescriptors['key'] = new DoctrineFieldDescriptor(
@@ -95,7 +96,7 @@ class CategoryManager implements CategoryManagerInterface
                 'key',
                 self::$categoryEntityName,
                 'public.key',
-                array(),
+                [],
                 true
             );
             $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
@@ -103,20 +104,20 @@ class CategoryManager implements CategoryManagerInterface
                 'name',
                 self::$catTranslationEntityName,
                 'public.name',
-                array(
+                [
                     self::$catTranslationEntityName => new DoctrineJoinDescriptor(
                             self::$catTranslationEntityName,
                             self::$categoryEntityName .
                             '.translations'
                         ),
-                )
+                ]
             );
             $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
                 'created',
                 'created',
                 self::$categoryEntityName,
                 'public.created',
-                array(),
+                [],
                 true
             );
             $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
@@ -124,7 +125,7 @@ class CategoryManager implements CategoryManagerInterface
                 'changed',
                 self::$categoryEntityName,
                 'public.changed',
-                array(),
+                [],
                 true
             );
             $this->fieldDescriptors['depth'] = new DoctrineFieldDescriptor(
@@ -132,7 +133,7 @@ class CategoryManager implements CategoryManagerInterface
                 'depth',
                 self::$categoryEntityName,
                 'public.depth',
-                array(),
+                [],
                 false
             );
             $this->fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
@@ -140,12 +141,12 @@ class CategoryManager implements CategoryManagerInterface
                 'parent',
                 self::$categoryEntityName . 'Parent',
                 'category.parent',
-                array(
+                [
                     self::$categoryEntityName . 'Parent' => new DoctrineJoinDescriptor(
                             self::$categoryEntityName,
                             self::$categoryEntityName . '.parent'
                         ),
-                ),
+                ],
                 false
             );
             $this->fieldDescriptors['hasChildren'] = new DoctrineFieldDescriptor(
@@ -153,12 +154,12 @@ class CategoryManager implements CategoryManagerInterface
                 'hasChildren',
                 self::$categoryEntityName . 'Children',
                 'category.children',
-                array(
+                [
                     self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
                             self::$categoryEntityName,
                             self::$categoryEntityName . '.children'
                         ),
-                ),
+                ],
                 false
             );
         }
@@ -170,9 +171,9 @@ class CategoryManager implements CategoryManagerInterface
      * Returns categories with a given parent and/or a given depth-level
      * if no arguments passed returns all categories.
      *
-     * @param int $parent the id of the parent to filter for
-     * @param int $depth the depth-level to filter for
-     * @param string|null $sortBy column name to sort the categories by
+     * @param int         $parent    the id of the parent to filter for
+     * @param int         $depth     the depth-level to filter for
+     * @param string|null $sortBy    column name to sort the categories by
      * @param string|null $sortOrder sort order
      *
      * @return CategoryEntity[]
@@ -185,8 +186,8 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns the children for a given category.
      *
-     * @param int $key the key of the category to search the children for
-     * @param string|null $sortBy column name to sort by
+     * @param int         $key       the key of the category to search the children for
+     * @param string|null $sortBy    column name to sort by
      * @param string|null $sortOrder sort order
      *
      * @return CategoryEntity[]
@@ -235,8 +236,8 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Creates a new category or overrides an existing one.
      *
-     * @param array $data The data of the category to save
-     * @param int $userId The id of the user, who is doing this change
+     * @param array $data   The data of the category to save
+     * @param int   $userId The id of the user, who is doing this change
      *
      * @throws KeyNotUniqueException
      *
@@ -285,7 +286,7 @@ class CategoryManager implements CategoryManagerInterface
      * and provides neat getters and setters.
      *
      * @param Category $category
-     * @param string $locale
+     * @param string   $locale
      *
      * @return null|CategoryWrapper
      */
@@ -302,14 +303,14 @@ class CategoryManager implements CategoryManagerInterface
      * Same as getApiObject, but takes multiple category-entities.
      *
      * @param Category[] $categories
-     * @param string $locale
+     * @param string     $locale
      *
      * @return CategoryWrapper[]
      */
     public function getApiObjects($categories, $locale)
     {
         if (empty($categories)) {
-            return array();
+            return [];
         }
 
         $arrReturn = [];

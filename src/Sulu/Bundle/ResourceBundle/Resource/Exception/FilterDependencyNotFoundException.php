@@ -17,13 +17,15 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 class FilterDependencyNotFoundException extends FilterException
 {
     /**
-     * The name of the object not found
+     * The name of the object not found.
+     *
      * @var string
      */
     private $entityName;
     /**
-     * The id of the object not found
-     * @var integer
+     * The id of the object not found.
+     *
+     * @var int
      */
     private $id;
 
@@ -40,7 +42,8 @@ class FilterDependencyNotFoundException extends FilterException
     }
 
     /**
-     * Returns the name of the entityname of the dependency not found
+     * Returns the name of the entityname of the dependency not found.
+     *
      * @return string
      */
     public function getEntityName()
@@ -49,7 +52,8 @@ class FilterDependencyNotFoundException extends FilterException
     }
 
     /**
-     * Returns the id of the object not found
+     * Returns the id of the object not found.
+     *
      * @return int
      */
     public function getId()

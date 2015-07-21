@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ interface TemplateResolverInterface
     /**
      * Resolves template for different node types.
      *
-     * @param int $nodeType
+     * @param int    $nodeType
      * @param string $templateKey
      *
      * @return string

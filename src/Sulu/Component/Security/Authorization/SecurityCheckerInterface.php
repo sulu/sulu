@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ interface SecurityCheckerInterface
     /**
      * Checks a Sulu specific permission based on the subject, a permission type and a locale.
      *
-     * @param mixed $subject
+     * @param mixed  $subject
      * @param string $permission
      *
      * @return bool

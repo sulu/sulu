@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,19 +32,19 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('test-mapper'),
+            ['test-mapper'],
             'TestMapper'
         );
         $this->mapper->expects($this->any())
             ->method('unique')
-            ->will($this->returnCallback(array($this, 'uniqueCallback')));
+            ->will($this->returnCallback([$this, 'uniqueCallback']));
         $this->mapper->expects($this->any())
             ->method('getUniquePath')
-            ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
+            ->will($this->returnCallback([$this, 'getUniquePathCallback']));
 
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\Compat\StructureManagerInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
-        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', array(), array(), '', false);
+        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', [], [], '', false);
 
         $this->strategy = new TreeStrategy(
             $this->mapper,

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ interface UserRepositoryInterface extends UserProviderInterface, RepositoryInter
     /**
      * initializes the UserRepository.
      *
-     * @param string $suluSystem The standard sulu system
+     * @param string                   $suluSystem      The standard sulu system
      * @param RequestAnalyzerInterface $requestAnalyzer The RequestAnalyzer is required for getting the current security
      *
      * @return

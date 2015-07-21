@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -18,13 +27,13 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('namespace')
                 ->useAttributeAsKey('role')
-                    ->defaultValue(array(
+                    ->defaultValue([
                         'extension_localized' => 'i18n',
                         'system' => 'sulu',
                         'system_localized' => 'i18n',
                         'content' => null,
                         'content_localized' => 'i18n',
-                    ))
+                    ])
                     ->prototype('scalar')->end()
                 ->end()
                 ->scalarNode('debug')
@@ -50,4 +59,3 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 }
-

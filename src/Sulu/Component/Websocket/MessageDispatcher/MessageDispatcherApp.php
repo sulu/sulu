@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,8 +44,8 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     /**
      * Triggered when a client sends data through the socket.
      *
-     * @param  \Ratchet\ConnectionInterface $from The socket/connection that sent the message to your application
-     * @param  string $msg The message received
+     * @param \Ratchet\ConnectionInterface $from The socket/connection that sent the message to your application
+     * @param string                       $msg  The message received
      *
      * @throws \Exception
      */
@@ -68,13 +69,13 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
             // send fail message
             $from->send(
                 json_encode(
-                    array(
+                    [
                         'type' => 'error',
                         'exception' => get_class($e),
                         'code' => $e->getCode(),
                         'msg' => $e->getMessage(),
                         'parentMsg' => $msg,
-                    )
+                    ]
                 )
             );
         }
@@ -85,9 +86,9 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     /**
      * Dispatches message to handler with dispatcher service.
      *
-     * @param ConnectionInterface $conn
+     * @param ConnectionInterface        $conn
      * @param ConnectionContextInterface $context
-     * @param array $msg
+     * @param array                      $msg
      *
      * @throws MissingParameterException
      */
@@ -104,7 +105,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
             $conn,
             $msg['handler'],
             $msg['message'],
-            $msg['options'] ?: array(),
+            $msg['options'] ?: [],
             $this->createMessageHandlerContext($context, $msg['handler'])
         );
     }
@@ -113,7 +114,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
      * Create a message handler context.
      *
      * @param ConnectionContextInterface $context
-     * @param string $handlerName
+     * @param string                     $handlerName
      *
      * @return MessageHandlerContext
      */

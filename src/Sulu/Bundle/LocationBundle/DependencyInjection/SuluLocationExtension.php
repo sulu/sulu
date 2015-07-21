@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -62,20 +63,20 @@ class SuluLocationExtension extends Extension
 
         foreach ($config['enabled_providers'] as $enabledProviderName) {
             $providerConfig = $config['providers'][$enabledProviderName];
-            $mapManager->addMethodCall('registerProvider', array(
+            $mapManager->addMethodCall('registerProvider', [
                 $enabledProviderName,
                 $providerConfig,
-            ));
+            ]);
         }
 
         foreach ($config['geolocators'] as $geoLocatorName => $geoLocatorOptions) {
-            $mapManager->addMethodCall('registerGeolocator', array(
+            $mapManager->addMethodCall('registerGeolocator', [
                 $geoLocatorName,
                 $geoLocatorOptions,
-            ));
+            ]);
         }
 
-        $mapManager->addMethodCall('setDefaultProviderName', array($config['default_provider']));
+        $mapManager->addMethodCall('setDefaultProviderName', [$config['default_provider']]);
     }
 
     /**

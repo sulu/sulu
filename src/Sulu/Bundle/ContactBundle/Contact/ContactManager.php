@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,11 +46,11 @@ class ContactManager extends AbstractContactManager
     private $contactRepository;
 
     /**
-     * @param ObjectManager $em
-     * @param TagManagerInterface $tagManager
-     * @param AccountRepository $accountRepository
+     * @param ObjectManager          $em
+     * @param TagManagerInterface    $tagManager
+     * @param AccountRepository      $accountRepository
      * @param ContactTitleRepository $contactTitleRepository
-     * @param ContactRepository $contactRepository
+     * @param ContactRepository      $contactRepository
      */
     public function __construct(
         ObjectManager $em,
@@ -65,7 +66,7 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Find a contact by it's id
+     * Find a contact by it's id.
      *
      * @param int $id
      *
@@ -75,20 +76,20 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->findById($id);
         if (!$contact) {
-            return null;
+            return;
         }
 
         return $contact;
     }
 
     /**
-     * Deletes the contact for the given id
+     * Deletes the contact for the given id.
      *
      * @return \Closure
      */
     public function delete()
     {
-        /**
+        /*
          * TODO: https://github.com/sulu-io/sulu/pull/1171
          * This method needs to be refactored since in the first
          * iteration the logic was just moved from the Controller
@@ -149,14 +150,15 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Creates a new contact for the given data
+     * Creates a new contact for the given data.
      *
-     * @param array $data
+     * @param array    $data
      * @param int|null $id
-     * @param bool $patch
-     * @param bool $flush
+     * @param bool     $patch
+     * @param bool     $flush
      *
      * @return Contact
+     *
      * @throws EntityNotFoundException
      */
     public function save(
@@ -165,7 +167,7 @@ class ContactManager extends AbstractContactManager
         $patch = false,
         $flush = true
     ) {
-        /**
+        /*
          * TODO: https://github.com/sulu-io/sulu/pull/1171
          * This method needs to be refactored since in the first
          * iteration the logic was just moved from the Controller to this class due
@@ -185,31 +187,31 @@ class ContactManager extends AbstractContactManager
                 $this->setMainAccount($contact, $data);
             }
             if (!$patch || $this->getProperty($data, 'emails')) {
-                $this->processEmails($contact, $this->getProperty($data, 'emails', array()));
+                $this->processEmails($contact, $this->getProperty($data, 'emails', []));
             }
             if (!$patch || $this->getProperty($data, 'phones')) {
-                $this->processPhones($contact, $this->getProperty($data, 'phones', array()));
+                $this->processPhones($contact, $this->getProperty($data, 'phones', []));
             }
             if (!$patch || $this->getProperty($data, 'addresses')) {
-                $this->processAddresses($contact, $this->getProperty($data, 'addresses', array()));
+                $this->processAddresses($contact, $this->getProperty($data, 'addresses', []));
             }
             if (!$patch || $this->getProperty($data, 'notes')) {
-                $this->processNotes($contact, $this->getProperty($data, 'notes', array()));
+                $this->processNotes($contact, $this->getProperty($data, 'notes', []));
             }
             if (!$patch || $this->getProperty($data, 'faxes')) {
-                $this->processFaxes($contact, $this->getProperty($data, 'faxes', array()));
+                $this->processFaxes($contact, $this->getProperty($data, 'faxes', []));
             }
             if (!$patch || $this->getProperty($data, 'tags')) {
-                $this->processTags($contact, $this->getProperty($data, 'tags', array()));
+                $this->processTags($contact, $this->getProperty($data, 'tags', []));
             }
             if (!$patch || $this->getProperty($data, 'urls')) {
-                $this->processUrls($contact, $this->getProperty($data, 'urls', array()));
+                $this->processUrls($contact, $this->getProperty($data, 'urls', []));
             }
             if (!$patch || $this->getProperty($data, 'categories')) {
-                $this->processCategories($contact, $this->getProperty($data, 'categories', array()));
+                $this->processCategories($contact, $this->getProperty($data, 'categories', []));
             }
             if (!$patch || $this->getProperty($data, 'bankAccounts')) {
-                $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', array()));
+                $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
             }
         } else {
             $contact = $this->contactRepository->createNew();
@@ -272,7 +274,7 @@ class ContactManager extends AbstractContactManager
             }
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($contact, $data);
-            $this->processCategories($contact, $this->getProperty($data, 'categories', array()));
+            $this->processCategories($contact, $this->getProperty($data, 'categories', []));
         }
 
         $this->em->persist($contact);
@@ -289,7 +291,7 @@ class ContactManager extends AbstractContactManager
      *
      * @param Contact $contact The entity to add the address to
      * @param Address $address The address to be added
-     * @param Bool $isMain Defines if the address is the main Address of the contact
+     * @param Bool    $isMain  Defines if the address is the main Address of the contact
      *
      * @return ContactAddress
      *
@@ -317,7 +319,7 @@ class ContactManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param Contact $contact
+     * @param Contact        $contact
      * @param ContactAddress $contactAddress
      *
      * @return mixed|void
@@ -380,7 +382,7 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return null;
+            return;
         }
 
         return new ContactApi($contact, $locale, $this->tagManager);
@@ -399,7 +401,7 @@ class ContactManager extends AbstractContactManager
         if ($contact) {
             return new ContactApi($contact, $locale, $this->tagManager);
         } else {
-            return null;
+            return;
         }
     }
 
@@ -465,9 +467,9 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Return property for key or given default value
+     * Return property for key or given default value.
      *
-     * @param array $data
+     * @param array  $data
      * @param string $key
      * @param string $default
      *

@@ -1,22 +1,21 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Structure;
 
-use PHPCR\NodeInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
  * Lazy loading container for content properties.
@@ -29,22 +28,21 @@ class ManagedStructure extends Structure
     private $inspector;
     private $structure;
     private $node;
-    private $legacyProperties = array();
-    private $contentViewProperties = array();
+    private $legacyProperties = [];
+    private $contentViewProperties = [];
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param DocumentInspector $inspector
-     * @param object $document
+     * @param LegacyPropertyFactory       $legacyPropertyFactory
+     * @param DocumentInspector           $inspector
+     * @param object                      $document
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         LegacyPropertyFactory $legacyPropertyFactory,
         DocumentInspector $inspector,
         $document
-    )
-    {
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->document = $document;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
@@ -123,7 +121,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Update the structure
+     * Update the structure.
      *
      * @param StructureMetadata $structure
      */
@@ -133,14 +131,14 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Return an array copy of the property data
+     * Return an array copy of the property data.
      *
      * @return array
      */
     public function toArray()
     {
         $this->init();
-        $values = array();
+        $values = [];
         foreach (array_keys($this->structure->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
@@ -154,6 +152,7 @@ class ManagedStructure extends Structure
     public function offsetExists($offset)
     {
         $this->init();
+
         return $this->structure->hasProperty($offset);
     }
 

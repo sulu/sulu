@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -110,7 +111,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/tags',
-            array('name' => 'tag3')
+            ['name' => 'tag3']
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -135,7 +136,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/tags',
-            array('name' => 'tag1')
+            ['name' => 'tag1']
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -151,7 +152,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tags/' . $this->tag1->getId(),
-            array('name' => 'tag1_new')
+            ['name' => 'tag1_new']
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -176,7 +177,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tags/' . $this->tag2->getId(),
-            array('name' => 'tag1')
+            ['name' => 'tag1']
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -192,7 +193,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tags/4711',
-            array('name' => 'tag1_new')
+            ['name' => 'tag1_new']
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -200,13 +201,13 @@ class TagControllerTest extends SuluTestCase
 
     public function testDeleteById()
     {
-        $mockedEventListener = $this->getMock('stdClass', array('onDelete'));
+        $mockedEventListener = $this->getMock('stdClass', ['onDelete']);
         $mockedEventListener->expects($this->once())->method('onDelete');
 
         $client = $this->createAuthenticatedClient();
         $client->getContainer()->get('event_dispatcher')->addListener(
             'sulu.tag.delete',
-            array($mockedEventListener, 'onDelete')
+            [$mockedEventListener, 'onDelete']
         );
 
         $client->request(
@@ -245,21 +246,21 @@ class TagControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $mockedEventListener = $this->getMock('stdClass', array('onMerge'));
+        $mockedEventListener = $this->getMock('stdClass', ['onMerge']);
         $mockedEventListener->expects($this->once())->method('onMerge');
 
         $client = $this->createAuthenticatedClient();
         $client->getContainer()->get('event_dispatcher')->addListener(
             'sulu.tag.merge',
-            array($mockedEventListener, 'onMerge')
+            [$mockedEventListener, 'onMerge']
         );
 
         $client->request(
             'POST',
             '/api/tags/merge',
-            array('src' => implode(',', array(
+            ['src' => implode(',', [
                 $this->tag2->getId(), $tag3->getId(), $tag4->getId(),
-            )), 'dest' => $this->tag1->getId())
+            ]), 'dest' => $this->tag1->getId()]
         );
         $this->assertEquals(303, $client->getResponse()->getStatusCode());
         $this->assertEquals('/admin/api/tags/' . $this->tag1->getId(), $client->getResponse()->headers->get('location'));
@@ -295,7 +296,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/tags/merge',
-            array('src' => 1233, 'dest' => $this->tag1->getId())
+            ['src' => 1233, 'dest' => $this->tag1->getId()]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -311,20 +312,20 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/tags',
-            array(
-                array(
+            [
+                [
                     'name' => 'tag3',
-                ),
-                array(
+                ],
+                [
                     'name' => 'tag4',
-                ),
-                array(
+                ],
+                [
                     'name' => 'tag5',
-                ),
-                array(
+                ],
+                [
                     'name' => 'tag6',
-                ),
-            )
+                ],
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -357,14 +358,14 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/tags',
-            array(
-                array(
+            [
+                [
                     'name' => 'tag1',
-                ),
-                array(
+                ],
+                [
                     'name' => 'tag2',
-                ),
-            )
+                ],
+            ]
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -380,16 +381,16 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/tags',
-            array(
-                array(
+            [
+                [
                     'id' => $this->tag1->getId(),
                     'name' => 'tag11',
-                ),
-                array(
+                ],
+                [
                     'id' => $this->tag1->getId(),
                     'name' => 'tag22',
-                ),
-            )
+                ],
+            ]
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());

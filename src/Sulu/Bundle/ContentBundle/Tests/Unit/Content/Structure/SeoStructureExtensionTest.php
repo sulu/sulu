@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,7 +46,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testSave()
     {
-        $content = array();
+        $content = [];
         $this->nodeMock
             ->expects($this->exactly(7))
             ->method('setProperty')
@@ -58,7 +58,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $data = array(
+        $data = [
             'title' => 'Title',
             'description' => 'Description',
             'keywords' => 'Test, Test1',
@@ -66,12 +66,12 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'noIndex' => true,
             'noFollow' => true,
             'hideInSitemap' => true,
-        );
+        ];
         $this->extension->setLanguageCode('de', 'i18n', null);
         $this->extension->save($this->nodeMock, $data, 'default', 'de');
 
         $this->assertEquals(
-            array(
+            [
                 'i18n:de-seo-title' => $data['title'],
                 'i18n:de-seo-description' => $data['description'],
                 'i18n:de-seo-keywords' => $data['keywords'],
@@ -79,14 +79,14 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-noIndex' => $data['noIndex'],
                 'i18n:de-seo-noFollow' => $data['noFollow'],
                 'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
-            ),
+            ],
             $content
         );
     }
 
     public function testSaveWithoutData()
     {
-        $content = array();
+        $content = [];
         $this->nodeMock
             ->expects($this->exactly(7))
             ->method('setProperty')
@@ -98,12 +98,12 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $data = array();
+        $data = [];
         $this->extension->setLanguageCode('de', 'i18n', null);
         $this->extension->save($this->nodeMock, $data, 'default', 'de');
 
         $this->assertEquals(
-            array(
+            [
                 'i18n:de-seo-title' => '',
                 'i18n:de-seo-description' => '',
                 'i18n:de-seo-keywords' => '',
@@ -111,14 +111,14 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-noIndex' => false,
                 'i18n:de-seo-noFollow' => false,
                 'i18n:de-seo-hideInSitemap' => false,
-            ),
+            ],
             $content
         );
     }
 
     public function testLoad()
     {
-        $data = array(
+        $data = [
             'title' => 'Title',
             'description' => 'Description',
             'keywords' => 'Test, Test1',
@@ -126,9 +126,9 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'noIndex' => true,
             'noFollow' => true,
             'hideInSitemap' => true,
-        );
+        ];
 
-        $content = array(
+        $content = [
             'i18n:de-seo-title' => $data['title'],
             'i18n:de-seo-description' => $data['description'],
             'i18n:de-seo-keywords' => $data['keywords'],
@@ -136,7 +136,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'i18n:de-seo-noIndex' => $data['noIndex'],
             'i18n:de-seo-noFollow' => $data['noFollow'],
             'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
-        );
+        ];
         $this->nodeMock
             ->expects($this->exactly(7))
             ->method('getPropertyValueWithDefault')
@@ -156,7 +156,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($this->nodeMock, 'default', 'de');
 
         $this->assertEquals(
-            array(
+            [
                 'i18n:de-seo-title' => $data['title'],
                 'i18n:de-seo-description' => $data['description'],
                 'i18n:de-seo-keywords' => $data['keywords'],
@@ -164,14 +164,14 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-noIndex' => $data['noIndex'],
                 'i18n:de-seo-noFollow' => $data['noFollow'],
                 'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
-            ),
+            ],
             $content
         );
     }
 
     public function testLoadWithoutData()
     {
-        $content = array();
+        $content = [];
         $this->nodeMock
             ->expects($this->exactly(7))
             ->method('getPropertyValueWithDefault')
@@ -191,7 +191,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
         $result = $this->extension->load($this->nodeMock, 'default', 'de');
 
         $this->assertEquals(
-            array(
+            [
                 'title' => '',
                 'description' => '',
                 'keywords' => '',
@@ -199,7 +199,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'noIndex' => false,
                 'noFollow' => false,
                 'hideInSitemap' => false,
-            ),
+            ],
             $result
         );
     }

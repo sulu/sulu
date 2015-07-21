@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,6 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * extends structure with seo content.
@@ -33,7 +33,7 @@ class ExcerptStructureExtension extends AbstractExtension
      * will be filled with data in constructor
      * {@inheritdoc}
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * {@inheritdoc}
@@ -110,7 +110,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $data = array();
+        $data = [];
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
@@ -156,7 +156,7 @@ class ExcerptStructureExtension extends AbstractExtension
     {
         $container = new ExcerptValueContainer($container);
 
-        $data = array();
+        $data = [];
         foreach ($this->getExcerptStructure()->getProperties() as $property) {
             if ($container->__isset($property->getName())) {
                 $property->setValue($container->__get($property->getName()));
@@ -179,7 +179,6 @@ class ExcerptStructureExtension extends AbstractExtension
             $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
             $this->excerptStructure->setLanguageCode($this->languageCode);
         }
-
 
         return $this->excerptStructure;
     }

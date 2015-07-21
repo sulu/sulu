@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,9 +48,9 @@ class AddWebsocketAppPass implements CompilerPassInterface
                 $allowedOrigins = array_key_exists(
                     'allowedOrigins',
                     $attributes
-                ) ? $attributes['allowedOrigins'] : array('*');
+                ) ? $attributes['allowedOrigins'] : ['*'];
 
-                $manager->addMethodCall('add', array($route, $app, $allowedOrigins, $httpHost));
+                $manager->addMethodCall('add', [$route, $app, $allowedOrigins, $httpHost]);
             }
         }
     }

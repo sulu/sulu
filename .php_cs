@@ -12,16 +12,7 @@ EOF;
 Symfony\CS\Fixer\Contrib\HeaderCommentFixer::setHeader($header);
 
 return Symfony\CS\Config\Config::create()
-    ->fixers(array(
-        'symfony',
-        'concat_with_spaces',
-        'ordered_use',
-        '-concat_without_spaces',
-        '-phpdoc_indent',
-        '-phpdoc_params',
-        '-phpdoc_to_comment',
-        '-blankline_after_open_tag'
-    ))
+    ->fixers(array('header_comment'))
     ->finder(
         Symfony\CS\Finder\DefaultFinder::create()
             ->exclude('vendor')

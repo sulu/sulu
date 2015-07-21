@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace vendor\sulu\sulu\src\Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InitializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,11 +27,11 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
 
         $this->initializer = new Initializer(
             $this->container->reveal(),
-            array(
+            [
                 'service1' => 50,
                 'service2' => 10,
                 'service3' => 29,
-            )
+            ]
         );
 
         $this->container->get('service1')->willReturn($this->initializer1->reveal());
@@ -31,11 +40,11 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should execute the initializers in the correct order
+     * It should execute the initializers in the correct order.
      */
     public function testInitialize()
     {
-        $calls = array();
+        $calls = [];
         $out = new NullOutput();
 
         $this->initializer1->initialize($out)->will(function () use (&$calls) {
@@ -50,8 +59,8 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
 
         $this->initializer->initialize();
 
-        $this->assertEquals(array(
-            'service1', 'service3', 'service2'
-        ), $calls);
+        $this->assertEquals([
+            'service1', 'service3', 'service2',
+        ], $calls);
     }
 }

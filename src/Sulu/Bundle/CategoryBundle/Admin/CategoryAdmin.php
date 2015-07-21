@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,7 +51,7 @@ class CategoryAdmin extends Admin
      */
     public function getCommands()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -66,12 +67,12 @@ class CategoryAdmin extends Admin
      */
     public function getSecurityContexts()
     {
-        return array(
-            'Sulu' => array(
-                'Settings' => array(
+        return [
+            'Sulu' => [
+                'Settings' => [
                     'sulu.settings.categories',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 }

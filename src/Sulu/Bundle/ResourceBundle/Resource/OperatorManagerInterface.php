@@ -12,15 +12,15 @@ namespace Sulu\Bundle\ResourceBundle\Resource;
 
 /**
  * Interface for the repository of the operator manager
- * Interface OperatorManagerInterface
- * @package Sulu\Bundle\ResourceBundle\Resource
+ * Interface OperatorManagerInterface.
  */
 interface OperatorManagerInterface
 {
     /**
-     * Returns all operators with a specific locale
+     * Returns all operators with a specific locale.
      *
      * @param $locale
+     *
      * @return mixed
      */
     public function findAllByLocale($locale);

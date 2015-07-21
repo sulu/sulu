@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Tests\Functional\Controller;
 
 use Guzzle\Http\Message\Response;
@@ -27,10 +36,10 @@ class GeolocatorControllerTest extends SuluTestCase
         $this->mockPlugin->addResponse(new Response(200, null, $rawResponse));
 
         $router = $this->client->getContainer()->get('router');
-        $this->client->request('get', $router->generate('sulu_location_geolocator_query', array(
+        $this->client->request('get', $router->generate('sulu_location_geolocator_query', [
             'providerName' => 'nominatim',
             'query' => $query,
-        )));
+        ]));
 
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());

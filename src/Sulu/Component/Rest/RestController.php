@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,7 +42,7 @@ abstract class RestController extends FOSRestController
      *
      * @var array
      */
-    protected $unsortable = array();
+    protected $unsortable = [];
 
     /**
      * contains all attributes that are sortable
@@ -49,7 +50,7 @@ abstract class RestController extends FOSRestController
      *
      * @var array
      */
-    protected $sortable = array();
+    protected $sortable = [];
 
     /**
      * contains all fields that should be excluded from api.
@@ -58,28 +59,28 @@ abstract class RestController extends FOSRestController
      *
      * @deprecated
      */
-    protected $fieldsExcluded = array();
+    protected $fieldsExcluded = [];
 
     /**
      * contains all fields that should be hidden by default from api.
      *
      * @var array
      */
-    protected $fieldsHidden = array();
+    protected $fieldsHidden = [];
 
     /**
      * contains the matching between fields and their types.
      *
      * @var array
      */
-    protected $fieldTypes = array(
+    protected $fieldTypes = [
         'created' => 'date',
         'changed' => 'date',
         'birthday' => 'date',
         'title' => 'title',
         'size' => 'bytes',
         'thumbnails' => 'thumbnails',
-    );
+    ];
 
     /**
      * contains all field relations.
@@ -88,14 +89,14 @@ abstract class RestController extends FOSRestController
      *
      * @deprecated
      */
-    protected $fieldsRelations = array();
+    protected $fieldsRelations = [];
 
     /**
      * contains sort order of elements: array(order => fieldName).
      *
      * @var array
      */
-    protected $fieldsSortOrder = array();
+    protected $fieldsSortOrder = [];
 
     /**
      * contains custom translation keys like array(fieldName => translationKey).
@@ -104,52 +105,52 @@ abstract class RestController extends FOSRestController
      *
      * @deprecated
      */
-    protected $fieldsTranslationKeys = array();
+    protected $fieldsTranslationKeys = [];
 
     /**
      * contains fields that cannot be hidden and are visible by default.
      *
      * @var array
      */
-    protected $fieldsDefault = array();
+    protected $fieldsDefault = [];
 
     /**
      * contains fields that are editable.
      *
      * @var array
      */
-    protected $fieldsEditable = array();
+    protected $fieldsEditable = [];
 
     /**
      * contains arrays of validation key-value data.
      *
      * @var array
      */
-    protected $fieldsValidation = array();
+    protected $fieldsValidation = [];
 
     /**
      * @var array contains the widths of the fields
      *
      * @deprecated
      */
-    protected $fieldsWidth = array();
+    protected $fieldsWidth = [];
 
     /**
      * @var array contains the widths of the fields
      */
-    protected $fieldsMinWidth = array();
+    protected $fieldsMinWidth = [];
 
     /**
      * @var array contains the default widths of some common fields
      */
-    private $fieldsDefaultWidth = array();
+    private $fieldsDefaultWidth = [];
 
     /**
      * contains default translations for some fields.
      *
      * @var array
      */
-    private $fieldsDefaultTranslationKeys = array();
+    private $fieldsDefaultTranslationKeys = [];
 
     /**
      * standard bundle prefix.
@@ -258,10 +259,10 @@ abstract class RestController extends FOSRestController
      *
      * @return array
      */
-    protected function addFieldAttributes($fields, $fieldsHidden = array())
+    protected function addFieldAttributes($fields, $fieldsHidden = [])
     {
         // add translations
-        $fieldsArray = array();
+        $fieldsArray = [];
 
         foreach ($fields as $field) {
             if (isset($this->fieldsTranslationKeys[$field])) {
@@ -288,7 +289,7 @@ abstract class RestController extends FOSRestController
                 $type = $this->fieldTypes[$field];
             }
 
-            $fieldsArray[] = array(
+            $fieldsArray[] = [
                 'id' => $field,
                 'translation' => $translationKey,
                 'disabled' => in_array($field, $fieldsHidden) ? true : false,
@@ -299,7 +300,7 @@ abstract class RestController extends FOSRestController
                 'type' => $type,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ?
                         $this->fieldsValidation[$field] : null,
-            );
+            ];
         }
 
         return $fieldsArray;
@@ -310,16 +311,16 @@ abstract class RestController extends FOSRestController
      * Special function for lists
      * route /contacts/list.
      *
-     * @param array $where
-     * @param String $entityName
-     * @param Function $entityFilter function for filtering entities
-     * @param array $joinConditions to specify join conditions
+     * @param array    $where
+     * @param String   $entityName
+     * @param Function $entityFilter   function for filtering entities
+     * @param array    $joinConditions to specify join conditions
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @deprecated
      */
-    protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
+    protected function responseList($where = [], $entityName = null, $entityFilter = null, $joinConditions = [])
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
@@ -337,7 +338,7 @@ abstract class RestController extends FOSRestController
             $entities = array_map($entityFilter, $entities);
         }
 
-        $response = array(
+        $response = [
             '_links' => $this->getHalLinks($entities, $pages, true),
             '_embedded' => $entities,
             'total' => sizeof($entities),
@@ -345,7 +346,7 @@ abstract class RestController extends FOSRestController
             'pages' => $pages,
             'limit' => $listHelper->getLimit(),
             'numberOfAll' => $numberOfAll,
-        );
+        ];
 
         return $this->view($response, 200);
     }
@@ -354,7 +355,7 @@ abstract class RestController extends FOSRestController
      * creates HAL conform response-array out of an entity collection.
      *
      * @param array $entities
-     * @param bool $returnListLinks
+     * @param bool  $returnListLinks
      *
      * @return array
      *
@@ -362,19 +363,19 @@ abstract class RestController extends FOSRestController
      */
     protected function createHalResponse(array $entities, $returnListLinks = false)
     {
-        return array(
+        return [
             '_links' => $this->getHalLinks($entities, 1, $returnListLinks),
             '_embedded' => $entities,
             'total' => count($entities),
-        );
+        ];
     }
 
     /**
      * returns HAL-conform _links array.
      *
      * @param array $entities
-     * @param int $pages
-     * @param bool $returnListLinks
+     * @param int   $pages
+     * @param bool  $returnListLinks
      *
      * @return array
      *
@@ -409,9 +410,9 @@ abstract class RestController extends FOSRestController
         $page = $listHelper->getPage();
 
         // create sort links
-        $sortable = array();
+        $sortable = [];
         if ($returnListLinks && count($entities) > 0) {
-            $keys = array();
+            $keys = [];
             if (sizeof($this->sortable) > 0) {
                 $keys = $this->sortable;
             } elseif (is_array($entities[0])) {
@@ -481,7 +482,7 @@ abstract class RestController extends FOSRestController
         // create pagination link
         $paginationLink = $this->replaceOrAddUrlString($path, 'limit=', '{limit}');
 
-        return array(
+        return [
             'self' => $path,
             'first' => ($pages > 1) ?
                     $this->replaceOrAddUrlString($path, 'page=', 1) : null,
@@ -496,16 +497,16 @@ abstract class RestController extends FOSRestController
             'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
             'all' => $returnListLinks ? $allLink : null,
-        );
+        ];
     }
 
     /**
      * function replaces a url parameter.
      *
-     * @param string $url String the complete url
-     * @param string $key String parameter name (e.g. page=)
+     * @param string $url   String the complete url
+     * @param string $key   String parameter name (e.g. page=)
      * @param string $value replace value
-     * @param bool $add defines if value should be added
+     * @param bool   $add   defines if value should be added
      *
      * @return mixed|string
      *
@@ -665,9 +666,9 @@ abstract class RestController extends FOSRestController
      * Tries to find a given id in a given set of entities. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
      *
-     * @param array $requestEntities The set of entities to search in
-     * @param int $id The id to search
-     * @param array $matchedEntry
+     * @param array  $requestEntities The set of entities to search in
+     * @param int    $id              The id to search
+     * @param array  $matchedEntry
      * @param string $matchedKey
      */
     protected function findMatch($requestEntities, $id, &$matchedEntry, &$matchedKey)

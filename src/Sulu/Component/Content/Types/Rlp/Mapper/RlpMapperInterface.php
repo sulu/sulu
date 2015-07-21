@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,21 +29,21 @@ interface RlpMapperInterface
     /**
      * creates a new route for given path.
      *
-     * @param NodeInterface $contentNode reference node
-     * @param string $path path to generate
-     * @param string $webspaceKey key of webspace
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param NodeInterface $contentNode  reference node
+     * @param string        $path         path to generate
+     * @param string        $webspaceKey  key of webspace
+     * @param string        $languageCode
+     * @param string        $segmentKey
      */
     public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns path for given contentNode.
      *
-     * @param NodeInterface $contentNode reference node
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param NodeInterface $contentNode  reference node
+     * @param string        $webspaceKey  key of portal
+     * @param string        $languageCode
+     * @param string        $segmentKey
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
@@ -53,8 +54,8 @@ interface RlpMapperInterface
     /**
      * returns path for given contentNode.
      *
-     * @param string $uuid uuid of contentNode
-     * @param string $webspaceKey key of portal
+     * @param string $uuid         uuid of contentNode
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -67,8 +68,8 @@ interface RlpMapperInterface
     /**
      * returns history for given contentNode.
      *
-     * @param string $uuid uuid of contentNode
-     * @param string $webspaceKey key of portal
+     * @param string $uuid         uuid of contentNode
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -80,11 +81,11 @@ interface RlpMapperInterface
      * returns the uuid of referenced content node.
      *
      * @param string $resourceLocator requested RL
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey     key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException    resourceLocator has been moved
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      *
      * @return string uuid of content node
@@ -95,7 +96,7 @@ interface RlpMapperInterface
      * checks if given path is unique.
      *
      * @param string $path
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -107,7 +108,7 @@ interface RlpMapperInterface
      * returns a unique path with "-1" if necessary.
      *
      * @param string $path
-     * @param string $webspaceKey key of portal
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -130,9 +131,9 @@ interface RlpMapperInterface
     /**
      * creates a new resourcelocator and creates the correct history.
      *
-     * @param string $src old resource locator
-     * @param string $dest new resource locator
-     * @param string $webspaceKey key of portal
+     * @param string $src          old resource locator
+     * @param string $dest         new resource locator
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -144,8 +145,8 @@ interface RlpMapperInterface
     /**
      * deletes given resource locator node.
      *
-     * @param string $path of resource locator node
-     * @param string $webspaceKey key of portal
+     * @param string $path         of resource locator node
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */
@@ -154,8 +155,8 @@ interface RlpMapperInterface
     /**
      * restore given resource locator.
      *
-     * @param string $path of resource locator
-     * @param string $webspaceKey key of portal
+     * @param string $path         of resource locator
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */

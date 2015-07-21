@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 
 /**
- * Handle serialization and deserialization of the PageBridge
+ * Handle serialization and deserialization of the PageBridge.
  */
 class PageBridgeHandler implements SubscribingHandlerInterface
 {
@@ -42,27 +43,27 @@ class PageBridgeHandler implements SubscribingHandlerInterface
 
     public static function getSubscribingMethods()
     {
-        return array(
-            array(
+        return [
+            [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => PageBridge::class,
                 'method' => 'doSerialize',
-            ),
-            array(
+            ],
+            [
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
                 'type' => PageBridge::class,
                 'method' => 'doDeserialize',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param PageBridge $bridge
-     * @param array $type
-     * @param Context $context
+     * @param PageBridge               $bridge
+     * @param array                    $type
+     * @param Context                  $context
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
@@ -80,18 +81,18 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         $structure = $structureProperty->getValue($bridge);
 
         $context->accept(
-            array(
+            [
                 'document' => $document,
-                'structure' => $structure->name
-            )
+                'structure' => $structure->name,
+            ]
         );
     }
 
     /**
      * @param JsonDeserializationVisitor|JsonSerializationVisitor $visitor
-     * @param array $data
-     * @param array $type
-     * @param Context $context
+     * @param array                                               $data
+     * @param array                                               $type
+     * @param Context                                             $context
      *
      * @return PageBridge
      */
@@ -101,7 +102,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $document = $context->accept($data['document'], array('name' => PageDocument::class));
+        $document = $context->accept($data['document'], ['name' => PageDocument::class]);
 
         $structure = $this->structureFactory->getStructureMetadata('page', $data['structure']);
 

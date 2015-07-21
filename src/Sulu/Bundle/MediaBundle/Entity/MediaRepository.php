@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -78,14 +79,14 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    public function findMedia($filter = array(), $limit = null, $offset = null)
+    public function findMedia($filter = [], $limit = null, $offset = null)
     {
         try {
             list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
 
             // if empty array of ids is requested return empty array of medias
             if ($ids !== null && sizeof($ids) === 0) {
-                return array();
+                return [];
             }
 
             if (!$ids) {
@@ -154,7 +155,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * Extracts filter vars
+     * Extracts filter vars.
      *
      * @param array $filter
      *
@@ -169,7 +170,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
         $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
 
-        return array($collection, $types, $search, $orderBy, $orderSort, $ids);
+        return [$collection, $types, $search, $orderBy, $orderSort, $ids];
     }
 
     /**
@@ -177,7 +178,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * filename within a collection.
      *
      * @param String $filename
-     * @param int $collectionId
+     * @param int    $collectionId
      *
      * @return Media
      */
@@ -234,15 +235,17 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * create a query for ids with given filter
+     * create a query for ids with given filter.
+     *
      * @param string $collection
-     * @param array $types
+     * @param array  $types
      * @param string $search
      * @param string $orderBy
      * @param string $orderSort
-     * @param int $limit
-     * @param int $offset
+     * @param int    $limit
+     * @param int    $offset
      * @param string $select
+     *
      * @return Query
      */
     private function getIdsQuery(
@@ -299,14 +302,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * returns ids with given filters
+     * returns ids with given filters.
+     *
      * @param string $collection
-     * @param array $types
+     * @param array  $types
      * @param string $search
      * @param string $orderBy
      * @param string $orderSort
-     * @param int $limit
-     * @param int $offset
+     * @param int    $limit
+     * @param int    $offset
+     *
      * @return array
      */
     private function getIds(

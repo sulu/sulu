@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -79,7 +80,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
             $this->accessControlVoter->vote(
                 $this->token->reveal(),
                 new SecurityCondition('acme_example', null, '1', 'Acme\Example'),
-                array()
+                []
             )
         );
     }

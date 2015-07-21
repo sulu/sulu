@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,9 +50,9 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->structure->getUuid()->willReturn('this-is-uuid');
 
-        $this->proxyCache->ban(array(
+        $this->proxyCache->ban([
             TagsHandler::TAGS_HEADER => '(structure\-this\-is\-uuid)(,.+)?$',
-        ))->shouldBeCalled();
+        ])->shouldBeCalled();
         $this->proxyCache->flush()->shouldBeCalled();
 
         $this->handler->invalidateStructure($this->structure->reveal());
@@ -61,28 +62,28 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateResponse()
     {
-        $expectedTags = array(
+        $expectedTags = [
             'structure-1', 'structure-2', 'structure-3', 'structure-4',
-        );
+        ];
 
         $this->structure->getUuid()->willReturn('1');
-        $this->structure->getProperties(true)->willReturn(array(
+        $this->structure->getProperties(true)->willReturn([
             $this->property1->reveal(),
             $this->property2->reveal(),
-        ));
+        ]);
         $this->property1->getContentTypeName()->willReturn('type1');
         $this->property2->getContentTypeName()->willReturn('type2');
 
         $this->contentTypeManager->get('type1')->willReturn($this->contentType1);
         $this->contentTypeManager->get('type2')->willReturn($this->contentType2);
 
-        $this->contentType1->getReferencedUuids(Argument::any())->willReturn(array(
+        $this->contentType1->getReferencedUuids(Argument::any())->willReturn([
             '2',
-        ));
-        $this->contentType2->getReferencedUuids(Argument::any())->willReturn(array(
+        ]);
+        $this->contentType2->getReferencedUuids(Argument::any())->willReturn([
             '3',
             '4',
-        ));
+        ]);
 
         $this->parameterBag->set('X-Cache-Tags', implode(',', $expectedTags))->shouldBeCalled();
 

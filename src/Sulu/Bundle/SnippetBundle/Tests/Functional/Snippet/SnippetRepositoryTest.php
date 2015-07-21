@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
-use PHPCR\PropertyType;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
@@ -40,28 +40,28 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
 
     public function provideGetSnippets()
     {
-        return array(
-            array(
+        return [
+            [
                 null, null, null,
                 5,
-            ),
-            array(
+            ],
+            [
                 'hotel', null, null,
                 2,
-            ),
-            array(
+            ],
+            [
                 'car', null, null,
                 3,
-            ),
-            array(
+            ],
+            [
                 'car', 1, 2,
                 2,
-            ),
-            array(
+            ],
+            [
                 'car', 1, 1,
                 1,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -78,21 +78,21 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
 
     public function provideGetSnippetsByUuids()
     {
-        return array(
-            array(
-                array('hotel1', 'hotel2', 'car1'), 'de', 3,
-            ),
+        return [
+            [
+                ['hotel1', 'hotel2', 'car1'], 'de', 3,
+            ],
             // Currently fails because a default template does not exist...
             //array(
             //    array('hotel1', 'hotel2', 'car1'), 'en', 3
             //),
-            array(
-                array('hotel1', '842e61c0-09ab-42a9-1111-111111111111', 'car1'), 'de', 2,
-            ),
-            array(
-                array(), 'de', 0,
-            ),
-        );
+            [
+                ['hotel1', '842e61c0-09ab-42a9-1111-111111111111', 'car1'], 'de', 2,
+            ],
+            [
+                [], 'de', 0,
+            ],
+        ];
     }
 
     /**
@@ -100,7 +100,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
      */
     public function testGetSnippetsByUuids($snippets, $languageCode, $expectedCount)
     {
-        $uuids = array();
+        $uuids = [];
         foreach ($snippets as $snippetVarName) {
             if (isset($this->{$snippetVarName})) {
                 $snippet = $this->{$snippetVarName};

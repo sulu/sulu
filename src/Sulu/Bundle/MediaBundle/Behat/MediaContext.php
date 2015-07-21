@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -81,14 +82,14 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
         $collection = $this->getOrCreateMediaCollection($collectionName);
         $mediaType = $this->getOrCreateMediaType('image');
 
-        $data = array(
+        $data = [
             'id' => null,
             'locale' => 'en',
             'type' => $mediaType->getId(),
             'collection' => $collection->getId(),
             'name' => basename($name),
             'title' => basename($name),
-        );
+        ];
 
         $this->getMediaManager()->save($file, $data, $this->getUserId());
     }
@@ -106,7 +107,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
         }
 
         $this->visitPath('/admin/#media/collections/edit:' . $collection->getId() . '/content');
-        $this->waitForAuraEvents(array('husky.datagrid.view.rendered'));
+        $this->waitForAuraEvents(['husky.datagrid.view.rendered']);
     }
 
     /**
@@ -116,7 +117,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     {
         $collection = $this->getLastMediaCollection();
         $this->visitPath('/admin/#media/collections/edit:' . $collection->getId() . '/settings');
-        $this->waitForAuraEvents(array('husky.toolbar.header.initialized'));
+        $this->waitForAuraEvents(['husky.toolbar.header.initialized']);
     }
 
     /**

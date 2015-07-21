@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,7 +43,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $logger;
 
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = array())
+    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = [])
     {
         $this->loader = $loader;
         $this->logger = $logger;
@@ -76,7 +77,7 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
      *
-     * @param string $url The url to search for
+     * @param string $url         The url to search for
      * @param string $environment The environment in which the url should be searched
      *
      * @return array|null
@@ -98,9 +99,9 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Returns all possible urls for resourcelocator.
      *
-     * @param string $resourceLocator
-     * @param string $environment
-     * @param string $languageCode
+     * @param string      $resourceLocator
+     * @param string      $environment
+     * @param string      $languageCode
      * @param null|string $webspaceKey
      * @param null|string $domain
      *
@@ -108,7 +109,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null, $domain = null)
     {
-        $urls = array();
+        $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
@@ -136,7 +137,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function getUrls($environment)
     {
-        $urls = array();
+        $urls = [];
 
         foreach ($this->getWebspaceCollection()->getPortalInformations($environment) as $portalInformation) {
             $urls[] = $portalInformation->getUrl();
@@ -158,7 +159,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function getAllLocalizations()
     {
-        $localizations = array();
+        $localizations = [];
 
         foreach ($this->getWebspaceCollection() as $webspace) {
             /** @var Webspace $webspace */
@@ -194,10 +195,10 @@ class WebspaceManager implements WebspaceManagerInterface
                 $dumper = new PhpWebspaceCollectionDumper($webspaceCollection);
                 $cache->write(
                     $dumper->dump(
-                        array(
+                        [
                             'cache_class' => $class,
-                            'base_class'  => $this->options['base_class'],
-                        )
+                            'base_class' => $this->options['base_class'],
+                        ]
                     ),
                     $webspaceCollection->getResources()
                 );
@@ -223,22 +224,24 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function setOptions($options)
     {
-        $this->options = array(
-            'config_dir'  => null,
-            'cache_dir'   => null,
-            'debug'       => false,
+        $this->options = [
+            'config_dir' => null,
+            'cache_dir' => null,
+            'debug' => false,
             'cache_class' => 'WebspaceCollectionCache',
-            'base_class'  => 'WebspaceCollection',
-        );
+            'base_class' => 'WebspaceCollection',
+        ];
 
         // overwrite the default values with the given options
         $this->options = array_merge($this->options, $options);
     }
 
     /**
-     * Url is from domain
+     * Url is from domain.
+     *
      * @param $url
      * @param $domain
+     *
      * @return array
      */
     protected function isFromDomain($url, $domain)

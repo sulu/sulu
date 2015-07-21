@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ResolveTargetEntitiesPass implements CompilerPassInterface
 {
     /**
-     * @var array $interfaces
+     * @var array
      */
     private $interfaces;
 
@@ -49,20 +50,21 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
 
         foreach ($this->interfaces as $interface => $model) {
             $resolveTargetEntityListener
-                ->addMethodCall('addResolveTargetEntity', array(
+                ->addMethodCall('addResolveTargetEntity', [
                         $interface,
                         $this->getClass($container, $model),
-                        array(),
-                    )
+                        [],
+                    ]
                 );
         }
     }
 
     /**
      * @param ContainerBuilder $container
-     * @param string $key
+     * @param string           $key
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     private function getClass(ContainerBuilder $container, $key)

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,7 +43,7 @@ class CodeController extends RestController implements ClassResourceInterface
     /**
      * @var DoctrineFieldDescriptor[]
      */
-    protected $fieldDescriptors = array();
+    protected $fieldDescriptors = [];
 
     /**
      * returns all fields that can be used by list.
@@ -73,13 +74,13 @@ class CodeController extends RestController implements ClassResourceInterface
             // flat structure
             return $this->listAction($request);
         } else {
-            /** @var ListRestHelperInterface $listRestHelper */
+            /* @var ListRestHelperInterface $listRestHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
             $limit = $listHelper->getLimit();
             $offset = $listHelper->getOffset();
             $sortOrder = $listHelper->getSortOrder();
             $sortColumn = $listHelper->getSortColumn();
-            $sorting = array($sortColumn => $sortOrder);
+            $sorting = [$sortColumn => $sortOrder];
 
             /** @var CodeRepository $repository */
             $repository = $this->getDoctrine()
@@ -120,7 +121,7 @@ class CodeController extends RestController implements ClassResourceInterface
      */
     private function listAction(Request $request)
     {
-        $filter = array();
+        $filter = [];
 
         $catalogueId = $request->get('catalogueId');
         $packageId = $request->get('packageId');
@@ -243,7 +244,7 @@ class CodeController extends RestController implements ClassResourceInterface
      * Updates the code for the given id.
      *
      * @param Request $request
-     * @param int $id The id of the package to update
+     * @param int     $id      The id of the package to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -282,10 +283,10 @@ class CodeController extends RestController implements ClassResourceInterface
                 foreach ($translations as $translationData) {
                     /** @var Translation $translation */
                     $translation = $translationRepository->findOneBy(
-                        array(
+                        [
                             'code' => $code->getId(),
                             'catalogue' => $translationData['catalogue']['id'],
-                        )
+                        ]
                     );
 
                     if ($translation != null) {
@@ -352,7 +353,7 @@ class CodeController extends RestController implements ClassResourceInterface
             'id',
             self::$entityName,
             'id',
-            array(),
+            [],
             true,
             false,
             '',
@@ -363,7 +364,7 @@ class CodeController extends RestController implements ClassResourceInterface
             'code',
             self::$entityName,
             'code',
-            array(),
+            [],
             true,
             false,
             '',
@@ -377,19 +378,19 @@ class CodeController extends RestController implements ClassResourceInterface
             'packageId',
             self::$packageEntity,
             'package',
-            array(
+            [
                 self::$packageEntity => new DoctrineJoinDescriptor(
                         self::$packageEntity,
                         self::$entityName . '.package'
                     ),
-            )
+            ]
         );
         $this->fieldDescriptors['catalogueId'] = new DoctrineFieldDescriptor(
             'id',
             'catalogueId',
             self::$catalogueEntity,
             'catalogue',
-            array(
+            [
                 self::$packageEntity => new DoctrineJoinDescriptor(
                         self::$packageEntity,
                         self::$entityName . '.package'
@@ -399,19 +400,19 @@ class CodeController extends RestController implements ClassResourceInterface
                         self::$packageEntity . '.catalogues',
                         self::$catalogueEntity . '.locale = ' . $locale
                     ),
-            )
+            ]
         );
         $this->fieldDescriptors['location_name'] = new DoctrineFieldDescriptor(
             'name',
             'location_name',
             self::$locationEntity,
             'location',
-            array(
+            [
                 self::$locationEntity => new DoctrineJoinDescriptor(
                         self::$locationEntity,
                         self::$entityName . '.location'
                     ),
-            )
+            ]
         );
 
         return $this->fieldDescriptors;

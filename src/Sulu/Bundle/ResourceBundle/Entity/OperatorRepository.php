@@ -15,15 +15,15 @@ use Doctrine\ORM\NoResultException;
 
 /**
  * Repository for operators
- * Class OperatorRepository
- * @package Sulu\Bundle\ResourceBundle\Entity
+ * Class OperatorRepository.
  */
 class OperatorRepository extends EntityRepository implements OperatorRepositoryInterface
 {
     /**
-     * Searches for all operator by locale
+     * Searches for all operator by locale.
      *
      * @param $locale
+     *
      * @return mixed
      */
     public function findAllByLocale($locale)
@@ -31,13 +31,15 @@ class OperatorRepository extends EntityRepository implements OperatorRepositoryI
         try {
             return $this->getOperatorQuery($locale)->getQuery()->getResult();
         } catch (NoResultException $exc) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Returns the query for operators
+     * Returns the query for operators.
+     *
      * @param string $locale The locale to load
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     protected function getOperatorQuery($locale)

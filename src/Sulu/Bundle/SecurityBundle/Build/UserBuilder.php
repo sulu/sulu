@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,7 +31,7 @@ class UserBuilder extends SuluBuilder
      */
     public function getDependencies()
     {
-        return array('fixtures', 'database');
+        return ['fixtures', 'database'];
     }
 
     /**
@@ -60,10 +61,10 @@ class UserBuilder extends SuluBuilder
         $this->execCommand(
             'Creating role: ' . $roleName,
             'sulu:security:role:create',
-            array(
+            [
                 'name' => $roleName,
                 'system' => $system,
-        ));
+        ]);
         $this->output->writeln(
             sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
         );
@@ -71,7 +72,7 @@ class UserBuilder extends SuluBuilder
         $this->execCommand(
             'Creating user: ' . $user,
             'sulu:security:user:create',
-            array(
+            [
                 'username' => $user,
                 'firstName' => 'Adam',
                 'lastName' => 'Ministrator',
@@ -79,7 +80,7 @@ class UserBuilder extends SuluBuilder
                 'locale' => 'de',
                 'role' => $roleName,
                 'password' => $password,
-            )
+            ]
         );
         $this->output->writeln(
             sprintf('Created user "<comment>%s</comment>" with password "<comment>%s</comment>"', $user, $password)

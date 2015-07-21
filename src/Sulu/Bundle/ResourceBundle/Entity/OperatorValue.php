@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * OperatorValue
+ * OperatorValue.
  */
 class OperatorValue
 {
@@ -23,7 +21,7 @@ class OperatorValue
     private $value;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -38,7 +36,7 @@ class OperatorValue
     private $operator;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -46,9 +44,9 @@ class OperatorValue
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int 
      */
     public function getId()
     {
@@ -56,9 +54,10 @@ class OperatorValue
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation $translations
+     *
      * @return OperatorValue
      */
     public function addTranslation(\Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation $translations)
@@ -69,7 +68,7 @@ class OperatorValue
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation $translations
      */
@@ -79,7 +78,7 @@ class OperatorValue
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
@@ -89,9 +88,10 @@ class OperatorValue
     }
 
     /**
-     * Set operator
+     * Set operator.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\Operator $operator
+     *
      * @return OperatorValue
      */
     public function setOperator(\Sulu\Bundle\ResourceBundle\Entity\Operator $operator)
@@ -102,7 +102,7 @@ class OperatorValue
     }
 
     /**
-     * Get operator
+     * Get operator.
      *
      * @return \Sulu\Bundle\ResourceBundle\Entity\Operator 
      */
@@ -112,9 +112,10 @@ class OperatorValue
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return OperatorValue
      */
     public function setValue($value)
@@ -125,7 +126,7 @@ class OperatorValue
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string 
      */

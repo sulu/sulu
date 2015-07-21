@@ -14,7 +14,7 @@ use Sulu\Bundle\ResourceBundle\Resource\FilterListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 
 /**
- * Listens for events emitted by the list builder
+ * Listens for events emitted by the list builder.
  */
 class ListBuilderListener
 {
@@ -26,13 +26,14 @@ class ListBuilderListener
     /**
      * @param FilterListBuilderInterface $filterListBuilder
      */
-    function __construct(FilterListBuilderInterface $filterListBuilder)
+    public function __construct(FilterListBuilderInterface $filterListBuilder)
     {
         $this->filterListBuilder = $filterListBuilder;
     }
 
     /**
-     * Will be called when a listbuilder.create event is emitted
+     * Will be called when a listbuilder.create event is emitted.
+     *
      * @param ListBuilderCreateEvent $event
      */
     public function onListBuilderCreate(ListBuilderCreateEvent $event)

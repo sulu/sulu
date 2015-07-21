@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * Operator
+ * Operator.
  */
 class Operator
 {
@@ -23,7 +21,7 @@ class Operator
     private $operator;
 
     /**
-     * @var integer
+     * @var int
      */
     private $type;
 
@@ -33,7 +31,7 @@ class Operator
     private $inputType;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -48,7 +46,7 @@ class Operator
     private $values;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -57,9 +55,10 @@ class Operator
     }
 
     /**
-     * Set operator
+     * Set operator.
      *
      * @param string $operator
+     *
      * @return Operator
      */
     public function setOperator($operator)
@@ -70,7 +69,7 @@ class Operator
     }
 
     /**
-     * Get operator
+     * Get operator.
      *
      * @return string
      */
@@ -80,9 +79,10 @@ class Operator
     }
 
     /**
-     * Set type
+     * Set type.
      *
-     * @param integer $type
+     * @param int $type
+     *
      * @return Operator
      */
     public function setType($type)
@@ -93,9 +93,9 @@ class Operator
     }
 
     /**
-     * Get type
+     * Get type.
      *
-     * @return integer
+     * @return int
      */
     public function getType()
     {
@@ -103,9 +103,10 @@ class Operator
     }
 
     /**
-     * Set inputType
+     * Set inputType.
      *
      * @param string $inputType
+     *
      * @return Operator
      */
     public function setInputType($inputType)
@@ -116,7 +117,7 @@ class Operator
     }
 
     /**
-     * Get inputType
+     * Get inputType.
      *
      * @return string
      */
@@ -126,9 +127,9 @@ class Operator
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -136,7 +137,7 @@ class Operator
     }
 
     /**
-     * Set id
+     * Set id.
      *
      * @param $id integer
      */
@@ -146,9 +147,10 @@ class Operator
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations
+     *
      * @return Operator
      */
     public function addTranslation(\Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations)
@@ -159,7 +161,7 @@ class Operator
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations
      */
@@ -169,7 +171,7 @@ class Operator
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -179,9 +181,10 @@ class Operator
     }
 
     /**
-     * Add values
+     * Add values.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values
+     *
      * @return Operator
      */
     public function addValue(\Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values)
@@ -192,7 +195,7 @@ class Operator
     }
 
     /**
-     * Remove values
+     * Remove values.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values
      */
@@ -202,7 +205,7 @@ class Operator
     }
 
     /**
-     * Get values
+     * Get values.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,7 +45,7 @@ class SnippetContent extends ComplexContentType
     /**
      * @var array
      */
-    private $snippetCache = array();
+    private $snippetCache = [];
 
     /**
      * Constructor.
@@ -78,12 +79,12 @@ class SnippetContent extends ComplexContentType
     /**
      * Set data to given property.
      *
-     * @param array $data
+     * @param array             $data
      * @param PropertyInterface $property
      */
     protected function setData($data, PropertyInterface $property)
     {
-        $refs = isset($data) ? $data : array();
+        $refs = isset($data) ? $data : [];
         $property->setValue($refs);
     }
 
@@ -92,7 +93,7 @@ class SnippetContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $refs = array();
+        $refs = [];
         if ($node->hasProperty($property->getName())) {
             $refs = $node->getProperty($property->getName())->getString();
         }
@@ -118,10 +119,10 @@ class SnippetContent extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $snippetReferences = array();
+        $snippetReferences = [];
         $values = $property->getValue();
 
-        $values = is_array($values) ? $values : array();
+        $values = is_array($values) ? $values : [];
 
         foreach ($values as $value) {
             if ($value instanceof Snippet) {
@@ -158,7 +159,7 @@ class SnippetContent extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -177,7 +178,7 @@ class SnippetContent extends ComplexContentType
 
         $refs = $property->getValue();
 
-        $contentData = array();
+        $contentData = [];
 
         $ids = $this->getUuids($refs);
 
@@ -205,7 +206,7 @@ class SnippetContent extends ComplexContentType
         $refs = $property->getValue();
         $ids = $this->getUuids($refs);
 
-        $contentData = array();
+        $contentData = [];
         foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
             $contentData[] = $snippet['content'];
         }
@@ -220,7 +221,7 @@ class SnippetContent extends ComplexContentType
      */
     private function loadSnippets($ids, $webspaceKey, $locale, $shadowLocale = null)
     {
-        $snippets = array();
+        $snippets = [];
         foreach ($ids as $i => $ref) {
             if (!array_key_exists($ref, $this->snippetCache)) {
                 $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
@@ -256,7 +257,7 @@ class SnippetContent extends ComplexContentType
      */
     private function getUuids($data)
     {
-        $ids = is_array($data) ? $data : array();
+        $ids = is_array($data) ? $data : [];
 
         return $ids;
     }

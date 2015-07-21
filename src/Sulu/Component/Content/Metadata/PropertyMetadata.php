@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,54 +17,54 @@ namespace Sulu\Component\Content\Metadata;
 class PropertyMetadata extends ItemMetadata
 {
     /**
-     * Type of this property (e.g. "text_line", "smart_content")
+     * Type of this property (e.g. "text_line", "smart_content").
      *
      * @var string
      */
     public $type;
 
     /**
-     * Placeholder for property
+     * Placeholder for property.
      */
     public $placeholder;
 
     /**
-     * If the property should be available in different localizations
+     * If the property should be available in different localizations.
      *
-     * @var boolean
+     * @var bool
      */
     public $localized = false;
 
     /**
-     * If the property is required
+     * If the property is required.
      *
-     * @var boolean
+     * @var bool
      */
     public $required = false;
 
     /**
-     * The number of grid columns the property should use in the admin interface
+     * The number of grid columns the property should use in the admin interface.
      *
-     * @var integer
+     * @var int
      */
     public $colSpan = null;
 
     /**
-     * The CSS class the property should use in the admin interface
+     * The CSS class the property should use in the admin interface.
      *
      * @var string
      */
     public $cssClass = null;
 
     /**
-     * Tags, e.g. [['name' => 'sulu_search.field', 'type' => 'string']]
+     * Tags, e.g. [['name' => 'sulu_search.field', 'type' => 'string']].
      *
      * @var array
      */
-    public $tags = array();
+    public $tags = [];
 
     /**
-     * @var integer
+     * @var int
      */
     public $minOccurs = 1;
 
@@ -88,7 +88,7 @@ class PropertyMetadata extends ItemMetadata
         return $this->minOccurs;
     }
 
-    public function getStructure() 
+    public function getStructure()
     {
         throw new \InvalidArgumentException(
             'Not implemented'
@@ -103,7 +103,7 @@ class PropertyMetadata extends ItemMetadata
     /**
      * @deprecated - use getType
      */
-    public function getContentTypeName() 
+    public function getContentTypeName()
     {
         return $this->type;
     }
@@ -111,17 +111,17 @@ class PropertyMetadata extends ItemMetadata
     /**
      * @deprecated
      */
-    public function getIsBlock() 
+    public function getIsBlock()
     {
         return false;
     }
 
-    public function getColSpan() 
+    public function getColSpan()
     {
         return $this->colSpan;
     }
 
-    public function getPlaceholder($locale) 
+    public function getPlaceholder($locale)
     {
         return $this->placeholder[$locale];
     }
@@ -141,7 +141,7 @@ class PropertyMetadata extends ItemMetadata
         return $this->localized;
     }
 
-    public function getType() 
+    public function getType()
     {
         return $this->type;
     }

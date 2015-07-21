@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -87,17 +88,17 @@ class Collection extends ApiWrapper
     /**
      * @var array
      */
-    protected $preview = array();
+    protected $preview = [];
 
     /**
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * @var Collection[]
      */
-    protected $children = array();
+    protected $children = [];
 
     /**
      * @var Collection
@@ -122,7 +123,7 @@ class Collection extends ApiWrapper
      */
     public function setChildren($children)
     {
-        $childrenEntities = array();
+        $childrenEntities = [];
 
         foreach ($children as $child) {
             $childrenEntities[] = $child->getEntity();

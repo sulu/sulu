@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,27 +16,27 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 class AccountContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
         $details->setId('details');
         $details->setComponent('accounts@sulucontact');
-        $details->setComponentOptions(array('display' => 'form'));
+        $details->setComponentOptions(['display' => 'form']);
 
         $contacts = new ContentNavigationItem('content-navigation.contact.accounts.contacts');
         $contacts->setAction('contacts');
         $contacts->setId('contacts');
         $contacts->setComponent('accounts@sulucontact');
-        $contacts->setComponentOptions(array('display' => 'contacts'));
-        $contacts->setDisplay(array('edit'));
+        $contacts->setComponentOptions(['display' => 'contacts']);
+        $contacts->setDisplay(['edit']);
 
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');
         $documents->setComponent('accounts@sulucontact');
-        $documents->setComponentOptions(array('display' => 'documents'));
-        $documents->setDisplay(array('edit'));
+        $documents->setComponentOptions(['display' => 'documents']);
+        $documents->setDisplay(['edit']);
 
-        return array($details, $contacts, $documents);
+        return [$details, $contacts, $documents];
     }
 }

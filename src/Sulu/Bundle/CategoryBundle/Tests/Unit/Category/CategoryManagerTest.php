@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,28 +51,28 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->categoryRepository = $this->getMockForAbstractClass(
             'Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface',
-            array(),
+            [],
             '',
             false
         );
 
         $this->userRepository = $this->getMockForAbstractClass(
             'Sulu\Component\Security\Authentication\UserRepositoryInterface',
-            array(),
+            [],
             '',
             false
         );
 
         $this->em = $this->getMockForAbstractClass(
             'Doctrine\Common\Persistence\ObjectManager',
-            array(),
+            [],
             '',
             false
         );
 
         $this->eventDispatcher = $this->getMockForAbstractClass(
             'Symfony\Component\EventDispatcher\EventDispatcherInterface',
-            array(),
+            [],
             '',
             false
         );

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,18 +11,13 @@
 
 namespace Sulu\Component\Content\Compat\Block;
 
-use JMS\Serializer\Annotation\Discriminator;
-use JMS\Serializer\Annotation\HandlerCallback;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Context;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
- * Representation of a block node in template xml
+ * Representation of a block node in template xml.
  */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
@@ -30,12 +26,12 @@ class BlockProperty extends Property implements BlockPropertyInterface
      *
      * @var BlockPropertyType[]
      */
-    private $types = array();
+    private $types = [];
 
     /**
      * @var BlockPropertyType[]
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * @var string
@@ -50,8 +46,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $params = array(),
-        $tags = array(),
+        $params = [],
+        $tags = [],
         $col = null
     ) {
         parent::__construct(
@@ -139,7 +135,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     /**
      * initiate new child with given type name.
      *
-     * @param int $index
+     * @param int    $index
      * @param string $typeName
      *
      * @return BlockPropertyType
@@ -157,7 +153,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function clearProperties()
     {
-        $this->properties = array();
+        $this->properties = [];
     }
 
     /**
@@ -175,6 +171,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
                 $index, $this->getName(), implode(', ', array_keys($this->properties))
             ));
         }
+
         return $this->properties[$index];
     }
 
@@ -223,13 +220,12 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         // check value for single value
         if (array_keys($items) !== range(0, count($items) - 1)) {
-            $items = array($items);
+            $items = [$items];
         }
 
-        $this->properties = array();
+        $this->properties = [];
 
-        for ($i = 0; $i < count($items); $i++) {
-
+        for ($i = 0; $i < count($items); ++$i) {
             $item = $items[$i];
             $type = $this->initProperties($i, $item['type']);
 
@@ -268,14 +264,14 @@ class BlockProperty extends Property implements BlockPropertyInterface
     {
         // if size of children smaller than minimum
         if (count($this->properties) < $this->getMinOccurs()) {
-            for ($i = count($this->properties); $i < $this->getMinOccurs(); $i++) {
+            for ($i = count($this->properties); $i < $this->getMinOccurs(); ++$i) {
                 $this->initProperties($i, $this->getDefaultTypeName());
             }
         }
 
-        $data = array();
+        $data = [];
         foreach ($this->properties as $type) {
-            $result = array('type' => $type->getName());
+            $result = ['type' => $type->getName()];
             foreach ($type->getChildProperties() as $property) {
                 $result[$property->getName()] = $property->getValue();
             }
@@ -308,7 +304,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $this->getParams()
         );
 
-        $clone->types = array();
+        $clone->types = [];
         foreach ($this->types as $type) {
             $clone->addType(clone($type));
         }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,7 +25,7 @@ class PortalDefaultLocalizationNotFoundException extends WebspaceException
 
     /**
      * @param Webspace $webspace
-     * @param Portal $portal
+     * @param Portal   $portal
      */
     public function __construct(Webspace $webspace, Portal $portal)
     {

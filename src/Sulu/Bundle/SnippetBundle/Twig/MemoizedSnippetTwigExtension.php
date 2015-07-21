@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,6 +64,6 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
      */
     public function loadSnippet($uuid, $locale = null)
     {
-        return $this->memoizeCache->memoize(array($this->extension, 'loadSnippet'), $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'loadSnippet'], $this->lifeTime);
     }
 }

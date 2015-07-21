@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Test the image command compiler pass
+ * Test the image command compiler pass.
  */
 class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
 {
@@ -38,7 +39,7 @@ class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
         $this->setDefinition('sulu_media.image.command_manager', $commandManager);
 
         $command = new Definition();
-        $command->addTag('sulu_media.image.command', array('alias' => 'resize'));
+        $command->addTag('sulu_media.image.command', ['alias' => 'resize']);
         $this->setDefinition('sulu_media.image.command.resize', $command);
 
         $this->compile();
@@ -46,10 +47,10 @@ class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'sulu_media.image.command_manager',
             'add',
-            array(
+            [
                 new Reference('sulu_media.image.command.resize'),
-                'resize'
-            )
+                'resize',
+            ]
         );
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,8 +11,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * handles preview start / stop / update / render.
@@ -178,7 +179,7 @@ class Preview implements PreviewInterface
             $changes = $this->renderStructure($content, true, $property);
             if ($changes !== false) {
                 $this->previewCache->appendChanges(
-                    array($property => $changes),
+                    [$property => $changes],
                     $userId,
                     $content->getUuid(),
                     $webspaceKey,
@@ -247,7 +248,7 @@ class Preview implements PreviewInterface
             $data = $sequence['property']->getValue();
             $value = &$data;
             $len = sizeof($sequence['index']);
-            for ($i = 0; $i < $len; $i++) {
+            for ($i = 0; $i < $len; ++$i) {
                 $value = &$value[$sequence['index'][$i]];
             }
             $value = $tmp;

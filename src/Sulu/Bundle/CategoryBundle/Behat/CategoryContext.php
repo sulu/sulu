@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,22 +25,22 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
      */
     public function theCategoryExists($name)
     {
-        $this->getCategoryManager()->save(array(
+        $this->getCategoryManager()->save([
             'name' => $name,
             'locale' => 'de',
             'key' => $name,
-            'meta' => array(
-                array(
+            'meta' => [
+                [
                     'key' => 'myKey',
                     'value' => 'myValue',
-                ),
-                array(
+                ],
+                [
                     'key' => 'anotherKey',
                     'value' => 'should not be visible due to locale',
                     'locale' => 'de-ch',
-                ),
-            ),
-        ), $this->getUserId());
+                ],
+            ],
+        ], $this->getUserId());
     }
 
     /**

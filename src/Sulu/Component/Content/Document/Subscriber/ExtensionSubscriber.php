@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,21 +11,16 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
-use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\Content\Document\Extension\ExtensionContainer;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\Content\Document\Extension\ManagedExtensionContainer;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class ExtensionSubscriber extends AbstractMappingSubscriber
 {
@@ -42,8 +38,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
 
         // these two dependencies should absolutely not be necessary
         NamespaceRegistry $namespaceRegistry
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->extensionManager = $extensionManager;
         $this->inspector = $inspector;
@@ -55,13 +50,13 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // persist should happen before content is mapped
-            Events::PERSIST => array('handlePersist', 10),
+            Events::PERSIST => ['handlePersist', 10],
 
             // hydrate should happen afterwards
-            Events::HYDRATE => array('handleHydrate', -10),
-        );
+            Events::HYDRATE => ['handleHydrate', -10],
+        ];
     }
 
     /**
@@ -104,7 +99,6 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
             }
 
             $extensionData = $extensionsData[$extension->getName()];
-
 
             $extension->setLanguageCode($locale, $prefix, $this->internalPrefix);
             $extension->save(

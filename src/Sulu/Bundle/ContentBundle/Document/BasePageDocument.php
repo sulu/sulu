@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,9 +20,10 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
-use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
@@ -30,7 +32,6 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 
 /**
@@ -73,7 +74,7 @@ class BasePageDocument implements
      * @var \DateTime
      */
     protected $creator;
-    
+
     /**
      * @var int
      */
@@ -97,7 +98,7 @@ class BasePageDocument implements
     /**
      * @var string[]
      */
-    protected $navigationContexts = array();
+    protected $navigationContexts = [];
 
     /**
      * @var int
@@ -175,7 +176,7 @@ class BasePageDocument implements
     protected $webspaceName;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $suluOrder;
 
@@ -184,14 +185,14 @@ class BasePageDocument implements
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
         $this->structure = new Structure();
-        $this->extensions =  new ExtensionContainer();
+        $this->extensions = new ExtensionContainer();
         $this->children = new \ArrayIterator();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getNodeName() 
+    public function getNodeName()
     {
         return $this->nodeName;
     }
@@ -199,7 +200,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getTitle() 
+    public function getTitle()
     {
         return $this->title;
     }
@@ -215,7 +216,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getCreated() 
+    public function getCreated()
     {
         return $this->created;
     }
@@ -223,7 +224,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getChanged() 
+    public function getChanged()
     {
         return $this->changed;
     }
@@ -231,7 +232,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getCreator() 
+    public function getCreator()
     {
         return $this->creator;
     }
@@ -239,7 +240,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getChanger() 
+    public function getChanger()
     {
         return $this->changer;
     }
@@ -247,7 +248,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getParent() 
+    public function getParent()
     {
         return $this->parent;
     }
@@ -263,11 +264,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getResourceSegment() 
+    public function getResourceSegment()
     {
         return $this->resourceSegment;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -279,15 +280,15 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getNavigationContexts() 
+    public function getNavigationContexts()
     {
         return $this->navigationContexts;
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public function setNavigationContexts(array $navigationContexts = array())
+    public function setNavigationContexts(array $navigationContexts = [])
     {
         $this->navigationContexts = $navigationContexts;
     }
@@ -295,11 +296,10 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getRedirectType() 
+    public function getRedirectType()
     {
         return $this->redirectType;
     }
-    
     /**
      * {@inheritDoc}
      */
@@ -311,11 +311,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getRedirectTarget() 
+    public function getRedirectTarget()
     {
         return $this->redirectTarget;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -327,11 +327,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getRedirectExternal() 
+    public function getRedirectExternal()
     {
         return $this->redirectExternal;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -343,11 +343,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getWorkflowStage() 
+    public function getWorkflowStage()
     {
         return $this->workflowStage;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -367,11 +367,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getShadowLocale() 
+    public function getShadowLocale()
     {
         return $this->shadowLocale;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -383,11 +383,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function isShadowLocaleEnabled() 
+    public function isShadowLocaleEnabled()
     {
         return $this->shadowLocaleEnabled;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -399,7 +399,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getUuid() 
+    public function getUuid()
     {
         return $this->uuid;
     }
@@ -407,7 +407,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getStructureType() 
+    public function getStructureType()
     {
         return $this->structureType;
     }
@@ -419,7 +419,7 @@ class BasePageDocument implements
     {
         return $this->structure;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -427,7 +427,6 @@ class BasePageDocument implements
     {
         $this->structureType = $structureType;
     }
-
 
     /**
      * {@inheritDoc}
@@ -456,7 +455,7 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getPath() 
+    public function getPath()
     {
         return $this->path;
     }
@@ -464,11 +463,11 @@ class BasePageDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getExtensionsData() 
+    public function getExtensionsData()
     {
         return $this->extensions;
     }
-    
+
     /**
      * {@inheritDoc}
      */

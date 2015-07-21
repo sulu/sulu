@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,50 +50,50 @@ class TagManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->tagRepository = $this->getMockForAbstractClass(
             'Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface',
-            array(),
+            [],
             '',
             false,
             true,
             true,
-            array('findTagByName')
+            ['findTagByName']
         );
 
         $this->userRepository = $this->getMockForAbstractClass(
             'Sulu\Component\Security\Authentication\UserRepositoryInterface',
-            array(),
+            [],
             '',
             false
         );
 
         $this->em = $this->getMockForAbstractClass(
             'Doctrine\Common\Persistence\ObjectManager',
-            array(),
+            [],
             '',
             false
         );
 
         $this->eventDispatcher = $this->getMockForAbstractClass(
             'Symfony\Component\EventDispatcher\EventDispatcherInterface',
-            array(),
+            [],
             '',
             false
         );
 
         $this->tagRepository->expects($this->any())->method('findTagByName')->will($this->returnValueMap(
-                array(
-                    array('Tag1', (new Tag())->setId(1)),
-                    array('Tag2', (new Tag())->setId(2)),
-                    array('Tag3', (new Tag())->setId(3)),
-                )
+                [
+                    ['Tag1', (new Tag())->setId(1)],
+                    ['Tag2', (new Tag())->setId(2)],
+                    ['Tag3', (new Tag())->setId(3)],
+                ]
             )
         );
 
         $this->tagRepository->expects($this->any())->method('findTagById')->will($this->returnValueMap(
-                array(
-                    array(1, (new Tag())->setName('Tag1')),
-                    array(2, (new Tag())->setName('Tag2')),
-                    array(3, (new Tag())->setName('Tag3')),
-                )
+                [
+                    [1, (new Tag())->setName('Tag1')],
+                    [2, (new Tag())->setName('Tag2')],
+                    [3, (new Tag())->setName('Tag3')],
+                ]
             )
         );
 
@@ -106,19 +107,19 @@ class TagManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveTagNames()
     {
-        $tagNames = array('Tag1', 'Tag2', 'Tag3', 'InvalidTag');
+        $tagNames = ['Tag1', 'Tag2', 'Tag3', 'InvalidTag'];
 
         $tagIds = $this->tagManager->resolveTagNames($tagNames);
 
-        $this->assertEquals(array(1, 2, 3), $tagIds);
+        $this->assertEquals([1, 2, 3], $tagIds);
     }
 
     public function testResolveTagIds()
     {
-        $tagIds = array(1, 2, 3, 99);
+        $tagIds = [1, 2, 3, 99];
 
         $tagNames = $this->tagManager->resolveTagIds($tagIds);
 
-        $this->assertEquals(array('Tag1', 'Tag2', 'Tag3'), $tagNames);
+        $this->assertEquals(['Tag1', 'Tag2', 'Tag3'], $tagNames);
     }
 }

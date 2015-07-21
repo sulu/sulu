@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 /**
  * Class SitemapXMLGenerator
- * Generate the Sitemap XML based on one or several WebspaceSitemaps
+ * Generate the Sitemap XML based on one or several WebspaceSitemaps.
  */
 class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
 {
@@ -39,14 +40,14 @@ class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
      */
     public function generate($webspaceSitemaps, $domain = null, $renderFile = null)
     {
-        $renderFile = $renderFile ? : $this->renderFile;
+        $renderFile = $renderFile ?: $this->renderFile;
 
         return $this->twig->render(
             $renderFile,
-            array(
+            [
                 'webspaceSitemaps' => $webspaceSitemaps,
-                'domain'           => $domain
-            )
+                'domain' => $domain,
+            ]
         );
     }
 }

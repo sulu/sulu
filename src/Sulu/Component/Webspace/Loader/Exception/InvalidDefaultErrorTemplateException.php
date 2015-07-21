@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,7 +25,7 @@ class InvalidDefaultErrorTemplateException extends WebspaceException
      * InvalidErrorTemplateException constructor.
      *
      * @param string $template
-     * @param int $webspace
+     * @param int    $webspace
      */
     public function __construct($template, $webspace)
     {

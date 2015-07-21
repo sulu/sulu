@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     /**
      * @var array
      */
-    protected $properties = array('navContexts');
+    protected $properties = ['navContexts'];
 
     /**
      * @var string|null
@@ -34,7 +35,7 @@ class NavigationQueryBuilder extends ContentQueryBuilder
      */
     protected function buildWhere($webspaceKey, $locale)
     {
-        $where = array();
+        $where = [];
         if ($this->context !== null) {
             $where[] = sprintf("page.[i18n:%s-navContexts] = '%s'", $locale, $this->context);
         }

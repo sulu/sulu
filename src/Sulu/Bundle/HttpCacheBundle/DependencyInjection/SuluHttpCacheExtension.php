@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,7 +52,7 @@ class SuluHttpCacheExtension extends Extension
     /**
      * Configure the proxy client services.
      *
-     * @param array $config
+     * @param array            $config
      * @param ContainerBuilder $container
      */
     private function configureProxyClient($config, ContainerBuilder $container)
@@ -87,7 +88,7 @@ class SuluHttpCacheExtension extends Extension
     /**
      * Configure the varnish services.
      *
-     * @param array $config
+     * @param array            $config
      * @param ContainerBuilder $container
      */
     private function configureProxyClientVarnish($config, ContainerBuilder $container)
@@ -103,12 +104,12 @@ class SuluHttpCacheExtension extends Extension
     /**
      * Configure the structure cache handler services.
      *
-     * @param array $config
+     * @param array            $config
      * @param ContainerBuilder $container
      */
     private function configureStructureCacheHandlers($config, ContainerBuilder $container)
     {
-        $enabledHandlers = array();
+        $enabledHandlers = [];
 
         // remove handlers which have not been enabled
         foreach ($config as $handlerName => $handlerConfig) {

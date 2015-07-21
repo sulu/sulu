@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,7 +50,7 @@ class MaskConverter implements MaskConverterInterface
      */
     public function convertPermissionsToArray($permissions)
     {
-        $permissionsData = array(
+        $permissionsData = [
             'view' => (bool) ($permissions & $this->permissions['view']),
             'add' => (bool) ($permissions & $this->permissions['add']),
             'edit' => (bool) ($permissions & $this->permissions['edit']),
@@ -57,7 +58,7 @@ class MaskConverter implements MaskConverterInterface
             'archive' => (bool) ($permissions & $this->permissions['archive']),
             'live' => (bool) ($permissions & $this->permissions['live']),
             'security' => (bool) ($permissions & $this->permissions['security']),
-        );
+        ];
 
         return $permissionsData;
     }

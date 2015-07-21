@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,13 +45,13 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
     {
         $this->contentQuery = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Query\ContentQueryExecutor',
-            array(),
+            [],
             '',
             false
         );
         $this->contentQueryBuilder = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Query\ContentQueryBuilderInterface',
-            array(),
+            [],
             '',
             false
         );
@@ -61,7 +62,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
     {
         $subNode1 = $this->getMockForAbstractClass(
             'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
@@ -70,7 +71,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $subNode1->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-123-123'));
         $subNode2 = $this->getMockForAbstractClass(
             'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
@@ -80,7 +81,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
-            array(),
+            [],
             '',
             true,
             true,
@@ -89,7 +90,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
 
         $session = $this->getMockForAbstractClass(
             'PHPCR\SessionInterface',
-            array(),
+            [],
             '',
             true,
             true,
@@ -98,12 +99,12 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
 
         $node->expects($this->any())->method('getSession')->will($this->returnValue($session));
         $session->expects($this->any())->method('getNodesByIdentifier')->will(
-            $this->returnValue(array($subNode1, $subNode2))
+            $this->returnValue([$subNode1, $subNode2])
         );
 
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
-            array(),
+            [],
             '',
             true,
             true,
@@ -114,20 +115,20 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getValue')->will(
             $this->returnValue(
-                array(
+                [
                     '123-123-123',
                     '123-456-789',
                     'not existing',
-                )
+                ]
             )
         );
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
-            array(
+            [
                 '123-123-123',
                 '123-456-789',
-            )
+            ]
         );
 
         $this->internalLinks->write($node, $property, 1, 'test', 'de', null);
