@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +13,6 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
-use Sulu\Component\HttpCache\Handler\AggregateHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
@@ -55,10 +55,10 @@ class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
             ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerFlushInterface');
 
-        $this->handler = new AggregateHandler(array(
+        $this->handler = new AggregateHandler([
             $this->handler1->reveal(),
             $this->handler2->reveal(),
-        ));
+        ]);
     }
 
     public function testInvalidateStructure()

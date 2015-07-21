@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,7 +32,7 @@ class RegisterLocalizationProvidersPass implements CompilerPassInterface
 
         foreach ($taggedServices as $id => $attributes) {
             $localizationProvider = $container->getDefinition($id);
-            $localizationManager->addMethodCall('addLocalizationProvider', array($localizationProvider));
+            $localizationManager->addMethodCall('addLocalizationProvider', [$localizationProvider]);
         }
     }
 }

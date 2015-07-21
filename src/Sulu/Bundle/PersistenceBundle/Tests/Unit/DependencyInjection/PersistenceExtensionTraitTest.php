@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,17 +20,17 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
     {
         $extension = new UsingPersistenceExtensionTrait();
         $extension->load(
-            array(
-                'objects' => array(
-                    'foo' => array(
+            [
+                'objects' => [
+                    'foo' => [
                         'model' => 'Sulu\Component\Persistence\Model\Foo',
-                    ),
-                    'bar' => array(
+                    ],
+                    'bar' => [
                         'model' => 'Sulu\Component\Persistence\Model\Bar',
                         'repository' => 'Sulu\Bundle\PersistenceBundle\Entity\BarRepository',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             $this->container
         );
 
@@ -50,17 +51,17 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
 
         $this->assertContainerBuilderHasParameter(
             'sulu.persistence.objects',
-            array(
-                'sulu' => array(
-                    'foo' => array(
+            [
+                'sulu' => [
+                    'foo' => [
                         'model' => 'Sulu\Component\Persistence\Model\Foo',
-                    ),
-                    'bar' => array(
+                    ],
+                    'bar' => [
                         'model' => 'Sulu\Component\Persistence\Model\Bar',
                         'repository' => 'Sulu\Bundle\PersistenceBundle\Entity\BarRepository',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $this->assertContainerBuilderHasService(

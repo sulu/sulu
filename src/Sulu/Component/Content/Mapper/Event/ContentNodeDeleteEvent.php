@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,9 +44,9 @@ class ContentNodeDeleteEvent extends Event
 
     /**
      * @param ContentMapperInterface $contentMapper
-     * @param SuluNodeHelper $nodeHelper
-     * @param NodeInterface $node
-     * @param string $webspace
+     * @param SuluNodeHelper         $nodeHelper
+     * @param NodeInterface          $node
+     * @param string                 $webspace
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
@@ -76,7 +77,7 @@ class ContentNodeDeleteEvent extends Event
      */
     public function getStructures()
     {
-        $structures = array();
+        $structures = [];
         foreach ($this->nodeHelper->getLanguagesForNode($this->node) as $locale) {
             $structures[] = $this->getStructure($locale);
         }

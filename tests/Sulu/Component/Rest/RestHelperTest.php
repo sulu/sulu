@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,7 +40,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $this->listRestHelper->expects($this->any())->method('getLimit')->willReturn(10);
         $listBuilder->expects($this->once())->method('limit')->with(10)->willReturnSelf();
 
-        $this->restHelper->initializeListBuilder($listBuilder, array());
+        $this->restHelper->initializeListBuilder($listBuilder, []);
     }
 
     public function testInitializeListBuilderPage()
@@ -51,13 +52,13 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $this->listRestHelper->expects($this->any())->method('getPage')->willReturn(2);
         $listBuilder->expects($this->once())->method('setCurrentPage')->with(2)->willReturnSelf();
 
-        $this->restHelper->initializeListBuilder($listBuilder, array());
+        $this->restHelper->initializeListBuilder($listBuilder, []);
     }
 
     public function testInitializeListBuilderAddFields()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(array('addField'))
+            ->setMethods(['addField'])
             ->getMockForAbstractClass();
 
         $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
@@ -68,17 +69,17 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->listRestHelper->expects($this->any())->method('getFields')->willReturn(array('name', 'desc'));
+        $this->listRestHelper->expects($this->any())->method('getFields')->willReturn(['name', 'desc']);
         $listBuilder->expects($this->at(0))->method('addField')->with($field1);
         $listBuilder->expects($this->at(1))->method('addField')->with($field2);
 
-        $this->restHelper->initializeListBuilder($listBuilder, array('name' => $field1, 'desc' => $field2));
+        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
     }
 
     public function testInitializeListBuilderSetFields()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(array('setFields'))
+            ->setMethods(['setFields'])
             ->getMockForAbstractClass();
 
         $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
@@ -89,7 +90,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $fields = array('name' => $field1, 'desc' => $field2);
+        $fields = ['name' => $field1, 'desc' => $field2];
 
         $listBuilder->expects($this->once())->method('setFields')->with($fields);
 
@@ -99,7 +100,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
     public function testInitializeListBuilderAddSearch()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(array('addSearchField', 'search'))
+            ->setMethods(['addSearchField', 'search'])
             ->getMockForAbstractClass();
 
         $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
@@ -110,19 +111,19 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->listRestHelper->expects($this->any())->method('getSearchFields')->willReturn(array('name', 'desc'));
+        $this->listRestHelper->expects($this->any())->method('getSearchFields')->willReturn(['name', 'desc']);
         $this->listRestHelper->expects($this->any())->method('getSearchPattern')->willReturn('searchValue');
         $listBuilder->expects($this->at(0))->method('addSearchField')->with($field1);
         $listBuilder->expects($this->at(1))->method('addSearchField')->with($field2);
         $listBuilder->expects($this->once())->method('search')->with('searchValue');
 
-        $this->restHelper->initializeListBuilder($listBuilder, array('name' => $field1, 'desc' => $field2));
+        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
     }
 
     public function testInitializeListBuilderSort()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(array('sort'))
+            ->setMethods(['sort'])
             ->getMockForAbstractClass();
 
         $field = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
@@ -133,12 +134,12 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $this->listRestHelper->expects($this->any())->method('getSortOrder')->willReturn('ASC');
         $listBuilder->expects($this->once())->method('sort')->with($field, 'ASC');
 
-        $this->restHelper->initializeListBuilder($listBuilder, array('name' => $field));
+        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field]);
     }
 
     public function testprocessSubEntitiesEmpty()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
@@ -160,15 +161,15 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->add();
         };
 
-        $this->restHelper->processSubEntities(array(), array(), $get, $add, $update, $delete);
+        $this->restHelper->processSubEntities([], [], $get, $add, $update, $delete);
     }
 
     public function testprocessSubEntitiesWithDelete()
     {
-        $mockedObject = $this->getMock('stdClass', array('getId'));
+        $mockedObject = $this->getMock('stdClass', ['getId']);
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
 
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
@@ -191,10 +192,10 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->restHelper->processSubEntities(
-            array(
+            [
                 $mockedObject,
-            ),
-            array(),
+            ],
+            [],
             $get,
             $add,
             $update,
@@ -204,10 +205,10 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testprocessSubEntitiesWithUpdate()
     {
-        $mockedObject = $this->getMock('stdClass', array('getId'));
+        $mockedObject = $this->getMock('stdClass', ['getId']);
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
 
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->once())->method('update');
         $mock->expects($this->never())->method('add');
@@ -230,14 +231,14 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->restHelper->processSubEntities(
-            array(
+            [
                 $mockedObject,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'id' => 1,
-                ),
-            ),
+                ],
+            ],
             $get,
             $add,
             $update,
@@ -247,7 +248,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testprocessSubEntitiesWithAdd()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->once())->method('add');
@@ -270,12 +271,12 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->restHelper->processSubEntities(
-            array(),
-            array(
-                array(
+            [],
+            [
+                [
                     'id' => 1,
-                ),
-            ),
+                ],
+            ],
             $get,
             $add,
             $update,
@@ -285,14 +286,14 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testCompareEntitiesWithData()
     {
-        $mockedObject = $this->getMock('stdClass', array('getId', 'getValue'));
+        $mockedObject = $this->getMock('stdClass', ['getId', 'getValue']);
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
         $mockedObject->expects($this->any())->method('getValue')->will($this->returnValue(2));
 
         $mockedObject2 = clone $mockedObject;
         $mockedObject3 = clone $mockedObject;
 
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->any())->method('update');
         $mock->expects($this->once())->method('add');
@@ -323,23 +324,23 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->restHelper->compareEntitiesWithData(
-            array(
+            [
                 $mockedObject,
                 $mockedObject2,
                 $mockedObject3,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'id' => 1,
                     'value' => 3,
-                ),
-                array(
+                ],
+                [
                     'id' => 2,
-                ),
-                array(
+                ],
+                [
                     'value' => 2,
-                ),
-            ),
+                ],
+            ],
             $get,
             $add,
             $update,

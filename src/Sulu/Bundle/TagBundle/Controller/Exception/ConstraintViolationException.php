@@ -1,12 +1,13 @@
 <?php
+
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\TagBundle\Controller\Exception;
 
@@ -34,8 +35,8 @@ class ConstraintViolationException extends RestException
 
     /**
      * @param string $message The error message
-     * @param string $field The field which is not
-     * @param int $code
+     * @param string $field   The field which is not
+     * @param int    $code
      */
     public function __construct($message, $field, $code = 0)
     {
@@ -45,10 +46,10 @@ class ConstraintViolationException extends RestException
 
     public function toArray()
     {
-        return array(
+        return [
             'code' => $this->code,
             'message' => $this->message,
             'field' => $this->field,
-        );
+        ];
     }
 }

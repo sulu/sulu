@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -72,7 +73,7 @@ interface ListBuilderInterface
      * Defines the field by which the table is sorted.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string $order
+     * @param string                  $order
      *
      * @return ListBuilderInterface
      */
@@ -114,7 +115,7 @@ interface ListBuilderInterface
      * Defines a constraint for the rows to return.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
-     * @param string $value The value the FieldDescriptor should have
+     * @param string                  $value           The value the FieldDescriptor should have
      *
      * @return mixed
      */
@@ -124,7 +125,7 @@ interface ListBuilderInterface
      * Defines a constraint for the rows to return which are not equal the specified values.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
-     * @param string $value The value the FieldDescriptor should not have
+     * @param string                  $value           The value the FieldDescriptor should not have
      *
      * @return mixed
      */

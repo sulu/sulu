@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,7 +44,7 @@ class Account extends ApiWrapper
 {
     /**
      * @param AccountInterface $account
-     * @param string $locale The locale of this product
+     * @param string           $locale  The locale of this product
      */
     public function __construct(AccountInterface $account, $locale)
     {
@@ -238,7 +239,7 @@ class Account extends ApiWrapper
      */
     public function getUrls()
     {
-        $urls = array();
+        $urls = [];
         if ($this->entity->getUrls()) {
             foreach ($this->entity->getUrls() as $url) {
                 $urls[] = $url;
@@ -282,7 +283,7 @@ class Account extends ApiWrapper
      */
     public function getPhones()
     {
-        $phones = array();
+        $phones = [];
         if ($this->entity->getPhones()) {
             foreach ($this->entity->getPhones() as $phone) {
                 $phones[] = $phone;
@@ -326,7 +327,7 @@ class Account extends ApiWrapper
      */
     public function getEmails()
     {
-        $emails = array();
+        $emails = [];
         if ($this->entity->getEmails()) {
             foreach ($this->entity->getEmails() as $email) {
                 $emails[] = $email;
@@ -370,7 +371,7 @@ class Account extends ApiWrapper
      */
     public function getNotes()
     {
-        $notes = array();
+        $notes = [];
         if ($this->entity->getNotes()) {
             foreach ($this->entity->getNotes() as $note) {
                 $notes[] = $note;
@@ -414,7 +415,7 @@ class Account extends ApiWrapper
      */
     public function getFaxes()
     {
-        $faxes = array();
+        $faxes = [];
         if ($this->entity->getFaxes()) {
             foreach ($this->entity->getFaxes() as $fax) {
                 $faxes[] = $fax;
@@ -592,10 +593,10 @@ class Account extends ApiWrapper
      */
     public function getBankAccounts()
     {
-        $bankAccounts = array();
+        $bankAccounts = [];
         if ($this->entity->getBankAccounts()) {
             foreach ($this->entity->getBankAccounts() as $bankAccount) {
-                /** @var BankAccountEntity $bankAccount */
+                /* @var BankAccountEntity $bankAccount */
                 $bankAccounts[] = new BankAccount($bankAccount);
             }
         }
@@ -674,7 +675,7 @@ class Account extends ApiWrapper
      */
     public function getAccountContacts()
     {
-        $accountContacts = array();
+        $accountContacts = [];
         if ($this->entity->getAccountContacts()) {
             foreach ($this->entity->getAccountContacts() as $AccountContact) {
                 $accountContacts[] = new AccountContact($AccountContact, $this->locale);
@@ -935,7 +936,7 @@ class Account extends ApiWrapper
      */
     public function getAccountAddresses()
     {
-        $accountAddresses = array();
+        $accountAddresses = [];
         if ($this->entity->getAccountAddresses()) {
             foreach ($this->entity->getAccountAddresses() as $adr) {
                 $accountAddress[] = new AccountAddress($adr);
@@ -955,7 +956,7 @@ class Account extends ApiWrapper
     public function getAddresses()
     {
         $accountAddresses = $this->entity->getAccountAddresses();
-        $addresses = array();
+        $addresses = [];
 
         if (!is_null($accountAddresses)) {
             /** @var ContactAddress $accountAddress */
@@ -1004,7 +1005,7 @@ class Account extends ApiWrapper
     public function getContacts()
     {
         $accountContacts = $this->entity->getAccountContacts();
-        $contacts = array();
+        $contacts = [];
 
         if (!is_null($accountContacts)) {
             /** @var AccountContactEntity $accountContact */
@@ -1051,7 +1052,7 @@ class Account extends ApiWrapper
      */
     public function getMedias()
     {
-        $medias = array();
+        $medias = [];
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
                 $medias[] = new Media($media, $this->locale, null);
@@ -1071,7 +1072,7 @@ class Account extends ApiWrapper
      */
     public function getCategories()
     {
-        $entities = array();
+        $entities = [];
         if ($this->entity->getCategories()) {
             foreach ($this->entity->getCategories() as $category) {
                 $entities[] = new Category($category, $this->locale);

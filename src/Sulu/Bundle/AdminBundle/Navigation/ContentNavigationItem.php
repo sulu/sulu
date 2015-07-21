@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -52,7 +53,7 @@ class ContentNavigationItem
      *
      * @var array
      */
-    private $componentOptions = array();
+    private $componentOptions = [];
 
     /**
      * Defines in which state the navigation item will be displayed (basically new, edit).
@@ -85,7 +86,7 @@ class ContentNavigationItem
     public function __construct($name)
     {
         $this->name = $name;
-        $this->display = array(static::DISPLAY_NEW, static::DISPLAY_EDIT);
+        $this->display = [static::DISPLAY_NEW, static::DISPLAY_EDIT];
         $this->resetStore = true;
     }
 

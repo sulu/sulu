@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -73,7 +74,7 @@ class ResourceLocatorTest extends SuluTestCase
 
     public function testWrite()
     {
-        $property = new Property('url', array(), 'resource_locator');
+        $property = new Property('url', [], 'resource_locator');
         $property->setValue('/test');
 
         $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');
@@ -88,7 +89,7 @@ class ResourceLocatorTest extends SuluTestCase
 
     public function testLoadFromProperty()
     {
-        $property = new Property('url', array(), 'resource_locator');
+        $property = new Property('url', [], 'resource_locator');
 
         $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');
         $node->addMixin('sulu:content');
@@ -102,7 +103,7 @@ class ResourceLocatorTest extends SuluTestCase
 
     public function testLoadFromNode()
     {
-        $property = new Property('url', array(), 'resource_locator');
+        $property = new Property('url', [], 'resource_locator');
         $property->setValue('/test');
 
         $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');
@@ -122,7 +123,7 @@ class ResourceLocatorTest extends SuluTestCase
 
     public function testOverride()
     {
-        $property = new Property('url', array(), 'resource_locator');
+        $property = new Property('url', [], 'resource_locator');
         $property->setValue('/test');
 
         $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');

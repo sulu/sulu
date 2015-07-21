@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -61,7 +62,7 @@ class SeoController extends RestController implements ClassResourceInterface
      * returns seo information for given node uuid.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -93,7 +94,7 @@ class SeoController extends RestController implements ClassResourceInterface
      * handles a post request to save seo data.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

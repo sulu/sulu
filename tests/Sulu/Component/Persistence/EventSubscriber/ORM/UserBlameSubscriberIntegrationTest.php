@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,7 +32,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
     public function testUserBlame()
     {
         $context = $this->getContainer()->get('security.context');
-        $token = new UsernamePasswordToken('test', 'test', 'test_provider', array());
+        $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
         $user = new User();
         $user->setUsername('dantleech');
         $user->setPassword('foo');

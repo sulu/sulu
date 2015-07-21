@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,14 +15,14 @@ class SearchManagerTest extends BaseTestCase
 {
     /**
      * The search manager should update existing documents with the same IDs rather
-     * than creating new documents
+     * than creating new documents.
      */
     public function testSearchManager()
     {
         $nbResults = 10;
         $documents = $this->generateDocumentIndex($nbResults);
 
-        for ($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; ++$i) {
             foreach ($documents as $document) {
                 $this->documentManager->persist($document, 'de');
             }

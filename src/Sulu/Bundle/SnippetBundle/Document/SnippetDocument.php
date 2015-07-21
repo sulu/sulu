@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\SnippetBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -7,15 +16,15 @@ use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
+use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
-use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 
 /**
- * Snippet document
+ * Snippet document.
  */
 class SnippetDocument implements
     NodeNameBehavior,
@@ -52,7 +61,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getNodeName() 
+    public function getNodeName()
     {
         return $this->nodeName;
     }
@@ -60,13 +69,13 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getTitle() 
+    public function getTitle()
     {
         return $this->title;
     }
 
     /**
-     * Set the title
+     * Set the title.
      */
     public function setTitle($title)
     {
@@ -76,7 +85,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getCreated() 
+    public function getCreated()
     {
         return $this->created;
     }
@@ -84,7 +93,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getChanged() 
+    public function getChanged()
     {
         return $this->changed;
     }
@@ -92,7 +101,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getCreator() 
+    public function getCreator()
     {
         return $this->creator;
     }
@@ -100,7 +109,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getChanger() 
+    public function getChanger()
     {
         return $this->changer;
     }
@@ -108,7 +117,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getParent() 
+    public function getParent()
     {
         return $this->parent;
     }
@@ -124,11 +133,11 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getWorkflowStage() 
+    public function getWorkflowStage()
     {
         return $this->workflowStage;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -148,7 +157,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getUuid() 
+    public function getUuid()
     {
         return $this->uuid;
     }
@@ -156,7 +165,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getStructureType() 
+    public function getStructureType()
     {
         return $this->structureType;
     }
@@ -168,7 +177,7 @@ class SnippetDocument implements
     {
         return $this->structure;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -196,7 +205,7 @@ class SnippetDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getPath() 
+    public function getPath()
     {
         return $this->path;
     }

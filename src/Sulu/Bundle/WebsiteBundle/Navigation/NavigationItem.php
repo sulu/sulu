@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,7 +48,7 @@ class NavigationItem
      */
     private $excerpt;
 
-    public function __construct($title, $url, $excerpt, $children = array(), $uuid = null, $nodeType = Structure::STATE_TEST)
+    public function __construct($title, $url, $excerpt, $children = [], $uuid = null, $nodeType = Structure::STATE_TEST)
     {
         $this->title = $title;
         $this->url = $url;

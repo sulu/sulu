@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,17 +11,15 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
+use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
+use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use PHPCR\PropertyType;
 
 class RedirectTypeSubscriber extends AbstractMappingSubscriber
 {
@@ -32,16 +31,15 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     private $documentRegistry;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder  $encoder
      * @param DocumentAccessor $accessor
-     * @param ProxyFactory $proxyFactory
+     * @param ProxyFactory     $proxyFactory
      */
     public function __construct(
-        PropertyEncoder $encoder, 
+        PropertyEncoder $encoder,
         ProxyFactory $proxyFactory,
         DocumentRegistry $documentRegistry
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->proxyFactory = $proxyFactory;
         $this->documentRegistry = $documentRegistry;
@@ -96,7 +94,7 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
 
         $node->setProperty(
             $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            $document->getRedirectType() ? : RedirectType::NONE,
+            $document->getRedirectType() ?: RedirectType::NONE,
             PropertyType::LONG
         );
 

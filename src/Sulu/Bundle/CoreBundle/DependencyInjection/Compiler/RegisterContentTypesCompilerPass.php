@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,7 +43,7 @@ class RegisterContentTypesCompilerPass implements CompilerPassInterface
 
             $contentTypeManager->addMethodCall(
                 'mapAliasToServiceId',
-                array($attributes[0]['alias'], $id)
+                [$attributes[0]['alias'], $id]
             );
         }
     }

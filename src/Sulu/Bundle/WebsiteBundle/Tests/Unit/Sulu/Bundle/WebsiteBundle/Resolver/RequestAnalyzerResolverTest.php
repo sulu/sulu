@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,7 +36,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $this->resolver = new RequestAnalyzerResolver(
             $this->webspaceManager->reveal(),
             'dev',
-            array('analyticsKey' => 'UA-SULU-Test')
+            ['analyticsKey' => 'UA-SULU-Test']
         );
     }
 
@@ -93,49 +93,49 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');
         $requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
         $requestAnalyzer->getResourceLocator()->willReturn('/search');
-        $requestAnalyzer->getGetParameters()->willReturn(array('p' => 1));
-        $requestAnalyzer->getPostParameters()->willReturn(array());
+        $requestAnalyzer->getGetParameters()->willReturn(['p' => 1]);
+        $requestAnalyzer->getPostParameters()->willReturn([]);
         $requestAnalyzer->getPortal()->willReturn($portal);
         $requestAnalyzer->getAnalyticsKey()->willReturn('analyticsKey');
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
-            array(
-                'request' => array(
+            [
+                'request' => [
                     'webspaceKey' => 'sulu_io',
                     'locale' => 'de_at',
                     'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
-                    'get' => array('p' => 1),
-                    'post' => array(),
+                    'get' => ['p' => 1],
+                    'post' => [],
                     'analyticsKey' => 'analyticsKey',
-                ),
-            ),
+                ],
+            ],
             $result
         );
     }
 
     public function testResolveForPreview()
     {
-        $this->webspaceManager->getPortalInformations('dev')->willReturn(array('sulu.io/de' => array()));
+        $this->webspaceManager->getPortalInformations('dev')->willReturn(['sulu.io/de' => []]);
 
         $result = $this->resolver->resolveForPreview('sulu_io', 'de');
         $this->assertEquals(
-            array(
-                'request' => array(
+            [
+                'request' => [
                     'webspaceKey' => 'sulu_io',
                     'locale' => 'de',
                     'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '',
                     'resourceLocator' => '',
-                    'get' => array(),
-                    'post' => array(),
+                    'get' => [],
+                    'post' => [],
                     'analyticsKey' => 'UA-SULU-Test',
-                ),
-            ),
+                ],
+            ],
             $result
         );
     }

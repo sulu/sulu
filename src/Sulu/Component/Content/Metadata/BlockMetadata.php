@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,17 +12,17 @@
 namespace Sulu\Component\Content\Metadata;
 
 /**
- * Blocks represents a choice of sub structures
+ * Blocks represents a choice of sub structures.
  *
  * TODO: Components are basically Snippets, but Snippets are loaded as Structures
  */
 class BlockMetadata extends PropertyMetadata
 {
-    public $components = array();
+    public $components = [];
     public $defaultComponentName;
 
     /**
-     * Return the default component name
+     * Return the default component name.
      *
      * @return string
      */
@@ -31,17 +32,17 @@ class BlockMetadata extends PropertyMetadata
     }
 
     /**
-     * Return the components
+     * Return the components.
      *
      * @return ComponentMetadata[]
      */
-    public function getComponents() 
+    public function getComponents()
     {
         return $this->components;
     }
 
     /**
-     * Add a new component
+     * Add a new component.
      *
      * @param ComponentMetadata $component
      */

@@ -1,14 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
- * This class locates and sorts fixture files
+ * This class locates and sorts fixture files.
  */
 class DocumentFixtureLoader
 {
@@ -41,7 +49,7 @@ class DocumentFixtureLoader
 
         foreach ($finder as $file) {
             $declaredClasses = get_declared_classes();
-            require_once($file);
+            require_once $file;
             $declaredClassesDiff = array_diff(get_declared_classes(), $declaredClasses);
             $fixtureClass = array_pop($declaredClassesDiff);
 

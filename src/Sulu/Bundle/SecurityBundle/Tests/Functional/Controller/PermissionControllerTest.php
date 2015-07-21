@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,11 +52,11 @@ class PermissionControllerTest extends SuluTestCase
 
     public function providePermissionData()
     {
-        return array(
-            array(
+        return [
+            [
                 '1',
                 'Acme\Example',
-                array(
+                [
                     'add' => 'true',
                     'view' => true,
                     'delete' => false,
@@ -63,9 +64,9 @@ class PermissionControllerTest extends SuluTestCase
                     'archive' => false,
                     'live' => false,
                     'security' => false,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -75,13 +76,13 @@ class PermissionControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/permissions', array(
+        $client->request('POST', '/api/permissions', [
             'id' => $id,
             'type' => $class,
-            'permissions' => array(
+            'permissions' => [
                 'ROLE_SULU_ADMINISTRATOR' => $permissions,
-            ),
-        ));
+            ],
+        ]);
 
         $client->request('GET', '/api/permissions?id=' . $id . '&type=' . $class);
 
@@ -93,13 +94,13 @@ class PermissionControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(
-            array(
+            [
                 'id' => $id,
                 'type' => $class,
-                'permissions' => array(
+                'permissions' => [
                     'ROLE_SULU_ADMINISTRATOR' => $permissions,
-                ),
-            ),
+                ],
+            ],
             $response
         );
     }
@@ -111,26 +112,26 @@ class PermissionControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/permissions', array(
+        $client->request('POST', '/api/permissions', [
             'id' => $id,
             'type' => $class,
-            'permissions' => array(
+            'permissions' => [
                 'ROLE_SULU_ADMINISTRATOR' => $permissions,
-            ),
-        ));
+            ],
+        ]);
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(
-            array(
+            [
                 'id' => $id,
                 'type' => $class,
-                'permissions' => array(
+                'permissions' => [
                     'ROLE_SULU_ADMINISTRATOR' => $permissions,
-                ),
-            ),
+                ],
+            ],
             $response
         );
 
@@ -155,12 +156,12 @@ class PermissionControllerTest extends SuluTestCase
 
     public function provideWrongPermissionData()
     {
-        return array(
-            array(null, null, null),
-            array('1', null, array()),
-            array(null, 'Acme\Example', array()),
-            array('1', 'Acme\Example', null),
-        );
+        return [
+            [null, null, null],
+            ['1', null, []],
+            [null, 'Acme\Example', []],
+            ['1', 'Acme\Example', null],
+        ];
     }
 
     /**
@@ -170,11 +171,11 @@ class PermissionControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/permissions', array(
+        $client->request('POST', '/api/permissions', [
             'id' => $id,
             'type' => $class,
             'permissions' => $permissions,
-        ));
+        ]);
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }

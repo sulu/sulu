@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -86,7 +87,7 @@ class SecurityContextVoter implements VoterInterface
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        $attributeVotes = array();
+        $attributeVotes = [];
 
         /** @var User $user */
         $user = $token->getUser();
@@ -106,12 +107,12 @@ class SecurityContextVoter implements VoterInterface
                 continue;
             }
 
-            $roleVotes = array();
-            $groupVotes = array();
+            $roleVotes = [];
+            $groupVotes = [];
 
             foreach ($user->getUserRoles() as $userRole) {
                 // check all given roles if they have the given attribute
-                /** @var UserRole $userRole */
+                /* @var UserRole $userRole */
                 $roleVotes[] = $this->checkPermissions(
                     $object,
                     $attribute,
@@ -122,7 +123,7 @@ class SecurityContextVoter implements VoterInterface
 
             foreach ($user->getUserGroups() as $userGroup) {
                 // check if one of the user groups have the given attribute
-                /** @var UserGroup $userGroup */
+                /* @var UserGroup $userGroup */
                 $groupVotes[] = $this->checkUserGroup(
                     $object,
                     $attribute,
@@ -143,9 +144,9 @@ class SecurityContextVoter implements VoterInterface
      * Checks if the given group has the permission to execute the desired task.
      *
      * @param SecurityCondition $object
-     * @param int $attribute
-     * @param Group $group
-     * @param array $locales
+     * @param int               $attribute
+     * @param Group             $group
+     * @param array             $locales
      *
      * @return bool
      */
@@ -176,9 +177,9 @@ class SecurityContextVoter implements VoterInterface
      * Checks if the given set of permissions grants to execute the desired task.
      *
      * @param SecurityCondition $object
-     * @param int $attribute
-     * @param Collection $permissions
-     * @param array $locales
+     * @param int               $attribute
+     * @param Collection        $permissions
+     * @param array             $locales
      *
      * @return bool True if the desired access is valid, otherwise false
      */
@@ -198,16 +199,16 @@ class SecurityContextVoter implements VoterInterface
      * Checks if the combination of permission and userrole is allowed for the given attributes.
      *
      * @param SecurityCondition $object
-     * @param int $attribute
-     * @param Permission $permission
-     * @param array|null $locales
+     * @param int               $attribute
+     * @param Permission        $permission
+     * @param array|null        $locales
      *
      * @return bool
      */
     private function isGranted($object, $attribute, Permission $permission, $locales)
     {
         if (!is_array($locales)) {
-            $locales = array();
+            $locales = [];
         }
 
         $hasContext = $permission->getContext() == $object->getSecurityContext();

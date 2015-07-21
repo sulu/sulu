@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,7 +37,7 @@ class Validators
 
         // validate that the namespace is at least one level deep
         if (false === strpos($namespace, '\\')) {
-            $msg = array();
+            $msg = [];
             $msg[] = sprintf('The namespace must contain a vendor namespace (e.g. "VendorName\%s" instead of simply "%s").', $namespace, $namespace);
             $msg[] = 'If you\'ve specified a vendor namespace, did you forget to surround it with quotes (init:bundle "Acme\BlogBundle")?';
 
@@ -85,7 +86,7 @@ class Validators
     {
         $format = strtolower($format);
 
-        if (!in_array($format, array('php', 'xml', 'yml', 'annotation'))) {
+        if (!in_array($format, ['php', 'xml', 'yml', 'annotation'])) {
             throw new \RuntimeException(sprintf('Format "%s" is not supported.', $format));
         }
 
@@ -103,7 +104,7 @@ class Validators
 
     public static function getReservedWords()
     {
-        return array(
+        return [
             'abstract',
             'and',
             'array',
@@ -172,6 +173,6 @@ class Validators
             'return',
             'print',
             'unset',
-        );
+        ];
     }
 }

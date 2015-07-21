@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,25 +17,25 @@ namespace Sulu\Component\Content\Metadata;
 abstract class ItemMetadata
 {
     /**
-     * Name of this item
+     * Name of this item.
      *
      * @var string
      */
     public $name;
 
     /**
-     * The title of this property|structure e.g. [["de": "Artikles", "en": "Articles"]]
+     * The title of this property|structure e.g. [["de": "Artikles", "en": "Articles"]].
      *
      * @var array
      */
-    public $title = array();
+    public $title = [];
 
     /**
-     * Description of this property|structure e.g. [["de": "Liste von Artikeln", "en": "List of articles"]]
+     * Description of this property|structure e.g. [["de": "Liste von Artikeln", "en": "List of articles"]].
      *
      * @var array
      */
-    public $description = array();
+    public $description = [];
 
     /**
      * Tags, e.g. 
@@ -48,10 +48,10 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $tags = array();
+    public $tags = [];
 
     /**
-     * Parameters applying to the property
+     * Parameters applying to the property.
      *
      * ````
      * array(
@@ -61,14 +61,14 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $parameters = array();
+    public $parameters = [];
 
     /**
-     * Children of this item, f.e. properties, sections or structures
+     * Children of this item, f.e. properties, sections or structures.
      *
      * @var Item[]
      */
-    public $children = array();
+    public $children = [];
 
     /**
      * @param mixed $name
@@ -79,7 +79,7 @@ abstract class ItemMetadata
     }
 
     /**
-     * Magic setter to catch bad property calls
+     * Magic setter to catch bad property calls.
      */
     public function __set($field, $value)
     {
@@ -90,9 +90,10 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the named property
+     * Return the named property.
      *
      * @param string $name
+     *
      * @return ItemMetadata
      */
     public function getChild($name)
@@ -112,6 +113,7 @@ abstract class ItemMetadata
      * if it does not.
      *
      * @param string $name
+     *
      * @return bool
      */
     public function hasChild($name)
@@ -120,7 +122,7 @@ abstract class ItemMetadata
     }
 
     /**
-     * Adds a child item
+     * Adds a child item.
      *
      * @param ItemMetadata $child
      */
@@ -137,7 +139,7 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the children of this item
+     * Return the children of this item.
      *
      * @return Item[]
      */
@@ -167,6 +169,7 @@ abstract class ItemMetadata
      * Return the paramter with the given name.
      *
      * @param string $name
+     *
      * @return mixed
      */
     public function getParameter($name)
@@ -182,7 +185,7 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the name of this item
+     * Return the name of this item.
      *
      * @return string
      */
@@ -196,16 +199,18 @@ abstract class ItemMetadata
      *
      * @return array
      */
-    public function getTags() 
+    public function getTags()
     {
         return $this->tags;
     }
 
     /**
-     * Return the named tag
+     * Return the named tag.
      *
      * @param string $tagName
+     *
      * @throws \InvalidArgumentException
+     *
      * @return array
      */
     public function getTag($tagName)
@@ -225,6 +230,7 @@ abstract class ItemMetadata
      * Return true if this item has the named tag.
      *
      * @param string $name
+     *
      * @return bool
      */
     public function hasTag($name)
@@ -239,21 +245,21 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the parameters for this property
+     * Return the parameters for this property.
      *
      * @return array
      */
-    public function getParameters() 
+    public function getParameters()
     {
         return $this->parameters;
     }
 
     /**
-     * Return the decsription of this property
+     * Return the decsription of this property.
      *
      * @return string
      */
-    public function getDescription() 
+    public function getDescription()
     {
         return $this->description;
     }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,10 +10,6 @@
  */
 
 namespace Sulu\Component\Content\Metadata;
-
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
-use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 /**
  * Represents metadata for a structure.
@@ -25,7 +21,8 @@ class StructureMetadata extends ItemMetadata
 {
     /**
      * The resource from which this structure was loaded
-     * (useful for debugging)
+     * (useful for debugging).
+     *
      * @var string
      */
     public $resource;
@@ -46,14 +43,16 @@ class StructureMetadata extends ItemMetadata
     public $view;
 
     /**
-     * Same as ItemMetadata::$children but without Sections
+     * Same as ItemMetadata::$children but without Sections.
+     *
      * @see StructureMetadata::burnProperties()
+     *
      * @var array
      */
     public $properties;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $internal;
 
@@ -63,6 +62,7 @@ class StructureMetadata extends ItemMetadata
      * @see StructureMetadata::getProperties()
      *
      * @param string $name
+     *
      * @return PropertyMetadata
      */
     public function getProperty($name)
@@ -79,7 +79,7 @@ class StructureMetadata extends ItemMetadata
     }
 
     /**
-     * Return all model properties
+     * Return all model properties.
      *
      * The "model" set of properties does not include UI elements 
      * such as sections.
@@ -103,7 +103,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function burnProperties()
     {
-        $properties = array();
+        $properties = [];
         foreach ($this->children as $child) {
             if ($child instanceof SectionMetadata) {
                 $properties = array_merge($properties, $child->getChildren());
@@ -131,6 +131,7 @@ class StructureMetadata extends ItemMetadata
      * tag name.
      *
      * @param string $tagName
+     *
      * @return bool
      */
     public function getPropertyByTagName($tagName, $highest = true)
@@ -152,6 +153,7 @@ class StructureMetadata extends ItemMetadata
      * tag name.
      *
      * @param string $tagName
+     *
      * @return bool
      */
     public function hasPropertyWithTagName($tagName)
@@ -160,18 +162,19 @@ class StructureMetadata extends ItemMetadata
     }
 
     /**
-     * Return all properties with the given tag name
+     * Return all properties with the given tag name.
      *
      * @param string $tagName
+     *
      * @return bool
      */
     public function getPropertiesByTagName($tagName)
     {
-        $properties = array();
+        $properties = [];
 
         foreach ($this->properties as $property) {
             foreach ($property->tags as $tag) {
-                if ($tag['name'] == $tagName){
+                if ($tag['name'] == $tagName) {
                     $properties[$property->name] = $property;
                 }
             }
@@ -181,23 +184,23 @@ class StructureMetadata extends ItemMetadata
     }
 
     /**
-     * Return the resource from which this structure was loaded
+     * Return the resource from which this structure was loaded.
      *
      * @return string
      */
-    public function getResource() 
+    public function getResource()
     {
         return $this->resource;
     }
 
     /**
-     * Return if this is an internal structure
+     * Return if this is an internal structure.
      *
      * TODO: Refactor this: https://github.com/sulu-io/sulu/issues/1220
      *
-     * @return boolean
+     * @return bool
      */
-    public function isInternal() 
+    public function isInternal()
     {
         return $this->internal;
     }

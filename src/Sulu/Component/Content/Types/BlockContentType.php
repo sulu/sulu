@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,14 +12,14 @@
 namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
-use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 
 /**
  * content type for block.
@@ -89,7 +90,7 @@ class BlockContentType extends ComplexContentType
             );
             $len = $lengthProperty->getValue();
 
-            for ($i = 0; $i < $len; $i++) {
+            for ($i = 0; $i < $len; ++$i) {
                 // load type
                 $contentType = $this->contentTypeManager->get($typeProperty->getContentTypeName());
                 $contentType->read(
@@ -168,7 +169,7 @@ class BlockContentType extends ComplexContentType
 
             $len = sizeof($data);
 
-            for ($i = 0; $i < $len; $i++) {
+            for ($i = 0; $i < $len; ++$i) {
                 $blockPropertyType = $blockProperty->initProperties($i, $data[$i]['type']);
 
                 /** @var PropertyInterface $subProperty */
@@ -211,7 +212,7 @@ class BlockContentType extends ComplexContentType
             $data = $blockProperty->getValue();
 
             if (!$blockProperty->getIsMultiple()) {
-                $data = array($data);
+                $data = [$data];
             }
 
             $data = array_filter($data);
@@ -234,7 +235,7 @@ class BlockContentType extends ComplexContentType
                 $segmentKey
             );
 
-            for ($i = 0; $i < $len; $i++) {
+            for ($i = 0; $i < $len; ++$i) {
                 $blockPropertyType = $blockProperty->getProperties($i);
 
                 // save type property
@@ -358,8 +359,8 @@ class BlockContentType extends ComplexContentType
      * use callback to prepare data foreach property function($contentType, $property).
      *
      * @param PropertyInterface $property
-     * @param callable $dataCallback
-     * @param bool $returnType
+     * @param callable          $dataCallback
+     * @param bool              $returnType
      *
      * @return array
      */
@@ -371,13 +372,13 @@ class BlockContentType extends ComplexContentType
             $blockProperty = $blockProperty->getProperty();
         }
 
-        $data = array();
-        for ($i = 0; $i < $blockProperty->getLength(); $i++) {
+        $data = [];
+        for ($i = 0; $i < $blockProperty->getLength(); ++$i) {
             $blockPropertyType = $blockProperty->getProperties($i);
 
             if ($returnType) {
                 $type = $blockPropertyType->getName();
-                $data[$i] = array('type' => $type);
+                $data[$i] = ['type' => $type];
             }
 
             foreach ($blockPropertyType->getChildProperties() as $childProperty) {

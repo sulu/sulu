@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,18 +11,16 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Exception;
-use Sulu\Exception\FeatureNotImplementedException;
-use Symfony\Component\Config\Loader\LoaderResolverInterface;
-use Symfony\Component\Config\Util\XmlUtils;
-use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Exception\FeatureNotImplementedException;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
- * Load structure structure from an XML file
+ * Load structure structure from an XML file.
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
@@ -129,15 +127,15 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = $data['minOccurs'] ? : 1;
-        $property->maxOccurs = $data['maxOccurs'] ? : 999;
+        $property->minOccurs = $data['minOccurs'] ?: 1;
+        $property->maxOccurs = $data['maxOccurs'] ?: 999;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }
 
     private function normalizePropertyData($data)
     {
-        $data = array_replace_recursive(array(
+        $data = array_replace_recursive([
             'type' => null,
             'multilingual' => true,
             'mandatory' => true,
@@ -145,36 +143,35 @@ class XmlLoader extends XmlLegacyLoader
             'cssClass' => null,
             'minOccurs' => null,
             'maxOccurs' => null,
-        ), $this->normalizeItem($data));
+        ], $this->normalizeItem($data));
 
         return $data;
     }
 
     private function normalizeStructureData($data)
     {
-        $data = array_replace_recursive(array(
+        $data = array_replace_recursive([
             'key' => null,
             'view' => null,
             'controller' => null,
             'internal' => false,
             'cacheLifetime' => null,
-        ), $this->normalizeItem($data));
-
+        ], $this->normalizeItem($data));
 
         return $data;
     }
 
     private function normalizeItem($data)
     {
-        $data = array_merge_recursive(array(
-            'meta' => array(
-                'title' => array(),
-                'info_text' => array(),
-                'placeholder' => array(),
-            ),
-            'params' => array(),
-            'tags' => array(),
-        ), $data);
+        $data = array_merge_recursive([
+            'meta' => [
+                'title' => [],
+                'info_text' => [],
+                'placeholder' => [],
+            ],
+            'params' => [],
+            'tags' => [],
+        ], $data);
 
         return $data;
     }

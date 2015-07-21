@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
     /**
      * @var WidgetInterface[]
      */
-    protected $widgets = array();
+    protected $widgets = [];
 
     /**
      * @var EngineInterface
@@ -57,13 +58,13 @@ class WidgetsHandler implements WidgetsHandlerInterface
      * renders a widget group.
      *
      * @param string $groupAlias
-     * @param array $parameters
+     * @param array  $parameters
      *
      * @return string
      *
      * @throws WidgetGroupNotFoundException
      */
-    public function renderWidgetGroup($groupAlias, $parameters = array())
+    public function renderWidgetGroup($groupAlias, $parameters = [])
     {
         if (array_key_exists($groupAlias, $this->widgetGroups)) {
             return $this->render($this->widgetGroups[$groupAlias]['mappings'], $parameters);
@@ -88,26 +89,26 @@ class WidgetsHandler implements WidgetsHandlerInterface
      *
      * @return string
      */
-    public function render($aliases, $parameters = array())
+    public function render($aliases, $parameters = [])
     {
         // process widgets
-        $widgets = array();
+        $widgets = [];
         foreach ($aliases as $alias) {
-            $widgets[] = array(
+            $widgets[] = [
                 'name' => $this->widgets[$alias]->getName(),
                 'template' => $this->widgets[$alias]->getTemplate(),
                 'data' => $this->widgets[$alias]->getData($parameters),
-            );
+            ];
         }
 
         if (count($widgets) > 0) {
             // render template
             return $this->templateEngine->render(
                 $this->template,
-                array(
+                [
                     'widgets' => $widgets,
                     'parameters' => $parameters,
-                )
+                ]
             );
         }
 

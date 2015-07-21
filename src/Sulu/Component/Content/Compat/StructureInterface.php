@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -216,7 +217,7 @@ interface StructureInterface extends \JsonSerializable
     public function setType($type);
 
     /**
-     * Return type of structure
+     * Return type of structure.
      *
      * @return \Sulu\Component\Content\Compat\StructureType
      */

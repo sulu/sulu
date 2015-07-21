@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,12 +33,12 @@ class GenerateBundleCommand extends GeneratorCommand
     protected function configure()
     {
         $this
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
                 new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure'),
-            ))
+            ])
             ->setDescription('Generates a sulu bundle')
             ->setHelp(<<<EOT
 The <info>generate:bundle</info> command helps you generates new bundles.
@@ -80,7 +81,7 @@ EOT
             }
         }
 
-        foreach (array('namespace', 'dir') as $option) {
+        foreach (['namespace', 'dir'] as $option) {
             if (null === $input->getOption($option)) {
                 throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
             }
@@ -88,7 +89,7 @@ EOT
 
         $namespace = Validators::validateBundleNamespace($input->getOption('namespace'));
         if (!$bundle = $input->getOption('bundle-name')) {
-            $bundle = strtr($namespace, array('\\' => ''));
+            $bundle = strtr($namespace, ['\\' => '']);
         }
         $bundle = Validators::validateBundleName($bundle);
         $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
@@ -100,7 +101,7 @@ EOT
             $dir = getcwd() . '/' . $dir;
         }
 
-        $errors = array();
+        $errors = [];
         $runner = $dialog->getRunner($output, $errors);
 
         // register the bundle in the Kernel class
@@ -134,7 +135,7 @@ EOT
         }
 
         if (null === $namespace) {
-            $output->writeln(array(
+            $output->writeln([
                 '',
                 'Your application code must be written in <comment>bundles</comment>. This command helps',
                 'you generate them easily.',
@@ -150,9 +151,9 @@ EOT
                 '',
                 'Use <comment>/</comment> instead of <comment>\\ </comment> for the namespace delimiter to avoid any problem.',
                 '',
-            ));
+            ]);
 
-            $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'), false, $input->getOption('namespace'));
+            $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), ['Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'], false, $input->getOption('namespace'));
             $input->setOption('namespace', $namespace);
         }
 
@@ -165,17 +166,17 @@ EOT
         }
 
         if (null === $bundle) {
-            $bundle = strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
+            $bundle = strtr($namespace, ['\\Bundle\\' => '', '\\' => '']);
 
-            $output->writeln(array(
+            $output->writeln([
                 '',
                 'In your code, a bundle is often referenced by its name. It can be the',
                 'concatenation of all namespace parts but it\'s really up to you to come',
                 'up with a unique name (a good practice is to start with the vendor name).',
                 'Based on the namespace, we suggest <comment>' . $bundle . '</comment>.',
                 '',
-            ));
-            $bundle = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundle), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $bundle);
+            ]);
+            $bundle = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundle), ['Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName'], false, $bundle);
             $input->setOption('bundle-name', $bundle);
         }
 
@@ -194,12 +195,12 @@ EOT
             $d = str_replace('bundle', '', $d);
             $dir = dirname(dirname($this->getContainer()->getParameter('kernel.root_dir'))) . '/vendor/' . $d . '-bundle/';
 
-            $output->writeln(array(
+            $output->writeln([
                 '',
                 'The bundle can be generated anywhere. The suggested default directory uses',
                 'the standard conventions.',
                 '',
-            ));
+            ]);
             $dir = $dialog->askAndValidate($output, $dialog->getQuestion('Target directory', $dir), function ($dir) use ($bundle, $namespace) {
                 return Validators::validateTargetDir($dir, $bundle, $namespace);
             }, false, $dir);
@@ -207,12 +208,12 @@ EOT
         }
 
         // optional files to generate
-        $output->writeln(array(
+        $output->writeln([
             '',
             'To help you get started faster, the command can generate some',
             'code snippets for you.',
             '',
-        ));
+        ]);
 
         $structure = $input->getOption('structure');
         if (!$structure && $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the whole directory structure', 'yes', '?'), true)) {
@@ -221,24 +222,24 @@ EOT
         $input->setOption('structure', $structure);
 
         // summary
-        $output->writeln(array(
+        $output->writeln([
             '',
             $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
             sprintf("You are going to generate a \"<info>%s\\%s</info>\" bundle\nin \"<info>%s</info>\" using the \"<info>%s</info>\" format.", $namespace, $bundle, $dir, 'yml'),
             '',
-        ));
+        ]);
     }
 
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
     {
         $output->write('Checking that the bundle is autoloaded: ');
         if (!class_exists($namespace . '\\' . $bundle)) {
-            return array(
+            return [
                 '- Edit the <comment>composer.json</comment> file and register the bundle',
                 '  namespace in the "autoload" section:',
                 '',
-            );
+            ];
         }
     }
 
@@ -257,19 +258,19 @@ EOT
             if (!$ret) {
                 $reflected = new \ReflectionObject($kernel);
 
-                return array(
+                return [
                     sprintf('- Edit <comment>%s</comment>', $reflected->getFilename()),
                     '  and add the following bundle in the <comment>AppKernel::registerBundles()</comment> method:',
                     '',
                     sprintf('    <comment>new %s(),</comment>', $namespace . '\\' . $bundle),
                     '',
-                );
+                ];
             }
         } catch (\RuntimeException $e) {
-            return array(
+            return [
                 sprintf('Bundle <comment>%s</comment> is already defined in <comment>AppKernel::registerBundles()</comment>.', $namespace . '\\' . $bundle),
                 '',
-            );
+            ];
         }
     }
 
@@ -305,19 +306,19 @@ EOT
                 }
                 $help .= "        <comment>prefix:   /</comment>\n";
 
-                return array(
+                return [
                     '- Import the bundle\'s routing resource in the app main routing file:',
                     '',
                     sprintf('    <comment>%s:</comment>', $bundle),
                     $help,
                     '',
-                );
+                ];
             }
         } catch (\RuntimeException $e) {
-            return array(
+            return [
                 sprintf('Bundle <comment>%s</comment> is already imported.', $bundle),
                 '',
-            );
+            ];
         }
     }
 

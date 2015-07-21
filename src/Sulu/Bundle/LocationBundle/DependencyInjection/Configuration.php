@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,14 +39,14 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('enabled_providers')
                     ->prototype('scalar')->end()
-                    ->defaultValue(array('leaflet', 'google'))
+                    ->defaultValue(['leaflet', 'google'])
                 ->end()
                 ->enumNode('default_provider')
-                    ->values(array('leaflet', 'google'))
+                    ->values(['leaflet', 'google'])
                     ->defaultValue('leaflet')
                 ->end()
                 ->enumNode('geolocator')
-                    ->values(array('nominatim', 'google'))
+                    ->values(['nominatim', 'google'])
                     ->defaultValue('nominatim')
                 ->end()
                 ->arrayNode('providers')

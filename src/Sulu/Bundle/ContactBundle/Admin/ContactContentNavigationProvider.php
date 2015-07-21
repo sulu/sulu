@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,19 +16,19 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 class ContactContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
         $details->setComponent('contacts@sulucontact');
-        $details->setComponentOptions(array('display' => 'form'));
+        $details->setComponentOptions(['display' => 'form']);
 
         $documents = new ContentNavigationItem('content-navigation.contacts.documents');
         $documents->setAction('documents');
         $documents->setComponent('contacts@sulucontact');
-        $documents->setComponentOptions(array('display' => 'documents'));
-        $documents->setDisplay(array('edit'));
+        $documents->setComponentOptions(['display' => 'documents']);
+        $documents->setDisplay(['edit']);
 
-        return array($details, $documents);
+        return [$details, $documents];
     }
 }

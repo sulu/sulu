@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,9 +47,9 @@ class SuluNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredSupertypeNames()
     {
-        return array(
+        return [
             'mix:referenceable',
-        );
+        ];
     }
 
     /**
@@ -106,7 +107,7 @@ class SuluNodeType implements NodeTypeDefinitionInterface
      * NodeTypeTemplateInterface, then this method will return false.
      *
      * @return bool True, if nodes of this type must support orderable child
-     *      nodes, else false.
+     *              nodes, else false.
      *
      * @api
      */
@@ -172,7 +173,7 @@ class SuluNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredPropertyDefinitions()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -189,6 +190,6 @@ class SuluNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredChildNodeDefinitions()
     {
-        return array();
+        return [];
     }
 }

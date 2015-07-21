@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,14 +29,14 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 interface StructureBehavior extends LocaleBehavior
 {
     /**
-     * Return the type of the structure used for the content
+     * Return the type of the structure used for the content.
      *
      * @return string
      */
     public function getStructureType();
 
     /**
-     * Set the structure type used for the content
+     * Set the structure type used for the content.
      *
      * @param string
      */
@@ -48,5 +49,3 @@ interface StructureBehavior extends LocaleBehavior
      */
     public function getStructure();
 }
-
-

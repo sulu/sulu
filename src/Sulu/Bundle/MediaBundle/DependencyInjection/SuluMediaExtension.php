@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,9 +57,9 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.segments', $config['storage']['local']['segments']);
 
         // collections
-        $container->setParameter('sulu_media.collection.type.default', array(
+        $container->setParameter('sulu_media.collection.type.default', [
             'id' => 1,
-        ));
+        ]);
         $container->setParameter('sulu_media.collection.previews.format', '50x50');
 
         // media

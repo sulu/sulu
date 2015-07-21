@@ -1,12 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
- * This property wraps the "new" PropertyValue class
+ * This property wraps the "new" PropertyValue class.
  */
 class PropertyValueProperty extends Property
 {

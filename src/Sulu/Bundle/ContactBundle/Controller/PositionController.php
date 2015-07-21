@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -67,7 +68,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     public function cgetAction()
     {
         $list = new CollectionRepresentation(
-            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], array('position' => 'ASC')),
+            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], ['position' => 'ASC']),
             self::$entityKey
         );
 
@@ -116,7 +117,7 @@ class PositionController extends RestController implements ClassResourceInterfac
      * Edits the existing position for the given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $id The id of the position to update
+     * @param int                                       $id      The id of the position to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -209,7 +210,7 @@ class PositionController extends RestController implements ClassResourceInterfac
                 }
 
                 $data[] = $this->addAndUpdateTitles($item);
-                $i++;
+                ++$i;
             }
 
             $this->getDoctrine()->getManager()->flush();

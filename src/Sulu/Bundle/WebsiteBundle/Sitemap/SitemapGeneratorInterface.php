@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,18 +17,18 @@ interface SitemapGeneratorInterface
      * Generates a sitemap over all languages in webspace.
      *
      * @param string $webspaceKey
-     * @param bool $flat
+     * @param bool   $flat
      *
      * @return WebspaceSitemap
      */
     public function generateAllLocals($webspaceKey, $flat = false);
 
     /**
-     * Generates a sitemap for given webspace
+     * Generates a sitemap for given webspace.
      *
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool $flat
+     * @param bool   $flat
      *
      * @return WebspaceSitemap
      */

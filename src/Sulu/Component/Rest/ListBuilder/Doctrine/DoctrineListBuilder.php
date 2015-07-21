@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,27 +36,27 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $searchFields = array();
+    protected $searchFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $whereFields = array();
+    protected $whereFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $whereNotFields = array();
+    protected $whereNotFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $inFields = array();
+    protected $inFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor
@@ -132,7 +133,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private function getJoins()
     {
-        $joins = array();
+        $joins = [];
 
         if ($this->sortField != null) {
             $joins = array_merge($joins, $this->sortField->getJoins());
@@ -217,7 +218,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         if ($this->search != null) {
-            $searchParts = array();
+            $searchParts = [];
             foreach ($this->searchFields as $searchField) {
                 $searchParts[] = $searchField->getSelect() . ' LIKE :search';
             }
@@ -237,7 +238,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function addIns(array $inFields, array $inValues)
     {
-        $inParts = array();
+        $inParts = [];
         foreach ($inFields as $inField) {
             $inParts[] = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
             $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
@@ -254,7 +255,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function addBetweens(array $betweenFields, array $betweenValues)
     {
-        $betweenParts = array();
+        $betweenParts = [];
         foreach ($betweenFields as $betweenField) {
             $betweenParts[] = $betweenField->getSelect() .
                 ' BETWEEN :' . $betweenField->getName() . '1' .
@@ -270,13 +271,13 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * sets where statement.
      *
-     * @param array $whereFields
-     * @param array $whereValues
+     * @param array  $whereFields
+     * @param array  $whereValues
      * @param string $comparator
      */
     protected function addWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
-        $whereParts = array();
+        $whereParts = [];
         foreach ($whereFields as $whereField) {
             $value = $whereValues[$whereField->getName()];
 

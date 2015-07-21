@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,7 +38,7 @@ class BlockPropertyType
      * @var PropertyInterface[]
      * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
-    private $childProperties = array();
+    private $childProperties = [];
 
     public function __construct($name, $metadata)
     {
@@ -129,7 +130,7 @@ class BlockPropertyType
     public function __clone()
     {
         $properties = $this->childProperties;
-        $this->childProperties = array();
+        $this->childProperties = [];
         foreach ($properties as $childProperty) {
             $this->addChild(clone $childProperty);
         }

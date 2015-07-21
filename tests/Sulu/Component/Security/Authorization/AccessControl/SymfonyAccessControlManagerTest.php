@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -75,10 +76,10 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
     public static function provideObjectIdentifiers()
     {
-        return array(
-            array('1', 'Acme\Example', null, '1'),
-            array('1', 'Acme\Example', 'de', '1'),
-        );
+        return [
+            ['1', 'Acme\Example', null, '1'],
+            ['1', 'Acme\Example', 'de', '1'],
+        ];
     }
 
     /**
@@ -90,9 +91,9 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $ace1->getSecurityIdentity()->willReturn($this->securityIdentity);
         $ace1->getMask()->willReturn(64);
 
-        $this->acl->getObjectAces()->willReturn(array($ace1->reveal()));
+        $this->acl->getObjectAces()->willReturn([$ace1->reveal()]);
 
-        $this->maskConverter->convertPermissionsToArray(64)->willReturn(array('view' => true));
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true]);
 
         $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
             ->willReturn($this->acl->reveal());
@@ -112,7 +113,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
 
-        $this->assertEquals(array(), $permissions);
+        $this->assertEquals([], $permissions);
     }
 
     /**
@@ -132,7 +133,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->aclProvider->createAcl(Argument::cetera())->shouldNotBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
-        $this->acl->getObjectAces()->willReturn(array($ace->reveal()));
+        $this->acl->getObjectAces()->willReturn([$ace->reveal()]);
 
         $this->acl->updateObjectAce(0, Argument::any())->shouldBeCalled();
 
@@ -140,7 +141,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
             $objectType,
             $objectId,
             $this->securityIdentity,
-            array('view'),
+            ['view'],
             $locale
         );
     }
@@ -155,7 +156,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->aclProvider->createAcl(new ObjectIdentity($objectIdentifier, $objectType))->shouldNotBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
-        $this->acl->getObjectAces()->willReturn(array());
+        $this->acl->getObjectAces()->willReturn([]);
 
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
 
@@ -163,7 +164,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
             $objectType,
             $objectId,
             $this->securityIdentity,
-            array('view'),
+            ['view'],
             $locale
         );
     }
@@ -180,7 +181,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->acl->reveal())->shouldBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
-        $this->acl->getObjectAces()->willReturn(array());
+        $this->acl->getObjectAces()->willReturn([]);
 
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
 
@@ -188,7 +189,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
             $objectType,
             $objectId,
             $this->securityIdentity,
-            array('view'),
+            ['view'],
             $locale
         );
     }
@@ -205,20 +206,20 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->acl->reveal())->shouldBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
-        $this->acl->getObjectAces()->willReturn(array());
+        $this->acl->getObjectAces()->willReturn([]);
 
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
 
         $this->eventDispatcher->dispatch(
             'sulu.security.permission.update',
-            new PermissionUpdateEvent($objectType, $objectIdentifier, $this->securityIdentity, array('view'))
+            new PermissionUpdateEvent($objectType, $objectIdentifier, $this->securityIdentity, ['view'])
         )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
             $this->securityIdentity,
-            array('view'),
+            ['view'],
             $locale
         );
     }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,7 +35,7 @@ class FallbackController
     /**
      * Redirect message to app and returns value as json response.
      *
-     * @param string $appName
+     * @param string  $appName
      * @param Request $request
      *
      * @return JsonResponse
@@ -57,6 +58,6 @@ class FallbackController
             ob_clean();
         }
 
-        return new Response($connection->getData(), 200, array('Content-Type' => 'application/json'));
+        return new Response($connection->getData(), 200, ['Content-Type' => 'application/json']);
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,8 @@ class ExpectedDefaultTemplatesNotFound extends WebspaceException
 {
     /**
      * ExpectedDefaultTemplatesNotFound constructor.
-     * @param string $webspace
+     *
+     * @param string   $webspace
      * @param string[] $expected
      * @param string[] $found
      */
@@ -26,8 +28,8 @@ class ExpectedDefaultTemplatesNotFound extends WebspaceException
         parent::__construct(
             sprintf(
                 'One of expected types "[%s]" not found (found "[%s]") in webspace "%s".',
-                join(', ', $expected),
-                join(', ', $found),
+                implode(', ', $expected),
+                implode(', ', $found),
                 $webspace
             )
         );

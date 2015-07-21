@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,9 +31,9 @@ interface ExtensionInterface
      * save data to node.
      *
      * @param NodeInterface $node
-     * @param mixed $data
-     * @param string $webspaceKey
-     * @param string $languageCode
+     * @param mixed         $data
+     * @param string        $webspaceKey
+     * @param string        $languageCode
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode);
 
@@ -40,8 +41,8 @@ interface ExtensionInterface
      * load data from node.
      *
      * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $languageCode
+     * @param string        $webspaceKey
+     * @param string        $languageCode
      *
      * @return mixed data of extension
      */

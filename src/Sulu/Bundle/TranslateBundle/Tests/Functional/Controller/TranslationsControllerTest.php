@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -137,30 +138,30 @@ class TranslationsControllerTest extends SuluTestCase
 
     public function testPatch()
     {
-        $request = array(
-            array(
+        $request = [
+            [
                 'id' => $this->code1->getId(),
                 'value' => 'new code value 1.1',
-                'code' => array(
+                'code' => [
                     'id' => $this->code1->getId(),
                     'code' => 'code.1',
                     'frontend' => false,
                     'backend' => false,
                     'length' => 100,
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'id' => null,
                 'value' => 'realy new Code',
-                'code' => array(
+                'code' => [
                     'id' => null,
                     'code' => 'new.code',
                     'frontend' => false,
                     'backend' => false,
                     'length' => 101,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $client = $this->createAuthenticatedClient();
         $client->request('PATCH', '/api/catalogues/' . $this->catalogue1->getId() . '/translations', $request);
         $response = json_decode($client->getResponse()->getContent());

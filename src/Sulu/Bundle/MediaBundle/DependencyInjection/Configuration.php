@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -57,11 +58,11 @@ class Configuration implements ConfigurationInterface
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->arrayNode('response_headers')
-                        ->prototype('scalar')->end()->defaultValue(array(
+                        ->prototype('scalar')->end()->defaultValue([
                             'Expires' => '+1 month',
                             'Pragma' => 'public',
                             'Cache-Control' => 'public',
-                        ))
+                        ])
                     ->end()
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
@@ -70,10 +71,10 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('blocked_file_types')
-                        ->prototype('scalar')->end()->defaultValue(array('file/exe'))
+                        ->prototype('scalar')->end()->defaultValue(['file/exe'])
                     ->end()
                     ->arrayNode('mime_types')
-                        ->prototype('scalar')->end()->defaultValue(array(
+                        ->prototype('scalar')->end()->defaultValue([
                             'image/jpeg',
                             'image/jpg',
                             'image/gif',
@@ -82,27 +83,27 @@ class Configuration implements ConfigurationInterface
                             'image/svg+xml',
                             'image/vnd.adobe.photoshop',
                             'application/pdf',
-                        ))
+                        ])
                     ->end()
                     ->arrayNode('types')
-                        ->prototype('scalar')->end()->defaultValue(array(
-                            array(
+                        ->prototype('scalar')->end()->defaultValue([
+                            [
                                 'type' => 'document',
-                                'mimeTypes' => array('*'),
-                            ),
-                            array(
+                                'mimeTypes' => ['*'],
+                            ],
+                            [
                                 'type' => 'image',
-                                'mimeTypes' => array('image/*'),
-                            ),
-                            array(
+                                'mimeTypes' => ['image/*'],
+                            ],
+                            [
                                 'type' => 'video',
-                                'mimeTypes' => array('video/*'),
-                            ),
-                            array(
+                                'mimeTypes' => ['video/*'],
+                            ],
+                            [
                                 'type' => 'audio',
-                                'mimeTypes' => array('audio/*'),
-                            ),
-                        ))
+                                'mimeTypes' => ['audio/*'],
+                            ],
+                        ])
                     ->end()
                 ->end()
             ->end()
@@ -117,7 +118,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('disposition_type')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->enumNode('default')->values(array('inline', 'attachment'))->defaultValue('attachment')->end()
+                    ->enumNode('default')->values(['inline', 'attachment'])->defaultValue('attachment')->end()
                     ->arrayNode('mime_types_inline')
                         ->prototype('scalar')->end()
                     ->end()

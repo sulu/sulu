@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ class AdminPool
      *
      * @var array
      */
-    private $pool = array();
+    private $pool = [];
 
     /**
      * Returns all the registered admins.
@@ -54,7 +55,7 @@ class AdminPool
         /** @var Navigation $navigation */
         $navigation = null;
         foreach ($this->pool as $admin) {
-            /** @var Admin $admin */
+            /* @var Admin $admin */
             if ($navigation == null) {
                 $navigation = $admin->getNavigation();
             } else {
@@ -70,9 +71,9 @@ class AdminPool
      */
     public function getCommands()
     {
-        $commands = array();
+        $commands = [];
         foreach ($this->pool as $admin) {
-            /** @var Admin $admin */
+            /* @var Admin $admin */
             $commands = array_merge($commands, $admin->getCommands());
         }
 
@@ -81,9 +82,9 @@ class AdminPool
 
     public function getSecurityContexts()
     {
-        $contexts = array();
+        $contexts = [];
         foreach ($this->pool as $admin) {
-            /** @var Admin $admin */
+            /* @var Admin $admin */
             $contexts = array_merge_recursive($contexts, $admin->getSecurityContexts());
         }
 

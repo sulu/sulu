@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Theme;
 
 use Sulu\Component\Webspace\Theme;
@@ -8,11 +17,11 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
 {
     public function testToArray()
     {
-        $expected = array(
+        $expected = [
             'key' => 'foo',
-            'defaultTemplates' => array('page' => 'default'),
-            'errorTemplates' => array('404' => 'template404'),
-        );
+            'defaultTemplates' => ['page' => 'default'],
+            'errorTemplates' => ['404' => 'template404'],
+        ];
 
         $theme = new Theme();
         $theme->setKey($expected['key']);
@@ -24,11 +33,11 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
 
     public function testAddErrorTemplate()
     {
-        $expected = array(
+        $expected = [
             'key' => 'foo',
-            'defaultTemplates' => array(),
-            'errorTemplates' => array('404' => 'template404'),
-        );
+            'defaultTemplates' => [],
+            'errorTemplates' => ['404' => 'template404'],
+        ];
         $theme = new Theme();
         $theme->setKey($expected['key']);
         $theme->addErrorTemplate('404', 'template404');
@@ -40,11 +49,11 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
 
     public function testAddErrorTemplateDefault()
     {
-        $expected = array(
+        $expected = [
             'key' => 'foo',
-            'defaultTemplates' => array(),
-            'errorTemplates' => array('404' => 'template404', 'default' => 'template'),
-        );
+            'defaultTemplates' => [],
+            'errorTemplates' => ['404' => 'template404', 'default' => 'template'],
+        ];
         $theme = new Theme();
         $theme->setKey($expected['key']);
         $theme->addErrorTemplate('default', 'template');
@@ -58,11 +67,11 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
 
     public function testAddDefaultTemplate()
     {
-        $expected = array(
+        $expected = [
             'key' => 'foo',
-            'errorTemplates' => array(),
-            'defaultTemplates' => array('page' => 'default', 'homepage' => 'overview'),
-        );
+            'errorTemplates' => [],
+            'defaultTemplates' => ['page' => 'default', 'homepage' => 'overview'],
+        ];
         $theme = new Theme();
         $theme->setKey($expected['key']);
         $theme->addDefaultTemplate('page', 'default');

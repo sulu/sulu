@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
@@ -18,16 +27,16 @@ class ContactsContentNavigationProvider implements ContentNavigationProviderInte
         $this->securityChecker = $securityChecker;
     }
 
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
-        $navigation = array();
+        $navigation = [];
 
         if ($this->securityChecker->hasPermission('sulu.security.users', 'view')) {
             $permissions = new ContentNavigationItem('content-navigation.security.permissions');
             $permissions->setAction('permissions');
             $permissions->setComponent('users@sulusecurity');
-            $permissions->setComponentOptions(array('display' => 'form'));
-            $permissions->setDisplay(array('edit'));
+            $permissions->setComponentOptions(['display' => 'form']);
+            $permissions->setDisplay(['edit']);
 
             $navigation[] = $permissions;
         }

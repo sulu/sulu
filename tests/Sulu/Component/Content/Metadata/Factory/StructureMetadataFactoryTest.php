@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -52,23 +52,23 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
         $this->factory = new StructureMetadataFactory(
             $this->loader->reveal(),
-            array(
-                'page' => array(
-                    array(
+            [
+                'page' => [
+                    [
                         'type' => 'page',
                         'path' => __DIR__ . '/data/page',
-                    ),
-                ),
-                'snoopet' => array(
-                    array(
+                    ],
+                ],
+                'snoopet' => [
+                    [
                         'type' => 'page',
                         'path' => __DIR__ . '/data/snoops',
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'page' => 'something',
-            ),
+            ],
             $this->cacheDir
         );
     }
@@ -79,7 +79,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should throw an exception if a non existing document alias is given
+     * It should throw an exception if a non existing document alias is given.
      *
      * @expectedException Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException
      * @expectedExceptionMessage Structure path for document type "non_existing" is not mapped. Mapped structure types: "page
@@ -90,7 +90,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should throw an exception if a non existing structure type is given
+     * It should throw an exception if a non existing structure type is given.
      *
      * @expectedException Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException
      * @expectedExceptionMessage Could not load structure type "overview_not_existing" for document type "page", looked in "
@@ -101,7 +101,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should use a default structure type if null is given
+     * It should use a default structure type if null is given.
      */
     public function testGetStructureDefault()
     {
@@ -112,7 +112,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should cache the result
+     * It should cache the result.
      */
     public function testCacheResult()
     {
@@ -125,7 +125,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should throw an exception if no structure type is given and no default is available
+     * It should throw an exception if no structure type is given and no default is available.
      *
      * @expectedException RuntimeException
      */
@@ -137,7 +137,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the structure is loaded and that the loader
      * is only called once (that the subsequent fetches do not reload
-     * the metadata from the source)
+     * the metadata from the source).
      */
     public function testGetStructure()
     {
@@ -153,7 +153,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It returns all structures that are available
+     * It returns all structures that are available.
      */
     public function testGetStructures()
     {

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +30,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->property7 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
 
         $propertyIndex = 1;
-        foreach (array(
+        foreach ([
             'i18n:fr-changer' => 'One title',
             'bas:barfoo' => 'Two title',
             'i18n:it-barfoo' => 'Three title',
@@ -37,19 +38,19 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             'i18n:de-bbbaaaa' => 'Five title',
             'i18n:de-seo-changer' => 'Six title',
             'i18n:de-de-changer' => 'Seven title',
-        ) as $propertyName => $propertyValue) {
+        ] as $propertyName => $propertyValue) {
             $this->{'property' . $propertyIndex}->expects($this->any())
                 ->method('getName')
                 ->will($this->returnValue($propertyName));
             $this->{'property' . $propertyIndex}->expects($this->any())
                 ->method('getValue')
                 ->will($this->returnValue($propertyValue));
-            $propertyIndex++;
+            ++$propertyIndex;
         }
 
         $this->node->expects($this->any())
             ->method('getProperties')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 $this->property1,
                 $this->property2,
                 $this->property3,
@@ -57,15 +58,15 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
                 $this->property5,
                 $this->property6,
                 $this->property7,
-            )));
+            ]));
 
         $this->helper = new SuluNodeHelper(
             $this->session,
             'i18n',
-            array(
+            [
                 'base' => 'cmf',
                 'snippet' => 'snippets',
-            )
+            ]
         );
     }
 
@@ -74,7 +75,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $languages = $this->helper->getLanguagesForNode($this->node);
 
         // languages are only counted if they are on the "template" property
-        $this->assertEquals(array('fr', 'de'), $languages);
+        $this->assertEquals(['fr', 'de'], $languages);
     }
 
     public function testLocalizedPropertyValues()
@@ -82,22 +83,22 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $localizedValues = $this->helper->getLocalizedPropertyValues($this->node, 'changer');
 
         // languages are only counted if they are on the "template" property
-        $this->assertEquals(array(
+        $this->assertEquals([
             'fr' => 'One title',
             'de' => 'Four title',
-        ), $localizedValues);
+        ], $localizedValues);
     }
 
     public function provideExtractWebspaceFromPath()
     {
-        return array(
-            array('/cmf/sulu_io/content/articles/article-one', 'sulu_io'),
-            array('/cmfcontent/articles/article-one', null),
-            array('/cmf/webspace_five', null),
-            array('/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'),
-            array('', null),
-            array('asdasd', null),
-        );
+        return [
+            ['/cmf/sulu_io/content/articles/article-one', 'sulu_io'],
+            ['/cmfcontent/articles/article-one', null],
+            ['/cmf/webspace_five', null],
+            ['/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'],
+            ['', null],
+            ['asdasd', null],
+        ];
     }
 
     /**
@@ -111,14 +112,14 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function provideExtractSnippetTypeFromPath()
     {
-        return array(
-            array('/cmf/snippets/foobar/snippet1', 'foobar'),
-            array('/cmf/snippets/bar-foo/snippet2', 'bar-foo'),
-            array('/cmf/snippets', null, false),
-            array('/cmf/snippets/bar', null, false),
-            array('/cmf/snippets/animal/elephpant', 'animal'),
-            array('', null, false),
-        );
+        return [
+            ['/cmf/snippets/foobar/snippet1', 'foobar'],
+            ['/cmf/snippets/bar-foo/snippet2', 'bar-foo'],
+            ['/cmf/snippets', null, false],
+            ['/cmf/snippets/bar', null, false],
+            ['/cmf/snippets/animal/elephpant', 'animal'],
+            ['', null, false],
+        ];
     }
 
     /**
@@ -136,12 +137,12 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function provideGetStructureTypeForNode()
     {
-        return array(
-            array('sulu:snippet', 'snippet'),
-            array('sulu:page', 'page'),
-            array('sulu:foobar', null),
-            array('', null),
-        );
+        return [
+            ['sulu:snippet', 'snippet'],
+            ['sulu:page', 'page'],
+            ['sulu:foobar', null],
+            ['', null],
+        ];
     }
 
     /**
@@ -151,21 +152,21 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
     {
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
-            ->with('jcr:mixinTypes', array())
-            ->will($this->returnValue(array($nodeType)));
+            ->with('jcr:mixinTypes', [])
+            ->will($this->returnValue([$nodeType]));
 
         $this->assertEquals($expected, $this->helper->getStructureTypeForNode($this->node));
     }
 
     public function provideHasSuluNodeType()
     {
-        return array(
-            array('sulu:snippet', true),
-            array(array('sulu:foobar', 'sulu:snippet'), true),
-            array('sulu:page', false),
-            array('sulu:foobar', false),
-            array('', false),
-        );
+        return [
+            ['sulu:snippet', true],
+            [['sulu:foobar', 'sulu:snippet'], true],
+            ['sulu:page', false],
+            ['sulu:foobar', false],
+            ['', false],
+        ];
     }
 
     /**
@@ -175,15 +176,15 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
     {
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
-            ->with('jcr:mixinTypes', array())
-            ->will($this->returnValue(array('sulu:snippet')));
+            ->with('jcr:mixinTypes', [])
+            ->will($this->returnValue(['sulu:snippet']));
 
         $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
     }
 
     public function testSiblingNodes()
     {
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 3; ++$i) {
             ${'node' . $i} = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
             ${'node' . $i}->expects($this->any())
                 ->method('getPath')
@@ -195,9 +196,9 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->node));
         $this->node->expects($this->any())
             ->method('getNodes')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 $node1, $node2, $node3,
-            )));
+            ]));
 
         $res = $this->helper->getNextNode($node2);
         $this->assertSame($node3->getPath(), $res->getPath());

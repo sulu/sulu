@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,15 +11,15 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Handler;
 
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
+use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
- * Handle serializeation and deserialization of document content
+ * Handle serializeation and deserialization of document content.
  */
 class StructureHandler implements SubscribingHandlerInterface
 {
@@ -27,27 +28,27 @@ class StructureHandler implements SubscribingHandlerInterface
      */
     public static function getSubscribingMethods()
     {
-        return array(
-            array(
+        return [
+            [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => Structure::class,
                 'method' => 'doSerialize',
-            ),
-            array(
+            ],
+            [
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
                 'type' => Structure::class,
                 'method' => 'doDeserialize',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
-     * @param array $type
-     * @param Context $context
+     * @param NodeInterface            $nodeInterface
+     * @param array                    $type
+     * @param Context                  $context
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
@@ -62,9 +63,9 @@ class StructureHandler implements SubscribingHandlerInterface
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
-     * @param array $type
-     * @param Context $context
+     * @param NodeInterface            $nodeInterface
+     * @param array                    $type
+     * @param Context                  $context
      */
     public function doDeserialize(
         JsonDeserializationVisitor $visitor,
@@ -80,5 +81,4 @@ class StructureHandler implements SubscribingHandlerInterface
 
         return $container;
     }
-
 }

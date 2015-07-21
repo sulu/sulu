@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,7 +46,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected $fieldsWidth = array();
+    protected $fieldsWidth = [];
 
     /**
      * {@inheritdoc}
@@ -77,11 +78,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 array_values(
                     array_diff_key(
                         $this->getManager()->getFieldDescriptors(),
-                        array(
+                        [
                             'depth' => false,
                             'parent' => false,
                             'hasChildren' => false,
-                        )
+                        ]
                     )
                 ),
                 200
@@ -117,7 +118,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns the children for a parent for the given key.
      *
      * @param Request $request
-     * @param mixed $key
+     * @param mixed   $key
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -350,10 +351,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 'lft',
                 CategoryManager::$categoryEntityName,
                 'public.lft',
-                array(),
+                [],
                 true
             ),
-            array($parentEntity->getLft() + 1, $parentEntity->getRgt())
+            [$parentEntity->getLft() + 1, $parentEntity->getRgt()]
         );
     }
 

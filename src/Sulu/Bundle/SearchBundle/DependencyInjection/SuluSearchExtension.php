@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,26 +26,26 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container)
     {
-        $container->prependExtensionConfig('jms_serializer', array(
-            'metadata' => array(
-                'directories' => array(
-                    array(
+        $container->prependExtensionConfig('jms_serializer', [
+            'metadata' => [
+                'directories' => [
+                    [
                         'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer/massive',
                         'namespace_prefix' => 'Massive\Bundle\SearchBundle\Search',
-                    ),
-                    array(
+                    ],
+                    [
                         'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer/sulu',
                         'namespace_prefix' => 'Sulu\Bundle\SearchBundle\Search',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
-        $container->prependExtensionConfig('massive_search', array(
-            'services' => array(
+        $container->prependExtensionConfig('massive_search', [
+            'services' => [
                 'factory' => 'sulu_search.search.factory',
-            ),
-        ));
+            ],
+        ]);
     }
 
     /**

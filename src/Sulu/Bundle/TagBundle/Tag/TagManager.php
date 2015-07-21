@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -60,7 +61,7 @@ class TagManager implements TagManagerInterface
      *
      * @var DoctrineFieldDescriptor[]
      */
-    protected $fieldDescriptors = array();
+    protected $fieldDescriptors = [];
 
     public function __construct(
         TagRepositoryInterface $tagRepository,
@@ -134,7 +135,7 @@ class TagManager implements TagManagerInterface
         $tag = $this->findByName($name);
 
         if (!$tag) {
-            $tag = $this->save(array('name' => $name), $userId);
+            $tag = $this->save(['name' => $name], $userId);
         }
 
         return $tag;
@@ -216,7 +217,7 @@ class TagManager implements TagManagerInterface
      */
     public function merge($srcTagIds, $destTagId)
     {
-        $srcTags = array();
+        $srcTags = [];
 
         $destTag = $this->tagRepository->findTagById($destTagId);
         if (!$destTag) {
@@ -253,7 +254,7 @@ class TagManager implements TagManagerInterface
      */
     public function resolveTagIds($tagIds)
     {
-        $resolvedTags = array();
+        $resolvedTags = [];
 
         foreach ($tagIds as $tagId) {
             $tag = $this->findById($tagId);
@@ -274,7 +275,7 @@ class TagManager implements TagManagerInterface
      */
     public function resolveTagNames($tagNames)
     {
-        $resolvedTags = array();
+        $resolvedTags = [];
 
         foreach ($tagNames as $tagName) {
             $tag = $this->findByName($tagName);
@@ -293,7 +294,7 @@ class TagManager implements TagManagerInterface
             'id',
             self::$tagEntityName,
             'public.id',
-            array(),
+            [],
             true,
             false,
             '',
@@ -304,7 +305,7 @@ class TagManager implements TagManagerInterface
             'name',
             self::$tagEntityName,
             'tags.name',
-            array(),
+            [],
             false,
             true,
             '',
@@ -318,7 +319,7 @@ class TagManager implements TagManagerInterface
             'created',
             self::$tagEntityName,
             'public.created',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -328,7 +329,7 @@ class TagManager implements TagManagerInterface
             'changed',
             self::$tagEntityName,
             'public.changed',
-            array(),
+            [],
             true,
             false,
             'date'
@@ -338,7 +339,7 @@ class TagManager implements TagManagerInterface
             'creator',
             self::$contactEntityName,
             'tags.author',
-            array(
+            [
                 self::$userEntityName => new DoctrineJoinDescriptor(
                         self::$userEntityName,
                         self::$tagEntityName . '.creator'
@@ -347,7 +348,7 @@ class TagManager implements TagManagerInterface
                         self::$contactEntityName,
                         self::$userEntityName . '.contact'
                     ),
-            ),
+            ],
             true
         );
     }

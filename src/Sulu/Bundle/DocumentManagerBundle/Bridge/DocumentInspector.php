@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
@@ -53,7 +62,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the webspace name for the given document
+     * Return the webspace name for the given document.
      *
      * @param object $document
      *
@@ -65,7 +74,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the path of the document in relation to the content root
+     * Return the path of the document in relation to the content root.
      *
      * TODO: We need a better solution for retrieving webspace paths (the existing
      *       "session manager" is not a good solution).
@@ -90,7 +99,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the structure for the given StructureBehavior implementing document
+     * Return the structure for the given StructureBehavior implementing document.
      *
      * @param StructureBehavior $document
      *
@@ -105,7 +114,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the (DocumentManager) Metadata for the given document
+     * Return the (DocumentManager) Metadata for the given document.
      *
      * @param object $document
      *
@@ -117,7 +126,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the localization state of the node
+     * Return the localization state of the node.
      *
      * @param object $document
      *
@@ -142,7 +151,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the locale for the given document
+     * Return the locale for the given document.
      *
      * @return string
      */
@@ -156,6 +165,7 @@ class DocumentInspector extends BaseDocumentInspector
      * any fallback logic was applied to it.
      *
      * @param object $document
+     *
      * @return string
      */
     public function getOriginalLocale($document)
@@ -164,7 +174,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the concrete localizations for the given document
+     * Return the concrete localizations for the given document.
      *
      * @param StructureBehavior $document
      *
@@ -172,7 +182,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getLocales(StructureBehavior $document)
     {
-        $locales = array();
+        $locales = [];
         $node = $this->getNode($document);
         $prefix = $this->namespaceRegistry->getPrefix('system_localized');
 
@@ -192,7 +202,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return locales which are not shadows
+     * Return locales which are not shadows.
      *
      * @param ShadowLocaleBehavior $document
      *
@@ -204,7 +214,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the enabled shadow locales for the given document
+     * Return the enabled shadow locales for the given document.
      *
      * @param ShadowLocaleBehavior $document
      *
@@ -212,7 +222,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getShadowLocales(ShadowLocaleBehavior $document)
     {
-        $shadowLocales = array();
+        $shadowLocales = [];
         $locales = $this->getLocales($document);
         $node = $this->getNode($document);
         foreach ($locales as $locale) {
@@ -234,7 +244,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Returns urls for given page for all locales in webspace
+     * Returns urls for given page for all locales in webspace.
      *
      * TODO: Implement a router service instead of this.
      *
@@ -244,7 +254,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getLocalizedUrlsForPage(BasePageDocument $page)
     {
-        $localizedUrls = array();
+        $localizedUrls = [];
         $webspaceKey = $this->getWebspace($page);
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $node = $this->getNode($page);
@@ -300,7 +310,7 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Extracts webspace key from given path
+     * Extracts webspace key from given path.
      *
      * @param string $path path of node
      *
@@ -321,6 +331,6 @@ class DocumentInspector extends BaseDocumentInspector
             return $matches[1];
         }
 
-        return null;
+        return;
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -354,7 +355,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getPosition();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -676,7 +677,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      */
     public function getTagNameArray()
     {
-        $tags = array();
+        $tags = [];
 
         if (!is_null($this->getTags())) {
             foreach ($this->getTags() as $tag) {
@@ -759,7 +760,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getAccount();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -778,7 +779,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -787,7 +788,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getAddresses()
     {
         $contactAddresses = $this->getContactAddresses();
-        $addresses = array();
+        $addresses = [];
 
         if (!is_null($contactAddresses)) {
             /** @var ContactAddress $contactAddress */
@@ -915,7 +916,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -999,7 +1000,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'id' => $this->getLastName(),
             'firstName' => $this->getFirstName(),
             'middleName' => $this->getMiddleName(),
@@ -1009,6 +1010,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             'birthday' => $this->getBirthday(),
             'created' => $this->getCreated(),
             'changed' => $this->getChanged(),
-        );
+        ];
     }
 }

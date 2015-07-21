@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\SnippetBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
 
 class SnippetType extends AbstractStructureBehaviorType
 {
@@ -16,9 +24,9 @@ class SnippetType extends AbstractStructureBehaviorType
     {
         parent::setDefaultOptions($options);
 
-        $options->setDefaults(array(
+        $options->setDefaults([
             'data_class' => 'Sulu\Bundle\SnippetBundle\Document\SnippetDocument',
-        ));
+        ]);
     }
 
     /**
@@ -30,10 +38,10 @@ class SnippetType extends AbstractStructureBehaviorType
         $builder->add('workflowStage');
 
         // TODO: Fix the admin interface to not send this junk (not required for snippets)
-        $builder->add('redirectType', 'text', array('mapped' => false));
-        $builder->add('resourceSegment', 'text', array('mapped' => false));
-        $builder->add('navigationContexts', 'text', array('mapped' => false));
-        $builder->add('shadowLocaleEnabled', 'text', array('mapped' => false));
+        $builder->add('redirectType', 'text', ['mapped' => false]);
+        $builder->add('resourceSegment', 'text', ['mapped' => false]);
+        $builder->add('navigationContexts', 'text', ['mapped' => false]);
+        $builder->add('shadowLocaleEnabled', 'text', ['mapped' => false]);
     }
 
     /**

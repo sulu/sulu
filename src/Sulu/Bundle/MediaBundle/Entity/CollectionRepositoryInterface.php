@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,12 +20,12 @@ interface CollectionRepositoryInterface
      * Finds a collection set starting by given ID and depth.
      *
      * @param Collection $collection
-     * @param int $depth
-     * @param array $filter
+     * @param int        $depth
+     * @param array      $filter
      *
      * @return Collection[]
      */
-    public function findCollectionSet($depth = 0, $filter = array(), CollectionInterface $collection = null, $sortBy = array());
+    public function findCollectionSet($depth = 0, $filter = [], CollectionInterface $collection = null, $sortBy = []);
 
     /**
      * Finds the collection with a given id.
@@ -39,13 +40,13 @@ interface CollectionRepositoryInterface
      * finds all collections, can be filtered with parent and depth.
      *
      * @param array $filter
-     * @param int $limit
-     * @param int $offset
+     * @param int   $limit
+     * @param int   $offset
      * @param array $sortBy sort by e.g. array('title' => 'ASC')
      *
      * @return Collection[]
      */
-    public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = array());
+    public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = []);
 
     /**
      * Finds the breadcrumb of a collection with given id.

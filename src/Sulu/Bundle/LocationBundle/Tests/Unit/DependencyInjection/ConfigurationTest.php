@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyConfigTest\PhpUnit\AbstractConfigurationTestCase;
@@ -7,33 +16,33 @@ use Sulu\Bundle\LocationBundle\DependencyInjection\Configuration;
 
 class ConfigurationTest extends AbstractConfigurationTestCase
 {
-    protected $expectedDefaultConfig = array(
-        'types' => array(
-            'location' => array(
+    protected $expectedDefaultConfig = [
+        'types' => [
+            'location' => [
                 'template' => 'SuluLocationBundle:Template:content-types/location.html.twig',
-            ),
-        ),
-        'enabled_providers' => array('leaflet', 'google'),
+            ],
+        ],
+        'enabled_providers' => ['leaflet', 'google'],
         'default_provider' => 'leaflet',
         'geolocator' => 'nominatim',
-        'providers' => array(
-            'leaflet' => array(
+        'providers' => [
+            'leaflet' => [
                 'title' => 'Leaflet (OSM)',
-            ),
-            'google' => array(
+            ],
+            'google' => [
                 'title' => 'Google Maps',
                 'api_key' => '',
-            ),
-        ),
-        'geolocators' => array(
-            'nominatim' => array(
+            ],
+        ],
+        'geolocators' => [
+            'nominatim' => [
                 'endpoint' => 'http://open.mapquestapi.com/nominatim/v1/search.php',
-            ),
-            'google' => array(
+            ],
+            'google' => [
                 'api_key' => '',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     public function getConfiguration()
     {
@@ -42,7 +51,7 @@ class ConfigurationTest extends AbstractConfigurationTestCase
 
     public function testDefaultConfig()
     {
-        $this->assertProcessedConfigurationEquals(array(), $this->expectedDefaultConfig);
+        $this->assertProcessedConfigurationEquals([], $this->expectedDefaultConfig);
     }
 
     public function testOverwriteConfig()
@@ -50,14 +59,14 @@ class ConfigurationTest extends AbstractConfigurationTestCase
         $expectedConfig = $this->expectedDefaultConfig;
         $expectedConfig['providers']['google']['title'] = 'My Maps';
 
-        $this->assertProcessedConfigurationEquals(array(
-            array(
-                'providers' => array(
-                    'google' => array(
+        $this->assertProcessedConfigurationEquals([
+            [
+                'providers' => [
+                    'google' => [
                         'title' => 'My Maps',
-                    ),
-                ),
-            ),
-        ), $expectedConfig);
+                    ],
+                ],
+            ],
+        ], $expectedConfig);
     }
 }

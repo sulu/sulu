@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,18 +11,18 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Extension\ExtensionManager;
-use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
-use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  * generates subclasses of structure to match template definitions.
- * this classes will be cached in Symfony cache
+ * this classes will be cached in Symfony cache.
  */
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
@@ -30,16 +31,16 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $inspector;
     private $propertyFactory;
 
-    private $typeMap = array(
+    private $typeMap = [
         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
         'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
-    );
+    ];
 
     /**
-     * @param StructureMetadataFactory  $structureFactory
-     * @param ExtensionManager  $extensionManager
-     * @param DocumentInspector $inspector
+     * @param StructureMetadataFactory $structureFactory
+     * @param ExtensionManager         $extensionManager
+     * @param DocumentInspector        $inspector
      */
     public function __construct(
         StructureMetadataFactory $structureFactory,
@@ -66,7 +67,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructures($type = Structure::TYPE_PAGE)
     {
-        $wrappedStructures = array();
+        $wrappedStructures = [];
         $structures = $this->structureFactory->getStructures($type);
 
         foreach ($structures as $structure) {
@@ -109,7 +110,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Wrap the given Structure with a legacy (bridge) structure
+     * Wrap the given Structure with a legacy (bridge) structure.
      *
      * @param Structure
      *

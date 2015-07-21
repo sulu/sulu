@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +33,7 @@ class HandlerPass implements CompilerPassInterface
         $aggregateHandler = $container->getDefinition('sulu_http_cache.handler.aggregate');
         $taggedHandlers = $container->findTaggedServiceIds('sulu_http_cache.handler');
 
-        $knownHandlers = array();
+        $knownHandlers = [];
 
         foreach ($taggedHandlers as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
@@ -58,7 +59,7 @@ class HandlerPass implements CompilerPassInterface
             $knownHandlers[$alias] = $id;
         }
 
-        $handlers = array();
+        $handlers = [];
         $configuredAliases = $container->getParameter('sulu_http_cache.handler.aggregate.handlers');
 
         foreach ($configuredAliases as $configuredAlias) {
@@ -82,11 +83,11 @@ class HandlerPass implements CompilerPassInterface
      * (if it does not then someone has added a tag in the wrong place).
      *
      * @param ContainerBuilder $container
-     * @param mixed $id
+     * @param mixed            $id
      */
     private function validateHandler(ContainerBuilder $container, $id)
     {
-        /** @var Definition */
+        /* @var Definition */
         $definition = $container->getDefinition($id);
         $reflection = new \ReflectionClass($container->getParameterBag()->resolveValue($definition->getClass()));
 

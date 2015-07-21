@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
-use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -14,9 +22,9 @@ class SearchIntegrationTest extends SuluTestCase
 
     protected function getKernelConfiguration()
     {
-        return array(
-            'sulu_context' => 'website'
-        );
+        return [
+            'sulu_context' => 'website',
+        ];
     }
 
     public function setUp()
@@ -31,16 +39,16 @@ class SearchIntegrationTest extends SuluTestCase
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
 
         $this->mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
-        $this->mediaSelectionContainer->getData('de')->willReturn(array($this->media));
+        $this->mediaSelectionContainer->getData('de')->willReturn([$this->media]);
         $this->mediaSelectionContainer->toArray()->willReturn(null);
     }
 
     public function provideIndex()
     {
-        return array(
-            array('170x170', null),
-            array('invalid', '\InvalidArgumentException'),
-        );
+        return [
+            ['170x170', null],
+            ['invalid', '\InvalidArgumentException'],
+        ];
     }
 
     /**
@@ -52,9 +60,9 @@ class SearchIntegrationTest extends SuluTestCase
             $this->setExpectedException($expectedException);
         }
 
-        $this->media->setFormats(array(
+        $this->media->setFormats([
             $format => 'myimage.jpg',
-        ));
+        ]);
 
         $testAdapter = $this->container->get('massive_search.adapter.test');
 
@@ -63,9 +71,9 @@ class SearchIntegrationTest extends SuluTestCase
         $document->setResourceSegment('/hallo/fo');
         $document->setStructureType('images');
         $document->setParent($this->webspaceDocument);
-        $document->getStructure()->bind(array(
-            'images' => $this->mediaSelectionContainer->reveal()
-        ), false);
+        $document->getStructure()->bind([
+            'images' => $this->mediaSelectionContainer->reveal(),
+        ], false);
         $this->documentManager->persist($document, 'de');
         $this->documentManager->flush();
 

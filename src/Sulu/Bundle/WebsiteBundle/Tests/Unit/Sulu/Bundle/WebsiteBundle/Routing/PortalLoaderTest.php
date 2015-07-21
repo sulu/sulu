@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -65,10 +66,10 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
         $portal2 = new Portal();
         $portal2->setKey('sulu_com');
 
-        $portalInformations = array(
+        $portalInformations = [
             new PortalInformation(null, null, $portal1, null, 'sulu.io/de'),
             new PortalInformation(null, null, $portal2, null, 'sulu.com'),
-        );
+        ];
 
         $this->loaderResolver->resolve(Argument::any(), Argument::any())->willReturn($this->loader->reveal());
         $this->loader->load(Argument::any(), Argument::any())->willReturn($importedRouteCollection);

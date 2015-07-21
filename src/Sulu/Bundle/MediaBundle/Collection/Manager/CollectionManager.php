@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -98,7 +99,7 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array(), $sortBy = array())
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [])
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if ($collectionEntity === null) {
@@ -123,7 +124,7 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
+    public function get($locale, $filter = [], $limit = null, $offset = null, $sortBy = [])
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
         $this->count = $collectionEntities instanceof Paginator ?
@@ -140,12 +141,12 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array())
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [])
     {
         /** @var Paginator $collectionSet */
         $collectionSet = $this->collectionRepository->findCollectionSet(
             $depth,
-            array('offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale),
+            ['offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale],
             null,
             $sortBy
         );
@@ -177,7 +178,7 @@ class CollectionManager implements CollectionManagerInterface
      */
     private function initializeFieldDescriptors()
     {
-        $fieldDescriptors = array();
+        $fieldDescriptors = [];
 
         $this->fieldDescriptors = $fieldDescriptors;
 
@@ -186,7 +187,7 @@ class CollectionManager implements CollectionManagerInterface
             'id',
             self::$entityName,
             'id',
-            array(),
+            [],
             true,
             false,
             '',
@@ -197,12 +198,12 @@ class CollectionManager implements CollectionManagerInterface
             'type_name',
             self::$entityCollectionType,
             'locale',
-            array(
+            [
                 self::$entityCollectionType => new DoctrineJoinDescriptor(
                     self::$entityCollectionType,
                     self::$entityName . '.type'
                 ),
-            ),
+            ],
             true,
             false
         );
@@ -211,12 +212,12 @@ class CollectionManager implements CollectionManagerInterface
             'title',
             self::$entityCollectionMeta,
             'title',
-            array(
+            [
                 self::$entityName => new DoctrineJoinDescriptor(
                     self::$entityCollectionMeta,
                     self::$entityName . '.meta'
                 ),
-            ),
+            ],
             false,
             true,
             'title',
@@ -227,12 +228,12 @@ class CollectionManager implements CollectionManagerInterface
             'description',
             self::$entityCollectionMeta,
             'description',
-            array(
+            [
                 self::$entityName => new DoctrineJoinDescriptor(
                     self::$entityCollectionMeta,
                     self::$entityName . '.meta'
                 ),
-            ),
+            ],
             true,
             false,
             'description'
@@ -242,7 +243,7 @@ class CollectionManager implements CollectionManagerInterface
             'changer',
             self::$entityContact,
             'changer',
-            array(
+            [
                 self::$entityUser => new DoctrineJoinDescriptor(
                     self::$entityUser,
                     self::$entityName . '.changer'
@@ -251,7 +252,7 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityContact,
                     self::$entityUser . '.contact'
                 ),
-            ),
+            ],
             true,
             false
         );
@@ -260,7 +261,7 @@ class CollectionManager implements CollectionManagerInterface
             'creator',
             self::$entityContact,
             'creator',
-            array(
+            [
                 self::$entityUser => new DoctrineJoinDescriptor(
                     self::$entityUser,
                     self::$entityName . '.creator'
@@ -269,7 +270,7 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityContact,
                     self::$entityUser . '.contact'
                 ),
-            ),
+            ],
             true,
             false
         );
@@ -278,7 +279,7 @@ class CollectionManager implements CollectionManagerInterface
             'thumbnails',
             self::$entityName,
             'thumbnails',
-            array(),
+            [],
             false,
             true,
             'thumbnails'
@@ -381,7 +382,7 @@ class CollectionManager implements CollectionManagerInterface
      * Data can be set over by array.
      *
      * @param Collection $collection
-     * @param array $data
+     * @param array      $data
      *
      * @return Collection
      */
@@ -515,7 +516,7 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param int $id
+     * @param int    $id
      * @param string $locale
      *
      * @return array
@@ -524,7 +525,7 @@ class CollectionManager implements CollectionManagerInterface
     {
         $media = null;
         $medias = $this->mediaRepository
-            ->findMedia(array('collection' => $id, 'paginator' => false), 1);
+            ->findMedia(['collection' => $id, 'paginator' => false], 1);
 
         if (count($medias) > 0) {
             $media = $medias[0];
@@ -546,16 +547,16 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param int $mediaId
+     * @param int         $mediaId
      * @param FileVersion $fileVersion
-     * @param string $locale
+     * @param string      $locale
      *
      * @return array
      */
     protected function getPreviewsFromFileVersion($mediaId, $fileVersion, $locale)
     {
         $title = '';
-        /**
+        /*
          * @var FileVersionMeta
          */
         foreach ($fileVersion->getMeta() as $key => $meta) {
@@ -577,24 +578,24 @@ class CollectionManager implements CollectionManagerInterface
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
             if ($formatName == $this->collectionPreviewFormat) {
-                return array(
+                return [
                     'url' => $formatUrl,
                     'title' => $title,
-                );
+                ];
                 break;
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
      * prepare an api entity.
      *
-     * @param CollectionEntity $entity
-     * @param string $locale
-     * @param CollectionEntity[] $entities nested set
-     * @param array $breadcrumbEntities
+     * @param CollectionEntity   $entity
+     * @param string             $locale
+     * @param CollectionEntity[] $entities           nested set
+     * @param array              $breadcrumbEntities
      *
      * @return Collection
      */
@@ -602,7 +603,7 @@ class CollectionManager implements CollectionManagerInterface
     {
         $apiEntity = new Collection($entity, $locale);
 
-        $children = array();
+        $children = [];
 
         if ($entities !== null) {
             foreach ($entities as $possibleChild) {
@@ -618,7 +619,7 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         if ($breadcrumbEntities !== null) {
-            $breadcrumbApiEntities = array();
+            $breadcrumbApiEntities = [];
             foreach ($breadcrumbEntities as $entity) {
                 $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);
             }

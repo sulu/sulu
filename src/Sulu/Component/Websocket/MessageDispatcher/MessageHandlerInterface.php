@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,8 +21,8 @@ interface MessageHandlerInterface
     /**
      * Processes given message.
      *
-     * @param ConnectionInterface $conn
-     * @param array $message
+     * @param ConnectionInterface   $conn
+     * @param array                 $message
      * @param MessageHandlerContext $context
      */
     public function handle(ConnectionInterface $conn, array $message, MessageHandlerContext $context);

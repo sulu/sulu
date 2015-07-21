@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,21 +52,21 @@ class TemplateController extends Controller
         $structureProvider = $this->get('sulu.content.webspace_structure_provider');
         $structures = $structureProvider->getStructures($request->get('webspace'));
 
-        $templates = array();
+        $templates = [];
         foreach ($structures as $structure) {
             if (false === $structure->getInternal() || $internal !== false) {
-                $templates[] = array(
+                $templates[] = [
                     'internal' => $structure->getInternal(),
                     'template' => $structure->getKey(),
                     'title' => $structure->getLocalizedTitle($this->getUser()->getLocale()),
-                );
+                ];
             }
         }
 
-        $data = array(
+        $data = [
             '_embedded' => $templates,
             'total' => sizeof($templates),
-        );
+        ];
 
         return new JsonResponse($data);
     }
@@ -74,7 +75,7 @@ class TemplateController extends Controller
      * renders one structure as form.
      *
      * @param Request $request
-     * @param string $key template key
+     * @param string  $key     template key
      *
      * @return Response
      */
@@ -103,14 +104,14 @@ class TemplateController extends Controller
 
         return $this->render(
             'SuluContentBundle:Template:content.html.twig',
-            array(
+            [
                 'template' => $template,
                 'webspaceKey' => $webspace,
                 'languageCode' => $language,
                 'userLocale' => $userLocale,
                 'templateKey' => $key,
                 'fireEvent' => $fireEvent,
-            )
+            ]
         );
     }
 
@@ -141,7 +142,7 @@ class TemplateController extends Controller
     /**
      * returns structure for given key.
      *
-     * @param string $key template key
+     * @param string $key  template key
      * @param string $type
      *
      * @return StructureInterface
@@ -178,24 +179,24 @@ class TemplateController extends Controller
         $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
         $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
         $currentLocalization = $webspace->getLocalization($languageCode);
-        $localizations = array();
+        $localizations = [];
 
         $i = 0;
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $localizations[] = array(
+            $localizations[] = [
                 'localization' => $localization->getLocalization(),
                 'name' => $localization->getLocalization('-'),
                 'id' => $i++,
-            );
+            ];
         }
 
         return $this->render(
             'SuluContentBundle:Template:column.html.twig',
-            array(
+            [
                 'localizations' => $localizations,
                 'currentLocalization' => $currentLocalization,
                 'webspace' => $webspace,
-            )
+            ]
         );
     }
 
@@ -212,27 +213,27 @@ class TemplateController extends Controller
         $languageCode = $request->get('languageCode');
         $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
 
-        $navContexts = array();
+        $navContexts = [];
         foreach ($webspace->getNavigation()->getContexts() as $context) {
-            $navContexts[] = array(
+            $navContexts[] = [
                 'name' => $context->getTitle($languageCode),
                 'id' => $context->getKey(),
-            );
+            ];
         }
 
-        $languages = array();
+        $languages = [];
         foreach ($webspace->getAllLocalizations() as $localization) {
             $languages[] = $localization->getLocalization();
         }
 
         return $this->render(
             'SuluContentBundle:Template:settings.html.twig',
-            array(
+            [
                 'languageCode' => $languageCode,
                 'webspaceKey' => $webspaceKey,
                 'navContexts' => $navContexts,
                 'languages' => $languages,
-            )
+            ]
         );
     }
 }

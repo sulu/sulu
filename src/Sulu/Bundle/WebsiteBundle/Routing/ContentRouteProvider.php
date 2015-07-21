@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,11 +12,11 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -53,8 +54,8 @@ class ContentRouteProvider implements RouteProviderInterface
      * @param Request $request A request against which to match.
      *
      * @return \Symfony\Component\Routing\RouteCollection with all Routes that
-     *      could potentially match $request. Empty collection if nothing can
-     *      match.
+     *                                                    could potentially match $request. Empty collection if nothing can
+     *                                                    match.
      */
     public function getRouteCollectionForRequest(Request $request)
     {
@@ -159,16 +160,16 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * Find the route using the provided route name.
      *
-     * @param string $name the route name to fetch
-     * @param array $parameters DEPRECATED the parameters as they are passed
-     *      to the UrlGeneratorInterface::generate call
+     * @param string $name       the route name to fetch
+     * @param array  $parameters DEPRECATED the parameters as they are passed
+     *                           to the UrlGeneratorInterface::generate call
      *
      * @return \Symfony\Component\Routing\Route
      *
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException if
-     *      there is no route with that name in this repository
+     *                                                                     there is no route with that name in this repository
      */
-    public function getRouteByName($name, $parameters = array())
+    public function getRouteByName($name, $parameters = [])
     {
         // TODO: Implement getRouteByName() method.
     }
@@ -184,18 +185,18 @@ class ContentRouteProvider implements RouteProviderInterface
      * simple implementation could be to just repeatedly call
      * $this->getRouteByName() while catching and ignoring eventual exceptions.
      *
-     * @param array $names the list of names to retrieve
+     * @param array $names      the list of names to retrieve
      * @param array $parameters DEPRECATED the parameters as they are passed to
-     *      the UrlGeneratorInterface::generate call. (Only one array, not one
-     *      for each entry in $names.
+     *                          the UrlGeneratorInterface::generate call. (Only one array, not one
+     *                          for each entry in $names.
      *
      * @return \Symfony\Component\Routing\Route[] iterable thing with the keys
-     *      the names of the $names argument.
+     *                                            the names of the $names argument.
      */
-    public function getRoutesByNames($names, $parameters = array())
+    public function getRoutesByNames($names, $parameters = [])
     {
         // TODO
-        return array();
+        return [];
     }
 
     /**
@@ -220,11 +221,11 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         // redirect by information from webspace config
         return new Route(
-            $request->getPathInfo(), array(
+            $request->getPathInfo(), [
                 '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
                 'url' => $this->requestAnalyzer->getPortalUrl(),
                 'redirect' => $this->requestAnalyzer->getRedirect(),
-            )
+            ]
         );
     }
 
@@ -238,15 +239,15 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         // redirect to linked page
         return new Route(
-            $request->getPathInfo(), array(
+            $request->getPathInfo(), [
                 '_controller' => 'SuluWebsiteBundle:Default:redirect',
                 'url' => $url,
-            )
+            ]
         );
     }
 
     /**
-     * @param Request $request
+     * @param Request            $request
      * @param StructureInterface $content
      *
      * @return Route
@@ -254,10 +255,10 @@ class ContentRouteProvider implements RouteProviderInterface
     protected function getStructureRoute(Request $request, $content)
     {
         return new Route(
-            $request->getPathInfo(), array(
+            $request->getPathInfo(), [
                 '_controller' => $content->getController(),
                 'structure' => $content,
-            )
+            ]
         );
     }
 

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,10 +51,10 @@ class MetaTwigExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_meta_alternate', array($this, 'getAlternateLinks')),
-            new \Twig_SimpleFunction('sulu_meta_seo', array($this, 'getSeoMetaTags')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_meta_alternate', [$this, 'getAlternateLinks']),
+            new \Twig_SimpleFunction('sulu_meta_seo', [$this, 'getSeoMetaTags']),
+        ];
     }
 
     /**
@@ -73,7 +74,7 @@ class MetaTwigExtension extends \Twig_Extension
             $defaultLocale = $defaultLocale->getLocalization();
         }
 
-        $result = array();
+        $result = [];
         foreach ($urls as $locale => $url) {
             if ($url !== null) {
                 if ($locale === $defaultLocale) {
@@ -96,11 +97,11 @@ class MetaTwigExtension extends \Twig_Extension
      */
     public function getSeoMetaTags($extension, $content)
     {
-        $seo = array();
+        $seo = [];
         if (array_key_exists('seo', $extension)) {
             $seo = $extension['seo'];
         }
-        $excerpt = array();
+        $excerpt = [];
         if (array_key_exists('excerpt', $extension)) {
             $excerpt = $extension['excerpt'];
         }
@@ -116,12 +117,12 @@ class MetaTwigExtension extends \Twig_Extension
         $seo['description'] = substr($seo['description'], 0, 155);
 
         // generate robots content
-        $robots = array();
+        $robots = [];
         $robots[] = (array_key_exists('noIndex', $seo) && $seo['noIndex'] === true) ? 'noIndex' : 'index';
         $robots[] = (array_key_exists('noFollow', $seo) && $seo['noFollow'] === true) ? 'noFollow' : 'follow';
 
         // build meta tags
-        $result = array();
+        $result = [];
         $result[] = $this->getMeta('description', $seo['description']);
         $result[] = $this->getMeta('keywords', $seo['keywords']);
         $result[] = $this->getMeta('robots', strtoupper(implode(', ', $robots)));
@@ -136,7 +137,7 @@ class MetaTwigExtension extends \Twig_Extension
      * @param string $url
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool $default
+     * @param bool   $default
      *
      * @return string
      */

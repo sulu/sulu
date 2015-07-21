@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,19 +11,19 @@
 
 namespace Sulu\Component\Content\Document\Subscriber\Compat;
 
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Mapper\ContentEvents;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Util\SuluNodeHelper;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Send the legacy content mapper NODE_PRE/POST_REMOVE events
+ * Send the legacy content mapper NODE_PRE/POST_REMOVE events.
  */
 class MapperRemoveSubscriber implements EventSubscriberInterface
 {
@@ -68,12 +69,12 @@ class MapperRemoveSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            Events::REMOVE => array(
-                array('handlePreRemove', 500),
-                array('handlePostRemove', -100),
-            ),
-        );
+        return [
+            Events::REMOVE => [
+                ['handlePreRemove', 500],
+                ['handlePostRemove', -100],
+            ],
+        ];
     }
 
     public function handlePreRemove(RemoveEvent $event)
@@ -88,7 +89,7 @@ class MapperRemoveSubscriber implements EventSubscriberInterface
         $this->events[spl_object_hash($document)] = $event;
         $this->structure[spl_object_hash($document)] = $event;
         $this->dispatcher->dispatch(
-            ContentEvents::NODE_PRE_DELETE, 
+            ContentEvents::NODE_PRE_DELETE,
             $event
         );
     }
@@ -105,7 +106,7 @@ class MapperRemoveSubscriber implements EventSubscriberInterface
         $event = $this->events[$oid];
 
         $this->dispatcher->dispatch(
-            ContentEvents::NODE_POST_DELETE, 
+            ContentEvents::NODE_POST_DELETE,
             $event
         );
 
