@@ -10,18 +10,13 @@
 
 namespace Sulu\Component\Content\Compat\Block;
 
-use JMS\Serializer\Annotation\Discriminator;
-use JMS\Serializer\Annotation\HandlerCallback;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Context;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
- * Representation of a block node in template xml
+ * Representation of a block node in template xml.
  */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
@@ -175,6 +170,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
                 $index, $this->getName(), implode(', ', array_keys($this->properties))
             ));
         }
+
         return $this->properties[$index];
     }
 
@@ -228,8 +224,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         $this->properties = array();
 
-        for ($i = 0; $i < count($items); $i++) {
-
+        for ($i = 0; $i < count($items); ++$i) {
             $item = $items[$i];
             $type = $this->initProperties($i, $item['type']);
 
@@ -268,7 +263,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     {
         // if size of children smaller than minimum
         if (count($this->properties) < $this->getMinOccurs()) {
-            for ($i = count($this->properties); $i < $this->getMinOccurs(); $i++) {
+            for ($i = count($this->properties); $i < $this->getMinOccurs(); ++$i) {
                 $this->initProperties($i, $this->getDefaultTypeName());
             }
         }

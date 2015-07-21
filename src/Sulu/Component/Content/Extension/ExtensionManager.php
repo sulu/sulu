@@ -10,10 +10,8 @@
 
 namespace Sulu\Component\Content\Extension;
 
-use Sulu\Component\Content\Extension\ExtensionInterface;
-
 /**
- * Manages extensions
+ * Manages extensions.
  */
 class ExtensionManager implements ExtensionManagerInterface
 {
@@ -25,7 +23,7 @@ class ExtensionManager implements ExtensionManagerInterface
     public function getExtensions($structureType)
     {
         $extensions = array();
-        
+
         if (isset($this->extensions['all'])) {
             $extensions = $this->extensions['all'];
         }

@@ -4,7 +4,6 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures\fixtures;
 
 class DocumentFixtureLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +18,7 @@ class DocumentFixtureLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should load, instantiate and order fixture classes
-     * It should assign the container to classes implementing ContainerAwareInterface
+     * It should assign the container to classes implementing ContainerAwareInterface.
      */
     public function testLoad()
     {

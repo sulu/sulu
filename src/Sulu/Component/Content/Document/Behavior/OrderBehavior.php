@@ -19,7 +19,7 @@ interface OrderBehavior
     /**
      * Return the absolute order value of this document.
      *
-     * @return integer
+     * @return int
      */
     public function getSuluOrder();
 }

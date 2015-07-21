@@ -76,6 +76,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
     /**
      * @param $webspaceKey
+     *
      * @return WebspaceSitemap
      */
     private function getWebspaceSitemap($webspaceKey)
@@ -100,6 +101,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
      * @param string $webspaceKey
      * @param array $locales
      * @param bool $flat
+     *
      * @return array
      */
     private function generateByLocals($webspaceKey, $locales, $flat = false)

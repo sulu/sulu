@@ -2,10 +2,6 @@
 
 namespace Sulu\Component\Content\Document\Extension;
 
-use Sulu\Component\Content\Extension\ExtensionManager;
-use PHPCR\NodeInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-
 /**
  * Container for extension data.
  *
@@ -50,7 +46,7 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
             return $this->data[$extensionName];
         }
 
-        return null;
+        return;
     }
 
     public function offsetSet($extensionName, $data)

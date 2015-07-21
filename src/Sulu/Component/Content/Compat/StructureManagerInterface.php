@@ -10,8 +10,8 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Interface of StructureManager.

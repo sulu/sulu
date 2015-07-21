@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
 {

@@ -209,7 +209,7 @@ class PositionController extends RestController implements ClassResourceInterfac
                 }
 
                 $data[] = $this->addAndUpdateTitles($item);
-                $i++;
+                ++$i;
             }
 
             $this->getDoctrine()->getManager()->flush();

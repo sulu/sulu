@@ -13,12 +13,11 @@ namespace Sulu\Bundle\SearchBundle\Command;
 use Jackalope\Query\Row;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPCR\SessionInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

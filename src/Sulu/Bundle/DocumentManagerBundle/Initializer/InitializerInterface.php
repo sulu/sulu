@@ -7,7 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Bundle\DocumentManagerBundle\Initializer;
 
 use Symfony\Component\Console\Output\OutputInterface;

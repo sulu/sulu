@@ -2,14 +2,13 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Prophecy\Argument;
-use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Localization\Localization;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
@@ -83,7 +82,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early if not implementing StructureBehavior
+     * It should return early if not implementing StructureBehavior.
      */
     public function testReturnEarly()
     {
@@ -99,7 +98,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * If no webspace is available, then return the first available localization for the document
+     * If no webspace is available, then return the first available localization for the document.
      */
     public function testNoWebspace()
     {
@@ -116,7 +115,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should reset the original locale if the load_ghost_content option is false
+     * It should reset the original locale if the load_ghost_content option is false.
      */
     public function testNoWebspaceDoNotLoadGhostContent()
     {
@@ -133,9 +132,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-
     /**
-     * It should throw an exception if no locale can be determined
+     * It should throw an exception if no locale can be determined.
      *
      * @expectedException RuntimeException
      */
@@ -148,7 +146,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return webspace parent localization
+     * It should return webspace parent localization.
      */
     public function testWebspaceParentLocalization()
     {
@@ -170,7 +168,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return children localizations
+     * It should return children localizations.
      */
     public function testWebspaceChildrenLocalization()
     {
@@ -184,7 +182,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->localization1->getParent()->willReturn(null);
         $this->localization1->getChildren()->willReturn(array(
-            $this->localization2->reveal()
+            $this->localization2->reveal(),
         ));
 
         $this->registry->updateLocale(
@@ -197,7 +195,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return any localizations if neither parent nor children
+     * It should return any localizations if neither parent nor children.
      */
     public function testWebspaceAnyLocalization()
     {
@@ -214,7 +212,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->localization1->getChildren()->willReturn(array());
 
         $this->webspace->getLocalizations()->willReturn(array(
-            $this->localization2->reveal()
+            $this->localization2->reveal(),
         ));
 
         $this->registry->updateLocale(

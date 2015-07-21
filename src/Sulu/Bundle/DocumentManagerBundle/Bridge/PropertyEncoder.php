@@ -3,7 +3,6 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
 use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PropertyEncoder as BasePropertyEncoder;
 
@@ -30,4 +29,3 @@ class PropertyEncoder extends BasePropertyEncoder
         return $this->contentname($property->getName());
     }
 }
-

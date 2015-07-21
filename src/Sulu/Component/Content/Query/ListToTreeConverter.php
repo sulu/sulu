@@ -16,13 +16,14 @@ namespace Sulu\Component\Content\Query;
 class ListToTreeConverter
 {
     /**
-     * @var boolean
+     * @var bool
      */
     private $moveUp;
 
     /**
      * ListToTreeConverter constructor.
-     * @param boolean $moveUp
+     *
+     * @param bool $moveUp
      */
     public function __construct($moveUp = false)
     {
@@ -75,7 +76,7 @@ class ListToTreeConverter
 
         $tree = $this->explodeTree($map, '/');
 
-        for ($i = 0; $i < $minDepth - 1; $i++) {
+        for ($i = 0; $i < $minDepth - 1; ++$i) {
             $tree['children'] = array_values($tree['children']);
             if (!array_key_exists('children', $tree) || !array_key_exists(0, $tree['children'])) {
                 return array();
@@ -95,7 +96,7 @@ class ListToTreeConverter
             $tree['children'] = array_values($tree['children']);
 
             // search for empty nodes
-            for ($i = 0; $i < sizeof($tree['children']); $i++) {
+            for ($i = 0; $i < sizeof($tree['children']); ++$i) {
                 if (array_keys($tree['children'][$i]) === array('children')) {
                     if ($this->moveUp) {
                         array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
@@ -108,7 +109,7 @@ class ListToTreeConverter
             $tree['children'] = array_values($tree['children']);
 
             // recursive to array
-            for ($i = 0; $i < sizeof($tree['children']); $i++) {
+            for ($i = 0; $i < sizeof($tree['children']); ++$i) {
                 $tree['children'][$i] = $this->toArray($tree['children'][$i]);
             }
         } else {

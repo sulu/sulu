@@ -13,13 +13,13 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -117,7 +117,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $nodes = array();
         $max = 15;
-        for ($i = 0; $i < $max; $i++) {
+        for ($i = 0; $i < $max; ++$i) {
             $data = array(
                 'title' => 'News ' . $i,
                 'url' => '/news/news-' . $i,
@@ -237,7 +237,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $nodes = array();
         $max = 15;
-        for ($i = 0; $i < $max; $i++) {
+        for ($i = 0; $i < $max; ++$i) {
             $data = array(
                 'title' => 'News ' . $i,
                 'url' => '/news/news-' . $i,
@@ -320,7 +320,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodes[$news->getUuid()] = $news;
         $nodes[$products->getUuid()] = $products;
 
-        for ($i = 0; $i < sizeof($nodes); $i++) {
+        for ($i = 0; $i < sizeof($nodes); ++$i) {
             $item = $result[$i];
 
             /** @var StructureInterface $expected */
@@ -340,13 +340,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $t1t2 = 0;
         $t1 = 0;
         $t2 = 0;
-        for ($i = 0; $i < $max; $i++) {
+        for ($i = 0; $i < $max; ++$i) {
             if ($i % 2 === 1) {
                 $tags = array($this->tag1->getName(), $this->tag2->getName());
-                $t1t2++;
+                ++$t1t2;
             } else {
                 $tags = array($this->tag2->getName());
-                $t2++;
+                ++$t2;
             }
 
             $data = array(

@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Sulu\Component\Content\MetadataInterface;
-
 class ExtensionNotFoundException extends \Exception
 {
     /**

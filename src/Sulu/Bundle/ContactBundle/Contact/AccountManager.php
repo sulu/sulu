@@ -215,7 +215,7 @@ class AccountManager extends AbstractContactManager
             return $contacts;
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -243,7 +243,7 @@ class AccountManager extends AbstractContactManager
             return $accounts;
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -260,7 +260,7 @@ class AccountManager extends AbstractContactManager
             return $this->accountFactory->createApiEntity($account, $locale);
         }
 
-        return null;
+        return;
     }
 
     /**

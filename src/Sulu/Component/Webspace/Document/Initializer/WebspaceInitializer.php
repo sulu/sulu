@@ -2,17 +2,17 @@
 
 namespace Sulu\Component\Webspace\Document\Initializer;
 
-use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\PathBuilder;
-use Sulu\Component\DocumentManager\NodeManager;
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\NodeManager;
+use Sulu\Component\DocumentManager\PathBuilder;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\OutputInterface;
- 
+
 class WebspaceInitializer implements InitializerInterface
 {
     private $webspaceManager;
@@ -27,8 +27,7 @@ class WebspaceInitializer implements InitializerInterface
         DocumentInspector $inspector,
         PathBuilder $pathBuilder,
         NodeManager $nodeManager
-    )
-    {
+    ) {
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
         $this->pathBuilder = $pathBuilder;
@@ -59,7 +58,7 @@ class WebspaceInitializer implements InitializerInterface
             $homeDocument = $this->documentManager->find($homePath, 'fr', array(
                 'load_ghost_content' => false,
                 'auto_create' => true,
-                'path' => $homePath
+                'path' => $homePath,
             ));
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
@@ -78,7 +77,7 @@ class WebspaceInitializer implements InitializerInterface
 
             $this->nodeManager->createPath($routesPath . '/' . $webspaceLocale);
             $this->documentManager->persist($homeDocument, $webspaceLocale, array(
-                'path' => $homePath
+                'path' => $homePath,
             ));
         }
     }

@@ -44,7 +44,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             $this->{'property' . $propertyIndex}->expects($this->any())
                 ->method('getValue')
                 ->will($this->returnValue($propertyValue));
-            $propertyIndex++;
+            ++$propertyIndex;
         }
 
         $this->node->expects($this->any())
@@ -183,7 +183,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testSiblingNodes()
     {
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 3; ++$i) {
             ${'node' . $i} = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
             ${'node' . $i}->expects($this->any())
                 ->method('getPath')

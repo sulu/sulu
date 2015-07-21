@@ -17,21 +17,21 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface RedirectTypeBehavior
 {
     /**
-     * Return the redirect type
+     * Return the redirect type.
      *
      * @return string
      */
     public function getRedirectType();
 
     /**
-     * Set the redirect type
+     * Set the redirect type.
      *
      * @param string $redirectType
      */
     public function setRedirectType($redirectType);
 
     /**
-     * Return the internal redirect target document
+     * Return the internal redirect target document.
      *
      * Applies when the redirect type is RedirectType::INTERNAL
      *
@@ -40,7 +40,7 @@ interface RedirectTypeBehavior
     public function getRedirectTarget();
 
     /**
-     * Set the routable document to which the target shuld
+     * Set the routable document to which the target shuld.
      *
      * Applies when the redirect type is RedirectType::INTERNAL
      *
@@ -49,7 +49,7 @@ interface RedirectTypeBehavior
     public function setRedirectTarget($redirectTarget);
 
     /**
-     * Return the external redirect URL
+     * Return the external redirect URL.
      *
      * Applies when the redirect type is RedirectType::EXTERNAL
      *
@@ -58,7 +58,7 @@ interface RedirectTypeBehavior
     public function getRedirectExternal();
 
     /**
-     * Set the external redirect URL
+     * Set the external redirect URL.
      *
      * Applies when the redirect type is RedirectType::EXTERNAL
      *

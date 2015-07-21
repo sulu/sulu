@@ -10,25 +10,25 @@
 
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
-use Doctrine\ORM\NoResultException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
-use Sulu\Component\Security\Authentication\SaltGenerator;
-use Sulu\Component\Persistence\RelationTrait;
-use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
+use Sulu\Component\Persistence\RelationTrait;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 class UserManager implements UserManagerInterface
 {
@@ -107,7 +107,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Deletes a user with the given id
+     * Deletes a user with the given id.
      *
      * @return \Closure
      */
@@ -127,7 +127,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Return all users
+     * Return all users.
      *
      * @return array
      */
@@ -137,7 +137,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Creates a new user with the given data
+     * Creates a new user with the given data.
      *
      * @param array $data
      * @param string $locale
@@ -280,7 +280,7 @@ class UserManager implements UserManagerInterface
 
     /**
      * Checks if a username is unique
-     * Null and empty will always return false
+     * Null and empty will always return false.
      *
      * @param string $username
      *
@@ -301,7 +301,7 @@ class UserManager implements UserManagerInterface
 
     /**
      * Checks if an email-adress is unique
-     * Null and empty will always return false
+     * Null and empty will always return false.
      *
      * @param string $email
      *
@@ -337,7 +337,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Checks if the given password is a valid one
+     * Checks if the given password is a valid one.
      *
      * @param string $password The password to check
      *
@@ -349,7 +349,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Process all user roles from request
+     * Process all user roles from request.
      *
      * @param UserInterface $user
      * @param array $userRoles
@@ -393,7 +393,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Process all user groups from request
+     * Process all user groups from request.
      *
      * @param UserInterface $user
      * @param $userGroups
@@ -437,7 +437,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Updates an existing UserRole with the given data
+     * Updates an existing UserRole with the given data.
      *
      * @param UserRole $userRole
      * @param $userRoleData
@@ -465,7 +465,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Adds a new UserRole to the given user
+     * Adds a new UserRole to the given user.
      *
      * @param UserInterface $user
      * @param $userRoleData
@@ -506,7 +506,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Adds a new UserGroup to the given user
+     * Adds a new UserGroup to the given user.
      *
      * @param UserInterface $user
      * @param $userGroupData
@@ -535,7 +535,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Updates an existing UserGroup with the given data
+     * Updates an existing UserGroup with the given data.
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroup
      * @param $userGroupData
@@ -563,7 +563,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Returns the contact with the given id
+     * Returns the contact with the given id.
      *
      * @param int $id
      *
@@ -583,7 +583,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Generates a random salt for the password
+     * Generates a random salt for the password.
      *
      * @return string
      */
@@ -593,7 +593,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Encodes the given password, for the given passwort, with he given salt and returns the result
+     * Encodes the given password, for the given passwort, with he given salt and returns the result.
      *
      * @param UserInterface $user
      * @param string $password
@@ -609,7 +609,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Return property for key or given default value
+     * Return property for key or given default value.
      *
      * @param array $data
      * @param string $key
@@ -627,7 +627,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Processes the email and adds it to the user
+     * Processes the email and adds it to the user.
      *
      * @param UserInterface $user
      * @param string $email
@@ -666,7 +666,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Finds all users for the given account
+     * Finds all users for the given account.
      *
      * @param int $accountId
      *
@@ -678,7 +678,7 @@ class UserManager implements UserManagerInterface
     }
 
     /**
-     * Finds a user for a given contact id
+     * Finds a user for a given contact id.
      *
      * @param int $contactId
      *
@@ -692,7 +692,7 @@ class UserManager implements UserManagerInterface
     /**
      * this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
-     * reindex entities
+     * reindex entities.
      *
      * @param mixed $entities
      *

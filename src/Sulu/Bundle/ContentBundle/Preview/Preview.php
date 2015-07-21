@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * handles preview start / stop / update / render.
@@ -247,7 +247,7 @@ class Preview implements PreviewInterface
             $data = $sequence['property']->getValue();
             $value = &$data;
             $len = sizeof($sequence['index']);
-            for ($i = 0; $i < $len; $i++) {
+            for ($i = 0; $i < $len; ++$i) {
                 $value = &$value[$sequence['index'][$i]];
             }
             $value = $tmp;

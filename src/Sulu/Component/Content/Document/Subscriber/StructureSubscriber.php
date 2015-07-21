@@ -10,27 +10,23 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Events;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface as DocumentMetadataFactory;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Document\Structure\Structure;
-use Sulu\Component\Content\Document\Structure\ManagedStructure;
-use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
-use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Document\Property\Property;
+use Sulu\Component\Content\Document\Structure\ManagedStructure;
+use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class StructureSubscriber extends AbstractMappingSubscriber
 {
@@ -83,7 +79,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
         $options = $event->getOptions();
         $options->setDefaults(
             array(
-                'load_ghost_content' => true
+                'load_ghost_content' => true,
             )
         );
         $options->setAllowedTypes(
@@ -103,7 +99,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
 
     /**
      * Set the structure type early so that subsequent subscribers operate
-     * upon the correct structure type
+     * upon the correct structure type.
      *
      * @param PersistEvent $event
      */
@@ -135,7 +131,6 @@ class StructureSubscriber extends AbstractMappingSubscriber
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $value = $node->getPropertyValueWithDefault($propertyName, null);
         $document->setStructureType($value);
-
 
         if (false === $event->getOption('load_ghost_content', false)) {
             if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
@@ -204,7 +199,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Map to the content properties to the node using the content types
+     * Map to the content properties to the node using the content types.
      *
      * @param mixed $document
      * @param NodeInterface $node

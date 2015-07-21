@@ -12,8 +12,8 @@ namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 /**
  * enables to translate multiple properties.

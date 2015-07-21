@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
@@ -25,11 +26,10 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Sulu\Component\Rest\RestController;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 
 /**
  * Makes accounts available through a REST API.
@@ -1261,7 +1261,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     $this->container->getParameter('sulu.model.contact.class'),
                     'contact.contacts.main-contact',
                     array(
-                        $this->container->getParameter('sulu.model.contact.class')=> new DoctrineJoinDescriptor(
+                        $this->container->getParameter('sulu.model.contact.class') => new DoctrineJoinDescriptor(
                             $this->container->getParameter('sulu.model.contact.class'),
                             $this->getAccountEntityName() .
                             '.mainContact'

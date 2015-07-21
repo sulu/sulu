@@ -10,15 +10,15 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 
-use Sulu\Component\Content\Compat\Structure\Document;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use PHPCR\SessionInterface;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 use JMS\Serializer\EventDispatcher\Events;
-use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use JMS\Serializer\EventDispatcher\ObjectEvent;
 use PHPCR\ItemNotFoundException;
+use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Compat\Structure\Document;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\DocumentRegistry;
 
 /**
  * Handle document re-registration upon deserialization.

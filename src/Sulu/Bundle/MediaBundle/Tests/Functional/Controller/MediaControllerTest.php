@@ -249,7 +249,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test Header dispositionType attachment
+     * Test Header dispositionType attachment.
      */
     public function testDownloadHeaderAttachment()
     {
@@ -268,7 +268,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test Header dispositionType inline
+     * Test Header dispositionType inline.
      */
     public function testDownloadHeaderInline()
     {
@@ -908,7 +908,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test move action
+     * Test move action.
      */
     public function testMove()
     {
@@ -940,7 +940,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test move to non existing collection
+     * Test move to non existing collection.
      */
     public function testMoveNonExistingCollection()
     {
@@ -953,7 +953,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test move to non existing media
+     * Test move to non existing media.
      */
     public function testMoveNonExistingMedia()
     {
@@ -964,7 +964,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test non existing action
+     * Test non existing action.
      */
     public function testMoveNonExistingAction()
     {

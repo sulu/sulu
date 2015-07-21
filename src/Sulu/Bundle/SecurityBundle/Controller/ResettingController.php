@@ -11,6 +11,12 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,12 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
  * Class ResettingController.
@@ -369,7 +369,8 @@ class ResettingController extends Controller
     /**
      * @return UserRepositoryInterface
      */
-    private function getUserRepository() {
+    private function getUserRepository()
+    {
         return $this->get('sulu.repository.user');
     }
 }

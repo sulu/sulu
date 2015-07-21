@@ -2,10 +2,10 @@
 
 namespace vendor\sulu\sulu\src\Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InitializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +31,7 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should execute the initializers in the correct order
+     * It should execute the initializers in the correct order.
      */
     public function testInitialize()
     {
@@ -51,7 +51,7 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         $this->initializer->initialize();
 
         $this->assertEquals(array(
-            'service1', 'service3', 'service2'
+            'service1', 'service3', 'service2',
         ), $calls);
     }
 }

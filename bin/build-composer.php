@@ -3,7 +3,7 @@
 use Symfony\Component\Finder\Finder;
 
 $vendorDir = __DIR__ . '/../vendor';
-$suluDir = __DIR__ .'/../src/Sulu';
+$suluDir = __DIR__ . '/../src/Sulu';
 
 require_once $vendorDir . '/autoload.php';
 
@@ -30,7 +30,7 @@ $replace = array();
 
 $packages = array();
 $nativePackageNames = array(
-    'sulu/sulu' => 'sulu/sulu'
+    'sulu/sulu' => 'sulu/sulu',
 );
 
 foreach ($finder as $file) {
@@ -69,7 +69,7 @@ $newPackage = array(
         array(
             'name' => 'Sulu Community',
             'homepage' => 'https://github.com/sulu-cmf/sulu/contributors',
-        )
+        ),
     ),
     'require' => $require,
     'require-dev' => $requireDev,
@@ -77,9 +77,9 @@ $newPackage = array(
     'suggest' => $suggest,
     'autoload' => array(
         'psr-0' => array(
-            'Sulu\\' => 'src/'
-        )
-    )
+            'Sulu\\' => 'src/',
+        ),
+    ),
 );
 
 $newPackage = json_encode($newPackage, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);

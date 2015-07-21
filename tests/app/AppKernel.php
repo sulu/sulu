@@ -18,5 +18,4 @@ class AppKernel extends SuluTestKernel
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
         $loader->load(__DIR__ . '/config/config.yml');
     }
-
 }

@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Form\Type;
 
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class HomeDocumentType extends BasePageDocumentType

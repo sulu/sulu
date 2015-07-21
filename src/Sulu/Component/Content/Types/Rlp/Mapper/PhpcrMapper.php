@@ -129,7 +129,7 @@ class PhpcrMapper extends RlpMapper
         $segmentKey = null
     ) {
         if ($node->isNew()) {
-            return null;
+            return;
         }
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
@@ -240,6 +240,7 @@ class PhpcrMapper extends RlpMapper
      *
      * @throws ResourceLocatorMovedException resourceLocator has been moved
      * @throws ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     *
      * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
@@ -328,7 +329,7 @@ class PhpcrMapper extends RlpMapper
             $i = 1;
             // while $path-$i is not unique raise counter
             while (!$this->isUnique($routes, $path . $i)) {
-                $i++;
+                ++$i;
             }
 
             // result is unique
@@ -532,7 +533,7 @@ class PhpcrMapper extends RlpMapper
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;
-        for ($i = 0; $i < sizeof($pathParts); $i++) {
+        for ($i = 0; $i < sizeof($pathParts); ++$i) {
             if ($curNode->hasNode($pathParts[$i])) {
                 $curNode = $curNode->getNode($pathParts[$i]);
             } else {
@@ -576,6 +577,7 @@ class PhpcrMapper extends RlpMapper
      * @param $contentNode
      *
      * @return bool
+     *
      * @throws ResourceLocatorAlreadyExistsException
      */
     private function checkResourceLocator(NodeInterface $routeNode, $resourceLocator, $contentNode)

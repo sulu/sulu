@@ -13,8 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -143,7 +143,7 @@ class PreviewTest extends SuluTestCase
                 $b['title'],
                 $subTemplate
             );
-            $i++;
+            ++$i;
         }
         $template .= "</div>\n</div>\n";
         if (!$partial) {

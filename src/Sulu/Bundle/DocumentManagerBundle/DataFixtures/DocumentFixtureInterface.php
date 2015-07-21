@@ -20,7 +20,7 @@ interface DocumentFixtureInterface
      * Return an integer by which the order will be determined in
      * accordance with the values returned by other fixtures.
      *
-     * @return integer
+     * @return int
      */
     public function getOrder();
 }

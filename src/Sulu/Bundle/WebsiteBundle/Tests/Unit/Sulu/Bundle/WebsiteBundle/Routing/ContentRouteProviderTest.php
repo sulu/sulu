@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
+use Prophecy\Argument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
@@ -21,7 +22,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
-use Prophecy\Argument;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -564,4 +564,3 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 }
-

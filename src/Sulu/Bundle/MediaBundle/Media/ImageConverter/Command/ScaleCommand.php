@@ -18,7 +18,7 @@ class ScaleCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface & $image, $parameters)
+    public function execute(ImageInterface &$image, $parameters)
     {
         $parameters = array_merge(array(
             'retina' => false,

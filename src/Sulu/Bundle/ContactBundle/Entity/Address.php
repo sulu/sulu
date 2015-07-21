@@ -605,5 +605,4 @@ class Address
     {
         return $this->note;
     }
-
 }

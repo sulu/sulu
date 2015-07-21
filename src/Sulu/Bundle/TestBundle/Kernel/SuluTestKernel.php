@@ -63,6 +63,6 @@ class SuluTestKernel extends SuluKernel
      */
     protected function getContainerClass()
     {
-        return $this->name.ucfirst($this->getContext()).ucfirst($this->environment).($this->debug ? 'Debug' : '').'ProjectContainer';
+        return $this->name . ucfirst($this->getContext()) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
     }
 }

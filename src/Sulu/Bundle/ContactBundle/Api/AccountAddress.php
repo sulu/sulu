@@ -95,7 +95,7 @@ class AccountAddress extends ApiWrapper
      */
     public function getAddress()
     {
-        $adr =  $this->entity->getAddress();
+        $adr = $this->entity->getAddress();
 
         return new AddressEntity($adr);
     }

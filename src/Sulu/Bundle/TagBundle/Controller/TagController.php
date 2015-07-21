@@ -319,7 +319,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 } else {
                     $tags[] = $this->getManager()->save($item, null);
                 }
-                $i++;
+                ++$i;
             }
             $this->getDoctrine()->getManager()->flush();
             $view = $this->view($tags, 200);

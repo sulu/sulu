@@ -55,7 +55,7 @@ abstract class AbstractCommandTest extends SuluTestCase
     {
         foreach ($this->getDataList() as $data) {
             $imagine = new Imagine();
-            $imageBox  = new Box($this->imageWidth, $this->imageHeight);
+            $imageBox = new Box($this->imageWidth, $this->imageHeight);
             $image = $imagine->create($imageBox);
 
             $this->command->execute($image, $data['options']);

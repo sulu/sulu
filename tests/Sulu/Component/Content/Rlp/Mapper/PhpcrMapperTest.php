@@ -11,10 +11,10 @@
 namespace Sulu\Component\Content\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class PhpcrMapperTest extends SuluTestCase
 {

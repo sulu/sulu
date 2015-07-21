@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Sulu\Component\Content\Compat\PropertyInterface;
-
 /**
  * data for mandatory exception not found.
  */

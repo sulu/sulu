@@ -3,11 +3,11 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Compat;
 
 use JMS\Serializer\SerializerInterface;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 

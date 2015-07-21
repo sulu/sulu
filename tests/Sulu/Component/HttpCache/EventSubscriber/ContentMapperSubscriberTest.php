@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\HttpCache\EventListener;
 
-use Sulu\Component\Content\Compat\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\EventSubscriber\ContentMapperSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;

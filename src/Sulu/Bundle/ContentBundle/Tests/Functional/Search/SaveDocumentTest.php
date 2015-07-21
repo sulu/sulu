@@ -11,12 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondDocumentCache;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\Document;
-use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 class SaveDocumentTest extends BaseTestCase
 {
@@ -58,7 +53,7 @@ class SaveDocumentTest extends BaseTestCase
                     'article' => 'Basel Switzerland',
                     'lines' => array('line1', 'line2'),
                 ),
-            )), false);
+            ), ), false);
         $document->setParent($this->homeDocument);
 
         $this->documentManager->persist($document, 'de');

@@ -10,14 +10,13 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\Content\Document\Behavior\RouteBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class RouteSubscriber extends AbstractMappingSubscriber
 {

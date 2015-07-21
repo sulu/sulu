@@ -10,13 +10,13 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 
-use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Events;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 /**
- * Normalize ManagedExtensionContainer instances to the ExtensionContainer type
+ * Normalize ManagedExtensionContainer instances to the ExtensionContainer type.
  */
 class ExtensionContainerSubscriber implements EventSubscriberInterface
 {

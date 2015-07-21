@@ -45,7 +45,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
-
         $this->addObjectsSection($rootNode);
 
         return $treeBuilder;

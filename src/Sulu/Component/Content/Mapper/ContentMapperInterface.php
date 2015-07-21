@@ -16,7 +16,6 @@ use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Interface of ContentMapper.
@@ -296,7 +295,7 @@ interface ContentMapperInterface
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 
     /**
-     * Converts a query result in a list of arrays
+     * Converts a query result in a list of arrays.
      *
      * @param QueryResultInterface $queryResult
      * @param string $webspaceKey

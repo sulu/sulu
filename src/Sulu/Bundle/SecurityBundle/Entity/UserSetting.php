@@ -20,18 +20,21 @@ class UserSetting
 {
     /**
      * The value of the setting.
+     *
      * @var string
      */
     private $value;
 
     /**
      * The key under which this setting is available.
+     *
      * @var string
      */
     private $key;
 
     /**
      * The user for which this setting is applying.
+     *
      * @var UserInterface
      * @Exclude
      */

@@ -11,19 +11,14 @@
 namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Sulu\Component\Content\Compat\Content;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\ContentInstanceFactory;
-use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Listen to sulu node save event and index the document
+ * Listen to sulu node save event and index the document.
  */
 class StructureSubscriber implements EventSubscriberInterface
 {
@@ -51,7 +46,7 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Deindex/index document in search implementation depending
-     * on the publish state
+     * on the publish state.
      *
      * @param ContentNodeEvent $event
      */
@@ -67,7 +62,7 @@ class StructureSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Schedules a document to be deindexed
+     * Schedules a document to be deindexed.
      *
      * @param ContentNodeDeleteEvent
      */

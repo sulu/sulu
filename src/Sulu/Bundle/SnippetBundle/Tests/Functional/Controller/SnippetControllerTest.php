@@ -12,8 +12,8 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class SnippetControllerTest extends SuluTestCase
 {
@@ -218,7 +218,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $params = array_merge(array(
             'language' => 'de',
-            'state' => StructureInterface::STATE_PUBLISHED
+            'state' => StructureInterface::STATE_PUBLISHED,
         ), $params);
 
         $data = array(
@@ -244,7 +244,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $params = array_merge(array(
             'language' => 'de',
-            'state' => StructureInterface::STATE_TEST
+            'state' => StructureInterface::STATE_TEST,
         ), $params);
 
         $data = array(

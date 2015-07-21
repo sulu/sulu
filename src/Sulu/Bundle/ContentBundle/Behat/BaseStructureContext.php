@@ -12,11 +12,9 @@
 namespace Sulu\Bundle\ContentBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
  * Base context class for Structure based feature contexts.

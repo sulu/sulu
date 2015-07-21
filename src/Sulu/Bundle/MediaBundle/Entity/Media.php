@@ -87,6 +87,7 @@ class Media implements AuditableInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
+
         return $this;
     }
 

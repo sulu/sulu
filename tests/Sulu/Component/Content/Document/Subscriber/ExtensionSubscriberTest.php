@@ -2,17 +2,16 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber;
-use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class ExtensionSubscriberTest extends SubscriberTestCase
 {
@@ -43,7 +42,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should hydrate data from extensions
+     * It should hydrate data from extensions.
      */
     public function testHydrateExtensionsData()
     {
@@ -76,7 +75,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should persist data from extensions
+     * It should persist data from extensions.
      */
     public function testPersistExtensionsData()
     {
@@ -84,7 +83,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
             array(
                 'ext_1' => array(
                     'foo' => 'bar',
-                )
+                ),
             )
         );
 
@@ -104,7 +103,6 @@ class ExtensionSubscriberTest extends SubscriberTestCase
         )->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
-
     }
 }
 
@@ -117,7 +115,7 @@ class TestExtensionDocument implements ExtensionBehavior
         $this->extensions = $extensions;
     }
 
-    public function getExtensionsData() 
+    public function getExtensionsData()
     {
         return $this->extensions;
     }
@@ -127,16 +125,15 @@ class TestExtensionDocument implements ExtensionBehavior
         $this->extensions = $data;
     }
 
-    public function setExtension($name, $data) 
+    public function setExtension($name, $data)
     {
     }
-    
 
-    public function getStructureType() 
+    public function getStructureType()
     {
         return 'foobar';
     }
-    
+
     public function setStructureType($structureType)
     {
     }
@@ -145,7 +142,7 @@ class TestExtensionDocument implements ExtensionBehavior
     {
     }
 
-    public function getLocale() 
+    public function getLocale()
     {
     }
 

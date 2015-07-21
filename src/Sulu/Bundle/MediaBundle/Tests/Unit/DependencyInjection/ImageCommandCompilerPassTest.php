@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Test the image command compiler pass
+ * Test the image command compiler pass.
  */
 class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
 {
@@ -48,7 +48,7 @@ class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
             'add',
             array(
                 new Reference('sulu_media.image.command.resize'),
-                'resize'
+                'resize',
             )
         );
     }

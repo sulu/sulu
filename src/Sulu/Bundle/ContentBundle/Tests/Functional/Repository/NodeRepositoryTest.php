@@ -11,28 +11,15 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use PHPCR\NodeInterface;
-use Psr\Log\NullLogger;
-use ReflectionMethod;
-use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceCollection;
-use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\Webspace\Webspace;
 
 /**
  * @group functional
@@ -205,7 +192,7 @@ class NodeRepositoryTest extends SuluTestCase
     }
 
     /**
-     * It should load the node tree tiers up until the tier containing the given UUID
+     * It should load the node tree tiers up until the tier containing the given UUID.
      */
     public function testGetNodesTreeUntilGivenUuid()
     {
@@ -219,7 +206,7 @@ class NodeRepositoryTest extends SuluTestCase
 
     /**
      * It should load the node tree tiers up until the tier containing the given UUID
-     * Without a webspte
+     * Without a webspte.
      */
     public function testGetNodesTreeWithoutWebspace()
     {
@@ -234,7 +221,7 @@ class NodeRepositoryTest extends SuluTestCase
     }
 
     /**
-     * With a webspace
+     * With a webspace.
      */
     public function testGetNodesTreeWithWebspace()
     {
@@ -255,7 +242,7 @@ class NodeRepositoryTest extends SuluTestCase
     }
 
     /**
-     * It should get the node tree tiers with ghosts
+     * It should get the node tree tiers with ghosts.
      */
     public function testGetNodesTreeWithGhosts()
     {
@@ -298,7 +285,6 @@ class NodeRepositoryTest extends SuluTestCase
 
         return $structures;
     }
-
 
     public function testExtensionData()
     {
@@ -640,7 +626,7 @@ class NodeRepositoryTest extends SuluTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $data[0] = $this->mapper->save(
@@ -791,7 +777,7 @@ class NodeRepositoryTest extends SuluTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $data[0] = $this->mapper->save(
@@ -952,7 +938,7 @@ class NodeRepositoryTest extends SuluTestCase
         $newData = array(
             'title' => 'Test4',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         );
 
         $data[3] = $this->mapper->save(
@@ -1079,7 +1065,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
     }
-
 }
 
 class TestExtension extends AbstractExtension

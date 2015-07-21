@@ -45,7 +45,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
@@ -77,7 +77,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 },
@@ -110,7 +110,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
@@ -144,7 +144,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
                 'mem',
                 array($a, $b),
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
@@ -178,7 +178,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
                 'mem',
                 array($a, $b),
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 },
@@ -213,7 +213,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
                 'mem',
                 array($a, $b),
                 function () use ($a, $b, &$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }

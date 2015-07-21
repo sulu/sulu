@@ -324,7 +324,7 @@ class ListQueryBuilder
                 );
                 $this->prefixes[] = $fieldParts[$i];
             }
-            $i++;
+            ++$i;
         }
 
         return $result;

@@ -13,12 +13,12 @@ namespace Sulu\Component\Webspace\StructureProvider;
 use Sulu\Component\Content\Structure\Page;
 
 /**
- * Provide templates which are implemented in a single webspace
+ * Provide templates which are implemented in a single webspace.
  */
 interface WebspaceStructureProviderInterface
 {
     /**
-     * Returns page templates which are implemented in given webspace
+     * Returns page templates which are implemented in given webspace.
      *
      * @param string $webspaceKey
      *

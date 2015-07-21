@@ -10,16 +10,15 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\Events;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
 
 class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 {
@@ -69,7 +68,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Update the locale to the shadow locale, if it is enabled
+     * Update the locale to the shadow locale, if it is enabled.
      *
      * Note that this should happen before the fallback locale has been resolved
      *
@@ -118,7 +117,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * If this is a shadow document, update the URL to that of the shadowed document
+     * If this is a shadow document, update the URL to that of the shadowed document.
      *
      * TODO: This is about caching and should be handled somewhere else.
      *

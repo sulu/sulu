@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiler pass for collecting services tagged with sulu_media.image.command
+ * Compiler pass for collecting services tagged with sulu_media.image.command.
  */
 class ImageCommandCompilerPass implements CompilerPassInterface
 {

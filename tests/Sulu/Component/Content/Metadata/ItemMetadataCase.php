@@ -2,8 +2,6 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Component\Content\Metadata\ItemMetadata;
-
 abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
 {
     abstract public function getMetadata();
@@ -20,7 +18,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should get a named tag
+     * It should get a named tag.
      */
     public function testGetTag()
     {
@@ -31,7 +29,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return a localized title
+     * It should return a localized title.
      */
     public function testGetTitle()
     {
@@ -41,7 +39,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the name if the localized title does not exist
+     * It should return the name if the localized title does not exist.
      */
     public function testGetTitleNoLocalization()
     {
@@ -51,7 +49,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It get a parameter
+     * It get a parameter.
      */
     public function testGetParameters()
     {
@@ -63,7 +61,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It throws an exception if the parameter does not exist
+     * It throws an exception if the parameter does not exist.
      *
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Unknown parameter "param5", known parameters: "param1"

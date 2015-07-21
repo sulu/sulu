@@ -1593,7 +1593,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Return property for key or given default value
+     * Return property for key or given default value.
      *
      * @param array $data
      * @param string $key
@@ -1613,7 +1613,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * TODO: this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
-     * reindex entities
+     * reindex entities.
      *
      * @param mixed $entities
      */
@@ -1631,7 +1631,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Returns the tag manager
+     * Returns the tag manager.
      *
      * @return TagManagerInterface
      */

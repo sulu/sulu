@@ -11,9 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Command;
 
 use Jackalope\Query\Row;
-use PHPCR\SessionInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -97,7 +94,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
                 if ($template !== '' && !in_array($template, $structures)) {
                     $tableRow[0] = 'X';
                     $descriptions[] = sprintf('Language "%s" contains a not existing xml-template', $header);
-                    $result++;
+                    ++$result;
                 }
                 if ($template !== '' && !in_array($template, $availableStructureKeys)) {
                     $tableRow[0] = 'X';
@@ -106,7 +103,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
                         $header,
                         $webspaceKey
                     );
-                    $result++;
+                    ++$result;
                 }
             }
 

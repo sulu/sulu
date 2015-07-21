@@ -10,13 +10,13 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 
-use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Events;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
- * Normalize ManagedStructure instances to the Structure type
+ * Normalize ManagedStructure instances to the Structure type.
  */
 class StructureSubscriber implements EventSubscriberInterface
 {

@@ -10,24 +10,12 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use JMS\Serializer\Annotation\Discriminator;
-use JMS\Serializer\Annotation\Exclude;
-use JMS\Serializer\Annotation\HandlerCallback;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Context;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
-use JMS\Serializer\Metadata\PropertyMetadata;
-use JMS\Serializer\Metadata\StaticPropertyMetadata;
-use Sulu\Component\Content\Compat\Block\BlockProperty;
-use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
-use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Util\ArrayableInterface;
-use Sulu\Component\Content\Compat\PropertyParameter;
 
 /**
- * Property of Structure generated from Structure Manager to map a template
+ * Property of Structure generated from Structure Manager to map a template.
  */
 class Property implements PropertyInterface, \JsonSerializable
 {
@@ -119,7 +107,7 @@ class Property implements PropertyInterface, \JsonSerializable
     protected $propertyValue;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(
         $name,
@@ -221,14 +209,12 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-<<<<<<< HEAD:src/Sulu/Component/Content/Property.php
      * returns tags defined in xml.
      *
      * @return \Sulu\Component\Content\PropertyTag[]
 =======
      * returns tags defined in xml
      * @return \Sulu\Component\Content\Compat\PropertyTag[]
->>>>>>> Moving stuff:src/Sulu/Component/Content/Compat/Property.php
      */
     public function getTags()
     {

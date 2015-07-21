@@ -7,16 +7,14 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Structure;
 
-use PHPCR\NodeInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
  * Lazy loading container for content properties.
@@ -43,8 +41,7 @@ class ManagedStructure extends Structure
         LegacyPropertyFactory $legacyPropertyFactory,
         DocumentInspector $inspector,
         $document
-    )
-    {
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->document = $document;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
@@ -123,7 +120,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Update the structure
+     * Update the structure.
      *
      * @param StructureMetadata $structure
      */
@@ -133,7 +130,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Return an array copy of the property data
+     * Return an array copy of the property data.
      *
      * @return array
      */
@@ -154,6 +151,7 @@ class ManagedStructure extends Structure
     public function offsetExists($offset)
     {
         $this->init();
+
         return $this->structure->hasProperty($offset);
     }
 

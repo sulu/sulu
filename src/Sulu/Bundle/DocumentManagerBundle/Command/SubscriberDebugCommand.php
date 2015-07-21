@@ -2,12 +2,12 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
+use Sulu\Component\DocumentManager\Events;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Helper\Table;
-use Sulu\Component\DocumentManager\Events;
 
 class SubscriberDebugCommand extends ContainerAwareCommand
 {
@@ -43,7 +43,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
                     $refl->getShortName()
                 ),
                 $methodName,
-                $priority
+                $priority,
             );
         }
 
@@ -82,7 +82,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
                 return $priority;
             }
 
-            return null;
+            return;
         }
 
         foreach ($value as $event) {
@@ -104,7 +104,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
         $table->setHeaders(array('Event'));
         foreach ($constants as $name => $value) {
             $table->addRow(array(
-                substr($value, strlen(self::PREFIX))
+                substr($value, strlen(self::PREFIX)),
             ));
         }
         $table->render();

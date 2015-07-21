@@ -24,7 +24,6 @@ class CommandManager implements ManagerInterface
 
     /**
      * @param CommandInterface $command
-     *
      * @param string $alias
      */
     public function add(CommandInterface $command, $alias)

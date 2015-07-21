@@ -13,11 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
  * provides a cache for preview with phpcr.

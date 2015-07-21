@@ -22,11 +22,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\Content\MetadataExtension\StructureExtension;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
 class NavigationTest extends SuluTestCase
@@ -78,7 +74,7 @@ class NavigationTest extends SuluTestCase
                 'url' => '/news',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News')),
                 'url' => '/news',
-                'navContexts' => array('footer')
+                'navContexts' => array('footer'),
             ),
             'products' => array(
                 'title' => 'Products',

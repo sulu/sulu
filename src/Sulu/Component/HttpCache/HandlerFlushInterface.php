@@ -10,9 +10,6 @@
 
 namespace Sulu\Component\HttpCache;
 
-use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Handlers implementing this interface should "flush" their underlying proxy.
  *

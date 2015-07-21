@@ -2,8 +2,8 @@
 
 namespace Sulu\Component\Content\Document\Extension;
 
-use Sulu\Component\Content\Extension\ExtensionManager;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 /**
@@ -71,8 +71,7 @@ class ManagedExtensionContainer extends ExtensionContainer
         $prefix,
         $internalPrefix,
         $webspaceName
-    )
-    {
+    ) {
         $this->extensionManager = $extensionManager;
         $this->node = $node;
         $this->locale = $locale;
@@ -86,6 +85,7 @@ class ManagedExtensionContainer extends ExtensionContainer
      * Lazily evaluate the value for the given extension.
      *
      * @param string $extensionName
+     *
      * @return mixed
      */
     public function offsetGet($extensionName)

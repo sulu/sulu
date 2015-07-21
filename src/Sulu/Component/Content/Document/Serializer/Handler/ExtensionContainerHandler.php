@@ -10,15 +10,15 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Handler;
 
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
+use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 /**
- * Handle serializeation and deserialization of document content
+ * Handle serializeation and deserialization of document content.
  */
 class ExtensionContainerHandler implements SubscribingHandlerInterface
 {

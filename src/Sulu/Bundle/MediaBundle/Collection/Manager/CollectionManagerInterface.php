@@ -12,6 +12,7 @@
  * Defines the operations of the CollectionManager.
  * The CollectionManager is responsible for the centralized management of our collections.
  */
+
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;

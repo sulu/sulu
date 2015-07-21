@@ -10,11 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
-use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Meta\MetaTwigExtension;
-use Sulu\Component\Content\Structure;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
@@ -60,7 +57,7 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get alternate links
+     * Test get alternate links.
      */
     public function testGetAlternateLinks()
     {
@@ -89,7 +86,7 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test seo meta tags
+     * test seo meta tags.
      */
     public function testGetSeoMetaTags()
     {
@@ -108,10 +105,10 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
                     'keywords' => 'SEO, Keywords',
                 ),
                 'excerpt' => array(
-                    'description' => 'Excerpt Description'
+                    'description' => 'Excerpt Description',
                 ),
             ), array(
-                'title' => 'Page Title'
+                'title' => 'Page Title',
             )
         );
 
@@ -126,7 +123,7 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Seo titel
+     * Seo titel.
      */
     public function testGetSeoMetaTagsFallback()
     {
@@ -144,10 +141,10 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
                     'keywords' => 'SEO, Keywords',
                 ),
                 'excerpt' => array(
-                    'description' => 'Excerpt Description'
+                    'description' => 'Excerpt Description',
                 ),
             ), array(
-                'title' => 'Page Title'
+                'title' => 'Page Title',
             )
         );
 

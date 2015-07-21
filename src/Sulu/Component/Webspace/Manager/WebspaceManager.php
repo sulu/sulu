@@ -196,7 +196,7 @@ class WebspaceManager implements WebspaceManagerInterface
                     $dumper->dump(
                         array(
                             'cache_class' => $class,
-                            'base_class'  => $this->options['base_class'],
+                            'base_class' => $this->options['base_class'],
                         )
                     ),
                     $webspaceCollection->getResources()
@@ -224,11 +224,11 @@ class WebspaceManager implements WebspaceManagerInterface
     public function setOptions($options)
     {
         $this->options = array(
-            'config_dir'  => null,
-            'cache_dir'   => null,
-            'debug'       => false,
+            'config_dir' => null,
+            'cache_dir' => null,
+            'debug' => false,
             'cache_class' => 'WebspaceCollectionCache',
-            'base_class'  => 'WebspaceCollection',
+            'base_class' => 'WebspaceCollection',
         );
 
         // overwrite the default values with the given options
@@ -236,9 +236,11 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Url is from domain
+     * Url is from domain.
+     *
      * @param $url
      * @param $domain
+     *
      * @return array
      */
     protected function isFromDomain($url, $domain)

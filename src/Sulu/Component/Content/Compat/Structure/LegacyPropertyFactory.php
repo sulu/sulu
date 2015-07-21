@@ -2,22 +2,20 @@
 
 namespace Sulu\Component\Content\Compat\Structure;
 
+use Sulu\Component\Content\Compat\Block\BlockProperty;
+use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\Section\SectionProperty;
-use Sulu\Component\Content\Compat\Block\BlockProperty;
-use Sulu\Component\Content\Metadata\Property;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
-use Sulu\Component\Content\Metadata\ItemMetadata;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Compat\Block\BlockPropertyType;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\Section\SectionProperty;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\Property;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 /**
  * Creates legacy properties from "new" properties.
@@ -37,7 +35,7 @@ class LegacyPropertyFactory
     }
 
     /**
-     * Create a new "translated" property
+     * Create a new "translated" property.
      *
      * @param object $property
      * @param string $locale
@@ -56,9 +54,10 @@ class LegacyPropertyFactory
     }
 
     /**
-     * Create a new property
+     * Create a new property.
      *
      * @param Item $item
+     *
      * @return PropertyInterface $property
      */
     public function createProperty(ItemMetadata $property, StructureInterface $structure = null)

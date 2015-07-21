@@ -12,12 +12,11 @@
 namespace Sulu\Component\Content\Metadata\Factory;
 
 use Sulu\Component\Content\Document\Structure\StructureInterface;
-use Symfony\Component\Config\FileLocator;
 
 interface StructureMetadataFactoryInterface
 {
     /**
-     * Return the structure of the given $type and $structureType
+     * Return the structure of the given $type and $structureType.
      *
      * @param mixed $type The primary system type, e.g. page, snippet
      * @param mixed $structureType The secondary user type
@@ -30,7 +29,7 @@ interface StructureMetadataFactoryInterface
     public function getStructureMetadata($type, $structureType);
 
     /**
-     * Return all structures of the given type
+     * Return all structures of the given type.
      *
      * @param string
      *
@@ -39,11 +38,11 @@ interface StructureMetadataFactoryInterface
     public function getStructures($type);
 
     /**
-     * Return true if the given type has been registered with the structure factory
+     * Return true if the given type has been registered with the structure factory.
      *
      * @param string $type
      *
-     * @return boolean
+     * @return bool
      */
     public function hasStructuresFor($type);
 }

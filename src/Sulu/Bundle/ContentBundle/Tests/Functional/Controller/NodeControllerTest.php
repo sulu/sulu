@@ -5,7 +5,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 use Doctrine\ORM\EntityManager;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -1425,7 +1424,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        for ($i = 0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($data); ++$i) {
             $template = $data[$i]['template'];
             unset($data[$i]['template']);
             $client->request('POST', '/api/nodes?template=' . $template . '&webspace=sulu_io&language=en', $data[$i]);

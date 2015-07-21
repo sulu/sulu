@@ -11,12 +11,13 @@
 namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
 /**
- * Thrown when a template does not contain a reserved property name
+ * Thrown when a template does not contain a reserved property name.
  */
 class ReservedPropertyNameException extends InvalidXmlException
 {
     /**
-     * The reserved property name, which has been used
+     * The reserved property name, which has been used.
+     *
      * @var string
      */
     protected $propertyName;
@@ -40,7 +41,8 @@ class ReservedPropertyNameException extends InvalidXmlException
     }
 
     /**
-     * Returns the name of the property, which was not allowed to be used
+     * Returns the name of the property, which was not allowed to be used.
+     *
      * @return string
      */
     public function getPropertyName()

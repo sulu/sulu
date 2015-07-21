@@ -499,7 +499,7 @@ interface ContactInterface
     public function getContactAddresses();
 
     /**
-     * Returns addresses
+     * Returns addresses.
      */
     public function getAddresses();
 

@@ -40,4 +40,3 @@ class InitializerPass implements CompilerPassInterface
         $initializerDef->replaceArgument(1, $map);
     }
 }
-

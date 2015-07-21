@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
 /**
- * Thrown when the xml definition of a template contains an error
+ * Thrown when the xml definition of a template contains an error.
  */
 class InvalidXmlException extends TemplateException
 {

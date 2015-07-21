@@ -10,12 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Content\Compat\Structure;
 
 /**
  * Query builder to load smart content.

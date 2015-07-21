@@ -11,11 +11,11 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
 
 class ContentOnPageTest extends BaseFunctionalTestCase
 {

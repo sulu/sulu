@@ -10,11 +10,11 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -121,7 +121,7 @@ class NavigationMapper implements NavigationMapperInterface
         $this->queryBuilder->init(array('context' => $context, 'excerpt' => $loadExcerpt));
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
-        for ($i = 0; $i < sizeof($result); $i++) {
+        for ($i = 0; $i < sizeof($result); ++$i) {
             if (!isset($result[$i]['children'])) {
                 $result[$i]['children'] = array();
             }

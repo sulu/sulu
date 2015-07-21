@@ -93,9 +93,9 @@ class CleanupHistoryCommandTest extends SuluTestCase
                 null,
                 array(
                     'contains' => array(
-                        '/' => false
+                        '/' => false,
                     ),
-                    'not-contains' => array()
+                    'not-contains' => array(),
                 ),
             ),
             array(
@@ -105,9 +105,9 @@ class CleanupHistoryCommandTest extends SuluTestCase
                 null,
                 array(
                     'contains' => array(
-                        '/' => false
+                        '/' => false,
                     ),
-                    'not-contains' => array()
+                    'not-contains' => array(),
                 ),
             ),
         );
@@ -129,9 +129,9 @@ class CleanupHistoryCommandTest extends SuluTestCase
                         '/' => false,
                         '/team' => false,
                         '/team/daniel' => false,
-                        '/team/johannes' => false
+                        '/team/johannes' => false,
                     ),
-                    'not-contains' => array()
+                    'not-contains' => array(),
                 ),
             ),
             array(
@@ -144,9 +144,9 @@ class CleanupHistoryCommandTest extends SuluTestCase
                         '/' => false,
                         '/team' => false,
                         '/team/daniel' => false,
-                        '/team/johannes' => false
+                        '/team/johannes' => false,
                     ),
-                    'not-contains' => array()
+                    'not-contains' => array(),
                 ),
             ),
         );
@@ -171,7 +171,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
                         '/my-test/johannes' => false,
                         '/team' => true,
                         '/team/daniel' => true,
-                        '/team/johannes' => true
+                        '/team/johannes' => true,
                     ),
                     'not-contains' => array(),
                 ),
@@ -189,7 +189,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
                         '/my-test/johannes' => false,
                         '/team' => true,
                         '/team/daniel' => true,
-                        '/team/johannes' => true
+                        '/team/johannes' => true,
                     ),
                     'not-contains' => array(),
                 ),
@@ -222,7 +222,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
                     'contains' => array(
                         '/team' => true,
                         '/team/daniel' => true,
-                        '/team/johannes' => true
+                        '/team/johannes' => true,
                     ),
                     'not-contains' => array(
                         '/',
@@ -241,8 +241,8 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $locale = 'de';
 
         return array(
-            array($webspaceKey, $locale, false, '/team',),
-            array($webspaceKey, $locale, true, '/team',),
+            array($webspaceKey, $locale, false, '/team'),
+            array($webspaceKey, $locale, true, '/team'),
         );
     }
 
@@ -286,7 +286,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
                 '--dry-run' => $dryRun,
-                '--base-path' => $basePath
+                '--base-path' => $basePath,
             )
         );
         $output = $this->tester->getDisplay();
@@ -301,7 +301,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
                 '--dry-run' => $dryRun,
-                '--base-path' => $basePath
+                '--base-path' => $basePath,
             )
         );
         $output = $this->tester->getDisplay();

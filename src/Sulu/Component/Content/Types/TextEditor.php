@@ -49,7 +49,7 @@ class TextEditor extends SimpleContentType
             'link' => new PropertyParameter('link', true),
             'height' => new PropertyParameter('height', 300),
             'max_height' => new PropertyParameter('max_height', 500),
-            'paste_from_word' => new PropertyParameter('paste_from_word', true)
+            'paste_from_word' => new PropertyParameter('paste_from_word', true),
         );
     }
 }

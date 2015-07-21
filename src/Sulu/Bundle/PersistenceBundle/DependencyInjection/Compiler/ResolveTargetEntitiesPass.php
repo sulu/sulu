@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ResolveTargetEntitiesPass implements CompilerPassInterface
 {
     /**
-     * @var array $interfaces
+     * @var array
      */
     private $interfaces;
 
@@ -63,6 +63,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
      * @param string $key
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     private function getClass(ContainerBuilder $container, $key)

@@ -211,7 +211,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Finds all users for the role with the given id
+     * Finds all users for the role with the given id.
      *
      * @param int $roleId
      *

@@ -11,7 +11,7 @@
 namespace Sulu\Component\PHPCR\NodeTypes\Content;
 
 /**
- * Node type for representing home pages in the PHPCR
+ * Node type for representing home pages in the PHPCR.
  */
 class HomeNodeType extends ContentNodeType
 {
@@ -29,7 +29,7 @@ class HomeNodeType extends ContentNodeType
     public function getDeclaredSupertypeNames()
     {
         return array(
-            'sulu:content'
+            'sulu:content',
         );
     }
 }

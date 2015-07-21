@@ -12,7 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 /**
  * Class WebspaceSitemap
- * Store Webspace Information and Sitemap
+ * Store Webspace Information and Sitemap.
  */
 class WebspaceSitemap implements WebspaceSitemapInterface
 {
@@ -50,6 +50,7 @@ class WebspaceSitemap implements WebspaceSitemapInterface
     public function setWebspaceKey($webspaceKey)
     {
         $this->webspaceKey = $webspaceKey;
+
         return $this;
     }
 
@@ -67,6 +68,7 @@ class WebspaceSitemap implements WebspaceSitemapInterface
     public function setDefaultLocalization($defaultLocalization)
     {
         $this->defaultLocalization = $defaultLocalization;
+
         return $this;
     }
 
@@ -84,6 +86,7 @@ class WebspaceSitemap implements WebspaceSitemapInterface
     public function setSitemap($sitemap)
     {
         $this->sitemap = $sitemap;
+
         return $this;
     }
 
@@ -101,6 +104,7 @@ class WebspaceSitemap implements WebspaceSitemapInterface
     public function setLocalizations($localizations)
     {
         $this->localizations = $localizations;
+
         return $this;
     }
 
@@ -110,6 +114,7 @@ class WebspaceSitemap implements WebspaceSitemapInterface
     public function addLocalization($localization)
     {
         $this->localizations[$localization] = $localization;
+
         return $this;
     }
 
@@ -119,6 +124,7 @@ class WebspaceSitemap implements WebspaceSitemapInterface
     public function removeLocalization($localization)
     {
         unset($this->localizations[$localization]);
+
         return $this;
     }
 }

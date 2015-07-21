@@ -3,7 +3,6 @@
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
@@ -595,7 +594,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * Magic getter
+     * Magic getter.
      *
      * @deprecated Do not use magic getters. Use ArrayAccess instead.
      */
@@ -617,6 +616,7 @@ class StructureBridge implements StructureInterface
     public function getIsShadow()
     {
         $document = $this->getDocument();
+
         return $document->isShadowLocaleEnabled();
     }
 
@@ -739,5 +739,4 @@ class StructureBridge implements StructureInterface
 
         return $propertyBridge;
     }
-
 }

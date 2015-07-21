@@ -121,7 +121,7 @@ class ListRepository extends EntityRepository
                         $ids[$id] = -1;
                         $filteredResults[] = $result;
                     }
-                    $ids[$id]++;
+                    ++$ids[$id];
                     // check filters
                     foreach ($filters as $filter => $key) {
                         // check if we are at the specified index
