@@ -4,7 +4,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 90;
+    z-index: 120;
 
     .toolbar-row {
         display: table;
@@ -108,30 +108,14 @@
     // add top space to the content-container beneath the header
     & + .page {
         margin-top: $headerHeight;
-        padding-bottom: $headerHeight
+        &::after {
+            padding-bottom: $headerHeight;
+        }
     }
-    &.has-tabs + .page #content {
-        padding-top: $contentPaddingTop + $tabsHeight;
-    }
-}
-
-.sulu-header-background {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    background: $blue;
-    height: $headerHeight;
-    width: 100%;
-    z-index: -1;
-    @include transition(height $tabsHideAnimationDuration ease $tabsHideAnimationDelay, border-bottom-width $tabsHideAnimationDuration ease $tabsHideAnimationDelay);
-
-    &.has-tabs {
-        height: $headerHeight + $tabsHeight;
-        border-bottom: $tabsHeight solid $white;
-    }
-    &.tabs-hidden {
-      height: $headerHeight;
-      border-bottom-width: 0;
+    &.has-tabs + .page {
+        &::before {
+            margin-bottom: $contentPaddingTop + $tabsHeight - 1px;
+        }
     }
 }
 

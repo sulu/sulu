@@ -140,9 +140,10 @@ define(['sulumedia/model/media'], function(Media) {
         },
 
         actionCallback: function(id, item) {
+            this.sandbox.sulu.viewStates['media-file-edit-id'] = id;
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'media/collections/edit:' + item.collection + '/files/edit:' + id
+                'media/collections/edit:' + item.collection + '/files'
             );
 
             var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
@@ -248,8 +249,8 @@ define(['sulumedia/model/media'], function(Media) {
          * @param locale {object} the new locale to display
          */
         changeLanguage: function(locale) {
-            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale.localization);
-            this.sandbox.emit('husky.datagrid.url.update', {locale: locale.localization});
+            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale.id);
+            this.sandbox.emit('husky.datagrid.url.update', {locale: locale.id});
         }
     };
 });

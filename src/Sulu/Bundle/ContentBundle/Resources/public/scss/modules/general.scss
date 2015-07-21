@@ -2,6 +2,10 @@
   width: 95px;
 }
 
+#content-form {
+    @include clear-float;
+}
+
 .sortable-placeholder {
     margin-bottom: 20px;
 }

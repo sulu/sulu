@@ -229,11 +229,10 @@ define([
                 }
                 this.startMediaEdit();
 
-                if (!!this.options.mediaId) {
+                if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
                     this.sandbox.once('sulu.media-edit.initialized', function() {
-                        this.editMedia(this.options.mediaId);
-
-                        this.sandbox.emit('husky.tabs.header.option.unset', 'mediaId');
+                        this.editMedia(this.sandbox.sulu.viewStates['media-file-edit-id']);
+                        delete this.sandbox.sulu.viewStates['media-file-edit-id'];
                     }.bind(this));
 
                     this.sandbox.once('husky.dropzone.'+this.instanceName+'.initialized', function(){

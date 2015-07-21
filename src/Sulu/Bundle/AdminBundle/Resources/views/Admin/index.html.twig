@@ -27,11 +27,11 @@
         <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
     </head>
     <body>
-        <div id="main">
+        <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is not defined %}
-                data-aura-footer="false"
-                {% endif %}
+                    {% if user.username is not defined %}
+                        data-aura-footer="false"
+                    {% endif %}
                  data-aura-user-name="{{ user.fullname }}"
                  data-aura-system-name="{{ name }}"
                  data-aura-system-version="{{ suluVersion }}"
@@ -43,11 +43,7 @@
             <div class="content-container">
                 <div class="content-column fixed">
                     <div class="page">
-                        <main class="grid"
-                              id="content"
-                              data-aura-component="app@suluadmin"
-                              data-aura-user="{{ user| json_encode }}">
-                        </main>
+                        <main class="grid" id="content"></main>
                     </div>
                     <div id="labels-container" data-aura-component="labels@suluadmin"></div>
                 </div>
@@ -56,8 +52,8 @@
                     <aside id="sidebar" data-aura-component="sidebar@suluadmin"></aside>
                 </div>
             </div>
+            <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
         </div>
-        <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
 
         <script type="text/javascript">
             {% autoescape false %}

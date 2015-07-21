@@ -211,6 +211,8 @@ define(function() {
          * @param {Object} [header.tabs] Object that contains configurations for the tabs.
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
+         * @param {String|Object} [header.tabs.container] the container to render the tabs-content in.
+         *        If not set the content gets insertet directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
          *        If not set no toolbar will be displayed.
          * @param {Array|String} [header.toolbar.template] Array of toolbar items to pass to the header component,
@@ -226,6 +228,7 @@ define(function() {
          *      header: {
          *          tabs: {
          *              url: 'url/to/tabsData',
+         *              container: '#my-container-selector',
          *          },
          *          toolbar {
          *              languageChanger: true
@@ -256,15 +259,7 @@ define(function() {
          * @param {Object} header The header config object.
          */
         handleHeader = function(header) {
-            var $content;
-
-            if (!header) {
-                return false;
-            }
-
-            // insert the content-container
-            $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
-            this.html($content);
+            if (!header) return false;
 
             getTabsData.call(this, header).then(function(tabsData) {
                 var $container = this.sandbox.dom.createElement('<div class="sulu-header"/>');
@@ -274,7 +269,6 @@ define(function() {
                     name: 'header@suluadmin',
                     options: {
                         el: $container,
-                        tabsData: tabsData,
                         noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
 
                         toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
@@ -286,8 +280,9 @@ define(function() {
                         toolbarParentTemplate: (!!header.toolbar && !!header.toolbar.parentTemplate) ?
                             header.toolbar.parentTemplate : null,
 
-                        contentComponentOptions: this.options,
-                        contentEl: $content
+                        tabsData: tabsData,
+                        tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,
+                        tabsParentOption: this.options
                     }
                 }]);
 

@@ -19,8 +19,8 @@
  * @param {Function} [options.changeStateCallback] Function to execute if the toolbar-state changes
  * @param {Function} [options.parentChangeStateCallback] Same as changeStateCallback
  * @param {Object} [options.tabsData] data to pass to the tabs component. For data-structure markup see husky
- * @param {Object} [options.contentComponentOptions] options to forward to the content-component. Are further used for the content-tabs-component
- * @param {Object} [options.contentEl] element for the content-component
+ * @param {Object} [options.tabsParentOptions] The options-object of the tabs-parent-component. this options get merged into each tabs-component-option
+ * @param {String|Object} [options.tabsContainer] Selector or dom object to insert the the tabs-content into
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
  * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a default-language changer will be displayed. Can be an object to build a custom language changer
  * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
@@ -42,19 +42,18 @@ define([], function () {
             changeStateCallback: null,
             parentChangeStateCallback: null,
             tabsData: null,
-            contentComponentOptions: {},
-            contentEl: null,
+            tabsParentOptions: {},
             toolbarOptions: {},
+            tabsContainer: null,
             toolbarLanguageChanger: false,
             toolbarDisabled: false,
             noBack: false,
-            scrollContainerSelector: '#content',
+            scrollContainerSelector: '.content-column > .page',
             scrollDelta: 50 //px
         },
 
         constants = {
             componentClass: 'sulu-header',
-            headerBackgroundSelector: '.sulu-header-background',
             hasTabsClass: 'has-tabs',
             backClass: 'back',
             backIcon: 'chevron-left',
@@ -66,7 +65,7 @@ define([], function () {
             languageChangerTitleSelector: '.language-changer .title',
             overflownClass: 'overflown',
             hideTabsClass: 'tabs-hidden',
-            backgroundClass: 'sulu-header-background',
+            tabsContentClass: 'tabs-content',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'}
@@ -104,9 +103,6 @@ define([], function () {
                 '   <span class="title"><%= title %></span>',
                 '   <span class="dropdown-toggle"></span>',
                 '</div>'
-            ].join(''),
-            background: [
-                '<div class="' + constants.backgroundClass + '"></div>'
             ].join('')
         },
 
@@ -354,9 +350,10 @@ define([], function () {
          */
         initialize: function () {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.toolbarRow)());
-            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.tabsRow)());
+            // set default callback when no callback is provided
+            if (!this.options.changeStateCallback) {
+                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
+            }
 
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
@@ -364,15 +361,11 @@ define([], function () {
             this.toolbarExpandedWidth = 0;
             this.oldScrollPosition = 0;
             this.$tabs = null;
+            this.tabsAction = null;
 
             this.bindCustomEvents();
-            this.bindDomEvents();
             this.render();
-
-            // set default callback when no callback is provided
-            if (!this.options.changeStateCallback) {
-                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
-            }
+            this.bindDomEvents();
 
             var toolbarDef, tabsDef;
             toolbarDef = this.startToolbar();
@@ -392,7 +385,8 @@ define([], function () {
             // add component-class
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
 
-            this.sandbox.dom.append('body', templates.background);
+            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.toolbarRow)());
+            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.tabsRow)());
 
             // hide back if configured
             if (this.options.noBack === true) {
@@ -433,16 +427,8 @@ define([], function () {
             var def = this.sandbox.data.deferred();
 
             if (this.options.tabsData !== null) {
-                this.removeTabsComponent();
-
-                // first start the content-component responsible for the tabs-content-handling
-                this.startContentTabsComponent();
-                // wait for content-component to initialize
-                this.sandbox.once('sulu.content-tabs.content.initialized', function () {
-                    this.startTabsComponent(def);
-                }.bind(this));
+                this.startTabsComponent(def);
             } else {
-                this.removeTabsComponent();
                 def.resolve();
             }
 
@@ -455,7 +441,6 @@ define([], function () {
          */
         startTabsComponent: function (def) {
             if (!!this.options.tabsData) {
-                this.removeTabsComponent();
                 var $container = this.sandbox.dom.createElement('<div/>'),
                     options = {
                         el: $container,
@@ -467,7 +452,6 @@ define([], function () {
                     };
 
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-                this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
 
                 // wait for initialized
                 this.sandbox.once('husky.tabs.header.initialized', function () {
@@ -486,18 +470,8 @@ define([], function () {
         },
 
         /**
-         * Removes the tabs components
-         */
-        removeTabsComponent: function () {
-            var $tabs = this.$find('.' + constants.tabsClass);
-            this.sandbox.stop(this.sandbox.dom.children($tabs));
-            this.sandbox.dom.removeClass(constants.headerBackgroundSelector, constants.hasTabsClass);
-            this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
-        },
-
-        /**
          * Sets a new toolbar into the header
-         * @param options {Object} just toolbar-options. Or options with template and parentTemplate
+         * @param options {Object} toolbar-options. Or options with template and parentTemplate
          */
         setToolbar: function (options) {
             if (!options.template) {
@@ -518,8 +492,6 @@ define([], function () {
          */
         startToolbar: function () {
             var def = this.sandbox.data.deferred();
-
-            this.sandbox.stop(this.$find('.' + constants.toolbarClass + ' *'));
 
             if (this.options.toolbarDisabled !== true) {
                 var options = this.options.toolbarOptions;
@@ -547,7 +519,6 @@ define([], function () {
          * Renderes and starts the language-changer dropdown
          */
         startLanguageChanger: function() {
-            this.sandbox.stop(this.$find(constants.rightSelector + ' *'));
             if (!!this.options.toolbarLanguageChanger) {
                 var $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.languageChanger)({
                     title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale
@@ -628,8 +599,52 @@ define([], function () {
 
             this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
 
+            // load component on start
+            this.sandbox.on('husky.tabs.header.initialized', this.startTabContent.bind(this));
+
+            // load component after click
+            this.sandbox.on('husky.tabs.header.item.select', this.startTabContent.bind(this));
+
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
+        },
+
+        /**
+         * Renderes and starts a tab-content component
+         * @param tabItem {Object} the Tabs object
+         */
+        startTabContent: function(tabItem) {
+            var options;
+            tabItem = tabItem || this.options.tabsData.items[0];
+            if (!tabItem.forceReload && tabItem.action === this.tabsAction) {
+                return false; // no reload required
+            }
+            this.tabsAction = tabItem.action;
+            // resets store to prevent duplicated models
+            if (!!tabItem.resetStore) {
+                this.sandbox.mvc.Store.reset();
+            }
+            this.stopTabContent();
+
+            var $container = this.sandbox.dom.createElement('<div class="' +  constants.tabsContentClass + '"/>');
+            this.sandbox.dom.append(this.options.tabsContainer, $container);
+
+            options = this.sandbox.util.extend(true, {},
+                this.options.tabsParentOption,
+                {el: $container},
+                tabItem.componentOptions);
+            this.sandbox.start([{
+                name: tabItem.component,
+                options: options
+            }]);
+        },
+
+        /**
+         * Stops the tab-content-component
+         */
+        stopTabContent: function() {
+            App.stop('.' + constants.tabsContentClass + ' *');
+            App.stop('.' + constants.tabsContentClass);
         },
 
         /**
@@ -785,7 +800,6 @@ define([], function () {
          * Hides the tabs
          */
         hideTabs: function() {
-            this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hideTabsClass);
             this.sandbox.dom.addClass(this.$el, constants.hideTabsClass);
         },
 
@@ -793,7 +807,6 @@ define([], function () {
          * Shows the tabs
          */
         showTabs: function() {
-            this.sandbox.dom.removeClass(constants.headerBackgroundSelector, constants.hideTabsClass);
             this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
         },
 
@@ -812,24 +825,6 @@ define([], function () {
 
             if (typeof this.options.parentChangeStateCallback === 'function') {
                 this.options.parentChangeStateCallback.call(this, saved, type, highlight);
-            }
-        },
-
-        /**
-         * Starts the content component necessary and responsible for the tabs
-         */
-        startContentTabsComponent: function () {
-            if (this.options.contentEl !== null) {
-                this.sandbox.start([
-                    {
-                        name: 'content-tabs@suluadmin',
-                        options: {
-                            el: this.sandbox.dom.$(this.options.contentEl),
-                            contentOptions: this.options.contentComponentOptions,
-                            tabsData: this.options.tabsData
-                        }
-                    }
-                ]);
             }
         }
     };
