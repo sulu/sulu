@@ -150,6 +150,16 @@ define([], function () {
             return createEventName.call(this, 'language-changed');
         },
 
+        /**
+         * emited if switched to a tab with no specified component
+         *
+         * @event sulu.header.[INSTANCE_NAME].tab-changed
+         * @param {Object} the tab item switched to
+         */
+        TAB_CHANGED = function () {
+            return createEventName.call(this, 'tab-changed');
+        },
+
     /*********************************************
      *   Abstract events
      ********************************************/
@@ -600,43 +610,47 @@ define([], function () {
             this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
 
             // load component on start
-            this.sandbox.on('husky.tabs.header.initialized', this.startTabContent.bind(this));
+            this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
 
             // load component after click
-            this.sandbox.on('husky.tabs.header.item.select', this.startTabContent.bind(this));
+            this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
         },
 
         /**
-         * Renderes and starts a tab-content component
+         * Renderes and starts a tab-content component if specified. if not emits an event
          * @param tabItem {Object} the Tabs object
          */
-        startTabContent: function(tabItem) {
-            var options;
-            tabItem = tabItem || this.options.tabsData.items[0];
-            if (!tabItem.forceReload && tabItem.action === this.tabsAction) {
-                return false; // no reload required
-            }
-            this.tabsAction = tabItem.action;
-            // resets store to prevent duplicated models
-            if (!!tabItem.resetStore) {
-                this.sandbox.mvc.Store.reset();
-            }
-            this.stopTabContent();
+        tabChangedHandler: function(tabItem) {
+            if (!!tabItem.component) {
+                var options;
+                tabItem = tabItem || this.options.tabsData.items[0];
+                if (!tabItem.forceReload && tabItem.action === this.tabsAction) {
+                    return false; // no reload required
+                }
+                this.tabsAction = tabItem.action;
+                // resets store to prevent duplicated models
+                if (!!tabItem.resetStore) {
+                    this.sandbox.mvc.Store.reset();
+                }
+                this.stopTabContent();
 
-            var $container = this.sandbox.dom.createElement('<div class="' +  constants.tabsContentClass + '"/>');
-            this.sandbox.dom.append(this.options.tabsContainer, $container);
+                var $container = this.sandbox.dom.createElement('<div class="' +  constants.tabsContentClass + '"/>');
+                this.sandbox.dom.append(this.options.tabsContainer, $container);
 
-            options = this.sandbox.util.extend(true, {},
-                this.options.tabsParentOption,
-                {el: $container},
-                tabItem.componentOptions);
-            this.sandbox.start([{
-                name: tabItem.component,
-                options: options
-            }]);
+                options = this.sandbox.util.extend(true, {},
+                    this.options.tabsParentOption,
+                    {el: $container},
+                    tabItem.componentOptions);
+                this.sandbox.start([{
+                    name: tabItem.component,
+                    options: options
+                }]);
+            } else {
+                this.sandbox.emit(TAB_CHANGED.call(this), tabItem);
+            }
         },
 
         /**

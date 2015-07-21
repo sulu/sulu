@@ -211,6 +211,7 @@ define(function() {
          * @param {Object} [header.tabs] Object that contains configurations for the tabs.
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
+         * @param {String} [header.tabs.data] tabs-data to pass to the header if no tabs-url is specified
          * @param {String|Object} [header.tabs.container] the container to render the tabs-content in.
          *        If not set the content gets insertet directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
@@ -297,7 +298,7 @@ define(function() {
         getTabsData = function(header) {
             var loaded = this.sandbox.data.deferred();
             if (!header.tabs || !header.tabs.url) {
-                loaded.resolve(null);
+                loaded.resolve((!!header.tabs) ? header.tabs.data : null);
                 return loaded;
             }
             this.sandbox.util.load(header.tabs.url).then(function(data) {
