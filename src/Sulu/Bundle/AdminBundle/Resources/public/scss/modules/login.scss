@@ -1,6 +1,9 @@
 @import "compass/css3/transform";
 
 .sulu-login {
+    $logoSize: 150px;
+    $boxWidth: 400px;
+
     width: 100%;
     height: 100%;
     background: $baseBackgroundColor;
@@ -21,8 +24,6 @@
         background: $grayDarkLighter;
 
         .media-logo {
-            $logoSize: 150px;
-
             width: $logoSize;
             height: $logoSize;
             z-index: 20;
@@ -74,12 +75,22 @@
         background-color: $blue;
 
         .content-box {
-            $boxWidth: 400px;
-
             width: $boxWidth;
             z-index: 10;
             overflow: hidden;
             @include centerBlock;
+
+            .content-logo {
+                display: none; //only in portrait-mode (media query)
+                margin: 0 auto 30px;
+
+                width: $logoSize;
+                height: $logoSize;
+                z-index: 20;
+
+                background: url("../img/logo.svg") no-repeat center center;
+                @include background-size(contain);
+            }
 
             .frame-slider {
                 transition: left 300ms;
@@ -149,7 +160,7 @@
             }
         }
 
-        span.navigator {
+        .navigator {
             color: $white;
             font-size: 12px; // as in sketch
             cursor: pointer;
@@ -229,4 +240,22 @@
 .login-label-container {
     // center labels in content-container
     left: 75% !important;
+}
+
+@media screen and (max-width: 800px) , screen and (orientation: portrait) {
+    .media-container {
+        display: none !important;
+    }
+
+    .content-container {
+        width: 100% !important;
+    }
+
+    .content-logo {
+        display: block !important;
+    }
+
+    .login-content-footer {
+        display: none !important;
+    }
 }

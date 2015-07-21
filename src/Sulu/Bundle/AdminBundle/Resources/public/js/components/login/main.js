@@ -69,6 +69,7 @@ define([], function () {
 
             contentContainerClass: 'content-container',
             contentLoadingClass: 'content-loading',
+            contentLogoClass: 'content-logo',
             successClass: 'content-success',
 
             contentBoxClass: 'content-box',
@@ -111,6 +112,7 @@ define([], function () {
                 '</div>'].join(''),
             contentContainer: ['<div class="' + constants.contentContainerClass + '">',
                 '   <div class="' + constants.contentBoxClass + '">',
+                '       <div class="' + [constants.contentLogoClass, constants.navigatorSpanClass].join(" ") + '"></div>',
                 '       <div class="' + constants.frameSliderClass + '"></div>',
                 '   </div>',
                 '   <div class="grid-row ' + constants.contentFooterClass + '">',
@@ -237,6 +239,9 @@ define([], function () {
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
             this.renderMediaContainer();
             this.renderContentContainer();
+
+            // init left-property for animation and focus first input field
+            this.moveFrameSliderTo(this.sandbox.dom.find('.' + constants.frameClass, this.dom.$frameSlider)[0]);
         },
 
         /**
@@ -287,9 +292,6 @@ define([], function () {
 
             this.renderLoader();
             this.sandbox.dom.append(this.$el, this.dom.$contentContainer);
-
-            // init left-property for animation and focus first input field
-            this.moveFrameSliderTo(this.sandbox.dom.find('.' + constants.frameClass, this.dom.$frameSlider)[0]);
         },
 
         /**
@@ -415,7 +417,7 @@ define([], function () {
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
 
             // reset error-status on user input-element-change, using keyup because change is only fired when loosing focus
-            this.sandbox.dom.on(this.dom.$loginFrame, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$loginFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
         },
 
         /**
@@ -426,7 +428,7 @@ define([], function () {
             this.sandbox.dom.on(this.dom.$requestResetMailButton, 'click', this.requestResetMailButtonClickHandler.bind(this));
 
             // reset error-status on user input-element-change
-            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
         },
 
         /**
@@ -445,7 +447,7 @@ define([], function () {
             this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click', this.loginRouteClickHandler.bind(this));
 
             // reset error-status on user input-element-change
-            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keyup', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
         },
 
 
@@ -514,10 +516,10 @@ define([], function () {
                 password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm));
             if (username.length === 0 || password.length === 0) {
                 this.displayLoginError();
-            } else {
-                this.login(username, password);
+                return false;
             }
-            return false;
+            this.login(username, password);
+
         },
 
         /**
@@ -728,26 +730,32 @@ define([], function () {
             this.moveFrameSliderTo(this.dom.$loginFrame);
         },
 
-        /**
-         * Focus first input-field of the given frame
-         * @param $frame
-         */
-        focusFirstInput: function ($frame) {
-            if (this.sandbox.dom.find('input', $frame).length > 0) {
-                var input = this.sandbox.dom.find('input', $frame)[0];
-                this.sandbox.dom.select(input);
-                //set input cursor to end of input-value
-                this.sandbox.dom.val(input, this.sandbox.dom.val(input));
-            }
-        },
 
         /**
          * Move frame-slider to the given frame and focus first input
          * @param $frame
          */
         moveFrameSliderTo: function ($frame) {
-            this.sandbox.dom.css(this.dom.$frameSlider, 'left', -this.sandbox.dom.position($frame).left);
-            this.focusFirstInput($frame);
+            this.sandbox.dom.one(this.$el, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function() {
+                this.focusFirstInput($frame);
+            }.bind(this));
+            this.sandbox.dom.css(this.dom.$frameSlider, 'left', -this.sandbox.dom.position($frame).left + 'px');
+        },
+
+        /**
+         * Focus first input-field of the given frame
+         * @param $frame
+         */
+        focusFirstInput: function ($frame) {
+            if (this.sandbox.dom.find('input', $frame).length < 1) {
+                return false;
+            }
+            
+            var input = this.sandbox.dom.find('input', $frame)[0];
+            this.sandbox.dom.select(input);
+            //set input cursor to end of input-value
+            input.setSelectionRange(this.sandbox.dom.val(input).length,this.sandbox.dom.val(input).length);
+
         }
     };
 });

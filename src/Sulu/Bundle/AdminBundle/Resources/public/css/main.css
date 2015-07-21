@@ -242,7 +242,7 @@ input, select {
   background: #f1f1f1;
   overflow: hidden;
 }
-/* line 9, ../scss/modules/login.scss */
+/* line 12, ../scss/modules/login.scss */
 .sulu-login .media-container, .sulu-login .content-container {
   width: 50%;
   height: 100%;
@@ -251,12 +251,12 @@ input, select {
   transition: left 300ms;
   transition-delay: 500ms;
 }
-/* line 19, ../scss/modules/login.scss */
+/* line 22, ../scss/modules/login.scss */
 .sulu-login .media-container {
   float: left;
   background: #3e3e3e;
 }
-/* line 23, ../scss/modules/login.scss */
+/* line 26, ../scss/modules/login.scss */
 .sulu-login .media-container .media-logo {
   width: 150px;
   height: 150px;
@@ -272,11 +272,11 @@ input, select {
   -o-background-size: contain;
   background-size: contain;
 }
-/* line 37, ../scss/modules/login.scss */
+/* line 38, ../scss/modules/login.scss */
 .sulu-login .media-container.media-loading .media-background {
   opacity: 0;
 }
-/* line 42, ../scss/modules/login.scss */
+/* line 43, ../scss/modules/login.scss */
 .sulu-login .media-container .media-background {
   width: 100%;
   height: 100%;
@@ -288,7 +288,7 @@ input, select {
   -o-background-size: cover;
   background-size: cover;
 }
-/* line 52, ../scss/modules/login.scss */
+/* line 53, ../scss/modules/login.scss */
 .sulu-login .media-container .media-background .darkener {
   width: 100%;
   height: 100%;
@@ -296,16 +296,16 @@ input, select {
   transition: opacity 500ms;
   opacity: 0.5;
 }
-/* line 65, ../scss/modules/login.scss */
+/* line 66, ../scss/modules/login.scss */
 .sulu-login .media-container:hover .media-background .darkener {
   opacity: 0.4;
 }
-/* line 72, ../scss/modules/login.scss */
+/* line 73, ../scss/modules/login.scss */
 .sulu-login .content-container {
   float: right;
   background-color: #52B6CA;
 }
-/* line 76, ../scss/modules/login.scss */
+/* line 77, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box {
   width: 400px;
   z-index: 10;
@@ -318,13 +318,26 @@ input, select {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 84, ../scss/modules/login.scss */
+/* line 83, ../scss/modules/login.scss */
+.sulu-login .content-container .content-box .content-logo {
+  display: none;
+  margin: 0 auto 30px;
+  width: 150px;
+  height: 150px;
+  z-index: 20;
+  background: url("../img/logo.svg") no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+}
+/* line 95, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider {
   transition: left 300ms;
   display: table;
   position: relative;
 }
-/* line 90, ../scss/modules/login.scss */
+/* line 101, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame {
   display: table-cell;
   min-width: 400px;
@@ -332,63 +345,63 @@ input, select {
   vertical-align: middle;
   padding: 0 50px;
 }
-/* line 97, ../scss/modules/login.scss */
+/* line 108, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .message, .sulu-login .content-container .content-box .box-frame .error-message {
   display: block;
   color: #fff;
 }
-/* line 102, ../scss/modules/login.scss */
+/* line 113, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .message {
   padding-bottom: 20px;
   text-align: center;
 }
-/* line 106, ../scss/modules/login.scss */
+/* line 117, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .message span.to-mail {
   display: block;
   padding-top: 10px;
   font-weight: bold;
 }
-/* line 113, ../scss/modules/login.scss */
+/* line 124, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .error-message {
   max-height: 0px;
   transition: max-height 200ms;
   overflow: hidden;
 }
-/* line 121, ../scss/modules/login.scss */
+/* line 132, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame.login-error .error-message {
   max-height: 100px;
   padding-bottom: 20px;
 }
-/* line 126, ../scss/modules/login.scss */
+/* line 137, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame.login-error .husky-validate {
   color: #EA524E;
 }
-/* line 131, ../scss/modules/login.scss */
+/* line 142, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .box-frame-footer {
   margin: 0;
 }
-/* line 134, ../scss/modules/login.scss */
+/* line 145, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .box-frame-footer .btn {
   border: 1px solid #fff;
   float: right;
   padding: 0 45px;
 }
-/* line 139, ../scss/modules/login.scss */
+/* line 150, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .box-frame-footer .btn.inactive {
   border: 1px solid #3e3e3e;
   color: #3e3e3e;
 }
-/* line 145, ../scss/modules/login.scss */
+/* line 156, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .box-frame .box-frame-footer span {
   line-height: 40px;
 }
-/* line 152, ../scss/modules/login.scss */
-.sulu-login .content-container span.navigator {
+/* line 163, ../scss/modules/login.scss */
+.sulu-login .content-container .navigator {
   color: #fff;
   font-size: 12px;
   cursor: pointer;
 }
-/* line 158, ../scss/modules/login.scss */
+/* line 169, ../scss/modules/login.scss */
 .sulu-login .content-container .login-content-footer {
   width: 100%;
   position: absolute;
@@ -405,7 +418,7 @@ input, select {
   content: ' ';
   display: block;
 }
-/* line 175, ../scss/modules/login.scss */
+/* line 186, ../scss/modules/login.scss */
 .sulu-login .content-container .login-loader {
   position: absolute;
   top: 50%;
@@ -419,7 +432,7 @@ input, select {
   opacity: 0;
   transition: opacity 200ms;
 }
-/* line 184, ../scss/modules/login.scss */
+/* line 195, ../scss/modules/login.scss */
 .sulu-login .content-container .success-overlay {
   height: 100%;
   width: 100%;
@@ -429,7 +442,7 @@ input, select {
   opacity: 0;
   transition: opacity 300ms;
 }
-/* line 196, ../scss/modules/login.scss */
+/* line 207, ../scss/modules/login.scss */
 .sulu-login .content-container .success-overlay .success-icon {
   position: absolute;
   top: 50%;
@@ -441,32 +454,53 @@ input, select {
   font-size: 200px;
   color: #fff;
 }
-/* line 204, ../scss/modules/login.scss */
+/* line 215, ../scss/modules/login.scss */
 .sulu-login .content-container.content-loading .login-content-footer {
   opacity: 0;
 }
-/* line 208, ../scss/modules/login.scss */
+/* line 219, ../scss/modules/login.scss */
 .sulu-login .content-container.content-loading .login-loader {
   opacity: 1;
 }
-/* line 215, ../scss/modules/login.scss */
+/* line 226, ../scss/modules/login.scss */
 .sulu-login.content-success .success-overlay {
   opacity: 1;
 }
-/* line 219, ../scss/modules/login.scss */
+/* line 230, ../scss/modules/login.scss */
 .sulu-login.content-success .media-container {
   left: -50%;
 }
-/* line 223, ../scss/modules/login.scss */
+/* line 234, ../scss/modules/login.scss */
 .sulu-login.content-success .content-container {
   left: 50%;
 }
 
-/* line 229, ../scss/modules/login.scss */
+/* line 240, ../scss/modules/login.scss */
 .login-label-container {
   left: 75% !important;
 }
 
+@media screen and (max-width: 800px), screen and (orientation: portrait) {
+  /* line 246, ../scss/modules/login.scss */
+  .media-container {
+    display: none !important;
+  }
+
+  /* line 250, ../scss/modules/login.scss */
+  .content-container {
+    width: 100% !important;
+  }
+
+  /* line 254, ../scss/modules/login.scss */
+  .content-logo {
+    display: block !important;
+  }
+
+  /* line 258, ../scss/modules/login.scss */
+  .login-content-footer {
+    display: none !important;
+  }
+}
 /* line 1, ../scss/modules/labels.scss */
 #labels-container {
   z-index: 1000;
