@@ -12,10 +12,11 @@ define(function() {
     'use strict';
 
     var constants = {
-            datagridInstanceName: 'tags'
+            datagridInstanceName: 'tags',
+            instanceNameToolbar: 'saveToolbar'
         },
 
-        bindCustomEvents = function(instanceNameToolbar) {
+        bindCustomEvents = function() {
             // add clicked
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.add', {
@@ -37,7 +38,7 @@ define(function() {
             // checkbox clicked
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
-                this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.' + postfix, 'delete', false);
+                this.sandbox.emit('husky.toolbar.' + constants.instanceNameToolbar + '.item.' + postfix, 'delete', false);
             }.bind(this));
 
             // error - non unique tag name
@@ -67,7 +68,6 @@ define(function() {
 
     return {
         view: true,
-        instanceNameToolbar: 'saveToolbar',
 
         layout: {
             content: {
@@ -91,7 +91,7 @@ define(function() {
 
         initialize: function() {
             this.render();
-            bindCustomEvents.call(this, this.instanceNameToolbar);
+            bindCustomEvents.call(this);
         },
 
         render: function() {
@@ -103,7 +103,7 @@ define(function() {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
-                    instanceName: this.instanceNameToolbar,
+                    instanceName: constants.instanceNameToolbar,
                     inHeader: true,
                     groups: [
                         {
