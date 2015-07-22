@@ -47,7 +47,7 @@ class StructureProvider implements ProviderInterface
     private $mapping;
 
     /**
-     * @var StructureFactory
+     * @var StructureMetadataFactory
      */
     private $structureFactory;
 
