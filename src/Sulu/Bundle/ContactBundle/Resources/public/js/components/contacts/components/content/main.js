@@ -17,7 +17,7 @@ define(function() {
                 url: '/admin/content-navigations?alias=contact'
             },
             toolbar: {
-                template: 'default'
+                buttons: ['saveWithOptions', 'settings']
             }
         }
     };

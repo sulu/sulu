@@ -216,10 +216,7 @@ define(function() {
          *        If not set the content gets insertet directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
          *        If not set no toolbar will be displayed.
-         * @param {Array|String} [header.toolbar.template] Array of toolbar items to pass to the header component,
-         *        can also be a string representing a template (e.g. 'default')
-         * @param {Array|String} [header.toolbar.parentTemplate] Same as toolbar.template,
-         *        gets merged with toolbar template.
+         * @param {Array} [header.toolbar.buttons] array of arguments to pass to sulu.buttons.get to recieve the toolbar buttons
          * @param {Object} [header.toolbar.options] Object with options for the toolbar component.
          * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header.
          *        If true the default language changer will be rendered. Default is true.
@@ -233,7 +230,7 @@ define(function() {
          *          },
          *          toolbar {
          *              languageChanger: true
-         *              template: 'default'
+         *              buttons: ['save', {'edit': {callback: myNewCallback.bind(this}}]
          *          }
          *      }
          *
@@ -276,10 +273,7 @@ define(function() {
                         toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ?
                             header.toolbar.languageChanger : false,
                         toolbarDisabled: !header.toolbar,
-                        toolbarTemplate: (!!header.toolbar && !!header.toolbar.template) ?
-                            header.toolbar.template : 'default',
-                        toolbarParentTemplate: (!!header.toolbar && !!header.toolbar.parentTemplate) ?
-                            header.toolbar.parentTemplate : null,
+                        toolbarButtons: (!!header.toolbar && !!header.toolbar.buttons) ? header.toolbar.buttons : [],
 
                         tabsData: tabsData,
                         tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,

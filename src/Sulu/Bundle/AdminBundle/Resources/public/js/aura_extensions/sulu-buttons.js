@@ -5,14 +5,15 @@
     define([], {
 
         initialize: function (app) {
-            /*********
-             * Sulu Buttons
-             *********/
+            /**
+             * Buttons definition (start)
+             */
             app.sandbox.sulu.buttons = {};
 
             app.sandbox.sulu.buttons.add = {
                 id: 'add',
                 icon: 'plus-circle',
+                title: app.sandbox.translate('public.add-new'),
                 class: 'highlight',
                 position: 10,
                 callback: function () {
@@ -23,6 +24,7 @@
             app.sandbox.sulu.buttons.delete = {
                 id: 'delete',
                 icon: 'trash-o',
+                title: app.sandbox.translate('public.delete-selected'),
                 position: 20,
                 disabled: true,
                 callback: function () {
@@ -32,6 +34,7 @@
 
             app.sandbox.sulu.buttons.settings = {
                 id: 'settings',
+                title: app.sandbox.translate('public.settings'),
                 icon: 'gear',
                 position: 30
             };
@@ -39,6 +42,7 @@
             app.sandbox.sulu.buttons.edit = {
                 id: 'edit',
                 icon: 'pencil',
+                title: app.sandbox.translate('public.edit-selected'),
                 position: 25,
                 disabled: true,
                 callback: function () {
@@ -49,32 +53,11 @@
             app.sandbox.sulu.buttons.layout = {
                 id: 'change',
                 icon: 'th-large',
+                title: app.sandbox.translate('public.layout'),
                 dropdownOptions: {
                     markSelected: true
                 },
-                dropdownItems: [
-                    {
-                        id: 'small-thumbnails',
-                        title: app.sandbox.translate('sulu.toolbar.small-thumbnails'),
-                        callback: function () {
-                            app.sandbox.emit('sulu.toolbar.change.thumbnail-small');
-                        }
-                    },
-                    {
-                        id: 'big-thumbnails',
-                        title: app.sandbox.translate('sulu.toolbar.big-thumbnails'),
-                        callback: function () {
-                            app.sandbox.emit('sulu.toolbar.change.thumbnail-large');
-                        }
-                    },
-                    {
-                        id: 'table',
-                        title: app.sandbox.translate('sulu.toolbar.table'),
-                        callback: function () {
-                            app.sandbox.emit('sulu.toolbar.change.table');
-                        }
-                    }
-                ]
+                dropdownItems: ['smallThumbnails', 'bigThumbnails', 'table']
             };
 
             app.sandbox.sulu.buttons.save = {
@@ -88,24 +71,114 @@
                 }
             };
 
-            app.sandbox.sulu.buttons.saveWithOptions = app.sandbox.util.extend(true, app.sandbox.sulu.buttons.save, {
-                dropdownItems: [
-                    {
-                        id: 'save-back',
-                        title: app.sandbox.translate('public.save-and-back'),
-                        callback: function () {
-                            app.sandbox.emit('sulu.toolbar.save-back');
+            app.sandbox.sulu.buttons.saveWithOptions = app.sandbox.util.extend(true, {}, app.sandbox.sulu.buttons.save, {
+                dropdownItems: ['saveBack', 'saveNew']
+            });
+            /**
+             * Buttons definition (end)
+             */
+
+            /**
+             * Dropdown-items definition (start)
+             */
+            app.sandbox.sulu.buttons.dropdownItems = {};
+
+            app.sandbox.sulu.buttons.dropdownItems.smallThumbnails = {
+                id: 'small-thumbnails',
+                title: app.sandbox.translate('sulu.toolbar.small-thumbnails'),
+                callback: function () {
+                    app.sandbox.emit('sulu.toolbar.change.thumbnail-small');
+                }
+            },
+
+            app.sandbox.sulu.buttons.dropdownItems.bigThumbnails = {
+                id: 'big-thumbnails',
+                title: app.sandbox.translate('sulu.toolbar.big-thumbnails'),
+                callback: function () {
+                    app.sandbox.emit('sulu.toolbar.change.thumbnail-large');
+                }
+            },
+
+            app.sandbox.sulu.buttons.dropdownItems.table = {
+                id: 'table',
+                title: app.sandbox.translate('sulu.toolbar.table'),
+                callback: function () {
+                    app.sandbox.emit('sulu.toolbar.change.table');
+                }
+            },
+
+            app.sandbox.sulu.buttons.dropdownItems.saveBack = {
+                id: 'save-back',
+                title: app.sandbox.translate('public.save-and-back'),
+                callback: function () {
+                    app.sandbox.emit('sulu.toolbar.save-back');
+                }
+            },
+
+            app.sandbox.sulu.buttons.dropdownItems.saveNew = {
+                id: 'save-back',
+                title: app.sandbox.translate('public.save-and-back'),
+                callback: function () {
+                    app.sandbox.emit('sulu.toolbar.save-back');
+                }
+            },
+            /**
+             * Dropdown-items definition (end)
+             */
+
+
+            /**
+             * Takes arguments and returns an array of toolbar-buttons
+             * An argument can be a string (a defined button) or an object which
+             * overrides different properties of a button
+             * @example
+             *
+             *      sulu.buttons.get('save', 'edit', {'save': {callback: myNewCallbackFunction}});
+             *
+             * @returns {Array} an array of buttons
+             */
+            app.sandbox.sulu.buttons.get = function() {
+                var buttons = [], button;
+                app.sandbox.util.foreach(arguments, function(arg) {
+                    button = null;
+                    if (typeof arg === 'string') {
+                        if (!!app.sandbox.sulu.buttons[arg]) {
+                            button = app.sandbox.sulu.buttons[arg];
                         }
-                    },
-                    {
-                        id: 'save-new',
-                        title: app.sandbox.translate('public.save-and-new'),
-                        callback: function () {
-                            app.sandbox.emit('sulu.toolbar.save-new');
+                    } else if (typeof arg === 'object') {
+                        if (!!Object.keys(arg).length && !!app.sandbox.sulu.buttons[Object.keys(arg)[0]]) {
+                            button = app.sandbox.util.extend(true,
+                                app.sandbox.sulu.buttons[Object.keys(arg)[0]],
+                                arg[Object.keys(arg)[0]]
+                            );
+                        } else {
+                            button = arg;
                         }
                     }
-                ]
-            });
+                    if (!!button) {
+                        buttons.push(button);
+                    }
+                });
+                return buttons;
+            };
+        },
+
+        getButton: function(id, isDropdownItem) {
+            var button;
+            if (typeof arg === 'string') {
+                if (!!app.sandbox.sulu.buttons[id]) {
+                    button = app.sandbox.sulu.buttons[id];
+                }
+            } else if (typeof arg === 'object') {
+                if (!!Object.keys(id).length && !!app.sandbox.sulu.buttons[Object.keys(id)[0]]) {
+                    button = app.sandbox.util.extend(true,
+                        app.sandbox.sulu.buttons[Object.keys(id)[0]],
+                        id[Object.keys(id)[0]]
+                    );
+                } else {
+                    button = id;
+                }
+            }
         }
     });
 })();

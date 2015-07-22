@@ -24,6 +24,5 @@ define(function () {
                 }
             };
         }
-
     };
 });
