@@ -30,7 +30,7 @@
     </parameters>
 
     <services>
-        <service id="sulu.content.path_cleaner" public="false" class="%sulu.content.path_cleaner.class%"/>
+        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%"/>
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
 
         <!-- content mapper -->
