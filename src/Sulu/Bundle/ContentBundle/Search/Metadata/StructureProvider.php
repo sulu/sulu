@@ -136,16 +136,19 @@ class StructureProvider implements ProviderInterface
                         $tag = $componentProperty->getTag('sulu.search.field');
                         $tagAttributes = $tag['attributes'];
 
-                        $propertyMapping->addFieldMapping(
-                            $property->getName() . '.' . $componentProperty->getName(),
-                            [
-                                'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                                'field' => $this->factory->createMetadataProperty(
-                                    '[' . $componentProperty->getName() . ']'
-                                ),
-                                'indexed' => !isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false',
-                            ]
-                        );
+                        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+                            $propertyMapping->addFieldMapping(
+                                $property->getName() . '.' . $componentProperty->getName(),
+                                [
+                                    'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                                    'field' => $this->factory->createMetadataProperty(
+                                        '[' . $componentProperty->getName() . ']'
+                                    ),
+                                    'aggregate' => true,
+                                    'indexed' => false,
+                                ]
+                            );
+                        }
                     }
                 }
 
