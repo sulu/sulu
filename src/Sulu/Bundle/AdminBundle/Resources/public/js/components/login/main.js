@@ -408,7 +408,7 @@ define([], function() {
          */
         bindLoginDomEvents: function() {
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.inputFormKeyHandler.bind(this, this.dom.$loginFrame));
             this.sandbox.dom.on(this.dom.$forgotPasswordSwitch, 'click', this.moveToForgotPasswordFrame.bind(this));
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
 
@@ -422,7 +422,7 @@ define([], function() {
          */
         bindForgotPasswordDomEvents: function() {
             this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keydown',
-                this.forgotPasswordKeyHandler.bind(this));
+                this.inputFormKeyHandler.bind(this, this.dom.$forgotPasswordFrame));
             this.sandbox.dom.on(this.dom.$requestResetMailButton, 'click',
                 this.requestResetMailButtonClickHandler.bind(this));
 
@@ -444,7 +444,8 @@ define([], function() {
          */
         bindResetPasswordDomEvents: function() {
             this.sandbox.dom.on(this.dom.$resetPasswordButton, 'click', this.resetPasswordButtonClickHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keydown', this.resetPasswordKeyHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keydown',
+                this.inputFormKeyHandler.bind(this, this.dom.resetPasswordFrame));
             this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click',
                 this.loginRouteClickHandler.bind(this));
 
@@ -464,8 +465,9 @@ define([], function() {
          * Handle change of validation-input-element value on given frame
          * @param $frame parent frame of changed input-element
          */
-        validationInputChangeHandler: function($frame) {
-            if (event.keyCode === 13) {
+        validationInputChangeHandler: function($frame, event) {
+            console.log(event);
+            if (event.type === 'keyup' && event.keyCode === 13) {
                 return false; // do not reset error status on enter
             }
             else if (this.sandbox.dom.hasClass($frame, constants.errorClass)) {
@@ -531,32 +533,13 @@ define([], function() {
         },
 
         /**
-         * Handles keydown-event in login-frame
+         * Handles keydown-event in  box-frames
          * @param event
          */
-        loginFormKeyHandler: function(event) {
-            if (event.keyCode === 13) { //on enter
-                this.loginFormSubmitHandler();
-            }
-        },
-
-        /**
-         * Handles keydown-event in forgot-password-frame
-         * @param event
-         */
-        forgotPasswordKeyHandler: function(event) {
-            if (event.keyCode === 13) { //on enter
-                this.requestResetMailButtonClickHandler();
-            }
-        },
-
-        /**
-         * Handles  keydown-event in reset-password-frame
-         * @param event
-         */
-        resetPasswordKeyHandler: function(event) {
-            if (event.keyCode === 13) { //on enter
-                this.resetPasswordButtonClickHandler();
+        inputFormKeyHandler: function($frame, event) {
+            if (event.keyCode === 13) {
+                var $button = this.sandbox.dom.find('.btn', $frame);
+                this.sandbox.dom.click($button); //on enter
             }
         },
 

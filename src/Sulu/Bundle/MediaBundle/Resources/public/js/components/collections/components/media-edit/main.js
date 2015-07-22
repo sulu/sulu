@@ -248,7 +248,7 @@ define(function() {
          * Starts the loading overlay in hidden state
          */
         startLoadingOverlay: function() {
-            var $container = this.sandbox.dom.createElement('<div class="' + constants.contentLoadingClass + '"/>'),
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.loadingClass + '"/>'),
                 $loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '" />');
 
             this.sandbox.dom.append(this.$el, $container);
