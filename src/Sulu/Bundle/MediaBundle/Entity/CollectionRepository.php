@@ -222,6 +222,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('id', $id);
+
             return $query->getResult();
         } catch (NoResultException $ex) {
             return [];

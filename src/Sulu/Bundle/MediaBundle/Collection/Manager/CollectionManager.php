@@ -532,7 +532,7 @@ class CollectionManager implements CollectionManagerInterface
                 foreach ($file->getFileVersions() as $fileVersion) {
                     if ($fileVersion->getVersion() == $file->getVersion()) {
                         $format = $this->getPreviewsFromFileVersion($media->getId(), $fileVersion, $locale);
-                        
+
                         if (!empty($format)) {
                             return $format;
                         }
@@ -541,7 +541,7 @@ class CollectionManager implements CollectionManagerInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**

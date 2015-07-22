@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 /**

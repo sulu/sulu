@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 
 /**
  * Repository for the Catalogues, implementing some additional functions
