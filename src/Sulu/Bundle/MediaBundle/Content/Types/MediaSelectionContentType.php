@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,9 +14,9 @@ namespace Sulu\Bundle\MediaBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -44,12 +45,12 @@ class MediaSelectionContentType extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array(
+        return [
             'types' => new PropertyParameter('types', null),
             'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'top'),
             'displayOptions' => new PropertyParameter(
                 'displayOptions',
-                array(
+                [
                     'leftTop' => new PropertyParameter('leftTop', true),
                     'top' => new PropertyParameter('top', true),
                     'rightTop' => new PropertyParameter('rightTop', true),
@@ -59,10 +60,10 @@ class MediaSelectionContentType extends ComplexContentType
                     'leftBottom' => new PropertyParameter('leftBottom', true),
                     'bottom' => new PropertyParameter('bottom', true),
                     'rightBottom' => new PropertyParameter('rightBottom', true),
-                ),
+                ],
                 'collection'
             ),
-        );
+        ];
     }
 
     /**
@@ -117,7 +118,7 @@ class MediaSelectionContentType extends ComplexContentType
     /**
      * set data to property.
      *
-     * @param string[] $data ids of images
+     * @param string[]          $data     ids of images
      * @param PropertyInterface $property
      * @param $languageCode
      */
@@ -146,7 +147,6 @@ class MediaSelectionContentType extends ComplexContentType
         if (isset($value['data'])) {
             unset($value['data']);
         }
-
 
         // set value to node
         $node->setProperty($property->getName(), json_encode($value));
@@ -186,9 +186,9 @@ class MediaSelectionContentType extends ComplexContentType
         $types = $params['types']->getValue();
 
         $container = new MediaSelectionContainer(
-            isset($data['config']) ? $data['config'] : array(),
+            isset($data['config']) ? $data['config'] : [],
             isset($data['displayOption']) ? $data['displayOption'] : '',
-            isset($data['ids']) ? $data['ids'] : array(),
+            isset($data['ids']) ? $data['ids'] : [],
             $property->getStructure()->getLanguageCode(),
             $types,
             $this->mediaManager

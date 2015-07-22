@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,12 +22,12 @@ class SnippetContentNavigationProvider implements ContentNavigationProviderInter
     /**
      * {@inheritdoc}
      */
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('content-navigation.snippets.details');
         $details->setAction('details');
         $details->setComponent('snippet/form/details@sulusnippet');
 
-        return array($details);
+        return [$details];
     }
 }

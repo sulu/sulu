@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,11 +23,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\Content\MetadataExtension\StructureExtension;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
 class NavigationTest extends SuluTestCase
@@ -72,47 +69,47 @@ class NavigationTest extends SuluTestCase
      */
     private function prepareTestData()
     {
-        $data = array(
-            'news' => array(
+        $data = [
+            'news' => [
                 'title' => 'News',
                 'url' => '/news',
-                'ext' => array('excerpt' => array('title' => 'Excerpt News')),
+                'ext' => ['excerpt' => ['title' => 'Excerpt News']],
                 'url' => '/news',
-                'navContexts' => array('footer')
-            ),
-            'products' => array(
+                'navContexts' => ['footer'],
+            ],
+            'products' => [
                 'title' => 'Products',
                 'url' => '/products',
-                'ext' => array('excerpt' => array('title' => 'Excerpt Products')),
-                'navContexts' => array('main'),
-            ),
-            'news/news-1' => array(
+                'ext' => ['excerpt' => ['title' => 'Excerpt Products']],
+                'navContexts' => ['main'],
+            ],
+            'news/news-1' => [
                 'title' => 'News-1',
                 'url' => '/news/news-1',
-                'ext' => array('excerpt' => array('title' => 'Excerpt News 1')),
-                'navContexts' => array('main', 'footer'),
-            ),
-            'news/news-2' => array(
+                'ext' => ['excerpt' => ['title' => 'Excerpt News 1']],
+                'navContexts' => ['main', 'footer'],
+            ],
+            'news/news-2' => [
                 'title' => 'News-2',
                 'url' => '/news/news-2',
-                'ext' => array('excerpt' => array('title' => 'Excerpt News 2')),
-                'navContexts' => array('main'),
-            ),
-            'products/products-1' => array(
+                'ext' => ['excerpt' => ['title' => 'Excerpt News 2']],
+                'navContexts' => ['main'],
+            ],
+            'products/products-1' => [
                 'title' => 'Products-1',
                 'url' => '/products/products-1',
-                'ext' => array('excerpt' => array('title' => 'Excerpt Products 1')),
-                'navContexts' => array('main', 'footer'),
-            ),
-            'products/products-2' => array(
+                'ext' => ['excerpt' => ['title' => 'Excerpt Products 1']],
+                'navContexts' => ['main', 'footer'],
+            ],
+            'products/products-2' => [
                 'title' => 'Products-2',
                 'url' => '/products/products-2',
-                'ext' => array('excerpt' => array('title' => 'Excerpt Products 2')),
-                'navContexts' => array('main'),
-            ),
-        );
+                'ext' => ['excerpt' => ['title' => 'Excerpt Products 2']],
+                'navContexts' => ['main'],
+            ],
+        ];
 
-        $this->mapper->saveStartPage(array('title' => 'Startpage', 'url' => '/'), 'simple', 'sulu_io', 'en', 1);
+        $this->mapper->saveStartPage(['title' => 'Startpage', 'url' => '/'], 'simple', 'sulu_io', 'en', 1);
 
         $data['news'] = $this->mapper->save(
             $data['news'],
@@ -189,7 +186,7 @@ class NavigationTest extends SuluTestCase
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Compat\Structure\Page',
-            array($name, 'asdf', 'asdf', 2400)
+            [$name, 'asdf', 'asdf', 2400]
         );
 
         $method = new ReflectionMethod(
@@ -197,9 +194,9 @@ class NavigationTest extends SuluTestCase
         );
 
         $method->setAccessible(true);
-        $property = new Property('title', '', 'text_line', true, true, 1, 1, array());
+        $property = new Property('title', '', 'text_line', true, true, 1, 1, []);
         $property->setStructure($structureMock);
-        $method->invokeArgs($structureMock, array($property));
+        $method->invokeArgs($structureMock, [$property]);
 
         if ($rlp) {
             $property = new Property(
@@ -210,11 +207,11 @@ class NavigationTest extends SuluTestCase
                 true,
                 1,
                 1,
-                array(),
-                array(new PropertyTag('sulu.rlp', 1))
+                [],
+                [new PropertyTag('sulu.rlp', 1)]
             );
             $property->setStructure($structureMock);
-            $method->invokeArgs($structureMock, array($property));
+            $method->invokeArgs($structureMock, [$property]);
         }
 
         return $structureMock;
@@ -290,11 +287,11 @@ class NavigationTest extends SuluTestCase
         $this->markTestSkipped('This method does not work at more than one level. See issue #1252');
 
         $data['news'] = $this->mapper->save(
-            array(
+            [
                 'title' => 'SubNews',
                 'url' => '/asdf',
-                'navContexts' => array('footer'),
-            ),
+                'navContexts' => ['footer'],
+            ],
             'simple',
             'sulu_io',
             'en',
@@ -315,11 +312,11 @@ class NavigationTest extends SuluTestCase
     public function testNavigationExcerpt()
     {
         $data['news'] = $this->mapper->save(
-            array(
+            [
                 'title' => 'SubNews',
                 'url' => '/asdf',
-                'navContexts' => array('footer'),
-            ),
+                'navContexts' => ['footer'],
+            ],
             'simple',
             'sulu_io',
             'en',
@@ -441,10 +438,10 @@ class NavigationTest extends SuluTestCase
 
     public function testNavigationTestPage()
     {
-        $data = array(
+        $data = [
             'title' => 'Products-3',
             'url' => '/products/products-3',
-        );
+        ];
 
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
@@ -486,11 +483,11 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
 
-        $data = array(
+        $data = [
             'title' => 'Products-3',
             'url' => '/products/products-3',
-            'navContexts' => array('main'),
-        );
+            'navContexts' => ['main'],
+        ];
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
             'simple',
@@ -517,7 +514,7 @@ class NavigationTest extends SuluTestCase
     public function testNavigationStateTestParent()
     {
         $this->data['products'] = $this->mapper->save(
-            array('title' => 'Products', 'url' => '/products'),
+            ['title' => 'Products', 'url' => '/products'],
             'simple',
             'sulu_io',
             'en',
@@ -583,7 +580,7 @@ class ExcerptStructureExtension extends AbstractExtension
      * will be filled with data in constructor
      * {@inheritdoc}
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * {@inheritdoc}
@@ -654,7 +651,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $data = array();
+        $data = [];
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(

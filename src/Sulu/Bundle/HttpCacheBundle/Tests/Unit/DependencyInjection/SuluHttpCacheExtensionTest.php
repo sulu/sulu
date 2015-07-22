@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -18,9 +27,9 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
     protected function getContainerExtensions()
     {
-        return array(
+        return [
             new SuluHttpCacheExtension(),
-        );
+        ];
     }
 
     public function testDefaultConfig()
@@ -36,13 +45,13 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
     public function provideHandler()
     {
-        return array(
-            array('tags'),
-            array('paths'),
-            array('public'),
-            array('debug'),
-            array('aggregate'),
-        );
+        return [
+            ['tags'],
+            ['paths'],
+            ['public'],
+            ['debug'],
+            ['aggregate'],
+        ];
     }
 
     /**
@@ -50,15 +59,15 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
      */
     public function testHandler($handler)
     {
-        $config = array();
+        $config = [];
         if ($handler !== 'aggregate') {
-            $config = array(
-                'handlers' => array(
-                    $handler => array(
+            $config = [
+                'handlers' => [
+                    $handler => [
                         'enabled' => true,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
         }
 
         $this->load($config);
@@ -72,15 +81,15 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
     public function testVarnishConfig()
     {
-        $config = array(
-            'proxy_client' => array(
-                'varnish' => array(
+        $config = [
+            'proxy_client' => [
+                'varnish' => [
                     'enabled' => true,
-                    'servers' => array('foobar.dom', 'dom.foobar'),
+                    'servers' => ['foobar.dom', 'dom.foobar'],
                     'base_url' => 'http://foo.dom',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->load($config);
         $this->compile();
@@ -94,11 +103,11 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
     public function provideEventSubscribers()
     {
-        return array(
-            array('content_mapper'),
-            array('flush'),
-            array('update_response'),
-        );
+        return [
+            ['content_mapper'],
+            ['flush'],
+            ['update_response'],
+        ];
     }
 
     /**
@@ -106,7 +115,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
      */
     public function testEventSubscribers($name)
     {
-        $this->load(array());
+        $this->load([]);
         $this->compile();
 
         $this->container->get('sulu_http_cache.event_subscriber.' . $name);

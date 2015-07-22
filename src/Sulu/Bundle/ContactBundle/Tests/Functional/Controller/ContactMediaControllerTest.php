@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -244,10 +245,10 @@ class ContactMediaControllerTest extends SuluTestCase
 
     public function setUpCollection(&$collection)
     {
-        $style = array(
+        $style = [
             'type' => 'circle',
             'color' => '#ffcc00',
-        );
+        ];
 
         $collection->setStyle(json_encode($style));
 
@@ -297,9 +298,9 @@ class ContactMediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
-            array(
+            [
                 'mediaId' => $this->media->getId(),
-            )
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -332,9 +333,9 @@ class ContactMediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
-            array(
+            [
                 'mediaId' => 99,
-            )
+            ]
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());

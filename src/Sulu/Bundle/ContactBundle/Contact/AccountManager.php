@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,11 +45,11 @@ class AccountManager extends AbstractContactManager
     private $contactRepository;
 
     /**
-     * @param ObjectManager $em
+     * @param ObjectManager       $em
      * @param TagManagerInterface $tagManager
-     * @param AccountFactory $accountFactory
-     * @param AccountRepository $accountRepository
-     * @param ContactRepository $contactRepository
+     * @param AccountFactory      $accountFactory
+     * @param AccountRepository   $accountRepository
+     * @param ContactRepository   $contactRepository
      */
     public function __construct(
         ObjectManager $em,
@@ -66,9 +67,9 @@ class AccountManager extends AbstractContactManager
     /**
      * adds an address to the entity.
      *
-     * @param Account $account The entity to add the address to
+     * @param Account       $account The entity to add the address to
      * @param AddressEntity $address The address to be added
-     * @param Bool $isMain Defines if the address is the main Address of the contact
+     * @param Bool          $isMain  Defines if the address is the main Address of the contact
      *
      * @return AccountAddressEntity
      *
@@ -96,7 +97,7 @@ class AccountManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param AccountInterface $account
+     * @param AccountInterface     $account
      * @param AccountAddressEntity $accountAddress
      *
      * @return mixed|void
@@ -215,7 +216,7 @@ class AccountManager extends AbstractContactManager
             return $contacts;
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -243,7 +244,7 @@ class AccountManager extends AbstractContactManager
             return $accounts;
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -260,7 +261,7 @@ class AccountManager extends AbstractContactManager
             return $this->accountFactory->createApiEntity($account, $locale);
         }
 
-        return null;
+        return;
     }
 
     /**

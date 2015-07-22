@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,9 +17,9 @@ class KeyNotUniqueException extends RestException
 {
     public function toArray()
     {
-        return array(
+        return [
             'code' => 1,
             'message' => 'A category-key has to be unique',
-        );
+        ];
     }
 }

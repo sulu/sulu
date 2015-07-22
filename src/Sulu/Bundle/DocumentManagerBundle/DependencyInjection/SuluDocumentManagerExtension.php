@@ -1,28 +1,37 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class SuluDocumentManagerExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', array(
-                'metadata' => array(
-                    'directories' => array(
-                        array(
+            $container->prependExtensionConfig('jms_serializer', [
+                'metadata' => [
+                    'directories' => [
+                        [
                             'path' => __DIR__ . '/../Resources/config/serializer',
                             'namespace_prefix' => 'Sulu\Component\DocumentManager',
-                        ),
-                    ),
-                ),
-            ));
+                        ],
+                    ],
+                ],
+            ]);
         }
     }
 
@@ -47,11 +56,11 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $dispatcherId = $debug ? 'sulu_document_manager.event_dispatcher.debug' : 'sulu_document_manager.event_dispatcher.standard';
         $container->setAlias('sulu_document_manager.event_dispatcher', $dispatcherId);
 
-        $realMapping = array();
+        $realMapping = [];
         foreach ($config['mapping'] as $alias => $mapping) {
-            $realMapping[] = array_merge(array(
+            $realMapping[] = array_merge([
                 'alias' => $alias,
-            ), $mapping);
+            ], $mapping);
         }
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);

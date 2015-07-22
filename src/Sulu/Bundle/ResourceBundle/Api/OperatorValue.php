@@ -10,18 +10,16 @@
 
 namespace Sulu\Bundle\ResourceBundle\Api;
 
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use Hateoas\Configuration\Annotation\Relation;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ResourceBundle\Entity\OperatorValue as OperatorValueEntity;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation;
 use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ResourceBundle\Entity\OperatorValue as OperatorValueEntity;
 
 /**
- * The OperatorValue class which will be exported to the API
+ * The OperatorValue class which will be exported to the API.
  *
- * @package Sulu\Bundle\ResourceBundle\Api
  * @ExclusionPolicy("all")
  */
 class OperatorValue extends ApiWrapper
@@ -37,7 +35,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Returns the name of the operator value
+     * Returns the name of the operator value.
      *
      * @return string The name of the operator
      * @VirtualProperty
@@ -49,7 +47,8 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Sets the name of the operator value
+     * Sets the name of the operator value.
+     *
      * @param string $name The name of the operator value
      */
     public function setName($name)
@@ -58,7 +57,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Get translation by locale
+     * Get translation by locale.
      *
      * @return OperatorValueTranslation
      */
@@ -81,9 +80,10 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return OperatorValue
      */
     public function setValue($value)
@@ -92,7 +92,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      * @VirtualProperty
@@ -104,9 +104,9 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      * @VirtualProperty
      * @SerializedName("id")
      */
@@ -116,7 +116,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param OperatorValueTranslation $translations
      */
@@ -126,7 +126,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param OperatorValueTranslation $translations
      */
@@ -136,7 +136,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Get translations
+     * Get translations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -146,7 +146,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Set operator
+     * Set operator.
      *
      * @param Operator $operator
      */
@@ -156,7 +156,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Get operator
+     * Get operator.
      *
      * @return \Sulu\Bundle\ResourceBundle\Entity\Operator
      */

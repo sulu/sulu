@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -181,7 +182,7 @@ class Url implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        $res = array();
+        $res = [];
         $res['url'] = $this->getUrl();
         $res['language'] = $this->getLanguage();
         $res['country'] = $this->getCountry();

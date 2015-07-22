@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,16 +29,16 @@ class AuthenticationEntryPointTest extends \PHPUnit_Framework_TestCase
 
     public function provideUrlData()
     {
-        return array(
-            array(
+        return [
+            [
                 '/admin/api/test',
                 401,
-            ),
-            array(
+            ],
+            [
                 '/admin/template/test',
                 302,
-            ),
-        );
+            ],
+        ];
     }
 
     /**

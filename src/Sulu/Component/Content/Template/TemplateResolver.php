@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -9,8 +10,6 @@
  */
 
 namespace Sulu\Component\Content\Template;
-
-use Sulu\Component\Content\Metadata;
 
 /**
  * Resolves template for node types.

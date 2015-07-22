@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -95,9 +96,9 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Executes command.
      *
-     * @param ConnectionInterface $conn
+     * @param ConnectionInterface   $conn
      * @param MessageHandlerContext $context
-     * @param array $msg
+     * @param array                 $msg
      *
      * @return mixed|null
      *
@@ -152,9 +153,9 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Start preview session.
      *
-     * @param ConnectionInterface $conn
+     * @param ConnectionInterface   $conn
      * @param MessageHandlerContext $context
-     * @param array $msg
+     * @param array                 $msg
      *
      * @return array
      *
@@ -202,17 +203,17 @@ class PreviewMessageHandler implements MessageHandlerInterface
         // start preview
         $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
 
-        return array(
+        return [
             'command' => 'start',
             'content' => $contentUuid,
             'msg' => 'OK',
-        );
+        ];
     }
 
     /**
      * Stop preview session.
      *
-     * @param ConnectionInterface $from
+     * @param ConnectionInterface   $from
      * @param MessageHandlerContext $context
      *
      * @return array
@@ -239,19 +240,19 @@ class PreviewMessageHandler implements MessageHandlerInterface
 
         $context->clear();
 
-        return array(
+        return [
             'command' => 'start',
             'content' => $contentUuid,
             'msg' => 'OK',
-        );
+        ];
     }
 
     /**
      * Updates properties of current session content.
      *
-     * @param ConnectionInterface $from
+     * @param ConnectionInterface   $from
      * @param MessageHandlerContext $context
-     * @param array $msg
+     * @param array                 $msg
      *
      * @return array
      *
@@ -299,7 +300,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
             );
         }
 
-        return array(
+        return [
             'command' => 'update',
             'content' => $contentUuid,
             'data' => $this->preview->getChanges(
@@ -308,6 +309,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
                 $webspaceKey,
                 $locale
             ),
-        );
+        ];
     }
 }

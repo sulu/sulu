@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,10 +43,10 @@ class TranslateAdmin extends Admin
      */
     public function getCommands()
     {
-        return array(
+        return [
             new ImportCommand(),
             new ExportCommand(),
-        );
+        ];
     }
 
     /**

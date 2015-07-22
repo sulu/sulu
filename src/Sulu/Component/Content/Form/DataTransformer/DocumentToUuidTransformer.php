@@ -1,21 +1,21 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Form\DataTransformer;
 
-use Symfony\Component\Form\DataTransformerInterface;
-use DTL\Component\Content\Document\DocumentInterface;
 use PHPCR\Util\UUIDHelper;
-use Symfony\Component\Form\Exception\TransformationFailedException;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class DocumentToUuidTransformer implements DataTransformerInterface
 {
@@ -46,7 +46,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
     public function reverseTransform($uuid)
     {
         if (!$uuid) {
-            return null;
+            return;
         }
 
         if (!UUIDHelper::isUuid($uuid)) {

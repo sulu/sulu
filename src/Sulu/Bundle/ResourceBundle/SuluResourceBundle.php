@@ -11,11 +11,9 @@
 namespace Sulu\Bundle\ResourceBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class SuluResourceBundle
- * @package Sulu\Bundle\ResourceBundle
+ * Class SuluResourceBundle.
  */
 class SuluResourceBundle extends Bundle
 {

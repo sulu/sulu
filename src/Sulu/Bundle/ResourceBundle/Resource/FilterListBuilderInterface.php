@@ -14,12 +14,12 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
  * Component which triggers the generation of additional statements from the conditions of a filter
- * and applies them to the list builder
+ * and applies them to the list builder.
  */
 interface FilterListBuilderInterface
 {
     /**
-     * Applies the conditions from a filter to the listbuilder
+     * Applies the conditions from a filter to the listbuilder.
      *
      * @param ListbuilderInterface $listBuilder
      *

@@ -1,8 +1,15 @@
 <?php
 
-namespace Sulu\Component\Content\Metadata;
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
-use Sulu\Component\Content\Metadata\StructureMetadata;
+namespace Sulu\Component\Content\Metadata;
 
 class StructureMetdataTest extends ItemMetadataCase
 {

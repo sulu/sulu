@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -64,7 +65,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected $tagManager;
 
     /**
-     * @param ObjectManager $em
+     * @param ObjectManager       $em
      * @param TagManagerInterface $tagManager
      */
     public function __construct(ObjectManager $em, TagManagerInterface $tagManager)
@@ -196,7 +197,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Returns AccountContact relation if exists.
      *
      * @param AccountInterface $account
-     * @param Contact $contact
+     * @param Contact          $contact
      *
      * @return null|AccountContact
      */
@@ -234,7 +235,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * creates a new main Account Contacts relation.
      *
-     * @param Contact $contact
+     * @param Contact          $contact
      * @param AccountInterface $account
      * @param $position
      *
@@ -444,14 +445,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Returns the billing address of an account/contact.
      *
      * @param AccountInterface|Contact $entity
-     * @param bool $force Forces function to return an address if any address is defined
-     *          if no delivery address is defined it will first return the main address then any
+     * @param bool                     $force  Forces function to return an address if any address is defined
+     *                                         if no delivery address is defined it will first return the main address then any
      *
      * @return mixed
      */
     public function getBillingAddress($entity, $force = false)
     {
-        /** @var Address $address */
+        /* @var Address $address */
         $conditionCallback = function ($address) {
             return $address->getBillingAddress();
         };
@@ -463,14 +464,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Returns the delivery address.
      *
      * @param AccountInterface|Contact $entity
-     * @param bool $force Forces function to return an address if any address is defined
-     *          if no delivery address is defined it will first return the main address then any
+     * @param bool                     $force  Forces function to return an address if any address is defined
+     *                                         if no delivery address is defined it will first return the main address then any
      *
      * @return mixed
      */
     public function getDeliveryAddress($entity, $force = false)
     {
-        /** @var Address $address */
+        /* @var Address $address */
         $conditionCallback = function ($address) {
             return $address->getDeliveryAddress();
         };
@@ -521,9 +522,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Returns an address by callback-condition.
      *
      * @param AccountInterface|Contact $entity
-     * @param callable $conditionCallback
-     * @param bool $force Forces function to return an address if any address is defined
-     *          if no delivery address is defined it will first return the main address then any
+     * @param callable                 $conditionCallback
+     * @param bool                     $force             Forces function to return an address if any address is defined
+     *                                                    if no delivery address is defined it will first return the main address then any
      *
      * @return mixed
      */
@@ -534,7 +535,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $main = null;
 
         if (!is_null($addresses)) {
-            /** @var AccountAddress $accountAddress */
+            /* @var AccountAddress $accountAddress */
             foreach ($addresses as $address) {
                 if ($conditionCallback($address->getAddress())) {
                     return $address->getAddress();
@@ -558,7 +559,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * adds new relations.
      *
      * @param Contact $contact
-     * @param array $data
+     * @param array   $data
      */
     public function addNewContactRelations($contact, $data)
     {
@@ -627,7 +628,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         // process details
         if ($this->getProperty($data, 'bankAccounts') !== null) {
-            $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', array()));
+            $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
         }
     }
 
@@ -642,7 +643,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function processEmails($contact, $emails)
     {
         $get = function ($email) {
-            /** @var Email $email */
+            /* @var Email $email */
 
             return $email->getId();
         };
@@ -682,7 +683,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Adds a new email to the given contact and persist it with the given object manager.
      *
      * @param Contact $contact
-     * @param array $emailData
+     * @param array   $emailData
      *
      * @return bool
      *
@@ -1197,8 +1198,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given address.
      *
      * @param Address $address The phone object to update
-     * @param mixed $entry The entry with the new data
-     * @param Bool $isMain returns if address should be set to main
+     * @param mixed   $entry   The entry with the new data
+     * @param Bool    $isMain  returns if address should be set to main
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
@@ -1356,7 +1357,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Updates the given note.
      *
-     * @param Note $note
+     * @param Note  $note
      * @param array $entry The entry with the new data
      *
      * @return bool True if successful, otherwise false
@@ -1507,7 +1508,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given note.
      *
      * @param BankAccount $entity The phone object to update
-     * @param string $data The entry with the new data
+     * @param string      $data   The entry with the new data
      *
      * @return bool True if successful, otherwise false
      */
@@ -1593,9 +1594,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Return property for key or given default value
+     * Return property for key or given default value.
      *
-     * @param array $data
+     * @param array  $data
      * @param string $key
      * @param string $default
      *
@@ -1613,7 +1614,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * TODO: this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
-     * reindex entities
+     * reindex entities.
      *
      * @param mixed $entities
      */
@@ -1631,7 +1632,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Returns the tag manager
+     * Returns the tag manager.
      *
      * @return TagManagerInterface
      */

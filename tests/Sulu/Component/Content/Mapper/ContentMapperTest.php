@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,49 +11,38 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use ReflectionMethod;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
-use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Section\SectionProperty;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\MetadataExtension\StructureExtension;
-use Sulu\Component\Content\MetadataExtension\StructureExtensionInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
-use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\MetadataExtension\StructureExtensionInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Webspace\NavigationContext;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
- * tests content mapper with tree strategy and phpcr mapper
+ * tests content mapper with tree strategy and phpcr mapper.
  */
 class ContentMapperTest extends SuluTestCase
 {
     /**
      * @var StructureExtensionInterface[]
      */
-    private $extensions = array();
+    private $extensions = [];
 
     private $languageNamespace = 'i18n';
 
     public function setUp()
     {
         $this->initPhpcr();
-        $this->extensions = array(new TestExtension('test1'), new TestExtension('test2', 'test2'));
+        $this->extensions = [new TestExtension('test1'), new TestExtension('test2', 'test2')];
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
@@ -70,15 +60,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testSave()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         $result = $this->mapper->saveRequest(
             ContentMapperRequest::create()
@@ -91,10 +81,10 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Testname', $result->getPropertyValue('title'));
         $this->assertEquals(
-            array(
+            [
                 'tag1',
                 'tag2',
-            ),
+            ],
             $result->getPropertyValue('tags')
         );
         $this->assertEquals('/news/test', $result->getPropertyValue('url'));
@@ -108,7 +98,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Testname', $page->getTitle());
         $this->assertEquals('sulu_io', $page->getStructure()->getProperty('article')->getValue());
-        $this->assertEquals(array('tag1', 'tag2'), $page->getStructure()->getProperty('tags')->getValue());
+        $this->assertEquals(['tag1', 'tag2'], $page->getStructure()->getProperty('tags')->getValue());
         $this->assertEquals('overview', $page->getStructureType());
         $this->assertEquals(
             WorkflowStage::TEST,
@@ -121,83 +111,83 @@ class ContentMapperTest extends SuluTestCase
 
     public function provideSaveShadow()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'is_shadow' => false,
                     'language' => 'de',
                     'shadow_base_language' => null,
-                ),
-                array(
+                ],
+                [
                     'is_shadow' => true,
                     'language' => 'en',
                     'shadow_base_language' => 'de_at',
-                ),
-                array(
+                ],
+                [
                     'exception' => 'Attempting to create shadow for "en" on a non-concrete locale "de_at" for document at "/cmf/sulu_io/contents/testname". Concrete languages are "de"',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'is_shadow' => false,
                     'language' => 'de',
                     'shadow_base_language' => 'fr',
-                ),
+                ],
                 null,
-                array(),
-            ),
-            array(
-                array(
+                [],
+            ],
+            [
+                [
                     'is_shadow' => true,
                     'language' => 'de',
                     'shadow_base_language' => 'de',
-                ),
+                ],
                 null,
-                array(
+                [
                     'exception' => 'shadow of itself',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'is_shadow' => false,
                     'language' => 'de_at',
                     'shadow_base_language' => 'de',
-                ),
-                array(
+                ],
+                [
                     'is_shadow' => true,
                     'language' => 'en_us',
                     'shadow_base_language' => 'de_at',
-                ),
-                array(),
-            ),
-            array(
-                array(
+                ],
+                [],
+            ],
+            [
+                [
                     'is_shadow' => false,
                     'language' => 'de_at',
                     'shadow_base_language' => 'en_us',
-                ),
-                array(
+                ],
+                [
                     'is_shadow' => true,
                     'language' => 'en_us',
                     'shadow_base_language' => 'de_at',
-                ),
-                array(),
-            ),
-            array(
-                array(
+                ],
+                [],
+            ],
+            [
+                [
                     'is_shadow' => false,
                     'language' => 'de_at',
                     'shadow_base_language' => 'en_us',
-                ),
-                array(
+                ],
+                [
                     'is_shadow' => true,
                     'language' => 'en_us',
                     'shadow_base_language' => 'de_at',
                     'url' => null,
-                ),
-                array(),
-            ),
-        );
+                ],
+                [],
+            ],
+        ];
     }
 
     /**
@@ -208,26 +198,26 @@ class ContentMapperTest extends SuluTestCase
         $node2,
         $expectations
     ) {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         if (isset($expectations['exception'])) {
             $this->setExpectedException('\RuntimeException', $expectations['exception']);
         }
 
-        $nodes = array($node1);
+        $nodes = [$node1];
         if ($node2) {
             $nodes[] = $node2;
         }
 
-        $structures = array();
+        $structures = [];
         foreach ($nodes as $i => $node) {
             if (array_key_exists('url', $node)) {
                 $data['url'] = $node['url'];
@@ -266,15 +256,15 @@ class ContentMapperTest extends SuluTestCase
             ->setLocale('de')
             ->setTemplateKey('overview')
             ->setData(
-                array(
+                [
                     'title' => 'Testname',
-                    'tags' => array(
+                    'tags' => [
                         'tag1',
                         'tag2',
-                    ),
+                    ],
                     'url' => '/news/test',
-                    'article' => 'sulu_io'
-                )
+                    'article' => 'sulu_io',
+                ]
             )
             ->setWebspaceKey('sulu_io')
             ->setUserId(1);
@@ -291,7 +281,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals('sulu_io', $content->article);
         $this->assertEquals('/news/test', $content->url);
-        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(['tag1', 'tag2'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEmpty($content->getNavContexts());
         $this->assertEquals(1, $content->getCreator());
@@ -300,15 +290,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNewProperty()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         $contentBefore = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
 
@@ -330,7 +320,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
-        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(['tag1', 'tag2'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -338,15 +328,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testLoadByRL()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
 
@@ -355,7 +345,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals('sulu_io', $content->article);
         $this->assertEquals('/news/test', $content->url);
-        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(['tag1', 'tag2'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -363,15 +353,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testUpdate()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -390,7 +380,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals('thats a new test', $content->article);
         $this->assertEquals('/news/test', $content->url);
-        $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->tags);
+        $this->assertEquals(['thats cool', 'tag2', 'tag3'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -407,7 +397,7 @@ class ContentMapperTest extends SuluTestCase
             $content->getProperty($this->languageNamespace . ':de-article')->getString()
         );
         $this->assertEquals(
-            array('thats cool', 'tag2', 'tag3'),
+            ['thats cool', 'tag2', 'tag3'],
             $content->getPropertyValue($this->languageNamespace . ':de-tags')
         );
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
@@ -421,15 +411,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testPartialUpdate()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -448,7 +438,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals('sulu_io', $content->article);
         $this->assertEquals('/news/test', $content->url);
-        $this->assertEquals(array('tag2', 'tag3'), $content->tags);
+        $this->assertEquals(['tag2', 'tag3'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -461,7 +451,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-title')->getString());
         $this->assertEquals('sulu_io', $content->getProperty($this->languageNamespace . ':de-article')->getString());
-        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals(['tag2', 'tag3'], $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
             StructureInterface::STATE_TEST,
@@ -473,15 +463,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNonPartialUpdate()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -500,7 +490,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
-        $this->assertEquals(array('tag2', 'tag3'), $content->tags);
+        $this->assertEquals(['tag2', 'tag3'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -513,7 +503,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-title')->getString());
         $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-article'));
-        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals(['tag2', 'tag3'], $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
             StructureInterface::STATE_TEST,
@@ -525,15 +515,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testUpdateNullValue()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -576,24 +566,24 @@ class ContentMapperTest extends SuluTestCase
 
     public function testUpdateTemplate()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
 
         // change simple content
-        $data = array(
+        $data = [
             'title' => 'Testname',
             'blog' => 'this is a blog test',
-        );
+        ];
 
         // update content
         $this->mapper->save($data, 'default', 'sulu_io', 'de', 1, true, $structure->getUuid());
@@ -621,7 +611,7 @@ class ContentMapperTest extends SuluTestCase
 
         // old properties exists in node
         $this->assertEquals('sulu_io', $content->getPropertyValue($this->languageNamespace . ':de-article'));
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals(['tag1', 'tag2'], $content->getPropertyValue($this->languageNamespace . ':de-tags'));
 
         // property of new structure exists
         $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-title')->getString());
@@ -633,15 +623,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testUpdateURL()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -658,7 +648,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals('sulu_io', $content->article);
         $this->assertEquals('/news/test/test/test', $content->url);
-        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(['tag1', 'tag2'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -671,7 +661,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-title')->getString());
         $this->assertEquals('sulu_io', $content->getProperty($this->languageNamespace . ':de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals(['tag1', 'tag2'], $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
@@ -689,15 +679,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNameUpdate()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
@@ -725,7 +715,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('test', $content->getProperty($this->languageNamespace . ':en-title')->getString());
         $this->assertEquals('sulu_io', $content->getProperty($this->languageNamespace . ':en-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':en-tags'));
+        $this->assertEquals(['tag1', 'tag2'], $content->getPropertyValue($this->languageNamespace . ':en-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':en-template'));
         $this->assertEquals(
             StructureInterface::STATE_TEST,
@@ -737,15 +727,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testUpdateUrlTwice()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -771,7 +761,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals('sulu_io', $content->article);
         $this->assertEquals('/news/asdf/test/test', $content->url);
-        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(['tag1', 'tag2'], $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
@@ -784,7 +774,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-title')->getString());
         $this->assertEquals('sulu_io', $content->getProperty($this->languageNamespace . ':de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals(['tag1', 'tag2'], $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
             StructureInterface::STATE_TEST,
@@ -805,44 +795,44 @@ class ContentMapperTest extends SuluTestCase
 
     public function testContentTree()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'News',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news',
                 'article' => 'asdfasdfasdf',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Testnews-1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-1',
-                'article' => 'sulu_io'
-            ),
-            array(
+                'article' => 'sulu_io',
+            ],
+            [
                 'title' => 'Testnews-2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-2',
-                'article' => 'sulu_io'
-            ),
-            array(
+                'article' => 'sulu_io',
+            ],
+            [
                 'title' => 'Testnews-2-1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-2/test-1',
-                'article' => 'sulu_io'
-            )
-        );
+                'article' => 'sulu_io',
+            ],
+        ];
 
         // save root content
         $root = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -890,46 +880,46 @@ class ContentMapperTest extends SuluTestCase
 
     private function prepareTreeTestData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'News',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news',
                 'article' => 'asdfasdfasdf',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Testnews-1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-1',
-                'article' => 'sulu_io'
-            ),
-            array(
+                'article' => 'sulu_io',
+            ],
+            [
                 'title' => 'Testnews-2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-2',
-                'article' => 'sulu_io'
-            ),
-            array(
+                'article' => 'sulu_io',
+            ],
+            [
                 'title' => 'Testnews-2-1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-2/test-1',
-                'article' => 'sulu_io'
-            )
-        );
+                'article' => 'sulu_io',
+            ],
+        ];
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
 
         // save root content
         $result['root'] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -1076,15 +1066,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testStartPage()
     {
-        $data = array(
+        $data = [
             'title' => 'startpage',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/',
             'article' => 'article',
-        );
+        ];
 
         $this->mapper->saveStartPage($data, 'overview', 'sulu_io', 'en', 1, false);
 
@@ -1107,19 +1097,19 @@ class ContentMapperTest extends SuluTestCase
 
     public function testShadowStartPage()
     {
-        $data = array(
+        $data = [
             'title' => 'startpage',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/',
             'article' => 'article',
-        );
+        ];
 
         $this->mapper->saveStartPage($data, 'overview', 'sulu_io', 'en', 1, false);
 
-        $this->mapper->saveStartPage(array('title' => 'Startseite'), 'overview', 'sulu_io', 'de', 1, false, true, 'en');
+        $this->mapper->saveStartPage(['title' => 'Startseite'], 'overview', 'sulu_io', 'de', 1, false, true, 'en');
 
         $startPage = $this->mapper->loadStartPage('sulu_io', 'de');
         $this->assertEquals('startpage', $startPage->title);
@@ -1128,44 +1118,44 @@ class ContentMapperTest extends SuluTestCase
 
     public function testDelete()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'News',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news',
                 'article' => 'asdfasdfasdf',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Testnews-1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-1',
-                'article' => 'sulu_io'
-            ),
-            array(
+                'article' => 'sulu_io',
+            ],
+            [
                 'title' => 'Testnews-2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-2',
-                'article' => 'sulu_io'
-            ),
-            array(
+                'article' => 'sulu_io',
+            ],
+            [
                 'title' => 'Testnews-2-1',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-2/test-1',
-                'article' => 'sulu_io'
-            )
-        );
+                'article' => 'sulu_io',
+            ],
+        ];
 
         // save root content
         $root = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -1197,15 +1187,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testCleanUp()
     {
-        $data = array(
+        $data = [
             'title' => 'ä   ü ö   Ä Ü Ö',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/',
             'article' => 'article',
-        );
+        ];
 
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
 
@@ -1218,20 +1208,20 @@ class ContentMapperTest extends SuluTestCase
     public function testStateTransition()
     {
         // default state TEST
-        $data1 = array(
+        $data1 = [
             'title' => 't1',
             'url' => '/url',
-        );
+        ];
         $data1 = $this->mapper->save($data1, 'overview', 'sulu_io', 'de', 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data1->getNodeState());
         $this->assertNull($data1->getPublished());
         $this->assertFalse($data1->getPublishedState());
 
         // save with state PUBLISHED
-        $data2 = array(
+        $data2 = [
             'url' => '/url1',
-            'title' => 't2'
-        );
+            'title' => 't2',
+        ];
         $data2 = $this->mapper->save($data2, 'overview', 'sulu_io', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
         $this->assertNotNull($data2->getPublished());
@@ -1239,9 +1229,9 @@ class ContentMapperTest extends SuluTestCase
 
         sleep(1);
         // change state from TEST to PUBLISHED
-        $data3 = array(
+        $data3 = [
             'title' => 't1',
-        );
+        ];
         $data3 = $this->mapper->save($data3, 'overview', 'sulu_io', 'de', 1, true, $data1->getUuid(), null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getNodeState());
         $this->assertNotNull($data3->getPublished());
@@ -1249,9 +1239,9 @@ class ContentMapperTest extends SuluTestCase
         $this->assertTrue($data3->getPublished() > $data2->getPublished());
 
         // change state from PUBLISHED to TEST (exception)
-        $data4 = array(
+        $data4 = [
             'title' => 't2',
-        );
+        ];
         $data4 = $this->mapper->save($data4, 'overview', 'sulu_io', 'de', 1, true, $data2->getUuid(), null, 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getNodeState());
         $this->assertNull($data4->getPublished());
@@ -1260,17 +1250,17 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNavigationContext()
     {
-        $navContexts = array('main', 'footer');
-        $data = array(
+        $navContexts = ['main', 'footer'];
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
             'article' => 'sulu_io',
-            'navContexts' => $navContexts
-        );
+            'navContexts' => $navContexts,
+        ];
 
         $result = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
         $content = $this->mapper->load($result->getUuid(), 'sulu_io', 'de');
@@ -1333,22 +1323,22 @@ class ContentMapperTest extends SuluTestCase
 
     public function testSameName()
     {
-        $data = array(
+        $data = [
             'title' => 'Test',
-            'tags' => array('tag1'),
+            'tags' => ['tag1'],
             'url' => '/test-1',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         $d1 = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
         $data['url'] = '/test-2';
-        $data['tags'] = array('tag2');
+        $data['tags'] = ['tag2'];
         $d2 = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
 
         $this->assertEquals('Test', $d1->title);
-        $this->assertEquals(array('tag1'), $d1->tags);
+        $this->assertEquals(['tag1'], $d1->tags);
         $this->assertEquals('Test', $d2->title);
-        $this->assertEquals(array('tag2'), $d2->tags);
+        $this->assertEquals(['tag2'], $d2->tags);
 
         $this->assertNotNull($this->session->getNode('/cmf/sulu_io/contents/test'));
         $this->assertNotNull($this->session->getNode('/cmf/sulu_io/contents/test-1'));
@@ -1357,9 +1347,9 @@ class ContentMapperTest extends SuluTestCase
         $d2 = $this->mapper->load($d2->getUuid(), 'sulu_io', 'de');
 
         $this->assertEquals('Test', $d1->title);
-        $this->assertEquals(array('tag1'), $d1->tags);
+        $this->assertEquals(['tag1'], $d1->tags);
         $this->assertEquals('Test', $d2->title);
-        $this->assertEquals(array('tag2'), $d2->tags);
+        $this->assertEquals(['tag2'], $d2->tags);
     }
 
     public function testBreadcrumb()
@@ -1385,30 +1375,30 @@ class ContentMapperTest extends SuluTestCase
 
     private function prepareGhostTestData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'News-EN',
                 'url' => '/news',
-            ),
-            array(
+            ],
+            [
                 'title' => 'News-DE_AT',
                 'url' => '/news',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Products-EN',
                 'url' => '/products',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Products-DE',
                 'url' => '/products',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Team-DE',
                 'url' => '/team-de',
-            ),
-        );
+            ],
+        ];
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
 
         // save root content
         $result['news-en'] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
@@ -1610,41 +1600,41 @@ class ContentMapperTest extends SuluTestCase
 
     public function prepareLoadShadowData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'hello',
                 'article' => 'German',
                 'shadow' => false,
                 'language' => 'de',
                 'is_shadow' => false,
                 'shadow_base_language' => null,
-            ),
-            array(
+            ],
+            [
                 'title' => 'hello',
                 'article' => 'Austrian',
                 'shadow' => true,
                 'language' => 'de_at',
                 'is_shadow' => true,
                 'shadow_base_language' => 'de',
-            ),
-            array(
+            ],
+            [
                 'title' => 'random',
                 'article' => 'Auslander',
                 'shadow' => true,
                 'language' => 'de_at',
                 'is_shadow' => false,
                 'shadow_base_language' => 'de',
-            ),
-        );
+            ],
+        ];
 
-        $result = array();
+        $result = [];
         foreach ($data as $dataItem) {
             $result[$dataItem['title']][$dataItem['language']] = $this->mapper->save(
-                array(
+                [
                     'title' => $dataItem['title'],
                     'url' => '/' . $dataItem['title'],
                     'article' => $dataItem['article'],
-                ),
+                ],
                 'overview',
                 'sulu_io',
                 $dataItem['language'],
@@ -1678,23 +1668,23 @@ class ContentMapperTest extends SuluTestCase
 
         // this is a shadow, so it should be "German" not "Austrian"
         $this->assertEquals('German', $structure->getProperty('article')->getValue());
-        $this->assertEquals(array('de' => 'de_at'), $structure->getEnabledShadowLanguages());
+        $this->assertEquals(['de' => 'de_at'], $structure->getEnabledShadowLanguages());
 
         // the node has only one concrete language
-        $this->assertEquals(array('de'), $structure->getConcreteLanguages());
+        $this->assertEquals(['de'], $structure->getConcreteLanguages());
     }
 
     public function testTranslatedResourceLocator()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
         $content = $this->mapper->load($structure->getUuid(), 'sulu_io', 'en');
 
@@ -1709,10 +1699,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertFalse($this->session->getNode('/cmf/sulu_io/routes/de')->hasNode('news/test'));
         $this->assertNotNull($this->session->getNode('/cmf/sulu_io/routes/en/news/test'));
 
-        $data = array(
+        $data = [
             'title' => 'Testname',
             'url' => '/neuigkeiten/test',
-        );
+        ];
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, $structure->getUuid());
         $content = $this->mapper->load($structure->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/neuigkeiten/test', $content->url);
@@ -1733,33 +1723,33 @@ class ContentMapperTest extends SuluTestCase
 
     public function testBlock()
     {
-        $data = array(
+        $data = [
             'title' => 'Test-name',
             'url' => '/test',
-            'block1' => array(
-                array(
+            'block1' => [
+                [
                     'type' => 'default',
                     'title' => 'Block-name-1',
                     'article' => 'Block-Article-1',
-                ),
-                array(
+                ],
+                [
                     'type' => 'default',
                     'title' => 'Block-name-2',
                     'article' => 'Block-Article-2',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         // check save
         $structure = $this->mapper->save($data, 'complex', 'sulu_io', 'de', 1);
         $result = $structure->toArray();
         $this->assertEquals(
             $data,
-            array(
+            [
                 'title' => $result['title'],
                 'url' => $result['url'],
                 'block1' => $result['block1'],
-            )
+            ]
         );
 
         // change sorting
@@ -1770,11 +1760,11 @@ class ContentMapperTest extends SuluTestCase
         $result = $structure->toArray();
         $this->assertEquals(
             $data,
-            array(
+            [
                 'title' => $result['title'],
                 'url' => $result['url'],
                 'block1' => $result['block1'],
-            )
+            ]
         );
 
         // check load
@@ -1782,30 +1772,30 @@ class ContentMapperTest extends SuluTestCase
         $result = $structure->toArray();
         $this->assertEquals(
             $data,
-            array(
+            [
                 'title' => $result['title'],
                 'url' => $result['url'],
                 'block1' => $result['block1'],
-            )
+            ]
         );
     }
 
     public function testMultilingual()
     {
         // change simple content
-        $dataDe = array(
+        $dataDe = [
             'title' => 'Testname-DE',
             'blog' => 'German',
             'url' => '/news/test',
-        );
+        ];
 
         // update content
         $structureDe = $this->mapper->save($dataDe, 'default', 'sulu_io', 'de', 1);
 
-        $dataEn = array(
+        $dataEn = [
             'title' => 'Testname-EN',
             'blog' => 'English',
-        );
+        ];
         $structureEn = $this->mapper->save($dataEn, 'default', 'sulu_io', 'en', 1, true, $structureDe->getUuid())->toArray();
         $structureDe = $this->mapper->load($structureDe->getUuid(), 'sulu_io', 'de');
 
@@ -1836,10 +1826,10 @@ class ContentMapperTest extends SuluTestCase
 
     public function testMandatory()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
             'url' => '/news/test',
-        );
+        ];
 
         $this->setExpectedException(
             '\Sulu\Component\Content\Exception\MandatoryPropertyException',
@@ -1854,110 +1844,110 @@ class ContentMapperTest extends SuluTestCase
      */
     private function prepareBigTreeTestData()
     {
-        $data = array(
-            array(
-                'data' => array(
+        $data = [
+            [
+                'data' => [
                     'title' => 'Products',
                     'url' => '/products',
-                ),
-                'children' => array(
-                    array(
-                        'data' => array(
+                ],
+                'children' => [
+                    [
+                        'data' => [
                             'title' => 'Products1',
                             'url' => '/products/products-1',
-                        ),
-                        'children' => array(),
-                    ),
-                ),
-            ),
-            array(
-                'data' => array(
+                        ],
+                        'children' => [],
+                    ],
+                ],
+            ],
+            [
+                'data' => [
                     'title' => 'News',
                     'url' => '/news',
-                ),
-                'children' => array(
-                    array(
-                        'data' => array(
+                ],
+                'children' => [
+                    [
+                        'data' => [
                             'title' => 'News-1',
                             'url' => '/news/news-1',
-                        ),
-                        'children' => array(
-                            array(
-                                'data' => array(
+                        ],
+                        'children' => [
+                            [
+                                'data' => [
                                     'title' => 'SubNews-1',
                                     'url' => '/news/news-1/subnews-1',
-                                ),
-                                'children' => array(),
-                            ),
-                            array(
-                                'data' => array(
+                                ],
+                                'children' => [],
+                            ],
+                            [
+                                'data' => [
                                     'title' => 'SubNews-2',
                                     'url' => '/news/news-1/subnews-2',
-                                ),
-                                'children' => array(),
-                            ),
-                            array(
-                                'data' => array(
+                                ],
+                                'children' => [],
+                            ],
+                            [
+                                'data' => [
                                     'title' => 'SubNews-3',
                                     'url' => '/news/news-1/subnews-3',
-                                ),
-                                'children' => array(
-                                    array(
-                                        'data' => array(
+                                ],
+                                'children' => [
+                                    [
+                                        'data' => [
                                             'title' => 'SubSubNews-1',
                                             'url' => '/news/news-1/subnews-3/subsubnews-1',
-                                        ),
-                                        'children' => array(),
-                                    ),
-                                    array(
-                                        'data' => array(
+                                        ],
+                                        'children' => [],
+                                    ],
+                                    [
+                                        'data' => [
                                             'title' => 'SubSubNews-2',
                                             'url' => '/news/news-1/subnews-3/subsubnews-2',
-                                        ),
-                                        'children' => array(),
-                                    ),
-                                    array(
-                                        'data' => array(
+                                        ],
+                                        'children' => [],
+                                    ],
+                                    [
+                                        'data' => [
                                             'title' => 'SubSubNews-3',
                                             'url' => '/news/news-1/subnews-3/subsubnews-3',
-                                        ),
-                                        'children' => array(),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                    array(
-                        'data' => array(
+                                        ],
+                                        'children' => [],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'data' => [
                             'title' => 'News-2',
                             'url' => '/news/news-2',
-                        ),
-                        'children' => array(),
-                    ),
-                    array(
-                        'data' => array(
+                        ],
+                        'children' => [],
+                    ],
+                    [
+                        'data' => [
                             'title' => 'News-3',
                             'url' => '/news/news-3',
-                        ),
-                        'children' => array(),
-                    ),
-                ),
-            ),
-            array(
-                'data' => array(
+                        ],
+                        'children' => [],
+                    ],
+                ],
+            ],
+            [
+                'data' => [
                     'title' => 'About Us',
                     'url' => '/about-us',
-                ),
-                'children' => array(),
-            ),
-        );
+                ],
+                'children' => [],
+            ],
+        ];
 
         return $this->saveData($data);
     }
 
     private function saveData($data, $uuid = null)
     {
-        $result = array();
+        $result = [];
         foreach ($data as $item) {
             $itemStructure = $this->mapper->save($item['data'], 'overview', 'sulu_io', 'de', 1, true, null, $uuid);
             $this->saveData($item['children'], $itemStructure->getUuid());
@@ -1979,19 +1969,18 @@ class ContentMapperTest extends SuluTestCase
 
         $ancestors = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'de', 'sulu_io', false);
 
-        $documentNames = array();
+        $documentNames = [];
         foreach ($ancestors as $ancestor) {
             $documentNames[] = $ancestor->getPath();
         }
 
-
-        $this->assertEquals(array(
+        $this->assertEquals([
             '/news/news-1/subnews-3/subsubnews-2',
             '/news/news-1/subnews-3',
             '/news/news-1',
             '/news',
             '',
-        ), $documentNames);
+        ], $documentNames);
     }
 
     public function testLanguageCopy()
@@ -2010,7 +1999,7 @@ class ContentMapperTest extends SuluTestCase
     {
         $data = $this->prepareSinglePageTestData();
 
-        $this->mapper->copyLanguage($data->getUuid(), 1, 'sulu_io', 'de', array('en', 'de_at'));
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'sulu_io', 'de', ['en', 'de_at']);
 
         $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en');
 
@@ -2025,19 +2014,19 @@ class ContentMapperTest extends SuluTestCase
 
     private function prepareCopyLanguageTree()
     {
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
 
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'test',
                 'url' => '/test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'childtest',
                 'url' => '/test/childtest',
-            ),
-        );
+            ],
+        ];
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
@@ -2051,7 +2040,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->mapper->copyLanguage($data[0]->getUuid(), 1, 'sulu_io', 'de', 'en');
         $this->mapper->save(
-            array('title' => 'test-en', 'url' => '/test-en'),
+            ['title' => 'test-en', 'url' => '/test-en'],
             'overview',
             'sulu_io',
             'en',
@@ -2088,11 +2077,11 @@ class ContentMapperTest extends SuluTestCase
 
     public function testSection()
     {
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'blog' => 'Thats a good test',
-        );
+        ];
 
         $structure = $this->mapper->save($data, 'section', 'sulu_io', 'en', 1);
         $resultSave = $structure->toArray();
@@ -2115,17 +2104,17 @@ class ContentMapperTest extends SuluTestCase
 
     public function testCompleteExtensions()
     {
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'blog' => 'Thats a good test',
-            'ext' => array(
-                'test1' => array(
+            'ext' => [
+                'test1' => [
                     'a' => 'That´s a test',
                     'b' => 'That´s a second test',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $structure = $structure = $this->mapper->save($data, 'default', 'sulu_io', 'en', 1);
         $result = $structure->toArray();
@@ -2136,23 +2125,23 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/test', $result['path']);
         $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
         $this->assertEquals(
-            array(
+            [
                 'a' => '',
                 'b' => '',
-            ),
+            ],
             $result['ext']['test2']
         );
 
-        $data = array(
+        $data = [
             'title' => 'Test',
             'blog' => 'Thats a good test',
-            'ext' => array(
-                'test2' => array(
+            'ext' => [
+                'test2' => [
                     'a' => 'a',
                     'b' => 'b',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $structure = $this->mapper->save(
             $data,
@@ -2170,17 +2159,17 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('/test', $result['path']);
         $this->assertEquals(
-            array(
+            [
                 'a' => 'That´s a test',
                 'b' => 'That´s a second test',
-            ),
+            ],
             $result['ext']['test1']
         );
         $this->assertEquals(
-            array(
+            [
                 'a' => 'a',
                 'b' => 'b',
-            ),
+            ],
             $result['ext']['test2']
         );
 
@@ -2192,38 +2181,38 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('/test', $result['path']);
         $this->assertEquals(
-            array(
+            [
                 'a' => 'That´s a test',
                 'b' => 'That´s a second test',
-            ),
+            ],
             $result['ext']['test1']
         );
         $this->assertEquals(
-            array(
+            [
                 'a' => 'a',
                 'b' => 'b',
-            ),
+            ],
             $result['ext']['test2']
         );
     }
 
     public function testExtensionsLocalized()
     {
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'localized_blog' => 'Thats a good test',
-            'ext' => array(
-                'test1' => array(
+            'ext' => [
+                'test1' => [
                     'a' => 'That´s a test',
                     'b' => 'That´s a second test',
-                ),
-                'test2' => array(
+                ],
+                'test2' => [
                     'a' => 'That´s a test',
                     'b' => 'That´s a second test',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $structure = $structure = $this->mapper->save($data, 'default', 'sulu_io', 'en', 1);
         $result = $structure->toArray();
@@ -2233,35 +2222,35 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('/test', $result['path']);
         $this->assertEquals(
-            array(
+            [
                 'a' => 'That´s a test',
                 'b' => 'That´s a second test',
-            ),
+            ],
             $result['ext']['test1']
         );
         $this->assertEquals(
-            array(
+            [
                 'a' => 'That´s a test',
                 'b' => 'That´s a second test',
-            ),
+            ],
             $result['ext']['test2']
         );
 
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'localized_blog' => 'Das ist ein guter Test',
-            'ext' => array(
-                'test1' => array(
+            'ext' => [
+                'test1' => [
                     'a' => 'Das ist ein Test',
                     'b' => 'Das ist ein zweiter Test',
-                ),
-                'test2' => array(
+                ],
+                'test2' => [
                     'a' => 'Das ist ein Test',
                     'b' => 'Das ist ein zweiter Test',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $structure = $structure = $this->mapper->save(
             $data,
@@ -2279,17 +2268,17 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('/test', $result['path']);
         $this->assertEquals(
-            array(
+            [
                 'a' => 'Das ist ein Test',
                 'b' => 'Das ist ein zweiter Test',
-            ),
+            ],
             $result['ext']['test1']
         );
         $this->assertEquals(
-            array(
+            [
                 'a' => 'Das ist ein Test',
                 'b' => 'Das ist ein zweiter Test',
-            ),
+            ],
             $result['ext']['test2']
         );
 
@@ -2297,17 +2286,17 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Test', $resultDE['title']);
         $this->assertEquals('Das ist ein guter Test', $resultDE['localized_blog']);
         $this->assertEquals(
-            array(
+            [
                 'a' => 'Das ist ein Test',
                 'b' => 'Das ist ein zweiter Test',
-            ),
+            ],
             $resultDE['ext']['test1']
         );
         $this->assertEquals(
-            array(
+            [
                 'a' => 'Das ist ein Test',
                 'b' => 'Das ist ein zweiter Test',
-            ),
+            ],
             $resultDE['ext']['test2']
         );
 
@@ -2315,28 +2304,28 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Test', $resultEN['title']);
         $this->assertEquals('Thats a good test', $resultEN['localized_blog']);
         $this->assertEquals(
-            array(
+            [
                 'a' => 'That´s a test',
                 'b' => 'That´s a second test',
-            ),
+            ],
             $resultEN['ext']['test1']
         );
         $this->assertEquals(
-            array(
+            [
                 'a' => 'That´s a test',
                 'b' => 'That´s a second test',
-            ),
+            ],
             $resultEN['ext']['test2']
         );
     }
 
     public function testExtensions()
     {
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'blog' => 'Thats a good test',
-        );
+        ];
 
         $structure = $this->mapper->save($data, 'default', 'sulu_io', 'en', 1);
         $result = $structure->toArray();
@@ -2347,13 +2336,13 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Test', $result['title']);
         $this->assertEquals('Thats a good test', $result['blog']);
 
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test1']);
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test2']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test1']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test2']);
 
-        $dataTest1EN = array(
+        $dataTest1EN = [
             'a' => 'en test1 a',
             'b' => 'en test1 b',
-        );
+        ];
 
         $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest1EN, 'test1', 'sulu_io', 'en', 1);
         $result = $structure->toArray();
@@ -2365,7 +2354,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Thats a good test', $result['blog']);
 
         $this->assertEquals($dataTest1EN, $result['ext']['test1']);
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test2']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test2']);
 
         $structure = $this->mapper->load($structure->getUuid(), 'sulu_io', 'en');
         $result = $structure->toArray();
@@ -2377,12 +2366,12 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Thats a good test', $result['blog']);
 
         $this->assertEquals($dataTest1EN, $result['ext']['test1']);
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test2']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test2']);
 
-        $dataTest2EN = array(
+        $dataTest2EN = [
             'a' => 'en test2 a',
             'b' => 'en test2 b',
-        );
+        ];
 
         $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest2EN, 'test2', 'sulu_io', 'en', 1);
         $result = $structure->toArray();
@@ -2408,11 +2397,11 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals($dataTest1EN, $result['ext']['test1']);
         $this->assertEquals($dataTest2EN, $result['ext']['test2']);
 
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'blog' => 'Das ist ein guter Test',
-        );
+        ];
 
         $structure = $this->mapper->save($data, 'default', 'sulu_io', 'de', 1, true, $structure->getUuid());
         $result = $structure->toArray();
@@ -2423,13 +2412,13 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Test', $result['title']);
         $this->assertEquals('Das ist ein guter Test', $result['blog']);
 
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test1']);
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test2']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test1']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test2']);
 
-        $dataTest2DE = array(
+        $dataTest2DE = [
             'a' => 'de test2 a',
             'b' => 'de test2 b',
-        );
+        ];
 
         $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest2DE, 'test2', 'sulu_io', 'de', 1);
         $result = $structure->toArray();
@@ -2440,7 +2429,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Test', $result['title']);
         $this->assertEquals('Das ist ein guter Test', $result['blog']);
 
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test1']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test1']);
         $this->assertEquals($dataTest2DE, $result['ext']['test2']);
 
         $structure = $this->mapper->load($structure->getUuid(), 'sulu_io', 'de');
@@ -2452,23 +2441,23 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('Test', $result['title']);
         $this->assertEquals('Das ist ein guter Test', $result['blog']);
 
-        $this->assertEquals(array('a' => '', 'b' => ''), $result['ext']['test1']);
+        $this->assertEquals(['a' => '', 'b' => ''], $result['ext']['test1']);
         $this->assertEquals($dataTest2DE, $result['ext']['test2']);
     }
 
     public function testTranslatedNodeNotFound()
     {
-        $data = array(
+        $data = [
             'title' => 'Test',
             'url' => '/test/test',
             'blog' => 'Thats a good test',
-        );
+        ];
 
         $structure = $this->mapper->save($data, 'default', 'sulu_io', 'en', 1);
-        $dataTest2DE = array(
+        $dataTest2DE = [
             'a' => 'de test2 a',
             'b' => 'de test2 b',
-        );
+        ];
 
         $this->setExpectedException(
             'Sulu\Component\Content\Exception\TranslatedNodeNotFoundException',
@@ -2480,18 +2469,18 @@ class ContentMapperTest extends SuluTestCase
 
     public function testGetRlAndName()
     {
-        $data1 = array(
+        $data1 = [
             'title' => 'Test',
             'url' => '/test/test',
             'blog' => 'Thats a good test',
-        );
+        ];
         $structure1 = $this->mapper->save($data1, 'default', 'sulu_io', 'en', 1);
 
-        $data2 = array(
+        $data2 = [
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'internal_link' => $structure1->getUuid(),
-        );
+        ];
         $structure2 = $this->mapper->save($data2, 'internal-link', 'sulu_io', 'en', 1);
 
         $this->assertEquals(Structure::NODE_TYPE_INTERNAL_LINK, $structure2->getNodeType());
@@ -2500,11 +2489,11 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals($structure1->getResourceLocator(), $structure2->getResourceLocator());
         $this->assertEquals($structure1->getNodeName(), $structure2->getNodeName());
 
-        $data3 = array(
+        $data3 = [
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'external' => 'www.google.at',
-        );
+        ];
         $structure3 = $this->mapper->save($data3, 'external-link', 'sulu_io', 'en', 1);
 
         $this->assertEquals(Structure::NODE_TYPE_EXTERNAL_LINK, $structure3->getNodeType());
@@ -2515,13 +2504,13 @@ class ContentMapperTest extends SuluTestCase
 
     private function prepareSinglePageTestData()
     {
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
 
-        $data = array(
+        $data = [
             'title' => 'Page-1',
             'url' => '/page-1',
-        );
+        ];
 
         $data = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
 
@@ -2533,54 +2522,54 @@ class ContentMapperTest extends SuluTestCase
      */
     private function prepareCopyMoveTestData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Page-1',
                 'url' => '/page-1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Sub',
                 'url' => '/page-1/sub',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Sub',
                 'url' => '/page-1/sub-1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Page-2',
                 'url' => '/page-2',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Sub',
                 'url' => '/page-2/sub',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Sub',
                 'url' => '/page-2/sub-1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'SubPage',
                 'url' => '/page-2/subpage',
-            ),
-            array(
+            ],
+            [
                 'title' => 'SubSubPage',
                 'url' => '/page-2/subpage/subpage',
-            ),
-            array(
+            ],
+            [
                 'title' => 'SubSubSubPage',
                 'url' => '/page-2/subpage/subpage/subpage',
-            ),
-            array(
+            ],
+            [
                 'title' => 'SubPage',
                 'url' => '/page-2/sub-1/subpage',
-            ),
-            array(
+            ],
+            [
                 'title' => 'SubSubPage',
                 'url' => '/page-2/sub-1/subpage/subpage',
-            ),
-        );
+            ],
+        ];
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
 
         // save content
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -2603,30 +2592,30 @@ class ContentMapperTest extends SuluTestCase
      */
     private function prepareOrderAtData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Page-1',
                 'url' => '/page-1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Page-1-1',
                 'url' => '/page-1/page-1-1',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Page-1-2',
                 'url' => '/page-1/page-1-2',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Page-1-3',
                 'url' => '/page-1/page-1-3',
-            ),
-            array(
+            ],
+            [
                 'title' => 'Page-1-4',
                 'url' => '/page-1/page-1-4',
-            ),
-        );
+            ],
+        ];
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
+        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1, true, null, $data[0]->getUuid());
@@ -2694,10 +2683,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
 
         $uuid = $data[6]->getUuid();
-        $data[6] = array(
+        $data[6] = [
             'title' => 'SubPage',
             'url' => '/page-2/test',
-        );
+        ];
         $result = $data[6] = $this->mapper->save($data[6], 'overview', 'sulu_io', 'de', 2, true, $uuid);
 
         $this->assertEquals($data[6]->getUuid(), $result->getUuid());
@@ -2944,12 +2933,12 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNewExternalLink()
     {
-        $data = array(
+        $data = [
             'title' => 'Page-1',
             'external' => 'www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'url' => '/url',
-        );
+        ];
 
         $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'de');
@@ -2970,18 +2959,18 @@ class ContentMapperTest extends SuluTestCase
     public function testChangeToExternalLink()
     {
         // prepare a page
-        $data = array(
+        $data = [
             'title' => 'Page-1',
             'url' => '/page-1',
-        );
+        ];
         $result = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
 
         // turn it into a external link
-        $data = array(
+        $data = [
             'title' => 'External',
             'external' => 'www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        );
+        ];
         $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $result->getUuid());
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'en');
 
@@ -3000,10 +2989,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('overview', $loadResult->getOriginTemplate());
 
         // back to content type
-        $data = array(
+        $data = [
             'title' => 'Page-1',
             'nodeType' => Structure::NODE_TYPE_CONTENT,
-        );
+        ];
         $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $result->getUuid());
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'en');
 
@@ -3016,15 +3005,15 @@ class ContentMapperTest extends SuluTestCase
 
     public function testSaveInvalidResourceLocator()
     {
-        $data = array(
+        $data = [
             'title' => 'Testname',
-            'tags' => array(
+            'tags' => [
                 'tag1',
                 'tag2',
-            ),
+            ],
             'url' => '/news/test.xml',
-            'article' => 'sulu_io'
-        );
+            'article' => 'sulu_io',
+        ];
 
         $this->setExpectedException(
             'Sulu\Component\Content\Exception\ResourceLocatorNotValidException',
@@ -3036,7 +3025,7 @@ class ContentMapperTest extends SuluTestCase
     public function testSaveSlash()
     {
         $result = $this->mapper->save(
-            array('title' => 'My / Your nice test', 'url' => '/my-your-nice-test'),
+            ['title' => 'My / Your nice test', 'url' => '/my-your-nice-test'],
             'overview',
             'sulu_io',
             'de',
@@ -3050,10 +3039,10 @@ class ContentMapperTest extends SuluTestCase
 
     public function testGetResourceLocators()
     {
-        $data = array(
-            array('title' => 'Beschreibung', 'url' => '/beschreibung'),
-            array('title' => 'Description', 'url' => '/description'),
-        );
+        $data = [
+            ['title' => 'Beschreibung', 'url' => '/beschreibung'],
+            ['title' => 'Description', 'url' => '/description'],
+        ];
 
         $data[0] = $this->mapper->save(
             $data[0],
@@ -3133,19 +3122,19 @@ class ContentMapperTest extends SuluTestCase
     public function testContentTypeSwitch()
     {
         // REF
-        $internalLinkData = array(
+        $internalLinkData = [
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
-        );
+            'blog' => 'Thats a good test',
+        ];
         $internalLink = $this->mapper->save($internalLinkData, 'default', 'sulu_io', 'en', 1);
 
         // REF
-        $snippetData = array(
+        $snippetData = [
             'title' => 'Test',
             'url' => '/test/test',
-            'blog' => 'Thats a good test'
-        );
+            'blog' => 'Thats a good test',
+        ];
         $snippet = $this->mapper->save(
             $snippetData,
             'hotel',
@@ -3161,23 +3150,22 @@ class ContentMapperTest extends SuluTestCase
             Structure::TYPE_SNIPPET
         );
 
-
         // Internal Link with String Type
-        $testSiteData = array(
+        $testSiteData = [
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'url' => '/test/123',
-            'the_internal_link' => $internalLink->getUuid()
-        );
+            'the_internal_link' => $internalLink->getUuid(),
+        ];
         $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link_page', 'sulu_io', 'en', 1);
 
         $uuid = $testSiteStructure->getUuid();
 
         // Change to Snippet Array
-        $testSiteData['internal'] = array(
+        $testSiteData['internal'] = [
             $snippet->getUuid(),
-            $snippet->getUuid()
-        );
+            $snippet->getUuid(),
+        ];
         $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
         $this->mapper->save($testSiteData, 'with_snippet', 'sulu_io', 'en', 1, true, $uuid);
@@ -3190,28 +3178,28 @@ class ContentMapperTest extends SuluTestCase
 
     /**
      * It should delete a node which has children with history.
-     * It should not throw an exception
+     * It should not throw an exception.
      */
     public function testDeleteWithChildrenHistory()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'A',
                 'url' => '/a',
-            ),
-            array(
+            ],
+            [
                 'title' => 'B',
                 'url' => '/a/b',
-            ),
-            array(
+            ],
+            [
                 'title' => 'C',
                 'url' => '/a/b/c',
-            ),
-            array(
+            ],
+            [
                 'title' => 'D',
                 'url' => '/a/d',
-            ),
-        );
+            ],
+        ];
 
         // save content
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -3237,7 +3225,7 @@ class ContentMapperTest extends SuluTestCase
     }
 
     /**
-     * It should copy a language with an internal link
+     * It should copy a language with an internal link.
      */
     public function testLanguageCopyInternalLink()
     {
@@ -3245,15 +3233,15 @@ class ContentMapperTest extends SuluTestCase
         $page->setStructureType('default');
         $page->setTitle('Hallo');
         $page->setResourceSegment('/hallo');
-        $this->documentManager->persist($page, 'de', array(
-            'parent_path' => '/cmf/sulu_io/contents'
-        ));
+        $this->documentManager->persist($page, 'de', [
+            'parent_path' => '/cmf/sulu_io/contents',
+        ]);
         $this->documentManager->flush();
 
-        $data = array(
+        $data = [
             'title' => 'Page-1',
             'internal_link' => $page->getUuid(),
-        );
+        ];
 
         $data = $this->mapper->save($data, 'internal-link', 'sulu_io', 'de', 1);
 
@@ -3276,25 +3264,25 @@ class ContentMapperTest extends SuluTestCase
         $page->setTitle('Beschreibung');
         $page->setResourceSegment('/beschreibung');
         $page->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $this->documentManager->persist($page, 'de', array(
+        $this->documentManager->persist($page, 'de', [
             'parent_path' => '/cmf/sulu_io/contents',
-        ));
+        ]);
         $this->documentManager->flush();
 
         $page->setTitle('Description');
         $page->setResourceSegment('/description');
         $page->setWorkflowStage(WorkflowStage::TEST);
-        $this->documentManager->persist($page, 'en', array(
+        $this->documentManager->persist($page, 'en', [
             'parent_path' => '/cmf/sulu_io/contents',
-        ));
+        ]);
         $this->documentManager->flush();
 
         $page->setShadowLocaleEnabled(true);
         $page->setShadowLocale('de');
 
-        $this->documentManager->persist($page, 'en', array(
+        $this->documentManager->persist($page, 'en', [
             'parent_path' => '/cmf/sulu_io/contents',
-        ));
+        ]);
         $this->documentManager->flush();
 
         $content = $this->mapper->load($page->getUuid(), 'sulu_io', 'en');
@@ -3322,10 +3310,10 @@ class ContentMapperTest extends SuluTestCase
 
 class TestExtension extends AbstractExtension
 {
-    protected $properties = array(
+    protected $properties = [
         'a',
         'b',
-    );
+    ];
 
     public function __construct($name, $additionalPrefix = null)
     {
@@ -3347,9 +3335,9 @@ class TestExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        return array(
+        return [
             'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
             'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), ''),
-        );
+        ];
     }
 }

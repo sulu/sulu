@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Webspace;
 
 use Sulu\Component\Localization\Localization;
@@ -51,30 +60,30 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $expected = array(
+        $expected = [
             'key' => 'foo',
             'name' => 'portal_key',
-            'localizations' => array(
-                array('fr'),
-            ),
-            'security' => array(
+            'localizations' => [
+                ['fr'],
+            ],
+            'security' => [
                 'system' => 'sec_sys',
-            ),
-            'segments' => array(
-                array(
+            ],
+            'segments' => [
+                [
                     'asd',
-                ),
-            ),
-            'portals' => array(
-                array('one'),
-            ),
-            'theme' => array(
+                ],
+            ],
+            'portals' => [
+                ['one'],
+            ],
+            'theme' => [
                 'dsa',
-            ),
-            'navigation' => array(
-                'contexts' => array(),
-            ),
-        );
+            ],
+            'navigation' => [
+                'contexts' => [],
+            ],
+        ];
 
         $this->security->getSystem()->willReturn($expected['security']['system']);
         $this->localization->toArray()->willReturn($expected['localizations'][0]);
@@ -85,20 +94,20 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->webspace->setKey($expected['key']);
         $this->webspace->setName($expected['name']);
         $this->webspace->setLocalizations(
-            array(
+            [
                 $this->localization->reveal(),
-            )
+            ]
         );
         $this->webspace->setSecurity($this->security->reveal());
         $this->webspace->setSegments(
-            array(
+            [
                 $this->segment->reveal(),
-            )
+            ]
         );
         $this->webspace->setPortals(
-            array(
+            [
                 $this->portal->reveal(),
-            )
+            ]
         );
         $this->webspace->setTheme($this->theme->reveal());
 

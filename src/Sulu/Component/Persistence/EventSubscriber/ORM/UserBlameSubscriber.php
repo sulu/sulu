@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,7 +41,7 @@ class UserBlameSubscriber implements EventSubscriber
     /**
      * @var object[]
      */
-    private $blameQueue = array();
+    private $blameQueue = [];
 
     /**
      * @param TokenStorage $tokenStorage
@@ -55,10 +56,10 @@ class UserBlameSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        $events = array(
+        $events = [
             Events::loadClassMetadata,
             Events::onFlush,
-        );
+        ];
 
         return $events;
     }
@@ -75,33 +76,33 @@ class UserBlameSubscriber implements EventSubscriber
 
         if ($reflection !== null && $reflection->implementsInterface('Sulu\Component\Persistence\Model\UserBlameInterface')) {
             if (!$metadata->hasAssociation(self::CREATOR_FIELD)) {
-                $metadata->mapManyToOne(array(
+                $metadata->mapManyToOne([
                     'fieldName' => self::CREATOR_FIELD,
                     'targetEntity' => UserInterface::class,
-                    'joinColumns' => array(
-                        array(
+                    'joinColumns' => [
+                        [
                             'name' => 'idUsersCreator',
                             'onDelete' => 'SET NULL',
                             'referencedColumnName' => 'id',
                             'nullable' => true,
-                        ),
-                    ),
-                ));
+                        ],
+                    ],
+                ]);
             }
 
             if (!$metadata->hasAssociation(self::CHANGER_FIELD)) {
-                $metadata->mapManyToOne(array(
+                $metadata->mapManyToOne([
                     'fieldName' => self::CHANGER_FIELD,
                     'targetEntity' => UserInterface::class,
-                    'joinColumns' => array(
-                        array(
+                    'joinColumns' => [
+                        [
                             'name' => 'idUsersChanger',
                             'onDelete' => 'SET NULL',
                             'referencedColumnName' => 'id',
                             'nullable' => true,
-                        ),
-                    ),
-                ));
+                        ],
+                    ],
+                ]);
             }
         }
     }
@@ -167,7 +168,7 @@ class UserBlameSubscriber implements EventSubscriber
             }
         }
 
-        $this->blameQueue = array();
+        $this->blameQueue = [];
     }
 
     /**

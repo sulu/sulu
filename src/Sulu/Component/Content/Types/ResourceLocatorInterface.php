@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -47,9 +48,9 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * reads the value for given property out of the database + sets the value of the property.
      *
      * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * @param string        $webspaceKey
+     * @param string        $languageCode
+     * @param string        $segmentKey
      *
      * @return string
      */
@@ -70,8 +71,8 @@ interface ResourceLocatorInterface extends ContentTypeInterface
     /**
      * deletes given resource locator node.
      *
-     * @param string $path of resource locator node
-     * @param string $webspaceKey key of portal
+     * @param string $path         of resource locator node
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */
@@ -80,8 +81,8 @@ interface ResourceLocatorInterface extends ContentTypeInterface
     /**
      * restore given resource locator.
      *
-     * @param string $path of resource locator
-     * @param string $webspaceKey key of portal
+     * @param string $path         of resource locator
+     * @param string $webspaceKey  key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */

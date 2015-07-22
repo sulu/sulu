@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,18 +33,18 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         $structureManager = $this->get('sulu.content.structure_manager');
         $types = $structureManager->getStructures(Structure::TYPE_SNIPPET);
 
-        $templates = array();
+        $templates = [];
         foreach ($types as $type) {
-            $templates[] = array(
+            $templates[] = [
                 'template' => $type->getKey(),
                 'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
-            );
+            ];
         }
 
-        $data = array(
+        $data = [
             '_embedded' => $templates,
             'total' => sizeof($templates),
-        );
+        ];
 
         return new JsonResponse($data);
     }

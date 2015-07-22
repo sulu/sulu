@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -74,13 +75,13 @@ class PreviewExceptionListener
 
         $responseContent = $this->templateEngine->render(
             $this->findTemplate(),
-            array(
+            [
                 'status_code' => $code,
                 'status_text' => $statusText,
                 'exception' => $exception,
                 'logger' => null,
                 'currentContent' => $content,
-            )
+            ]
         );
 
         $event->setResponse(new Response($responseContent));

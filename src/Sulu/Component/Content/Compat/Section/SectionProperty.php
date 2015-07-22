@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
- * Defines a section for properties
+ * Defines a section for properties.
  */
 class SectionProperty extends Property implements SectionPropertyInterface
 {
@@ -29,16 +30,16 @@ class SectionProperty extends Property implements SectionPropertyInterface
      * @var PropertyInterface[]
      * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
-    private $childProperties = array();
+    private $childProperties = [];
 
     /**
      * @param string $name
-     * @param array $metadata
+     * @param array  $metadata
      * @param string $col
      */
     public function __construct($name, $metadata, $col)
     {
-        parent::__construct($name, $metadata, 'section', false, false, 1, 1, array(), array(), $col);
+        parent::__construct($name, $metadata, 'section', false, false, 1, 1, [], [], $col);
     }
 
     /**

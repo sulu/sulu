@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,11 +20,11 @@ interface WidgetsHandlerInterface
      * renders a widget group.
      *
      * @param string $groupAlias
-     * @param array $parameters
+     * @param array  $parameters
      *
      * @return string
      */
-    public function renderWidgetGroup($groupAlias, $parameters = array());
+    public function renderWidgetGroup($groupAlias, $parameters = []);
 
     /**
      * return true of widget group exists.
@@ -42,13 +43,13 @@ interface WidgetsHandlerInterface
      *
      * @return string
      */
-    public function render($aliases, $parameters = array());
+    public function render($aliases, $parameters = []);
 
     /**
      * add an widget to rendering process.
      *
      * @param WidgetInterface $widget
-     * @param string $alias
+     * @param string          $alias
      */
     public function addWidget(WidgetInterface $widget, $alias);
 }

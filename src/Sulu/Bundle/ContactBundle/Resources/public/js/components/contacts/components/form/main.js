@@ -21,7 +21,9 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             addressesSelector: '#addresses',
 
             bankAccountsId: '#bankAccounts',
-            bankAccountAddSelector: '.bank-account-add'
+            bankAccountAddSelector: '.bank-account-add',
+
+            editFormSelector: '#contact-edit-form'
         },
 
         setHeaderToolbar = function() {
@@ -251,7 +253,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     {
                         name: 'contact-form@sulucontact',
                         options: {
-                            el: '#contact-edit-form',
+                            el: constants.editFormSelector,
                             fieldTypes: this.fieldTypes,
                             defaultTypes: this.defaultTypes
                         }
@@ -334,6 +336,15 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     this.updateBankAccountAddIcon(this.numberOfBankAccounts);
                 }, this);
 
+                this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
+            },
+
+            /**
+             * Does some cleanup with aura components
+             */
+            cleanUp: function() {
+                // stop contact form before leaving
+                this.sandbox.stop(constants.editFormSelector);
             },
 
             initContactData: function() {

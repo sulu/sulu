@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -57,7 +58,7 @@ class WidgetsPass implements CompilerPassInterface
                 if (array_key_exists('alias', $tagAttribute)) {
                     $widgetsHandler->addMethodCall(
                         'addWidget',
-                        array(new Reference($id), $tagAttribute['alias'])
+                        [new Reference($id), $tagAttribute['alias']]
                     );
                 } else {
                     throw new InvalidArgumentException('A widget could not be registered.', 'alias');

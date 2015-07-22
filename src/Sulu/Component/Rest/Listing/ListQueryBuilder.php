@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,7 +44,7 @@ class ListQueryBuilder
      *
      * @var array
      */
-    private $fields = array();
+    private $fields = [];
 
     /**
      * The array representation of the sortings.
@@ -121,14 +122,14 @@ class ListQueryBuilder
      *
      * @var
      */
-    private $relationalFilters = array();
+    private $relationalFilters = [];
 
     /**
      * contains all join conditions.
      *
      * @var
      */
-    private $joinConditions = array();
+    private $joinConditions = [];
 
     /**
      * @param $associationNames
@@ -139,7 +140,7 @@ class ListQueryBuilder
      * @param $where
      * @param array $searchTextFields
      * @param array $searchNumberFields
-     * @param array $joinConditions - specify a custom join condition
+     * @param array $joinConditions     - specify a custom join condition
      */
     public function __construct(
         $associationNames,
@@ -148,14 +149,14 @@ class ListQueryBuilder
         $fields,
         $sorting,
         $where,
-        $searchTextFields = array(),
-        $searchNumberFields = array(),
-        $joinConditions = array()
+        $searchTextFields = [],
+        $searchNumberFields = [],
+        $joinConditions = []
     ) {
         $this->associationNames = $associationNames;
         $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
-        $this->fields = (is_array($fields)) ? $fields : array();
+        $this->fields = (is_array($fields)) ? $fields : [];
         $this->sorting = $sorting;
         $this->where = $where;
         $this->searchFields = array_merge($searchTextFields, $searchNumberFields);
@@ -204,11 +205,11 @@ class ListQueryBuilder
     private function getSelectFrom($prefix = 'u')
     {
         $this->joins = '';
-        $this->prefixes = array($prefix);
+        $this->prefixes = [$prefix];
 
         // select and where fields
         $fieldsWhere = array_merge(
-            ($this->fields != null) ? $this->fields : array(),
+            ($this->fields != null) ? $this->fields : [],
             array_keys($this->where)
         );
 
@@ -306,7 +307,7 @@ class ListQueryBuilder
     /**
      * Generate JOIN {parent}.{fieldname} {alias} foreach fieldPart.
      *
-     * @param array $fieldParts
+     * @param array  $fieldParts
      * @param string $prefix
      *
      * @return string
@@ -324,7 +325,7 @@ class ListQueryBuilder
                 );
                 $this->prefixes[] = $fieldParts[$i];
             }
-            $i++;
+            ++$i;
         }
 
         return $result;
@@ -391,8 +392,8 @@ class ListQueryBuilder
         $result = '';
         // Only return where clause if there actually is some data
         if (sizeof($this->where) > 0 || sizeof($this->searchFields) > 0) {
-            $wheres = array();
-            $searches = array();
+            $wheres = [];
+            $searches = [];
 
             $whereKeys = array_keys($this->where);
 

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,14 +18,14 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $selectFields = array();
+    protected $selectFields = [];
 
     /**
      * The field descriptors for the field, which will be used for the search.
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $searchFields = array();
+    protected $searchFields = [];
 
     /**
      * The value for which the searchfields will be searched.
@@ -36,16 +37,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The field descriptor for the field to sort.
      *
-     * @var AbstractFieldDescriptor
+     * @var AbstractFieldDescriptor[]
      */
-    protected $sortField = null;
+    protected $sortFields = [];
 
     /**
      * Defines the sort order of the string.
      *
-     * @var string
+     * @var string[]
      */
-    protected $sortOrder;
+    protected $sortOrders;
 
     /**
      * The limit for this query.
@@ -59,70 +60,75 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var array
      */
-    protected $whereFields = array();
+    protected $whereFields = [];
 
     /**
      * The values the where fields should have.
      *
      * @var array
      */
-    protected $whereValues = array();
+    protected $whereValues = [];
 
     /**
-     * The comparators the where fields should use
+     * The comparators the where fields should use.
+     *
      * @var array
      */
-    protected $whereComparators = array();
+    protected $whereComparators = [];
 
     /**
-     * The conjunctions for the where clauses
+     * The conjunctions for the where clauses.
+     *
      * @var array
      */
-    protected $whereConjunctions = array();
+    protected $whereConjunctions = [];
 
     /**
-     * group by fields
+     * group by fields.
+     *
      * @var array
      */
-    protected $groupByFields = array();
+    protected $groupByFields = [];
 
     /**
      * The fields which will be used for in-clauses.
      *
      * @var array
      */
-    protected $inFields = array();
+    protected $inFields = [];
 
     /**
      * The fields which will be used for between-clauses.
      *
      * @var array
      */
-    protected $betweenFields = array();
+    protected $betweenFields = [];
 
     /**
      * The values for the in-clauses.
      *
      * @var array
      */
-    protected $inValues = array();
+    protected $inValues = [];
 
     /**
      * The values for the between-clauses.
      *
      * @var array
      */
-    protected $betweenValues = array();
+    protected $betweenValues = [];
 
     /**
-     * The conjunctions for the between clauses
+     * The conjunctions for the between clauses.
+     *
      * @var array
      */
-    protected $betweenConjunctions = array();
+    protected $betweenConjunctions = [];
 
     /**
-     * The page the resulting query will be returning
-     * @var integer
+     * The page the resulting query will be returning.
+     *
+     * @var int
      */
     protected $page = 1;
 
@@ -144,7 +150,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use setSelectFields instead
      */
-    public function setFields($fieldDescriptors){
+    public function setFields($fieldDescriptors)
+    {
         $this->selectFields = $fieldDescriptors;
     }
 
@@ -177,7 +184,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->selectFields[$fieldName];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -191,7 +198,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use hasSelectField instead
      */
-    public function hasField($name){
+    public function hasField($name)
+    {
         return array_key_exists($name, $this->selectFields);
     }
 
@@ -212,7 +220,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
             return $this->fieldDescriptors[$fieldName];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -238,8 +246,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortField = $fieldDescriptor;
-        $this->sortOrder = $order;
+        $this->sortFields[] = $fieldDescriptor;
+        $this->sortOrders[] = $order;
 
         return $this;
     }
@@ -294,7 +302,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use where instead
      */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value){
+    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
+    {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
         $this->whereComparators[$fieldDescriptor->getName()] = self::WHERE_COMPARATOR_UNEQUAL;

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -20,7 +29,7 @@ interface DocumentFixtureInterface
      * Return an integer by which the order will be determined in
      * accordance with the values returned by other fixtures.
      *
-     * @return integer
+     * @return int
      */
     public function getOrder();
 }

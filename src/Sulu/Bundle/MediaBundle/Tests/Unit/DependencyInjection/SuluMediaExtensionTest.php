@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,9 +18,9 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions()
     {
-        return array(
+        return [
             new SuluMediaExtension(),
-        );
+        ];
     }
 
     public function testLoad()
@@ -27,22 +28,22 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->load();
 
         $this->assertContainerBuilderHasService('sulu_media.media_manager');
-        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', array(
+        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', [
             'Expires' => '+1 month',
             'Pragma' => 'public',
             'Cache-Control' => 'public',
-        ));
+        ]);
         $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', '170x170');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.segments', 10);
-        $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', array(
+        $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', [
             'id' => 1,
-        ));
+        ]);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.save_image', true);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
-        $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', array('file/exe'));
+        $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', ['file/exe']);
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
-        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types',  array(
+        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types',  [
             'image/jpeg',
             'image/jpg',
             'image/gif',
@@ -51,24 +52,24 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
             'image/svg+xml',
             'image/vnd.adobe.photoshop',
             'application/pdf',
-        ));
-        $this->assertContainerBuilderHasParameter('sulu_media.media.types', array(
-            array(
+        ]);
+        $this->assertContainerBuilderHasParameter('sulu_media.media.types', [
+            [
                 'type' => 'document',
-                'mimeTypes' => array('*'),
-            ),
-            array(
+                'mimeTypes' => ['*'],
+            ],
+            [
                 'type' => 'image',
-                'mimeTypes' => array('image/*'),
-            ),
-            array(
+                'mimeTypes' => ['image/*'],
+            ],
+            [
                 'type' => 'video',
-                'mimeTypes' => array('video/*'),
-            ),
-            array(
+                'mimeTypes' => ['video/*'],
+            ],
+            [
                 'type' => 'audio',
-                'mimeTypes' => array('audio/*'),
-            ),
-        ));
+                'mimeTypes' => ['audio/*'],
+            ],
+        ]);
     }
 }

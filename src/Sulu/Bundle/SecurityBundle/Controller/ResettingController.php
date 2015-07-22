@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +12,12 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,12 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
  * Class ResettingController.
@@ -72,7 +73,7 @@ class ResettingController extends Controller
      * a link to the resetting route.
      *
      * @param Request $request
-     * @param bool $generateNewKey If true a new token will be generated before sending the mail
+     * @param bool    $generateNewKey If true a new token will be generated before sending the mail
      *
      * @return JsonResponse
      */
@@ -86,7 +87,7 @@ class ResettingController extends Controller
             }
             $email = $this->getEmail($user);
             $this->sendTokenEmail($user, $this->getSenderAddress($request), $email);
-            $response = new JsonResponse(array('email' => $email));
+            $response = new JsonResponse(['email' => $email]);
         } catch (EntityNotFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (TokenAlreadyRequestedException $ex) {
@@ -116,7 +117,7 @@ class ResettingController extends Controller
             $this->changePassword($user, $request->get('password', ''));
             $this->deleteToken($user);
             $this->loginUser($user, $request);
-            $response = new JsonResponse(array('url' => $this->get('router')->generate('sulu_admin')));
+            $response = new JsonResponse(['url' => $this->get('router')->generate('sulu_admin')]);
         } catch (InvalidTokenException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (MissingPasswordException $ex) {
@@ -227,8 +228,8 @@ class ResettingController extends Controller
      * Sends the password-reset-token of a user to an email-adress.
      *
      * @param UserInterface $user
-     * @param string $from From-Email-Address
-     * @param string $to To-Email-Address
+     * @param string        $from From-Email-Address
+     * @param string        $to   To-Email-Address
      *
      * @throws NoTokenFoundException
      * @throws TokenEmailsLimitReachedException
@@ -246,13 +247,13 @@ class ResettingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(static::$emailSubjectKey, array(), static::$translationDomain)
+                $translator->trans(static::$emailSubjectKey, [], static::$translationDomain)
             )
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(static::$emailMessageKey, array(), static::$translationDomain) . PHP_EOL .
-                $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()), true)
+                $translator->trans(static::$emailMessageKey, [], static::$translationDomain) . PHP_EOL .
+                $this->generateUrl('sulu_admin.reset', ['token' => $user->getPasswordResetToken()], true)
             );
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
@@ -264,7 +265,7 @@ class ResettingController extends Controller
      * Changes the password of a user.
      *
      * @param UserInterface $user
-     * @param string $password
+     * @param string        $password
      *
      * @throws MissingPasswordException
      */
@@ -354,8 +355,8 @@ class ResettingController extends Controller
      * Returns an encoded password gor a given one.
      *
      * @param UserInterface $user
-     * @param string $password
-     * @param string $salt
+     * @param string        $password
+     * @param string        $salt
      *
      * @return mixed
      */
@@ -369,7 +370,8 @@ class ResettingController extends Controller
     /**
      * @return UserRepositoryInterface
      */
-    private function getUserRepository() {
+    private function getUserRepository()
+    {
         return $this->get('sulu.repository.user');
     }
 }

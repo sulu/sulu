@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,45 +42,45 @@ class SearchControllerTest extends SuluTestCase
 
     public function provideSearch()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'q' => 'Hello',
                     'locale' => 'de',
-                ),
-                array(
+                ],
+                [
                     'page' => 1,
                     'limit' => 10,
                     'pages' => 1,
-                    '_embedded' => array(
-                        'result' => array(
-                        ),
-                    ),
-                    'totals' => array(
+                    '_embedded' => [
+                        'result' => [
+                        ],
+                    ],
+                    'totals' => [
                         'page' => 0,
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
                         'test' => 0,
-                    ),
+                    ],
                     'total' => 0,
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'q' => 'Product',
-                    'indexes' => array('Product'),
+                    'indexes' => ['Product'],
                     'locale' => 'fr',
-                ),
-                array(
+                ],
+                [
                     'page' => 1,
                     'limit' => 10,
                     'pages' => 1,
-                    '_embedded' => array(
-                        'result' => array(
-                            array(
+                    '_embedded' => [
+                        'result' => [
+                            [
                                 'id' => null,
-                                'document' => array(
+                                'document' => [
                                     'id' => 6,
                                     'title' => 'Product Xeon',
                                     'description' => 'To be or not to be, that is the question',
@@ -91,40 +92,40 @@ class SearchControllerTest extends SuluTestCase
                                     'changed' => '2015-04-12T00:00:00+00:00',
                                     'creatorName' => 'dantleech',
                                     'changerName' => 'dantleech',
-                                    'properties' => array(
+                                    'properties' => [
                                         'title' => 'Product Xeon',
                                         'body' => 'To be or not to be, that is the question',
-                                    ),
-                                ),
+                                    ],
+                                ],
                                 'score' => -1,
-                            ),
-                        ),
-                    ),
-                    'totals' => array(
+                            ],
+                        ],
+                    ],
+                    'totals' => [
                         'test' => 1,
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
                         'page' => 0,
-                    ),
+                    ],
                     'total' => 1,
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'q' => 'Xeon',
                     'limit' => 1,
                     'page' => 2,
-                ),
-                array(
+                ],
+                [
                     'page' => 2,
                     'limit' => 1,
                     'pages' => 2,
-                    '_embedded' => array(
-                        'result' => array(
-                            array(
+                    '_embedded' => [
+                        'result' => [
+                            [
                                 'id' => null,
-                                'document' => array(
+                                'document' => [
                                     'id' => 7,
                                     'title' => 'Car Xeon',
                                     'description' => 'To be or not to be, that is the question',
@@ -136,26 +137,26 @@ class SearchControllerTest extends SuluTestCase
                                     'changed' => '2015-04-12T00:00:00+00:00',
                                     'creatorName' => 'dantleech',
                                     'changerName' => 'dantleech',
-                                    'properties' => array(
+                                    'properties' => [
                                         'title' => 'Car Xeon',
                                         'body' => 'To be or not to be, that is the question',
-                                    ),
-                                ),
+                                    ],
+                                ],
                                 'score' => -1,
-                            ),
-                        ),
-                    ),
-                    'totals' => array(
+                            ],
+                        ],
+                    ],
+                    'totals' => [
                         'test' => 2,
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
                         'page' => 0,
-                    ),
+                    ],
                     'total' => 2,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ interface HandlerUpdateResponseInterface extends HandlerInterface
     /**
      * Update the response based on the given structure.
      *
-     * @param Response $response
+     * @param Response           $response
      * @param StructureInterface $structure
      */
     public function updateResponse(Response $response, StructureInterface $structure);

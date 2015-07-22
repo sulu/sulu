@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Extension;
 
-use Sulu\Component\Content\Extension\ExtensionManager;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 /**
@@ -55,13 +64,13 @@ class ManagedExtensionContainer extends ExtensionContainer
     private $webspaceName;
 
     /**
-     * @param string $structureType
+     * @param string                    $structureType
      * @param ExtensionManagerInterface $extensionManager
-     * @param NodeInterface $node
-     * @param string $locale
-     * @param string $prefix
-     * @param string $internalPrefix
-     * @param string $webspaceName
+     * @param NodeInterface             $node
+     * @param string                    $locale
+     * @param string                    $prefix
+     * @param string                    $internalPrefix
+     * @param string                    $webspaceName
      */
     public function __construct(
         $structureType,
@@ -71,8 +80,7 @@ class ManagedExtensionContainer extends ExtensionContainer
         $prefix,
         $internalPrefix,
         $webspaceName
-    )
-    {
+    ) {
         $this->extensionManager = $extensionManager;
         $this->node = $node;
         $this->locale = $locale;
@@ -86,6 +94,7 @@ class ManagedExtensionContainer extends ExtensionContainer
      * Lazily evaluate the value for the given extension.
      *
      * @param string $extensionName
+     *
      * @return mixed
      */
     public function offsetGet($extensionName)
@@ -115,7 +124,7 @@ class ManagedExtensionContainer extends ExtensionContainer
      */
     public function toArray()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->extensionManager->getExtensions($this->structureType) as $extension) {
             $result[$extension->getName()] = $this->offsetGet($extension->getName());

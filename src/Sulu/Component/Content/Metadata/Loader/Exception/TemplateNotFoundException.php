@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +14,7 @@ namespace Sulu\Component\Content\Metadata\Loader\Exception;
 use Exception;
 
 /**
- * indicates an exception in template loading
+ * indicates an exception in template loading.
  */
 class TemplateNotFoundException extends Exception
 {

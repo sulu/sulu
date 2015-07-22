@@ -10,15 +10,13 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * ConditionGroup
+ * ConditionGroup.
  */
 class ConditionGroup
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -33,7 +31,7 @@ class ConditionGroup
     private $filter;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -41,9 +39,9 @@ class ConditionGroup
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int 
      */
     public function getId()
     {
@@ -51,9 +49,10 @@ class ConditionGroup
     }
 
     /**
-     * Add conditions
+     * Add conditions.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\Condition $conditions
+     *
      * @return ConditionGroup
      */
     public function addCondition(\Sulu\Bundle\ResourceBundle\Entity\Condition $conditions)
@@ -64,7 +63,7 @@ class ConditionGroup
     }
 
     /**
-     * Remove conditions
+     * Remove conditions.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\Condition $conditions
      */
@@ -74,7 +73,7 @@ class ConditionGroup
     }
 
     /**
-     * Get conditions
+     * Get conditions.
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
@@ -84,9 +83,10 @@ class ConditionGroup
     }
 
     /**
-     * Set filter
+     * Set filter.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\Filter $filter
+     *
      * @return ConditionGroup
      */
     public function setFilter(\Sulu\Bundle\ResourceBundle\Entity\Filter $filter)
@@ -97,7 +97,7 @@ class ConditionGroup
     }
 
     /**
-     * Get filter
+     * Get filter.
      *
      * @return \Sulu\Bundle\ResourceBundle\Entity\Filter 
      */

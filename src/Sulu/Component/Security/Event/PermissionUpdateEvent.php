@@ -1,41 +1,47 @@
 <?php
+
 /*
- * This file is part of Sulu
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Security\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * This event is dispatched when any object permission have been updated
+ * This event is dispatched when any object permission have been updated.
  */
 class PermissionUpdateEvent extends Event
 {
     /**
-     * The type of the object for which the permissions have been updated
+     * The type of the object for which the permissions have been updated.
+     *
      * @var string
      */
     private $type;
 
     /**
-     * The identifier of the object for which the permissions have been updated
+     * The identifier of the object for which the permissions have been updated.
+     *
      * @var string
      */
     private $identifier;
 
     /**
-     * The security identity for which the permissions have been updated
+     * The security identity for which the permissions have been updated.
+     *
      * @var string
      */
     private $securityIdentity;
 
     /**
-     * The new updated permissions
+     * The new updated permissions.
+     *
      * @var array
      */
     private $permissions;
@@ -44,7 +50,7 @@ class PermissionUpdateEvent extends Event
      * @param string $type
      * @param string $identifier
      * @param string $securityIdentity
-     * @param array $permissions
+     * @param array  $permissions
      */
     public function __construct($type, $identifier, $securityIdentity, $permissions)
     {
@@ -55,7 +61,8 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
-     * Returns the type of the object for which the permissions have been updated
+     * Returns the type of the object for which the permissions have been updated.
+     *
      * @return string
      */
     public function getType()
@@ -64,7 +71,8 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
-     * Returns the identifier of the object for which the permissions have been updated
+     * Returns the identifier of the object for which the permissions have been updated.
+     *
      * @return string
      */
     public function getIdentifier()
@@ -73,7 +81,8 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
-     * Returns the security identity for which the permissions have been updated
+     * Returns the security identity for which the permissions have been updated.
+     *
      * @return string
      */
     public function getSecurityIdentity()
@@ -82,7 +91,8 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
-     * Returns the new updated permissions
+     * Returns the new updated permissions.
+     *
      * @return array
      */
     public function getPermissions()

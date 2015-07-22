@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,10 +32,10 @@ class InvalidTokenException extends SecurityException
 
     public function toArray()
     {
-        return array(
+        return [
             'code' => $this->code,
             'message' => $this->message,
             'token' => $this->token,
-        );
+        ];
     }
 }

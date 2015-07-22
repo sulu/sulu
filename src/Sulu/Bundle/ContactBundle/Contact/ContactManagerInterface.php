@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ interface ContactManagerInterface
      *
      * @param $entity The entity to add the address to
      * @param Address $address The address to be added
-     * @param Bool $isMain Defines if the address is the main Address of the contact
+     * @param Bool    $isMain  Defines if the address is the main Address of the contact
      *
      * @return $relation
      */

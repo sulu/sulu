@@ -1,13 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
+use Sulu\Component\DocumentManager\Events;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Helper\Table;
-use Sulu\Component\DocumentManager\Events;
 
 class SubscriberDebugCommand extends ContainerAwareCommand
 {
@@ -36,15 +45,15 @@ class SubscriberDebugCommand extends ContainerAwareCommand
             list($listener, $methodName) = $listenerTuple;
             $refl = new \ReflectionClass(get_class($listener));
             $priority = $this->getPriority($eventName, $methodName, $listener);
-            $rows[] = array(
+            $rows[] = [
                 sprintf(
                     '<comment>%s</comment>\\%s',
                     $refl->getNamespaceName(),
                     $refl->getShortName()
                 ),
                 $methodName,
-                $priority
-            );
+                $priority,
+            ];
         }
 
         usort($rows, function ($a, $b) {
@@ -52,7 +61,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
         });
 
         $table = new Table($output);
-        $table->setHeaders(array('Class', 'Method', 'Priority'));
+        $table->setHeaders(['Class', 'Method', 'Priority']);
         $table->setRows($rows);
         $table->render();
     }
@@ -82,7 +91,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
                 return $priority;
             }
 
-            return null;
+            return;
         }
 
         foreach ($value as $event) {
@@ -101,11 +110,11 @@ class SubscriberDebugCommand extends ContainerAwareCommand
 
         $table = new Table($output);
 
-        $table->setHeaders(array('Event'));
+        $table->setHeaders(['Event']);
         foreach ($constants as $name => $value) {
-            $table->addRow(array(
-                substr($value, strlen(self::PREFIX))
-            ));
+            $table->addRow([
+                substr($value, strlen(self::PREFIX)),
+            ]);
         }
         $table->render();
     }

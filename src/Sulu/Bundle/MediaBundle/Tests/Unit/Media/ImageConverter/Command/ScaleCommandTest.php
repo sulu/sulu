@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,40 +21,40 @@ class ScaleCommandTest extends AbstractCommandTest
 
     protected function getDataList()
     {
-        return array(
-            array(
+        return [
+            [
                 // Command Options
-                'options' => array(
+                'options' => [
                         'x' => 200,
                         'y' => 100,
                         'forceRatio' => false,
-                    ),
+                    ],
                 // Tested Result
                 'width' => 200,
                 'height' => 100,
-            ),
-            array(
+            ],
+            [
                 // Command Options
-                'options' => array(
+                'options' => [
                         'x' => 5000,
                         'y' => 5000,
                         'forceRatio' => true,
-                    ),
+                    ],
                 // Tested Result
                 'width' => 500,
                 'height' => 500,
-            ),
-            array(
+            ],
+            [
                 // Command Options
-                'options' => array(
+                'options' => [
                         'x' => 5000,
                         'y' => 5000,
                         'forceRatio' => false,
-                    ),
+                    ],
                 // Tested Result
                 'width' => 700,
                 'height' => 500,
-            ),
-        );
+            ],
+        ];
     }
 }

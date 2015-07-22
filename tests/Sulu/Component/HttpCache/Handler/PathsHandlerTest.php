@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -81,10 +82,10 @@ class PathsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->structure->getLanguageCode()->willReturn($this->languageCode);
         $this->structure->getWebspaceKey()->willReturn($this->webspaceKey);
 
-        $urls = array(
+        $urls = [
             '/path/to/1',
             '/path/to/2',
-        );
+        ];
 
         $this->webspaceManager->findUrlsByResourceLocator(
             '/path/to',

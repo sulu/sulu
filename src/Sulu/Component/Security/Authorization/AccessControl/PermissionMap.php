@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,7 +37,7 @@ class PermissionMap implements PermissionMapInterface
             return;
         }
 
-        return array($this->permissions[$permission]);
+        return [$this->permissions[$permission]];
     }
 
     /**

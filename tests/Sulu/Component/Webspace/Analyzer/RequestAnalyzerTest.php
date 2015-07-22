@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,22 +39,22 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
             '\Sulu\Component\Webspace\Manager\WebspaceManagerInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('findPortalInformationByUrl')
+            ['findPortalInformationByUrl']
         );
 
         $this->userRepository = $this->getMockForAbstractClass(
             '\Sulu\Component\Security\Authentication\UserRepositoryInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('setSystem')
+            ['setSystem']
         );
 
         $this->requestAnalyzer = new WebsiteRequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
@@ -71,93 +72,93 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
     public function provideAnalyze()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'portal_url' => 'sulu.lo/test',
                     'path_info' => '/test/path/to',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
                     'redirect' => '',
-                ),
-                array(
+                ],
+                [
                     'redirect' => null,
                     'resource_locator_prefix' => '/test',
                     'resource_locator' => '/path/to',
                     'portal_url' => 'sulu.lo/test',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'portal_url' => 'sulu.lo',
                     'path_info' => '/test/path/to',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                     'redirect' => 'sulu.lo/test',
-                ),
-                array(
+                ],
+                [
                     'redirect' => 'sulu.lo/test',
                     'resource_locator_prefix' => '',
                     'resource_locator' => '/test/path/to',
                     'portal_url' => 'sulu.lo',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public function provideAnalyzeWithFormat()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'portal_url' => 'sulu.lo/test',
                     'path_info' => '/test/path/to.html',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
                     'redirect' => '',
-                ),
-                array(
+                ],
+                [
                     'redirect' => null,
                     'resource_locator_prefix' => '/test',
                     'resource_locator' => '/path/to',
                     'portal_url' => 'sulu.lo/test',
                     'format' => 'html',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'portal_url' => 'sulu.lo',
                     'path_info' => '/test/path/to.rss',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                     'redirect' => 'sulu.lo/test',
-                ),
-                array(
+                ],
+                [
                     'redirect' => 'sulu.lo/test',
                     'resource_locator_prefix' => '',
                     'resource_locator' => '/test/path/to',
                     'portal_url' => 'sulu.lo',
                     'format' => 'rss',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'portal_url' => 'sulu.lo/test',
                     'path_info' => '/test/path/to',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
                     'redirect' => '',
-                ),
-                array(
+                ],
+                [
                     'redirect' => null,
                     'resource_locator_prefix' => '/test',
                     'resource_locator' => '/path/to',
                     'portal_url' => 'sulu.lo/test',
                     'format' => null,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
      * @dataProvider provideAnalyze
      */
-    public function testAnalyze($config, $expected = array())
+    public function testAnalyze($config, $expected = [])
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -182,8 +183,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->prepareWebspaceManager($portalInformation);
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(array('post' => 1));
-        $request->query = new ParameterBag(array('get' => 1));
+        $request->request = new ParameterBag(['post' => 1]);
+        $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
@@ -197,14 +198,14 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
         $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getResourceLocator());
         $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getResourceLocatorPrefix());
-        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getPostParameters());
-        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getGetParameters());
+        $this->assertEquals(['post' => 1], $this->requestAnalyzer->getPostParameters());
+        $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
     }
 
     /**
      * @dataProvider provideAnalyzeWithFormat
      */
-    public function testAnalyzeWithFormat($config, $expected = array())
+    public function testAnalyzeWithFormat($config, $expected = [])
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -231,8 +232,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $requestFormat = false;
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(array('post' => 1));
-        $request->query = new ParameterBag(array('get' => 1));
+        $request->request = new ParameterBag(['post' => 1]);
+        $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
@@ -269,8 +270,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             $this->requestAnalyzer->getResourceLocatorPrefix()
         );
         $this->assertEquals($expected['format'], $request->getRequestFormat());
-        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getPostParameters());
-        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getGetParameters());
+        $this->assertEquals(['post' => 1], $this->requestAnalyzer->getPostParameters());
+        $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
     }
 
     /**
@@ -283,8 +284,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         );
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(array('post' => 1));
-        $request->query = new ParameterBag(array('get' => 1));
+        $request->request = new ParameterBag(['post' => 1]);
+        $request->query = new ParameterBag(['get' => 1]);
 
         $this->requestAnalyzer->analyze($request);
     }

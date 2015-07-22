@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,12 +11,9 @@
 
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -33,9 +31,9 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             KernelEvents::RESPONSE => 'onResponse',
-        );
+        ];
     }
 
     /**

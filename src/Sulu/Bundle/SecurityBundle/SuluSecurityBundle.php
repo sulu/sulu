@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,10 +23,10 @@ class SuluSecurityBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $this->buildPersistence(
-            array(
+            [
                 'Sulu\Component\Security\Authentication\UserInterface' => 'sulu.model.user.class',
                 'Sulu\Component\Security\Authentication\RoleInterface' => 'sulu.model.role.class',
-            ),
+            ],
             $container
         );
 

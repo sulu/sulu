@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,12 +41,12 @@ class SitemapController extends WebsiteController
 
         $flatSitemap = true;
 
-        $webspaceSitemaps = array(
+        $webspaceSitemaps = [
             $sitemapGenerator->generateAllLocals(
                 $requestAnalyzer->getWebspace()->getKey(),
                 $flatSitemap
             ),
-        );
+        ];
         $preferredDomain = $request->getHttpHost();
 
         // XML Response

@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures\fixtures;
 
 class DocumentFixtureLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,11 +27,11 @@ class DocumentFixtureLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should load, instantiate and order fixture classes
-     * It should assign the container to classes implementing ContainerAwareInterface
+     * It should assign the container to classes implementing ContainerAwareInterface.
      */
     public function testLoad()
     {
-        $fixtures = $this->loader->load(array(__DIR__ . '/fixtures'));
+        $fixtures = $this->loader->load([__DIR__ . '/fixtures']);
         $this->assertCount(3, $fixtures);
         $this->assertInstanceOf(fixtures\FoobarFixture::class, $fixtures[0]);
         $this->assertInstanceOf(fixtures\BarfooFixture::class, $fixtures[1]);

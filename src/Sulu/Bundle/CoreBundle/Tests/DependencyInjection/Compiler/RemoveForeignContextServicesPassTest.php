@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,15 +19,15 @@ class RemoveForeignContextServicesPassTest extends AbstractCompilerPassTestCase
 {
     public function provideWebsiteServices()
     {
-        return array(
-            array(
-                array(
-                    array('service' => 'service 1', 'context' => 'website', 'included' => true),
-                    array('service' => 'service 2', 'context' => 'website', 'included' => true),
-                    array('service' => 'service 3', 'context' => 'admin', 'included' => false),
-                ),
-            ),
-        );
+        return [
+            [
+                [
+                    ['service' => 'service 1', 'context' => 'website', 'included' => true],
+                    ['service' => 'service 2', 'context' => 'website', 'included' => true],
+                    ['service' => 'service 3', 'context' => 'admin', 'included' => false],
+                ],
+            ],
+        ];
     }
 
     protected function registerCompilerPass(ContainerBuilder $container)
@@ -43,7 +44,7 @@ class RemoveForeignContextServicesPassTest extends AbstractCompilerPassTestCase
 
         foreach ($services as $service) {
             $definition = new Definition();
-            $definition->addTag('sulu.context', array('context' => $service['context']));
+            $definition->addTag('sulu.context', ['context' => $service['context']]);
 
             $this->setDefinition($service['service'], $definition);
         }

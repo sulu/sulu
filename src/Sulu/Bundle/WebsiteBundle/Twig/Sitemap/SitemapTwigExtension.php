@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,10 +57,10 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('sulu_sitemap_url', array($this, 'sitemapUrlFunction')),
-            new \Twig_SimpleFunction('sulu_sitemap', array($this, 'sitemapFunction')),
-        );
+        return [
+            new \Twig_SimpleFunction('sulu_sitemap_url', [$this, 'sitemapUrlFunction']),
+            new \Twig_SimpleFunction('sulu_sitemap', [$this, 'sitemapFunction']),
+        ];
     }
 
     /**

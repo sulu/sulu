@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,13 +16,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFind()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            [],
+            []
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -32,13 +33,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithFields()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array('field1', 'field2', 'field3'),
+            [],
+            ['field1', 'field2', 'field3'],
             'SuluCoreBundle:Example',
-            array('field1', 'field2', 'field3'),
-            array(),
-            array(),
-            array()
+            ['field1', 'field2', 'field3'],
+            [],
+            [],
+            []
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -49,13 +50,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithSorting()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array('sortField' => 'ASC'),
-            array(),
-            array()
+            [],
+            ['sortField' => 'ASC'],
+            [],
+            []
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -66,13 +67,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithWhere()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array(),
-            array('field1' => 1, 'field2' => 2),
-            array()
+            [],
+            [],
+            ['field1' => 1, 'field2' => 2],
+            []
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -83,13 +84,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithSearch()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array(),
-            array(),
-            array('field')
+            [],
+            [],
+            [],
+            ['field']
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -100,13 +101,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithWhereAndSearch()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array(),
-            array('field1' => 1, 'field2' => 2),
-            array('field')
+            [],
+            [],
+            ['field1' => 1, 'field2' => 2],
+            ['field']
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -120,14 +121,14 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithWhereAndNumericSearch()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array(),
-            array('field1' => 1, 'field2' => 2),
-            array('field1'),
-            array('field2', 'field3')
+            [],
+            [],
+            ['field1' => 1, 'field2' => 2],
+            ['field1'],
+            ['field2', 'field3']
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -141,13 +142,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithJoins()
     {
         $builder = new ListQueryBuilder(
-            array('object', 'otherobject'),
-            array(),
+            ['object', 'otherobject'],
+            [],
             'SuluCoreBundle:Example',
-            array('object_field1', 'object_field2', 'otherobject_field3'),
-            array(),
-            array(),
-            array()
+            ['object_field1', 'object_field2', 'otherobject_field3'],
+            [],
+            [],
+            []
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
@@ -162,13 +163,13 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testCounting()
     {
         $builder = new ListQueryBuilder(
-            array(),
-            array(),
+            [],
+            [],
             'SuluCoreBundle:Example',
-            array(),
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            [],
+            []
         );
 
         $builder->justCount('u.id', 'total');

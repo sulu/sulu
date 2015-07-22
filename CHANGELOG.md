@@ -2,7 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
+    * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
+                                          then select data
     * ENHANCEMENT #1367 [AdminBundle]     Added new tabs design
     * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
     * ENHANCEMENT #1368 [ResourceBundle]  Changed handling of conjunctions for filters
@@ -16,6 +19,10 @@ CHANGELOG for Sulu
     * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
+
+* dev-master
+    * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
+    * HOTFIX      #1391 [All]            Removed partial load hints
 
 * 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document

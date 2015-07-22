@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,16 +33,16 @@ interface MediaRepositoryInterface
      * finds all media, can be filtered with parent.
      *
      * @param array $filter
-     * @param int $limit
-     * @param int $offset
+     * @param int   $limit
+     * @param int   $offset
      *
      * @return Paginator
      */
-    public function findMedia($filter = array(), $limit = null, $offset = null);
+    public function findMedia($filter = [], $limit = null, $offset = null);
 
     /**
      * @param string $filename
-     * @param int $collectionId
+     * @param int    $collectionId
      *
      * @return Media
      */
@@ -57,7 +58,7 @@ interface MediaRepositoryInterface
     public function findMediaByCollectionId($collectionId, $limit, $offset);
 
     /**
-     * Returns amount of affected rows
+     * Returns amount of affected rows.
      *
      * @param array $filter
      *

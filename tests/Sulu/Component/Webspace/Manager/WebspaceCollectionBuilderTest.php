@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,7 +29,7 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', ['locate']);
         $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
         $this->loader = new XmlFileLoader($locator);
 

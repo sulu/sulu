@@ -1,8 +1,15 @@
 <?php
 
-namespace Sulu\Component\Content\Metadata;
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
-use Sulu\Component\Content\Metadata\ItemMetadata;
+namespace Sulu\Component\Content\Metadata;
 
 abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
 {
@@ -20,18 +27,18 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should get a named tag
+     * It should get a named tag.
      */
     public function testGetTag()
     {
         $metadata = $this->getMetadata();
-        $tag = array('name' => 'foo');
-        $metadata->tags = array($tag);
+        $tag = ['name' => 'foo'];
+        $metadata->tags = [$tag];
         $this->assertEquals($tag, $metadata->getTag('foo'));
     }
 
     /**
-     * It should return a localized title
+     * It should return a localized title.
      */
     public function testGetTitle()
     {
@@ -41,7 +48,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the name if the localized title does not exist
+     * It should return the name if the localized title does not exist.
      */
     public function testGetTitleNoLocalization()
     {
@@ -51,19 +58,19 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It get a parameter
+     * It get a parameter.
      */
     public function testGetParameters()
     {
         $metadata = $this->getMetadata();
-        $metadata->parameters = array(
+        $metadata->parameters = [
             'param1' => 'param',
-        );
+        ];
         $this->assertEquals('param', $metadata->getParameter('param1'));
     }
 
     /**
-     * It throws an exception if the parameter does not exist
+     * It throws an exception if the parameter does not exist.
      *
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Unknown parameter "param5", known parameters: "param1"
@@ -71,9 +78,9 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetParametersInvalid()
     {
         $metadata = $this->getMetadata();
-        $metadata->parameters = array(
+        $metadata->parameters = [
             'param1' => 'param',
-        );
+        ];
         $metadata->getParameter('param5');
     }
 }

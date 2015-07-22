@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -64,7 +65,7 @@ interface ListBuilderInterface
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Gets a field descriptor used by the ListBuilder to retrieve and return the list
+     * Gets a field descriptor used by the ListBuilder to retrieve and return the list.
      *
      * @param string $fieldName
      *
@@ -73,7 +74,7 @@ interface ListBuilderInterface
     public function getSelectField($fieldName);
 
     /**
-     * Checks if field by name has been already added
+     * Checks if field by name has been already added.
      *
      * @param $name
      *
@@ -105,10 +106,10 @@ interface ListBuilderInterface
     public function search($search);
 
     /**
-     * Defines the field by which the table is sorted.
+     * Adds a field by which the table is sorted.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string $order
+     * @param string                  $order
      *
      * @return ListBuilderInterface
      */
@@ -178,7 +179,7 @@ interface ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Defines a in constraint.
+     * Defines an IN constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
@@ -211,15 +212,14 @@ interface ListBuilderInterface
     public function execute();
 
     /**
-     * Sets an array of field descriptors
+     * Sets an array of field descriptors.
      *
      * @param AbstractFieldDescriptor[] $fieldDescriptors
-     *
      */
     public function setFieldDescriptors(array $fieldDescriptors);
 
     /**
-     * Returns a field descriptor by name
+     * Returns a field descriptor by name.
      *
      * @param string $name
      *

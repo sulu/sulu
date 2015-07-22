@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +30,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->controller = $this->getMockForAbstractClass('\Sulu\Component\Rest\RestController');
-        $this->mockedObject = $this->getMock('stdClass', array('getId'));
+        $this->mockedObject = $this->getMock('stdClass', ['getId']);
         $this->mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
     }
 
@@ -40,14 +41,14 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $id = 1;
         $findCallback = function ($id) {
-            return array('id' => $id);
+            return ['id' => $id];
         };
 
         /** @var View $view */
         $view = $method->invoke($this->controller, $id, $findCallback);
 
         $this->assertEquals(200, $view->getStatusCode());
-        $this->assertEquals(array('id' => 1), $view->getData());
+        $this->assertEquals(['id' => 1], $view->getData());
     }
 
     public function testResponseGetByNotExistingId()
@@ -68,7 +69,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutEmpty()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
@@ -88,12 +89,12 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'processPut');
         $method->setAccessible(true);
 
-        $method->invoke($this->controller, array(), array(), $delete, $update, $add);
+        $method->invoke($this->controller, [], [], $delete, $update, $add);
     }
 
     public function testProcessPutWithDelete()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
@@ -115,10 +116,10 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $method->invoke(
             $this->controller,
-            array(
+            [
                 $this->mockedObject,
-            ),
-            array(),
+            ],
+            [],
             $delete,
             $update,
             $add
@@ -127,7 +128,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutWithUpdate()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->once())->method('update');
         $mock->expects($this->never())->method('add');
@@ -149,14 +150,14 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $method->invoke(
             $this->controller,
-            array(
+            [
                 $this->mockedObject,
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'id' => 1,
-                ),
-            ),
+                ],
+            ],
             $delete,
             $update,
             $add
@@ -165,7 +166,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutWithAdd()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->once())->method('add');
@@ -187,12 +188,12 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $method->invoke(
             $this->controller,
-            array(),
-            array(
-                array(
+            [],
+            [
+                [
                     'id' => 1,
-                ),
-            ),
+                ],
+            ],
             $delete,
             $update,
             $add
@@ -250,31 +251,31 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testResponseList()
     {
-        $entities = array(
-            array(
+        $entities = [
+            [
                 'test' => 1,
-            ),
-            array(
+            ],
+            [
                 'test' => 2,
-            ),
-            array(
+            ],
+            [
                 'test' => 3,
-            ),
-        );
+            ],
+        ];
 
         $controller = $this->getMockForAbstractClass(
             '\Sulu\Component\Rest\RestController',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('get', 'getRequest')
+            ['get', 'getRequest']
         );
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage')
+            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage']
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -285,13 +286,13 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
-        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
-        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
+        $query->expects($this->any())->method('all')->will($this->returnValue([]));
         $request->query = $query;
 
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
@@ -322,40 +323,40 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testResponseListForAllValue()
     {
-        $entities = array(
-            array(
+        $entities = [
+            [
                 'test' => 1,
-            ),
-            array(
+            ],
+            [
                 'test' => 2,
-            ),
-            array(
+            ],
+            [
                 'test' => 3,
-            ),
-            array(
+            ],
+            [
                 'test' => 4,
-            ),
-            array(
+            ],
+            [
                 'test' => 5,
-            ),
-            array(
+            ],
+            [
                 'test' => 6,
-            ),
-        );
+            ],
+        ];
 
         $controller = $this->getMockForAbstractClass(
             '\Sulu\Component\Rest\RestController',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('get', 'getRequest')
+            ['get', 'getRequest']
         );
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage')
+            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage']
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -366,15 +367,15 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
-        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will(
             $this->returnValue('admin/api/contacts?flat=true&page=2&limit=4&orderBy=lastName&sortOrder=asc')
         );
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
-        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
+        $query->expects($this->any())->method('all')->will($this->returnValue([]));
         $request->query = $query;
 
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
@@ -399,31 +400,31 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateHalResponse()
     {
-        $entities = array(
-            array(
+        $entities = [
+            [
                 'test' => 1,
-            ),
-            array(
+            ],
+            [
                 'test' => 2,
-            ),
-            array(
+            ],
+            [
                 'test' => 3,
-            ),
-        );
+            ],
+        ];
 
         $controller = $this->getMockForAbstractClass(
             '\Sulu\Component\Rest\RestController',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('get', 'getRequest')
+            ['get', 'getRequest']
         );
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage')
+            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage']
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -434,13 +435,13 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
-        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
-        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
+        $query->expects($this->any())->method('all')->will($this->returnValue([]));
         $request->query = $query;
 
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'createHalResponse');
@@ -457,14 +458,14 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testHalLink()
     {
-        $entities = array(
+        $entities = [
             $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
             $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
-        );
+        ];
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('getLimit', 'getPage')
+            ['getLimit', 'getPage']
         );
 
         $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
@@ -472,21 +473,21 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller = $this->getMockForAbstractClass(
             '\Sulu\Component\Rest\RestController',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('get', 'getRequest')
+            ['get', 'getRequest']
         );
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
-        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
-        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
+        $query->expects($this->any())->method('all')->will($this->returnValue([]));
         $request->query = $query;
 
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'getHalLinks');

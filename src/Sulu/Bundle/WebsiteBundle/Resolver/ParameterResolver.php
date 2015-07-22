@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +33,7 @@ class ParameterResolver implements ParameterResolverInterface
     /**
      * ParameterResolver constructor.
      *
-     * @param StructureResolverInterface $structureResolver
+     * @param StructureResolverInterface       $structureResolver
      * @param RequestAnalyzerResolverInterface $requestAnalyzerResolver
      */
     public function __construct(
@@ -55,7 +56,7 @@ class ParameterResolver implements ParameterResolverInterface
         if ($structure !== null) {
             $structureData = $this->structureResolver->resolve($structure);
         } else {
-            $structureData = array();
+            $structureData = [];
         }
 
         if (!$preview) {
@@ -71,11 +72,11 @@ class ParameterResolver implements ParameterResolverInterface
             $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
         }
 
-        $pageUrls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
-        $urls = array();
+        $pageUrls = array_key_exists('urls', $structureData) ? $structureData['urls'] : [];
+        $urls = [];
 
         foreach ($allLocalizations as $localization) {
-            /** @var Localization $localization */
+            /* @var Localization $localization */
             $locale = $localization->getLocalization();
 
             if (array_key_exists($locale, $pageUrls)) {

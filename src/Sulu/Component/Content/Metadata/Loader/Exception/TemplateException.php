@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,12 +14,13 @@ namespace Sulu\Component\Content\Metadata\Loader\Exception;
 use Exception;
 
 /**
- * Thrown when there is an error concerning a template
+ * Thrown when there is an error concerning a template.
  */
 class TemplateException extends Exception
 {
     /**
-     * The template causing the error
+     * The template causing the error.
+     *
      * @var string
      */
     protected $template;
@@ -33,7 +35,8 @@ class TemplateException extends Exception
     }
 
     /**
-     * Returns the template causing the error
+     * Returns the template causing the error.
+     *
      * @return string
      */
     public function getTemplate()

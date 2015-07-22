@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,10 +24,10 @@ class DialogHelper extends BaseDialogHelper
         if (!$errors) {
             $this->writeSection($output, 'You can now start using the generated code!');
         } else {
-            $this->writeSection($output, array(
+            $this->writeSection($output, [
                 'The command was not able to configure everything automatically.',
                 'You must do the following changes manually.',
-            ), 'error');
+            ], 'error');
 
             $output->writeln($errors);
         }
@@ -48,11 +49,11 @@ class DialogHelper extends BaseDialogHelper
 
     public function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white')
     {
-        $output->writeln(array(
+        $output->writeln([
             '',
             $this->getHelperSet()->get('formatter')->formatBlock($text, $style, true),
             '',
-        ));
+        ]);
     }
 
     public function getQuestion($question, $default, $sep = ':')

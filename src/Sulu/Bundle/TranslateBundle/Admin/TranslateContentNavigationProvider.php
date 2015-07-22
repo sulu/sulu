@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,19 +16,19 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 class TranslateContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('Details');
         $details->setAction('details');
         $details->setComponent('packages@sulutranslate');
-        $details->setComponentOptions(array('display' => 'details'));
-        $details->setDisplay(array('edit'));
+        $details->setComponentOptions(['display' => 'details']);
+        $details->setDisplay(['edit']);
 
         $settings = new ContentNavigationItem('Settings');
         $settings->setAction('settings');
         $settings->setComponent('packages@sulutranslate');
-        $settings->setComponentOptions(array('display' => 'settings'));
+        $settings->setComponentOptions(['display' => 'settings']);
 
-        return array($details, $settings);
+        return [$details, $settings];
     }
 }

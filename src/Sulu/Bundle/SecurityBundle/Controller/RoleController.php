@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,19 +40,19 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
-    protected $fieldsDefault = array('name');
-    protected $fieldsExcluded = array();
-    protected $fieldsHidden = array('changed', 'created');
-    protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0 => 'id', 1 => 'name');
-    protected $fieldsTranslationKeys = array();
+    protected $fieldsDefault = ['name'];
+    protected $fieldsExcluded = [];
+    protected $fieldsHidden = ['changed', 'created'];
+    protected $fieldsRelations = [];
+    protected $fieldsSortOrder = [0 => 'id', 1 => 'name'];
+    protected $fieldsTranslationKeys = [];
     protected $bundlePrefix = 'security.roles.';
 
     /**
      * @var Array - Holds the field descriptors for the list response
-     * TODO: Create a Manager and move the field descriptors to the manager
+     *            TODO: Create a Manager and move the field descriptors to the manager
      */
-    protected $fieldDescriptors = array();
+    protected $fieldDescriptors = [];
 
     // TODO: move field descriptors to a manager
     protected function getFieldDescriptors()
@@ -65,13 +66,13 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = array();
+        $this->fieldDescriptors = [];
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
             $this->container->getParameter('sulu.model.role.class'),
             'public.id',
-            array(),
+            [],
             false, false, '', '50px'
         );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
@@ -91,7 +92,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             'created',
             $this->container->getParameter('sulu.model.role.class'),
             'public.created',
-            array(),
+            [],
             false, false, 'date'
         );
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
@@ -99,7 +100,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             'changed',
             $this->container->getParameter('sulu.model.role.class'),
             'public.changed',
-            array(),
+            [],
             true, false, 'date'
         );
     }
@@ -273,7 +274,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 $role->setName($name);
                 $role->setSystem($request->get('system'));
 
-                if (!$this->processPermissions($role, $request->get('permissions', array()))) {
+                if (!$this->processPermissions($role, $request->get('permissions', []))) {
                     throw new RestException('Could not update dependencies!');
                 }
 
@@ -336,7 +337,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
         $get = function ($entity) {
-            /** @var Permission $entity */
+            /* @var Permission $entity */
 
             return $entity->getId();
         };
@@ -428,28 +429,28 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $roleData['name'] = $role->getName();
         $roleData['identifier'] = $role->getIdentifier();
         $roleData['system'] = $role->getSystem();
-        $roleData['permissions'] = array();
+        $roleData['permissions'] = [];
 
         $permissions = $role->getPermissions();
         if (!empty($permissions)) {
             foreach ($permissions as $permission) {
-                /** @var Permission $permission */
-                $roleData['permissions'][] = array(
+                /* @var Permission $permission */
+                $roleData['permissions'][] = [
                     'id' => $permission->getId(),
                     'context' => $permission->getContext(),
                     'module' => $permission->getModule(),
                     'permissions' => $this->get('sulu_security.mask_converter')
                         ->convertPermissionsToArray($permission->getPermissions()),
-                );
+                ];
             }
         }
 
         $securityType = $role->getSecurityType();
         if ($securityType) {
-            $roleData['securityType'] = array(
+            $roleData['securityType'] = [
                 'id' => $securityType->getId(),
                 'name' => $securityType->getName(),
-            );
+            ];
         }
 
         return $roleData;

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,20 +23,20 @@ class MultipleTranslatedPropertiesTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->properties = new MultipleTranslatedProperties(
-            array(
+            [
                 'template', 'foobar',
-            ),
+            ],
             'i18n'
         );
     }
 
     public function provideGetName()
     {
-        return array(
-            array(Structure::TYPE_PAGE, 'foobar', 'i18n:de-foobar'),
-            array(Structure::TYPE_SNIPPET, 'template', 'template'),
-            array(Structure::TYPE_PAGE, 'template', 'i18n:de-template'),
-        );
+        return [
+            [Structure::TYPE_PAGE, 'foobar', 'i18n:de-foobar'],
+            [Structure::TYPE_SNIPPET, 'template', 'template'],
+            [Structure::TYPE_PAGE, 'template', 'i18n:de-template'],
+        ];
     }
 
     /**

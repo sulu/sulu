@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,16 +11,14 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use PHPCR\PropertyType;
 use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class WorkflowStageSubscriber extends AbstractMappingSubscriber
 {
@@ -104,4 +103,3 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
         return $value;
     }
 }
-

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,26 +18,24 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface WorkflowStageBehavior
 {
     /**
-     * Return the workflow stage
+     * Return the workflow stage.
      *
-     * @return string|integer
+     * @return string|int
      */
     public function getWorkflowStage();
 
     /**
-     * Set the workflow stage
+     * Set the workflow stage.
      *
-     * @param string|integer
+     * @param string|int
      */
     public function setWorkflowStage($workflowStage);
 
     /**
      * Get the published date or return NULL if the 
-     * document has not yet been published
+     * document has not yet been published.
      *
      * @return null|\DateTime
      */
     public function getPublished();
-    
 }
-

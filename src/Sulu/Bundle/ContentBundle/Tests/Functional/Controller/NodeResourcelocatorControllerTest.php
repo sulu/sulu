@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\SessionInterface;
@@ -33,70 +42,70 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->initPhpcr();
         $this->data = $this->prepareRepositoryContent();
         $this->client = $this->createClient(
-            array(),
-            array(
+            [],
+            [
                 'PHP_AUTH_USER' => 'test',
                 'PHP_AUTH_PW' => 'test',
-            )
+            ]
         );
     }
 
     private function prepareRepositoryContent()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Produkte',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/products',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'News',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'test',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'test-2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-1',
                 'article' => 'Test',
-            ),
-            array(
+            ],
+            [
                 'title' => 'test',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test-1/test',
                 'article' => 'Test',
-            ),
-        );
+            ],
+        ];
 
         $client = $this->createClient(
-            array(),
-            array(
+            [],
+            [
                 'PHP_AUTH_USER' => 'test',
                 'PHP_AUTH_PW' => 'test',
-            )
+            ]
         );
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
@@ -117,7 +126,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->client->request(
             'POST',
             '/api/nodes/resourcelocators/generates?webspace=sulu_io&language=en&template=default',
-            array('parts' => array('title' => 'test'))
+            ['parts' => ['title' => 'test']]
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -126,7 +135,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->client->request(
             'POST',
             '/api/nodes/resourcelocators/generates?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&language=en&template=default',
-            array('parts' => array('title' => 'test'))
+            ['parts' => ['title' => 'test']]
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -135,7 +144,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->client->request(
             'POST',
             '/api/nodes/resourcelocators/generates?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&language=en&template=default',
-            array('parts' => array('title' => 'test'))
+            ['parts' => ['title' => 'test']]
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -144,7 +153,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->client->request(
             'POST',
             '/api/nodes/resourcelocators/generates?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&language=en&template=default',
-            array('parts' => array('title' => 'test'))
+            ['parts' => ['title' => 'test']]
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());

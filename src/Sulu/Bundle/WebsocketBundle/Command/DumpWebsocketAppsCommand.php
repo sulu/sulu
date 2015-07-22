@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,16 +44,16 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
 
         /** @var Table $table */
         $table = $this->getHelper('table');
-        $table->setHeaders(array('App-Name', 'Route', 'Allowed-Origins', 'Host-Name'));
+        $table->setHeaders(['App-Name', 'Route', 'Allowed-Origins', 'Host-Name']);
 
         foreach ($manager->getApps() as $app) {
             $table->addRow(
-                array(
+                [
                     $app['name'],
                     $app['route'],
                     print_r($app['allowedOrigins'], true),
                     $manager->getHttpHost(),
-                )
+                ]
             );
         }
 

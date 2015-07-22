@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -54,8 +55,8 @@ class BaseTestCase extends SuluTestCase
 
     public function generateDocumentIndex($count, $urlPrefix = '/test-')
     {
-        $documents = array();
-        for ($i = 1; $i <= $count; $i++) {
+        $documents = [];
+        for ($i = 1; $i <= $count; ++$i) {
             $pageDocument = new PageDocument();
             $pageDocument->setStructureType('default');
             $pageDocument->setParent($this->homeDocument);
@@ -74,7 +75,7 @@ class BaseTestCase extends SuluTestCase
 
     public function indexDocument($title, $url)
     {
-        /** @var ContentMapperInterface $mapper */
+        /* @var ContentMapperInterface $mapper */
         $document = $this->documentManager->create('page');
         $document->setTitle($title);
         $document->setStructureType('default');

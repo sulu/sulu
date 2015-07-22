@@ -14,13 +14,12 @@ use Sulu\Bundle\ResourceBundle\Api\Filter;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
- * Interface FilterManagerInterface
- * @package Sulu\Bundle\ResourceBundle\Filter
+ * Interface FilterManagerInterface.
  */
 interface FilterManagerInterface
 {
     /**
-     * Returns an array of field descriptors
+     * Returns an array of field descriptors.
      *
      * @param $locale
      *
@@ -29,7 +28,7 @@ interface FilterManagerInterface
     public function getFieldDescriptors($locale);
 
     /**
-     * Returns an array of field descriptors specific for the list
+     * Returns an array of field descriptors specific for the list.
      *
      * @param $locale
      *
@@ -38,9 +37,9 @@ interface FilterManagerInterface
     public function getListFieldDescriptors($locale);
 
     /**
-     * Finds a filter by id and locale
+     * Finds a filter by id and locale.
      *
-     * @param integer $id
+     * @param int $id
      * @param string $locale
      *
      * @return Filter
@@ -49,7 +48,7 @@ interface FilterManagerInterface
 
     /**
      * Finds all filters filtered by context and user and
-     * for the given locale
+     * for the given locale.
      *
      * @param string $context
      * @param $userId
@@ -60,33 +59,33 @@ interface FilterManagerInterface
     public function findFiltersForUserAndContext($context, $userId, $locale);
 
     /**
-     * Removes a filter with the given id
+     * Removes a filter with the given id.
      *
      * @param $id
      */
     public function delete($id);
 
     /**
-     * Saves the given filter
+     * Saves the given filter.
      *
      * @param array $data
      * @param string $locale
-     * @param integer $userId
-     * @param integer $id
+     * @param int $userId
+     * @param int $id
      *
      * @return Filter
      */
     public function save(array $data, $locale, $userId, $id = null);
 
     /**
-     * Deletes multiple filters at once
+     * Deletes multiple filters at once.
      *
      * @param $ids
      */
     public function batchDelete($ids);
 
     /**
-     * Returns the configured features for a context
+     * Returns the configured features for a context.
      *
      * @param $context
      *
@@ -95,21 +94,21 @@ interface FilterManagerInterface
     public function getFeaturesForContext($context);
 
     /**
-     * Checks if the context exists
+     * Checks if the context exists.
      *
      * @param $context
      *
-     * @return boolean
+     * @return bool
      */
     public function hasContext($context);
 
     /**
-     * Checks if a feature is enabled for a context
+     * Checks if a feature is enabled for a context.
      *
      * @param $context
      * @param $feature
      *
-     * @return boolean
+     * @return bool
      */
     public function isFeatureEnabled($context, $feature);
 }

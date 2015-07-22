@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,10 +24,10 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
      */
     public function initEnv(BeforeScenarioScope $scope)
     {
-        $this->execCommand('doctrine:fixtures:load', array('--no-interaction' => true, '--append' => false));
-        $this->execCommand('doctrine:phpcr:workspace:purge', array('--force' => true));
-        $this->execCommand('sulu:phpcr:init', array('--no-interaction' => true));
-        $this->execCommand('sulu:webspace:init', array('--no-interaction' => true));
+        $this->execCommand('doctrine:fixtures:load', ['--no-interaction' => true, '--append' => false]);
+        $this->execCommand('doctrine:phpcr:workspace:purge', ['--force' => true]);
+        $this->execCommand('sulu:phpcr:init', ['--no-interaction' => true]);
+        $this->execCommand('sulu:webspace:init', ['--no-interaction' => true]);
     }
 
     /**

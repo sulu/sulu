@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -499,7 +500,7 @@ interface ContactInterface
     public function getContactAddresses();
 
     /**
-     * Returns addresses
+     * Returns addresses.
      */
     public function getAddresses();
 

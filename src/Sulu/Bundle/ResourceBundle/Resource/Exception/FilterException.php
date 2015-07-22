@@ -15,5 +15,4 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
   */
 class FilterException extends \Exception
 {
-
 }

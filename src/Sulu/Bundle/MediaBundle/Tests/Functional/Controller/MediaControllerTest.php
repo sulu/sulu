@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -192,10 +193,10 @@ class MediaControllerTest extends SuluTestCase
     protected function setUpCollection()
     {
         $this->collection = new Collection();
-        $style = array(
+        $style = [
             'type' => 'circle',
             'color' => '#ffcc00',
-        );
+        ];
 
         $this->collection->setStyle(json_encode($style));
 
@@ -249,7 +250,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test Header dispositionType attachment
+     * Test Header dispositionType attachment.
      */
     public function testDownloadHeaderAttachment()
     {
@@ -268,7 +269,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test Header dispositionType inline
+     * Test Header dispositionType inline.
      */
     public function testDownloadHeaderInline()
     {
@@ -284,6 +285,28 @@ class MediaControllerTest extends SuluTestCase
         ob_end_clean();
 
         $this->assertEquals('inline; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
+    }
+
+    /**
+     * Test Header dispositionType umlauts in name.
+     */
+    public function testDownloadHeaderUmlauts()
+    {
+        $media = $this->createMedia('wöchentlich');
+
+        $client = $this->createAuthenticatedClient();
+
+        ob_start();
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
+        );
+        ob_end_clean();
+
+        $this->assertEquals(
+            'inline; filename="woechentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
@@ -534,24 +557,24 @@ class MediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/media',
-            array(
+            [
                 'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
-                'contentLanguages' => array(
+                'contentLanguages' => [
                     'en-gb',
-                ),
-                'publishLanguages' => array(
+                ],
+                'publishLanguages' => [
                     'en-gb',
                     'en-au',
                     'en',
                     'de',
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'fileVersion' => $photo,
-            )
+            ]
         );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
@@ -569,16 +592,16 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'en-gb',
-        ), $response->contentLanguages);
+        ], $response->contentLanguages);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'en-gb',
             'en-au',
             'en',
             'de',
-        ), $response->publishLanguages);
+        ], $response->publishLanguages);
     }
 
     /**
@@ -597,12 +620,12 @@ class MediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/media',
-            array(
+            [
                 'collection' => $this->collection->getId(),
-            ),
-            array(
+            ],
+            [
                 'fileVersion' => $photo,
-            )
+            ]
         );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
@@ -632,12 +655,12 @@ class MediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/media',
-            array(
+            [
                 'collection' => $this->collection->getId(),
-            ),
-            array(
+            ],
+            [
                 'fileVersion' => $photo,
-            )
+            ]
         );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
@@ -667,24 +690,24 @@ class MediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/media/' . $media->getId() . '?action=new-version',
-            array(
+            [
                 'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
-                'contentLanguages' => array(
+                'contentLanguages' => [
                     'en-gb',
-                ),
-                'publishLanguages' => array(
+                ],
+                'publishLanguages' => [
                     'en-gb',
                     'en-au',
                     'en',
                     'de',
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'fileVersion' => $photo,
-            )
+            ]
         );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
@@ -700,15 +723,15 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'en-gb',
-        ), $response->contentLanguages);
-        $this->assertEquals(array(
+        ], $response->contentLanguages);
+        $this->assertEquals([
             'en-gb',
             'en-au',
             'en',
             'de',
-        ), $response->publishLanguages);
+        ], $response->publishLanguages);
     }
 
     /**
@@ -723,21 +746,21 @@ class MediaControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/media/' . $media->getId(),
-            array(
+            [
                 'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
                 'title' => 'Update Title',
                 'description' => 'Update Description',
-                'contentLanguages' => array(
+                'contentLanguages' => [
                     'en-gb',
-                ),
-                'publishLanguages' => array(
+                ],
+                'publishLanguages' => [
                     'en-gb',
                     'en-au',
                     'en',
                     'de',
-                ),
-            )
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -752,15 +775,15 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('Update Description', $response->description);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'en-gb',
-        ), $response->contentLanguages);
-        $this->assertEquals(array(
+        ], $response->contentLanguages);
+        $this->assertEquals([
             'en-gb',
             'en-au',
             'en',
             'de',
-        ), $response->publishLanguages);
+        ], $response->publishLanguages);
     }
 
     /**
@@ -779,12 +802,12 @@ class MediaControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/media/' . $media->getId() . '?action=new-version',
-            array(
+            [
                 'collection' => $this->collection->getId(),
-            ),
-            array(
+            ],
+            [
                 'fileVersion' => $photo,
-            )
+            ]
         );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
@@ -819,7 +842,7 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/media/' .  $media->getId()
+            '/api/media/' . $media->getId()
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -908,15 +931,15 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test move action
+     * Test move action.
      */
     public function testMove()
     {
         $destCollection = new Collection();
-        $style = array(
+        $style = [
             'type' => 'circle',
             'color' => '#ffcc00',
-        );
+        ];
 
         $destCollection->setStyle(json_encode($style));
         $destCollection->setType($this->collectionType);
@@ -940,7 +963,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test move to non existing collection
+     * Test move to non existing collection.
      */
     public function testMoveNonExistingCollection()
     {
@@ -953,7 +976,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test move to non existing media
+     * Test move to non existing media.
      */
     public function testMoveNonExistingMedia()
     {
@@ -964,7 +987,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test non existing action
+     * Test non existing action.
      */
     public function testMoveNonExistingAction()
     {

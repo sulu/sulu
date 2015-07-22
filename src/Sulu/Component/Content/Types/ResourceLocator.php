@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,10 +12,10 @@
 namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 
 /**

@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends SuluTestKernel
 {

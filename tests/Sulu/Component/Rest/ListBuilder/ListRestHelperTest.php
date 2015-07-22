@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFields()
     {
-        $request = new Request(array(
+        $request = new Request([
             'fields' => 'field1,field2,field3',
             'sortBy' => 'id',
             'sortOrder' => 'desc',
@@ -31,14 +32,14 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
             'searchFields' => 'title',
             'limit' => 10,
             'page' => 3,
-        ));
+        ]);
         $helper = new ListRestHelper($request, $this->em);
 
-        $this->assertEquals(array('field1', 'field2', 'field3'), $helper->getFields());
+        $this->assertEquals(['field1', 'field2', 'field3'], $helper->getFields());
         $this->assertEquals('id', $helper->getSortColumn());
         $this->assertEquals('desc', $helper->getSortOrder());
         $this->assertEquals('test', $helper->getSearchPattern());
-        $this->assertEquals(array('title'), $helper->getSearchFields());
+        $this->assertEquals(['title'], $helper->getSearchFields());
         $this->assertEquals(10, $helper->getLimit());
         $this->assertEquals(20, $helper->getOffset());
     }

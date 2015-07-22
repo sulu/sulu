@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,7 +34,7 @@ abstract class BundleGenerator extends Generator
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($dir)));
             }
             $files = scandir($dir);
-            if ($files != array('.', '..')) {
+            if ($files != ['.', '..']) {
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', realpath($dir)));
             }
             if (!is_writable($dir)) {
@@ -42,7 +43,7 @@ abstract class BundleGenerator extends Generator
         }
 
         $basename = substr($bundle, 0, -6);
-        $parameters = array(
+        $parameters = [
             'namespace' => $namespace,
             'bundle' => $bundle,
             'format' => 'xml',
@@ -51,7 +52,7 @@ abstract class BundleGenerator extends Generator
             'extension_alias' => Container::underscore($basename),
             'extensionalias' => str_replace('_', '', Container::underscore($basename)),
             'route' => $route,
-        );
+        ];
 
         $this->generateBundle($dir, $bundle, $basename, $structure, $parameters);
 

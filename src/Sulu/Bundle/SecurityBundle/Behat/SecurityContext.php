@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,7 +28,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     public function theUserExistsWithPassword($username, $password)
     {
         $this->getOrCreateRole('User', 'Sulu');
-        $this->execCommand('sulu:security:user:create', array(
+        $this->execCommand('sulu:security:user:create', [
             'username' => $username,
             'firstName' => 'Adam',
             'lastName' => 'Ministrator',
@@ -35,7 +36,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
             'locale' => 'en',
             'password' => $password,
             'role' => 'User',
-        ));
+        ]);
     }
 
     /**
@@ -47,7 +48,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $users = $users->getColumnsHash();
 
         foreach ($users as $user) {
-            $this->execCommand('sulu:security:user:create', array(
+            $this->execCommand('sulu:security:user:create', [
                 'username' => $user['username'],
                 'firstName' => $user['firstName'],
                 'lastName' => $user['lastName'],
@@ -55,7 +56,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
                 'locale' => $user['locale'],
                 'password' => $user['password'],
                 'role' => 'admin',
-            ));
+            ]);
         }
     }
 
@@ -79,9 +80,9 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     public function theRoleShouldNotExist($name)
     {
         $role = $this->getEntityManager()
-            ->getRepository('SuluSecurityBundle:Role')->findOneBy(array(
+            ->getRepository('SuluSecurityBundle:Role')->findOneBy([
                 'name' => $name,
-            ));
+            ]);
 
         if ($role) {
             throw new \Exception(sprintf('Role with name "%s" should NOT exist', $name));
@@ -127,7 +128,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $pool = $this->getContainer()->get('sulu_admin.admin_pool');
         $securityContexts = $pool->getSecurityContexts();
 
-        $securityContextsFlat = array();
+        $securityContextsFlat = [];
         array_walk_recursive(
             $securityContexts['Sulu'],
             function ($value) use (&$securityContextsFlat) {

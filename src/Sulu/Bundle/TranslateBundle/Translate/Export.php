@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -262,7 +263,7 @@ class Export
             );
 
         // Convert translations to format suitable for Symfony's MessageCatalogue
-        $messages = array();
+        $messages = [];
         foreach ($translations as $translation) {
             /** @var $translation Translation */
             if (!array_key_exists($translation->getCode()->getCode(), $messages)) {
@@ -274,7 +275,7 @@ class Export
 
         $messageCatalogue = new MessageCatalogue(
             $this->getLocale(),
-            array($this->filename => $messages)
+            [$this->filename => $messages]
         );
 
         // Write the file
@@ -288,8 +289,8 @@ class Export
                 break;
         }
 
-        $dumper->dump($messageCatalogue, array(
+        $dumper->dump($messageCatalogue, [
             'path' => $this->getPath(),
-        ));
+        ]);
     }
 }

@@ -1,12 +1,13 @@
 <?php
+
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
@@ -151,8 +152,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @param string $identifier The username or email of the user to load
      *
-     * @throws LockedException if the User is Locked
-     * @throws DisabledException if the User is not active
+     * @throws LockedException           if the User is Locked
+     * @throws DisabledException         if the User is not active
      * @throws UsernameNotFoundException if the User is not found
      *
      * @return UserInterface
@@ -211,7 +212,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Finds all users for the role with the given id
+     * Finds all users for the role with the given id.
      *
      * @param int $roleId
      *
@@ -366,7 +367,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function getUsernameByApiKey($apiKey)
     {
-        $user = $this->findOneBy(array('apiKey' => $apiKey));
+        $user = $this->findOneBy(['apiKey' => $apiKey]);
         if (!$user) {
             return;
         }

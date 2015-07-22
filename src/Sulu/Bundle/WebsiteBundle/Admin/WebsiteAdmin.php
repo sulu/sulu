@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,7 +39,7 @@ class WebsiteAdmin extends Admin
      */
     public function getCommands()
     {
-        return array();
+        return [];
     }
 
     /**

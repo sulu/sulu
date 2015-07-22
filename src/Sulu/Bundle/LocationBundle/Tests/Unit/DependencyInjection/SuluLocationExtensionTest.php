@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -9,9 +18,9 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions()
     {
-        return array(
+        return [
             new SuluLocationExtension(),
-        );
+        ];
     }
 
     public function testDefaultConfig()
@@ -19,29 +28,29 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
         $this->load();
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'sulu_location.map_manager',
-            'registerProvider', array(
+            'registerProvider', [
                 'google',
-                array(
+                [
                     'title' => 'Google Maps',
                     'api_key' => null,
-                ),
-            )
+                ],
+            ]
         );
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'sulu_location.map_manager',
-            'registerProvider', array(
+            'registerProvider', [
                 'leaflet',
-                array(
+                [
                     'title' => 'Leaflet (OSM)',
-                ),
-            )
+                ],
+            ]
         );
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'sulu_location.map_manager',
-            'setDefaultProviderName', array(
+            'setDefaultProviderName', [
                 'leaflet',
-            )
+            ]
         );
     }
 }

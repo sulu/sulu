@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,15 +46,15 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
             );
         };
 
-        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
-        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
+        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize([1, 2])));
+        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize([2, 3])));
 
         $this->cache->save($id12, 3, $this->defaultLifeTime)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -77,7 +78,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 },
@@ -85,8 +86,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
-        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
+        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize([1, 2])));
+        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize([2, 3])));
 
         $this->cache->save($id12, 3, 100)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -110,15 +111,15 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
             );
         };
 
-        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
-        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
+        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize([1, 2])));
+        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize([2, 3])));
 
         $this->cache->fetch($id12)->wilLReturn(3);
         $this->cache->contains($id12)->willReturn(true);
@@ -142,17 +143,17 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
                 'mem',
-                array($a, $b),
+                [$a, $b],
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
             );
         };
 
-        $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
-        $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
+        $id12 = md5(sprintf('mem(%s)', serialize([1, 2])));
+        $id23 = md5(sprintf('mem(%s)', serialize([2, 3])));
 
         $this->cache->save($id12, 3, $this->defaultLifeTime)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -176,9 +177,9 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
                 'mem',
-                array($a, $b),
+                [$a, $b],
                 function ($a, $b) use (&$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 },
@@ -186,8 +187,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
-        $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
+        $id12 = md5(sprintf('mem(%s)', serialize([1, 2])));
+        $id23 = md5(sprintf('mem(%s)', serialize([2, 3])));
 
         $this->cache->save($id12, 3, 100)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -211,17 +212,17 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
                 'mem',
-                array($a, $b),
+                [$a, $b],
                 function () use ($a, $b, &$called) {
-                    $called++;
+                    ++$called;
 
                     return $a + $b;
                 }
             );
         };
 
-        $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
-        $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
+        $id12 = md5(sprintf('mem(%s)', serialize([1, 2])));
+        $id23 = md5(sprintf('mem(%s)', serialize([2, 3])));
 
         $this->cache->fetch($id12)->wilLReturn(3);
         $this->cache->contains($id12)->willReturn(true);

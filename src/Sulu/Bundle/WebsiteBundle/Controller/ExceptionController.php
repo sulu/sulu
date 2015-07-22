@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -71,12 +72,12 @@ class ExceptionController extends BaseExceptionController
 
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
-        $parameter = array(
+        $parameter = [
             'status_code' => $code,
             'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
             'exception' => $exception,
             'currentContent' => $currentContent,
-        );
+        ];
         $data = $this->parameterResolver->resolve(
             $parameter,
             $this->requestAnalyzer

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ interface OrderBehavior
     /**
      * Return the absolute order value of this document.
      *
-     * @return integer
+     * @return int
      */
     public function getSuluOrder();
 }

@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Form\DataTransformer;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
-use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\DocumentManager;
 
 class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +30,7 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should transform a document to a UUID
+     * It should transform a document to a UUID.
      */
     public function testTransform()
     {
@@ -34,7 +41,7 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if reverse transform is attempted with something
-     * that is not a UUID
+     * that is not a UUID.
      *
      * @expectedException Symfony\Component\Form\Exception\TransformationFailedException
      * @expectedExceptionMessage Given UUID is not a UUID

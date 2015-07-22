@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ class JsonFileDumper extends FileDumper
      * Transforms a domain of a message catalogue to its string representation.
      *
      * @param MessageCatalogue $messages
-     * @param string $domain
+     * @param string           $domain
      *
      * @return string representation
      */
