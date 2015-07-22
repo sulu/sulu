@@ -17,7 +17,6 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Webspace;
 
 class SnippetTwigExtensionTest extends SuluTestCase
 {
@@ -78,6 +77,12 @@ class SnippetTwigExtensionTest extends SuluTestCase
         );
 
         return [[$data]];
+    }
+
+    public function testLoadSnippetNotExists()
+    {
+        $snippet = $this->extension->loadSnippet('123-123-123');
+        $this->assertNull($snippet);
     }
 
     public function testLoadSnippet()
