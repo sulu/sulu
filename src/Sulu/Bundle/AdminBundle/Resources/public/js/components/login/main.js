@@ -465,9 +465,9 @@ define([], function() {
         /**
          * Handle change of validation-input-element value on given frame
          * @param $frame parent frame of changed input-element
+         * @param event
          */
         validationInputChangeHandler: function($frame, event) {
-            console.log(event);
             if (event.type === 'keyup' && event.keyCode === 13) {
                 return false; // do not reset error status on enter
             }
@@ -534,13 +534,14 @@ define([], function() {
         },
 
         /**
-         * Handles keydown-event in  box-frames
+         * Handles keydown-event in given box-frame
+         * @param $frame
          * @param event
          */
         inputFormKeyHandler: function($frame, event) {
-            if (event.keyCode === 13) {
+            if (event.keyCode === 13) { //on enter
                 var $button = this.sandbox.dom.find('.btn', $frame);
-                this.sandbox.dom.click($button); //on enter
+                this.sandbox.dom.click($button);
             }
         },
 
