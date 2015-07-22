@@ -1,3 +1,4 @@
+@import "compass/css3/transform";
 @import '../js/vendor/husky/scss/mixins';
 
 @mixin background-size($type) {
@@ -20,12 +21,4 @@
   left: 50%;
   margin-left: -($width / 2);
   margin-top: -($height / 2);
-}
-
-@mixin blur($size) {
-  -webkit-filter: blur($size);
-  -moz-filter: blur($size);
-  -ms-filter: blur($size);
-  -o-filter: blur($size);
-  filter: blur($size);
 }

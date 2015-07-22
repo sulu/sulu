@@ -1,7 +1,10 @@
-@import "compass/css3/transform";
+#main {
+    min-width: 0;
+}
 
 .sulu-login {
     $logoSize: 150px;
+    $logoPath: "../img/logo_white.svg";
     $boxWidth: 400px;
 
     width: 100%;
@@ -16,8 +19,7 @@
 
         // properties for success slide animation
         left: 0;
-        transition: left 300ms;
-        transition-delay: 500ms;
+        @include transition(left 300ms 500ms);
     }
     .media-container {
         float: left;
@@ -29,7 +31,7 @@
             z-index: 20;
 
             @include centerFixedSizeBlock($logoSize, $logoSize);
-            background: url("../img/logo.svg") no-repeat center center;
+            background: url($logoPath) no-repeat center center;
             @include background-size(contain);
         }
 
@@ -45,7 +47,7 @@
             height: 100%;
 
             opacity: 1;
-            transition: opacity 300ms;
+            @include transition(opacity 300ms);
 
             background: no-repeat center center;
             @include background-size(cover);
@@ -56,8 +58,8 @@
                 height: 100%;
                 background: $black;
 
-                transition: opacity 500ms;
                 opacity: 0.5;
+                @include transition(opacity 500ms);
             }
         }
 
@@ -89,13 +91,12 @@
                 height: $logoSize;
                 z-index: 20;
 
-                background: url("../img/logo.svg") no-repeat center center;
+                background: url($logoPath) no-repeat center center;
                 @include background-size(contain);
             }
 
             .frame-slider {
-                transition: left 300ms;
-                display: table; //vertical centering
+                @include transition(left 300ms);
                 position: relative;
 
                 .box-frame {
@@ -124,7 +125,7 @@
                     .error-message {
                         // use max-height to enable css animation non-static height
                         max-height: 0px;
-                        transition: max-height 200ms;
+                        @include transition(max-height 200ms);
                         overflow: hidden;
                     }
 
@@ -150,7 +151,7 @@
 
                             // loader fade-in
                             opacity: 1;
-                            transition: opacity 300ms;
+                            @include transition(opacity 300ms);
 
                             &.inactive {
                                 border: 1px solid $grayDarkLighter;
@@ -203,7 +204,7 @@
 
             // success animation
             opacity: 0;
-            transition: opacity 300ms;
+            @include transition(opacity 300ms);
 
             .success-icon {
                 @include centerBlock;
@@ -242,25 +243,29 @@
 }
 
 @media screen and (max-width: 800px) , screen and (orientation: portrait) {
-    .media-container {
-        display: none !important;
-    }
+    .sulu-login {
+        .media-container {
+            display: none;
+        }
 
-    .content-container {
-        width: 100% !important;
-    }
-
-    .content-logo {
-        display: block !important;
-    }
-
-    .login-content-footer {
-        display: none !important;
-    }
-
-    .content-success{
         .content-container {
-            left: -100% !important;
+            width: 100%;
+
+            .content-box {
+                .content-logo {
+                    display: block;
+                }
+            }
+
+            .login-content-footer {
+                display: none;
+            }
+        }
+
+        &.content-success {
+            .content-container {
+                left: -100%;
+            }
         }
     }
 
@@ -268,3 +273,4 @@
         left: 50% !important;
     }
 }
+
