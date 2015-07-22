@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -93,11 +94,11 @@ class CollectionController extends RestController implements ClassResourceInterf
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
 
-            $filter = array(
+            $filter = [
                 'limit' => $limit,
                 'offset' => $offset,
                 'search' => $search,
-            );
+            ];
 
             $view = $this->responseGetById(
                 $id,
@@ -108,7 +109,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                         $depth,
                         $breadcrumb,
                         $filter,
-                        $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                        $sortBy !== null ? [$sortBy => $sortOrder] : []
                     );
                 }
             );
@@ -146,13 +147,13 @@ class CollectionController extends RestController implements ClassResourceInterf
             if ($flat) {
                 $collections = $collectionManager->get(
                     $this->getLocale($request),
-                    array(
+                    [
                         'depth' => $depth,
                         'search' => $search,
-                    ),
+                    ],
                     $limit,
                     $offset,
-                    $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                    $sortBy !== null ? [$sortBy => $sortOrder] : []
                 );
             } else {
                 $collections = $collectionManager->getTree(
@@ -161,7 +162,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $limit,
                     $search,
                     $depth,
-                    $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                    $sortBy !== null ? [$sortBy => $sortOrder] : []
                 );
             }
 
@@ -202,7 +203,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Edits the existing collection with the given id.
      *
-     * @param int $id The id of the collection to update
+     * @param int     $id      The id of the collection to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -244,7 +245,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      *
      * @Post("collections/{id}")
      *
-     * @param int $id
+     * @param int     $id
      * @param Request $request
      *
      * @return Response
@@ -271,7 +272,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Moves an entity into another one.
      *
-     * @param int $id
+     * @param int     $id
      * @param Request $request
      *
      * @return Response
@@ -292,7 +293,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     protected function getData(Request $request)
     {
-        return array(
+        return [
             'style' => $request->get('style'),
             'type' => $request->get('type', $this->container->getParameter('sulu_media.collection.type.default')),
             'parent' => $request->get('parent'),
@@ -303,7 +304,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             'creator' => $request->get('creator'),
             'changed' => $request->get('changed'),
             'created' => $request->get('created'),
-        );
+        ];
     }
 
     /**

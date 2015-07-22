@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,11 +18,11 @@ interface PreviewInterface
     /**
      * starts a preview for given user and content.
      *
-     * @param int $userId
-     * @param string $contentUuid
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param array $data changes which will be set after warmup
+     * @param int         $userId
+     * @param string      $contentUuid
+     * @param string      $webspaceKey
+     * @param string      $locale
+     * @param array       $data        changes which will be set after warmup
      * @param string|null $template
      *
      * @return StructureInterface
@@ -31,7 +32,7 @@ interface PreviewInterface
     /**
      * stops a preview.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -43,7 +44,7 @@ interface PreviewInterface
     /**
      * returns if a preview started for user and content.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
@@ -55,12 +56,12 @@ interface PreviewInterface
     /**
      * update properties in changes array.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @param array $changes
-     * @param bool $render
+     * @param array  $changes
+     * @param bool   $render
      *
      * @return StructureInterface
      */
@@ -69,12 +70,12 @@ interface PreviewInterface
     /**
      * saves changes for given user and content.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @param string $property propertyName which was changed
-     * @param mixed $data new data
+     * @param string $property    propertyName which was changed
+     * @param mixed  $data        new data
      *
      * @return \Sulu\Component\Content\Compat\StructureInterface
      */
@@ -97,11 +98,11 @@ interface PreviewInterface
     /**
      * renders a content for given user.
      *
-     * @param int $userId
-     * @param string $contentUuid
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param bool $partial
+     * @param int         $userId
+     * @param string      $contentUuid
+     * @param string      $webspaceKey
+     * @param string      $locale
+     * @param bool        $partial
      * @param string|null $property
      *
      * @return string

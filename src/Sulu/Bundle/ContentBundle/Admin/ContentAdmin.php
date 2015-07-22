@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -78,7 +79,7 @@ class ContentAdmin extends Admin
      */
     public function getCommands()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -94,16 +95,16 @@ class ContentAdmin extends Admin
      */
     public function getSecurityContexts()
     {
-        $webspaceContexts = array();
+        $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            /** @var Webspace $webspace */
+            /* @var Webspace $webspace */
             $webspaceContexts[] = $this->securityContextPrefix . $webspace->getKey();
         }
 
-        return array(
-            'Sulu' => array(
+        return [
+            'Sulu' => [
                 'Webspaces' => $webspaceContexts,
-            ),
-        );
+            ],
+        ];
     }
 }

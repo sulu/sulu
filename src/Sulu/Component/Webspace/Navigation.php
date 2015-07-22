@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,14 +19,14 @@ class Navigation
     /**
      * @var NavigationContext[]
      */
-    private $contexts = array();
+    private $contexts = [];
 
     /**
      * @var string[]
      */
-    private $keys = array();
+    private $keys = [];
 
-    public function __construct($contexts = array())
+    public function __construct($contexts = [])
     {
         foreach ($contexts as $context) {
             $this->addContext($context);

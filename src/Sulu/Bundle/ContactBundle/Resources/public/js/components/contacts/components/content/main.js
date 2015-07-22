@@ -17,7 +17,12 @@ define(function() {
                 url: '/admin/content-navigations?alias=contact'
             },
             toolbar: {
-                buttons: ['saveWithOptions', 'settings']
+                buttons: [
+                    'saveWithOptions',
+                    {'settings': {
+                        dropdownItems: ['delete']
+                    }}
+                ]
             }
         }
     };

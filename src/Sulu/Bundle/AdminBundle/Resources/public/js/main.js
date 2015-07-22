@@ -21,8 +21,8 @@ require.config({
         'husky': 'vendor/husky/husky',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content': 'aura_extensions/sulu-content',
-        'aura_extensions/sulu-buttons': 'aura_extensions/sulu-buttons',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
+        'aura_extensions/sulu-buttons': 'aura_extensions/sulu-buttons',
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
 
         '__component__$app@suluadmin': 'components/app/main',
@@ -38,8 +38,8 @@ require.config({
         'config',
         'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content',
-        'aura_extensions/sulu-buttons',
         'aura_extensions/sulu-extension',
+        'aura_extensions/sulu-buttons',
         'aura_extensions/url-manager',
         'widget-groups',
 

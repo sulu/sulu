@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,10 +10,6 @@
  */
 
 namespace Sulu\Bundle\CoreBundle\Build;
-
-use DTL\PhpcrMigrations\MigratorFactory;
-use DTL\PhpcrMigrations\VersionStorage;
-use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
  * Initialize the migrations when Sulu is built.
@@ -36,7 +32,7 @@ class PhpcrMigrationsBuilder extends SuluBuilder
      */
     public function getDependencies()
     {
-        return array('phpcr');
+        return ['phpcr'];
     }
 
     /**

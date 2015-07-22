@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,13 +19,13 @@ class CategoryContentNavigationProvider implements ContentNavigationProviderInte
     /**
      * {@inheritdoc}
      */
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('content-navigation.category.details');
         $details->setAction('details');
         $details->setComponent('categories@sulucategory');
-        $details->setComponentOptions(array('display' => 'form'));
+        $details->setComponentOptions(['display' => 'form']);
 
-        return array($details);
+        return [$details];
     }
 }

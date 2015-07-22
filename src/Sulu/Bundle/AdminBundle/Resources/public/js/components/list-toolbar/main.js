@@ -33,15 +33,6 @@ define([], function() {
             default: function() {
                 return [
                     {
-                        id: 'add',
-                        icon: 'plus-circle',
-                        class: 'highlight',
-                        position: 10,
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.add');
-                        }.bind(this)
-                    },
-                    {
                         id: 'delete',
                         icon: 'trash-o',
                         position: 20,

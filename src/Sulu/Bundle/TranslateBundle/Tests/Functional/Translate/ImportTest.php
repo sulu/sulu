@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,7 +39,7 @@ class ImportTest extends SuluTestCase
         $this->em = $this->db('ORM')->getOm();
         $this->purgeDatabase();
 
-        $hikaruBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', array('getName', 'getPath'));
+        $hikaruBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', ['getName', 'getPath']);
         $hikaruBundle->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('SuluHikaruBundle'));
@@ -46,7 +47,7 @@ class ImportTest extends SuluTestCase
             ->method('getPath')
             ->will($this->returnValue(self::$fixturePath . '/bundles/SuluHikaruBundle'));
 
-        $sampleBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', array('getName', 'getPath'));
+        $sampleBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', ['getName', 'getPath']);
         $sampleBundle->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('SuluSampleBundle'));
@@ -57,7 +58,7 @@ class ImportTest extends SuluTestCase
         $kernel = $this->getMock('Symfony\Component\HttpKernel\KernelInterface');
         $kernel->expects($this->any())
             ->method('getBundles')
-            ->will($this->returnValue(array($sampleBundle, $hikaruBundle)));
+            ->will($this->returnValue([$sampleBundle, $hikaruBundle]));
 
         $this->import = new Import($this->em, $kernel);
     }
@@ -131,20 +132,20 @@ class ImportTest extends SuluTestCase
 
         $translations = $this->em->getRepository('SuluTranslateBundle:Translation')->findAll();
 
-        $values = array(
+        $values = [
             'Sulu ist wirklich toll!',
             'Sulu ist OpenSource!',
             'Sulu ist sehr toll!',
             'Sulu ist sogar OpenSource!',
-        );
+        ];
         $this->assertTrue(in_array($translations[0]->getValue(), $values));
-        $values = array_diff($values, array($translations[0]->getValue()));
+        $values = array_diff($values, [$translations[0]->getValue()]);
         $this->assertTrue(in_array($translations[1]->getValue(), $values));
-        $values = array_diff($values, array($translations[1]->getValue()));
+        $values = array_diff($values, [$translations[1]->getValue()]);
         $this->assertTrue(in_array($translations[2]->getValue(), $values));
-        $values = array_diff($values, array($translations[2]->getValue()));
+        $values = array_diff($values, [$translations[2]->getValue()]);
         $this->assertTrue(in_array($translations[3]->getValue(), $values));
-        $values = array_diff($values, array($translations[3]->getValue()));
+        $values = array_diff($values, [$translations[3]->getValue()]);
         $this->assertEquals(0, sizeof($values));
 
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
@@ -161,17 +162,17 @@ class ImportTest extends SuluTestCase
         $package = $this->em->getRepository('SuluTranslateBundle:Package')->find($package->getId());
         $this->assertEquals('Import', $package->getName());
 
-        $catalogue = $this->em->getRepository('SuluTranslateBundle:Catalogue')->findOneBy(array(
+        $catalogue = $this->em->getRepository('SuluTranslateBundle:Catalogue')->findOneBy([
             'locale' => 'en',
             'package' => $package->getId(),
-        ));
+        ]);
         $this->assertNotNull($catalogue);
         $this->assertEquals('en', $catalogue->getLocale());
 
         $codes = $this->em->getRepository('SuluTranslateBundle:Code')->findBy(
-            array(
+            [
                 'package' => $package->getId(),
-            )
+            ]
         );
         $this->assertEquals(4, count($codes));
         $this->assertEquals('sulu.great', $codes[0]->getCode());
@@ -184,9 +185,9 @@ class ImportTest extends SuluTestCase
         $this->assertEquals(null, $codes[1]->getLength());
 
         $translations = $this->em->getRepository('SuluTranslateBundle:Translation')->findBy(
-            array(
+            [
                 'catalogue' => $catalogue->getId(),
-            )
+            ]
         );
         $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());
         $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());

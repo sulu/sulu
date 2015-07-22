@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\MediaBundle\Tests\Fixtures;
 
 use Sulu\Component\Content\Block\BlockProperty;
@@ -19,87 +28,87 @@ class DefaultStructureCache extends \Sulu\Component\Content\Metadata
 
         $prop1 = new Property(
             'title',
-            array(
-                'title' =>             array(
+            [
+                'title' => [
                 'de' => 'Titel',
                 'en' => 'Title',
-            ),
-            ),
+            ],
+            ],
             'text_line',
             true,
             true,
             1,
             1,
-            array(
-            ),
-            array(
+            [
+            ],
+            [
                 'sulu.rlp.part' => new PropertyTag('sulu.rlp.part', 1),
-            ),
+            ],
             ''
         );
         $this->addChild($prop1);
 
         $prop1 = new Property(
             'url',
-            array(
-                'title' =>             array(
+            [
+                'title' => [
                 'de' => 'Adresse',
                 'en' => 'Resourcelocator',
-            ),
-            ),
+            ],
+            ],
             'resource_locator',
             true,
             true,
             1,
             1,
-            array(
-            ),
-            array(
+            [
+            ],
+            [
                 'sulu.rlp' => new PropertyTag('sulu.rlp', 1),
-            ),
+            ],
             ''
         );
         $this->addChild($prop1);
 
         $prop1 = new Property(
             'links',
-            array(
-                'title' =>             array(
+            [
+                'title' => [
                 'de' => 'Interne Links',
                 'en' => 'Internal links',
-            ),
-            ),
+            ],
+            ],
             'internal_links',
             false,
             true,
             1,
             1,
-            array(
-            ),
-            array(
-            ),
+            [
+            ],
+            [
+            ],
             ''
         );
         $this->addChild($prop1);
 
         $prop1 = new Property(
             'images',
-            array(
-                'title' =>             array(
+            [
+                'title' => [
                 'de' => 'Bilder',
                 'en' => 'Images',
-            ),
-            ),
+            ],
+            ],
             'media_selection',
             false,
             true,
             1,
             1,
-            array(
-            ),
-            array(
-                'sulu.search.field' => new PropertyTag('sulu.search.field', 1, array('type' => 'string', 'role' => 'image')),
-            ),
+            [
+            ],
+            [
+                'sulu.search.field' => new PropertyTag('sulu.search.field', 1, ['type' => 'string', 'role' => 'image']),
+            ],
             ''
         );
         $this->addChild($prop1);
@@ -107,36 +116,36 @@ class DefaultStructureCache extends \Sulu\Component\Content\Metadata
         // section content
                 $section1 = new SectionProperty(
             'content',
-                        array(
-                'title' =>             array(
+                        [
+                'title' => [
                 'de' => 'Inhalt',
                 'en' => 'Content',
-            ),
-                'info_text' =>             array(
+            ],
+                'info_text' => [
                 'de' => 'Bereich für den Inhalt',
                 'en' => 'Content Section',
-            ),
-            ),
+            ],
+            ],
             ''
         );
         $prop1 = new Property(
             'article',
-            array(
-                'title' =>             array(
+            [
+                'title' => [
                 'de' => 'Artikel',
                 'en' => 'Article',
-            ),
-            ),
+            ],
+            ],
             'text_editor',
             false,
             true,
             1,
             1,
-            array(
+            [
                 'godMode' => 'true',
-            ),
-            array(
-            ),
+            ],
+            [
+            ],
             ''
         );
         $section1->addChild($prop1);

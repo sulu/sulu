@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,32 +51,32 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
         $category2 = new Category($categoryEntity2, 'en');
 
         $this->categoryManager->expects($this->any())->method('findByIds')->will($this->returnValueMap(
-                array(
-                    array(array(1, 2), array($categoryEntity1, $categoryEntity2)),
-                )
+                [
+                    [[1, 2], [$categoryEntity1, $categoryEntity2]],
+                ]
             )
         );
 
         $this->categoryManager->expects($this->any())->method('getApiObjects')->will($this->returnValueMap(
-                array(
-                    array(array($categoryEntity1, $categoryEntity2), 'en', array($category1, $category2)),
-                )
+                [
+                    [[$categoryEntity1, $categoryEntity2], 'en', [$category1, $category2]],
+                ]
             )
         );
 
         $node = $this->getMockBuilder('PHPCR\NodeInterface')
             ->getMock();
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will($this->returnValueMap(
-                array(
-                    array('property', array(), array(1, 2)),
-                )
+                [
+                    ['property', [], [1, 2]],
+                ]
             )
         );
 
         $property = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')
             ->getMock();
         $property->expects($this->any())->method('getName')->willReturn('property');
-        $property->expects($this->any())->method('setValue')->with(array($category1->toArray(), $category2->toArray()));
+        $property->expects($this->any())->method('setValue')->with([$category1->toArray(), $category2->toArray()]);
 
         $this->categoryManager->expects($this->once())->method('findByIds');
         $this->categoryList->read($node, $property, null, 'en', null);

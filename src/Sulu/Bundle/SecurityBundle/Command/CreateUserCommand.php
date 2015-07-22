@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,7 +36,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $this->setName('sulu:security:user:create')
             ->setDescription('Create a user.')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('username', InputArgument::REQUIRED, 'The username'),
                     new InputArgument('firstName', InputArgument::REQUIRED, 'The FirstName'),
                     new InputArgument('lastName', InputArgument::REQUIRED, 'The LastName'),
@@ -43,7 +44,7 @@ class CreateUserCommand extends ContainerAwareCommand
                     new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),
                     new InputArgument('role', InputArgument::REQUIRED, 'The role'),
                     new InputArgument('password', InputArgument::REQUIRED, 'The password'),
-                )
+                ]
             );
     }
 
@@ -53,11 +54,11 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $localizations = $this->getContainer()->get('sulu.core.localization_manager')->getLocalizations();
-        $locales = array();
+        $locales = [];
         $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
         foreach ($localizations as $localization) {
-            /** @var Localization $localization */
+            /* @var Localization $localization */
             $locales[] = $localization->getLocalization();
         }
 
@@ -73,7 +74,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $em = $doctrine->getManager();
         $user = $this->getUser();
 
-        $existing = $doctrine->getRepository(get_class($user))->findOneBy(array('username' => $username));
+        $existing = $doctrine->getRepository(get_class($user))->findOneBy(['username' => $username]);
 
         if ($existing) {
             $output->writeln(sprintf('<error>User "%s" already exists</error>',
@@ -109,10 +110,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLocale($locale);
         $user->setEmail($email);
 
-        /** @var RoleRepositoryInterface $contactRepository */
+        /* @var RoleRepositoryInterface $contactRepository */
         $roleRepository = $this->getContainer()->get('sulu.repository.role');
         /** @var RoleInterface $role */
-        $role = $roleRepository->findOneBy(array('name' => $roleName));
+        $role = $roleRepository->findOneBy(['name' => $roleName]);
 
         if (!$role) {
             $output->writeln(sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
@@ -161,7 +162,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $doctrine = $this->getDoctrine();
         $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
-        /** @var RepositoryInterface $contactRepository */
+        /* @var RepositoryInterface $contactRepository */
         $userRepository = $this->getContainer()->get('sulu.repository.user');
 
         if (!$input->getArgument('username')) {
@@ -172,7 +173,7 @@ class CreateUserCommand extends ContainerAwareCommand
                         throw new \InvalidArgumentException('Username can not be empty');
                     }
 
-                    $users = $userRepository->findBy(array('username' => $username));
+                    $users = $userRepository->findBy(['username' => $username]);
                     if (count($users) > 0) {
                         throw new \InvalidArgumentException(sprintf('Username "%s" is not unique', $username));
                     }
@@ -225,7 +226,7 @@ class CreateUserCommand extends ContainerAwareCommand
                         $email = null;
                     }
                     if ($email !== null) {
-                        $users = $userRepository->findBy(array('email' => $email));
+                        $users = $userRepository->findBy(['email' => $email]);
                         if (count($users) > 0) {
                             throw new \InvalidArgumentException(sprintf('Email "%s" is not unique', $email));
                         }

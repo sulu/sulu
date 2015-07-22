@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,6 +36,6 @@ class CacheController extends Controller
             $filesystem->remove($path);
         }
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +14,6 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
-use Sulu\Component\Content\Metadata;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContentContentNavigationProvider implements ContentNavigationProviderInterface
@@ -30,7 +30,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
 
     /**
      * @param SecurityCheckerInterface $securityChecker
-     * @param bool $enabledSecurity
+     * @param bool                     $enabledSecurity
      */
     public function __construct(SecurityCheckerInterface $securityChecker, $enabledSecurity = false)
     {
@@ -41,7 +41,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
     /**
      * {@inheritdoc}
      */
-    public function getNavigationItems(array $options = array())
+    public function getNavigationItems(array $options = [])
     {
         $content = new ContentNavigationItem('content-navigation.contents.content');
         $content->setId('tab-content');
@@ -52,35 +52,35 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $seo->setId('tab-seo');
         $seo->setAction('seo');
         $seo->setComponent('content/seo@sulucontent');
-        $seo->setDisplay(array('edit'));
+        $seo->setDisplay(['edit']);
 
         $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
         $excerpt->setId('tab-excerpt');
         $excerpt->setAction('excerpt');
         $excerpt->setComponent('content/excerpt@sulucontent');
-        $excerpt->setDisplay(array('edit'));
+        $excerpt->setDisplay(['edit']);
 
         $settings = new ContentNavigationItem('content-navigation.contents.settings');
         $settings->setId('tab-settings');
         $settings->setAction('settings');
         $settings->setComponent('content/settings@sulucontent');
-        $settings->setDisplay(array('edit'));
+        $settings->setDisplay(['edit']);
 
-        $navigation = array($content, $seo, $excerpt, $settings);
+        $navigation = [$content, $seo, $excerpt, $settings];
 
         $securityContext = 'sulu.webspaces.' . $options['webspace'];
 
         if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, 'security')) {
             $permissions = new ContentNavigationItem('Permissions');
             $permissions->setAction('permissions');
-            $permissions->setDisplay(array('edit'));
+            $permissions->setDisplay(['edit']);
             $permissions->setComponent('permission-tab@sulusecurity');
             $permissions->setComponentOptions(
-                array(
+                [
                     'display' => 'form',
                     'type' => WebspaceBehavior::class,
                     'securityContext' => $securityContext,
-                )
+                ]
             );
 
             $navigation[] = $permissions;

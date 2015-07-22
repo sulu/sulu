@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,18 +19,18 @@ interface ContentNavigationRegistryInterface
     /**
      * Returns all the navigation items for the given alias.
      *
-     * @param string $alias The alias which specifies the returned group
-     * @param array $options An arbitrary list of options to pass to the navigation items
+     * @param string $alias   The alias which specifies the returned group
+     * @param array  $options An arbitrary list of options to pass to the navigation items
      *
      * @return ContentNavigationItem
      */
-    public function getNavigationItems($alias, array $options = array());
+    public function getNavigationItems($alias, array $options = []);
 
     /**
      * Adds a content navigation provider to the given alias.
      *
      * @param string $alias The alias to which the given items should be added
-     * @param string $id The id of the content navigation provider
+     * @param string $id    The id of the content navigation provider
      */
     public function addContentNavigationProvider($alias, $id);
 }

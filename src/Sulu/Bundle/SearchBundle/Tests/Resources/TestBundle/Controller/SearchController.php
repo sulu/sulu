@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,8 +27,8 @@ class SearchController extends Controller
         $searchManager = $this->get('massive_search.search_manager');
         $hits = $searchManager->createSearch($q)->locale('de')->index('content');
 
-        return $this->render('TestBundle:Search:query.html.twig', array(
+        return $this->render('TestBundle:Search:query.html.twig', [
             'hits' => $hits,
-        ));
+        ]);
     }
 }

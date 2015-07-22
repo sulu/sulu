@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,7 +64,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
      * ));
      *
      * @param string $command Command to execute
-     * @param array $args Arguments and options
+     * @param array  $args    Arguments and options
      *
      * @return int Exit code of command
      */
@@ -152,9 +153,9 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     /**
      * Return the script for clicking by title.
      *
-     * @param string $selector in which the target text should be found
+     * @param string $selector  in which the target text should be found
      * @param string $itemTitle Title of text to click within the selector
-     * @param string $type Type of click (i.e. click or dblclick)
+     * @param string $type      Type of click (i.e. click or dblclick)
      *
      * @return string The script
      */
@@ -190,7 +191,7 @@ EOT;
      * Wait for the named selector to appear.
      *
      * @param string $selector Selector to wait for
-     * @param int $time Timeout in miliseconds to wait
+     * @param int    $time     Timeout in miliseconds to wait
      */
     protected function waitForSelector($selector, $time = self::LONG_WAIT_TIME)
     {
@@ -203,7 +204,7 @@ EOT;
      * exceeded.
      *
      * @param string $selector Selector to wait for
-     * @param int $time Timeout in miliseconds to wait
+     * @param int    $time     Timeout in miliseconds to wait
      */
     protected function waitForSelectorAndAssert($selector, $time = self::LONG_WAIT_TIME)
     {
@@ -215,7 +216,7 @@ EOT;
      * Wait for the given text to appear.
      *
      * @param string $text
-     * @param int $time Timeout in miliseconds
+     * @param int    $time Timeout in miliseconds
      */
     protected function waitForText($text, $time = 10000)
     {
@@ -244,7 +245,7 @@ EOT;
      * Assert that the selector appears the given number of times.
      *
      * @param string $selector
-     * @param int $count Number of times the selector is expected to appear
+     * @param int    $count    Number of times the selector is expected to appear
      */
     protected function assertNumberOfElements($selector, $count)
     {
@@ -298,7 +299,7 @@ EOT;
      * Set the value of the named selector.
      *
      * @param string $selector
-     * @param mixed $value
+     * @param mixed  $value
      */
     protected function fillSelector($selector, $value)
     {
@@ -316,13 +317,13 @@ EOT
      * Wait for the named aura events.
      *
      * @param array $eventNames Array of event names
-     * @param int $time in milliseconds
+     * @param int   $time       in milliseconds
      */
     protected function waitForAuraEvents($eventNames, $time = self::MEDIUM_WAIT_TIME)
     {
-        $script = array();
+        $script = [];
         $uniq = uniqid();
-        $varNames = array();
+        $varNames = [];
 
         foreach (array_keys($eventNames) as $i) {
             $varName = 'document.__behatvar' . $uniq . $i;

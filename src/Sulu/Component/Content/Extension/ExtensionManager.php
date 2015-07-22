@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,22 +11,20 @@
 
 namespace Sulu\Component\Content\Extension;
 
-use Sulu\Component\Content\Extension\ExtensionInterface;
-
 /**
- * Manages extensions
+ * Manages extensions.
  */
 class ExtensionManager implements ExtensionManagerInterface
 {
-    private $extensions = array();
+    private $extensions = [];
 
     /**
      * {@inheritdoc}
      */
     public function getExtensions($structureType)
     {
-        $extensions = array();
-        
+        $extensions = [];
+
         if (isset($this->extensions['all'])) {
             $extensions = $this->extensions['all'];
         }
@@ -78,7 +77,7 @@ class ExtensionManager implements ExtensionManagerInterface
     public function addExtension(ExtensionInterface $extension, $structureType = 'all')
     {
         if (!isset($this->extensions[$structureType])) {
-            $this->extensions[$structureType] = array();
+            $this->extensions[$structureType] = [];
         }
 
         $this->extensions[$structureType][$extension->getName()] = $extension;

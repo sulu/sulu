@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', ['locate']);
         $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
 
         $this->loader = new XmlFileLoader($locator);
@@ -47,7 +48,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
         $this->assertEquals(
-            array('page' => 'default', 'homepage' => 'overview'),
+            ['page' => 'default', 'homepage' => 'overview'],
             $webspace->getTheme()->getDefaultTemplates()
         );
 
@@ -401,11 +402,11 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $errorTemplates = $theme->getErrorTemplates();
 
         $this->assertEquals(
-            array(
+            [
                 'default' => 'ClientWebsiteBundle:views:error.html.twig',
                 '400' => 'ClientWebsiteBundle:views:error.400.html.twig',
                 '500' => 'ClientWebsiteBundle:views:error.500.html.twig',
-            ),
+            ],
             $errorTemplates
         );
 
@@ -424,10 +425,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $errorTemplates = $theme->getErrorTemplates();
 
         $this->assertEquals(
-            array(
+            [
                 '400' => 'ClientWebsiteBundle:views:error.400.html.twig',
                 '500' => 'ClientWebsiteBundle:views:error.500.html.twig',
-            ),
+            ],
             $errorTemplates
         );
 
@@ -446,9 +447,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $errorTemplates = $theme->getErrorTemplates();
 
         $this->assertEquals(
-            array(
+            [
                 'default' => 'ClientWebsiteBundle:views:error.html.twig',
-            ),
+            ],
             $errorTemplates
         );
 

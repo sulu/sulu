@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,18 +27,18 @@ class TemplateController extends Controller
             ->getRepository('Sulu\Bundle\SecurityBundle\Entity\SecurityType')
             ->findAll();
 
-        $securityTypeTitles = array();
+        $securityTypeTitles = [];
         foreach ($securityTypes as $securityType) {
-            $securityTypeTitles[] = array(
+            $securityTypeTitles[] = [
                 'id' => $securityType->getId(),
                 'name' => $securityType->getName(),
-            );
+            ];
         }
 
-        return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array(
+        return $this->render('SuluSecurityBundle:Template:role.form.html.twig', [
                 'systems' => $systems,
                 'security_types' => $securityTypeTitles,
-            )
+            ]
         );
     }
 

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,28 +17,28 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testReadTemplate()
     {
-        $template = array(
+        $template = [
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
-            'tags' => array(
-                array(
+            'tags' => [
+                [
                     'name' => 'some.random.structure.tag',
-                    'attributes' => array(
+                    'attributes' => [
                         'foo' => 'bar',
                         'bar' => 'foo',
-                    ),
-                ),
-            ),
-            'meta' => array(
-                'title' => array(
+                    ],
+                ],
+            ],
+            'meta' => [
+                'title' => [
                     'de' => 'Das ist das Template 1',
                     'en' => 'That´s the template 1',
-                ),
-            ),
-            'properties' => array(
-                'title' => array(
+                ],
+            ],
+            'properties' => [
+                'title' => [
                     'name' => 'title',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -46,39 +47,39 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attributes' => array(),
-                        ),
-                        array(
+                            'attributes' => [],
+                        ],
+                        [
                             'name' => 'some.random.tag',
                             'priority' => null,
-                            'attributes' => array(
+                            'attributes' => [
                                 'one' => '1',
                                 'two' => '2',
                                 'three' => 'three',
-                            ),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(
-                        'title' => array(
+                            ],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [
+                        'title' => [
                             'de' => 'Titel',
                             'en' => 'Title',
-                        ),
-                        'info_text' => array(
+                        ],
+                        'info_text' => [
                             'de' => 'Titel-Info-DE',
                             'en' => 'Title-Info-EN',
-                        ),
-                        'placeholder' => array(
+                        ],
+                        'placeholder' => [
                             'de' => 'Platzhalter-Info-DE',
                             'en' => 'Placeholder-Info-EN',
-                        ),
-                    ),
-                ),
-                'url' => array(
+                        ],
+                    ],
+                ],
+                'url' => [
                     'name' => 'url',
                     'type' => 'resource_locator',
                     'minOccurs' => null,
@@ -87,17 +88,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.rlp',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'article' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'article' => [
                     'name' => 'article',
                     'type' => 'text_area',
                     'minOccurs' => null,
@@ -106,17 +107,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.title',
                             'priority' => 5,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'pages' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'pages' => [
                     'name' => 'pages',
                     'type' => 'smart_content_selection',
                     'minOccurs' => null,
@@ -125,17 +126,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.title',
                             'priority' => null,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'article_number' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'article_number' => [
                     'name' => 'article_number',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -144,11 +145,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => false,
-                    'tags' => array(),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'images' => array(
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'images' => [
                     'name' => 'images',
                     'type' => 'image_selection',
                     'minOccurs' => 0,
@@ -157,25 +158,25 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(
-                        array(
+                    'tags' => [],
+                    'params' => [
+                        [
                             'name' => 'minLinks',
                             'value' => 1,
                             'type' => 'string',
-                            'meta' => array(),
-                        ),
-                        array(
+                            'meta' => [],
+                        ],
+                        [
                             'name' => 'maxLinks',
                             'value' => 10,
                             'type' => 'string',
-                            'meta' => array(),
-                        ),
-                    ),
-                    'meta' => array(),
-                ),
-            ),
-        );
+                            'meta' => [],
+                        ],
+                    ],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template.xml');
         $this->assertEquals($template, $result);
@@ -185,21 +186,21 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testReadTitleInSection()
     {
-        $template = array(
+        $template = [
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
-            'properties' => array(
-                'title_section' => array(
+            'properties' => [
+                'title_section' => [
                     'name' => 'title_section',
                     'colspan' => null,
                     'cssClass' => null,
                     'type' => 'section',
-                    'params' => array(),
-                    'meta' => array(),
-                    'properties' => array(
-                        'title' => array(
+                    'params' => [],
+                    'meta' => [],
+                    'properties' => [
+                        'title' => [
                             'name' => 'title',
                             'type' => 'text_line',
                             'minOccurs' => null,
@@ -208,13 +209,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'cssClass' => null,
                             'mandatory' => true,
                             'multilingual' => true,
-                            'tags' => array(),
-                            'params' => array(),
-                            'meta' => array(),
-                        ),
-                    ),
-                ),
-                'url' => array(
+                            'tags' => [],
+                            'params' => [],
+                            'meta' => [],
+                        ],
+                    ],
+                ],
+                'url' => [
                     'name' => 'url',
                     'type' => 'resource_locator',
                     'minOccurs' => null,
@@ -223,18 +224,18 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.rlp',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array()
-                ),
-            ),
-        );
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template_title_in_section.xml');
 
@@ -253,13 +254,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testReadTypesEmptyProperties()
     {
-        $template = array(
+        $template = [
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
-            'properties' => array(),
-        );
+            'properties' => [],
+        ];
 
         $this->setExpectedException(
             '\Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException',
@@ -279,13 +280,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testReadBlockTemplate()
     {
-        $template = array(
+        $template = [
             'key' => 'template_block',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => '4800',
-            'properties' => array(
-                'title' => array(
+            'properties' => [
+                'title' => [
                     'name' => 'title',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -294,17 +295,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'url' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'url' => [
                     'name' => 'url',
                     'type' => 'resource_locator',
                     'minOccurs' => null,
@@ -313,17 +314,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.rlp',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'article' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'article' => [
                     'name' => 'article',
                     'type' => 'text_editor',
                     'minOccurs' => null,
@@ -332,11 +333,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'block1' => array(
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'block1' => [
                     'name' => 'block1',
                     'default-type' => 'default',
                     'minOccurs' => '2',
@@ -345,26 +346,26 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'type' => 'block',
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.block',
                             'priority' => 20,
-                            'attributes' => array(),
-                        ),
-                        array(
+                            'attributes' => [],
+                        ],
+                        [
                             'name' => 'sulu.test.block',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                    'types' => array(
-                        'default' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                    'types' => [
+                        'default' => [
                             'name' => 'default',
-                            'meta' => array(),
-                            'properties' => array(
-                                'title1.1' => array(
+                            'meta' => [],
+                            'properties' => [
+                                'title1.1' => [
                                     'name' => 'title1.1',
                                     'type' => 'text_line',
                                     'minOccurs' => null,
@@ -373,11 +374,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => true,
                                     'multilingual' => true,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                                'article1.1' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                                'article1.1' => [
                                     'name' => 'article1.1',
                                     'type' => 'text_area',
                                     'mandatory' => true,
@@ -386,11 +387,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                                'block1.1' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                                'block1.1' => [
                                     'name' => 'block1.1',
                                     'default-type' => 'default',
                                     'minOccurs' => null,
@@ -399,15 +400,15 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => false,
                                     'type' => 'block',
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                    'types' => array(
-                                        'default' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                    'types' => [
+                                        'default' => [
                                             'name' => 'default',
-                                            'meta' => array(),
-                                            'properties' => array(
-                                                'block1.1.1' => array(
+                                            'meta' => [],
+                                            'properties' => [
+                                                'block1.1.1' => [
                                                     'name' => 'block1.1.1',
                                                     'default-type' => 'default',
                                                     'minOccurs' => null,
@@ -416,15 +417,15 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                     'cssClass' => null,
                                                     'mandatory' => false,
                                                     'type' => 'block',
-                                                    'tags' => array(),
-                                                    'params' => array(),
-                                                    'meta' => array(),
-                                                    'types' => array(
-                                                        'default' => array(
+                                                    'tags' => [],
+                                                    'params' => [],
+                                                    'meta' => [],
+                                                    'types' => [
+                                                        'default' => [
                                                             'name' => 'default',
-                                                            'meta' => array(),
-                                                            'properties' => array(
-                                                                'article1.1.1' => array(
+                                                            'meta' => [],
+                                                            'properties' => [
+                                                                'article1.1.1' => [
                                                                     'name' => 'article1.1.1',
                                                                     'type' => 'text_area',
                                                                     'minOccurs' => 2,
@@ -433,17 +434,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     'cssClass' => null,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
-                                                                    'tags' => array(
-                                                                        array(
+                                                                    'tags' => [
+                                                                        [
                                                                             'name' => 'sulu.node.title',
                                                                             'priority' => 5,
-                                                                            'attributes' => array(),
-                                                                        ),
-                                                                    ),
-                                                                    'params' => array(),
-                                                                    'meta' => array(),
-                                                                ),
-                                                                'article2.1.2' => array(
+                                                                            'attributes' => [],
+                                                                        ],
+                                                                    ],
+                                                                    'params' => [],
+                                                                    'meta' => [],
+                                                                ],
+                                                                'article2.1.2' => [
                                                                     'name' => 'article2.1.2',
                                                                     'type' => 'text_area',
                                                                     'minOccurs' => 2,
@@ -452,11 +453,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     'cssClass' => null,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
-                                                                    'tags' => array(),
-                                                                    'params' => array(),
-                                                                    'meta' => array(),
-                                                                ),
-                                                                'block1.1.3' => array(
+                                                                    'tags' => [],
+                                                                    'params' => [],
+                                                                    'meta' => [],
+                                                                ],
+                                                                'block1.1.3' => [
                                                                     'name' => 'block1.1.3',
                                                                     'default-type' => 'default',
                                                                     'minOccurs' => null,
@@ -465,15 +466,15 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     'cssClass' => null,
                                                                     'mandatory' => false,
                                                                     'type' => 'block',
-                                                                    'tags' => array(),
-                                                                    'params' => array(),
-                                                                    'meta' => array(),
-                                                                    'types' => array(
-                                                                        'default' => array(
+                                                                    'tags' => [],
+                                                                    'params' => [],
+                                                                    'meta' => [],
+                                                                    'types' => [
+                                                                        'default' => [
                                                                             'name' => 'default',
-                                                                            'meta' => array(),
-                                                                            'properties' => array(
-                                                                                'article1.1.3.1' => array(
+                                                                            'meta' => [],
+                                                                            'properties' => [
+                                                                                'article1.1.3.1' => [
                                                                                     'name' => 'article1.1.3.1',
                                                                                     'type' => 'text_area',
                                                                                     'minOccurs' => 2,
@@ -482,19 +483,19 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                                     'cssClass' => null,
                                                                                     'mandatory' => true,
                                                                                     'multilingual' => true,
-                                                                                    'tags' => array(),
-                                                                                    'params' => array(),
-                                                                                    'meta' => array(),
-                                                                                ),
-                                                                            ),
-                                                                        ),
-                                                                    ),
-                                                                ),
-                                                            ),
-                                                        ),
-                                                    ),
-                                                ),
-                                                'block1.1.2' => array(
+                                                                                    'tags' => [],
+                                                                                    'params' => [],
+                                                                                    'meta' => [],
+                                                                                ],
+                                                                            ],
+                                                                        ],
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                                'block1.1.2' => [
                                                     'name' => 'block1.1.2',
                                                     'default-type' => 'default',
                                                     'type' => 'block',
@@ -503,15 +504,15 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                     'colspan' => null,
                                                     'cssClass' => null,
                                                     'mandatory' => false,
-                                                    'tags' => array(),
-                                                    'params' => array(),
-                                                    'meta' => array(),
-                                                    'types' => array(
-                                                        'default' => array(
+                                                    'tags' => [],
+                                                    'params' => [],
+                                                    'meta' => [],
+                                                    'types' => [
+                                                        'default' => [
                                                             'name' => 'default',
-                                                            'meta' => array(),
-                                                            'properties' => array(
-                                                                'article1.1.2.1' => array(
+                                                            'meta' => [],
+                                                            'properties' => [
+                                                                'article1.1.2.1' => [
                                                                     'name' => 'article1.1.2.1',
                                                                     'type' => 'text_area',
                                                                     'minOccurs' => 2,
@@ -520,23 +521,23 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     'cssClass' => null,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
-                                                                    'tags' => array(),
-                                                                    'params' => array(),
-                                                                    'meta' => array(),
-                                                                ),
-                                                            ),
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'blog' => array(
+                                                                    'tags' => [],
+                                                                    'params' => [],
+                                                                    'meta' => [],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'blog' => [
                     'name' => 'blog',
                     'type' => 'text_editor',
                     'minOccurs' => null,
@@ -545,12 +546,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-            ),
-        );
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template_block.xml');
         $this->assertEquals($template, $result);
@@ -560,13 +561,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testBlockMultipleTypes()
     {
-        $template = array(
+        $template = [
             'key' => 'template_block_types',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => '4800',
-            'properties' => array(
-                'title' => array(
+            'properties' => [
+                'title' => [
                     'name' => 'title',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -575,17 +576,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'url' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'url' => [
                     'name' => 'url',
                     'type' => 'resource_locator',
                     'minOccurs' => null,
@@ -594,17 +595,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.rlp',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'block1' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'block1' => [
                     'name' => 'block1',
                     'default-type' => 'default',
                     'minOccurs' => '2',
@@ -613,52 +614,52 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'type' => 'block',
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.node.block',
                             'priority' => 20,
-                            'attributes' => array(),
-                        ),
-                        array(
+                            'attributes' => [],
+                        ],
+                        [
                             'name' => 'sulu.test.block',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(
-                        'title' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [
+                        'title' => [
                             'de' => 'Block1 DE',
                             'en' => 'Block1 EN',
-                        ),
-                        'info_text' => array(
+                        ],
+                        'info_text' => [
                             'de' => 'Info Block1 DE',
                             'en' => 'Info Block1 EN',
-                        ),
-                        'placeholder' => array(
+                        ],
+                        'placeholder' => [
                             'de' => 'Placeholder Block1 DE',
                             'en' => 'Placeholder Block1 EN',
-                        ),
-                    ),
-                    'types' => array(
-                        'default' => array(
+                        ],
+                    ],
+                    'types' => [
+                        'default' => [
                             'name' => 'default',
-                            'meta' => array(
-                                'title' => array(
+                            'meta' => [
+                                'title' => [
                                     'de' => 'Default DE',
                                     'en' => 'Default EN',
-                                ),
-                                'info_text' => array(
+                                ],
+                                'info_text' => [
                                     'de' => 'Info Default DE',
                                     'en' => 'Info Default EN',
-                                ),
-                                'placeholder' => array(
+                                ],
+                                'placeholder' => [
                                     'de' => 'Placeholder Default DE',
                                     'en' => 'Placeholder Default EN',
-                                ),
-                            ),
-                            'properties' => array(
-                                'title' => array(
+                                ],
+                            ],
+                            'properties' => [
+                                'title' => [
                                     'name' => 'title',
                                     'type' => 'text_line',
                                     'minOccurs' => null,
@@ -667,11 +668,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => true,
                                     'multilingual' => true,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                                'article' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                                'article' => [
                                     'name' => 'article',
                                     'type' => 'text_area',
                                     'minOccurs' => 2,
@@ -680,30 +681,30 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => true,
                                     'multilingual' => true,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                            ),
-                        ),
-                        'test' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                            ],
+                        ],
+                        'test' => [
                             'name' => 'test',
-                            'meta' => array(
-                                'title' => array(
+                            'meta' => [
+                                'title' => [
                                     'de' => 'Test DE',
                                     'en' => 'Test EN',
-                                ),
-                                'info_text' => array(
+                                ],
+                                'info_text' => [
                                     'de' => 'Info Test DE',
                                     'en' => 'Info Test EN',
-                                ),
-                                'placeholder' => array(
+                                ],
+                                'placeholder' => [
                                     'de' => 'Placeholder Test DE',
                                     'en' => 'Placeholder Test EN',
-                                ),
-                            ),
-                            'properties' => array(
-                                'title' => array(
+                                ],
+                            ],
+                            'properties' => [
+                                'title' => [
                                     'name' => 'title',
                                     'type' => 'text_line',
                                     'minOccurs' => null,
@@ -712,11 +713,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => true,
                                     'multilingual' => true,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                                'name' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                                'name' => [
                                     'name' => 'name',
                                     'type' => 'text_line',
                                     'minOccurs' => 2,
@@ -725,11 +726,11 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => true,
                                     'multilingual' => true,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                                'article' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                                'article' => [
                                     'name' => 'article',
                                     'type' => 'text_editor',
                                     'minOccurs' => 2,
@@ -738,15 +739,15 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'cssClass' => null,
                                     'mandatory' => true,
                                     'multilingual' => true,
-                                    'tags' => array(),
-                                    'params' => array(),
-                                    'meta' => array(),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'blog' => array(
+                                    'tags' => [],
+                                    'params' => [],
+                                    'meta' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'blog' => [
                     'name' => 'blog',
                     'type' => 'text_editor',
                     'minOccurs' => null,
@@ -755,12 +756,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-            ),
-        );
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template_block_types.xml');
         $this->assertEquals($template, $result);
@@ -770,13 +771,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testSections()
     {
-        $template = array(
+        $template = [
             'key' => 'template_sections',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
-            'properties' => array(
-                'title' => array(
+            'properties' => [
+                'title' => [
                     'name' => 'title',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -785,47 +786,47 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        '0' => array(
+                    'tags' => [
+                        '0' => [
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(
-                        'title' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [
+                        'title' => [
                             'de' => 'Titel',
                             'en' => 'Title',
-                        ),
-                        'info_text' => array(
+                        ],
+                        'info_text' => [
                             'de' => 'Titel-Info-DE',
                             'en' => 'Title-Info-EN',
-                        ),
-                        'placeholder' => array(
+                        ],
+                        'placeholder' => [
                             'de' => 'Platzhalter-Info-DE',
                             'en' => 'Placeholder-Info-EN',
-                        ),
-                    ),
-                ),
-                'test' => array(
+                        ],
+                    ],
+                ],
+                'test' => [
                     'name' => 'test',
                     'colspan' => null,
                     'cssClass' => 'test',
                     'type' => 'section',
-                    'params' => array(),
-                    'meta' => array(
-                        'title' => array(
+                    'params' => [],
+                    'meta' => [
+                        'title' => [
                             'de' => 'Test-DE',
                             'en' => 'Test-EN',
-                        ),
-                        'info_text' => array(
+                        ],
+                        'info_text' => [
                             'de' => 'Info-DE',
                             'en' => 'Info-EN',
-                        ),
-                    ),
-                    'properties' => array(
-                        'url' => array(
+                        ],
+                    ],
+                    'properties' => [
+                        'url' => [
                             'name' => 'url',
                             'type' => 'resource_locator',
                             'minOccurs' => null,
@@ -834,17 +835,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'cssClass' => 'test',
                             'mandatory' => true,
                             'multilingual' => true,
-                            'tags' => array(
-                                '0' => array(
+                            'tags' => [
+                                '0' => [
                                     'name' => 'sulu.rlp',
                                     'priority' => '1',
-                                    'attributes' => array()
-                                ),
-                            ),
-                            'params' => array(),
-                            'meta' => array(),
-                        ),
-                        'article' => array(
+                                    'attributes' => [],
+                                ],
+                            ],
+                            'params' => [],
+                            'meta' => [],
+                        ],
+                        'article' => [
                             'name' => 'article',
                             'type' => 'text_area',
                             'minOccurs' => null,
@@ -853,18 +854,18 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'cssClass' => null,
                             'mandatory' => null,
                             'multilingual' => true,
-                            'tags' => array(
-                                '0' => array(
+                            'tags' => [
+                                '0' => [
                                     'name' => 'sulu.node.title',
                                     'priority' => 5,
-                                    'attributes' => array(),
-                                ),
+                                    'attributes' => [],
+                                ],
 
-                            ),
-                            'params' => array(),
-                            'meta' => array(),
-                        ),
-                        'block' => array(
+                            ],
+                            'params' => [],
+                            'meta' => [],
+                        ],
+                        'block' => [
                             'name' => 'block',
                             'default-type' => 'test',
                             'minOccurs' => null,
@@ -873,24 +874,24 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'cssClass' => null,
                             'mandatory' => null,
                             'type' => 'block',
-                            'tags' => array(),
-                            'params' => array(),
-                            'meta' => array(
-                                'title' => array(
+                            'tags' => [],
+                            'params' => [],
+                            'meta' => [
+                                'title' => [
                                     'de' => 'Block-DE',
                                     'en' => 'Block-EN',
-                                ),
-                                'info_text' => array(
+                                ],
+                                'info_text' => [
                                     'de' => 'Block-Info-DE',
                                     'en' => 'Block-Info-EN',
-                                ),
-                            ),
-                            'types' => array(
-                                'test' => array(
+                                ],
+                            ],
+                            'types' => [
+                                'test' => [
                                     'name' => 'test',
-                                    'meta' => array(),
-                                    'properties' => array(
-                                        'name' => array(
+                                    'meta' => [],
+                                    'properties' => [
+                                        'name' => [
                                             'name' => 'name',
                                             'type' => 'text_line',
                                             'minOccurs' => null,
@@ -899,17 +900,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                             'cssClass' => null,
                                             'mandatory' => null,
                                             'multilingual' => true,
-                                            'tags' => array(),
-                                            'params' => array(),
-                                            'meta' => array(),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'pages' => array(
+                                            'tags' => [],
+                                            'params' => [],
+                                            'meta' => [],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'pages' => [
                     'name' => 'pages',
                     'type' => 'smart_content_selection',
                     'minOccurs' => null,
@@ -918,17 +919,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => true,
-                    'tags' => array(
-                        '0' => array(
+                    'tags' => [
+                        '0' => [
                             'name' => 'sulu.node.title',
                             'priority' => null,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array(),
-                ),
-                'images' => array(
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'images' => [
                     'name' => 'images',
                     'type' => 'image_selection',
                     'minOccurs' => 0,
@@ -937,25 +938,25 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(
-                        array(
+                    'tags' => [],
+                    'params' => [
+                        [
                             'name' => 'minLinks',
                             'value' => 1,
                             'type' => 'string',
-                            'meta' => array(),
-                        ),
-                        array(
+                            'meta' => [],
+                        ],
+                        [
                             'name' => 'maxLinks',
                             'value' => 10,
                             'type' => 'string',
-                            'meta' => array(),
-                        ),
-                    ),
-                    'meta' => array(),
-                ),
-            ),
-        );
+                            'meta' => [],
+                        ],
+                    ],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template_sections.xml');
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -973,13 +974,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testNestingParams()
     {
-        $template = array(
+        $template = [
             'key' => 'template_nesting_params',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
-            'properties' => array(
-                'title' => array(
+            'properties' => [
+                'title' => [
                     'name' => 'title',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -988,25 +989,25 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(
-                        array('name' => 'minLinks', 'value' => '1', 'type' => 'string', 'meta' => array()),
-                        array('name' => 'maxLinks', 'value' => '10', 'type' => 'string', 'meta' => array()),
-                        array(
+                    'tags' => [],
+                    'params' => [
+                        ['name' => 'minLinks', 'value' => '1', 'type' => 'string', 'meta' => []],
+                        ['name' => 'maxLinks', 'value' => '10', 'type' => 'string', 'meta' => []],
+                        [
                             'name' => 'test',
-                            'value' => array(
-                                array('name' => 't1', 'value' => 'v1', 'type' => 'string', 'meta' => array()),
-                                array('name' => 't2', 'value' => 'v2', 'type' => 'string', 'meta' => array()),
-                                array('name' => 't3', 'value' => 'v3', 'type' => 'string', 'meta' => array()),
-                                array('name' => 't4', 'value' => 'v4', 'type' => 'string', 'meta' => array()),
-                            ),
+                            'value' => [
+                                ['name' => 't1', 'value' => 'v1', 'type' => 'string', 'meta' => []],
+                                ['name' => 't2', 'value' => 'v2', 'type' => 'string', 'meta' => []],
+                                ['name' => 't3', 'value' => 'v3', 'type' => 'string', 'meta' => []],
+                                ['name' => 't4', 'value' => 'v4', 'type' => 'string', 'meta' => []],
+                            ],
                             'type' => 'collection',
-                            'meta' => array(),
-                        ),
-                    ),
-                    'meta' => array(),
-                ),
-                'url' => array(
+                            'meta' => [],
+                        ],
+                    ],
+                    'meta' => [],
+                ],
+                'url' => [
                     'name' => 'url',
                     'type' => 'resource_locator',
                     'minOccurs' => null,
@@ -1015,18 +1016,18 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.rlp',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array()
-                ),
-            )
-        );
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template_nesting_params.xml');
 
@@ -1037,13 +1038,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testMetaParams()
     {
-        $template = array(
+        $template = [
             'key' => 'template_meta_params',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
-            'properties' => array(
-                'title' => array(
+            'properties' => [
+                'title' => [
                     'name' => 'title',
                     'type' => 'text_line',
                     'minOccurs' => null,
@@ -1052,20 +1053,20 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(),
-                    'params' => array(
-                        array(
+                    'tags' => [],
+                    'params' => [
+                        [
                             'name' => 'min',
                             'value' => '1',
                             'type' => 'string',
-                            'meta' => array(
-                                'title' => array('de' => 'Mindestens', 'en' => 'Minimum'),
-                            ),
-                        ),
-                    ),
-                    'meta' => array(),
-                ),
-                'url' => array(
+                            'meta' => [
+                                'title' => ['de' => 'Mindestens', 'en' => 'Minimum'],
+                            ],
+                        ],
+                    ],
+                    'meta' => [],
+                ],
+                'url' => [
                     'name' => 'url',
                     'type' => 'resource_locator',
                     'minOccurs' => null,
@@ -1074,18 +1075,18 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                        array(
+                    'tags' => [
+                        [
                             'name' => 'sulu.rlp',
                             'priority' => 1,
-                            'attributes' => array(),
-                        ),
-                    ),
-                    'params' => array(),
-                    'meta' => array()
-                ),
-            )
-        );
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
 
         $result = $this->loadFixture('template_meta_params.xml');
 
@@ -1180,7 +1181,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     private function arrayRecursiveDiff($aArray1, $aArray2)
     {
-        $aReturn = array();
+        $aReturn = [];
 
         foreach ($aArray1 as $mKey => $mValue) {
             if (array_key_exists($mKey, $aArray2)) {

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ class MessageDispatcher implements MessageDispatcherInterface
     /**
      * @var MessageHandlerInterface[]
      */
-    private $handler = array();
+    private $handler = [];
 
     /**
      * {@inheritdoc}
@@ -54,11 +55,11 @@ class MessageDispatcher implements MessageDispatcherInterface
             $error = true;
         }
 
-        return array(
+        return [
             'handler' => $name,
             'message' => $message,
             'options' => $options,
             'error' => $error,
-        );
+        ];
     }
 }

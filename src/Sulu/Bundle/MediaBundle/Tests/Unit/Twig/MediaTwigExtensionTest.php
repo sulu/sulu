@@ -66,7 +66,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveMedias()
     {
-        $entities = array($this->prophesize(Media::class), $this->prophesize(Media::class));
+        $entities = [$this->prophesize(Media::class), $this->prophesize(Media::class)];
         $entities[0]->getId()->willReturn(1);
         $entities[1]->getId()->willReturn(2);
 
@@ -79,7 +79,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $extension = new MediaTwigExtension($mediaManager->reveal());
-        $result = $extension->resolveMediasFunction(array($entities[0]->reveal(), $entities[1]->reveal()), 'de');
+        $result = $extension->resolveMediasFunction([$entities[0]->reveal(), $entities[1]->reveal()], 'de');
 
         $this->assertCount(2, $result);
         $this->assertInstanceOf(MediaApi::class, $result[0]);
@@ -88,7 +88,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveApiMedias()
     {
-        $apiEntities = array($this->prophesize(MediaApi::class), $this->prophesize(MediaApi::class));
+        $apiEntities = [$this->prophesize(MediaApi::class), $this->prophesize(MediaApi::class)];
 
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getByIds(Argument::any(), Argument::any())->shouldNotBeCalled();
@@ -99,7 +99,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $extension = new MediaTwigExtension($mediaManager->reveal());
-        $result = $extension->resolveMediasFunction(array($apiEntities[0]->reveal(), $apiEntities[1]->reveal()), 'de');
+        $result = $extension->resolveMediasFunction([$apiEntities[0]->reveal(), $apiEntities[1]->reveal()], 'de');
 
         $this->assertCount(2, $result);
         $this->assertInstanceOf(MediaApi::class, $result[0]);
@@ -110,27 +110,27 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveMediasById()
     {
-        $entities = array($this->prophesize(Media::class), $this->prophesize(Media::class));
+        $entities = [$this->prophesize(Media::class), $this->prophesize(Media::class)];
         $entities[0]->getId()->willReturn(1);
         $entities[1]->getId()->willReturn(2);
 
-        $apiEntities = array(new MediaApi($entities[0]->reveal(), 'de'), new MediaApi($entities[1]->reveal(), 'de'));
+        $apiEntities = [new MediaApi($entities[0]->reveal(), 'de'), new MediaApi($entities[1]->reveal(), 'de')];
 
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
-        $mediaManager->getByIds(array(1, 2), 'de')->willReturn($apiEntities);
+        $mediaManager->getByIds([1, 2], 'de')->willReturn($apiEntities);
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->shouldNotBeCalled();
 
         $extension = new MediaTwigExtension($mediaManager->reveal());
-        $extension->resolveMediasFunction(array(1, 2), 'de');
+        $extension->resolveMediasFunction([1, 2], 'de');
     }
 
     public function testResolveMediasMixed()
     {
-        $entities = array(
+        $entities = [
             $this->prophesize(Media::class),
             $this->prophesize(Media::class),
-            $this->prophesize(Media::class)
-        );
+            $this->prophesize(Media::class),
+        ];
         $entities[0]->getId()->willReturn(1);
         $entities[1]->getId()->willReturn(2);
         $entities[2]->getId()->willReturn(3);
@@ -139,7 +139,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $apiEntity2 = new MediaApi($entities[1]->reveal(), 'de');
 
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
-        $mediaManager->getByIds(array(3), 'de')->willReturn(array($apiEntity3));
+        $mediaManager->getByIds([3], 'de')->willReturn([$apiEntity3]);
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->will(
             function ($args) {
                 return $args[0];
@@ -147,7 +147,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $extension = new MediaTwigExtension($mediaManager->reveal());
-        $result = $extension->resolveMediasFunction(array($entities[0]->reveal(), 3, $apiEntity2), 'de');
+        $result = $extension->resolveMediasFunction([$entities[0]->reveal(), 3, $apiEntity2], 'de');
 
         $this->assertCount(3, $result);
         $this->assertEquals(1, $result[0]->getId());

@@ -2,6 +2,33 @@
 
     'use strict';
 
+    /**
+     * Takes a button-id or a button object and returns a proper toolbar-button
+     * @param {String|Object} id Either a string which identifies a sulu button or an object
+     *          which overrides stuff of a sulu button or a proper toolbar-button
+     * @param {Boolean} isDropdownItem if true a dropdownItem is created, else a button
+     * @returns {Object} a toolbar button
+     */
+    var getButton = function(id, isDropdownItem) {
+        var button,
+            source = (isDropdownItem) ? this.sandbox.sulu.buttons.dropdownItems : this.sandbox.sulu.buttons;
+        if (typeof id === 'string') {
+            if (!!source[id]) {
+                button = source[id];
+            }
+        } else if (typeof id === 'object') {
+            if (!!Object.keys(id).length && !!source[Object.keys(id)[0]]) {
+                button = this.sandbox.util.extend(true,
+                    source[Object.keys(id)[0]],
+                    id[Object.keys(id)[0]]
+                );
+            } else {
+                button = id;
+            }
+        }
+        return button;
+    };
+
     define([], {
 
         initialize: function (app) {
@@ -122,6 +149,14 @@
                     app.sandbox.emit('sulu.toolbar.save-back');
                 }
             },
+
+            app.sandbox.sulu.buttons.dropdownItems.delete = {
+                id: 'delete-button',
+                title: app.sandbox.translate('public.delete'),
+                callback: function () {
+                    app.sandbox.emit('sulu.toolbar.delete');
+                }
+            },
             /**
              * Dropdown-items definition (end)
              */
@@ -140,20 +175,13 @@
             app.sandbox.sulu.buttons.get = function() {
                 var buttons = [], button;
                 app.sandbox.util.foreach(arguments, function(arg) {
-                    button = null;
-                    if (typeof arg === 'string') {
-                        if (!!app.sandbox.sulu.buttons[arg]) {
-                            button = app.sandbox.sulu.buttons[arg];
-                        }
-                    } else if (typeof arg === 'object') {
-                        if (!!Object.keys(arg).length && !!app.sandbox.sulu.buttons[Object.keys(arg)[0]]) {
-                            button = app.sandbox.util.extend(true,
-                                app.sandbox.sulu.buttons[Object.keys(arg)[0]],
-                                arg[Object.keys(arg)[0]]
-                            );
-                        } else {
-                            button = arg;
-                        }
+                    button = getButton.call(app, arg, false);
+                    if (!!button.dropdownItems) {
+                        var dropdownItems = [];
+                        app.sandbox.util.foreach(button.dropdownItems, function(dropdownItem) {
+                            dropdownItems.push(getButton.call(app, dropdownItem, true));
+                        }.bind(this));
+                        button.dropdownItems = dropdownItems;
                     }
                     if (!!button) {
                         buttons.push(button);
@@ -161,24 +189,6 @@
                 });
                 return buttons;
             };
-        },
-
-        getButton: function(id, isDropdownItem) {
-            var button;
-            if (typeof arg === 'string') {
-                if (!!app.sandbox.sulu.buttons[id]) {
-                    button = app.sandbox.sulu.buttons[id];
-                }
-            } else if (typeof arg === 'object') {
-                if (!!Object.keys(id).length && !!app.sandbox.sulu.buttons[Object.keys(id)[0]]) {
-                    button = app.sandbox.util.extend(true,
-                        app.sandbox.sulu.buttons[Object.keys(id)[0]],
-                        id[Object.keys(id)[0]]
-                    );
-                } else {
-                    button = id;
-                }
-            }
         }
     });
 })();

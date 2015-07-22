@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
- * Condition
+ * Condition.
  */
 class Condition
 {
@@ -32,7 +30,7 @@ class Condition
     private $operator;
 
     /**
-     * @var integer
+     * @var int
      */
     private $type;
 
@@ -42,7 +40,7 @@ class Condition
     private $value;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -52,9 +50,10 @@ class Condition
     private $conditionGroup;
 
     /**
-     * Set field
+     * Set field.
      *
      * @param string $field
+     *
      * @return Condition
      */
     public function setField($field)
@@ -65,7 +64,7 @@ class Condition
     }
 
     /**
-     * Get field
+     * Get field.
      *
      * @return string 
      */
@@ -75,9 +74,10 @@ class Condition
     }
 
     /**
-     * Set operator
+     * Set operator.
      *
      * @param string $operator
+     *
      * @return Condition
      */
     public function setOperator($operator)
@@ -88,7 +88,7 @@ class Condition
     }
 
     /**
-     * Get operator
+     * Get operator.
      *
      * @return string 
      */
@@ -98,9 +98,10 @@ class Condition
     }
 
     /**
-     * Set type
+     * Set type.
      *
-     * @param integer $type
+     * @param int $type
+     *
      * @return Condition
      */
     public function setType($type)
@@ -111,9 +112,9 @@ class Condition
     }
 
     /**
-     * Get type
+     * Get type.
      *
-     * @return integer 
+     * @return int 
      */
     public function getType()
     {
@@ -121,9 +122,10 @@ class Condition
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return Condition
      */
     public function setValue($value)
@@ -134,7 +136,7 @@ class Condition
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string 
      */
@@ -144,9 +146,9 @@ class Condition
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int 
      */
     public function getId()
     {
@@ -154,9 +156,10 @@ class Condition
     }
 
     /**
-     * Set conditionGroup
+     * Set conditionGroup.
      *
      * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroup
+     *
      * @return Condition
      */
     public function setConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroup)
@@ -167,7 +170,7 @@ class Condition
     }
 
     /**
-     * Get conditionGroup
+     * Get conditionGroup.
      *
      * @return \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup 
      */

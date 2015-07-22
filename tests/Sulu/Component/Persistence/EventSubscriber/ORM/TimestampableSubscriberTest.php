@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,10 +44,10 @@ class TimestampableSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function provideOnPreUpdate()
     {
-        return array(
-            array(null),
-            array(new \DateTime('2015-01-01')),
-        );
+        return [
+            [null],
+            [new \DateTime('2015-01-01')],
+        ];
     }
 
     /**

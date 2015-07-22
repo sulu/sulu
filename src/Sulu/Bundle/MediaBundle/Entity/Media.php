@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -87,6 +88,7 @@ class Media implements AuditableInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
+
         return $this;
     }
 

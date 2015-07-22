@@ -7,27 +7,31 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
- * Exception which is thrown when the value of a condition does not match the type
+ * Exception which is thrown when the value of a condition does not match the type.
   */
 class ConditionTypeMismatchException extends FilterException
 {
     /**
-     * Id of the entity
-     * @var integer
+     * Id of the entity.
+     *
+     * @var int
      */
     private $id;
 
     /**
-     * The value of the condition
+     * The value of the condition.
+     *
      * @var string
      */
     private $value;
 
     /**
-     * The type of the condition
+     * The type of the condition.
+     *
      * @var int
      */
     private $type;
@@ -49,7 +53,8 @@ class ConditionTypeMismatchException extends FilterException
     }
 
     /**
-     * Returns value of the condition
+     * Returns value of the condition.
+     *
      * @return string
      */
     public function getValue()
@@ -58,7 +63,8 @@ class ConditionTypeMismatchException extends FilterException
     }
 
     /**
-     * Returns the of the condition
+     * Returns the of the condition.
+     *
      * @return int
      */
     public function getType()
@@ -67,12 +73,12 @@ class ConditionTypeMismatchException extends FilterException
     }
 
     /**
-     * Returns the id of the condition
+     * Returns the id of the condition.
+     *
      * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,13 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Util\SuluNodeHelper;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\Console\Helper\ProgressHelper;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Symfony\Component\Console\Helper\ProgressHelper;
 
 /**
  * Listen to for new hits. If document instance of structure
@@ -50,7 +47,7 @@ class ReindexListener
         DocumentManager $documentManager,
         DocumentInspector $inspector,
         SearchManagerInterface $searchManager,
-        array $mapping = array()
+        array $mapping = []
     ) {
         $this->searchManager = $searchManager;
         $this->mapping = $mapping;
@@ -76,7 +73,7 @@ class ReindexListener
             'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"'
         );
 
-        $count = array();
+        $count = [];
 
         if ($purge) {
             $this->purgeContentIndexes($output);
@@ -102,7 +99,7 @@ class ReindexListener
                     if (!isset($count[$documentClass])) {
                         $count[$documentClass] = 0;
                     }
-                    $count[$documentClass]++;
+                    ++$count[$documentClass];
                 } catch (\Exception $e) {
                     $output->writeln(sprintf(
                         '<error>Error indexing or de-indexing page (path: %s locale: %s)</error>: %s',

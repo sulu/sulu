@@ -12,8 +12,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource;
 
 /**
  * Datatypes used by filters and operators to generate proper queries
- * Class Types
- * @package Sulu\Bundle\ResourceBundle\Filter
+ * Class Types.
  */
 final class DataTypes
 {

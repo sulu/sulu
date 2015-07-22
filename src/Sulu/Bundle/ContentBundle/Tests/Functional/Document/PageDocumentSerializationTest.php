@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,14 +12,11 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Integration\Document;
 
 use JMS\Serializer\SerializerInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
-use Symfony\Component\Form\FormInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Collections\ArrayCollection;
-use Sulu\Component\Content\Document\Structure\Structure;
 
 class PageDocumentSerializationTest extends SuluTestCase
 {
@@ -52,7 +50,7 @@ class PageDocumentSerializationTest extends SuluTestCase
     }
 
     /**
-     * It can serialize content that contains objects
+     * It can serialize content that contains objects.
      * 
      * NOTE: We do not persist so that we can use any type
      *       of content - persisting would cause the content
@@ -63,15 +61,15 @@ class PageDocumentSerializationTest extends SuluTestCase
         $internalLink = new PageDocument();
         $internalLink->setTitle('Hello');
 
-        $page = $this->createPage(array(
+        $page = $this->createPage([
             'title' => 'Foobar',
             'object' => $internalLink,
-            'arrayOfObjects' => array(
+            'arrayOfObjects' => [
                 $internalLink,
                 $internalLink,
-            ),
+            ],
             'integer' => 1234,
-        ));
+        ]);
 
         $result = $this->serializer->serialize($page, 'json');
 
@@ -79,7 +77,7 @@ class PageDocumentSerializationTest extends SuluTestCase
     }
 
     /**
-     * It can deserialize content that contains objects
+     * It can deserialize content that contains objects.
      *
      * @depends testSerialization
      */
@@ -88,7 +86,8 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page = $this->serializer->deserialize($data, PageDocument::class, 'json');
 
         $this->assertInstanceOf(PageDocument::class, $page);
-        $this->assertEquals('/foo', $page->getResourceSegment()); $this->assertEquals('Hello', $page->getTitle());
+        $this->assertEquals('/foo', $page->getResourceSegment());
+        $this->assertEquals('Hello', $page->getTitle());
         $content = $page->getStructure();
 
         $this->assertInternalType('integer', $content->getProperty('integer')->getValue());
@@ -98,13 +97,13 @@ class PageDocumentSerializationTest extends SuluTestCase
     }
 
     /**
-     * It can serialize persisted documents
+     * It can serialize persisted documents.
      */
     public function testSerializationPersisted()
     {
-        $page = $this->createPage(array(
+        $page = $this->createPage([
             'title' => 'Hello',
-        ));
+        ]);
         $this->manager->persist($page, 'de');
         $this->manager->flush();
 
@@ -114,13 +113,13 @@ class PageDocumentSerializationTest extends SuluTestCase
     }
 
     /**
-     * It can deserialize persisted documents with routes
+     * It can deserialize persisted documents with routes.
      */
     public function testDeserializationPersisted()
     {
-        $page = $this->createPage(array(
+        $page = $this->createPage([
             'title' => 'Hello',
-        ));
+        ]);
         $this->manager->persist($page, 'de');
         $this->manager->flush();
 

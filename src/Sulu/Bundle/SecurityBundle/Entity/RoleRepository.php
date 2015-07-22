@@ -1,17 +1,17 @@
 <?php
+
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -40,7 +40,6 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->where('role.id=:roleId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('roleId', $id);
 
             return $query->getSingleResult();
@@ -69,13 +68,12 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->andWhere('role.system=:roleSystem');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('roleName', $name);
             $query->setParameter('roleSystem', $system);
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 
@@ -92,11 +90,8 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->addSelect('permissions');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-            $result = $query->getResult();
-
-            return $result;
+            return $query->getResult();
         } catch (NoResultException $ex) {
             return;
         }
@@ -113,7 +108,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
             ->select('role.name')
             ->getQuery();
 
-        $roles = array();
+        $roles = [];
         foreach ($query->getArrayResult() as $roleEntity) {
             $roles[] = $roleEntity['name'];
         }

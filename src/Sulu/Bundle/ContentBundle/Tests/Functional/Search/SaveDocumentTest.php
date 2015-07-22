@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,12 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondDocumentCache;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\Document;
-use Sulu\Component\Content\Compat\DocumentInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 class SaveDocumentTest extends BaseTestCase
 {
@@ -45,20 +41,20 @@ class SaveDocumentTest extends BaseTestCase
         $document->setStructureType('blocks');
         $document->setResourceSegment('/places');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $document->getStructure()->bind(array(
-            'block' => array(
-                array(
+        $document->getStructure()->bind([
+            'block' => [
+                [
                     'type' => 'article',
                     'title' => 'Dornbirn',
                     'article' => 'Dornbirn Austrua',
-                ),
-                array(
+                ],
+                [
                     'type' => 'article',
                     'title' => 'Basel',
                     'article' => 'Basel Switzerland',
-                    'lines' => array('line1', 'line2'),
-                ),
-            )), false);
+                    'lines' => ['line1', 'line2'],
+                ],
+            ], ], false);
         $document->setParent($this->homeDocument);
 
         $this->documentManager->persist($document, 'de');
@@ -66,11 +62,11 @@ class SaveDocumentTest extends BaseTestCase
 
         $searchManager = $this->getSearchManager();
 
-        $searches = array(
+        $searches = [
             'Places' => 1,
             'Basel' => 1,
             'Dornbirn' => 1,
-        );
+        ];
 
         foreach ($searches as $search => $count) {
             $res = $searchManager->createSearch($search)->locale('de')->index('page')->execute();

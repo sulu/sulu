@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +30,7 @@ interface AccountFactoryInterface
      * Creates a new api entity out of an account.
      *
      * @param AccountInterface $account
-     * @param string $locale
+     * @param string           $locale
      *
      * @return Account
      */

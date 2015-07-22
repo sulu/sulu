@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -42,7 +42,9 @@ class MediaStreamController extends Controller
     protected $storage = null;
 
     /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getImageAction(Request $request)
     {
@@ -62,7 +64,10 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param Request $request
+     * @param int $id
+     *
+     * @return StreamedResponse
      */
     public function downloadAction(Request $request, $id)
     {
@@ -85,7 +90,7 @@ class MediaStreamController extends Controller
                 $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
             }
 
-            $response = $this->getFileResponse($fileVersion, $dispositionType);
+            $response = $this->getFileResponse($fileVersion, $request->getLocale(), $dispositionType);
 
             return $response;
         } catch (MediaException $e) {
@@ -95,12 +100,18 @@ class MediaStreamController extends Controller
 
     /**
      * @param FileVersion $fileVersion
+     * @param string $locale
      * @param string $dispositionType
      *
      * @return StreamedResponse
      */
-    protected function getFileResponse($fileVersion, $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT)
-    {
+    protected function getFileResponse(
+        $fileVersion,
+        $locale,
+        $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
+    ) {
+        $cleaner = $this->get('sulu.content.path_cleaner');
+
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
@@ -120,10 +131,13 @@ class MediaStreamController extends Controller
             fclose($handle);
         });
 
+        $pathInfo = pathinfo($fileName);
+
         // Prepare headers
         $disposition = $response->headers->makeDisposition(
             $dispositionType,
-            basename($fileName)
+            $fileName,
+            $cleaner->cleanup($pathInfo['filename'], $locale) . '.' . $pathInfo['extension']
         );
 
         // Set headers
@@ -144,7 +158,7 @@ class MediaStreamController extends Controller
      */
     protected function getFileVersion($id, $version)
     {
-        /**
+        /*
          * @var Media
          */
         $mediaEntity = $this->getDoctrine()
@@ -156,7 +170,7 @@ class MediaStreamController extends Controller
 
         $file = $mediaEntity->getFiles()[0];
 
-        /**
+        /*
          * @var FileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {

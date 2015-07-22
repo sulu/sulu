@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,7 +15,7 @@ use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AbstractFilingSubscriber;
 
 /**
- * Automatically set the parnet at a pre-determined location
+ * Automatically set the parnet at a pre-determined location.
  */
 class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
 {

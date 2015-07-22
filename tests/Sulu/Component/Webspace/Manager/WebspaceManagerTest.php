@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,7 +44,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $filesystem->remove($this->cacheDir);
         }
 
-        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', ['locate']);
         $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
         $this->loader = new XmlFileLoader($locator);
 
@@ -52,11 +53,11 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             $this->logger,
-            array(
+            [
                 'cache_dir' => $this->cacheDir,
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
-            )
+            ]
         );
     }
 
@@ -297,7 +298,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
         $this->assertNull($portalInformation->getSegment());
 
-        /** @var Portal $portal */
+        /* @var Portal $portal */
         /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
@@ -341,18 +342,18 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function provideFindPortalInformationByUrl()
     {
-        return array(
-            array('dan.lo/de-asd/test/test', false),
-            array('dan.lo/de-asd/test/test.rss', false),
-            array('dan.lo/de/test/test', true),
-            array('dan.lo/de/test/test.rss', true),
-            array('dan.lo/de-asd', false),
-            array('dan.lo/de-asd.rss', false),
-            array('dan.lo/de/s', true),
-            array('dan.lo/de/s.rss', true),
-            array('dan.lo/de', true),
-            array('dan.lo/de.rss', true),
-        );
+        return [
+            ['dan.lo/de-asd/test/test', false],
+            ['dan.lo/de-asd/test/test.rss', false],
+            ['dan.lo/de/test/test', true],
+            ['dan.lo/de/test/test.rss', true],
+            ['dan.lo/de-asd', false],
+            ['dan.lo/de-asd.rss', false],
+            ['dan.lo/de/s', true],
+            ['dan.lo/de/s.rss', true],
+            ['dan.lo/de', true],
+            ['dan.lo/de.rss', true],
+        ];
     }
 
     /**
@@ -408,12 +409,12 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->logger = $this->getMockForAbstractClass(
             '\Psr\Log\LoggerInterface',
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array('warning')
+            ['warning']
         );
 
         $this->logger->expects($this->once())->method('warning')->will($this->returnValue(null));
@@ -421,11 +422,11 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             $this->logger,
-            array(
+            [
                 'cache_dir' => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both',
-                'cache_class' => 'WebspaceCollectionCache' . uniqid()
-            )
+                'cache_class' => 'WebspaceCollectionCache' . uniqid(),
+            ]
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -502,15 +503,15 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
         $this->assertEquals(
-            array(
+            [
                 'http://massiveart.lo/en-us/w/test',
                 'http://massiveart.lo/en-us/s/test',
-            ),
+            ],
             $result
         );
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
-        $this->assertEquals(array('http://sulu.lo/test'), $result);
+        $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
     public function testGetPortals()
@@ -600,52 +601,52 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(7, $localizations);
 
         $this->assertContains(
-            array(
+            [
                 'country' => 'us',
                 'language' => 'en',
-            ),
+            ],
             $localizations
         );
         $this->assertContains(
-            array(
+            [
                 'country' => 'at',
                 'language' => 'de',
-            ),
+            ],
             $localizations
         );
         $this->assertContains(
-            array(
+            [
                 'country' => 'ca',
                 'language' => 'en',
-            ),
+            ],
             $localizations
         );
         $this->assertContains(
-            array(
+            [
                 'country' => 'ca',
                 'language' => 'fr',
-            ),
+            ],
             $localizations
         );
         $this->assertContains(
-            array(
+            [
                 'country' => null,
                 'language' => 'de',
-            ),
+            ],
             $localizations
         );
         $this->assertContains(
-            array(
+            [
                 'country' => null,
                 'language' => 'en',
-            ),
+            ],
             $localizations
         );
         $this->assertContains(
-            array(
+            [
                 'country' => 'uk',
                 'language' => 'en',
-            ),
+            ],
             $localizations
         );
     }

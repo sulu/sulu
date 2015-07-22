@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -49,8 +50,8 @@ class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testCGetAction()
     {
-        $query = array('alias' => 'alias', 'option' => 'value');
-        $data = array(new ContentNavigationItem('item'));
+        $query = ['alias' => 'alias', 'option' => 'value'];
+        $data = [new ContentNavigationItem('item')];
         $request = new Request($query);
 
         $this->contentNavigationCollector->getNavigationItems($query['alias'], $query)->willReturn($data);
@@ -72,11 +73,11 @@ class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testCGetActionWithUnexistingAlias()
     {
-        $query = array('alias' => 'not_existent_alias');
+        $query = ['alias' => 'not_existent_alias'];
         $request = new Request($query);
 
         $contentNavigationAliasNotFoundException = new ContentNavigationAliasNotFoundException(
-            $query['alias'], array()
+            $query['alias'], []
         );
         $this->contentNavigationCollector->getNavigationItems(Argument::cetera())->willThrow(
             $contentNavigationAliasNotFoundException

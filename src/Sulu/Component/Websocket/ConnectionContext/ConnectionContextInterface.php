@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -103,7 +104,7 @@ interface ConnectionContextInterface
      * Set parameter with given name.
      *
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set($name, $value);
 

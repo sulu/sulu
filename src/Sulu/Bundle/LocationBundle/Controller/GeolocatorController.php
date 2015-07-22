@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Controller;
 
 use Sulu\Bundle\LocationBundle\Geolocator\Exception\GeolocatorNotFoundException;
@@ -36,6 +45,6 @@ class GeolocatorController extends Controller
 
         $res = $geolocator->locate($query);
 
-        return new JsonResponse(array('_embedded' => array('locations' => $res->toArray())));
+        return new JsonResponse(['_embedded' => ['locations' => $res->toArray()]]);
     }
 }

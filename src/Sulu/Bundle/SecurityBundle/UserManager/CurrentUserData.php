@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -26,8 +35,8 @@ class CurrentUserData implements CurrentUserDataInterface
     protected $registry;
 
     /**
-     * @param SecurityContextInterface $security
-     * @param RouterInterface $router
+     * @param SecurityContextInterface                 $security
+     * @param RouterInterface                          $router
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $registry
      */
     public function __construct(SecurityContextInterface $security, RouterInterface $router, Registry $registry)
@@ -110,7 +119,7 @@ class CurrentUserData implements CurrentUserDataInterface
      */
     public function getUserSettings()
     {
-        $settingsArray = array();
+        $settingsArray = [];
         foreach ($this->getUser()->getUserSettings()->toArray() as $setting) {
             $settingsArray[$setting->getKey()] = json_decode($setting->getValue());
         };
@@ -135,7 +144,7 @@ class CurrentUserData implements CurrentUserDataInterface
         /** @var UserSetting $setting */
         $setting = $this->registry
             ->getRepository('SuluSecurityBundle:UserSetting')
-            ->findOneBy(array('user' => $user, 'key' => $key));
+            ->findOneBy(['user' => $user, 'key' => $key]);
 
         // or create new one
         if (!$setting) {
@@ -177,7 +186,7 @@ class CurrentUserData implements CurrentUserDataInterface
 
     public function toArray()
     {
-        return array(
+        return [
             'id' => $this->getId(),
             'username' => $this->getUserName(),
             'fullname' => $this->getFullName(),
@@ -185,9 +194,9 @@ class CurrentUserData implements CurrentUserDataInterface
             'logout' => $this->getLogoutLink(),
             'locale' => $this->getLocale(),
             'settings' => json_encode($this->getUserSettings()),
-            'contact' => array(
+            'contact' => [
                 'id' => $this->getUser()->getContact()->getId(),
-            ),
-        );
+            ],
+        ];
     }
 }

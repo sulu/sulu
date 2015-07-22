@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,9 +25,9 @@ interface CategoryManagerInterface
      * Returns tags with a given parent and/or a given depth-level
      * if no arguments passed returns all categories.
      *
-     * @param int $parent the id of the parent to filter for
-     * @param int $depth the depth-level to filter for
-     * @param string|null $sortBy column name to sort the categories by
+     * @param int         $parent    the id of the parent to filter for
+     * @param int         $depth     the depth-level to filter for
+     * @param string|null $sortBy    column name to sort the categories by
      * @param string|null $sortOrder sort order
      *
      * @return Category[]
@@ -36,8 +37,8 @@ interface CategoryManagerInterface
     /**
      * Returns the children for a given category.
      *
-     * @param int $key the key of the category to search the children for
-     * @param string|null $sortBy column name to sort by
+     * @param int         $key       the key of the category to search the children for
+     * @param string|null $sortBy    column name to sort by
      * @param string|null $sortOrder sort order
      *
      * @return Category[]
@@ -74,8 +75,8 @@ interface CategoryManagerInterface
     /**
      * Creates a new category or overrides an existing one.
      *
-     * @param array $data The data of the category to save
-     * @param int $userId The id of the user, who is doing this change
+     * @param array $data   The data of the category to save
+     * @param int   $userId The id of the user, who is doing this change
      *
      * @return Category
      */
@@ -93,7 +94,7 @@ interface CategoryManagerInterface
      * and provides neat getters and setters.
      *
      * @param Category $category
-     * @param string $locale
+     * @param string   $locale
      *
      * @return CategoryWrapper
      */
@@ -103,7 +104,7 @@ interface CategoryManagerInterface
      * Same as getApiObject, but takes multiple category-entities.
      *
      * @param Category[] $categories
-     * @param string $locale
+     * @param string     $locale
      *
      * @return CategoryWrapper[]
      */

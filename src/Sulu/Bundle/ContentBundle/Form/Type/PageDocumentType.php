@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,8 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Form\Type;
 
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PageDocumentType extends BasePageDocumentType
@@ -21,9 +20,9 @@ class PageDocumentType extends BasePageDocumentType
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
-        $options->setDefaults(array(
+        $options->setDefaults([
             'data_class' => 'Sulu\Bundle\ContentBundle\Document\PageDocument',
-        ));
+        ]);
 
         parent::setDefaultOptions($options);
     }

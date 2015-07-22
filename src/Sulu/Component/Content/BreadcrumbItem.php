@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -80,10 +81,10 @@ class BreadcrumbItem implements BreadcrumbItemInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'uuid' => $this->getUuid(),
             'depth' => $this->getDepth(),
             'title' => $this->getTitle(),
-        );
+        ];
     }
 }

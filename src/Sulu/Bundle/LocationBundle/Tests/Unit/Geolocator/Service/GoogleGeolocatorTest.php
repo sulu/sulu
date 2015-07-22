@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
 use Guzzle\Http\Client;
@@ -30,11 +39,11 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
 
     public function provideLocate()
     {
-        return array(
-            array(
+        return [
+            [
                 '10, Rue Alexandre Dumas, Paris',
                 1,
-                array(
+                [
                     'displayTitle' => '10 Rue Alexandre Dumas, 75011 Paris, France',
                     'street' => 'Rue Alexandre Dumas',
                     'number' => '10',
@@ -43,12 +52,12 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
                     'country' => 'France',
                     'longitude' => '2.3897064000000001',
                     'latitude' => '48.852964900000003',
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'Dornbirn',
                 1,
-                array(
+                [
                     'displayTitle' => 'Dornbirn, Austria',
                     'street' => null,
                     'number' => null,
@@ -57,9 +66,9 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
                     'country' => 'Austria',
                     'longitude' => '9.7437899999999988',
                     'latitude' => '47.412399999999998',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**

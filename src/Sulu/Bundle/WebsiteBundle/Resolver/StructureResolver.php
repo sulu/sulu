@@ -1,12 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Compat\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.
@@ -25,7 +33,7 @@ class StructureResolver implements StructureResolverInterface
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureManagerInterface $structureManager
+     * @param StructureManagerInterface   $structureManager
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
@@ -40,9 +48,9 @@ class StructureResolver implements StructureResolverInterface
      */
     public function resolve(StructureInterface $structure)
     {
-        $data = array(
-            'view' => array(),
-            'content' => array(),
+        $data = [
+            'view' => [],
+            'content' => [],
             'uuid' => $structure->getUuid(),
             'creator' => $structure->getCreator(),
             'changer' => $structure->getChanger(),
@@ -50,7 +58,7 @@ class StructureResolver implements StructureResolverInterface
             'changed' => $structure->getChanged(),
             'template' => $structure->getKey(),
             'path' => $structure->getPath(),
-        );
+        ];
 
         if ($structure instanceof PageBridge) {
             $data['extension'] = $structure->getExt()->toArray();
@@ -68,7 +76,6 @@ class StructureResolver implements StructureResolverInterface
             $data['view'][$property->getName()] = $contentType->getViewData($property);
             $data['content'][$property->getName()] = $contentType->getContentData($property);
         }
-
 
         return $data;
     }

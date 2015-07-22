@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContentBundle\Document;
 
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 
 /**
  * The route document represents a route with in a webspace.
@@ -31,7 +40,7 @@ class RouteDocument implements
      * @var string
      */
     private $path;
-    
+
     /**
      * @var string
      */
@@ -45,7 +54,7 @@ class RouteDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getNodeName() 
+    public function getNodeName()
     {
         return $this->nodeName;
     }
@@ -53,7 +62,7 @@ class RouteDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getPath() 
+    public function getPath()
     {
         return $this->path;
     }
@@ -61,7 +70,7 @@ class RouteDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getUuid() 
+    public function getUuid()
     {
         return $this->uuid;
     }
@@ -69,11 +78,11 @@ class RouteDocument implements
     /**
      * {@inheritDoc}
      */
-    public function getTargetDocument() 
+    public function getTargetDocument()
     {
         return $this->targetDocument;
     }
-    
+
     /**
      * {@inheritDoc}
      */

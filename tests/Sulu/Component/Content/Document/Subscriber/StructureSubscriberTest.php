@@ -1,34 +1,29 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
 use Prophecy\Argument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Structure\Structure;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
-use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\Metadata;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {
@@ -41,7 +36,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->propertyValue = $this->prophesize(PropertyValue::class);
         $this->legacyProperty = $this->prophesize(TranslatedProperty::class);
-        $this->structureMetadata= $this->prophesize(StructureMetadata::class);
+        $this->structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->structure = $this->prophesize(Structure::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
@@ -55,7 +50,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early if the document is not implementing the behavior
+     * It should return early if the document is not implementing the behavior.
      */
     public function testPersistNotImplementing()
     {
@@ -64,7 +59,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early if the structure type is empty
+     * It should return early if the structure type is empty.
      */
     public function testPersistNoStructureType()
     {
@@ -76,7 +71,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should set the structure type and map the content to thethe node
+     * It should set the structure type and map the content to thethe node.
      */
     public function testPersist()
     {
@@ -92,9 +87,9 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structureMetadata->getProperties()->willReturn(array(
-            'prop1' => $this->structureProperty->reveal()
-        ));
+        $this->structureMetadata->getProperties()->willReturn([
+            'prop1' => $this->structureProperty->reveal(),
+        ]);
         $this->structureProperty->isRequired()->willReturn(true);
         $this->structureProperty->getContentTypeName()->willReturn('content_type');
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
@@ -115,7 +110,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should throw an exception if the property is required but the value is null
+     * It should throw an exception if the property is required but the value is null.
      *
      * @expectedException Sulu\Component\Content\Exception\MandatoryPropertyException
      */
@@ -131,9 +126,9 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structureMetadata->getProperties()->willReturn(array(
-            'prop1' => $this->structureProperty->reveal()
-        ));
+        $this->structureMetadata->getProperties()->willReturn([
+            'prop1' => $this->structureProperty->reveal(),
+        ]);
         $this->structureProperty->isRequired()->willReturn(true);
         $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn(null);
@@ -144,7 +139,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early when not implementing
+     * It should return early when not implementing.
      */
     public function testHydrateNotImplementing()
     {
@@ -153,7 +148,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should set the created and updated fields on the document
+     * It should set the created and updated fields on the document.
      */
     public function testHydrate()
     {
@@ -172,7 +167,6 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->assertEquals('foobar', $document->getStructureType());
         $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
     }
-
 }
 
 class TestContentDocument implements StructureBehavior
@@ -186,11 +180,11 @@ class TestContentDocument implements StructureBehavior
         $this->structure = $structure;
     }
 
-    public function getStructureType() 
+    public function getStructureType()
     {
         return $this->structureType;
     }
-    
+
     public function setStructureType($structureType)
     {
         $this->structureType = $structureType;
@@ -201,7 +195,7 @@ class TestContentDocument implements StructureBehavior
         return $this->structure;
     }
 
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }

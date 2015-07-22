@@ -24,7 +24,7 @@ define(['widget-groups'], function(WidgetGroups) {
             }, this);
 
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.contacts.new');
             }, this);
 
@@ -58,13 +58,10 @@ define(['widget-groups'], function(WidgetGroups) {
         },
 
         header: {
-            title: 'contact.contacts.title',
             noBack: true,
-
-            breadcrumb: [
-                {title: 'navigation.contacts'},
-                {title: 'contact.contacts.title'}
-            ]
+            toolbar: {
+                buttons: ['add']
+            }
         },
 
         templates: ['/admin/contact/template/contact/list'],

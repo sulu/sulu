@@ -10,17 +10,15 @@
 
 namespace Sulu\Bundle\ResourceBundle\Api;
 
-use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
-use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
- * The Condition class which will be exported to the API
+ * The Condition class which will be exported to the API.
  *
- * @package Sulu\Bundle\ResourceBundle\Api
  * @ExclusionPolicy("all")
  */
 class Condition extends ApiWrapper
@@ -36,11 +34,12 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @VirtualProperty
      * @SerializedName("id")
-     * @return integer
+     *
+     * @return int
      */
     public function getId()
     {
@@ -48,10 +47,11 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @VirtualProperty
      * @SerializedName("value")
+     *
      * @return mixed
      */
     public function getValue()
@@ -60,10 +60,11 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Get field
+     * Get field.
      *
      * @VirtualProperty
      * @SerializedName("field")
+     *
      * @return string
      */
     public function getField()
@@ -72,10 +73,11 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Get operator
+     * Get operator.
      *
      * @VirtualProperty
      * @SerializedName("operator")
+     *
      * @return string
      */
     public function getOperator()
@@ -84,11 +86,12 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @VirtualProperty
      * @SerializedName("type")
-     * @return integer
+     *
+     * @return int
      */
     public function getType()
     {
@@ -96,7 +99,7 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Set field
+     * Set field.
      *
      * @param string $field
      */
@@ -106,7 +109,7 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Set operator
+     * Set operator.
      *
      * @param string $operator
      */
@@ -116,9 +119,9 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Set type
+     * Set type.
      *
-     * @param integer $type
+     * @param int $type
      */
     public function setType($type)
     {
@@ -126,7 +129,7 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -136,7 +139,7 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Set conditionGroup
+     * Set conditionGroup.
      *
      * @param ConditionGroup $conditionGroup
      */
@@ -146,7 +149,7 @@ class Condition extends ApiWrapper
     }
 
     /**
-     * Get conditionGroup
+     * Get conditionGroup.
      *
      * @return ConditionGroup
      */

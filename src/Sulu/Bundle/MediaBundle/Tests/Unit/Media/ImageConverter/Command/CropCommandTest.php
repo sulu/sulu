@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,19 +21,19 @@ class CropCommandTest extends AbstractCommandTest
 
     protected function getDataList()
     {
-        return array(
-            array(
+        return [
+            [
                 // Command Options
-                'options' => array(
+                'options' => [
                         'x' => 100,
                         'y' => 100,
                         'w' => 150,
                         'h' => 200,
-                    ),
+                    ],
                 // Tested Result
                 'width' => 150,
                 'height' => 200,
-            ),
-        );
+            ],
+        ];
     }
 }

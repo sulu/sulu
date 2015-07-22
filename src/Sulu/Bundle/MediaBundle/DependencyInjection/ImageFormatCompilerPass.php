@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,7 +47,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
      */
     protected function loadThemeFormats($defaultOptions)
     {
-        $activeFormats = array();
+        $activeFormats = [];
         $this->setFormatsFromFile(__DIR__ . '/../Resources/config/image-formats.xml', $activeFormats, $defaultOptions);
 
         $activeTheme = $this->container->get('liip_theme.active_theme');

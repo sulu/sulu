@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,7 +31,7 @@ class MissingArgumentException extends RestException
     protected $argument;
 
     /**
-     * @param string $entity The type of the entity, which was not found
+     * @param string $entity   The type of the entity, which was not found
      * @param string $argument The argument of the entity, which was not passed
      */
     public function __construct($entity, $argument)

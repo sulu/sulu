@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -156,19 +157,19 @@ class UserControllerTest extends SuluTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(array('de', 'en')));
+        $userRole1->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
         $userRole2->setUser($user);
-        $userRole2->setLocale(json_encode(array('de', 'en')));
+        $userRole2->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole2);
 
         $userRole3 = new UserRole();
         $userRole3->setRole($role2);
         $userRole3->setUser($user);
-        $userRole3->setLocale(json_encode(array('de', 'en')));
+        $userRole3->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole3);
 
         $permission1 = new Permission();
@@ -254,43 +255,43 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'manager',
                 'email' => 'manager@test.com',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                ],
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
-                        'role' => array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-                'userGroups' => array(
-                    array(
-                        'group' => array(
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+                'userGroups' => [
+                    [
+                        'group' => [
                             'id' => $this->group1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
-                        'group' => array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
+                        'group' => [
                             'id' => $this->group2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -340,24 +341,24 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
+                        ],
                         'locales' => '["de"]',
-                    ),
-                    array(
-                        'role' => array(
+                    ],
+                    [
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
+                        ],
                         'locales' => '["de"]',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
         $response = json_decode($client->getResponse()->getContent());
 
@@ -372,23 +373,23 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'hikari',
                 'email' => 'admin@test.com', //already used by admin
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                ],
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
+                        ],
                         'locales' => '["de"]',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
         $response = json_decode($client->getResponse()->getContent());
 
@@ -406,23 +407,23 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'hikari',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                    'emails' => array(array('email' => $this->contact1->getEmails()[0]->getEmail())),
-                ),
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                    'emails' => [['email' => $this->contact1->getEmails()[0]->getEmail()]],
+                ],
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
+                        ],
                         'locales' => '["de"]',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
         $response = json_decode($client->getResponse()->getContent());
 
@@ -462,44 +463,44 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
+                ],
+                'userRoles' => [
+                    [
                         'id' => $this->user1->getId(),
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
                         'id' => 2,
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-                'userGroups' => array(
-                    array(
-                        'group' => array(
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+                'userGroups' => [
+                    [
+                        'group' => [
                             'id' => $this->group1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
-                        'group' => array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
+                        'group' => [
                             'id' => $this->group2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -551,14 +552,14 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'admin',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-            )
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -575,27 +576,27 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-            )
+                ],
+            ]
         );
 
         $client->request(
             'PUT',
             '/api/users/' . $this->user2->getId(),
-            array(
+            [
                 'username' => 'admin',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-            )
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -612,9 +613,9 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'locale' => 'en',
-            )
+            ]
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('en', $response->locale);
@@ -622,9 +623,9 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'newusername',
-            )
+            ]
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('newusername', $response->username);
@@ -632,11 +633,11 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PATCH',
             '/api/users/' . $this->user1->getId(),
-            array(
-                'contact' => array(
+            [
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-            )
+                ],
+            ]
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -659,22 +660,22 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-            )
+                ],
+            ]
         );
 
         $client->request(
             'PATCH',
             '/api/users/' . $this->user2->getId(),
-            array(
+            [
                 'username' => 'admin',
-            )
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -691,24 +692,24 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'manager',
                 'locale' => 'en',
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
-                        'role' => array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -776,30 +777,30 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
+                ],
+                'userRoles' => [
+                    [
                         'id' => $this->user1->getId(),
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
                         'id' => 2,
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -816,23 +817,23 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
+                ],
+                'userRoles' => [
+                    [
                         'id' => $this->user1->getId(),
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -854,27 +855,27 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'manager',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                ],
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
-                        'role' => array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -890,28 +891,28 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/users',
-            array(
+            [
                 'username' => 'manager',
                 'password' => '',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
-                        'role' => array(
+                ],
+                'userRoles' => [
+                    [
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
-                        'role' => array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -927,29 +928,29 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'manager',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
+                ],
+                'userRoles' => [
+                    [
                         'id' => $this->user1->getId(),
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
                         'id' => 2,
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -965,30 +966,30 @@ class UserControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/users/' . $this->user1->getId(),
-            array(
+            [
                 'username' => 'manager',
                 'password' => '',
                 'locale' => 'en',
-                'contact' => array(
+                'contact' => [
                     'id' => $this->contact1->getId(),
-                ),
-                'userRoles' => array(
-                    array(
+                ],
+                'userRoles' => [
+                    [
                         'id' => $this->user1->getId(),
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role1->getId(),
-                        ),
-                        'locales' => array('de', 'en'),
-                    ),
-                    array(
+                        ],
+                        'locales' => ['de', 'en'],
+                    ],
+                    [
                         'id' => 2,
-                        'role' => array(
+                        'role' => [
                             'id' => $this->role2->getId(),
-                        ),
-                        'locales' => array('en'),
-                    ),
-                ),
-            )
+                        ],
+                        'locales' => ['en'],
+                    ],
+                ],
+            ]
         );
 
         $response = json_decode($client->getResponse()->getContent());

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -95,7 +96,7 @@ class AccountAddress extends ApiWrapper
      */
     public function getAddress()
     {
-        $adr =  $this->entity->getAddress();
+        $adr = $this->entity->getAddress();
 
         return new AddressEntity($adr);
     }

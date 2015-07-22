@@ -10,19 +10,18 @@
 
 namespace Sulu\Bundle\ResourceBundle\Api;
 
+use Hateoas\Configuration\Annotation\Relation;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterTranslation;
 use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use Hateoas\Configuration\Annotation\Relation;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * The Filter class which will be exported to the API
+ * The Filter class which will be exported to the API.
  *
- * @package Sulu\Bundle\ResourceBundle\Api
  * @Relation("self", href="expr('/admin/api/filters/' ~ object.getId())")
  * @ExclusionPolicy("all")
  */
@@ -39,11 +38,12 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @VirtualProperty
      * @SerializedName("id")
-     * @return integer
+     *
+     * @return int
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Returns the name of the filter
+     * Returns the name of the filter.
      *
      * @return string The name of the filter
      * @VirtualProperty
@@ -63,11 +63,12 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get conjunction
+     * Get conjunction.
      *
      * @VirtualProperty
      * @SerializedName("conjunction")
-     * @return boolean
+     *
+     * @return bool
      */
     public function getConjunction()
     {
@@ -75,10 +76,11 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get entity
+     * Get entity.
      *
      * @VirtualProperty
      * @SerializedName("context")
+     *
      * @return string
      */
     public function getContext()
@@ -87,10 +89,11 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get conditionGroups
+     * Get conditionGroups.
      *
      * @VirtualProperty
      * @SerializedName("conditionGroups")
+     *
      * @return null|ConditionGroup[]
      */
     public function getConditionGroups()
@@ -105,13 +108,13 @@ class Filter extends ApiWrapper
             return $result;
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Set conjunction
+     * Set conjunction.
      *
-     * @param boolean $conjunction
+     * @param bool $conjunction
      */
     public function setConjunction($conjunction)
     {
@@ -119,7 +122,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Set context
+     * Set context.
      *
      * @param $name
      */
@@ -129,7 +132,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Add translations
+     * Add translations.
      *
      * @param FilterTranslation $translation
      */
@@ -139,9 +142,10 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Remove translations
+     * Remove translations.
      *
      * @param FilterTranslation $translations
+     *
      * @return bool
      */
     public function removeTranslation(FilterTranslation $translations)
@@ -150,7 +154,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get translation by locale
+     * Get translation by locale.
      *
      * @return FilterTranslation
      */
@@ -173,7 +177,8 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the name of the filter
+     * Sets the name of the filter.
+     *
      * @param string $name The name of the filter
      */
     public function setName($name)
@@ -182,9 +187,10 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Add conditionGroups
+     * Add conditionGroups.
      *
      * @param ConditionGroup $conditionGroup
+     *
      * @return Filter
      */
     public function addConditionGroup(ConditionGroup $conditionGroup)
@@ -193,7 +199,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Remove conditionGroup
+     * Remove conditionGroup.
      *
      * @param ConditionGroup $conditionGroup
      */
@@ -203,7 +209,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the changer of the filter
+     * Sets the changer of the filter.
      *
      * @param UserInterface $user The changer of the filter
      */
@@ -213,7 +219,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the changer of the filter
+     * Sets the changer of the filter.
      *
      * @return UserInterface creator/owner filter
      */
@@ -223,7 +229,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the creator of the filter
+     * Sets the creator of the filter.
      *
      * @param UserInterface $user The creator of the filter
      */
@@ -233,7 +239,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Returns the creator of the filter
+     * Returns the creator of the filter.
      *
      * @return UserInterface creator/owner of the filter
      */
@@ -243,7 +249,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the change time of the filter
+     * Sets the change time of the filter.
      *
      * @param \DateTime $changed
      */
@@ -253,7 +259,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the created time of the filter
+     * Sets the created time of the filter.
      *
      * @param \DateTime $created
      */
@@ -263,7 +269,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the change time of the filter
+     * Sets the change time of the filter.
      *
      * @return \DateTime
      */
@@ -273,10 +279,9 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the created time of the filter
+     * Sets the created time of the filter.
      *
      * @return \DateTime
-     *
      */
     public function getCreated()
     {
@@ -284,9 +289,10 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
+     *
      * @return Filter
      */
     public function setUser(UserInterface $user = null)
@@ -295,7 +301,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface
      */
@@ -305,24 +311,27 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get private flag
+     * Get private flag.
      *
      * @VirtualProperty
      * @SerializedName("private")
-     * @return boolean
+     *
+     * @return bool
      */
-    public function getPrivate(){
+    public function getPrivate()
+    {
         return $this->entity->getPrivate();
     }
 
     /**
-     * Sets the private flag
+     * Sets the private flag.
      *
      * @param $private boolean
      *
      * @return FilterEntity
      */
-    public function setPrivate($private){
+    public function setPrivate($private)
+    {
         $this->entity->setPrivate($private);
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -71,35 +72,35 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function provideLifecycle()
     {
-        return array(
+        return [
             // INVALIDATE: Is master request, has a structure and is not a preview
-            array(
-                array(
+            [
+                [
                     'is_master_request' => true,
                     'has_structure' => true,
                     'preview' => false,
-                ),
+                ],
                 true,
-            ),
+            ],
             // NO INVALIDATE: Has not structure
-            array(
-                array(
+            [
+                [
                     'is_master_request' => true,
                     'has_structure' => false,
                     'preview' => false,
-                ),
+                ],
                 false,
-            ),
+            ],
             // NO INVALIDATE: Is preview
-            array(
-                array(
+            [
+                [
                     'is_master_request' => true,
                     'has_structure' => true,
                     'preview' => true,
-                ),
+                ],
                 false,
-            ),
-        );
+            ],
+        ];
     }
 
     /**

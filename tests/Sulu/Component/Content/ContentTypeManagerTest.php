@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,10 +44,10 @@ class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
 
     public function provideHas()
     {
-        return array(
-            array('content_1.alias', true),
-            array('invalid.alias', false),
-        );
+        return [
+            ['content_1.alias', true],
+            ['invalid.alias', false],
+        ];
     }
 
     /**

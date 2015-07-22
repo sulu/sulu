@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\CoreBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -9,16 +18,16 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions()
     {
-        return array(
+        return [
             new SuluCoreExtension(),
-        );
+        ];
     }
 
     public function testLoadNoConfig()
     {
-        $this->load(array(
-            'locales' => array('en', 'de'),
-        ));
+        $this->load([
+            'locales' => ['en', 'de'],
+        ]);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             'sulu.cache.warmer.structure', 'kernel.cache_warmer'
         );
@@ -31,17 +40,17 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
 
     public function testDefaults()
     {
-        $this->load(array(
-            'content' => array(
-                'structure' => array(
-                    'default_type' => array(
+        $this->load([
+            'content' => [
+                'structure' => [
+                    'default_type' => [
                         'snippet' => 'barfoo',
-                    ),
-                    'paths' => array(),
-                ),
-            ),
-            'locales' => array('en', 'de'),
-        ));
+                    ],
+                    'paths' => [],
+                ],
+            ],
+            'locales' => ['en', 'de'],
+        ]);
 
         $this->assertEquals(
             'barfoo',

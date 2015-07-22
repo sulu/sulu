@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -86,9 +87,9 @@ class DataNavigationItem extends NavigationItem
     protected $searchTranslationKey = 'sulu.data-navigation.search';
 
     /**
-     * @param string $name The name of the item
-     * @param string $dataUrl url to load data for data-navigation
-     * @param NavigationItem $parent The parent of the item
+     * @param string         $name    The name of the item
+     * @param string         $dataUrl url to load data for data-navigation
+     * @param NavigationItem $parent  The parent of the item
      */
     public function __construct($name, $dataUrl, $parent = null)
     {
@@ -286,7 +287,7 @@ class DataNavigationItem extends NavigationItem
         $result = parent::toArray();
 
         // build options object
-        $dataNavigation = array(
+        $dataNavigation = [
             'rootUrl' => $this->dataUrl,
             'url' => $this->dataUrl,
             'resultKey' => $this->dataResultKey,
@@ -294,13 +295,13 @@ class DataNavigationItem extends NavigationItem
             'childrenLinkKey' => $this->dataChildrenLinkKey,
             'showAddButton' => $this->showAddButton,
             'instanceName' => $this->instanceName,
-            'translates' => array(
+            'translates' => [
                 'noData' => $this->noDataTranslationKey,
                 'title' => $this->titleTranslationKey,
                 'addButton' => $this->addButtonTranslationKey,
                 'search' => $this->searchTranslationKey,
-            ),
-        );
+            ],
+        ];
 
         // not setted values should be removed
         $dataNavigation = array_filter($dataNavigation);

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,9 +12,9 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
 {
@@ -37,7 +38,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
      */
     public function getKernelConfiguration()
     {
-        return array('environment' => 'dev');
+        return ['environment' => 'dev'];
     }
 
     /**
@@ -51,9 +52,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'Le grande budapest',
-            ));
+            ]);
         $this->hotel1 = $this->contentMapper->saveRequest($req);
 
         // HOTELS (including page)
@@ -63,9 +64,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setLocale('en')
             ->setUserId(1)
             ->setUuid($this->hotel1->getUuid())
-            ->setData(array(
+            ->setData([
                 'title' => 'Le grande budapest (en)',
-            ));
+            ]);
         $this->hotel1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
@@ -73,9 +74,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'L\'Hôtel New Hampshire',
-            ));
+            ]);
         $this->hotel2 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
@@ -85,14 +86,14 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setTemplateKey('hotel_page')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'Hotels page',
                 'url' => '/hotels',
-                'hotels' => array(
+                'hotels' => [
                     $this->hotel1->getUuid(),
                     $this->hotel2->getUuid(),
-                ),
-            ));
+                ],
+            ]);
 
         $hotels = $this->contentMapper->saveRequest($req);
 
@@ -106,9 +107,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setUuid($hotels->getUuid())
             ->setIsShadow(true)
             ->setShadowBaseLanguage('de')
-            ->setData(array(
+            ->setData([
                 'title' => 'Hotels',
-            ));
+            ]);
 
         $this->contentMapper->saveRequest($req);
 
@@ -118,9 +119,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setTemplateKey('car')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'C car',
-            ));
+            ]);
         $this->car1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
@@ -128,9 +129,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setTemplateKey('car')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'A car',
-            ));
+            ]);
         $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
@@ -138,9 +139,9 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setTemplateKey('car')
             ->setLocale('de')
             ->setUserId(1)
-            ->setData(array(
+            ->setData([
                 'title' => 'B car',
-            ));
+            ]);
         $this->contentMapper->saveRequest($req);
     }
 }

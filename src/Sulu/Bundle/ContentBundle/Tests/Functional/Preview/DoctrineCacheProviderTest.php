@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,9 +17,9 @@ use JMS\Serializer\Serializer;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
@@ -84,26 +85,26 @@ class DoctrineCacheProviderTest extends SuluTestCase
      */
     private function prepareData()
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'title' => 'Testtitle',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test',
-                'article' => array('Test-1', 'Test-2'),
-            ),
-            array(
+                'article' => ['Test-1', 'Test-2'],
+            ],
+            [
                 'title' => 'Testtitle2',
-                'tags' => array(
+                'tags' => [
                     'tag1',
                     'tag2',
-                ),
+                ],
                 'url' => '/news/test2',
-                'article' => array('Test-1', 'Test-2'),
-            ),
-        );
+                'article' => ['Test-1', 'Test-2'],
+            ],
+        ];
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
@@ -119,7 +120,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
 
         $method->setAccessible(true);
 
-        return $method->invokeArgs($this->cache, array($userId, $contentUuid, $locale));
+        return $method->invokeArgs($this->cache, [$userId, $contentUuid, $locale]);
     }
 
     public function testWarmUp()
@@ -253,7 +254,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
     {
         $data = $this->prepareData();
         $this->cache->warmUp(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $changes = array('title' => array('asdf', 'asdf'), 'article' => array(''));
+        $changes = ['title' => ['asdf', 'asdf'], 'article' => ['']];
 
         $result = $this->cache->saveChanges($changes, 1, $data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertEquals($changes, $result);
@@ -265,7 +266,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals($changes, $result);
 
         $result = $this->cache->fetchChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(array(), $result);
+        $this->assertEquals([], $result);
     }
 
     public function testContains()

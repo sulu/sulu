@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Cleanup ResourceLocator History
+ * Cleanup ResourceLocator History.
  */
 class CleanupHistoryCommand extends ContainerAwareCommand
 {
@@ -83,6 +84,7 @@ EOT
 
         if (!$this->session->nodeExists($fullPath)) {
             $this->output->write('<error>Resource-Locator "' . $relativePath . '" not found</error>');
+
             return;
         }
 
@@ -99,16 +101,16 @@ EOT
     }
 
     /**
-     * Cleanup specific node and his children
+     * Cleanup specific node and his children.
      *
      * @param NodeInterface $node
-     * @param string $rootPath
-     * @param boolean $dryRun
+     * @param string        $rootPath
+     * @param bool          $dryRun
      */
     private function cleanup(NodeInterface $node, $rootPath, $dryRun)
     {
         foreach ($node->getNodes() as $childNode) {
-            $this->cleanup($childNode, $rootPath,$dryRun);
+            $this->cleanup($childNode, $rootPath, $dryRun);
         }
 
         $path = ltrim(str_replace($rootPath, '', $node->getPath()), '/');

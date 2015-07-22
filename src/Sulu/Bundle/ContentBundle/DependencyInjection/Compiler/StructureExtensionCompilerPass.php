@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,12 +13,10 @@ namespace Sulu\Bundle\ContentBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * CompilerPass, which adds structure extension to structure manager
- * @package Sulu\Bundle\CoreBundle\DependencyInjection\Compiler
+ * CompilerPass, which adds structure extension to structure manager.
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {
@@ -37,9 +36,9 @@ class StructureExtensionCompilerPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 if (isset($attributes['template'])) {
-                    $params = array(new Reference($id), $attributes['template']);
+                    $params = [new Reference($id), $attributes['template']];
                 } else {
-                    $params = array(new Reference($id));
+                    $params = [new Reference($id)];
                 }
 
                 $definition->addMethodCall('addExtension', $params);

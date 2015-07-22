@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 use Symfony\Component\Finder\Finder;
 
 $vendorDir = __DIR__ . '/../vendor';
-$suluDir = __DIR__ .'/../src/Sulu';
+$suluDir = __DIR__ . '/../src/Sulu';
 
 require_once $vendorDir . '/autoload.php';
 
@@ -23,15 +32,15 @@ function extract_packages($packageList, $list, $nativePackageNames)
 $finder = new Finder();
 $finder->name('composer.json')->in($suluDir);
 
-$require = array();
-$requireDev = array();
-$suggest = array();
-$replace = array();
+$require = [];
+$requireDev = [];
+$suggest = [];
+$replace = [];
 
-$packages = array();
-$nativePackageNames = array(
-    'sulu/sulu' => 'sulu/sulu'
-);
+$packages = [];
+$nativePackageNames = [
+    'sulu/sulu' => 'sulu/sulu',
+];
 
 foreach ($finder as $file) {
     $json = file_get_contents($file);
@@ -58,29 +67,29 @@ foreach ($packages as $package) {
 ksort($require);
 ksort($requireDev);
 
-$newPackage = array(
+$newPackage = [
     'name' => 'sulu/sulu',
     'type' => 'library',
     'description' => 'SuluCMF core distribution',
     'license' => 'MIT',
-    'keywords' => array('core', 'sulu'),
+    'keywords' => ['core', 'sulu'],
     'version' => 'dev-develop',
-    'authors' => array(
-        array(
+    'authors' => [
+        [
             'name' => 'Sulu Community',
             'homepage' => 'https://github.com/sulu-cmf/sulu/contributors',
-        )
-    ),
+        ],
+    ],
     'require' => $require,
     'require-dev' => $requireDev,
     'replace' => $replace,
     'suggest' => $suggest,
-    'autoload' => array(
-        'psr-0' => array(
-            'Sulu\\' => 'src/'
-        )
-    )
-);
+    'autoload' => [
+        'psr-0' => [
+            'Sulu\\' => 'src/',
+        ],
+    ],
+];
 
 $newPackage = json_encode($newPackage, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 die($newPackage);

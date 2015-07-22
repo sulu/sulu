@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMF.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,7 +46,7 @@ class AddMessageDispatcherPass implements CompilerPassInterface
                 $alias = $attributes['alias'];
 
                 if (array_key_exists($dispatcherName, $dispatchers)) {
-                    $dispatchers[$dispatcherName]->addMethodCall('add', array($alias, $handler));
+                    $dispatchers[$dispatcherName]->addMethodCall('add', [$alias, $handler]);
                 }
             }
         }
@@ -58,7 +59,7 @@ class AddMessageDispatcherPass implements CompilerPassInterface
      */
     private function findDispatchers(ContainerBuilder $container)
     {
-        $dispatchers = array();
+        $dispatchers = [];
         $taggedDispatchers = $container->findTaggedServiceIds(self::DISPATCHER_TAG);
 
         foreach ($taggedDispatchers as $id => $tags) {

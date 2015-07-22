@@ -1,23 +1,30 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Compat\Structure;
 
+use Sulu\Component\Content\Compat\Block\BlockProperty;
+use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\Section\SectionProperty;
-use Sulu\Component\Content\Compat\Block\BlockProperty;
-use Sulu\Component\Content\Metadata\Property;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
-use Sulu\Component\Content\Metadata\ItemMetadata;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Compat\Block\BlockPropertyType;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\Section\SectionProperty;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\Property;
+use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 /**
  * Creates legacy properties from "new" properties.
@@ -37,7 +44,7 @@ class LegacyPropertyFactory
     }
 
     /**
-     * Create a new "translated" property
+     * Create a new "translated" property.
      *
      * @param object $property
      * @param string $locale
@@ -56,9 +63,10 @@ class LegacyPropertyFactory
     }
 
     /**
-     * Create a new property
+     * Create a new property.
      *
      * @param Item $item
+     *
      * @return PropertyInterface $property
      */
     public function createProperty(ItemMetadata $property, StructureInterface $structure = null)
@@ -81,18 +89,18 @@ class LegacyPropertyFactory
         $parameters = $this->convertArrayToParameters($property->getParameters());
         $propertyBridge = new LegacyProperty(
             $property->getName(),
-            array(
+            [
                 'title' => $property->title,
                 'info_text' => $property->description,
                 'placeholder' => $property->placeholder,
-            ),
+            ],
             $property->getType(),
             $property->isRequired(),
             $property->isLocalized(),
             $property->getMaxOccurs(),
             $property->getMinOccurs(),
             $parameters,
-            array(),
+            [],
             $property->getColspan()
         );
 
@@ -107,7 +115,7 @@ class LegacyPropertyFactory
 
     private function convertArrayToParameters($arrayParams)
     {
-        $parameters = array();
+        $parameters = [];
         foreach ($arrayParams as $arrayParam) {
             $value = $arrayParam['value'];
 
@@ -125,10 +133,10 @@ class LegacyPropertyFactory
     {
         $sectionProperty = new SectionProperty(
             $property->getName(),
-            array(
+            [
                 'title' => $property->title,
                 'info_text' => $property->description,
-            ),
+            ],
             $property->getColspan()
         );
 
@@ -143,17 +151,17 @@ class LegacyPropertyFactory
     {
         $blockProperty = new BlockProperty(
             $property->getName(),
-            array(
+            [
                 'title' => $property->title,
                 'info_text' => $property->description,
-            ),
+            ],
             $property->getDefaultComponentName(),
             $property->isRequired(),
             $property->isLocalized(),
             $property->getMaxOccurs(),
             $property->getMinOccurs(),
             $property->getParameters(),
-            array(),
+            [],
             $property->getColspan()
         );
         $blockProperty->setStructure($structure);
@@ -161,10 +169,10 @@ class LegacyPropertyFactory
         foreach ($property->getComponents() as $component) {
             $blockPropertyType = new BlockPropertyType(
                 $component->getName(),
-                array(
+                [
                     'title' => $component->title,
                     'info_text' => $component->description,
-                )
+                ]
             );
 
             foreach ($component->getChildren() as $property) {

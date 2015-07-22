@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,7 +51,7 @@ class MediaTypeUpdateCommand extends ContainerAwareCommand
                             $newType = $typeManager->get($mediaTypeId);
                             $media->setType($newType);
                             $em->persist($media);
-                            $counter++;
+                            ++$counter;
                             $output->writeln(sprintf('Media with id <comment>%s</comment> change from type <comment>%s</comment> to <comment>%s</comment>', $media->getId(), $oldType->getName(), $newType->getName()));
                         }
                     }

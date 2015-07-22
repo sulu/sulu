@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,10 +22,10 @@ interface ParameterResolverInterface
     /**
      * Resolves parameter for website controller.
      *
-     * @param array $parameter
+     * @param array                    $parameter
      * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param StructureInterface $structure
-     * @param bool $preview
+     * @param StructureInterface       $structure
+     * @param bool                     $preview
      *
      * @return mixed
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,18 +40,18 @@ class PackageController extends RestController implements ClassResourceInterface
     /**
      * @var DoctrineFieldDescriptor[]
      */
-    protected $fieldDescriptors = array();
+    protected $fieldDescriptors = [];
 
     protected $basePath = 'admin/api/contacts';
 
-    protected $unsortable = array();
+    protected $unsortable = [];
 
-    protected $fieldsDefault = array('name');
-    protected $fieldsExcluded = array();
-    protected $fieldsHidden = array();
-    protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0 => 'id');
-    protected $fieldsTranslationKeys = array();
+    protected $fieldsDefault = ['name'];
+    protected $fieldsExcluded = [];
+    protected $fieldsHidden = [];
+    protected $fieldsRelations = [];
+    protected $fieldsSortOrder = [0 => 'id'];
+    protected $fieldsTranslationKeys = [];
     protected $bundlePrefix = 'translate.package.';
 
     /**
@@ -184,7 +185,7 @@ class PackageController extends RestController implements ClassResourceInterface
      * if the package with the given id is not yet existing.
      *
      * @param Request $request
-     * @param int $id The id of the package to update
+     * @param int     $id      The id of the package to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -205,7 +206,7 @@ class PackageController extends RestController implements ClassResourceInterface
 
                 $package->setName($name);
 
-                $catalogues = $request->get('catalogues', array());
+                $catalogues = $request->get('catalogues', []);
                 if (!$this->processCatalogues($catalogues, $package)) {
                     throw new RestException('Catalogue update not possible', 0);
                 }
@@ -321,8 +322,8 @@ class PackageController extends RestController implements ClassResourceInterface
      */
     private function getFieldDescriptors()
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, 'id', array());
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName, 'name', array());
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, 'id', []);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName, 'name', []);
 
         return $this->fieldDescriptors;
     }

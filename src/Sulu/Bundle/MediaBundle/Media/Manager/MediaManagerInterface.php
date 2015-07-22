@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,13 +24,13 @@ interface MediaManagerInterface
      * if no arguments passed returns all media.
      *
      * @param string $locale the locale which the object will be returned
-     * @param array $filter collection, ids, types
-     * @param int $limit to limit the output
-     * @param int $offset to offset the output
+     * @param array  $filter collection, ids, types
+     * @param int    $limit  to limit the output
+     * @param int    $offset to offset the output
      *
      * @return Media[]
      */
-    public function get($locale, $filter = array(), $limit = null, $offset = null);
+    public function get($locale, $filter = [], $limit = null, $offset = null);
 
     /**
      * Return the count of the last get.
@@ -41,7 +42,7 @@ interface MediaManagerInterface
     /**
      * Returns a media with a given id.
      *
-     * @param int $id the id of the category
+     * @param int    $id     the id of the category
      * @param string $locale the locale which the object will be returned
      *
      * @return Media
@@ -51,7 +52,7 @@ interface MediaManagerInterface
     /**
      * Returns the medias with the given ids in the specified order.
      *
-     * @param array $ids
+     * @param array  $ids
      * @param string $locale
      *
      * @return Media[]
@@ -62,8 +63,8 @@ interface MediaManagerInterface
      * Creates a new media or overrides an existing one.
      *
      * @param UploadedFile $uploadedFile
-     * @param array $data The data of the category to save
-     * @param int $userId The id of the user, who is doing this change
+     * @param array        $data         The data of the category to save
+     * @param int          $userId       The id of the user, who is doing this change
      *
      * @return Media
      */
@@ -79,9 +80,9 @@ interface MediaManagerInterface
     /**
      * Moves a media to a given collection.
      *
-     * @param int $id id of media
-     * @param string $locale the locale which the object will be returned
-     * @param int $destCollection id of destination collection
+     * @param int    $id             id of media
+     * @param string $locale         the locale which the object will be returned
+     * @param int    $destCollection id of destination collection
      *
      * @return Media
      *

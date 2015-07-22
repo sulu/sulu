@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -72,10 +72,10 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     public function theContactShouldNotExist($firstName, $lastName)
     {
         $contact = $this->getEntityManager()
-            ->getRepository('SuluContactBundle:Contact')->findOneBy(array(
+            ->getRepository('SuluContactBundle:Contact')->findOneBy([
                 'firstName' => $firstName,
                 'lastName' => $lastName,
-            ));
+            ]);
 
         if ($contact) {
             throw new \Exception(sprintf('Contact with firstname "%s" and lastname "%s" should NOT exist', $firstName, $lastName));
@@ -88,10 +88,10 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     public function theContactShouldExist($firstName, $lastName)
     {
         $contact = $this->getEntityManager()
-            ->getRepository('SuluContactBundle:Contact')->findOneBy(array(
+            ->getRepository('SuluContactBundle:Contact')->findOneBy([
                 'firstName' => $firstName,
                 'lastName' => $lastName,
-            ));
+            ]);
 
         if (!$contact) {
             throw new \Exception(sprintf('Contact with firstname "%s" and lastname "%s" should exist', $firstName, $lastName));

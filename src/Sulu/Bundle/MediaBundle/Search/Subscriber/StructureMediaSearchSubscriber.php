@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,7 +43,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     protected $searchImageFormat;
 
     /**
-     * @param MediaManagerInterface $mediaManager
+     * @param MediaManagerInterface    $mediaManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param $searchImageFormat
      */
@@ -63,9 +64,9 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             SearchEvents::PRE_INDEX => 'handlePreIndex',
-        );
+        ];
     }
 
     /**
@@ -124,9 +125,9 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
                 );
             }
 
-            $medias = $this->mediaManager->get($locale, array(
+            $medias = $this->mediaManager->get($locale, [
                 'ids' => $data['ids'],
-            ));
+            ]);
         }
 
         // no media, no thumbnail URL

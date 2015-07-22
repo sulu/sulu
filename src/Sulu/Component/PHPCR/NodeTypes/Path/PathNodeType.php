@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,9 +47,9 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredSupertypeNames()
     {
-        return array(
+        return [
             'sulu:base',
-        );
+        ];
     }
 
     /**
@@ -106,7 +107,7 @@ class PathNodeType implements NodeTypeDefinitionInterface
      * NodeTypeTemplateInterface, then this method will return false.
      *
      * @return bool True, if nodes of this type must support orderable child
-     *      nodes, else false.
+     *              nodes, else false.
      *
      * @api
      */
@@ -172,10 +173,10 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredPropertyDefinitions()
     {
-        return array(
+        return [
             new ContentPropertyDefinition(),
             new HistoryPropertyDefinition(),
-        );
+        ];
     }
 
     /**
@@ -192,6 +193,6 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredChildNodeDefinitions()
     {
-        return array();
+        return [];
     }
 }

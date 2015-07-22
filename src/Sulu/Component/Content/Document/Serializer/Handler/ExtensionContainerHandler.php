@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,41 +11,41 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Handler;
 
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
+use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 /**
- * Handle serializeation and deserialization of document content
+ * Handle serializeation and deserialization of document content.
  */
 class ExtensionContainerHandler implements SubscribingHandlerInterface
 {
     public static function getSubscribingMethods()
     {
-        return array(
-            array(
+        return [
+            [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => ExtensionContainer::class,
                 'method' => 'doSerialize',
-            ),
-            array(
+            ],
+            [
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
                 'type' => ExtensionContainer::class,
                 'method' => 'doDeserialize',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
-     * @param array $type
-     * @param Context $context
+     * @param NodeInterface            $nodeInterface
+     * @param array                    $type
+     * @param Context                  $context
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
@@ -57,9 +58,9 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface $nodeInterface
-     * @param array $type
-     * @param Context $context
+     * @param NodeInterface            $nodeInterface
+     * @param array                    $type
+     * @param Context                  $context
      */
     public function doDeserialize(
         JsonDeserializationVisitor $visitor,

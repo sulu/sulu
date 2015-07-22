@@ -11,15 +11,14 @@
 namespace Sulu\Bundle\ResourceBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ResourceBundle\Resource\OperatorManagerInterface;
 use Sulu\Component\Rest\RestController;
-use Hateoas\Representation\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes operators available through a REST API
- * Class OperatorController
- * @package Sulu\Bundle\ResourceBundle\Controller
+ * Class OperatorController.
  */
 class OperatorController extends RestController implements ClassResourceInterface
 {
@@ -27,6 +26,7 @@ class OperatorController extends RestController implements ClassResourceInterfac
 
     /**
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)

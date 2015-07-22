@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,13 +11,13 @@
 
 namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 
-use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Events;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 /**
- * Normalize ManagedExtensionContainer instances to the ExtensionContainer type
+ * Normalize ManagedExtensionContainer instances to the ExtensionContainer type.
  */
 class ExtensionContainerSubscriber implements EventSubscriberInterface
 {
@@ -25,12 +26,12 @@ class ExtensionContainerSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            array(
+        return [
+            [
                 'event' => Events::PRE_SERIALIZE,
                 'method' => 'onPreSerialize',
-            ),
-        );
+            ],
+        ];
     }
 
     /**

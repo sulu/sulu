@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +21,7 @@ class JsConfigPool
      *
      * @var array
      */
-    private $pool = array();
+    private $pool = [];
 
     /**
      * Returns all config parameters.
@@ -39,6 +40,6 @@ class JsConfigPool
      */
     public function addConfigParams(JsConfigInterface $params)
     {
-        $this->pool = array_merge($this->pool, array($params->getName() => $params->getParameters()));
+        $this->pool = array_merge($this->pool, [$params->getName() => $params->getParameters()]);
     }
 }

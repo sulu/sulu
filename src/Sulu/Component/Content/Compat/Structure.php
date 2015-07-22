@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,8 +14,8 @@ namespace Sulu\Component\Content\Compat;
 use DateTime;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
-use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 /**
  * The Structure class represenets content structure and is the super type
@@ -79,7 +80,7 @@ abstract class Structure implements StructureInterface
      * @var array
      * @Type("array<string,Sulu\Component\Content\Compat\Property>")
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * has structure sub structures.
@@ -163,7 +164,7 @@ abstract class Structure implements StructureInterface
      * @var array
      * @Type("array")
      */
-    private $tags = array();
+    private $tags = [];
 
     /**
      * type of node.
@@ -205,13 +206,13 @@ abstract class Structure implements StructureInterface
      * @var array
      * @Type("array")
      */
-    private $enabledShadowLanguages = array();
+    private $enabledShadowLanguages = [];
 
     /**
      * @var array
      * @Type("array")
      */
-    private $concreteLanguages = array();
+    private $concreteLanguages = [];
 
     /**
      * @var Metadata
@@ -271,12 +272,12 @@ abstract class Structure implements StructureInterface
     {
         foreach ($property->getTags() as $tag) {
             if (!array_key_exists($tag->getName(), $this->tags)) {
-                $this->tags[$tag->getName()] = array(
+                $this->tags[$tag->getName()] = [
                     'tag' => $tag,
-                    'properties' => array($tag->getPriority() => $property),
+                    'properties' => [$tag->getPriority() => $property],
                     'highest' => $property,
                     'lowest' => $property,
-                );
+                ];
             } else {
                 $this->tags[$tag->getName()]['properties'][$tag->getPriority()] = $property;
 
@@ -469,11 +470,11 @@ abstract class Structure implements StructureInterface
      * returns a property instance with given tag name.
      *
      * @param string $tagName
-     * @param bool $highest
-     *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @param bool   $highest
      *
      * @return PropertyInterface
+     *
+     * @throws NoSuchPropertyException
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
@@ -489,9 +490,9 @@ abstract class Structure implements StructureInterface
      *
      * @param string $tagName
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     *
      * @return PropertyInterface
+     *
+     * @throws NoSuchPropertyException
      */
     public function getPropertiesByTagName($tagName)
     {
@@ -686,7 +687,7 @@ abstract class Structure implements StructureInterface
         if ($flatten === false) {
             return $this->properties;
         } else {
-            $result = array();
+            $result = [];
             foreach ($this->properties as $property) {
                 if ($property instanceof SectionPropertyInterface) {
                     $result = array_merge($result, $property->getChildProperties());
@@ -859,7 +860,7 @@ abstract class Structure implements StructureInterface
     public function toArray($complete = true)
     {
         if ($complete) {
-            $result = array(
+            $result = [
                 'id' => $this->uuid,
                 'nodeType' => $this->nodeType,
                 'internal' => $this->internal,
@@ -873,7 +874,7 @@ abstract class Structure implements StructureInterface
                 'changer' => $this->changer,
                 'created' => $this->created,
                 'changed' => $this->changed,
-            );
+            ];
 
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
@@ -889,7 +890,7 @@ abstract class Structure implements StructureInterface
 
             return $result;
         } else {
-            $result = array(
+            $result = [
                 'id' => $this->uuid,
                 'path' => $this->path,
                 'nodeType' => $this->nodeType,
@@ -897,7 +898,7 @@ abstract class Structure implements StructureInterface
                 'concreteLanguages' => $this->getConcreteLanguages(),
                 'hasSub' => $this->hasChildren,
                 'title' => $this->getProperty('title')->toArray(),
-            );
+            ];
 
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
@@ -932,7 +933,7 @@ abstract class Structure implements StructureInterface
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      *
      * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
+     *               which is a value of any type other than a resource.
      */
     public function jsonSerialize()
     {
@@ -1004,6 +1005,8 @@ abstract class Structure implements StructureInterface
      * Return the tag with the given name.
      *
      * @param string $name
+     *
+     * @return StructureTag
      *
      * @throws \InvalidArgumentException
      */

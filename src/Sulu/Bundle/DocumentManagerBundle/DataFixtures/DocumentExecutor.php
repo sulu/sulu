@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
-use Symfony\Component\Console\Output\NullOutput;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
-use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\NodeManager;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -34,15 +43,14 @@ class DocumentExecutor
 
     /**
      * @param DocumentManager $documentManager
-     * @param NodeManager $nodeManager
-     * @param Initializer $initializer
+     * @param NodeManager     $nodeManager
+     * @param Initializer     $initializer
      */
     public function __construct(
         DocumentManager $documentManager,
         NodeManager $nodeManager,
         Initializer $initializer
-    )
-    {
+    ) {
         $this->documentManager = $documentManager;
         $this->nodeManager = $nodeManager;
         $this->initializer = $initializer;
@@ -51,14 +59,14 @@ class DocumentExecutor
     /**
      * Load the given fixture classes.
      *
-     * @param array $fixtures
-     * @param mixed $purge
-     * @param mixed $initialize
+     * @param array           $fixtures
+     * @param mixed           $purge
+     * @param mixed           $initialize
      * @param OutputInterface $output
      */
     public function execute(array $fixtures, $purge = true, $initialize = true, OutputInterface $output = null)
     {
-        $output = $output ? : new NullOutput();
+        $output = $output ?: new NullOutput();
 
         if (true === $purge) {
             $output->writeln('<comment>Purging workspace</comment>');

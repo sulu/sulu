@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,20 +11,19 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Set a fallback locale for the document if necessary
+ * Set a fallback locale for the document if necessary.
  *
  * TODO: Most of this code is legacy. It seems to me that this could be
  *       much simpler and more efficient.
@@ -67,11 +67,11 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // needs to happen after the node and document has been initially registered
             // but before any mapping takes place.
-            Events::HYDRATE => array('handleHydrate', 400),
-        );
+            Events::HYDRATE => ['handleHydrate', 400],
+        ];
     }
 
     /**
@@ -110,10 +110,10 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Return available localizations
+     * Return available localizations.
      *
      * @param StructureBehavior $document
-     * @param string $locale
+     * @param string            $locale
      *
      * @return string
      */
@@ -147,16 +147,16 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param string $webspaceName
+     * @param string   $webspaceName
      * @param string[] $availableLocales
-     * @param string $locale
+     * @param string   $locale
      *
      * @return string
      */
     private function getWebspaceLocale($webspaceName, array $availableLocales, $locale)
     {
         if (!$webspaceName) {
-            return null;
+            return;
         }
 
         // get localization object for querying parent localizations
@@ -164,7 +164,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $localization = $webspace->getLocalization($locale);
 
         if (null === $localization) {
-            return null;
+            return;
         }
 
         $resultLocalization = null;
@@ -192,17 +192,17 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$resultLocalization) {
-            return null;
+            return;
         }
 
         return $resultLocalization->getLocalization();
     }
 
     /**
-     * Finds the next available parent-localization in which the node has a translation
+     * Finds the next available parent-localization in which the node has a translation.
      *
-     * @param string[] $availableLocales
-     * @param Localization $localization The localization to start the search for
+     * @param string[]     $availableLocales
+     * @param Localization $localization     The localization to start the search for
      *
      * @return null|Localization
      */
@@ -219,14 +219,14 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             $localization = $localization->getParent();
         } while ($localization != null);
 
-        return null;
+        return;
     }
 
     /**
-     * Finds the next available child-localization in which the node has a translation
+     * Finds the next available child-localization in which the node has a translation.
      *
-     * @param string[] $availableLocales
-     * @param Localization $localization The localization to start the search for
+     * @param string[]     $availableLocales
+     * @param Localization $localization     The localization to start the search for
      *
      * @return null|Localization
      */
@@ -249,14 +249,14 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         // return null if nothing was found
-        return null;
+        return;
     }
 
     /**
-     * Finds any localization, in which the node is translated
+     * Finds any localization, in which the node is translated.
      *
-     * @param string[] $availableLocales
-     * @param Localization[] $localizations The available localizations
+     * @param string[]       $availableLocales
+     * @param Localization[] $localizations    The available localizations
      *
      * @return null|Localization
      */
@@ -265,7 +265,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         array $localizations
     ) {
         foreach ($localizations as $localization) {
-
             if (in_array($localization->getLocalization(), $availableLocales)) {
                 return $localization;
             }
@@ -277,6 +276,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             }
         }
 
-        return null;
+        return;
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -48,7 +49,7 @@ class ListRestHelper
      * The constructor takes the request as an argument, which
      * is injected by the service container.
      *
-     * @param Request $request
+     * @param Request       $request
      * @param ObjectManager $em
      */
     public function __construct(Request $request, ObjectManager $em)
@@ -73,12 +74,12 @@ class ListRestHelper
      * Create a ListRepository for given EntityName and find Entities for list.
      *
      * @param string $entityName
-     * @param array $where
-     * @param array $joinConditions
+     * @param array  $where
+     * @param array  $joinConditions
      *
      * @return array
      */
-    public function find($entityName, $where = array(), $joinConditions = array())
+    public function find($entityName, $where = [], $joinConditions = [])
     {
         return $this->getRepository($entityName)->find($where, 'u', false, $joinConditions);
     }
@@ -103,7 +104,7 @@ class ListRestHelper
         $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
         $sortBy = $this->getRequest()->get('sortBy', 'id');
 
-        return array($sortBy => $sortOrder);
+        return [$sortBy => $sortOrder];
     }
 
     /**
@@ -200,7 +201,7 @@ class ListRestHelper
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return ($searchFields != null) ? explode(',', $searchFields) : array();
+        return ($searchFields != null) ? explode(',', $searchFields) : [];
     }
 
     /**
@@ -210,7 +211,7 @@ class ListRestHelper
      *
      * @return int
      */
-    public function getTotalNumberOfElements($entityName, $where, $joinConditions = array())
+    public function getTotalNumberOfElements($entityName, $where, $joinConditions = [])
     {
         $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where, $joinConditions);
 

@@ -11,12 +11,12 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 /**
- * The interface for the filter entity repository
+ * The interface for the filter entity repository.
  */
 interface FilterRepositoryInterface
 {
     /**
-     * Searches for a filter by id and locale
+     * Searches for a filter by id and locale.
      *
      * @param $id
      * @param $locale
@@ -26,7 +26,7 @@ interface FilterRepositoryInterface
     public function findByIdAndLocale($id, $locale);
 
     /**
-     * Searches for a filter by id
+     * Searches for a filter by id.
      *
      * @param $id
      *
@@ -35,7 +35,7 @@ interface FilterRepositoryInterface
     public function findById($id);
 
     /**
-     * Deletes multiple filters
+     * Deletes multiple filters.
      *
      * @param $ids
      *
@@ -46,7 +46,7 @@ interface FilterRepositoryInterface
     /**
      * Searches for all filters of a user by context and locale
      * includes filters without a user which were e.g. created
-     * by fixtures
+     * by fixtures.
      *
      * @param string $locale
      * @param string $context

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,7 +46,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     // TODO: move the field descriptors to a manager
     public function __construct()
     {
-        $this->fieldDescriptors = array();
+        $this->fieldDescriptors = [];
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', static::$entityName);
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', static::$entityName);
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', static::$entityName);
@@ -181,7 +182,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
                 $this->setParent($group);
 
-                if (!$this->processRoles($group, $request->get('roles', array()))) {
+                if (!$this->processRoles($group, $request->get('roles', []))) {
                     throw new RestException('Could not update dependencies!');
                 }
 
@@ -211,7 +212,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
         $get = function ($entity) {
-            /** @var RoleInterface $entity */
+            /* @var RoleInterface $entity */
             return $entity->getId();
         };
 

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ interface ImageConverterInterface
      * Convert an image and return the tmpPath.
      *
      * @param string $originalPath
-     * @param array $formatOptions
+     * @param array  $formatOptions
      *
      * @return ImageInterface
      */

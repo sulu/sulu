@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,13 +47,13 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             }
 
             foreach ($container->getExtensions() as $name => $extension) {
-                $prependConfig = array();
+                $prependConfig = [];
                 switch ($name) {
                     case 'doctrine_phpcr':
-                        $prependConfig = array(
+                        $prependConfig = [
                             'session' => $phpcrConfig,
-                            'odm' => array(),
-                        );
+                            'odm' => [],
+                        ];
                         break;
                     case 'cmf_core':
                         break;
@@ -65,9 +66,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         if ($container->hasExtension('massive_build')) {
-            $container->prependExtensionConfig('massive_build', array(
+            $container->prependExtensionConfig('massive_build', [
                 'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',
-            ));
+            ]);
         }
     }
 
@@ -114,7 +115,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $webspaceConfig
-     * @param ContainerBuilder $container
+     * @param ContainerBuilder     $container
      * @param Loader\XmlFileLoader $loader
      */
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
@@ -139,7 +140,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $phpcrConfig
-     * @param ContainerBuilder $container
+     * @param ContainerBuilder     $container
      * @param Loader\XmlFileLoader $loader
      *
      * @throws InvalidArgumentException
@@ -151,7 +152,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $contentConfig
-     * @param ContainerBuilder $container
+     * @param ContainerBuilder     $container
      * @param Loader\XmlFileLoader $loader
      */
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
@@ -194,11 +195,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Template
-        $paths = array();
+        $paths = [];
         foreach ($contentConfig['structure']['paths'] as $pathConfig) {
             $pathType = $pathConfig['type'];
             if (!isset($paths[$pathType])) {
-                $paths[$pathType] = array();
+                $paths[$pathType] = [];
             }
             $paths[$pathType][] = $pathConfig;
         }

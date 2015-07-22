@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,11 +37,11 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
             '/web/uploads/media',
             '/uploads/media/{slug}',
             $this->segments,
-            array(
-                '50x50' => array(
+            [
+                '50x50' => [
                     'name' => '50x50',
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -54,7 +55,7 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
         $segment = ($fileId % $this->segments);
         $format = '50x50';
         $fileName = 'Test With Spaces & Co.jpg';
-        $filePath = $this->localStorage->getMediaUrl($fileId, $fileName, array(), $format, $version);
+        $filePath = $this->localStorage->getMediaUrl($fileId, $fileName, [], $format, $version);
         $encodedFileName = 'Test%20With%20Spaces%20%26%20Co.jpg';
 
         $this->assertSame(

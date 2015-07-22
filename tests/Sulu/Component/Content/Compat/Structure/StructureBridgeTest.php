@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Prophecy\Argument;
@@ -24,7 +33,7 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
         $images->getName()->willReturn('images');
 
         $title->setValue('test-title')->shouldBeCalled();
-        $images->setValue(array('ids' => array(1, 2, 3, 4)))->shouldBeCalled();
+        $images->setValue(['ids' => [1, 2, 3, 4]])->shouldBeCalled();
 
         $document = $this->prophesize(StructureBehavior::class);
         $metadata = $this->prophesize(StructureMetadata::class);
@@ -37,7 +46,7 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
         $property->setAccessible(true);
         $property->setValue($reveal, $document->reveal());
 
-        $metadata->getProperties()->willReturn(array($titleProperty, $imagesProperty));
+        $metadata->getProperties()->willReturn([$titleProperty, $imagesProperty]);
         $metadata->hasProperty('title')->willReturn(true);
         $metadata->getProperty('title')->willReturn($title->reveal());
         $metadata->hasProperty('images')->willReturn(true);
@@ -47,7 +56,7 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
         $copyFromStructure->hasProperty('title')->willReturn(true);
         $copyFromStructure->hasProperty('images')->willReturn(true);
         $copyFromStructure->getPropertyValue('title')->willReturn('test-title');
-        $copyFromStructure->getPropertyValue('images')->willReturn(array('ids' => array(1, 2, 3, 4)));
+        $copyFromStructure->getPropertyValue('images')->willReturn(['ids' => [1, 2, 3, 4]]);
 
         $propertyFactory->createProperty(
             Argument::type(PropertyMetadata::class),
