@@ -115,9 +115,7 @@
                         padding-bottom: 20px;
                         text-align: center;
 
-                        span.to-mail {
-                            display: block;
-                            padding-top: 10px;
+                        &.to-mail {
                             font-weight: bold;
                         }
                     }
