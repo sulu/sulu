@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
+
 * 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document
     * HOTFIX      #1346 [ContentBundle]  Reversed order of paths to enable overriding of templates again
