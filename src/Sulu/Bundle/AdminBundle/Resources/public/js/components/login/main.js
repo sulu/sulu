@@ -18,7 +18,7 @@
  * @param {String} [options.loginCheck] path to post the login-credentials to
  */
 
-define([], function () {
+define([], function() {
 
     'use strict';
 
@@ -59,30 +59,19 @@ define([], function () {
         constants = {
             componentClass: 'sulu-login',
 
-            mediaContainerClass: 'media-container',
             mediaLogoClass: 'media-logo',
             mediaBackgroundClass: 'media-background',
-            mediaFlareClass: 'media-flare',
             mediaLoadingClass: 'media-loading',
 
-            contentContainerClass: 'content-container',
             contentLoadingClass: 'content-loading',
-            contentLogoClass: 'content-logo',
             successClass: 'content-success',
 
             contentBoxClass: 'content-box',
             websiteSwitchClass: 'website-switch',
-            contentFooterClass: 'login-content-footer',
-            navigatorSpanClass: 'navigator',
             successOverlayClass: 'success-overlay',
-            successIconClass: 'success-icon',
 
             frameSliderClass: 'frame-slider',
             frameClass: 'box-frame',
-            loginFrameClass: 'login',
-            forgotPasswordFrameClass: 'forgot-password',
-            resendMailFrameClass: 'resend-mail',
-            resetPasswordFrameClass: 'reset-password',
 
             forgotPasswordSwitchClass: 'forgot-password-switch',
             loginSwitchClass: 'login-switch-span',
@@ -94,33 +83,32 @@ define([], function () {
             resetPasswordButtonId: 'reset-password-button',
             loginRouteClass: 'login-route-span',
 
-            frameFooterClass: 'box-frame-footer',
             errorMessageClass: 'error-message',
             errorClass: 'login-error',
             loaderClass: 'login-loader'
         },
 
         templates = {
-            mediaContainer: ['<div class="' + [constants.mediaContainerClass, constants.mediaLoadingClass].join(" ") + '">',
-                '   <div class="' + constants.mediaLogoClass + '"></div>',
+            mediaContainer: ['<div class="media-container ' + constants.mediaLoadingClass + '">',
+                '   <div class="media-logo"></div>',
                 '   <div class="' + constants.mediaBackgroundClass + '">',
                 '       <div class="darkener"></div>',
                 '   </div>',
                 '</div>'].join(''),
-            contentContainer: ['<div class="' + constants.contentContainerClass + '">',
+            contentContainer: ['<div class="content-container">',
                 '   <div class="' + constants.contentBoxClass + '">',
-                '       <div class="' + [constants.contentLogoClass, constants.navigatorSpanClass, constants.websiteSwitchClass].join(" ") + '"></div>',
+                '       <div class="content-logo navigator' + constants.websiteSwitchClass + '"></div>',
                 '       <div class="' + constants.frameSliderClass + '"></div>',
                 '   </div>',
-                '   <div class="grid-row ' + constants.contentFooterClass + '">',
-                '       <span class="' + [constants.websiteSwitchClass, constants.navigatorSpanClass].join(" ") + '"><%= backWebsiteMessage %></span>',
+                '   <div class="grid-row login-content-footer">',
+                '       <span class="navigator ' + constants.websiteSwitchClass + '"><%= backWebsiteMessage %></span>',
                 '   </div>',
                 '   <div class="' + constants.successOverlayClass + '">',
-                '       <span class="fa-check ' + constants.successIconClass + '"></span>', //testing
+                '       <span class="fa-check success-icon"></span>', //testing
                 '   </div>',
                 '</div>'].join(''),
 
-            loginFrame: ['<div class="' + [constants.frameClass, constants.loginFrameClass].join(" ") + '">',
+            loginFrame: ['<div class="' + constants.frameClass + ' login">',
                 '   <form class="grid inputs">',
                 '       <span class="' + constants.errorMessageClass + '"><%= errorMessage %></span>',
                 '       <div class="grid-row">',
@@ -130,33 +118,33 @@ define([], function () {
                 '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                 '       </div>',
                 '   </form>',
-                '   <div class="grid-row small ' + constants.frameFooterClass + '">',
-                '       <span class="' + [constants.forgotPasswordSwitchClass, constants.navigatorSpanClass].join(" ") + '"><%= forgotPasswordMessage %></span>',
+                '   <div class="grid-row small box-frame-footer">',
+                '       <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
                 '       <div id="' + constants.loginButtonId + '" class="btn action large fit"><%= login %></div>',
                 '   </div>',
                 '</div>'].join(''),
-            forgotPasswordFrame: ['<div class="' + [constants.frameClass, constants.forgotPasswordFrameClass].join(" ") + '">',
+            forgotPasswordFrame: ['<div class="' + constants.frameClass + ' forgot-password">',
                 '   <div class="grid inputs">',
                 '       <span class="' + constants.errorMessageClass + '"></span>',
                 '       <div class="grid-row">',
                 '           <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>" tabindex="-1"/>',
                 '       </div>',
                 '   </div>',
-                '   <div class="grid-row small ' + constants.frameFooterClass + '">',
-                '       <span class="' + [constants.loginSwitchClass, constants.navigatorSpanClass].join(" ") + '"><%= backLoginMessage %></span>',
+                '   <div class="grid-row small box-frame-footer">',
+                '       <span class="navigator ' + constants.loginSwitchClass + '"><%= backLoginMessage %></span>',
                 '       <div id="' + constants.requestResetMailButtonId + '" class="btn action large fit"><%= reset %></div>',
                 '   </div>',
                 '</div>'].join(''),
-            resendMailFrame: ['<div class="' + [constants.frameClass, constants.resendMailFrameClass].join(" ") + '">',
+            resendMailFrame: ['<div class="' + constants.frameClass + ' resend-mail">',
                 '   <div class="grid-row">',
                 '       <span class="message"><%= sentMessage %> <span class="to-mail"></span></span>',
                 '   </div>',
-                '   <div class="grid-row small ' + constants.frameFooterClass + '">',
-                '       <span class="' + [constants.loginSwitchClass, constants.navigatorSpanClass].join(" ") + '"><%= backLoginMessage %></span>',
+                '   <div class="grid-row small box-frame-footer">',
+                '       <span class="navigator ' + constants.loginSwitchClass + '"><%= backLoginMessage %></span>',
                 '       <div id="' + constants.resendResetMailButtonId + '" class="btn action large fit"><%= resend %></div>',
                 '   </div>',
                 '</div>'].join(''),
-            resetPasswordFrame: ['<div class="' + [constants.frameClass, constants.resetPasswordFrameClass].join(" ") + '">',
+            resetPasswordFrame: ['<div class="' + constants.frameClass + ' reset-password">',
                 '   <div class="grid inputs">',
                 '       <div class="grid-row">',
                 '           <input id="password1" class="form-element input-large husky-validate" type="password" placeholder="<%= password1Label %>"/>',
@@ -165,8 +153,8 @@ define([], function () {
                 '           <input id="password2" class="form-element input-large husky-validate" type="password" placeholder="<%= password2Label %>"/>',
                 '       </div>',
                 '   </div>',
-                '   <div class="grid-row small ' + constants.frameFooterClass + '">',
-                '       <span class="' + [constants.loginRouteClass, constants.navigatorSpanClass].join(" ") + '"><%= loginRouteMessage %></span>',
+                '   <div class="grid-row small box-frame-footer">',
+                '       <span class="navigator ' + constants.loginRouteClass + '"><%= loginRouteMessage %></span>',
                 '       <div id="' + constants.resetPasswordButtonId + '" class="btn action large fit"><%= login %></div>',
                 '   </div>',
                 '</div>'].join('')
@@ -177,11 +165,11 @@ define([], function () {
          *
          * @event sulu.login.[INSTANCE_NAME].initialized
          */
-        INITIALIZED = function () {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
-        createEventName = function (postfix) {
+        createEventName = function(postfix) {
             return 'sulu.login.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         };
 
@@ -189,7 +177,7 @@ define([], function () {
         /**
          * Initialize component
          */
-        initialize: function () {
+        initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
@@ -203,7 +191,7 @@ define([], function () {
         /**
          * Initialize component properties
          */
-        initProperties: function () {
+        initProperties: function() {
             this.dom = {
                 $mediaContainer: null,
                 $contentContainer: null,
@@ -231,7 +219,7 @@ define([], function () {
         /**
          * Render component
          */
-        render: function () {
+        render: function() {
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
             this.renderMediaContainer();
             this.renderContentContainer();
@@ -243,14 +231,15 @@ define([], function () {
         /**
          * Render left-side media container
          */
-        renderMediaContainer: function () {
+        renderMediaContainer: function() {
             // use pseudo dom-element to load background image
             var $img = this.sandbox.dom.createElement('<img/>');
             this.sandbox.dom.one($img, 'load', this.showMediaBackground.bind(this));
             this.sandbox.dom.attr($img, 'src', this.options.backgroundImg);
 
             this.dom.$mediaContainer = this.sandbox.dom.createElement(templates.mediaContainer);
-            this.dom.$mediaBackground = this.sandbox.dom.find('.' + constants.mediaBackgroundClass, this.dom.$mediaContainer);
+            this.dom.$mediaBackground =
+                this.sandbox.dom.find('.' + constants.mediaBackgroundClass, this.dom.$mediaContainer);
             this.sandbox.dom.css(
                 this.dom.$mediaBackground, 'background-image', 'url("' + this.options.backgroundImg + '")'
             );
@@ -261,21 +250,23 @@ define([], function () {
         /**
          * Fade in media-container background by css-transition
          */
-        showMediaBackground: function () {
+        showMediaBackground: function() {
             this.sandbox.dom.removeClass(this.dom.$mediaContainer, constants.mediaLoadingClass);
         },
 
         /**
          * Render right-side content container
          */
-        renderContentContainer: function () {
-            this.dom.$contentContainer = this.sandbox.dom.createElement(this.sandbox.util.template(templates.contentContainer)({
-                backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite)
-            }));
+        renderContentContainer: function() {
+            this.dom.$contentContainer =
+                this.sandbox.dom.createElement(this.sandbox.util.template(templates.contentContainer)({
+                    backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite)
+                }));
 
             this.dom.$contentBox = this.sandbox.dom.find('.' + constants.contentBoxClass, this.dom.$contentContainer);
             this.dom.$frameSlider = this.sandbox.dom.find('.' + constants.frameSliderClass, this.dom.$contentContainer);
-            this.dom.$successOverlay = this.sandbox.dom.find('.' + constants.successOverlayClass, this.dom.$contentContainer);
+            this.dom.$successOverlay =
+                this.sandbox.dom.find('.' + constants.successOverlayClass, this.dom.$contentContainer);
 
             // render content-box frames
             if (this.options.resetMode === false) {
@@ -293,7 +284,7 @@ define([], function () {
         /**
          * Render frame with login functionality
          */
-        renderLoginFrame: function () {
+        renderLoginFrame: function() {
             this.dom.$loginFrame = this.sandbox.dom.createElement(this.sandbox.util.template(templates.loginFrame)({
                 emailUser: this.sandbox.translate(this.options.translations.emailUser),
                 password: this.sandbox.translate(this.options.translations.password),
@@ -302,7 +293,8 @@ define([], function () {
                 login: this.sandbox.translate(this.options.translations.login)
             }));
 
-            this.dom.$forgotPasswordSwitch = this.sandbox.dom.find('.' + constants.forgotPasswordSwitchClass, this.dom.$loginFrame);
+            this.dom.$forgotPasswordSwitch =
+                this.sandbox.dom.find('.' + constants.forgotPasswordSwitchClass, this.dom.$loginFrame);
             this.dom.$loginButton = this.sandbox.dom.find('#' + constants.loginButtonId, this.dom.$loginFrame);
             this.dom.$loginForm = this.sandbox.dom.find('form', this.dom.$loginFrame);
 
@@ -312,15 +304,17 @@ define([], function () {
         /**
          * Render frame with password-reset-mail functionality
          */
-        renderForgotPasswordFrame: function () {
-            this.dom.$forgotPasswordFrame = this.sandbox.dom.createElement(this.sandbox.util.template(templates.forgotPasswordFrame)({
-                label: this.sandbox.translate(this.options.translations.resetPassword),
-                reset: this.sandbox.translate(this.options.translations.reset),
-                emailUser: this.sandbox.translate(this.options.translations.emailUser),
-                backLoginMessage: this.sandbox.translate(this.options.translations.backLogin)
-            }));
+        renderForgotPasswordFrame: function() {
+            this.dom.$forgotPasswordFrame =
+                this.sandbox.dom.createElement(this.sandbox.util.template(templates.forgotPasswordFrame)({
+                    label: this.sandbox.translate(this.options.translations.resetPassword),
+                    reset: this.sandbox.translate(this.options.translations.reset),
+                    emailUser: this.sandbox.translate(this.options.translations.emailUser),
+                    backLoginMessage: this.sandbox.translate(this.options.translations.backLogin)
+                }));
 
-            this.dom.$requestResetMailButton = this.sandbox.dom.find('#' + constants.requestResetMailButtonId, this.dom.$forgotPasswordFrame);
+            this.dom.$requestResetMailButton =
+                this.sandbox.dom.find('#' + constants.requestResetMailButtonId, this.dom.$forgotPasswordFrame);
 
             this.sandbox.dom.append(this.dom.$frameSlider, this.dom.$forgotPasswordFrame);
         },
@@ -328,14 +322,16 @@ define([], function () {
         /**
          * Render frame with resend reset-mail functionality
          */
-        renderResendMailFrame: function () {
-            this.dom.$resendMailFrame = this.sandbox.dom.createElement(this.sandbox.util.template(templates.resendMailFrame)({
-                resend: this.sandbox.translate(this.options.translations.resendResetMail),
-                sentMessage: this.sandbox.translate(this.options.translations.emailSent),
-                backLoginMessage: this.sandbox.translate(this.options.translations.backLogin)
-            }));
+        renderResendMailFrame: function() {
+            this.dom.$resendMailFrame =
+                this.sandbox.dom.createElement(this.sandbox.util.template(templates.resendMailFrame)({
+                    resend: this.sandbox.translate(this.options.translations.resendResetMail),
+                    sentMessage: this.sandbox.translate(this.options.translations.emailSent),
+                    backLoginMessage: this.sandbox.translate(this.options.translations.backLogin)
+                }));
 
-            this.dom.$resendResetMailButton = this.sandbox.dom.find('#' + constants.resendResetMailButtonId, this.dom.$resendMailFrame);
+            this.dom.$resendResetMailButton =
+                this.sandbox.dom.find('#' + constants.resendResetMailButtonId, this.dom.$resendMailFrame);
 
             this.sandbox.dom.append(this.dom.$frameSlider, this.dom.$resendMailFrame);
         },
@@ -343,17 +339,19 @@ define([], function () {
         /**
          * Render frame with reset-password functionality (only rendered in resetMode)
          */
-        renderResetPasswordFrame: function () {
-            this.dom.$resetPasswordFrame = this.sandbox.dom.createElement(this.sandbox.util.template(templates.resetPasswordFrame)({
-                password1Label: this.sandbox.translate(this.options.translations.enterNewPassword),
-                password2Label: this.sandbox.translate(this.options.translations.repeatPassword),
-                password: this.sandbox.translate(this.options.translations.password),
-                login: this.sandbox.translate(this.options.translations.login),
-                backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite),
-                loginRouteMessage: this.sandbox.translate(this.options.translations.backLogin)
-            }));
+        renderResetPasswordFrame: function() {
+            this.dom.$resetPasswordFrame =
+                this.sandbox.dom.createElement(this.sandbox.util.template(templates.resetPasswordFrame)({
+                    password1Label: this.sandbox.translate(this.options.translations.enterNewPassword),
+                    password2Label: this.sandbox.translate(this.options.translations.repeatPassword),
+                    password: this.sandbox.translate(this.options.translations.password),
+                    login: this.sandbox.translate(this.options.translations.login),
+                    backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite),
+                    loginRouteMessage: this.sandbox.translate(this.options.translations.backLogin)
+                }));
 
-            this.dom.$resetPasswordButton = this.sandbox.dom.find('#' + constants.resetPasswordButtonId, this.dom.$resetPasswordFrame);
+            this.dom.$resetPasswordButton =
+                this.sandbox.dom.find('#' + constants.resetPasswordButtonId, this.dom.$resetPasswordFrame);
 
             this.sandbox.dom.append(this.dom.$frameSlider, this.dom.$resetPasswordFrame);
         },
@@ -361,7 +359,7 @@ define([], function () {
         /**
          * Render login loader. Loader is hidden per default by css
          */
-        renderLoader: function () {
+        renderLoader: function() {
             this.dom.$loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
             this.sandbox.dom.append(this.dom.$contentContainer, this.dom.$loader);
             this.sandbox.start([
@@ -379,7 +377,7 @@ define([], function () {
         /**
          * Bind dom-related events
          */
-        bindDomEvents: function () {
+        bindDomEvents: function() {
             this.bindGeneralDomEvents();
 
             if (this.options.resetMode === false) {
@@ -388,7 +386,9 @@ define([], function () {
                 this.bindResendMailDomEvents();
 
                 // bind login-switcher for all Frames
-                this.sandbox.dom.on(this.dom.$contentBox, 'click', this.moveToLoginFrame.bind(this), '.' + constants.loginSwitchClass);
+                this.sandbox.dom.on(
+                    this.dom.$contentBox, 'click', this.moveToLoginFrame.bind(this), '.' + constants.loginSwitchClass
+                );
 
             } else {
                 this.bindResetPasswordDomEvents();
@@ -398,7 +398,7 @@ define([], function () {
         /**
          * Bind frame-unspecific dom events
          */
-        bindGeneralDomEvents: function () {
+        bindGeneralDomEvents: function() {
             this.sandbox.dom.on(this.dom.$contentContainer, 'click',
                 this.redirectTo.bind(this, this.sandbox.dom.window.location.origin), '.' + constants.websiteSwitchClass);
         },
@@ -406,50 +406,57 @@ define([], function () {
         /**
          * Bind login-frame related dom events
          */
-        bindLoginDomEvents: function () {
+        bindLoginDomEvents: function() {
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
             this.sandbox.dom.on(this.dom.$forgotPasswordSwitch, 'click', this.moveToForgotPasswordFrame.bind(this));
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
 
             // reset error-status on user input-element-change, using keyup because change is only fired when loosing focus
-            this.sandbox.dom.on(this.dom.$loginFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$loginFrame, 'keyup change',
+                this.validationInputChangeHandler.bind(this, this.dom.$loginFrame), '.husky-validate');
         },
 
         /**
          * Bind forgot-password-frame related dom events
          */
-        bindForgotPasswordDomEvents: function () {
-            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keydown', this.forgotPasswordKeyHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$requestResetMailButton, 'click', this.requestResetMailButtonClickHandler.bind(this));
+        bindForgotPasswordDomEvents: function() {
+            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keydown',
+                this.forgotPasswordKeyHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$requestResetMailButton, 'click',
+                this.requestResetMailButtonClickHandler.bind(this));
 
             // reset error-status on user input-element-change
-            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$forgotPasswordFrame, 'keyup change',
+                this.validationInputChangeHandler.bind(this, this.dom.$forgotPasswordFrame), '.husky-validate');
         },
 
         /**
          * Bind resend-mail-frame related dom events
          */
-        bindResendMailDomEvents: function () {
-            this.sandbox.dom.on(this.dom.$resendResetMailButton, 'click', this.resendResetMailButtonClickHandler.bind(this));
+        bindResendMailDomEvents: function() {
+            this.sandbox.dom.on(this.dom.$resendResetMailButton, 'click',
+                this.resendResetMailButtonClickHandler.bind(this));
         },
 
         /**
          * Bind reset-password-frame related dom events (reset mode)
          */
-        bindResetPasswordDomEvents: function () {
+        bindResetPasswordDomEvents: function() {
             this.sandbox.dom.on(this.dom.$resetPasswordButton, 'click', this.resetPasswordButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keydown', this.resetPasswordKeyHandler.bind(this));
-            this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click', this.loginRouteClickHandler.bind(this));
+            this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click',
+                this.loginRouteClickHandler.bind(this));
 
             // reset error-status on user input-element-change
-            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keyup change', this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
+            this.sandbox.dom.on(this.dom.$resetPasswordFrame, 'keyup change',
+                this.validationInputChangeHandler.bind(this, this.dom.$resetPasswordFrame), '.husky-validate');
         },
 
         /**
          * Handle click on login-button in login-frame
          */
-        loginButtonClickHandler: function () {
+        loginButtonClickHandler: function() {
             this.sandbox.dom.submit(this.dom.$loginForm);
         },
 
@@ -457,7 +464,7 @@ define([], function () {
          * Handle change of validation-input-element value on given frame
          * @param $frame parent frame of changed input-element
          */
-        validationInputChangeHandler: function ($frame) {
+        validationInputChangeHandler: function($frame) {
             if (event.keyCode === 13) {
                 return false; // do not reset error status on enter
             }
@@ -469,22 +476,24 @@ define([], function () {
         /**
          * Handles click on login-route item (reset-mode)
          */
-        loginRouteClickHandler: function () {
+        loginRouteClickHandler: function() {
             this.redirectTo(this.options.loginUrl);
         },
 
         /**
          * Handles click on reset-mail button in forgot-password-frame
          */
-        requestResetMailButtonClickHandler: function () {
-            var user = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#user', this.dom.$forgotPasswordFrame)));
+        requestResetMailButtonClickHandler: function() {
+            var user = this.sandbox.dom.trim(this.sandbox.dom.val(
+                this.sandbox.dom.find('#user', this.dom.$forgotPasswordFrame)
+            ));
             this.requestResetMail(user);
         },
 
         /**
          * Handles click on reset-button in reset-password-frame (reset mode)
          */
-        resetPasswordButtonClickHandler: function () {
+        resetPasswordButtonClickHandler: function() {
             var password1 = this.sandbox.dom.val(this.sandbox.dom.find('#password1', this.dom.$resetPasswordFrame)),
                 password2 = this.sandbox.dom.val(this.sandbox.dom.find('#password2', this.dom.$resetPasswordFrame));
 
@@ -499,7 +508,7 @@ define([], function () {
         /**
          * Handles click on resend-button in resend-mail-frame
          */
-        resendResetMailButtonClickHandler: function () {
+        resendResetMailButtonClickHandler: function() {
             if (this.sandbox.dom.hasClass(this.dom.$resendResetMailButton, 'inactive')) {
                 return false;
             }
@@ -509,7 +518,7 @@ define([], function () {
         /**
          * Handles submit event of login-form in login-frame
          */
-        loginFormSubmitHandler: function () {
+        loginFormSubmitHandler: function() {
             var username = this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm)),
                 password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm));
             if (username.length === 0 || password.length === 0) {
@@ -525,7 +534,7 @@ define([], function () {
          * Handles keydown-event in login-frame
          * @param event
          */
-        loginFormKeyHandler: function (event) {
+        loginFormKeyHandler: function(event) {
             if (event.keyCode === 13) { //on enter
                 this.loginFormSubmitHandler();
             }
@@ -535,7 +544,7 @@ define([], function () {
          * Handles keydown-event in forgot-password-frame
          * @param event
          */
-        forgotPasswordKeyHandler: function (event) {
+        forgotPasswordKeyHandler: function(event) {
             if (event.keyCode === 13) { //on enter
                 this.requestResetMailButtonClickHandler();
             }
@@ -545,7 +554,7 @@ define([], function () {
          * Handles  keydown-event in reset-password-frame
          * @param event
          */
-        resetPasswordKeyHandler: function (event) {
+        resetPasswordKeyHandler: function(event) {
             if (event.keyCode === 13) { //on enter
                 this.resetPasswordButtonClickHandler();
             }
@@ -556,14 +565,14 @@ define([], function () {
          * @param username
          * @param password
          */
-        login: function (username, password) {
+        login: function(username, password) {
             this.showLoader(this.dom.$loginFrame);
             this.sandbox.util.save(this.options.loginCheck, 'POST', {
                 '_username': username,
                 '_password': password
-            }).then(function (data) {
+            }).then(function(data) {
                 this.displaySuccessAndRedirect(data.url + this.sandbox.dom.window.location.hash);
-            }.bind(this)).fail(function () {
+            }.bind(this)).fail(function() {
                 this.hideLoader(this.dom.$loginFrame);
                 this.displayLoginError();
             }.bind(this));
@@ -574,7 +583,7 @@ define([], function () {
          * Forward to given url afterwards
          * @param redirectUrl - string
          */
-        displaySuccessAndRedirect: function (redirectUrl) {
+        displaySuccessAndRedirect: function(redirectUrl) {
             this.sandbox.dom.css(this.dom.$loader, 'opacity', '0');
 
             // fade in green success-overlay (css animated, duration: 300ms)
@@ -590,17 +599,17 @@ define([], function () {
          * Send user to server to request a resetting email
          * @param user
          */
-        requestResetMail: function (user) {
+        requestResetMail: function(user) {
             this.showLoader(this.dom.$forgotPasswordFrame);
             this.sandbox.util.save(this.options.resetMailUrl, 'POST', {
                 'user': user
-            }).then(function (data) {
+            }).then(function(data) {
                 // save given user for optional resending
                 this.resetMailUser = user;
                 this.hideLoader(this.dom.$forgotPasswordFrame);
                 this.showEmailSentLabel();
                 this.moveToResendMailFrame(data.email);
-            }.bind(this)).fail(function (data) {
+            }.bind(this)).fail(function(data) {
                 this.hideLoader(this.dom.$forgotPasswordFrame);
                 this.displayRequestResetMailError(data.responseJSON.code);
             }.bind(this));
@@ -610,14 +619,14 @@ define([], function () {
          * Reset password of the user with reset-token (options) and new password (reset mode)
          * @param newPassword - string
          */
-        resetPassword: function (newPassword) {
+        resetPassword: function(newPassword) {
             this.showLoader(this.dom.$resetPasswordFrame);
             this.sandbox.util.save(this.options.resetUrl, 'POST', {
                 'password': newPassword,
                 'token': this.options.resetToken
-            }).then(function (data) {
+            }).then(function(data) {
                 this.displaySuccessAndRedirect(data.url);
-            }.bind(this)).fail(function (data) {
+            }.bind(this)).fail(function(data) {
                 this.hideLoader(this.dom.$resetPasswordFrame);
                 this.displayResetPasswordError(data.responseJSON.code);
             }.bind(this));
@@ -626,14 +635,14 @@ define([], function () {
         /**
          * Send user which requested a resetting email to the server to resend mail
          */
-        resendResetMail: function () {
+        resendResetMail: function() {
             this.showLoader(this.dom.$resendMailFrame);
             this.sandbox.util.save(this.options.resendUrl, 'POST', {
                 'user': this.resetMailUser
-            }).then(function () {
+            }).then(function() {
                 this.hideLoader(this.dom.$resendMailFrame);
                 this.showEmailSentLabel();
-            }.bind(this)).fail(function (data) {
+            }.bind(this)).fail(function(data) {
                 this.hideLoader(this.dom.$resendMailFrame);
                 this.displayResendResetMailError(data.responseJSON.code);
             }.bind(this));
@@ -643,7 +652,7 @@ define([], function () {
          * Show input-loader instead of button in given frame
          * @param $frame
          */
-        showLoader: function ($frame) {
+        showLoader: function($frame) {
             if (this.sandbox.dom.hasClass($frame, constants.contentLoadingClass)) {
                 return false;
             }
@@ -659,21 +668,21 @@ define([], function () {
          * Hide input-loader in given frame. Show button of given frame instead
          * @param $frame
          */
-        hideLoader: function ($frame) {
+        hideLoader: function($frame) {
             this.sandbox.dom.removeClass($frame, constants.contentLoadingClass);
         },
 
         /**
          * Show an email-sent success-label
          */
-        showEmailSentLabel: function () {
+        showEmailSentLabel: function() {
             this.sandbox.emit('sulu.labels.success.show', this.options.translations.emailSentSuccess, 'labels.success');
         },
 
         /**
          * Add css class to visualize login-error
          */
-        displayLoginError: function () {
+        displayLoginError: function() {
             this.sandbox.dom.addClass(this.dom.$loginFrame, constants.errorClass);
             this.focusFirstInput(this.dom.$loginFrame);
         },
@@ -682,9 +691,11 @@ define([], function () {
          * Display request-reset-mail error
          * @param code - integer - the code for the reset-mail-message
          */
-        displayRequestResetMailError: function (code) {
+        displayRequestResetMailError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
-            this.sandbox.dom.html(this.sandbox.dom.find('.' + constants.errorMessageClass, this.dom.$forgotPasswordFrame), this.sandbox.translate(errorTransKey));
+            this.sandbox.dom.html(this.sandbox.dom.find('.' + constants.errorMessageClass, this.dom.$forgotPasswordFrame),
+                this.sandbox.translate(errorTransKey));
+
             this.sandbox.dom.addClass(this.dom.$forgotPasswordFrame, constants.errorClass);
             this.focusFirstInput(this.dom.$forgotPasswordFrame);
         },
@@ -693,7 +704,7 @@ define([], function () {
          * Display resend-reset-mail error
          * @param code - integer - error code
          */
-        displayResendResetMailError: function (code) {
+        displayResendResetMailError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
             this.sandbox.emit('sulu.labels.error.show', this.sandbox.translate(errorTransKey), 'labels.error');
             this.sandbox.dom.addClass(this.dom.$resendResetMailButton, 'inactive');
@@ -703,7 +714,7 @@ define([], function () {
          * Displays reset-password error (reset mode)
          * @param code - integer - error code
          */
-        displayResetPasswordError: function (code) {
+        displayResetPasswordError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
             this.sandbox.emit('sulu.labels.error.show', this.sandbox.translate(errorTransKey), 'labels.error');
             this.focusFirstInput(this.dom.$forgotPasswordFrame);
@@ -713,14 +724,14 @@ define([], function () {
          * Redirect to given url
          * @param url
          */
-        redirectTo: function (url) {
+        redirectTo: function(url) {
             this.sandbox.dom.window.location = url;
         },
 
         /**
          * Move frame-slider to forgot-password-frame
          */
-        moveToForgotPasswordFrame: function () {
+        moveToForgotPasswordFrame: function() {
             this.moveFrameSliderTo(this.dom.$forgotPasswordFrame);
         },
 
@@ -728,7 +739,7 @@ define([], function () {
          * Move frame-slider to resend-mail-frame display given email-address
          * @param email
          */
-        moveToResendMailFrame: function (email) {
+        moveToResendMailFrame: function(email) {
             this.sandbox.dom.html(this.sandbox.dom.find('.to-mail', this.dom.$resendMailFrame), email);
             this.moveFrameSliderTo(this.dom.$resendMailFrame);
         },
@@ -736,7 +747,7 @@ define([], function () {
         /**
          * Move to login-frame
          */
-        moveToLoginFrame: function () {
+        moveToLoginFrame: function() {
             this.moveFrameSliderTo(this.dom.$loginFrame);
         },
 
@@ -744,10 +755,11 @@ define([], function () {
          * Move frame-slider to the given frame and focus first input
          * @param $frame
          */
-        moveFrameSliderTo: function ($frame) {
-            this.sandbox.dom.one(this.$el, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function () {
-                this.focusFirstInput($frame); //workaround for ie; focus input after end of transition;
-            }.bind(this));
+        moveFrameSliderTo: function($frame) {
+            this.sandbox.dom.one(this.$el, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+                function() {
+                    this.focusFirstInput($frame); //workaround for ie; focus input after end of transition;
+                }.bind(this));
 
             this.sandbox.dom.css(this.dom.$frameSlider, 'left', -this.sandbox.dom.position($frame).left + 'px');
         },
@@ -756,7 +768,7 @@ define([], function () {
          * Focus first input-field of the given frame
          * @param $frame
          */
-        focusFirstInput: function ($frame) {
+        focusFirstInput: function($frame) {
             if (this.sandbox.dom.find('input', $frame).length < 1) {
                 return false;
             }
