@@ -42,7 +42,6 @@ class CodeRepository extends EntityRepository
                 ->where('code.id=:codeId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('codeId', $id);
 
             return $query->getSingleResult();

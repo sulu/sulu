@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 
 /**
  * AccountContactRepository.
@@ -37,7 +36,6 @@ class AccountContactRepository extends EntityRepository
                 ->where('account.id = :accountId AND contact.id = :contactId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $accountId);
             $query->setParameter('contactId', $contactId);
 

@@ -45,7 +45,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $query = new Query($this->_em);
         $query->setDQL($dql);
         $query->setParameter('id', $id);
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $result = $query->getResult();
 
         if (sizeof($result) === 0) {
@@ -122,8 +121,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $query->setParameter('locale', $filter['locale']);
             }
 
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
             return new Paginator($query);
         } catch (NoResultException $ex) {
             return [];
@@ -188,7 +185,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             if ($parent !== null) {
                 $query->setParameter('parent', $parent);
             }
@@ -198,8 +194,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             if ($search !== null) {
                 $query->setParameter('search', '%' . $search . '%');
             }
-
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
             return new Paginator($query);
         } catch (NoResultException $ex) {
@@ -228,7 +222,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('id', $id);
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
             return $query->getResult();
         } catch (NoResultException $ex) {

@@ -106,7 +106,7 @@ interface ListBuilderInterface
     public function search($search);
 
     /**
-     * Defines the field by which the table is sorted.
+     * Adds a field by which the table is sorted.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param string                  $order
@@ -179,7 +179,7 @@ interface ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Defines a in constraint.
+     * Defines an IN constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values

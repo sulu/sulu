@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 /**
@@ -50,7 +49,6 @@ class AccountRepository extends NestedTreeRepository
                 ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
@@ -123,7 +121,6 @@ class AccountRepository extends NestedTreeRepository
             }
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
@@ -175,7 +172,6 @@ class AccountRepository extends NestedTreeRepository
         }
 
         $query = $qb->getQuery();
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
         return $query->getArrayResult();
     }
@@ -254,7 +250,6 @@ class AccountRepository extends NestedTreeRepository
                 ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
@@ -282,7 +277,6 @@ class AccountRepository extends NestedTreeRepository
                 ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
@@ -312,7 +306,6 @@ class AccountRepository extends NestedTreeRepository
                 ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
