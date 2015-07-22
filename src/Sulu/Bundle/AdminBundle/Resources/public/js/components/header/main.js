@@ -14,8 +14,6 @@
  *
  * @param {Object} [options] Configuration object
  * @param {String} [options.instanceName] name of the instance
- * @param {Function} [options.changeStateCallback] Function to execute if the toolbar-state changes
- * @param {Function} [options.parentChangeStateCallback] Same as changeStateCallback
  * @param {Object} [options.tabsData] data to pass to the tabs component. For data-structure markup see husky
  * @param {Object} [options.tabsParentOptions] The options-object of the tabs-parent-component. this options get merged into each tabs-component-option
  * @param {String|Object} [options.tabsContainer] Selector or dom object to insert the the tabs-content into
@@ -36,8 +34,6 @@ define([], function () {
 
     var defaults = {
             instanceName: '',
-            changeStateCallback: null,
-            parentChangeStateCallback: null,
             tabsData: null,
             tabsParentOptions: {},
             toolbarOptions: {},
@@ -124,18 +120,6 @@ define([], function () {
          */
         BACK = function () {
             return createEventName.call(this, 'back');
-        },
-
-        /**
-         * listens on and changes the state of the toolbar
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
-         * @param {string} type 'add' or 'edit'
-         * @param {boolean} saved If false toolbar gets set in dirty state
-         * @param {boolean} highlight True to change with highlight effect
-         */
-        TOOLBAR_STATE_CHANGE = function () {
-            return createEventName.call(this, 'toolbar.state.change');
         },
 
         /**
@@ -237,9 +221,21 @@ define([], function () {
          *
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
          * @param {string} button The id of the button
+         * @param {Boolean} true to highlight the button on change
          */
         TOOLBAR_ITEM_ENABLE = function () {
             return createEventName.call(this, 'toolbar.item.enable');
+        },
+
+        /**
+         * listens on and disables a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
+         * @param {string} button The id of the button
+         * @param {Boolean} true to highlight the button on change
+         */
+        TOOLBAR_ITEM_DISABLE = function () {
+            return createEventName.call(this, 'toolbar.item.disable');
         },
 
         /**
@@ -561,6 +557,10 @@ define([], function () {
 
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function (id, highlight) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', id, highlight);
+            }.bind(this));
+
+            this.sandbox.on(TOOLBAR_ITEM_DISABLE.call(this), function (id, highlight) {
+                this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.disable', id, highlight);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_MARK.call(this), function (id) {

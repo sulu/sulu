@@ -299,7 +299,7 @@ define([
         },
 
         // saves an account
-        save: function(data) {
+        save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.account.set(data);
@@ -316,7 +316,12 @@ define([
                     var model = response.toJSON();
                     if (!!data.id) {
                         this.sandbox.emit('sulu.contacts.accounts.saved', model);
-                    } else {
+                    }
+                    if (action == 'back') {
+                        this.navigateToList();
+                    } else if (action == 'new') {
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add', true, true);
+                    } else if (!data.id) {
                         this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }
                 }.bind(this),

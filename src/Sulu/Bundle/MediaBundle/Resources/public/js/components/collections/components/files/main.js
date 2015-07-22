@@ -127,11 +127,6 @@ define(function() {
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.open-data-source');
             }.bind(this));
 
-            // premark the current view in the toolbar
-            this.sandbox.on('husky.toolbar.' + this.options.instanceName + '.initialized', function() {
-                this.sandbox.emit('sulu.header.toolbar.item.mark', listViews[this.listView].itemId);
-            }.bind(this));
-
             // download media
             this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
 
@@ -165,14 +160,11 @@ define(function() {
          * @param locale {string} the new locale to edit the collection in
          */
         changeLanguage: function(language) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
                 this.options.data.id, {locale: language.id, breadcrumb: 'true'},
                 function(collection) {
                     this.options.data = collection;
-                    this.setHeaderInfos();
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
                     this.sandbox.emit('husky.datagrid.url.update', {locale: this.options.data.locale});
                     this.options.locale = this.options.data.locale;
                 }.bind(this)
@@ -228,7 +220,6 @@ define(function() {
          * Renders the files tab
          */
         render: function() {
-            this.setHeaderInfos();
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
             this.startDropzone();
             this.startDatagrid();
@@ -240,13 +231,6 @@ define(function() {
          * @param additionalMedia {Number|String} id of a media which should, besides the selected ones, also be edited (e.g. if it was clicked)
          */
         editMedia: function(additionalMedia) {
-            // show a loading icon
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
-            // stop loading icon if editing of the media has started
-            this.sandbox.once('sulu.media-edit.edit', function() {
-                this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit', false);
-            }.bind(this));
-
             this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.lock-popup');
                 // add additional media to the edit-list, but only if its not already contained
@@ -255,33 +239,6 @@ define(function() {
                 }
                 this.sandbox.emit('sulu.media.collections.edit-media', selected);
             }.bind(this));
-        },
-
-        /**
-         * Sets all the Info contained in the header
-         * like breadcrumb or title
-         */
-        setHeaderInfos: function() {
-            var breadcrumb = [
-                {title: 'navigation.media'},
-                {
-                    title: 'media.collections.title',
-                    event: 'sulu.media.collections.breadcrumb-navigate.root'
-                }
-            ], i, len, data = this.options.data._embedded.breadcrumb || [];
-
-            for (i = 0, len = data.length; i < len; i++) {
-                breadcrumb.push({
-                    title: data[i].title,
-                    event: 'sulu.media.collections.breadcrumb-navigate',
-                    eventArgs: data[i]
-                });
-            }
-
-            breadcrumb.push({title: this.options.data.title});
-
-            this.sandbox.emit('sulu.header.set-title', this.options.data.title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         /**

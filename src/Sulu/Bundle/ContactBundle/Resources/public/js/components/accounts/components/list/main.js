@@ -28,7 +28,7 @@ define([
             }, this);
 
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.accounts.new');
             }, this);
 
@@ -73,7 +73,11 @@ define([
                 breadcrumb: [
                     {title: 'navigation.contacts'},
                     {title: 'contact.accounts.title'}
-                ]
+                ],
+
+                toolbar: {
+                    buttons: ['add']
+                }
             };
         },
 

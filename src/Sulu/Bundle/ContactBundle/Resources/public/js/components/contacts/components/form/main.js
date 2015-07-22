@@ -26,12 +26,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             editFormSelector: '#contact-edit-form'
         },
 
-        setHeaderToolbar = function() {
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                template: 'default'
-            });
-        },
-
         customTemplates = {
             addBankAccountsIcon: [
                 '<div class="grid-row">',
@@ -89,7 +83,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 this.setTitle();
 
                 this.render();
-                setHeaderToolbar.call(this);
                 this.listenForChange();
 
                 if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('contact-detail')) {
@@ -307,8 +300,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 }, this);
 
                 // contact save
-                this.sandbox.on('sulu.header.toolbar.save', function() {
-                    this.submit();
+                this.sandbox.on('sulu.toolbar.save', function(action) {
+                    this.submit(action);
                 }, this);
 
                 // back to list
@@ -426,7 +419,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 return field;
             },
 
-            submit: function() {
+            submit: function(action) {
                 this.sandbox.logger.log('save Model');
 
                 if (this.sandbox.form.validate(form)) {
@@ -447,15 +440,18 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     };
 
                     this.sandbox.logger.log('log data', data);
-                    this.sandbox.emit('sulu.contacts.contacts.save', data);
+                    this.sandbox.emit('sulu.contacts.contacts.save', data, action);
                 }
             },
 
             // @var Bool saved - defines if saved state should be shown
             setHeaderBar: function(saved) {
                 if (saved !== this.saved) {
-                    var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                    this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                    if (!!saved) {
+                        this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                    } else {
+                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                    }
                 }
                 this.saved = saved;
             },

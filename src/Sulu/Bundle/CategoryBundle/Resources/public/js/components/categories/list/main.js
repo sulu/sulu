@@ -29,13 +29,10 @@ define(function () {
 
         header: function () {
             return {
-                title: 'category.categories.title',
                 noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'category.categories.title'}
-                ]
+                toolbar: {
+                    buttons: ['add']
+                }
             };
         },
 
@@ -49,7 +46,7 @@ define(function () {
 
         bindCustomEvents: function() {
             this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this))
-            this.sandbox.on('sulu.list-toolbar.add', this.addNewCategory.bind(this));
+            this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
         },
 

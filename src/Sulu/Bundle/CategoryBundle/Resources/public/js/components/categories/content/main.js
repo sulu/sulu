@@ -19,7 +19,12 @@ define(function () {
                     url: '/admin/content-navigations?alias=category'
                 },
                 toolbar: {
-                    template: 'default',
+                    buttons: [
+                        'saveWithOptions',
+                        {'settings': {
+                            dropdownItems: ['delete']
+                        }}
+                    ],
                     languageChanger: true
                 }
             };

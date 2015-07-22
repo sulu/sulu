@@ -91,15 +91,18 @@
                 icon: 'floppy-o',
                 title: app.sandbox.translate('public.save'),
                 disabled: true,
-                id: 'save',
+                id: 'save-button',
                 position: 1,
                 callback: function () {
-                    app.sandbox.emit('sulu.toolbar.save');
+                    app.sandbox.emit('sulu.toolbar.save', 'edit');
                 }
             };
 
             app.sandbox.sulu.buttons.saveWithOptions = app.sandbox.util.extend(true, {}, app.sandbox.sulu.buttons.save, {
-                dropdownItems: ['saveBack', 'saveNew']
+                dropdownItems: ['saveBack', 'saveNew'],
+                dropdownOptions: {
+                    onlyOnClickOnArrow: true
+                }
             });
             /**
              * Buttons definition (end)
@@ -138,15 +141,15 @@
                 id: 'save-back',
                 title: app.sandbox.translate('public.save-and-back'),
                 callback: function () {
-                    app.sandbox.emit('sulu.toolbar.save-back');
+                    app.sandbox.emit('sulu.toolbar.save', 'back');
                 }
             },
 
             app.sandbox.sulu.buttons.dropdownItems.saveNew = {
-                id: 'save-back',
-                title: app.sandbox.translate('public.save-and-back'),
+                id: 'save-new',
+                title: app.sandbox.translate('public.save-and-new'),
                 callback: function () {
-                    app.sandbox.emit('sulu.toolbar.save-back');
+                    app.sandbox.emit('sulu.toolbar.save', 'new');
                 }
             },
 

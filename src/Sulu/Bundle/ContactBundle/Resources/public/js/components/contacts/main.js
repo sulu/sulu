@@ -45,8 +45,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.contacts.contacts.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.contacts.contacts.save', function(data, action) {
+                this.save(data, action);
             }, this);
 
             // wait for navigation events
@@ -146,7 +146,7 @@ define([
             DeleteDialog.show(this.sandbox, this.contact);
         },
 
-        save: function(data) {
+        save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.contact.set(data);
 
@@ -161,10 +161,14 @@ define([
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!data.id) {
-
                         // TODO update address lists
                         this.sandbox.emit('sulu.contacts.contacts.saved', model);
-                    } else {
+                    }
+                    if (action === 'back') {
+                        this.sandbox.emit('sulu.contacts.contacts.list');
+                    } else if (action == 'new') {
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add', true, true);
+                    } else if (!data.id) {
                         this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id + '/details');
                     }
                 }.bind(this),

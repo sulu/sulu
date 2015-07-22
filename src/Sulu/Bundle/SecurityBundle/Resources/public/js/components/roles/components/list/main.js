@@ -12,7 +12,7 @@ define(function() {
     'use strict';
 
     var bindCustomEvents = function() {
-        this.sandbox.on('sulu.list-toolbar.add', function() {
+        this.sandbox.on('sulu.toolbar.add', function() {
             this.sandbox.emit('sulu.roles.new');
         }.bind(this));
 
@@ -36,13 +36,10 @@ define(function() {
 
         header: function() {
             return {
-                title: 'security.roles.title',
                 noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'security.roles.title'}
-                ]
+                toolbar: {
+                    buttons: ['add']
+                }
             };
         },
 

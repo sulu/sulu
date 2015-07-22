@@ -239,7 +239,7 @@ define(function () {
                 if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
-                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
+                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
 
@@ -250,10 +250,9 @@ define(function () {
          * Handler for the sulu.router.navigate event. Calls the backbone-router
          * @param route {String} the route to navigate to
          * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the browser-url will be updated
-         * @param noLoader {Boolean} if false no loader will be instantiated
          * @param forceReload {Boolean} force page to reload
          */
-        navigate: function (route, trigger, noLoader, forceReload) {
+        navigate: function (route, trigger, forceReload) {
 
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
@@ -512,12 +511,12 @@ define(function () {
          * @param {boolean} loader If true a loader will be displayed
          * @param {boolean} updateNavigation If true the navigation will be updated with the passed route
          */
-        emitNavigationEvent: function (event, loader, updateNavigation) {
+        emitNavigationEvent: function (event, updateNavigation) {
             if (updateNavigation === true) {
                 this.selectNavigationItem(event.action);
             }
             if (!!event.action) {
-                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload, loader);
+                this.sandbox.emit('sulu.router.navigate', event.action, true, event.forceReload);
             }
         }
     };
