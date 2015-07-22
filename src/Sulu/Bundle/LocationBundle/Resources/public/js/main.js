@@ -33,7 +33,7 @@ define({
         // sandbox.mvc.routes.push({
         //     route: 'contacts/contacts',
         //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
+        //         return '<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>';
         //     }
         // });
     }

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(function () {
 
     'use strict';
 
@@ -39,7 +39,7 @@ define(function() {
          * raised after the initialization has finished
          * @event sulu.app.initialized
          */
-        INITIALIZED = function() {
+        INITIALIZED = function () {
             return createEventName('initialized');
         },
 
@@ -48,7 +48,7 @@ define(function() {
          * @event sulu.app.content.has-started
          * @param {function} callback The callback to pass true on
          */
-        HAS_STARTED = function() {
+        HAS_STARTED = function () {
             return createEventName('has-started');
         },
 
@@ -57,7 +57,7 @@ define(function() {
          * @event sulu.app.change-user-locale
          * @param {String} the locale to change to
          */
-        CHANGE_USER_LOCALE = function() {
+        CHANGE_USER_LOCALE = function () {
             return createEventName('change-user-locale');
         },
 
@@ -66,7 +66,7 @@ define(function() {
          * @event sulu.app.change-width
          * @param {String} the new width-type. 'fixed' or 'max'
          */
-        CHANGE_WIDTH = function() {
+        CHANGE_WIDTH = function () {
             return createEventName('change-width');
         },
 
@@ -77,7 +77,7 @@ define(function() {
          * @param {Boolean} false for no spacing right
          * @param {Boolean} false for no spacing top
          */
-        CHANGE_SPACING = function() {
+        CHANGE_SPACING = function () {
             return createEventName('change-spacing');
         },
 
@@ -86,14 +86,14 @@ define(function() {
          * @event sulu.app.toggle-shrinker
          * @param {Boolean} true to display, false to hide the shrinker-button
          */
-        TOGGLE_SHRINKER = function() {
+        TOGGLE_SHRINKER = function () {
             return createEventName('toggle-shrinker');
         },
 
         /**
          * Creates the event-names
          */
-        createEventName = function(postFix) {
+        createEventName = function (postFix) {
             return eventNamespace + postFix;
         };
 
@@ -103,10 +103,9 @@ define(function() {
         /**
          * Initialize the component
          */
-        initialize: function() {
+        initialize: function () {
             this.title = document.title;
             this.$shrinker = null;
-            this.currentRoute = null;
 
             this.initializeRouter();
             this.render();
@@ -119,7 +118,7 @@ define(function() {
 
             this.sandbox.emit(INITIALIZED.call(this));
 
-            this.sandbox.util.ajaxError(function(event, request) {
+            this.sandbox.util.ajaxError(function (event, request) {
                 switch (request.status) {
                     case 401:
                         window.location.replace('/admin/login');
@@ -142,14 +141,14 @@ define(function() {
          * @param {object} request
          * @return {string}
          */
-        extractErrorMessage: function(request) {
+        extractErrorMessage: function (request) {
             var message = [request.status];
 
             // if response is symfony JSON exception
             if (request.responseJSON !== undefined) {
                 var response = request.responseJSON;
 
-                this.sandbox.util.each(response, function(index) {
+                this.sandbox.util.each(response, function (index) {
                     var exception = response[index];
 
                     if (exception.message !== undefined) {
@@ -164,47 +163,54 @@ define(function() {
         /**
          * Initializes the backbone router
          */
-        initializeRouter: function() {
-            var AppRouter = this.sandbox.mvc.Router({
-                routes: {
-                    // Dashboard
-                    '': 'dashboard',
-
-                    // Default
-                    '*actions': 'default'
-                },
-
-                dashboard: function() {
-                    this.html('<div class="sulu-dashboard" data-aura-component="dashboard@suluadmin"/>');
-                }.bind(this),
-
-                default: function() {
-                    // We have no matching route
-                }
-            });
+        initializeRouter: function () {
+            var AppRouter = this.sandbox.mvc.Router();
             router = new AppRouter();
 
-            this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
-                router.route(route.route, function() {
-                    this.sandbox.mvc.Store.reset();
-                    this.beforeNavigateCleanup(route);
-                    route.callback.apply(this, arguments);
+            // Dashboard
+            this.sandbox.mvc.routes.push({
+                route: '',
+                callback: function(){
+                    return '<div class="sulu-dashboard" data-aura-component="dashboard@suluadmin"/>';
+                }
+            });
+
+            this.sandbox.util._.each(this.sandbox.mvc.routes, function (route) {
+                router.route(route.route, function () {
+                    this.routeCallback.call(this, route, arguments);
                 }.bind(this));
             }.bind(this));
+        },
+
+        /**
+         * Cleans up and calls the callback of a route. If it recieves content
+         * through the route-callback add it to the dom
+         * @param route {Object} backbone route
+         * @param routeArgs the arguments to pass to the route-callback
+         */
+        routeCallback: function (route, routeArgs) {
+            this.sandbox.mvc.Store.reset();
+            this.beforeNavigateCleanup(route);
+            var content = route.callback.apply(this, routeArgs);
+            if (!!content) {
+                content = this.sandbox.dom.createElement(content);
+                this.sandbox.dom.html('#content', content);
+                this.sandbox.start('#content', {reset: true});
+            }
         },
 
         /**
          * Takes an action and emits a sets the matching navigation-item active
          * @param action {string}
          */
-        selectNavigationItem: function(action) {
+        selectNavigationItem: function (action) {
             this.sandbox.emit('husky.navigation.select-item', action);
         },
 
         /**
          * Renderes dom events for the component
          */
-        render: function() {
+        render: function () {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.$shrinker = this.sandbox.dom.createElement(templates.shrinkable);
             this.sandbox.dom.hide(this.$shrinker);
@@ -214,9 +220,9 @@ define(function() {
         /**
          * Bind DOM-related Events
          */
-        bindDomEvents: function() {
+        bindDomEvents: function () {
             // call navigate event for marked a-tags
-            this.sandbox.dom.on(this.sandbox.dom.$document, 'click', function(event) {
+            this.sandbox.dom.on(this.sandbox.dom.$document, 'click', function (event) {
                 // prevent the default action for the anchor tag
                 this.sandbox.dom.preventDefault(event);
 
@@ -233,7 +239,7 @@ define(function() {
                 if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
-                    this.emitNavigationEvent({ action: event.currentTarget.attributes.href.value }, true, true);
+                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
 
@@ -247,7 +253,7 @@ define(function() {
          * @param noLoader {Boolean} if false no loader will be instantiated
          * @param forceReload {Boolean} force page to reload
          */
-        navigate: function(route, trigger, noLoader, forceReload) {
+        navigate: function (route, trigger, noLoader, forceReload) {
 
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
@@ -259,37 +265,28 @@ define(function() {
             }
 
             // navigate
-            router.navigate(route, { trigger: trigger });
+            router.navigate(route, {trigger: trigger});
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
         },
 
         /**
          * Cleans things up before navigating
-         * @param {String} route
          */
-        beforeNavigateCleanup: function(route) {
-            this.currentRoute = route;
-
-            // hide the header
-            App.emit('sulu.header.hide');
-
-            // FIXME App.stop is used in global context; possibly there is a better solution
-            // and the stop method will be called
-            App.stop('#sulu-content-container');
-            App.stop('#content > *');
-            App.stop('#sidebar > *');
+        beforeNavigateCleanup: function () {
+            this.sandbox.stop('#content > *');
+            this.sandbox.stop('#sidebar > *');
             app.cleanUp();
         },
 
         /**
          * Bind component-related events
          */
-        bindCustomEvents: function() {
+        bindCustomEvents: function () {
             // navigate
             this.sandbox.on('sulu.router.navigate', this.navigate.bind(this));
 
             // navigation event
-            this.sandbox.on('husky.navigation.item.select', function(event) {
+            this.sandbox.on('husky.navigation.item.select', function (event) {
                 this.emitNavigationEvent(event, false);
 
                 // update title
@@ -300,38 +297,38 @@ define(function() {
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.navigation.header.clicked', function(){
+            this.sandbox.on('husky.navigation.header.clicked', function () {
                 this.navigate('', true, false, false);
             }.bind(this));
 
-            this.sandbox.on('husky.data-navigation.select', function(item) {
+            this.sandbox.on('husky.data-navigation.select', function (item) {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
             }.bind(this));
 
             // content tabs event
-            this.sandbox.on('husky.tabs.content.item.select', function(event) {
+            this.sandbox.on('husky.tabs.content.item.select', function (event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
 
             // content tabs event
-            this.sandbox.on('husky.tabs.header.item.select', function(event) {
+            this.sandbox.on('husky.tabs.header.item.select', function (event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
 
-            this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
+            this.sandbox.on(HAS_STARTED.call(this), function (callbackFunction) {
                 callbackFunction(true);
             }.bind(this));
 
             // select right navigation-item on navigation startup
-            this.sandbox.on('husky.navigation.initialized', function() {
+            this.sandbox.on('husky.navigation.initialized', function () {
                 if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
                     this.selectNavigationItem(this.sandbox.mvc.history.fragment);
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.navigation.version-history.clicked', function() {
+            this.sandbox.on('husky.navigation.version-history.clicked', function () {
                 window.open(constants.versionHistoryUrl, '_blank');
             }.bind(this));
 
@@ -358,7 +355,7 @@ define(function() {
          * Toggles the shrinker-button
          * @param show {Boolean} if true gets displayed if false hidden
          */
-        toggleShrinker: function(show) {
+        toggleShrinker: function (show) {
             if (show === true) {
                 this.sandbox.dom.show(this.$shrinker);
             } else {
@@ -370,9 +367,12 @@ define(function() {
          * Click-handler for the shrinker-button. Shrinks or expands the content-column
          * and hides or shows the navigation
          */
-        toggleShrinkColumn: function() {
+        toggleShrinkColumn: function () {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
+            this.sandbox.dom.on($column, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function () {
+                this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
+            }.bind(this));
             if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
                 // expand
                 this.sandbox.emit('husky.navigation.show');
@@ -395,28 +395,28 @@ define(function() {
          * @param {Boolean} rightSpacing false for no spacing right
          * @param {Boolean} topSpacing false for no spacing top
          */
-        changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
+        changeSpacing: function (leftSpacing, rightSpacing, topSpacing) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.addClass($column, constants.noTransitionsClass);
             // left space
             if (leftSpacing === false) {
-                this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
+                this.sandbox.dom.addClass($column, constants.noLeftSpaceClass);
             } else {
-                this.sandbox.dom.removeClass(this.$el, constants.noLeftSpaceClass);
+                this.sandbox.dom.removeClass($column, constants.noLeftSpaceClass);
             }
 
             // right space
             if (rightSpacing === false) {
-                this.sandbox.dom.addClass(this.$el, constants.noRightSpaceClass);
+                this.sandbox.dom.addClass($column, constants.noRightSpaceClass);
             } else {
-                this.sandbox.dom.removeClass(this.$el, constants.noRightSpaceClass);
+                this.sandbox.dom.removeClass($column, constants.noRightSpaceClass);
             }
 
             // top space
             if (topSpacing === false) {
-                this.sandbox.dom.addClass(this.$el, constants.noTopSpaceClass);
+                this.sandbox.dom.addClass($column, constants.noTopSpaceClass);
             } else {
-                this.sandbox.dom.removeClass(this.$el, constants.noTopSpaceClass);
+                this.sandbox.dom.removeClass($column, constants.noTopSpaceClass);
             }
         },
 
@@ -424,7 +424,7 @@ define(function() {
          * Changes the width of content to fixed or to max
          * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
          */
-        changeWidth: function(width) {
+        changeWidth: function (width) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
             if (width === 'fixed') {
@@ -442,7 +442,7 @@ define(function() {
          * (it just sets a css-class which contains a width property)
          * @param small {Boolean} if true small-class gets added
          */
-        changeToFixedWidth: function(small) {
+        changeToFixedWidth: function (small) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.fixedWidthClass)) {
@@ -459,7 +459,7 @@ define(function() {
         /**
          * Makes the content take the maximum of the available space
          */
-        changeToMaxWidth: function() {
+        changeToMaxWidth: function () {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
@@ -473,7 +473,7 @@ define(function() {
          * Changes the locale of the user
          * @param locale {string} locale to change to
          */
-        changeUserLocale: function(locale) {
+        changeUserLocale: function (locale) {
             //Todo: don't use hardcoded url
             this.sandbox.util.ajax({
                 type: 'PUT',
@@ -483,7 +483,7 @@ define(function() {
                 data: JSON.stringify({
                     locale: locale
                 }),
-                success: function() {
+                success: function () {
                     this.sandbox.dom.window.location.reload();
                 }.bind(this)
             });
@@ -492,7 +492,7 @@ define(function() {
         /**
          * Routes to the form of the user
          */
-        routeToUserForm: function() {
+        routeToUserForm: function () {
             //Todo: don't use hardcoded url
             this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.contact.id + '/details', true, false, false);
             this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
@@ -502,7 +502,7 @@ define(function() {
          * Takes a postifix and updates the page title
          * @param postfix {String}
          */
-        setTitlePostfix: function(postfix) {
+        setTitlePostfix: function (postfix) {
             document.title = this.title + ' - ' + postfix;
         },
 
@@ -512,7 +512,7 @@ define(function() {
          * @param {boolean} loader If true a loader will be displayed
          * @param {boolean} updateNavigation If true the navigation will be updated with the passed route
          */
-        emitNavigationEvent: function(event, loader, updateNavigation) {
+        emitNavigationEvent: function (event, loader, updateNavigation) {
             if (updateNavigation === true) {
                 this.selectNavigationItem(event.action);
             }

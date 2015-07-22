@@ -52,7 +52,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/roles',
                 callback: function() {
-                    this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="list"/>');
+                    return '<div data-aura-component="roles@sulusecurity" data-aura-display="list"/>';
                 }
             });
 
@@ -60,7 +60,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/roles/new',
                 callback: function() {
-                    this.html('<div data-aura-component="roles/components/content@sulusecurity" data-aura-display="form"/>');
+                    return '<div data-aura-component="roles/components/content@sulusecurity" data-aura-display="form"/>';
                 }
             });
 
@@ -69,9 +69,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/roles/edit::id/:content',
                 callback: function(id) {
-                    this.html(
-                        '<div data-aura-component="roles/components/content@sulusecurity" data-aura-title="sulu.roles.permissions" data-aura-display="form" data-aura-id="' + id + '"/>'
-                    );
+                    return '<div data-aura-component="roles/components/content@sulusecurity" data-aura-title="sulu.roles.permissions" data-aura-display="form" data-aura-id="' + id + '"/>';
                 }
             });
         }

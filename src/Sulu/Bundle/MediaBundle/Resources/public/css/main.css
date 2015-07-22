@@ -12,21 +12,16 @@
 }
 
 /* line 1, ../scss/modules/collection.scss */
-.datagrid-container {
-  margin-top: 20px;
-}
-
-/* line 5, ../scss/modules/collection.scss */
 .list-toolbar-container {
   margin-top: 20px;
 }
 
-/* line 9, ../scss/modules/collection.scss */
+/* line 5, ../scss/modules/collection.scss */
 #collections-root.no-content {
   text-align: center;
   height: 210px;
 }
-/* line 13, ../scss/modules/collection.scss */
+/* line 9, ../scss/modules/collection.scss */
 #collections-root.no-content .icon {
   display: block;
   left: 50%;
@@ -34,7 +29,7 @@
   font-size: 125px;
   color: #e4e4e4;
 }
-/* line 20, ../scss/modules/collection.scss */
+/* line 16, ../scss/modules/collection.scss */
 #collections-root.no-content .text {
   font-weight: bold;
   color: #e4e4e4;

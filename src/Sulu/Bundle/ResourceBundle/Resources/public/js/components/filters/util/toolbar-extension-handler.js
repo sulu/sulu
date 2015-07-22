@@ -103,21 +103,19 @@ define(['app-config'], function(AppConfig) {
                 title: this.sandbox.translate('resource.filter'),
                 group: 2,
                 position: 1,
-                class: 'highlight-white',
-                type: 'select',
-                itemsOption: {
+                dropdownOptions: {
                     url: url,
                     resultKey: 'filters',
                     titleAttribute: 'name',
                     idAttribute: 'id',
-                    translate: false,
                     languageNamespace: 'toolbar.',
-                    markable: true,
+                    markSelected: true,
+                    changeButton: true,
                     callback: function(item) {
                         applyFilterToList.call(this, item, dataGridInstanceName, context);
                     }.bind(this)
                 },
-                items: [
+                dropdownItems: [
                     {
                         divider: true
                     },

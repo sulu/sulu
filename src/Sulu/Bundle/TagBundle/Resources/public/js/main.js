@@ -29,7 +29,7 @@ define({
         sandbox.mvc.routes.push({
              route: 'settings/tags',
              callback: function(){
-                 this.html('<div data-aura-component="tags@sulutag" data-aura-display="list"/>');
+                 return '<div data-aura-component="tags@sulutag" data-aura-display="list"/>';
              }
         });
     }

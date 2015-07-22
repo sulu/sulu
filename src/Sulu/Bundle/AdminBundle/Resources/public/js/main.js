@@ -25,12 +25,10 @@ require.config({
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
 
         '__component__$app@suluadmin': 'components/app/main',
-        '__component__$content-tabs@suluadmin': 'components/content-tabs/main',
         '__component__$overlay@suluadmin': 'components/overlay/main',
         '__component__$header@suluadmin': 'components/header/main',
         '__component__$list-toolbar@suluadmin': 'components/list-toolbar/main',
         '__component__$labels@suluadmin': 'components/labels/main',
-        '__component__$grid-group@suluadmin': 'components/grid-group/main',
         '__component__$sidebar@suluadmin': 'components/sidebar/main',
         '__component__$data-overlay@suluadmin': 'components/data-overlay/main'
     },
@@ -44,12 +42,10 @@ require.config({
         'widget-groups',
 
         '__component__$app@suluadmin',
-        '__component__$content-tabs@suluadmin',
         '__component__$overlay@suluadmin',
         '__component__$header@suluadmin',
         '__component__$list-toolbar@suluadmin',
         '__component__$labels@suluadmin',
-        '__component__$grid-group@suluadmin',
         '__component__$sidebar@suluadmin',
         '__component__$data-overlay@suluadmin'
     ],

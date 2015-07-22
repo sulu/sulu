@@ -644,7 +644,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                                 id: 'add',
                                 icon: 'plus-circle',
                                 title: this.sandbox.translate('media-selection.list-toolbar.upload-info'),
-                                hideTitle: false,
                                 hidden: true,
                                 callback: function() {
                                     this.sandbox.emit(
@@ -657,10 +656,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             {
                                 id: 'change',
                                 icon: 'th-large',
-                                itemsOption: {
-                                    markable: true
+                                dropdownOptions: {
+                                    markSelected: true
                                 },
-                                items: [
+                                dropdownItems: [
                                     {
                                         id: 'small-thumbnails',
                                         title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),

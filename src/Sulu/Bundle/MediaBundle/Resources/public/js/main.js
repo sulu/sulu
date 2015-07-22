@@ -36,9 +36,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'media/collections/root',
             callback: function() {
-                this.html(
-                    '<div data-aura-component="collections/components/root@sulumedia" />'
-                );
+                return '<div data-aura-component="collections/components/root@sulumedia" />';
             }
         });
 
@@ -46,19 +44,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content',
             callback: function(id, content) {
-                this.html(
-                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
-                );
-            }
-        });
-
-        // show a single collection with files and upload
-        sandbox.mvc.routes.push({
-            route: 'media/collections/edit::id/:content/edit::mediaId',
-            callback: function(id, content, mediaId) {
-                this.html(
-                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-media-id="' + mediaId + '"/>'
-                );
+                return '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
             }
         });
 

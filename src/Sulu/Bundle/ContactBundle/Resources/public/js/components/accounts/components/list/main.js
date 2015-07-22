@@ -95,21 +95,7 @@ define([
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'accounts',
-                    parentTemplate: 'default',
-                    inHeader: true,
-                    groups: [
-                        {
-                            id: 1,
-                            align: 'left'
-                        },
-                        {
-                            id: 2,
-                            align: 'right'
-                        }
-                    ],
-                    template: function() {
-                        return this.getToolbarTemplate();
-                    }.bind(this)
+                    template: 'default'
                 },
                 {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
@@ -124,21 +110,6 @@ define([
                 'accounts',
                 '#companies-list-info'
             );
-        },
-
-        getToolbarTemplate: function() {
-            return [
-                {
-                    id: 'add',
-                    icon: 'plus-circle',
-                    class: 'highlight-white',
-                    position: 1,
-                    title: this.sandbox.translate('sulu.list-toolbar.add'),
-                    callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.add');
-                    }.bind(this)
-                }
-            ];
         }
     };
 });

@@ -65,7 +65,7 @@ define(function() {
             }.bind(this));
 
             // change the editing language
-            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
 
             // save button clicked
             this.sandbox.on('sulu.header.toolbar.save', this.save.bind(this));

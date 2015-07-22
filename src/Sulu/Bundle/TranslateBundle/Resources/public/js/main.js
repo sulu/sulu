@@ -29,7 +29,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate',
                 callback: function() {
-                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="list" data-aura-display="settings"/>');
+                    return '<div data-aura-component="packages@sulutranslate" data-aura-display="list" data-aura-display="settings"/>';
                 }
             }
         );
@@ -38,7 +38,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/add',
                 callback: function() {
-                    this.html('<div data-aura-component="packages/components/content@sulutranslate" data-aura-display="settings" data-aura-startComponent="packages@sulutranslate" />');
+                    return '<div data-aura-component="packages/components/content@sulutranslate" data-aura-display="settings" data-aura-startComponent="packages@sulutranslate" />';
                 }
             }
         );
@@ -47,7 +47,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/:content',
                 callback: function(id, content) {
-                    this.html('<div data-aura-component="packages/components/content@sulutranslate" data-aura-display="' + content + '" data-aura-id="' + id + '"/>');
+                    return '<div data-aura-component="packages/components/content@sulutranslate" data-aura-display="' + content + '" data-aura-id="' + id + '"/>';
                 }
             }
         );
@@ -56,7 +56,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details::catalogueId',
                 callback: function(id, catalogueId) {
-                    this.html('<div data-aura-component="packages/components/content@sulutranslate" data-aura-display="details" data-aura-id="' + id + '" data-aura-catalogue="' + catalogueId + '"/>');
+                    return '<div data-aura-component="packages/components/content@sulutranslate" data-aura-display="details" data-aura-id="' + id + '" data-aura-catalogue="' + catalogueId + '"/>';
                 }
             }
         );
