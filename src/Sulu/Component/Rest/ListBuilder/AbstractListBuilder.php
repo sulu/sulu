@@ -39,7 +39,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $sortFields = array();
+    protected $sortFields = [];
 
     /**
      * Defines the sort order of the string.

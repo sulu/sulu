@@ -13,16 +13,13 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\ResultSetMapping;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The listbuilder implementation for doctrine.
@@ -118,7 +115,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // if no results are found - return
         if (count($ids) < 1) {
-            return array();
+            return [];
         }
 
         // now select all data
@@ -144,7 +141,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     /**
      * Function that finds all IDs of entities that match the
-     * search criteria
+     * search criteria.
      *
      * @return array
      */
@@ -158,7 +155,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $ids = $subquerybuilder->getQuery()->getArrayResult();
         // if no results are found - return
         if (count($ids) < 1) {
-            return array();
+            return [];
         }
         $ids = array_map(
             function ($array) {
@@ -171,7 +168,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Assigns ORDER BY clauses to querybuilder
+     * Assigns ORDER BY clauses to querybuilder.
      *
      * @param QueryBuilder $queryBuilder
      */
@@ -183,7 +180,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Sets group by fields to querybuilder
+     * Sets group by fields to querybuilder.
      *
      * @param QueryBuilder $queryBuilder
      */
@@ -229,7 +226,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Creates a query-builder for sub-selecting ID's
+     * Creates a query-builder for sub-selecting ID's.
      *
      * @param null|string $select
      *
@@ -253,7 +250,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
 
         // use fields that have filter functionality or have an inner join
-        $addJoins = array();
+        $addJoins = [];
         foreach ($this->getJoins() as $entity => $join) {
             if (array_search($entity, $filterFields) !== false
                 || $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
@@ -269,7 +266,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns array of field-descriptor aliases
+     * Returns array of field-descriptor aliases.
      *
      * @param array $filterFields
      *
@@ -277,7 +274,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function getEntityNamesOfFieldDescriptors($filterFields)
     {
-        $fields = array();
+        $fields = [];
 
         // filter array for DoctrineFieldDescriptors
         foreach ($filterFields as $field) {
@@ -304,7 +301,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Creates Querybuilder
+     * Creates Querybuilder.
      *
      * @param array|null $joins Define which joins should be made
      *
@@ -349,7 +346,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Adds joins to querybuilder
+     * Adds joins to querybuilder.
      *
      * @param QueryBuilder $queryBuilder
      * @param array $joins
@@ -444,7 +441,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Sets where statement
+     * Sets where statement.
      *
      * @param array $whereFields
      * @param array $whereValues

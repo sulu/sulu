@@ -46,15 +46,15 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     private $query;
 
     /**
-     * Result of id subquery
+     * Result of id subquery.
      *
      * @var array
      */
-    private $idResult = array(
-        array('id' => '1'),
-        array('id' => '2'),
-        array('id' => '3'),
-    );
+    private $idResult = [
+        ['id' => '1'],
+        ['id' => '2'],
+        ['id' => '3'],
+    ];
 
     private static $entityName = 'SuluCoreBundle:Example';
     private static $translationEntityName = 'SuluCoreBundle:ExampleTranslation';
@@ -71,7 +71,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
             ->disableOriginalConstructor()
-            ->setMethods(array('execute', 'getSingleScalarResult','getArrayResult'))
+            ->setMethods(['execute', 'getSingleScalarResult', 'getArrayResult'])
             ->getMockForAbstractClass();
 
         $this->em->expects($this->any())->method('createQueryBuilder')->willReturn($this->queryBuilder);
@@ -111,12 +111,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->queryBuilder->expects($this->exactly(2))->method('addSelect')->withConsecutive(
-            array(
+            [
                 self::$entityName . '.name AS name_alias',
-            ),
-            array(
+            ],
+            [
                 self::$entityName . '.desc AS desc_alias',
-            )
+            ]
         );
 
         $this->doctrineListBuilder->execute();
@@ -129,7 +129,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->queryBuilder->expects($this->exactly(1))->method('setParameter')->withConsecutive(
-            array('ids', array('1','2','3'))
+            ['ids', ['1', '2', '3']]
         );
 
         $this->doctrineListBuilder->execute();
@@ -141,12 +141,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
 
         $this->queryBuilder->expects($this->exactly(2))->method('addSelect')->withConsecutive(
-            array(
+            [
                 self::$entityName . '.name AS name_alias',
-            ),
-            array(
+            ],
+            [
                 self::$entityName . '.desc AS desc_alias',
-            )
+            ]
         );
 
         $this->doctrineListBuilder->execute();
@@ -228,7 +228,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
         // 2 calls: one for setting IDs in subquery and one for setting values
         $this->queryBuilder->expects($this->exactly(2))->method('setParameter')->withConsecutive(
-            array('search', '%value%')
+            ['search', '%value%']
         );
 
         $this->doctrineListBuilder->execute();
