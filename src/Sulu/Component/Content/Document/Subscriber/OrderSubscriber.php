@@ -39,9 +39,10 @@ class OrderSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Checks if the given document is supported by this subscriber
+     * Checks if the given document is supported by this subscriber.
      *
      * @param $document
+     *
      * @return bool
      */
     public function supports($document)
@@ -62,7 +63,7 @@ class OrderSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adjusts the order of the document and its siblings
+     * Adjusts the order of the document and its siblings.
      *
      * @param PersistEvent $event
      */
@@ -90,7 +91,7 @@ class OrderSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adjusts the order of the document and its siblings
+     * Adjusts the order of the document and its siblings.
      *
      * @param ReorderEvent $event
      */
@@ -116,7 +117,7 @@ class OrderSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adds the order to the document
+     * Adds the order to the document.
      *
      * @param AbstractMappingEvent $event
      */

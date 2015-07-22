@@ -13,9 +13,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
-use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 
 class OrderSubscriberTest extends SubscriberTestCase
@@ -45,7 +43,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $node3 = $this->prophesize(NodeInterface::class);
 
         $parentNode = $this->prophesize(NodeInterface::class);
-        $parentNode->getNodes()->willReturn(array($node1, $node2, $node3));
+        $parentNode->getNodes()->willReturn([$node1, $node2, $node3]);
         $this->node->hasProperty('sys:order')->willReturn(false);
         $this->node->getParent()->willReturn($parentNode);
         $this->node->setProperty('sys:order', 40, PropertyType::LONG)->shouldBeCalled();
@@ -68,7 +66,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $node3 = $this->prophesize(NodeInterface::class);
 
         $parentNode = $this->prophesize(NodeInterface::class);
-        $parentNode->getNodes()->willReturn(array($this->node, $node2, $node3));
+        $parentNode->getNodes()->willReturn([$this->node, $node2, $node3]);
         $this->node->getParent()->willReturn($parentNode);
         $this->node->setProperty('sys:order', 10, PropertyType::LONG)->shouldBeCalled();
         $node2->setProperty('sys:order', 20, PropertyType::LONG)->shouldBeCalled();
