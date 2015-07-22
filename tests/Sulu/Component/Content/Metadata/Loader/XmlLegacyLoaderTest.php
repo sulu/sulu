@@ -21,7 +21,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => '2400',
+            'cacheLifetime' => 2400,
             'tags' => [
                 [
                     'name' => 'some.random.structure.tag',
@@ -190,7 +190,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => '2400',
+            'cacheLifetime' => 2400,
             'properties' => [
                 'title_section' => [
                     'name' => 'title_section',
@@ -235,6 +235,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_title_in_section.xml');
@@ -260,6 +262,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
             'properties' => [],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $this->setExpectedException(
@@ -284,7 +288,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_block',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
-            'cacheLifetime' => '4800',
+            'cacheLifetime' => 4800,
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -551,6 +555,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_block.xml');
@@ -565,7 +571,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_block_types',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
-            'cacheLifetime' => '4800',
+            'cacheLifetime' => 4800,
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -761,6 +767,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_block_types.xml');
@@ -775,7 +783,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_sections',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => '2400',
+            'cacheLifetime' => 2400,
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -956,6 +964,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_sections.xml');
@@ -978,7 +988,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_nesting_params',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => '2400',
+            'cacheLifetime' => 2400,
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1027,6 +1037,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_nesting_params.xml');
@@ -1042,7 +1054,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_meta_params',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => '2400',
+            'cacheLifetime' => 2400,
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1086,6 +1098,8 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'meta' => [],
                 ],
             ],
+            'tags' => [],
+            'meta' => [],
         ];
 
         $result = $this->loadFixture('template_meta_params.xml');
@@ -1165,6 +1179,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         // no exception should be thrown
         $this->assertNotNull($result);
+    }
+
+    public function testCacheLifeTimeZero()
+    {
+        $result = $this->loadFixture('template_lifetime_0.xml');
+        $this->assertSame(0, $result['cacheLifetime']);
     }
 
     public function testWithoutRlpTagTypeSnippetInternal()
