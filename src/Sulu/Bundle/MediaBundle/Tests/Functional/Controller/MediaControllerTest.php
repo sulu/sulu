@@ -288,7 +288,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * Test Header dispositionType umlauts in name
+     * Test Header dispositionType umlauts in name.
      */
     public function testDownloadHeaderUmlauts()
     {
