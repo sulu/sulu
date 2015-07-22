@@ -290,16 +290,17 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
         }
 
-        // get entity names
-        $fields = array_map(
-            function ($field) {
-                return $field->getEntityName();
-            },
-            $fields
-        );
+        $fieldEntityNames = [];
+        foreach ($fields as $key => $field) {
+            // special treatment for join descriptors
+            if ($field instanceof DoctrineJoinDescriptor) {
+                $fieldEntityNames[] = $key;
+            }
+            $fieldEntityNames[] = $field->getEntityName();
+        }
 
         // unify result
-        return array_unique($fields);
+        return array_unique($fieldEntityNames);
     }
 
     /**
