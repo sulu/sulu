@@ -12,8 +12,10 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
@@ -67,11 +69,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $inFields = [];
 
     /**
-     * @var AbstractDoctrineFieldDescriptor
-     */
-    protected $sortField;
-
-    /**
      * @var \Doctrine\ORM\QueryBuilder
      */
     protected $queryBuilder;
@@ -88,29 +85,19 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function count()
     {
-        // TODO: remove uneccessary joins from count!
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->entityName . '.id)');
 
-        $entityId = $this->entityName . '.id';
-        $this->queryBuilder = $this->createQueryBuilder()
-            ->select('count(' . $entityId . ')');
-
-        $result = $this->queryBuilder->getQuery()->getScalarResult();
-        if (!$result) {
-            return 0;
-        }
-
-        // in case result has multiple results,
-        // group by separated result into multiple results,
-        // so return count of results
-        if (($temp = count($result)) > 1) {
-            $result = $temp;
-        } else {
-            // reset array indices
+        $result = $subQueryBuilder->getQuery()->getScalarResult();
+        $numResults = count($result);
+        if ($numResults > 1) {
+            return $numResults;
+        } elseif ($numResults == 1) {
             $result = array_values($result[0]);
-            $result = $result[0];
+
+            return $result[0];
         }
 
-        return $result;
+        return 0;
     }
 
     /**
@@ -122,21 +109,88 @@ class DoctrineListBuilder extends AbstractListBuilder
         $event = new ListBuilderCreateEvent($this);
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
 
-        $this->queryBuilder = $this->createQueryBuilder();
+        // first create simplified id query
+        // select ids with all necessary filter data
+        $ids = $this->findIdsByGivenCriteria();
 
+        // if no results are found - return
+        if (count($ids) < 1) {
+            return [];
+        }
+
+        // now select all data
+        $this->queryBuilder = $this->em->createQueryBuilder()
+            ->from($this->entityName, $this->entityName);
+        $this->assignJoins($this->queryBuilder);
+
+        // Add all select fields
         foreach ($this->selectFields as $field) {
             $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
+        // group by
+        $this->assignGroupBy($this->queryBuilder);
+        // assign sort-fields
+        $this->assignSortFields($this->queryBuilder);
 
-        if ($this->limit != null) {
-            $this->queryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
-        }
-
-        if ($this->sortField != null) {
-            $this->queryBuilder->orderBy($this->sortField->getSelect(), $this->sortOrder);
-        }
+        // use ids previously selected ids for query
+        $this->queryBuilder->where($this->entityName . '.id IN (:ids)')
+            ->setParameter('ids', $ids);
 
         return $this->queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Function that finds all IDs of entities that match the
+     * search criteria.
+     *
+     * @return array
+     */
+    protected function findIdsByGivenCriteria()
+    {
+        $subquerybuilder = $this->createSubQueryBuilder();
+        if ($this->limit != null) {
+            $subquerybuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+        }
+        $this->assignSortFields($subquerybuilder);
+        $ids = $subquerybuilder->getQuery()->getArrayResult();
+        // if no results are found - return
+        if (count($ids) < 1) {
+            return [];
+        }
+        $ids = array_map(
+            function ($array) {
+                return $array['id'];
+            },
+            $ids
+        );
+
+        return $ids;
+    }
+
+    /**
+     * Assigns ORDER BY clauses to querybuilder.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function assignSortFields($queryBuilder)
+    {
+        foreach ($this->sortFields as $index => $sortField) {
+            $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
+        }
+    }
+
+    /**
+     * Sets group by fields to querybuilder.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function assignGroupBy($queryBuilder)
+    {
+        if (!empty($this->groupByFields)) {
+            foreach ($this->groupByFields as $fields) {
+                $queryBuilder->groupBy($fields->getSelect());
+            }
+        }
     }
 
     /**
@@ -144,12 +198,12 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return DoctrineJoinDescriptor[]
      */
-    private function getJoins()
+    protected function getJoins()
     {
         $joins = [];
 
-        if ($this->sortField != null) {
-            $joins = array_merge($joins, $this->sortField->getJoins());
+        foreach ($this->sortFields as $sortField) {
+            $joins = array_merge($joins, $sortField->getJoins());
         }
 
         foreach ($this->selectFields as $field) {
@@ -172,44 +226,101 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
+     * Creates a query-builder for sub-selecting ID's.
+     *
+     * @param null|string $select
+     *
+     * @return QueryBuilder
+     */
+    protected function createSubQueryBuilder($select = null)
+    {
+        if (!$select) {
+            $select = $this->entityName . '.id';
+        }
+
+        $filterFields = array_merge(
+            $this->sortFields,
+            $this->whereFields,
+            $this->inFields,
+            $this->betweenFields,
+            $this->searchFields
+        );
+
+        // get entity names
+        $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
+
+        // use fields that have filter functionality or have an inner join
+        $addJoins = [];
+        foreach ($this->getJoins() as $entity => $join) {
+            if (array_search($entity, $filterFields) !== false
+                || $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
+            ) {
+                $addJoins[$entity] = $join;
+            }
+        }
+
+        $queryBuilder = $this->createQueryBuilder($addJoins)
+            ->select($select);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Returns array of field-descriptor aliases.
+     *
+     * @param array $filterFields
+     *
+     * @return string[]
+     */
+    protected function getEntityNamesOfFieldDescriptors($filterFields)
+    {
+        $fields = [];
+
+        // filter array for DoctrineFieldDescriptors
+        foreach ($filterFields as $field) {
+            // add joins of field
+            $fields = array_merge($fields, $field->getJoins());
+
+            if ($field instanceof DoctrineFieldDescriptor
+                || $field instanceof DoctrineJoinDescriptor
+            ) {
+                $fields[] = $field;
+            }
+        }
+
+        // get entity names
+        $fields = array_map(
+            function ($field) {
+                return $field->getEntityName();
+            },
+            $fields
+        );
+
+        // unify result
+        return array_unique($fields);
+    }
+
+    /**
+     * Creates Querybuilder.
+     *
+     * @param array|null $joins Define which joins should be made
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createQueryBuilder()
+    protected function createQueryBuilder($joins = null)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
 
-        foreach ($this->getJoins() as $entity => $join) {
-            switch ($join->getJoinMethod()) {
-                case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
-                    $this->queryBuilder->leftJoin(
-                        $join->getJoin(),
-                        $entity,
-                        $join->getJoinConditionMethod(),
-                        $join->getJoinCondition()
-                    );
-                    break;
-                case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
-                    $this->queryBuilder->innerJoin(
-                        $join->getJoin(),
-                        $entity,
-                        $join->getJoinConditionMethod(),
-                        $join->getJoinCondition()
-                    );
-                    break;
-            }
-        }
+        $this->assignJoins($this->queryBuilder, $joins);
 
         // set where
         if (!empty($this->whereFields)) {
             $this->addWheres($this->whereFields, $this->whereValues, $this->whereComparators, $this->whereConjunctions);
         }
 
-        if (!empty($this->groupByFields)) {
-            foreach ($this->groupByFields as $fields) {
-                $this->queryBuilder->groupBy($fields->getSelect());
-            }
-        }
+        // group by
+        $this->assignGroupBy($this->queryBuilder);
 
         // set in
         if (!empty($this->inFields)) {
@@ -235,7 +346,41 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * adds where statements for in-clauses.
+     * Adds joins to querybuilder.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param array $joins
+     */
+    protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
+    {
+        if ($joins === null) {
+            $joins = $this->getJoins();
+        }
+
+        foreach ($joins as $entity => $join) {
+            switch ($join->getJoinMethod()) {
+                case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
+                    $queryBuilder->leftJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
+                    break;
+                case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
+                    $queryBuilder->innerJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Adds where statements for in-clauses.
      *
      * @param array $inFields
      * @param array $inValues
@@ -296,7 +441,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * sets where statement.
+     * Sets where statement.
      *
      * @param array $whereFields
      * @param array $whereValues

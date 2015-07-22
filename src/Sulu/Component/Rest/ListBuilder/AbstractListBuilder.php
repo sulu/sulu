@@ -37,16 +37,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The field descriptor for the field to sort.
      *
-     * @var AbstractFieldDescriptor
+     * @var AbstractFieldDescriptor[]
      */
-    protected $sortField = null;
+    protected $sortFields = [];
 
     /**
      * Defines the sort order of the string.
      *
-     * @var string
+     * @var string[]
      */
-    protected $sortOrder;
+    protected $sortOrders;
 
     /**
      * The limit for this query.
@@ -246,8 +246,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortField = $fieldDescriptor;
-        $this->sortOrder = $order;
+        $this->sortFields[] = $fieldDescriptor;
+        $this->sortOrders[] = $order;
 
         return $this;
     }
