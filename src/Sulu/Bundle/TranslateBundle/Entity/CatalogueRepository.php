@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 
 /**
  * Repository for the Catalogues, implementing some additional functions
@@ -39,7 +38,6 @@ class CatalogueRepository extends EntityRepository
                 ->where('catalogue.id=:catalogueId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('catalogueId', $id);
 
             return $query->getSingleResult();
