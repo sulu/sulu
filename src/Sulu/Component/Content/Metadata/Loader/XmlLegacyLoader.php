@@ -139,12 +139,17 @@ class XmlLegacyLoader implements LoaderInterface
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
                 'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
-                'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'cacheLifetime' => intval($this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath)),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
-            $result = array_filter($result);
+            $result = array_filter(
+                $result,
+                function ($value) {
+                    return $value !== null;
+                }
+            );
 
             foreach (['key', 'view', 'controller', 'cacheLifetime'] as $requiredProperty) {
                 if (!isset($result[$requiredProperty])) {
