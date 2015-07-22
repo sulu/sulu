@@ -73,7 +73,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
 
             return $this->structureResolver->resolve($snippet);
         } catch (DocumentNotFoundException $ex) {
-            return null;
+            return;
         }
     }
 
