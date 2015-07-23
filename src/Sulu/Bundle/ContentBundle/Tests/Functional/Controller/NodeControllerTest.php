@@ -1246,6 +1246,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $items = $response['_embedded']['nodes'];
 
         $this->assertEquals('Homepage', $response['title']);

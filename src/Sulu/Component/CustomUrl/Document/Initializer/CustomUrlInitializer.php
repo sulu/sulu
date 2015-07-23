@@ -60,6 +60,7 @@ class CustomUrlInitializer implements InitializerInterface
     public function initialize(OutputInterface $output)
     {
         $nodeTypeManager = $this->sessionManager->getSession()->getWorkspace()->getNodeTypeManager();
+
         foreach ([new CustomUrlNodeType(), new CustomUrlRouteNodeType()] as $nodeType) {
             $nodeTypeManager->registerNodeType($nodeType, true);
         }

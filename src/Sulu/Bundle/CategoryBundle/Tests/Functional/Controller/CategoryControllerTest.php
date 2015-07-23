@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
+namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
@@ -217,6 +217,10 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
+
+        usort($categories, function ($cat1, $cat2) {
+            return $cat1->id > $cat2->id;
+        });
 
         $this->assertEquals('First Category', $categories[0]->name);
         $this->assertEquals('en', $categories[0]->defaultLocale);

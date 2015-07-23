@@ -279,8 +279,24 @@ class CodeController extends RestController implements ClassResourceInterface
             $code->setBackend($backend);
             $code->setFrontend($frontend);
             $code->setLength($length);
-            $code->setPackage($em->getReference(self::$packageEntity, $package['id']));
-            $code->setLocation($em->getReference(self::$locationEntity, $location['id']));
+
+            $package = $em->find(self::$packageEntity, $package['id']);
+            $location = $em->find(self::$locationEntity, $location['id']);
+
+            if (null === $package) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Package "%s" not found', $package['id']
+                ));
+            }
+
+            if (null === $location) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Location "%s" not found', $location['id']
+                ));
+            }
+
+            $code->setPackage($package);
+            $code->setLocation($location);
 
             if ($translations != null && count($translations) > 0) {
                 foreach ($translations as $translationData) {

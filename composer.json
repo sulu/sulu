@@ -41,6 +41,7 @@
         "phpcr/phpcr-shell": "~1.0.0@alpha",
         "doctrine/doctrine-bundle": "1.4.*",
         "jackalope/jackalope-jackrabbit": "~1.2.0",
+        "jackalope/jackalope-doctrine-dbal": "~1.2.0",
         "guzzle/plugin-mock": "3.9.*",
         "massive/build-bundle": "0.2.*",
         "matthiasnoback/symfony-config-test": "^1.0",

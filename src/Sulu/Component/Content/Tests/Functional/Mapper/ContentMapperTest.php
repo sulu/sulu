@@ -1369,7 +1369,7 @@ class ContentMapperTest extends SuluTestCase
 
         $result = $this->mapper->loadBySql2($sql2, 'de', 'sulu_io');
 
-        $this->assertEquals(5, count($result));
+        $this->assertCount(5, $result);
 
         $result = $this->mapper->loadBySql2($sql2, 'de', 'sulu_io', 2);
 
