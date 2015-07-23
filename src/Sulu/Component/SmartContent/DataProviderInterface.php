@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\SmartContent;
 
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 
 /**
@@ -20,9 +21,18 @@ interface DataProviderInterface
     /**
      * Returns configuration for smart-content.
      *
+     * @param array $propertyParameter
+     *
      * @return ProviderConfigurationInterface
      */
-    public function getConfig();
+    public function getConfiguration(array $propertyParameter);
+
+    /**
+     * Returns default parameter.
+     *
+     * @return PropertyParameter[]
+     */
+    public function getDefaultPropertyParameter();
 
     /**
      * Resolves given filters and returns filtered items.
@@ -35,5 +45,5 @@ interface DataProviderInterface
      *
      * @return ItemInterface[]
      */
-    public function resolveFilters($filters, $propertyParameter, $limit = null, $page = 1, $pageSize = null);
+    public function resolveFilters(array $filters, array $propertyParameter, $limit = null, $page = 1, $pageSize = null);
 }

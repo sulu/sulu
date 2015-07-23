@@ -41,7 +41,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     private $limit;
 
     /**
-     * @var KeyTitlePairInterface
+     * @var KeyTitlePairInterface[]
      */
     private $presentAs;
 
@@ -139,7 +139,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     }
 
     /**
-     * @param KeyTitlePairInterface $presentAs
+     * @param KeyTitlePairInterface[] $presentAs
      */
     public function setPresentAs($presentAs)
     {

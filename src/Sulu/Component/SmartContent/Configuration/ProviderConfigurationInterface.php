@@ -59,7 +59,7 @@ interface ProviderConfigurationInterface
      * Returns items for present as select.
      * If NULL no present as select will be displayed.
      *
-     * @return KeyTitlePairInterface
+     * @return null|KeyTitlePairInterface[]
      */
     public function getPresentAs();
 

@@ -20,7 +20,7 @@ class CategoriesConfiguration implements CategoriesConfigurationInterface
      */
     private $root;
 
-    public function __construct($root)
+    public function __construct($root = null)
     {
         $this->root = $root;
     }
