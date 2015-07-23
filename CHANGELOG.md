@@ -8,7 +8,8 @@ CHANGELOG for Sulu
     * HOTFIX      #1395 [ContentBundle]  Fixed cache-lifetime is required bug for lifetime "0"
     * HOTFIX      #1386 [ContentBundle]  Fixed hard-coded values in search metadata
     * HOTFIX      #1400 [SnippetBundle]  Fixed block sorting in snippet form
-    * HOTFIX      #1378 [ContentBundle]   Fixed sorting of pages
+    * HOTFIX      #1378 [ContentBundle]  Fixed sorting of pages
+    * HOTFIX      #1414 [ContentBundle]  Set published property in resolved smart content to date instead boolean
 
 * 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document

@@ -11,20 +11,21 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use Jackalope\Session;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
-use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Component\Content\MetadataExtension\StructureExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Webspace\NavigationContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
@@ -33,11 +34,44 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class ContentMapperTest extends SuluTestCase
 {
     /**
-     * @var StructureExtensionInterface[]
+     * @var ExtensionInterface[]
      */
     private $extensions = [];
 
+    /**
+     * @var string
+     */
     private $languageNamespace = 'i18n';
+
+    /**
+     * @var ContentMapper
+     */
+    private $mapper;
+
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * @var ExtensionManager
+     */
+    private $extensionManager;
+
+    /**
+     * @var TokenStorage
+     */
+    private $tokenStorage;
+
+    /**
+     * @var ContentTypeManager
+     */
+    private $contentTypeManager;
 
     public function setUp()
     {
@@ -47,6 +81,7 @@ class ContentMapperTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
+        $this->contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
 
         $this->tokenStorage = $this->getContainer()->get('security.token_storage');
 
@@ -286,6 +321,57 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEmpty($content->getNavContexts());
         $this->assertEquals(1, $content->getCreator());
         $this->assertEquals(1, $content->getChanger());
+    }
+
+    public function testLoadWithSmartContent()
+    {
+        $startPage = $this->mapper->loadStartPage('sulu_io', 'de');
+
+        $data = ContentMapperRequest::create('page')
+            ->setLocale('de')
+            ->setTemplateKey('overview_smart_content')
+            ->setData(
+                [
+                    'title' => 'Testname',
+                    'tags' => [
+                        'tag1',
+                        'tag2',
+                    ],
+                    'url' => '/news',
+                    'article' => 'sulu_io',
+                    'smartcontent' => [
+                        'dataSource' => $startPage->getUuid(),
+                    ],
+                ]
+            )
+            ->setWebspaceKey('sulu_io')
+            ->setState(Structure::STATE_PUBLISHED)
+            ->setUserId(1);
+
+        $structure = $this->mapper->saveRequest($data);
+
+        $childData = ContentMapperRequest::create('page')
+            ->setLocale('de')
+            ->setTemplateKey('default')
+            ->setData(
+                [
+                    'title' => 'Testname',
+                    'url' => '/news/child',
+                    'article' => 'sulu_io',
+                ]
+            )
+            ->setWebspaceKey('sulu_io')
+            ->setState(Structure::STATE_PUBLISHED)
+            ->setUserId(1);
+
+        $childStructure = $this->mapper->saveRequest($childData);
+
+        $content = $this->mapper->load($structure->getUuid(), 'sulu_io', 'de');
+
+        $smartContentType = $this->contentTypeManager->get('smart_content');
+        $smartContentData = $smartContentType->getContentData($content->getProperty('smartcontent'));
+
+        $this->assertInstanceOf('DateTime', $smartContentData[0]['published']);
     }
 
     public function testNewProperty()
