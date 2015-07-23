@@ -36,7 +36,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Copy tags and categories from current locale to all shadowed pages with this locale as base-locale
+     * Copy tags and categories from current locale to all shadowed pages with this locale as base-locale.
      *
      * @param object $document
      * @param NodeInterface $node
@@ -59,7 +59,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Copy tags and categories from base-locale to current locale
+     * Copy tags and categories from base-locale to current locale.
      *
      * @param object $document
      * @param NodeInterface $node
@@ -78,7 +78,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Returns tags of given node and locale
+     * Returns tags of given node and locale.
      *
      * @param NodeInterface $node
      * @param $locale
@@ -94,7 +94,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Returns categories of given node and locale
+     * Returns categories of given node and locale.
      *
      * @param NodeInterface $node
      * @param $locale
@@ -110,7 +110,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * Returns navigation context of given node and locale
+     * Returns navigation context of given node and locale.
      *
      * @param NodeInterface $node
      * @param $locale
