@@ -49,6 +49,11 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.shadow_copy_properties" class="Sulu\Component\Content\Document\Subscriber\ShadowCopyPropertiesSubscriber">
+            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
         <service id="sulu_document_manager.document.subscriber.title" class="Sulu\Component\Content\Document\Subscriber\TitleSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
