@@ -21,6 +21,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     const SHADOW_BASE_PROPERTY = 'i18n:*-shadow-base';
     const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
     const CATEGORIES_PROPERTY = 'i18n:%s-excerpt-categories';
+    const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
 
     /**
      * {@inheritdoc}
@@ -44,6 +45,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     {
         $tags = $this->getTags($node, $document->getLocale());
         $categories = $this->getCategories($node, $document->getLocale());
+        $navigationContext = $this->getNavigationContext($node, $document->getLocale());
 
         foreach ($node->getProperties(self::SHADOW_BASE_PROPERTY) as $property) {
             if ($property->getValue() === $document->getLocale()) {
@@ -51,6 +53,7 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
 
                 $node->setProperty(sprintf(self::TAGS_PROPERTY, $locale), $tags);
                 $node->setProperty(sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
+                $node->setProperty(sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
             }
         }
     }
@@ -67,9 +70,11 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
 
         $tags = $this->getTags($node, $shadowLocale);
         $categories = $this->getCategories($node, $shadowLocale);
+        $navigationContext = $this->getNavigationContext($node, $shadowLocale);
 
         $node->setProperty(sprintf(self::TAGS_PROPERTY, $document->getLocale()), $tags);
         $node->setProperty(sprintf(self::CATEGORIES_PROPERTY, $document->getLocale()), $categories);
+        $node->setProperty(sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $document->getLocale()), $navigationContext);
     }
 
     /**
@@ -100,6 +105,22 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     {
         return $node->getPropertyValueWithDefault(
             sprintf(self::CATEGORIES_PROPERTY, $locale),
+            []
+        );
+    }
+
+    /**
+     * Returns navigation context of given node and locale
+     *
+     * @param NodeInterface $node
+     * @param $locale
+     *
+     * @return array
+     */
+    private function getNavigationContext(NodeInterface $node, $locale)
+    {
+        return $node->getPropertyValueWithDefault(
+            sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
             []
         );
     }
