@@ -15,6 +15,7 @@ use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,6 +28,9 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
 
+    /**
+     * @var PropertyEncoder
+     */
     private $encoder;
 
     public function __construct(PropertyEncoder $encoder)
@@ -34,6 +38,13 @@ class OrderSubscriber implements EventSubscriberInterface
         $this->encoder = $encoder;
     }
 
+    /**
+     * Checks if the given document is supported by this subscriber.
+     *
+     * @param $document
+     *
+     * @return bool
+     */
     public function supports($document)
     {
         return $document instanceof OrderBehavior;
@@ -47,10 +58,13 @@ class OrderSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => 'handlePersist',
             Events::HYDRATE => 'handleHydrate',
+            Events::REORDER => 'handleReorder',
         ];
     }
 
     /**
+     * Adjusts the order of the document and its siblings.
+     *
      * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
@@ -77,7 +91,35 @@ class OrderSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param HydrateEvent $event
+     * Adjusts the order of the document and its siblings.
+     *
+     * @param ReorderEvent $event
+     */
+    public function handleReorder(ReorderEvent $event)
+    {
+        $node = $event->getNode();
+        $document = $event->getDocument();
+
+        if (false == $this->supports($document)) {
+            return;
+        }
+
+        $propertyName = $this->encoder->systemName(self::FIELD);
+
+        $parent = $node->getParent();
+        $count = 0;
+        foreach ($parent->getNodes() as $childNode) {
+            $childNode->setProperty($propertyName, ($count + 1) * 10, PropertyType::LONG);
+            ++$count;
+        }
+
+        $this->handleHydrate($event);
+    }
+
+    /**
+     * Adds the order to the document.
+     *
+     * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {

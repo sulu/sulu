@@ -58,6 +58,7 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
         $this->node = $this->prophesize(NodeInterface::class);
         $this->accessor = $this->prophesize(DocumentAccessor::class);
         $this->persistEvent->getNode()->willReturn($this->node);
+        $this->persistEvent->getAccessor()->willReturn($this->accessor);
         $this->hydrateEvent->getAccessor()->willReturn($this->accessor);
     }
 }
