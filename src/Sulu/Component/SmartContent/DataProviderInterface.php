@@ -10,20 +10,22 @@
 
 namespace Sulu\Component\SmartContent;
 
+use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
+
 /**
  * Interface for DataProviders which will be usable in SmartContent component.
  */
 interface DataProviderInterface
 {
     /**
-     * Returns configuration for smart-content
+     * Returns configuration for smart-content.
      *
-     * @return mixed
+     * @return ProviderConfigurationInterface
      */
     public function getConfig();
 
     /**
-     * Resolves given filters and returns filtered items
+     * Resolves given filters and returns filtered items.
      *
      * @param array $filters Contains the filter configuration.
      * @param array $propertyParameter Contains the parameter of resolved property.
