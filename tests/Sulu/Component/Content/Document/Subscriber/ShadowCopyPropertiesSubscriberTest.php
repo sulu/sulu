@@ -48,7 +48,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']); 
+        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
@@ -73,7 +73,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']); 
+        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
@@ -95,7 +95,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']); 
+        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
@@ -113,7 +113,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']); 
+        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
@@ -137,7 +137,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']); 
+        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();

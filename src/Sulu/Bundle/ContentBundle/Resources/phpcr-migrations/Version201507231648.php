@@ -89,7 +89,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
-     * Returns property-name for given pattern and locale
+     * Returns property-name for given pattern and locale.
      *
      * @param string $pattern
      * @param string $locale
@@ -102,7 +102,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
-     * Returns tags of given node and locale
+     * Returns tags of given node and locale.
      *
      * @param NodeInterface $node
      * @param $locale
@@ -118,7 +118,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
-     * Returns categories of given node and locale
+     * Returns categories of given node and locale.
      *
      * @param NodeInterface $node
      * @param $locale
@@ -134,7 +134,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
-     * Returns navigation context of given node and locale
+     * Returns navigation context of given node and locale.
      *
      * @param NodeInterface $node
      * @param $locale
