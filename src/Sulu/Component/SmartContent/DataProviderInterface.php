@@ -15,5 +15,23 @@ namespace Sulu\Component\SmartContent;
  */
 interface DataProviderInterface
 {
+    /**
+     * Returns configuration for smart-content
+     *
+     * @return mixed
+     */
+    public function getConfig();
 
+    /**
+     * Resolves given filters and returns filtered items
+     *
+     * @param array $filters Contains the filter configuration.
+     * @param array $propertyParameter Contains the parameter of resolved property.
+     * @param int|null $limit Indicates maximum size of result set.
+     * @param int $page Indicates page of result set.
+     * @param int|null $pageSize Indicates page-size of result set.
+     *
+     * @return ItemInterface[]
+     */
+    public function resolveFilters($filters, $propertyParameter, $limit = null, $page = 1, $pageSize = null);
 }
