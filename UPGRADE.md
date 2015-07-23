@@ -1,6 +1,6 @@
 # Upgrade
 
-## Dev-develop
+## dev-develop
 
 ### Listbuilder
 
@@ -18,6 +18,16 @@ purpose of overriding its previous sort field.
 
 ```bash
 app/console doctrine:schema:update --force
+```
+
+## dev-master
+
+### Shadow-Pages
+
+Filter values will now be copied from shadow-base locale to shadowed locale. Upgrade your data with following command:
+
+```bash
+app/console phpcr:migrations:migrate
 ```
 
 ## 1.0.0

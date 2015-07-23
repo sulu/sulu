@@ -21,6 +21,9 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
 
+* dev-master
+    * HOTFIX      #1416 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
+
 * 1.0.3 (2015-07-23)
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
     * HOTFIX      #1391 [All]            Removed partial load hints
