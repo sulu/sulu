@@ -37,12 +37,10 @@ define([
         sidebar: false
     };
     SnippetList.prototype.header = {
-        title: 'snippets.snippet.title',
         noBack: true,
-
-        breadcrumb: [
-            {title: 'navigation.snippets'}
-        ]
+        toolbar: {
+            buttons: ['add']
+        }
     };
 
     SnippetList.prototype.initialize = function() {
@@ -61,7 +59,7 @@ define([
         }, this);
 
         // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
+        this.sandbox.on('sulu.toolbar.add', function() {
             this.sandbox.emit('sulu.snippets.snippet.new');
         }, this);
 
@@ -83,21 +81,9 @@ define([
                 searchInstanceName: 'snippets',
                 searchFields: ['title'], // TODO ???
                 resultKey: 'snippets',
-                viewOptions: {
-                    table: {
-                        icons: [
-                            {
-                                icon: 'pencil',
-                                column: 'title',
-                                align: 'left',
-                                callback: function(id) {
-                                    this.sandbox.emit('sulu.snippets.snippet.load', id);
-                                }.bind(this)
-                            }
-                        ],
-                        highlightSelected: true
-                    }
-                }
+                actionCallback: function(id) {
+                    this.sandbox.emit('sulu.snippets.snippet.load', id);
+                }.bind(this)
             }
         );
     };

@@ -78,15 +78,14 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         });
 
         app.use('aura_extensions/url-manager');
-
-        bundles.forEach(function(bundle) {
-            app.use('/bundles/' + bundle + '/js/main.js');
-        }.bind(this));
-
         app.use('aura_extensions/backbone-relational');
         app.use('aura_extensions/sulu-content');
         app.use('aura_extensions/sulu-extension');
         app.use('aura_extensions/sulu-buttons');
+
+        bundles.forEach(function(bundle) {
+            app.use('/bundles/' + bundle + '/js/main.js');
+        }.bind(this));
 
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 

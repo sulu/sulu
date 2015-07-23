@@ -272,6 +272,7 @@ define(function () {
          * Cleans things up before navigating
          */
         beforeNavigateCleanup: function () {
+            this.sandbox.stop('.sulu-header');
             this.sandbox.stop('#content > *');
             this.sandbox.stop('#sidebar > *');
             app.cleanUp();
@@ -304,11 +305,6 @@ define(function () {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
-            }.bind(this));
-
-            // content tabs event
-            this.sandbox.on('husky.tabs.content.item.select', function (event) {
-                this.emitNavigationEvent(event, true);
             }.bind(this));
 
             // content tabs event
@@ -516,7 +512,7 @@ define(function () {
                 this.selectNavigationItem(event.action);
             }
             if (!!event.action) {
-                this.sandbox.emit('sulu.router.navigate', event.action, true, event.forceReload);
+                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }
         }
     };

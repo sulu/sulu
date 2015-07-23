@@ -13,7 +13,7 @@ define(function() {
 
     var bindCustomEvents = function(instanceNameToolbar) {
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
             }.bind(this));
 
@@ -60,18 +60,6 @@ define(function() {
             }
         },
 
-        header: function() {
-            return {
-                title: 'tag.tags.title',
-                noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'tag.tags.title'}
-                ]
-            };
-        },
-
         templates: ['/admin/tag/template/tag/list'],
 
         initialize: function() {
@@ -87,6 +75,7 @@ define(function() {
                 {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
+                    parentTemplate: this.sandbox.sulu.buttons.get('add'),
                     listener: 'default',
                     instanceName: this.instanceNameToolbar,
                     inHeader: true

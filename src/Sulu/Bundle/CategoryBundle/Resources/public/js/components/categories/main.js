@@ -265,7 +265,8 @@ define(['sulucategory/model/category',
                             options: {
                                 el: $form,
                                 data: data,
-                                activeTab: this.options.content
+                                activeTab: this.options.content,
+                                parent: this.options.parent || null
                             }
                         }
                     ]);

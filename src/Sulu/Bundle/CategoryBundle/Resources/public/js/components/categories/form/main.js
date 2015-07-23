@@ -132,7 +132,7 @@ define(function () {
                 if (action === 'back') {
                     this.sandbox.emit('sulu.category.categories.list');
                 } else if (action === 'new') {
-                    this.sandbox.emit('sulu.category.categories.form-add');
+                    this.sandbox.emit('sulu.category.categories.form-add', this.options.parent);
                 } else if (toEdit === true) {
                     this.sandbox.emit('sulu.category.categories.form', result.id);
                 }
