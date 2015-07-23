@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.0.3 (2015-07-23)
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
     * HOTFIX      #1391 [All]            Removed partial load hints
     * HOTFIX      #1393 [SnippetBundle]  Added try-catch to avoid exception for snippet load
