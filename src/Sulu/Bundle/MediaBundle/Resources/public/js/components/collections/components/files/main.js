@@ -94,19 +94,19 @@ define(function() {
          */
         bindCustomEvents: function() {
             // change datagrid to table
-            this.sandbox.on('sulu.list-toolbar.change.table', function() {
+            this.sandbox.on('sulu.toolbar.change.table', function() {
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
             }.bind(this));
 
             // change datagrid to thumbnail small
-            this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function() {
+            this.sandbox.on('sulu.toolbar.change.thumbnail-small', function() {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: false});
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
-            this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function() {
+            this.sandbox.on('sulu.toolbar.change.thumbnail-large', function() {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: true});
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
@@ -315,11 +315,18 @@ define(function() {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
                     parentTemplate: 'defaultEditable',
-                    template: [
-                        {
-                            id: 'settings',
-                            icon: 'gear',
-                            position: 30,
+                    template: this.sandbox.sulu.buttons.get(
+                        {'edit': {
+                            callback: function() {
+                                this.sandbox.emit('sulu.list-toolbar.edit');
+                            }.bind(this)
+                        }},
+                        {'delete': {
+                           callback: function() {
+                               this.sandbox.emit('sulu.list-toolbar.delete');
+                           }.bind(this)
+                        }},
+                        {'settings': {
                             dropdownItems: [
                                 {
                                     id: 'media-move',
@@ -332,39 +339,9 @@ define(function() {
                                     type: 'columnOptions'
                                 }
                             ]
-                        },
-                        {
-                            id: 'change',
-                            icon: 'th-large',
-                            dropdownOptions: {
-                                markSelected: true
-                            },
-                            dropdownItems: [
-                                {
-                                    id: 'small-thumbnails',
-                                    title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.change.thumbnail-small');
-                                    }.bind(this)
-                                },
-                                {
-                                    id: 'big-thumbnails',
-                                    title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.change.thumbnail-large');
-                                    }.bind(this)
-                                },
-                                {
-                                    id: 'table',
-                                    title: this.sandbox.translate('sulu.list-toolbar.table'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.change.table');
-                                    }.bind(this)
-                                }
-                            ]
-                        }
-                    ],
-                    inHeader: false
+                        }},
+                        'layout'
+                    )
                 },
                 {
                     el: this.$find(constants.datagridSelector),

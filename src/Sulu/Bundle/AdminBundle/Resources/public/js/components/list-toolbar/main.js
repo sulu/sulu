@@ -33,27 +33,10 @@ define([], function() {
             default: function() {
                 return [
                     {
-                        id: 'delete',
-                        icon: 'trash-o',
-                        position: 20,
-                        disabled: true,
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.delete');
-                        }.bind(this)
-                    },
-                    {
                         id: 'settings',
                         icon: 'gear',
                         position: 30,
                         dropdownItems: [
-                            {
-                                title: this.sandbox.translate('sulu.list-toolbar.import'),
-                                disabled: true
-                            },
-                            {
-                                title: this.sandbox.translate('sulu.list-toolbar.export'),
-                                disabled: true
-                            },
                             {
                                 type: 'columnOptions'
                             }
@@ -303,7 +286,8 @@ define([], function() {
                     hasSearch: true,
                     buttons: this.options.template,
                     instanceName: this.options.instanceName,
-                    showTitleAsTooltip: this.options.showTitleAsTooltip
+                    showTitleAsTooltip: this.options.showTitleAsTooltip,
+                    showTitle: false
                 };
 
             if (this.options.hasOwnProperty('hasSearch')) {

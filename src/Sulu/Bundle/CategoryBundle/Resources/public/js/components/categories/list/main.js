@@ -31,7 +31,7 @@ define(function () {
             return {
                 noBack: true,
                 toolbar: {
-                    buttons: ['add']
+                    buttons: ['add', 'delete']
                 }
             };
         },
@@ -47,7 +47,13 @@ define(function () {
         bindCustomEvents: function() {
             this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this))
             this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
+            this.sandbox.on('sulu.toolbar.delete', this.deleteSelected.bind(this));
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
+            }.bind(this));
         },
 
         /**

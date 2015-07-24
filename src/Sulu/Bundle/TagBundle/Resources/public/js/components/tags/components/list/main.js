@@ -18,7 +18,7 @@ define(function() {
             }.bind(this));
 
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.tags.delete', ids);
@@ -31,6 +31,12 @@ define(function() {
                     showErrorLabel.call(this,resp.responseJSON.code);
                 }
             }, this);
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
+            }.bind(this));
         },
 
         showErrorLabel = function(code) {
@@ -60,6 +66,13 @@ define(function() {
             }
         },
 
+        header: {
+            noBack: true,
+            toolbar: {
+                buttons: ['add', 'delete']
+            }
+        },
+
         templates: ['/admin/tag/template/tag/list'],
 
         initialize: function() {
@@ -75,7 +88,6 @@ define(function() {
                 {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
-                    parentTemplate: this.sandbox.sulu.buttons.get('add'),
                     listener: 'default',
                     instanceName: this.instanceNameToolbar,
                     inHeader: true

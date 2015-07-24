@@ -1184,7 +1184,15 @@ define([
                     header = {
                         noBack: true,
                         toolbar: {
-                            template: [],
+                            buttons: [
+                                {
+                                    id: 'toggler',
+                                    title: 'content.contents.show-ghost-pages',
+                                    content: '<div ' +
+                                             'data-aura-component="toggler@husky" ' +
+                                             'data-aura-instance-name="show-ghost-pages"></div>'
+                                }
+                            ],
                             languageChanger: {
                                 data: localizations,
                                 preSelected: this.options.language

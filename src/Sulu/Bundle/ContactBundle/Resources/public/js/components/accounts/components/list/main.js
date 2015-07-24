@@ -21,7 +21,7 @@ define([
 
         bindCustomEvents = function() {
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
                 }.bind(this));
@@ -35,7 +35,7 @@ define([
             // checkbox clicked
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
-                this.sandbox.emit('husky.toolbar.accounts.item.' + postfix, 'delete', false);
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
             }.bind(this));
         },
 
@@ -76,7 +76,7 @@ define([
                 ],
 
                 toolbar: {
-                    buttons: ['add']
+                    buttons: ['add', 'delete']
                 }
             };
         },
