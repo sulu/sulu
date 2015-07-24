@@ -22,6 +22,8 @@
 
                 app.sandbox.sulu.buttons.state = {
                     id: 'state',
+                    title: 'toolbar.state-test',
+                    icon: 'husky-test',
                     dropdownOptions: {
                         markSelected: true,
                         changeButton: true
@@ -30,7 +32,7 @@
 
                 app.sandbox.sulu.buttons.dropdownItems.statePublish = {
                     id: 'state-publish',
-                    title: app.sandbox.translate('toolbar.state-publish'),
+                    title: 'toolbar.state-publish',
                     icon: 'husky-publish',
                     callback: function() {
                         this.sandbox.emit('sulu.header.state.changed', 2);
@@ -39,7 +41,7 @@
 
                 app.sandbox.sulu.buttons.dropdownItems.stateTest = {
                     id: 'state-test',
-                    title: app.sandbox.translate('toolbar.state-test'),
+                    title: 'toolbar.state-test',
                     icon: 'husky-test',
                     callback: function() {
                         this.sandbox.emit('sulu.header.state.changed', 1);

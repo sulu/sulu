@@ -191,6 +191,12 @@ define(['app-config'], function(AppConfig) {
                 // reinit sorting
                 this.initSortableBlock();
             }.bind(this));
+
+
+            this.sandbox.dom.on(this.formId, 'init-sortable', function(e) {
+                // reinit sorting
+                this.initSortableBlock();
+            }.bind(this));
         },
 
         listenForChange: function() {

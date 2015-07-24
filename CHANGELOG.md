@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1404 [AdminBundle]     Implemented new login design
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
@@ -20,10 +21,15 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
 
-* dev-master
+* 1.0.3 (2015-07-23)
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
     * HOTFIX      #1391 [All]            Removed partial load hints
     * HOTFIX      #1393 [SnippetBundle]  Added try-catch to avoid exception for snippet load
+    * HOTFIX      #1395 [ContentBundle]  Fixed cache-lifetime is required bug for lifetime "0"
+    * HOTFIX      #1386 [ContentBundle]  Fixed hard-coded values in search metadata
+    * HOTFIX      #1400 [SnippetBundle]  Fixed block sorting in snippet form
+    * HOTFIX      #1378 [ContentBundle]  Fixed sorting of pages
+    * HOTFIX      #1414 [ContentBundle]  Set published property in resolved smart content to date instead boolean
 
 * 1.0.2 (2015-07-13)
     * HOTFIX      #1355 [CoreBundle]     Fixed creator id for website document

@@ -24,7 +24,6 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
 
     /**
      * @param PropertyEncoder  $encoder
-     * @param DocumentAccessor $accessor
      */
     public function __construct(PropertyEncoder $encoder)
     {
@@ -43,7 +42,7 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
@@ -76,7 +75,7 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
     abstract protected function doPersist(PersistEvent $event);
 
     /**
-     * @param DocumentInterface $document
+     * @param object $document
      */
     abstract protected function supports($document);
 

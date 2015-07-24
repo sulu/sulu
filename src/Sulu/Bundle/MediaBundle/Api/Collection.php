@@ -406,14 +406,11 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("changer")
-     *
      * @return string
      */
     public function getChanger()
     {
-        $user = $this->entity->getCreator();
+        $user = $this->entity->getChanger();
         if ($user) {
             return $user->getFullName();
         }
@@ -445,9 +442,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("creator")
-     *
      * @return string
      */
     public function getCreator()

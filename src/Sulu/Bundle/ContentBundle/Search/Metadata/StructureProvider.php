@@ -47,7 +47,7 @@ class StructureProvider implements ProviderInterface
     private $mapping;
 
     /**
-     * @var StructureFactory
+     * @var StructureMetadataFactory
      */
     private $structureFactory;
 
@@ -133,15 +133,22 @@ class StructureProvider implements ProviderInterface
                             continue;
                         }
 
-                        $propertyMapping->addFieldMapping(
-                            'title',
-                            [
-                                'type' => 'string',
-                                'field' => $this->factory->createMetadataProperty(
-                                    '[' . $componentProperty->getName() . ']'
-                                ),
-                            ]
-                        );
+                        $tag = $componentProperty->getTag('sulu.search.field');
+                        $tagAttributes = $tag['attributes'];
+
+                        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+                            $propertyMapping->addFieldMapping(
+                                $property->getName() . '.' . $componentProperty->getName(),
+                                [
+                                    'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                                    'field' => $this->factory->createMetadataProperty(
+                                        '[' . $componentProperty->getName() . ']'
+                                    ),
+                                    'aggregate' => true,
+                                    'indexed' => false,
+                                ]
+                            );
+                        }
                     }
                 }
 
