@@ -10,7 +10,7 @@ The tabs can be configured with the 'url', 'data' and 'container' option. The 'o
 
 #### Toolbar
 The language-changer can be configured as it was. Template and parentTemplate in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
-Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/commit/f9b3abeb547553c9c031710f1f98d0288b08ca9c
+Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/blob/f9b3abeb547553c9c031710f1f98d0288b08ca9c/UPGRADE.md
 
 #### Sulu-buttons
 Buttons for toolbars get specified in an aura-extension (sandbox.sulu.buttons and sandbox.sulu.buttons.dropdownItems). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
