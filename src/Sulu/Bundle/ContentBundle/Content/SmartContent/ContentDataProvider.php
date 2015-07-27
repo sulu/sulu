@@ -44,6 +44,15 @@ class ContentDataProvider implements DataProviderInterface
      */
     private $hasNextPage;
 
+    public function __construct(
+        ContentQueryBuilderInterface $contentQueryBuilder,
+        ContentQueryExecutor $contentQueryExecutor
+    ) {
+        $this->contentQueryBuilder = $contentQueryBuilder;
+        $this->contentQueryExecutor = $contentQueryExecutor;
+    }
+
+
     /**
      * {@inheritdoc}
      */
@@ -105,7 +114,10 @@ class ContentDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        if (!array_key_exists('dataSource', $filters) || $filters['dataSource'] === '' || $limit < 1) {
+        if (!array_key_exists('dataSource', $filters) ||
+            $filters['dataSource'] === '' ||
+            ($limit !== null && $limit < 1)
+        ) {
             return [];
         }
 
@@ -121,7 +133,7 @@ class ContentDataProvider implements DataProviderInterface
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
             $this->hasNextPage = (sizeof($result) > $pageSize);
 
-            return array_splice($data, 0, $pageSize);
+            return array_splice($result, 0, $pageSize);
         } else {
             return $this->load($options, $limit);
         }
