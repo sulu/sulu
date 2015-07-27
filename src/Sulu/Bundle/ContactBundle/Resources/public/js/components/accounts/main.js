@@ -11,7 +11,6 @@ define([
     'sulucontact/model/account',
     'sulucontact/model/contact',
     'sulucontact/model/accountContact',
-    'accountsutil/header',
     'sulucontact/model/email',
     'sulucontact/model/emailType',
     'sulumedia/model/media',
@@ -21,7 +20,6 @@ define([
     Account,
     Contact,
     AccountContact,
-    AccountsUtilHeader,
     Email,
     EmailType,
     Media,
@@ -44,27 +42,23 @@ define([
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
-                this.renderForm().then(this.setHeader.bind(this));
+                this.renderForm();
             } else if (this.options.display === 'contacts') {
                 this.renderComponent(
                     'accounts/components/',
                     this.options.display,
                     'accounts-form-container', {}
-                ).then(this.setHeader.bind(this));
+                );
             } else if (this.options.display === 'documents') {
                 this.renderComponent(
                     '',
                     this.options.display,
                     'documents-form',
                     {type: 'account'}
-                ).then(this.setHeader.bind(this));
+                );
             } else {
                 throw 'display type wrong';
             }
-        },
-
-        setHeader: function() {
-            AccountsUtilHeader.setHeader.call(this, this.account);
         },
 
         bindCustomEvents: function() {
@@ -153,10 +147,10 @@ define([
         },
 
         saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.toolbar.item.loading', 'save-button');
 
-            this.sandbox.logger.warn('newMediaIds',newMediaIds);
-            this.sandbox.logger.warn('removedMediaIds',removedMediaIds);
+            this.sandbox.logger.warn('newMediaIds', newMediaIds);
+            this.sandbox.logger.warn('removedMediaIds', removedMediaIds);
 
             this.processAjaxForDocuments(newMediaIds, accountId, 'POST');
             this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE');

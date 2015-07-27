@@ -90,6 +90,21 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Then the role :name should exist
+     */
+    public function theRoleShouldExist($name)
+    {
+        $role = $this->getEntityManager()
+            ->getRepository('SuluSecurityBundle:Role')->findOneBy([
+                'name' => $name,
+            ]);
+
+        if (!$role) {
+            throw new \Exception(sprintf('Role with name "%s" should exist', $name));
+        }
+    }
+
+    /**
      * @Given I am logged in as an administrator
      */
     public function iAmLoggedInAsAnAdministrator()

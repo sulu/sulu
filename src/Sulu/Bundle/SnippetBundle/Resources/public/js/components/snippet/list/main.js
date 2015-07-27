@@ -77,8 +77,7 @@ define([
         this.sandbox.sulu.initListToolbarAndList.call(this, 'snippets', '/admin/api/snippet/fields',
             {
                 el: this.$find('#list-toolbar-container'),
-                instanceName: 'snippets',
-                inHeader: true
+                instanceName: 'snippets'
             },
             {
                 el: this.sandbox.dom.find('#snippet-list', this.$el),

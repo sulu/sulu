@@ -67,8 +67,7 @@ define(function () {
                 {
                     el: this.$find(constants.toolbarSelector),
                     template: 'default',
-                    instanceName: this.instanceName,
-                    inHeader: true
+                    instanceName: this.instanceName
                 },
                 {
                     el: this.$find(constants.listSelector),

@@ -178,22 +178,6 @@ define([
             return createEventName.call(this, 'download-media');
         },
 
-        /**
-         * navigate to a collection when breadcrumb where clicked
-         * @event sulu.media.collections.breadcrumb-navigate
-         */
-        BREADCRUMB_NAVIGATE = function() {
-            return createEventName.call(this, 'breadcrumb-navigate');
-        },
-
-         /**
-         * navigate to a collection when breadcrumb where clicked on root item
-         * @event sulu.media.collections.breadcrumb-navigate.root
-         */
-        BREADCRUMB_NAVIGATE_ROOT = function() {
-            return createEventName.call(this, 'breadcrumb-navigate.root');
-        },
-
         /** returns normalized event names */
         createEventName = function(postFix) {
             return namespace + postFix;
@@ -358,20 +342,6 @@ define([
                 // default tab is files
                 tab = (!!tab) ? tab : 'files';
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/' + tab, true, true);
-            }.bind(this));
-
-            this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
-                var url = '/admin/api/collections/' + item.id + '?depth=1&sortBy=title';
-                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
-            }.bind(this));
-
-            this.sandbox.on(BREADCRUMB_NAVIGATE_ROOT.call(this), function() {
-                var url = '/admin/api/collections?sortBy=title';
-                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
             }.bind(this));
         },
 

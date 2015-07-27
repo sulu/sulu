@@ -89,8 +89,7 @@ define(function() {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
-                    instanceName: this.instanceNameToolbar,
-                    inHeader: true
+                    instanceName: this.instanceNameToolbar
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),

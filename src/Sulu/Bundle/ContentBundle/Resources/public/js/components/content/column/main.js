@@ -552,31 +552,9 @@ define(function() {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
-                this.addToggler();
-
                 // start column-navigation
                 this.startColumnNavigation();
             }.bind(this));
-        },
-
-        /**
-         * Generates the toggler and adds it to the header
-         */
-        addToggler: function() {
-            this.sandbox.emit('sulu.header.set-bottom-content', this.sandbox.util.template(templates.toggler)({
-                label: this.sandbox.translate('content.contents.show-ghost-pages')
-            }));
-
-            this.sandbox.start([
-                {
-                    name: 'toggler@husky',
-                    options: {
-                        el: '#show-ghost-pages',
-                        checked: this.showGhostPages,
-                        outline: true
-                    }
-                }
-            ]);
         },
 
         openGhost: function(item) {

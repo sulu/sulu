@@ -67,13 +67,7 @@ define([
 
         header: function() {
             return {
-                title: 'contact.accounts.title',
                 noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.accounts.title'}
-                ],
 
                 toolbar: {
                     buttons: ['add', 'delete']

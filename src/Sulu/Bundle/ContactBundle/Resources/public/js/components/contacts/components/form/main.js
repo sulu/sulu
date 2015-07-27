@@ -80,8 +80,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     this.dfdAllFieldsInitialized.resolve();
                 }.bind(this));
 
-                this.setTitle();
-
                 this.render();
                 this.listenForChange();
 
@@ -118,26 +116,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 this.bindDomEvents();
                 this.bindCustomEvents();
                 this.bindTagEvents(data);
-            },
-
-            /**
-             * Sets the title to the username
-             * default title as fallback
-             */
-            setTitle: function() {
-                var title = this.sandbox.translate('contact.contacts.title'),
-                    breadcrumb = [
-                        {title: 'navigation.contacts'},
-                        {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
-                    ];
-
-                if (!!this.options.data && !!this.options.data.id) {
-                    title = this.options.data.fullName;
-                    breadcrumb.push({title: '#' + this.options.data.id});
-                }
-
-                this.sandbox.emit('sulu.header.set-title', title);
-                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
             },
 
             // show tags and activate keylistener

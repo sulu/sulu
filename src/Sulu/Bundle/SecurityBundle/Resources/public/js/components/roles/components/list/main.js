@@ -63,8 +63,7 @@ define(function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'roles', '/admin/api/roles/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
-                    instanceName: 'roles',
-                    inHeader: true
+                    instanceName: 'roles'
                 },
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),

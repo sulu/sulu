@@ -310,7 +310,6 @@ define([
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    inHeader: true,
                     template: listTemplate.call(this)
                 },
                 {

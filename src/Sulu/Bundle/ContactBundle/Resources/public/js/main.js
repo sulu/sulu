@@ -10,7 +10,6 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'accountsutil/header': '../../sulucontact/js/components/accounts/util/header',
         'type/bic-input': '../../sulucontact/js/input-type/bic-input',
         'type/vat-input': '../../sulucontact/js/input-type/vat-input',
         'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
@@ -18,7 +17,7 @@ require.config({
 
         'aura_extensions/iban': '../../sulucontact/js/aura_extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/input-type/iban-input',
+        'type/iban-input': '../../sulucontact/js/input-type/iban-input'
     },
     shim: {
         'vendor/iban-converter': {
@@ -91,18 +90,10 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
 
             // filter integration
             Config.set('suluresource.filters.type.contacts', {
-                breadCrumb: [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', link: 'contacts/contacts'}
-                ],
                 routeToList: 'contacts/contacts'
             });
 
             Config.set('suluresource.filters.type.accounts', {
-                breadCrumb: [
-                    {title: 'navigation.accounts'},
-                    {title: 'contact.accounts.title', link: 'contacts/accounts'}
-                ],
                 routeToList: 'contacts/accounts'
             });
 
