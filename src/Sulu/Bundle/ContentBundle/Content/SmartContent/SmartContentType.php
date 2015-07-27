@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -31,6 +32,11 @@ class SmartContentType extends ComplexContentType
      * @var TagManagerInterface
      */
     private $tagManager;
+
+    /**
+     * @var DataProviderPoolInterface
+     */
+    private $dataProviderPool;
 
     /**
      * {@inheritdoc}
@@ -112,15 +118,24 @@ class SmartContentType extends ComplexContentType
     /**
      * {@inheritDoc}
      */
-    public function getDefaultParams()
+    public function getDefaultParams(PropertyInterface $property = null)
     {
+        $params = $property->getParams();
+
+        if (!array_key_exists('provider', $params)) {
+            throw new MissingMandatoryParameterException($property, 'provider');
+        }
+
+        $providerAlias = $this->dataProviderPool->get($params['provider']->getValue());
+
         return array_merge(
             parent::getDefaultParams(),
-            array('page_parameter' => new PropertyParameter('page_parameter', 'p'))
-            // TODO get default parameters from provider
+            array(
+                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+            ),
+            $this->dataProviderPool->get($providerAlias)->getDefaultPropertyParameter()
         );
-
-
     }
 
     /**

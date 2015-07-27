@@ -164,13 +164,7 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * remove property from given node.
-     *
-     * @param NodeInterface     $node
-     * @param PropertyInterface $property
-     * @param string            $webspaceKey
-     * @param string            $languageCode
-     * @param string            $segmentKey
+     * {@inheritDoc}
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
@@ -182,7 +176,7 @@ class SmartContent extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function getDefaultParams()
+    public function getDefaultParams(PropertyInterface $property = null)
     {
         $params = parent::getDefaultParams();
         $params['page_parameter'] = new PropertyParameter('page_parameter', 'p');
