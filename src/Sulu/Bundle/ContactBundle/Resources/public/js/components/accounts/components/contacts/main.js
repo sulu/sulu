@@ -34,7 +34,7 @@ define([
 
         bindCustomEvents = function() {
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
                 }.bind(this));
@@ -223,6 +223,7 @@ define([
                     id: 'add',
                     icon: 'plus-circle',
                     position: 1,
+                    class: 'highlight',
                     dropdownItems: [
                         {
                             id: 'add-account-contact',
