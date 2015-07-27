@@ -29,6 +29,12 @@ class PathCleanup implements PathCleanupInterface
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue',
+            'á' => 'a',
+            'à' => 'a',
+            'ú' => 'u',
+            'ù' => 'u',
+            'é' => 'e',
+            'è' => 'e',
             // because strtolower ignores Ä,Ö,Ü
             'Ä' => 'ae',
             'Ö' => 'oe',
@@ -66,7 +72,7 @@ class PathCleanup implements PathCleanupInterface
      */
     public function cleanup($dirty, $languageCode)
     {
-        $clean = strtolower($dirty);
+        $clean = mb_strtolower($dirty);
 
         $replacers = array_merge(
             $this->replacers['default'],

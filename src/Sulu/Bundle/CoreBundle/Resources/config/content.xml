@@ -76,7 +76,7 @@
         </service>
 
         <!-- rlp mapper -->
-        <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
+        <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%">
             <argument type="service" id="sulu.phpcr.session"/>
         </service>
 
