@@ -48,4 +48,39 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-key', $userSetting->getKey());
         $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
     }
+
+    public function testDeleteSettings()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/security/profile/settings',
+            ['key' => 'setting-key', 'value' => 'setting-value']
+        );
+
+        $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
+            [
+                'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
+                'key' => 'setting-key',
+            ]
+        );
+
+        $this->assertEquals('setting-key', $userSetting->getKey());
+        $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
+
+        $client->request(
+            'DELETE',
+            '/security/profile/settings',
+            ['key' => 'setting-key']
+        );
+
+        $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
+            [
+                'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
+                'key' => 'setting-key',
+            ]
+        );
+
+        $this->assertNull($userSetting);
+    }
 }

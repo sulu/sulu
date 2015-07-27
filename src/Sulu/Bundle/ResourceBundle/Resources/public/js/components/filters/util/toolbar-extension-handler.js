@@ -50,7 +50,7 @@ define(['app-config'], function(AppConfig) {
          * @param result {Object} contains result from datagrid update
          */
         updateFilterResult = function(result) {
-            if (!!this.filter) {
+            if (!!this.filter && !!result && !!result.total) {
                 if (!this.filterResultComponentStarted) {
                     this.filterResultComponentStarted = true;
                     App.start([
@@ -78,6 +78,8 @@ define(['app-config'], function(AppConfig) {
                         updatedUrl
                     );
                 }
+            } else {
+                this.sandbox.logger.log('Either no filter is set or the result contains no total number!');
             }
         },
 
@@ -87,6 +89,7 @@ define(['app-config'], function(AppConfig) {
         unsetFilter = function() {
             this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.unmark', this.filter.id);
             this.filter = null;
+            saveFilterUserSetting.call(this, null, this.datagridInstance);
         },
 
         /**
@@ -150,6 +153,53 @@ define(['app-config'], function(AppConfig) {
         },
 
         /**
+         * Returns a setting key for filters
+         * @param datagridInstance
+         * @returns {string}
+         */
+        getFilterSettingKey = function(datagridInstance){
+            return datagridInstance + 'Filter'
+        },
+
+        /**
+         * Creates or updates user setting for each applied filter
+         * @param filter {Object}
+         * @param datagridInstance {String}
+         */
+        saveFilterUserSetting = function(filter, datagridInstance) {
+            if (!!filter) {
+                this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, datagridInstance), filter);
+            } else {
+                this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, datagridInstance));
+            }
+        },
+
+        /**
+         * Appends filter param from user settings to datagrid url if setting exists
+         * @param gridOptions
+         */
+        appendFilterToUrl = function(gridOptions) {
+            var key = getFilterSettingKey.call(this, gridOptions.instanceName),
+                url = gridOptions.url,
+                filter = this.sandbox.sulu.getUserSetting(key);
+
+            if (!!filter && !!filter.id && url.indexOf('filter') === -1) {
+                if (url.indexOf('?') > -1) {
+                    url += '&';
+                } else {
+                    url += '?';
+                }
+                this.filter = filter;
+                gridOptions.url = url + 'filter=' + filter.id;
+
+                this.sandbox.once('husky.datagrid.'+gridOptions.instanceName+'.loaded', updateFilterResult.bind(this));
+
+                // TODO show result component for initial load
+                // TODO check unset of filter and also setting
+            }
+        },
+
+        /**
          * Emits the url update event for the given datagrid instance
          *
          * @param item {Object}
@@ -161,6 +211,7 @@ define(['app-config'], function(AppConfig) {
                 this.filter = item;
                 this.filterUrl = createUrlToFilterDetails.call(this);
                 this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
+                saveFilterUserSetting.call(this, item, instanceName);
             } else {
                 this.filter = null;
                 this.filterUrl = null;
@@ -178,6 +229,7 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
                 this.sandbox.on('sulu.router.navigate', resetOnNavigate.bind(this));
+                this.sandbox.on('sulu.list.preload', appendFilterToUrl.bind(this));
             });
         }
     };

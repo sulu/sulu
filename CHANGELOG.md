@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
+    * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
