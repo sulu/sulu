@@ -84,4 +84,12 @@ class ContentDataProvider implements DataProviderInterface
     {
         // TODO: Implement resolveFilters() method.
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHasNextPage()
+    {
+        // TODO: Implement getHasNextPage() method.
+    }
 }
