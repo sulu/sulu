@@ -55,9 +55,9 @@ input, select {
   position: relative;
   overflow: hidden;
   min-width: 510px;
+  -webkit-transition: width 700ms;
   -moz-transition: width 700ms;
   -o-transition: width 700ms;
-  -webkit-transition: width 700ms;
   transition: width 700ms;
 }
 /* line 22, ../scss/modules/layout.scss */
@@ -69,9 +69,9 @@ input, select {
   height: 100%;
   overflow: auto;
   padding: 40px 50px 40px 50px;
+  -webkit-transition: padding-left 700ms, padding-right 700ms;
   -moz-transition: padding-left 700ms, padding-right 700ms;
   -o-transition: padding-left 700ms, padding-right 700ms;
-  -webkit-transition: padding-left 700ms, padding-right 700ms;
   transition: padding-left 700ms, padding-right 700ms;
 }
 /* line 32, ../scss/modules/layout.scss */
@@ -100,16 +100,16 @@ input, select {
 }
 /* line 57, ../scss/modules/layout.scss */
 .content-column.no-transitions {
+  -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
-  -webkit-transition: none;
   transition: none;
 }
 /* line 59, ../scss/modules/layout.scss */
 .content-column.no-transitions #content {
+  -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
-  -webkit-transition: none;
   transition: none;
 }
 /* line 64, ../scss/modules/layout.scss */
@@ -123,7 +123,7 @@ input, select {
   height: 30px;
   overflow: hidden;
   background: #21272E;
-  color: #fff;
+  color: white;
   text-align: center;
   border-radius: 0 0 0 2px;
   font-size: 20px;
@@ -253,10 +253,10 @@ input, select {
   height: 100%;
   position: relative;
   left: 0;
-  -moz-transition: left 300ms 500ms;
-  -o-transition: left 300ms 500ms;
   -webkit-transition: left 300ms;
   -webkit-transition-delay: 500ms;
+  -moz-transition: left 300ms 500ms;
+  -o-transition: left 300ms 500ms;
   transition: left 300ms 500ms;
 }
 /* line 24, ../scss/modules/login.scss */
@@ -289,9 +289,9 @@ input, select {
   width: 100%;
   height: 100%;
   opacity: 1;
+  -webkit-transition: opacity 300ms;
   -moz-transition: opacity 300ms;
   -o-transition: opacity 300ms;
-  -webkit-transition: opacity 300ms;
   transition: opacity 300ms;
   background: no-repeat center center;
   -webkit-background-size: cover;
@@ -303,11 +303,11 @@ input, select {
 .sulu-login .media-container .media-background .darkener {
   width: 100%;
   height: 100%;
-  background: #000;
+  background: black;
   opacity: 0.5;
+  -webkit-transition: opacity 500ms;
   -moz-transition: opacity 500ms;
   -o-transition: opacity 500ms;
-  -webkit-transition: opacity 500ms;
   transition: opacity 500ms;
 }
 /* line 69, ../scss/modules/login.scss */
@@ -317,7 +317,7 @@ input, select {
 /* line 76, ../scss/modules/login.scss */
 .sulu-login .content-container {
   float: right;
-  background-color: #52B6CA;
+  background-color: #52b6ca;
 }
 /* line 80, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box {
@@ -327,9 +327,10 @@ input, select {
   position: absolute;
   top: 50%;
   left: 50%;
+  -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
 /* line 86, ../scss/modules/login.scss */
@@ -347,9 +348,9 @@ input, select {
 }
 /* line 98, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider {
+  -webkit-transition: left 300ms;
   -moz-transition: left 300ms;
   -o-transition: left 300ms;
-  -webkit-transition: left 300ms;
   transition: left 300ms;
   position: relative;
 }
@@ -364,7 +365,7 @@ input, select {
 /* line 109, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame .message, .sulu-login .content-container .content-box .frame-slider .box-frame .error-message {
   display: block;
-  color: #fff;
+  color: white;
 }
 /* line 114, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame .message {
@@ -378,9 +379,9 @@ input, select {
 /* line 123, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame .error-message {
   max-height: 0px;
+  -webkit-transition: max-height 200ms;
   -moz-transition: max-height 200ms;
   -o-transition: max-height 200ms;
-  -webkit-transition: max-height 200ms;
   transition: max-height 200ms;
   overflow: hidden;
 }
@@ -391,7 +392,7 @@ input, select {
 }
 /* line 136, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame.login-error .husky-validate {
-  color: #EA524E;
+  color: #ea524e;
 }
 /* line 141, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame .box-frame-footer {
@@ -400,13 +401,13 @@ input, select {
 }
 /* line 145, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame .box-frame-footer .btn {
-  border: 1px solid #fff;
+  border: 1px solid white;
   float: right;
   padding: 0 45px;
   opacity: 1;
+  -webkit-transition: opacity 300ms;
   -moz-transition: opacity 300ms;
   -o-transition: opacity 300ms;
-  -webkit-transition: opacity 300ms;
   transition: opacity 300ms;
 }
 /* line 154, ../scss/modules/login.scss */
@@ -426,7 +427,7 @@ input, select {
 }
 /* line 178, ../scss/modules/login.scss */
 .sulu-login .content-container .navigator {
-  color: #fff;
+  color: white;
   font-size: 12px;
   cursor: pointer;
 }
@@ -445,11 +446,11 @@ input, select {
   width: 100%;
   position: relative;
   z-index: -10;
-  background-color: #5DC774;
+  background-color: #5dc774;
   opacity: 0;
+  -webkit-transition: opacity 300ms;
   -moz-transition: opacity 300ms;
   -o-transition: opacity 300ms;
-  -webkit-transition: opacity 300ms;
   transition: opacity 300ms;
 }
 /* line 207, ../scss/modules/login.scss */
@@ -457,12 +458,13 @@ input, select {
   position: absolute;
   top: 50%;
   left: 50%;
+  -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   font-size: 200px;
-  color: #fff;
+  color: white;
 }
 /* line 214, ../scss/modules/login.scss */
 .sulu-login .content-container .login-loader {
@@ -540,7 +542,7 @@ input, select {
 
 /* line 1, ../scss/modules/header.scss */
 .sulu-header {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   width: 100%;
   position: absolute;
   top: 0;
@@ -554,9 +556,9 @@ input, select {
   left: 0px;
   margin: 0 50px;
   height: 150px;
+  -webkit-transition: margin 700ms;
   -moz-transition: margin 700ms;
   -o-transition: margin 700ms;
-  -webkit-transition: margin 700ms;
   transition: margin 700ms;
 }
 /* line 19, ../scss/modules/header.scss */
@@ -579,12 +581,12 @@ input, select {
   top: 12px;
   left: -30px;
   font-size: 16px;
-  color: #fff;
+  color: white;
   cursor: pointer;
   opacity: 1;
+  -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
 }
 /* line 42, ../scss/modules/header.scss */
@@ -628,7 +630,7 @@ input, select {
 }
 /* line 77, ../scss/modules/header.scss */
 .sulu-header .bottom-row .bottom-content * {
-  color: #fff;
+  color: white;
 }
 /* line 83, ../scss/modules/header.scss */
 .sulu-header .tabs {
@@ -636,9 +638,9 @@ input, select {
 }
 /* line 85, ../scss/modules/header.scss */
 .sulu-header .tabs .tabs-container {
+  -webkit-transition: padding 700ms;
   -moz-transition: padding 700ms;
   -o-transition: padding 700ms;
-  -webkit-transition: padding 700ms;
   transition: padding 700ms;
 }
 /* line 90, ../scss/modules/header.scss */
@@ -668,7 +670,7 @@ input, select {
   position: absolute;
   top: 0px;
   left: 0px;
-  background: #52B6CA;
+  background: #52b6ca;
   height: 150px;
   width: 100%;
   z-index: -1;
@@ -676,7 +678,7 @@ input, select {
 /* line 120, ../scss/modules/header.scss */
 .sulu-header-background.has-tabs {
   height: 200px;
-  border-bottom: 50px solid #fff;
+  border-bottom: 50px solid white;
 }
 
 /* line 127, ../scss/modules/header.scss */
@@ -698,7 +700,7 @@ input, select {
 .sulu-sidebar {
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: white;
   overflow: auto;
   border-left: 1px solid #f1f1f1;
 }
@@ -715,7 +717,7 @@ input, select {
 }
 /* line 22, ../scss/modules/sidebar.scss */
 .sulu-sidebar .action {
-  color: #000;
+  color: black;
   cursor: pointer;
   text-decoration: none;
 }
@@ -723,7 +725,7 @@ input, select {
 .sulu-sidebar .label {
   font-weight: 600;
   margin: 0 0 5px 0;
-  color: #999;
+  color: #999999;
 }
 /* line 34, ../scss/modules/sidebar.scss */
 .sulu-sidebar .blue-icon {

@@ -399,7 +399,8 @@
                                     limit: limit
                                 }
                             },
-                            gridOptions;
+                            gridOptions,
+                            datagridEventNamespace = 'husky.datagrid.';
 
                         if (!!limit) {
                             gridDefaults.paginationOptions = paginationOptionsDefaults;
@@ -430,13 +431,17 @@
                             }
                         ]);
 
+                        if (!!gridOptions.instanceName) {
+                            datagridEventNamespace += gridOptions.instanceName + '.'
+                        }
+
                         // save page size when changed
-                        this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
+                        this.sandbox.on(datagridEventNamespace + 'page-size.changed', function(size) {
                             this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
                         }.bind(this));
 
                         // save sorting when changed
-                        this.sandbox.on('husky.datagrid.data.sort', function(data) {
+                        this.sandbox.on(datagridEventNamespace + 'data.sort', function(data) {
                             this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
                     };
