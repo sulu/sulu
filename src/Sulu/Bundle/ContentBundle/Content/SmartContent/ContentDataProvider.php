@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContentBundle\Content\SmartContent;
 
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\SmartContent\Configuration\CategoriesConfiguration;
 use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
@@ -23,9 +25,24 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 class ContentDataProvider implements DataProviderInterface
 {
     /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
+
+    /**
+     * @var ContentQueryExecutor
+     */
+    private $contentQueryExecutor;
+
+    /**
      * @var ProviderConfigurationInterface
      */
     private $configuration;
+
+    /**
+     * @var bool
+     */
+    private $hasNextPage;
 
     /**
      * {@inheritdoc}
@@ -80,9 +97,88 @@ class ContentDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveFilters(array $filters, array $propertyParameter, $limit = null, $page = 1, $pageSize = null)
+    public function resolveFilters(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    ) {
+        if (!array_key_exists('dataSource', $filters) || $filters['dataSource'] === '' || $limit < 1) {
+            return [];
+        }
+
+        $this->contentQueryBuilder->init(
+            [
+                'config' => $filters,
+                'properties' => $propertyParameter['properties']->getValue(),
+                'excluded' => $filters['exclude']
+            ]
+        );
+
+        if ($pageSize !== null) {
+            $result = $this->loadPaginated($options, $limit, $page, $pageSize);
+            $this->hasNextPage = (sizeof($result) > $pageSize);
+
+            return array_splice($data, 0, $pageSize);
+        } else {
+            return $this->load($options, $limit);
+        }
+    }
+
+    /**
+     * Load paginated data
+     *
+     * @param array $options
+     * @param int $limit
+     * @param int $page
+     * @param int $pageSize
+     *
+     * @return array
+     */
+    private function loadPaginated(array $options, $limit, $page, $pageSize)
     {
-        // TODO: Implement resolveFilters() method.
+        $pageSize = intval($pageSize);
+        $offset = ($page - 1) * $pageSize;
+
+        $position = $pageSize * $page;
+        if ($limit !== null && $position >= $limit) {
+            $pageSize = $limit - $offset;
+            $loadLimit = $pageSize;
+        } else {
+            $loadLimit = $pageSize + 1;
+        }
+
+        return $this->contentQueryExecutor->execute(
+            $options['webspaceKey'],
+            [$options['locale']],
+            $this->contentQueryBuilder,
+            true,
+            -1,
+            $loadLimit,
+            $offset
+        );
+    }
+
+    /**
+     * Load data
+     *
+     * @param array $options
+     * @param int $limit
+     *
+     * @return array
+     */
+    private function load(array $options, $limit)
+    {
+        return $this->contentQueryExecutor->execute(
+            $options['webspaceKey'],
+            [$options['locale']],
+            $this->contentQueryBuilder,
+            true,
+            -1,
+            $limit
+        );
     }
 
     /**
@@ -90,6 +186,9 @@ class ContentDataProvider implements DataProviderInterface
      */
     public function getHasNextPage()
     {
-        // TODO: Implement getHasNextPage() method.
+        $result = $this->hasNextPage;
+        $this->hasNextPage = null;
+
+        return $result;
     }
 }
