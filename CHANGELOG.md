@@ -2,9 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
+    * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
-    * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
     * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
