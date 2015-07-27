@@ -431,7 +431,7 @@
                             }
                         ]);
 
-                        if(!!gridOptions.instanceName) {
+                        if (!!gridOptions.instanceName) {
                             datagridEventNamespace += gridOptions.instanceName + '.'
                         }
 
