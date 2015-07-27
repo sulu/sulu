@@ -38,14 +38,22 @@ interface DataProviderInterface
      * Resolves given filters and returns filtered items.
      *
      * @param array $filters Contains the filter configuration.
-     * @param array $propertyParameter Contains the parameter of resolved property.
+     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
      * @param int|null $limit Indicates maximum size of result set.
      * @param int $page Indicates page of result set.
      * @param int|null $pageSize Indicates page-size of result set.
+     * @param array $options Options like webspace or locale.
      *
      * @return ItemInterface[]
      */
-    public function resolveFilters(array $filters, array $propertyParameter, $limit = null, $page = 1, $pageSize = null);
+    public function resolveFilters(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    );
 
     /**
      * Returns TRUE if next page exists for last resolveFilters call.

@@ -186,10 +186,14 @@ class SmartContentType extends ComplexContentType
         $provider = $this->getProvider($property);
         $configuration = $provider->getConfiguration($params);
 
-        // prepare pagination and limitation
+        // prepare pagination, limitation and options
         $page = 1;
         $limit = (array_key_exists('limitResult', $filters) && $configuration->getLimit()) ?
             $filters['limitResult'] : null;
+        $options = [
+            'webspaceKey' => $property->getStructure()->getWebspaceKey(),
+            'locale' => $property->getStructure()->getLanguageCode()
+        ];
 
         if (isset($params['max_per_page']) && $configuration->getPaginated()) {
             // is paginated
@@ -197,7 +201,7 @@ class SmartContentType extends ComplexContentType
             $pageSize = intval($params['max_per_page']->getValue());
 
             // resolve paginated filters
-            $data = $provider->resolveFilters($filters, $params, $limit, $page, $pageSize);
+            $data = $provider->resolveFilters($filters, $params, $limit, $page, $pageSize, $options);
         } else {
             $data = $provider->resolveFilters($filters, $params, $limit);
         }
