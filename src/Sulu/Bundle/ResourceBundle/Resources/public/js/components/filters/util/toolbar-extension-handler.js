@@ -170,7 +170,6 @@ define(['app-config'], function(AppConfig) {
             if (!!filter) {
                 this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, datagridInstance), filter);
             } else {
-
                 this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, datagridInstance));
             }
         },
