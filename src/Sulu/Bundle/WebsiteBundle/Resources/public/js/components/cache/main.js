@@ -28,6 +28,8 @@ define([], function() {
     return {
         name: 'Sulu Cache Settings',
 
+        view: true,
+
         initialize: function() {
             this.render();
             this.bindDomEvents();

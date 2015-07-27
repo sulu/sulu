@@ -28032,7 +28032,7 @@ define('__component__$navigation@husky',[],function() {
         /**
          * raised when navigation was un-collapsed
          * @event husky.navigation.uncollapsed
-         * @param {Number} width The width of the un-collapsed navigation
+         * @param {Number} width The width of thewidth un-collapsed navigation
          */
         EVENT_UNCOLLAPSED = namespace + 'uncollapsed',
 
@@ -28862,6 +28862,7 @@ define('__component__$navigation@husky',[],function() {
             }
 
             this.sandbox.dom.addClass(this.$el, 'data-navigation-opened');
+            this.sandbox.dom.width(this.$el, '');
             this.sandbox.util.delay(function() {
                 $element.addClass('expanded');
             }, 0);
@@ -31792,6 +31793,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
+             * raised when the data is initially loaded
+             * @event husky.datagrid.loaded
+             */
+            LOADED = function() {
+                return this.createEventName('loaded');
+            },
+
+            /**
              * raised when item is deselected
              * @event husky.datagrid.item.deselect
              * @param {String} id of deselected item
@@ -32151,7 +32160,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                     this.loading();
                     this.load({
-                        url: url
+                        url: url,
+                        success: function(data) {
+                            this.sandbox.emit(LOADED.call(this), data);
+                        }.bind(this)
                     });
                 } else if (!!this.options.data) {
                     this.sandbox.logger.log('load data from array');
@@ -32370,6 +32382,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         }
                         this.destroy();
                         this.parseData(response);
+                        this.getSortingFromUrl(this.currentUrl);
                         this.render();
                         if (!!params.success && typeof params.success === 'function') {
                             params.success(response);
@@ -32378,6 +32391,22 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     .fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
+            },
+
+            /**
+             * Parses the sorting params from the url
+             * @param url
+             */
+            getSortingFromUrl: function(url) {
+                if (url.indexOf('sortOrder') > -1 && url.indexOf('sortBy') > -1) {
+                    var attribute = this.sandbox.util.getParameterByName('sortBy', url),
+                        direction = this.sandbox.util.getParameterByName('sortOrder', url);
+
+                    if (!!attribute && !!direction) {
+                        this.sort.attribute = attribute;
+                        this.sort.direction = direction;
+                    }
+                }
             },
 
             /**
@@ -33312,8 +33341,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                         this.load({
                             url: url,
-                            success: function() {
-                                this.sandbox.emit(UPDATED.call(this));
+                            success: function(data) {
+                                this.sandbox.emit(UPDATED.call(this), data);
                             }.bind(this)
                         });
                     }
@@ -50260,6 +50289,22 @@ define('husky_extensions/util',[],function() {
                     parent = [];
                 }
                 return $.extend(true, parent, object);
+            };
+
+            /**
+             * Returns a parameter value from a given url
+             * Found at http://stackoverflow.com/a/901144
+             * Has limitations e.g. for parameters like a[asf]=value
+             * @param name {string} name of the parameter to search for
+             * @param url {string}
+             * @returns {string}
+             */
+            app.core.util.getParameterByName =  function(name, url) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(url);
+                    
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
             };
 
 			app.core.util.template = _.template;

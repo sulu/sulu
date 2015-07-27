@@ -4,7 +4,7 @@ function build_bundle {
     if [ -f "Gruntfile.js" ]
     then
         grunt build
-        OUT = $? # return code of grunt build
+        OUT=$? # return code of grunt build
 
         if [ OUT != 0 ];
         then
