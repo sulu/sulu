@@ -798,7 +798,7 @@
             </trans-unit>
             <trans-unit id="a504f52dde1456ff4132c0b4820e29a41" resname="sulu.login.back-login">
                 <source>sulu.login.back-login</source>
-                <target>Zurück zum Login</target>
+                <target>Zum Login</target>
             </trans-unit>
             <trans-unit id="a504f52dde1456ff4132c0b4820e29a42" resname="sulu.login.resend-email">
                 <source>sulu.login.resend-email</source>

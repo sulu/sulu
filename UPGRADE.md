@@ -1,5 +1,35 @@
 # Upgrade
 
+## dev-develop
+
+### Listbuilder
+
+It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
+field, instead of adding a new one. Check if you haven't applied `sort()` multiple times to a listbuilder with the
+purpose of overriding its previous sort field.
+
+### Datagrid style upgrade
+
+- Deleted options: fullwidth, stickyHeader, rowClickSelect
+- The list-view with no margin was removed from the design. The view is still of width: 'max' but now with spacing on the left and right.
+- For routing from a list to the edit the new option actionCallback should be used. For other actions like displaying additional information in the sidebar there exists a new option clickCallback. These two callbacks alow the component to adapt its style depending on if there is an action or not. For special cases there is still the item.click event.
+
+### Filter conjunction field is nullable
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+## dev-master
+
+### Shadow-Pages
+
+Filter values will now be copied from shadow-base locale to shadowed locale. Upgrade your data with following command:
+
+```bash
+app/console phpcr:migrations:migrate
+```
+
 ## 1.0.0
 
 ### User / Role management changed

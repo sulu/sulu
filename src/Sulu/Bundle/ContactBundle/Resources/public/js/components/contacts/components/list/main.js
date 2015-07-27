@@ -11,35 +11,45 @@ define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 
-    var bindCustomEvents = function() {
-        // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-            }.bind(this));
-        }, this);
+    var constants = {
+            datagridInstanceName: 'contacts'
+        },
 
-        // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('sulu.contacts.contacts.new');
-        }, this);
-
-        if (WidgetGroups.exists('contact-info')) {
-            // show sidebar for selected item
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
+        bindCustomEvents = function() {
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+                }.bind(this));
             }, this);
-        }
-    };
+
+            // add clicked
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('sulu.contacts.contacts.new');
+            }, this);
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('husky.toolbar.contacts.item.' + postfix, 'delete', false);
+            }.bind(this));
+        },
+
+        clickCallback = function(item) {
+            // show sidebar for selected item
+            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
+        },
+
+        acitonCallback = function(id) {
+            this.sandbox.emit('sulu.contacts.contacts.load', id);
+        };
 
     return {
         view: true,
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             },
             sidebar: {
                 width: 'fixed',
@@ -72,7 +82,17 @@ define(['widget-groups'], function(WidgetGroups) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    inHeader: true
+                    inHeader: true,
+                    groups: [
+                        {
+                            id: 1,
+                            align: 'left'
+                        },
+                        {
+                            id: 2,
+                            align: 'right'
+                        }
+                    ]
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
@@ -80,23 +100,12 @@ define(['widget-groups'], function(WidgetGroups) {
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
-                    viewOptions: {
-                        table: {
-                            icons: [
-                                {
-                                    icon: 'pencil',
-                                    column: 'firstName',
-                                    align: 'left',
-                                    callback: function(id) {
-                                        this.sandbox.emit('sulu.contacts.contacts.load', id);
-                                    }.bind(this)
-                                }
-                            ],
-                            highlightSelected: true,
-                            fullWidth: true
-                        }
-                    }
-                }
+                    instanceName: constants.datagridInstanceName,
+                    clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
+                    actionCallback: acitonCallback.bind(this)
+                },
+                'contacts',
+                '#people-list-info'
             );
         }
     };

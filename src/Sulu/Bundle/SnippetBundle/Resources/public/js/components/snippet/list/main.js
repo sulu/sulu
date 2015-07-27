@@ -32,9 +32,7 @@ define([
     SnippetList.prototype.view = true;
     SnippetList.prototype.layout = {
         content: {
-            width: 'max',
-            leftSpace: false,
-            rightSpace: false
+            width: 'max'
         },
         sidebar: false
     };
@@ -97,8 +95,7 @@ define([
                                 }.bind(this)
                             }
                         ],
-                        highlightSelected: true,
-                        fullWidth: true
+                        highlightSelected: true
                     }
                 }
             }

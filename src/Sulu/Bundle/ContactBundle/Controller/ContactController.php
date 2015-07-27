@@ -126,7 +126,7 @@ class ContactController extends RestController implements ClassResourceInterface
             ' ',
             true,
             false,
-            '',
+            'string',
             '',
             '100px',
             false
@@ -140,7 +140,7 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             false,
             true,
-            '',
+            'string',
             '',
             '100px'
         );
@@ -153,7 +153,7 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             false,
             true,
-            '',
+            'string',
             '',
             '100px'
         );
@@ -166,7 +166,7 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             false,
             true,
-            '',
+            'string',
             '',
             '140px'
         );
@@ -189,7 +189,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 ),
             ],
             false,
-            true
+            true,
+            'string'
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
@@ -210,7 +211,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 ),
             ],
             false,
-            true
+            true,
+            'string'
         );
 
         $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
@@ -220,7 +222,8 @@ class ContactController extends RestController implements ClassResourceInterface
             'public.phone',
             [],
             false,
-            true
+            true,
+            'string'
         );
 
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
@@ -231,7 +234,7 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             true,
             false,
-            '',
+            'integer',
             '50px'
         );
 
@@ -241,7 +244,9 @@ class ContactController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'public.fax',
             [],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
@@ -250,7 +255,9 @@ class ContactController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'public.url',
             [],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
@@ -281,7 +288,9 @@ class ContactController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'public.deactivate',
             [],
-            true
+            true,
+            false,
+            'boolean'
         );
 
         $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor(
@@ -306,7 +315,9 @@ class ContactController extends RestController implements ClassResourceInterface
                     $this->container->getParameter('sulu.model.contact.class') . '.title'
                 ),
             ],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['salutation'] = new DoctrineFieldDescriptor(
@@ -315,7 +326,9 @@ class ContactController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.salutation',
             [],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['formOfAddress'] = new DoctrineFieldDescriptor(
@@ -324,7 +337,9 @@ class ContactController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.formOfAddress',
             [],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -344,7 +359,7 @@ class ContactController extends RestController implements ClassResourceInterface
             ],
             true,
             false,
-            '',
+            'string',
             '',
             '',
             false
@@ -371,7 +386,7 @@ class ContactController extends RestController implements ClassResourceInterface
             ' ',
             false,
             true,
-            '',
+            'string',
             '',
             '100px',
             false
@@ -393,7 +408,7 @@ class ContactController extends RestController implements ClassResourceInterface
             ],
             false,
             true,
-            '',
+            'string',
             '',
             '',
             false
@@ -640,7 +655,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     protected function getContactsByUserSystem()
     {
-        $repo = $this->get('sulu.repository.user');
+        $repo = $this->get('sulu_security.user_repository');
         $users = $repo->getUserInSystem();
         $contacts = [];
 

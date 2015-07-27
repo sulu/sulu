@@ -18,7 +18,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $fields = [];
+    protected $selectFields = [];
 
     /**
      * The field descriptors for the field, which will be used for the search.
@@ -37,16 +37,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The field descriptor for the field to sort.
      *
-     * @var AbstractFieldDescriptor
+     * @var AbstractFieldDescriptor[]
      */
-    protected $sortField = null;
+    protected $sortFields = [];
 
     /**
      * Defines the sort order of the string.
      *
-     * @var string
+     * @var string[]
      */
-    protected $sortOrder;
+    protected $sortOrders;
 
     /**
      * The limit for this query.
@@ -70,18 +70,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereValues = [];
 
     /**
-     * The where-not fields to be checked.
+     * The comparators the where fields should use.
      *
      * @var array
      */
-    protected $whereNotFields = [];
+    protected $whereComparators = [];
 
     /**
-     * The values the where-not fields should have.
+     * The conjunctions for the where clauses.
      *
      * @var array
      */
-    protected $whereNotValues = [];
+    protected $whereConjunctions = [];
 
     /**
      * group by fields.
@@ -119,6 +119,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $betweenValues = [];
 
     /**
+     * The conjunctions for the between clauses.
+     *
+     * @var array
+     */
+    protected $betweenConjunctions = [];
+
+    /**
      * The page the resulting query will be returning.
      *
      * @var int
@@ -126,19 +133,44 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $page = 1;
 
     /**
+     * All field descriptors for the current context.
+     *
+     * @var AbstractFieldDescriptor[]
+     */
+    protected $fieldDescriptors;
+
+    /**
      * {@inheritDoc}
+     */
+    public function setSelectFields($fieldDescriptors)
+    {
+        $this->selectFields = $fieldDescriptors;
+    }
+
+    /**
+     * @deprecated use setSelectFields instead
      */
     public function setFields($fieldDescriptors)
     {
-        $this->fields = $fieldDescriptors;
+        $this->selectFields = $fieldDescriptors;
     }
 
     /**
      * {@inheritDoc}
      */
+    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor)
+    {
+        $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated use addSelectField instead
+     */
     public function addField(AbstractFieldDescriptor $fieldDescriptor)
     {
-        $this->fields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
         return $this;
     }
@@ -146,9 +178,49 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
+    public function getSelectField($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->selectFields)) {
+            return $this->selectFields[$fieldName];
+        }
+
+        return;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasSelectField($name)
+    {
+        return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * @deprecated use hasSelectField instead
+     */
     public function hasField($name)
     {
-        return array_key_exists($name, $this->fields);
+        return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFieldDescriptors(array $fieldDescriptors)
+    {
+        $this->fieldDescriptors = $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptor($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->fieldDescriptors)) {
+            return $this->fieldDescriptors[$fieldName];
+        }
+
+        return;
     }
 
     /**
@@ -174,8 +246,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortField = $fieldDescriptor;
-        $this->sortOrder = $order;
+        $this->sortFields[] = $fieldDescriptor;
+        $this->sortOrders[] = $order;
 
         return $this;
     }
@@ -219,19 +291,23 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::CONJUNCTION_AND)
     {
         $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereValues[$fieldDescriptor->getName()] = $value;
+        $this->whereComparators[$fieldDescriptor->getName()] = $comparator;
+        $this->whereConjunctions[$fieldDescriptor->getName()] = $conjunction;
     }
 
     /**
-     * {@inheritDoc}
+     * @deprecated use where instead
      */
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
     {
-        $this->whereNotFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereNotValues[$fieldDescriptor->getName()] = $value;
+        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->whereValues[$fieldDescriptor->getName()] = $value;
+        $this->whereComparators[$fieldDescriptor->getName()] = self::WHERE_COMPARATOR_UNEQUAL;
+        $this->whereConjunctions[$fieldDescriptor->getName()] = self::CONJUNCTION_AND;
     }
 
     /**
@@ -246,10 +322,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values)
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND)
     {
         $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->betweenValues[$fieldDescriptor->getName()] = $values;
+        $this->betweenConjunctions[$fieldDescriptor->getName()] = $conjunction;
     }
 
     /**

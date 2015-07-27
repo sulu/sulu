@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
@@ -84,11 +85,13 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var UserInterface
+     * @Groups({"fullContact"})
      */
     protected $changer;
 
     /**
      * @var UserInterface
+     * @Groups({"fullContact"})
      */
     protected $creator;
 

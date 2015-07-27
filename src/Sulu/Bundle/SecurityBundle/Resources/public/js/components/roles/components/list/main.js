@@ -21,10 +21,6 @@ define(function() {
                 this.sandbox.emit('sulu.roles.delete', ids);
             }.bind(this));
         }.bind(this));
-
-        this.sandbox.on('husky.datagrid.item.click', function(id) {
-            this.sandbox.emit('sulu.roles.load', id);
-        }.bind(this));
     };
 
     return {
@@ -34,9 +30,7 @@ define(function() {
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             }
         },
 
@@ -73,11 +67,9 @@ define(function() {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
                     resultKey: 'roles',
-                    viewOptions: {
-                        table: {
-                            fullWidth: true
-                        }
-                    }
+                    actionCallback: function(id) {
+                        this.sandbox.emit('sulu.roles.load', id);
+                    }.bind(this)
                 }
             );
 

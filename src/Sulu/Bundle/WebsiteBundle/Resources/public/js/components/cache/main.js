@@ -42,15 +42,6 @@ define([], function() {
             ]
         },
 
-        layout: {
-            content: {
-                width: 'fixed',
-                leftSpace: true,
-                rightSpace: true,
-                topSpace: true
-            }
-        },
-
         initialize: function() {
             this.render();
             this.bindDomEvents();

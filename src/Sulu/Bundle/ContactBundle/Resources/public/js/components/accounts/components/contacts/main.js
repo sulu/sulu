@@ -27,13 +27,12 @@ define([
 
         companyPosition = null,
 
-        bindCustomEvents = function() {
-            // navigate to edit contact
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
-                this.sandbox.emit('sulu.contacts.contact.load', item);
-            }, this);
+        actionCallback = function(item) {
+            this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
+            this.sandbox.emit('sulu.contacts.contact.load', item);
+        },
 
+        bindCustomEvents = function() {
             // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
@@ -322,6 +321,7 @@ define([
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
+                    actionCallback: actionCallback.bind(this),
                     contentFilters: {
                         isMainContact: 'radio'
                     },

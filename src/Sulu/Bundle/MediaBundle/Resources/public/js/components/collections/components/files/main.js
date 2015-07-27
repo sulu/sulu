@@ -132,9 +132,6 @@ define(function() {
                 this.sandbox.emit('sulu.header.toolbar.item.mark', listViews[this.listView].itemId);
             }.bind(this));
 
-            // open edit overlay on datagrid click
-            this.sandbox.on('husky.datagrid.item.click', this.editMedia.bind(this));
-
             // download media
             this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
 
@@ -418,12 +415,12 @@ define(function() {
                     view: listViews[this.listView].name,
                     resultKey: 'media',
                     sortable: false,
+                    actionCallback: this.editMedia.bind(this),
                     viewOptions: {
+                        thumbnail: listViews[this.listView].thViewOptions || {},
                         table: {
-                            fullWidth: false,
-                            rowClickSelect: true
-                        },
-                        thumbnail: listViews[this.listView].thViewOptions || {}
+                            actionIconColumn: 'name'
+                        }
                     }
                 });
         },

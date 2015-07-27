@@ -70,15 +70,11 @@ class SuluBundleGenerator extends BundleGenerator
         // /Tests/bootstrap.php
         $this->renderFile('sulu/travis/Tests/bootstrap.php.twig', $dir . '/Tests/bootstrap.php', $parameters);
         // /Tests/Resources/app/AppKernel.php
-        $this->renderFile('sulu/travis/Tests/app/AppKernel.php.twig', $dir . '/Tests/Resources/app/AppKernel.php', $parameters);
-        // /Tests/Resources/app/config/config.yml
-        $this->renderFile('sulu/travis/Tests/app/config/config.yml.twig', $dir . '/Tests/Resources/app/config/config.yml', $parameters);
+        $this->renderFile('sulu/travis/Tests/app/AppKernel.php.twig', $dir . '/Tests/app/AppKernel.php', $parameters);
         // /tests/resources/app/config/routing.yml
-        $this->renderfile('sulu/travis/Tests/app/config/routing.yml.twig', $dir . '/Tests/Resources/app/config/routing.yml', $parameters);
-        // /tests/resources/app/config/security.yml
-        $this->renderfile('sulu/travis/Tests/app/config/security.yml.twig', $dir . '/Tests/Resources/app/config/security.yml', $parameters);
+        $this->renderfile('sulu/travis/Tests/app/config/routing.yml.twig', $dir . '/Tests/app/config/routing.yml', $parameters);
         // /tests/resources/app/Resources/webspaces/sulu.io.xml
-        $this->renderfile('sulu/travis/Tests/app/Resources/webspaces/sulu.io.xml.twig', $dir . '/Tests/Resources/app/Resources/webspaces/sulu.io.xml', $parameters);
+        $this->renderfile('sulu/travis/Tests/app/Resources/webspaces/sulu.io.xml.twig', $dir . '/Tests/app/Resources/webspaces/sulu.io.xml', $parameters);
 
         // Basic Structure
         if ($structure) {

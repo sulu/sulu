@@ -315,6 +315,17 @@ define([], function() {
                 this.options.template = mergeTemplates.call(this, this.options.parentTemplate, this.options.template);
 
             }
+
+            // emit event to extend toolbar
+            this.sandbox.emit(
+                'sulu.header.toolbar.extend',
+                this.options.context,
+                this.options.template,
+                this.options.instanceName,
+                this.options.datagridInstanceName,
+                this.options.listInfoContainerSelector
+            );
+
             this.options.template = parseTemplateTypes.call(this, this.options.template);
 
             var $container,

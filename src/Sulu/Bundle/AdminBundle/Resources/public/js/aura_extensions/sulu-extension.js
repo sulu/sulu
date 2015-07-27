@@ -288,7 +288,7 @@
                     cropLabelOfElement(sandbox, elements[i]);
                 }
             };
-            
+
             /**
              * creates an address string from an object
              * @param address
@@ -359,8 +359,12 @@
              * @param fields {String | Object} Url to load fields from or the fieldsObject
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
+             * @param context {String}
+             * @param listInfoContainerSelector {String} Selector for the container above the list
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(
+                key, fields, listToolbarOptions, datagridOptions, context, listInfoContainerSelector
+            ) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
                     pageSizeKey = key + 'PageSize',
@@ -375,7 +379,8 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false
+                                inHeader: false,
+                                context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                             gridDefaults = {
@@ -385,8 +390,7 @@
                                 selectedCounter: true,
                                 viewOptions: {
                                     table: {
-                                        noItemsText: 'public.empty-list',
-                                        stickyHeader: true
+                                        noItemsText: 'public.empty-list'
                                     }
                                 }
                             },
@@ -404,11 +408,15 @@
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
                         // replace default order by custom order settings
-                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url,order);
+                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =
                             gridOptions.columnOptionsInstanceName || toolbarOptions.instanceName;
+
+                        // add datagrid instance name to toolbar
+                        toolbarOptions.datagridInstanceName = gridOptions.instanceName;
+                        toolbarOptions.listInfoContainerSelector = listInfoContainerSelector;
 
                         //start list-toolbar and datagrid
                         this.sandbox.start([

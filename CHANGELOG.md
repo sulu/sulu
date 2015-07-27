@@ -1,6 +1,29 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #1404 [AdminBundle]     Implemented new login design
+    * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
+    * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
+    * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
+                                          then select data
+    * ENHANCEMENT #1367 [AdminBundle]     Added new tabs design
+    * ENHANCEMENT #1358 [AdminBundle]     Added new grid-style and refactored list in all affected bundles
+    * ENHANCEMENT #1368 [ResourceBundle]  Changed handling of conjunctions for filters
+    * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
+    * ENHANCEMENT #1363 [ContactBundle]   Removed old config from filter config
+    * ENHANCEMENT #1353 [ContactBundle]   Integrated custom filters for account-list 
+    * ENHANCEMENT #1310 [ContactBundle]   Integrated custom filters for contact-list
+    * ENHANCEMENT #1356 [ContactBundle]   Fixed getContactsByUserSystem function
+    * ENHANCEMENT #1345 [ContactBundle]   Added VAT validation for switzerland
+    * ENHANCEMENT #1341 [SecurityBundle]  Excluded user-roles from role-api serialization
+    * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
+    * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
+    * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
+
+* dev-master
+    * HOTFIX      #1416 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
+
 * 1.0.3 (2015-07-23)
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
     * HOTFIX      #1391 [All]            Removed partial load hints
