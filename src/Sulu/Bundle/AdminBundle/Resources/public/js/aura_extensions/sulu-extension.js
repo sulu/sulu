@@ -187,6 +187,26 @@
             };
 
             /**
+             * deletes data locally and in the database
+             * @param key
+             */
+            app.sandbox.sulu.deleteUserSetting = function(key) {
+                delete app.sandbox.sulu.userSettings[key];
+
+                var data = {
+                    key: key
+                };
+
+                // save to server
+                app.sandbox.util.ajax({
+                    type: 'DELETE',
+                    url: '/admin/security/profile/settings',
+                    data: data
+                });
+            };
+
+
+            /**
              * Shows a standard delete warning dialog
              * @param callback {Function} callback function to execute after dialog got closed. The callback gets always
              *                            executed (with true or false as first argument, whether the dialog got
