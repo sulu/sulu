@@ -87,14 +87,6 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * @return String - returns UserIcon URL
-     */
-    public function getUserIcon()
-    {
-        // TODO: Implement getUserIcon() method.
-    }
-
-    /**
      * returns locale of current user.
      *
      * @return String
@@ -182,7 +174,6 @@ class CurrentUserData implements CurrentUserDataInterface
             'id' => $this->getId(),
             'username' => $this->getUserName(),
             'fullname' => $this->getFullName(),
-            'icon' => $this->getUserIcon(),
             'locale' => $this->getLocale(),
             'settings' => json_encode($this->getUserSettings()),
             'contact' => [

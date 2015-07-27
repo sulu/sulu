@@ -42,13 +42,6 @@ interface CurrentUserDataInterface
     public function getFullName();
 
     /**
-     * returns UserIcon URL.
-     *
-     * @return String
-     */
-    public function getUserIcon();
-
-    /**
      * returns locale of current user.
      *
      * @return String
