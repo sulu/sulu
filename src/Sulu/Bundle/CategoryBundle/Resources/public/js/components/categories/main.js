@@ -123,8 +123,8 @@ define(['sulucategory/model/category',
         render: function () {
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'form') {
-                this.renderForm();
+            } else if (this.options.display === 'details') {
+                this.renderDetails();
             } else {
                 throw 'display type wrong';
             }
@@ -134,7 +134,7 @@ define(['sulucategory/model/category',
          * Binds custom related events
          */
         bindCustomEvents: function () {
-            this.sandbox.on('sulu.header.language-changed', this.renderForm.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.renderDetails.bind(this));
 
             // navigate to category list
             this.sandbox.on(NAVIGATE_CATEGORY_LIST.call(this), this.navigateToList.bind(this));
@@ -251,17 +251,17 @@ define(['sulucategory/model/category',
         },
 
         /**
-         * Renders the from for add and edit
+         * Renders the details for add and edit
          * @param language {Object} the language object from the header language changer
          */
-        renderForm: function (language) {
+        renderDetails: function (language) {
             this.sandbox.stop('#' + constants.formContainerId);
             var locale = (!!language) ? language.id : undefined;
             var category,
                 action = function (data) {
                     this.sandbox.start([
                         {
-                            name: 'categories/form@sulucategory',
+                            name: 'categories/edit/details@sulucategory',
                             options: {
                                 el: $form,
                                 data: data,

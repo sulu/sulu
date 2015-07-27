@@ -28,29 +28,29 @@ define({
 
         sandbox.mvc.routes.push({
             route: 'settings/categories',
-            callback: function(){
+            callback: function() {
                 return '<div data-aura-component="categories@sulucategory" data-aura-display="list"/>';
             }
         });
 
         sandbox.mvc.routes.push({
             route: 'settings/categories/new/:parent/:content',
-            callback: function(parent, content){
-                return '<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-parent="'+ parent +'" data-aura-content="'+ content +'"/>';
+            callback: function(parent, content) {
+                return '<div data-aura-component="categories/edit@sulucategory" data-aura-parent="'+ parent +'"/>';
             }
         });
 
         sandbox.mvc.routes.push({
             route: 'settings/categories/new/:content',
-            callback: function(content){
-                return '<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-content="'+ content +'"/>';
+            callback: function() {
+                return '<div data-aura-component="categories/edit@sulucategory"/>';
             }
         });
 
         sandbox.mvc.routes.push({
             route: 'settings/categories/edit::id/:content',
-            callback: function(id, content){
-                return '<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-content="'+ content +'" data-aura-id="'+ id +'"/>';
+            callback: function(id, content) {
+                return '<div data-aura-component="categories/edit@sulucategory" data-aura-id="'+ id +'"/>';
             }
         });
     }
