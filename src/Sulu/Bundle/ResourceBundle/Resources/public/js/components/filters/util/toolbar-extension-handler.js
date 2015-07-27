@@ -89,6 +89,7 @@ define(['app-config'], function(AppConfig) {
         unsetFilter = function() {
             this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.unmark', this.filter.id);
             this.filter = null;
+            saveFilterUserSetting.call(this, null, this.datagridInstance);
         },
 
         /**
@@ -151,7 +152,12 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        getUserKeySetting = function(datagridInstance){
+        /**
+         * Returns a setting key for filters
+         * @param datagridInstance
+         * @returns {string}
+         */
+        getFilterSettingKey = function(datagridInstance){
             return datagridInstance + 'Filter'
         },
 
@@ -162,9 +168,10 @@ define(['app-config'], function(AppConfig) {
          */
         saveFilterUserSetting = function(filter, datagridInstance) {
             if (!!filter) {
-                this.sandbox.sulu.saveUserSetting(getUserKeySetting.call(this, datagridInstance), filter);
+                this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, datagridInstance), filter);
             } else {
-                this.sandbox.sulu.saveUserSetting(getUserKeySetting.call(this, datagridInstance), null);
+
+                this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, datagridInstance));
             }
         },
 
@@ -173,7 +180,7 @@ define(['app-config'], function(AppConfig) {
          * @param gridOptions
          */
         appendFilterToUrl = function(gridOptions) {
-            var key = getUserKeySetting.call(this, gridOptions.instanceName),
+            var key = getFilterSettingKey.call(this, gridOptions.instanceName),
                 url = gridOptions.url,
                 filter = this.sandbox.sulu.getUserSetting(key);
 
