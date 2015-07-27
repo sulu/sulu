@@ -105,7 +105,7 @@ class ContentMapper implements ContentMapperInterface
     private $strategy;
 
     /**
-     * @Var DocumentManager
+     * @var DocumentManager
      */
     private $documentManager;
 
