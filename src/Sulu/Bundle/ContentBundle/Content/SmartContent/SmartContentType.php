@@ -53,6 +53,26 @@ class SmartContentType extends ComplexContentType
     private $cache = [];
 
     /**
+     * SmartContentType constructor.
+     * @param string $template
+     * @param TagManagerInterface $tagManager
+     * @param DataProviderPoolInterface $dataProviderPool
+     * @param RequestStack $requestStack
+     */
+    public function __construct(
+        DataProviderPoolInterface $dataProviderPool,
+        TagManagerInterface $tagManager,
+        RequestStack $requestStack,
+        $template
+    ) {
+        $this->dataProviderPool = $dataProviderPool;
+        $this->tagManager = $tagManager;
+        $this->requestStack = $requestStack;
+        $this->template = $template;
+    }
+
+
+    /**
      * {@inheritdoc}
      */
     public function read(
@@ -201,9 +221,16 @@ class SmartContentType extends ComplexContentType
             $pageSize = intval($params['max_per_page']->getValue());
 
             // resolve paginated filters
-            $data = $provider->resolveFilters($filters, $params, $limit, $page, $pageSize, $options);
+            $data = $provider->resolveFilters(
+                $filters,
+                $params,
+                $options,
+                (!empty($limit) ? intval($limit) : null),
+                $page,
+                $pageSize
+            );
         } else {
-            $data = $provider->resolveFilters($filters, $params, $limit);
+            $data = $provider->resolveFilters($filters, $params, $options, (!empty($limit) ? intval($limit) : null));
         }
 
         // append view data
@@ -250,18 +277,16 @@ class SmartContentType extends ComplexContentType
      * @param PropertyInterface $property
      *
      * @return DataProviderInterface
-     *
-     * @throws MissingMandatoryParameterException
      */
     private function getProvider(PropertyInterface $property)
     {
         $params = $property->getParams();
 
-        if (!array_key_exists('provider', $params)) {
-            throw new MissingMandatoryParameterException($property, 'provider');
+        // default fallback to content
+        $providerAlias = 'content';
+        if (array_key_exists('provider', $params)) {
+            $providerAlias = $params['provider']->getValue();
         }
-
-        $providerAlias = $this->dataProviderPool->get($params['provider']->getValue());
 
         return $this->dataProviderPool->get($providerAlias);
     }
