@@ -2,6 +2,22 @@
 
 ## Dev-develop
 
+### Header-toolbar and tabs
+The header got a complete redesign, the breadcrumb, title and bottom-content are not available anymore. Also the event header.set-toolbar got removed. A sulu-header can still be initialized via the header property when a view-component gets started.
+
+#### Tabs
+The tabs can be configured with the 'url', 'data' and 'container' option. The 'option' fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
+
+#### Toolbar
+The language-changer can be configured as it was. Template and parentTemplate in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
+
+#### Sulu-buttons
+Buttons for toolbars get specified in an aura-extension (sandbox.sulu.buttons and sandbox.sulu.buttons.dropdownItems). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
+
+### List-toolbar
+The inHeader option got removed and is not supported anymore. Sulu.buttons are used internally and can be passed via the template which is recommended instead of using string templates.
+
+
 ### Listbuilder
 
 It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
