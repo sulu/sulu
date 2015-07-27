@@ -15,8 +15,10 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Content type for smart selection
@@ -37,6 +39,18 @@ class SmartContentType extends ComplexContentType
      * @var DataProviderPoolInterface
      */
     private $dataProviderPool;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * Contains cached values
+     *
+     * @var array
+     */
+    private $cache = [];
 
     /**
      * {@inheritdoc}
@@ -120,13 +134,6 @@ class SmartContentType extends ComplexContentType
      */
     public function getDefaultParams(PropertyInterface $property = null)
     {
-        $params = $property->getParams();
-
-        if (!array_key_exists('provider', $params)) {
-            throw new MissingMandatoryParameterException($property, 'provider');
-        }
-
-        $providerAlias = $this->dataProviderPool->get($params['provider']->getValue());
 
         return array_merge(
             parent::getDefaultParams(),
@@ -134,7 +141,7 @@ class SmartContentType extends ComplexContentType
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
             ),
-            $this->dataProviderPool->get($providerAlias)->getDefaultPropertyParameter()
+            $this->getProvider($property)->getDefaultPropertyParameter()
         );
     }
 
@@ -152,5 +159,124 @@ class SmartContentType extends ComplexContentType
     public function getType()
     {
         return self::PRE_SAVE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        // check memoize
+        $hash = spl_object_hash($property);
+        if (array_key_exists($hash, $this->cache)) {
+            return $this->cache[$hash];
+        }
+
+        /** @var PropertyParameter[] $params */
+        $params = array_merge(
+            $this->getDefaultParams($property),
+            $property->getParams()
+        );
+
+        // prepare filters
+        $filters = $property->getValue();
+        $filters['exclude'] = [$property->getStructure()->getUuid()];
+
+        // get provider
+        $provider = $this->getProvider($property);
+        $configuration = $provider->getConfiguration($params);
+
+        // prepare pagination and limitation
+        $page = 1;
+        $limit = (array_key_exists('limitResult', $filters) && $configuration->getLimit()) ?
+            $filters['limitResult'] : null;
+
+        if (isset($params['max_per_page']) && $configuration->getPaginated()) {
+            // is paginated
+            $page = $this->getCurrentPage($params['page_parameter']->getValue());
+            $pageSize = intval($params['max_per_page']->getValue());
+
+            // resolve paginated filters
+            $data = $provider->resolveFilters($filters, $params, $limit, $page, $pageSize);
+        } else {
+            $data = $provider->resolveFilters($filters, $params, $limit);
+        }
+
+        // append view data
+        $filters['page'] = $page;
+        $filters['hasNextPage'] = $provider->getHasNextPage();
+        $property->setValue($filters);
+
+        // save result in cache
+        $this->cache[$hash] = $data;
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        $this->getContentData($property);
+        $config = $property->getValue();
+
+        $config = array_merge(
+            [
+                'dataSource' => null,
+                'includeSubFolders' => null,
+                'category' => null,
+                'tags' => [],
+                'sortBy' => null,
+                'sortMethod' => null,
+                'presentAs' => null,
+                'limitResult' => null,
+                'page' => null,
+                'hasNextPage' => null,
+            ],
+            $config
+        );
+
+        return $config;
+    }
+
+    /**
+     * Returns provider for given property
+     *
+     * @param PropertyInterface $property
+     *
+     * @return DataProviderInterface
+     *
+     * @throws MissingMandatoryParameterException
+     */
+    private function getProvider(PropertyInterface $property)
+    {
+        $params = $property->getParams();
+
+        if (!array_key_exists('provider', $params)) {
+            throw new MissingMandatoryParameterException($property, 'provider');
+        }
+
+        $providerAlias = $this->dataProviderPool->get($params['provider']->getValue());
+
+        return $this->dataProviderPool->get($providerAlias);
+    }
+
+    /**
+     * determine current page from current request.
+     *
+     * @param string $pageParameter
+     *
+     * @return int
+     */
+    private function getCurrentPage($pageParameter)
+    {
+        if ($this->requestStack->getCurrentRequest() !== null) {
+            $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+        } else {
+            $page = 1;
+        }
+
+        return intval($page);
     }
 }

@@ -21,7 +21,7 @@ interface DataProviderInterface
     /**
      * Returns configuration for smart-content.
      *
-     * @param array $propertyParameter
+     * @param PropertyParameter[] $propertyParameter
      *
      * @return ProviderConfigurationInterface
      */
@@ -46,4 +46,11 @@ interface DataProviderInterface
      * @return ItemInterface[]
      */
     public function resolveFilters(array $filters, array $propertyParameter, $limit = null, $page = 1, $pageSize = null);
+
+    /**
+     * Returns TRUE if next page exists for last resolveFilters call.
+     *
+     * @return bool
+     */
+    public function getHasNextPage();
 }
