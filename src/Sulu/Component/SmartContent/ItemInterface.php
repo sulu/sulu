@@ -11,19 +11,19 @@
 namespace Sulu\Component\SmartContent;
 
 /**
- * Item to display in smart-content UI
+ * Item to display in smart-content UI.
  */
-interface ItemInterface
+interface ItemInterface extends \ArrayAccess
 {
     /**
-     * Returns title of the item
+     * Returns title of the item.
      *
      * @return string
      */
     public function getTitle();
 
     /**
-     * Returns URL to image
+     * Returns URL to image.
      *
      * @return string
      */
