@@ -69,7 +69,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
 
         $client->request(
-            'PUT',
+            'DELETE',
             '/security/profile/settings',
             ['key' => 'setting-key']
         );
