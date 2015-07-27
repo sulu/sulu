@@ -49,13 +49,6 @@ interface CurrentUserDataInterface
     public function getUserIcon();
 
     /**
-     * returns Logout URL.
-     *
-     * @return String
-     */
-    public function getLogoutLink();
-
-    /**
      * returns locale of current user.
      *
      * @return String

@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
@@ -46,10 +47,10 @@ class AdminController extends Controller
                 $user = $userManager->getCurrentUserData()->toArray();
 
                 // get js config from bundles
-                $jsconfig = [];
+                $jsConfig = [];
                 if ($this->has(self::JS_CONFIG_ID)) {
-                    $jsconfig = $this->get(self::JS_CONFIG_ID);
-                    $jsconfig = $jsconfig->getConfigParams();
+                    $jsConfig = $this->get(self::JS_CONFIG_ID);
+                    $jsConfig = $jsConfig->getConfigParams();
                 }
 
                 // render template
@@ -69,7 +70,7 @@ class AdminController extends Controller
                         'fallback_locale' => $this->container->getParameter('sulu_core.fallback_locale'),
                         'suluVersion' => $this->container->getParameter('sulu.version'),
                         'user' => $user,
-                        'config' => $jsconfig,
+                        'config' => $jsConfig,
                     ]
                 );
             } else {
@@ -103,12 +104,14 @@ class AdminController extends Controller
     /**
      * Returns contexts of admin.
      *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function contextsAction()
+    public function contextsAction(Request $request)
     {
         $contexts = $this->get('sulu_admin.admin_pool')->getSecurityContexts();
-        $system = $this->getRequest()->get('system');
+        $system = $request->get('system');
 
         $response = isset($system) ? $contexts[$system] : $contexts;
 
@@ -123,12 +126,12 @@ class AdminController extends Controller
     public function configAction()
     {
         // get js config from bundles
-        $jsconfig = [];
+        $jsConfig = [];
         if ($this->has(self::JS_CONFIG_ID)) {
-            $jsconfig = $this->get(self::JS_CONFIG_ID);
-            $jsconfig = $jsconfig->getConfigParams();
+            $jsConfig = $this->get(self::JS_CONFIG_ID);
+            $jsConfig = $jsConfig->getConfigParams();
         }
 
-        return new JsonResponse($jsconfig);
+        return new JsonResponse($jsConfig);
     }
 }

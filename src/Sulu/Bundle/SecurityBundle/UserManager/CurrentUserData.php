@@ -95,14 +95,6 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
-     * @return String - returns Logout URL
-     */
-    public function getLogoutLink()
-    {
-        return 'http://' . $this->router->getContext()->getHost() . '/admin/logout';
-    }
-
-    /**
      * returns locale of current user.
      *
      * @return String
@@ -191,7 +183,6 @@ class CurrentUserData implements CurrentUserDataInterface
             'username' => $this->getUserName(),
             'fullname' => $this->getFullName(),
             'icon' => $this->getUserIcon(),
-            'logout' => $this->getLogoutLink(),
             'locale' => $this->getLocale(),
             'settings' => json_encode($this->getUserSettings()),
             'contact' => [
