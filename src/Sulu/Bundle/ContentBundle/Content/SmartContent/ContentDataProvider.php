@@ -121,11 +121,14 @@ class ContentDataProvider implements DataProviderInterface
             return [];
         }
 
+        $properties = array_key_exists('properties', $propertyParameter) ?
+            $propertyParameter['properties']->getValue() : null;
+
         $this->contentQueryBuilder->init(
             [
                 'config' => $filters,
-                'properties' => $propertyParameter['properties']->getValue(),
-                'excluded' => $filters['exclude']
+                'properties' => $properties,
+                'excluded' => $filters['excluded']
             ]
         );
 
@@ -133,14 +136,14 @@ class ContentDataProvider implements DataProviderInterface
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
             $this->hasNextPage = (sizeof($result) > $pageSize);
 
-            return array_splice($result, 0, $pageSize);
+            return $this->decorate(array_splice($result, 0, $pageSize));
         } else {
-            return $this->load($options, $limit);
+            return $this->decorate($this->load($options, $limit));
         }
     }
 
     /**
-     * Load paginated data
+     * Load paginated data.
      *
      * @param array $options
      * @param int $limit
@@ -174,7 +177,7 @@ class ContentDataProvider implements DataProviderInterface
     }
 
     /**
-     * Load data
+     * Load data.
      *
      * @param array $options
      * @param int $limit
@@ -190,6 +193,23 @@ class ContentDataProvider implements DataProviderInterface
             true,
             -1,
             $limit
+        );
+    }
+
+    /**
+     * Decorates result with item class.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function decorate(array $data)
+    {
+        return array_map(
+            function ($item) {
+                return new ContentDataItem($item);
+            },
+            $data
         );
     }
 

@@ -200,7 +200,7 @@ class SmartContentType extends ComplexContentType
 
         // prepare filters
         $filters = $property->getValue();
-        $filters['exclude'] = [$property->getStructure()->getUuid()];
+        $filters['excluded'] = [$property->getStructure()->getUuid()];
 
         // get provider
         $provider = $this->getProvider($property);
