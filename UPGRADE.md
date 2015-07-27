@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+#### Content-Types
+
+Interface of Method has changed.
+
+Old                                | New
+-----------------------------------|---------------------------------------------------------------------
+public function getDefaultParams() | public function getDefaultParams(PropertyInterface $property = null)
+
 ### Modified listbuilder to work with expressions
 
 The listbuilder uses now expressions to build the query. In course of these changes some default values have been
@@ -44,7 +52,6 @@ Filter values will now be copied from shadow-base locale to shadowed locale. Upg
 
 ```bash
 app/console phpcr:migrations:migrate
->>>>>>> master
 ```
 
 ## 1.0.0
