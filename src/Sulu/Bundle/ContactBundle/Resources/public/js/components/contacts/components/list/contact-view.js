@@ -7,6 +7,8 @@
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
+ * @param {Function} [addRecord] function to add a new record to the grid
+ * @param {Function} [removeRecord] function to remove an existing record from the grid
  * @param {Function} [destroy] function to destroy the view and unbind events
  */
 define(function() {
@@ -20,14 +22,17 @@ define(function() {
         constants = {
             containerClass: 'contact-grid',
             selectedClass: 'selected',
+            itemHeadClass: 'item-head',
+            itemInfoClass: 'item-info',
 
-            idProperty: 'id'
+            idProperty: 'id',
+            mailProperty: 'mainEmail',
         },
 
         templates = {
             item: [
                 '<div class="contact-item">',
-                '   <div class="item-head">',
+                '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="image" style="background-image: url(\'<%= picture %>\')"></div>',
                 '           <div class="head-name"><%= name %></div>',
@@ -37,7 +42,7 @@ define(function() {
                 '       <div class="head-sulubox"></div>',
                 '       <% } %>',
                 '   </div>',
-                '   <div class="item-info">',
+                '   <div class="' + constants.itemInfoClass + '">',
                 '       <% if (location !== "undefined") { %>',
                 '       <div class="info-row">',
                 '           <span class="fa-map-marker info-icon"></span>',
@@ -88,7 +93,9 @@ define(function() {
         },
 
         /**
-         * Method to render data in this view
+         * Method to render this view
+         * @param data object containing the data which is rendered
+         * @param $container dom-element to render datagrid in
          */
         render: function(data, $container) {
             this.data = data;
@@ -106,13 +113,13 @@ define(function() {
         bindGeneralDomEvents: function() {
             this.sandbox.dom.on('.grid', 'click', function() {
                 if (this.options.unselectOnBackgroundClick) {
-                    this.unselectAll();
+                    this.unselectAllItems();
                 }
             }.bind(this));
         },
 
         /**
-         * Parses the data and passes it to a render function
+         * Parses the data and passes it item by item to a render function
          * @param items {Array} array with items to render
          */
         renderItems: function(items) {
@@ -125,7 +132,7 @@ define(function() {
                 name = [record['firstName'], record['lastName']].join(' ');
                 suluUser = Math.random()<.3;
                 location = 'Testhausen 8, AT';
-                mail = record['mainEmail'];
+                mail = record[constants.mailProperty];
 
                 /*
                 // foreach matching configured get the corresponding datum from the record
@@ -164,7 +171,7 @@ define(function() {
         },
 
         /**
-         * Renders the actual thumbnail element
+         * Renders the actual contact item
          * @param id {String|Number} the identifier of the data record
          * @param imgSrc {String} the thumbnail src of the data record
          * @param imgAlt {String} the thumbnail alt tag of the data record
@@ -182,13 +189,12 @@ define(function() {
                     mail: this.sandbox.util.cropMiddle(String(mail), 26),
                 })
             );
+
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
                 this.selectItem(id);
             }
-            this.sandbox.dom.data(this.$items[id], 'id', id);
             this.sandbox.dom.append(this.$el, this.$items[id]);
-
-            this.bindThumbnailDomEvents(id);
+            this.bindItemDomEvents(id);
         },
 
         /**
@@ -203,16 +209,16 @@ define(function() {
          * Binds Dom-Events for a thumbnail
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
-        bindThumbnailDomEvents: function(id) {
+        bindItemDomEvents: function(id) {
             this.sandbox.dom.on(this.$items[id], 'click', function() {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
-            }.bind(this), ".item-info");
+            }.bind(this), "." + constants.itemInfoClass);
 
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.toggleItemSelected(id);
-            }.bind(this));
+            }.bind(this), "." + constants.itemHeadClass);
         },
 
         /**
@@ -275,9 +281,9 @@ define(function() {
         },
 
         /**
-         * Unselects all thumbnails
+         * Unselects all contact items
          */
-        unselectAll: function() {
+        unselectAllItems: function() {
             this.sandbox.util.each(this.$items, function(id) {
                 this.unselectItem(Number(id));
             }.bind(this));
