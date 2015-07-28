@@ -2,8 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #1421 [AdminBundle]     new button-api for header and tabs
-    * FEATURE     #1417 [AdminBundle]     style upgrade for header and tabs
+    * FEATURE     #1421 [AdminBundle]     New button-api for header and tabs
+    * FEATURE     #1417 [AdminBundle]     Style upgrade for header and tabs
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
