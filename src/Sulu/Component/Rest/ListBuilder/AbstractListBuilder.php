@@ -76,7 +76,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $fieldDescriptors;
+    protected $fieldDescriptors = [];
 
     /**
      * @var ExpressionInterface[]
