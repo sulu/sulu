@@ -14,8 +14,7 @@ define(['sulumedia/model/media'], function(Media) {
     var constants = {
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
-            listViewStorageKey: 'collectionEditListView',
-            mediaLanguageStorageKey: 'mediaLanguage'
+            listViewStorageKey: 'collectionEditListView'
         },
 
         defaults = {},
@@ -49,7 +48,7 @@ define(['sulumedia/model/media'], function(Media) {
 
         header: function() {
             // init locale
-            this.locale = this.sandbox.sulu.getUserSetting(constants.mediaLanguageStorageKey) || this.sandbox.sulu.user.locale;
+            this.locale = this.options.locale;
 
             return {
                 noBack: true,
@@ -237,8 +236,9 @@ define(['sulumedia/model/media'], function(Media) {
          * @param locale {object} the new locale to display
          */
         changeLanguage: function(locale) {
-            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale.id);
-            this.sandbox.emit('husky.datagrid.url.update', {locale: locale.id});
+            this.locale = locale.id;
+            this.sandbox.emit('sulu.media.collections.set-locale', this.locale);
+            this.sandbox.emit('husky.datagrid.url.update', {locale: this.locale});
         }
     };
 });

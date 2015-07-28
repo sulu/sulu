@@ -1,0 +1,1 @@
+define(function(){"use strict";return{header:function(){return{tabs:{url:"/admin/content-navigations?alias=category"},toolbar:{buttons:["saveWithOptions",{settings:{dropdownItems:["delete"]}}],languageChanger:!0}}}}});
