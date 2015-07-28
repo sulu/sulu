@@ -21,12 +21,14 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(Relation
                 identifier: '',
                 permissions: []
             };
-        }, relations: [
+        }
+        // TODO: fix bug (doesn't save with relations uncommented
+        /*, relations: [
             {
                 type: HasMany,
                 key: 'permissions',
                 relatedModel: Permission
             }
-        ]
+        ]*/
     });
 });
