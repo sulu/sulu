@@ -23,13 +23,13 @@ define([
             this.idDelete = null;
             this.loading = 'delete';
 
+            this.bindCustomEvents();
+
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'form') {
+            } else if (this.options.display === 'edit') {
                 this.renderForm();
             }
-
-            this.bindCustomEvents();
         },
 
         bindCustomEvents: function() {
