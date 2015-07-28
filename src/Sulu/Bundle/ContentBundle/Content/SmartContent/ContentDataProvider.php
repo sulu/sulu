@@ -106,6 +106,32 @@ class ContentDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function resolveDatasource($datasource, array $propertyParameter, array $options)
+    {
+        $properties = array_key_exists('properties', $propertyParameter) ?
+            $propertyParameter['properties']->getValue() : [];
+
+        $this->contentQueryBuilder->init(
+            [
+                'ids' => [$datasource],
+                'properties' => $properties,
+            ]
+        );
+
+        $result = $this->contentQueryExecutor->execute(
+            $options['webspaceKey'],
+            [$options['locale']],
+            $this->contentQueryBuilder
+        );
+
+        $items = $this->decorate($result);
+
+        return $items[0];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function resolveFilters(
         array $filters,
         array $propertyParameter,

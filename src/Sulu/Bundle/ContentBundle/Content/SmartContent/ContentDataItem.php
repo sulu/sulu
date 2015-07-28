@@ -26,9 +26,29 @@ class ContentDataItem extends Item
      *
      * @VirtualProperty()
      */
+    public function getId()
+    {
+        return $this->get('uuid');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @VirtualProperty()
+     */
     public function getTitle()
     {
         return $this->get('title');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @VirtualProperty()
+     */
+    public function getFullQualifiedTitle()
+    {
+        return '/' . ltrim($this->get('path'), '/');
     }
 
     /**

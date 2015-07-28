@@ -56,6 +56,17 @@ interface DataProviderInterface
     );
 
     /**
+     * Resolves datasource and returns the data of it.
+     *
+     * @param mixed $datasource Identification of datasource.
+     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
+     * @param array $options Options like webspace or locale.
+     *
+     * @return ItemInterface
+     */
+    public function resolveDatasource($datasource, array $propertyParameter,array $options);
+
+    /**
      * Returns TRUE if next page exists for last resolveFilters call.
      *
      * @return bool

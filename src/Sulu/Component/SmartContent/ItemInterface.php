@@ -16,11 +16,28 @@ namespace Sulu\Component\SmartContent;
 interface ItemInterface extends \ArrayAccess
 {
     /**
+     * Returns id of item.
+     *
+     * @return string
+     *
+     * @throws \Sulu\Component\SmartContent\Exception\NoSuchPropertyException
+     */
+    public function getId();
+
+    /**
      * Returns title of the item.
      *
      * @return string
      */
     public function getTitle();
+
+    /**
+     * Returns full qualified title of item.
+     * For example path or breadcrumb.
+     *
+     * @return mixed
+     */
+    public function getFullQualifiedTitle();
 
     /**
      * Returns URL to image.

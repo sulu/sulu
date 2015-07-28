@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -25,7 +25,6 @@ class SmartContentItemController extends RestController
     public function postItemsAction(Request $request)
     {
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
-        $limit = intval($request->query->get('limit', 3));
         $excluded = intval($this->getRequestParameter($request, 'excluded', true));
         $filters = $request->request->all();
         $options = [
@@ -37,13 +36,9 @@ class SmartContentItemController extends RestController
 
         $dataProviderPool = $this->get('sulu_content.smart_content.data_provider_pool');
         $provider = $dataProviderPool->get($providerAlias);
-        $result = $provider->resolveFilters($filters, [], $options);
-        $total = count($result);
+        $items = $provider->resolveFilters($filters, [], $options, $request->get('limitResult'));
+        $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
 
-        return $this->handleView(
-            $this->view(
-                new ListRepresentation($result, 'items', 'post_items', [], 1, $limit, $total)
-            )
-        );
+        return $this->handleView($this->view(new ItemCollectionRepresentation($items, $datasource)));
     }
 }
