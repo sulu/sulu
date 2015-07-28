@@ -8,7 +8,7 @@
  */
 
 define(['sulucategory/model/category',
-    'sulucategory/collections/categories'], function (Category, Categories) {
+    'sulucategory/collections/categories'], function(Category, Categories) {
 
     'use strict';
 
@@ -23,7 +23,7 @@ define(['sulucategory/model/category',
          * listens on and navigates to category list
          * @event sulu.category.categories.list
          */
-            NAVIGATE_CATEGORY_LIST = function () {
+        NAVIGATE_CATEGORY_LIST = function() {
             return createEventName.call(this, 'list');
         },
 
@@ -31,7 +31,7 @@ define(['sulucategory/model/category',
          * listens on and navigates to category form
          * @event sulu.category.categories.form
          */
-            NAVIGATE_CATEGORY_FORM = function () {
+        NAVIGATE_CATEGORY_FORM = function() {
             return createEventName.call(this, 'form');
         },
 
@@ -39,7 +39,7 @@ define(['sulucategory/model/category',
          * listens on and navigates to category form for adding
          * @event sulu.category.categories.form-add
          */
-            NAVIGATE_CATEGORY_FORM_ADD = function () {
+        NAVIGATE_CATEGORY_FORM_ADD = function() {
             return createEventName.call(this, 'form-add');
         },
 
@@ -48,7 +48,7 @@ define(['sulucategory/model/category',
          * @event sulu.category.categories.changed
          * @param {Object} the changed category model
          */
-            CATEGORY_CHANGED = function () {
+        CATEGORY_CHANGED = function() {
             return createEventName.call(this, 'changed');
         },
 
@@ -57,7 +57,7 @@ define(['sulucategory/model/category',
          * @event sulu.category.categories.save
          * @param {Object} the data of the category to save
          */
-            CATEGORY_SAVE = function () {
+        CATEGORY_SAVE = function() {
             return createEventName.call(this, 'save');
         },
 
@@ -68,7 +68,7 @@ define(['sulucategory/model/category',
          * @param {Function} function to execute after every deleted category
          * @param {Function} function to execute after everything got deleted
          */
-            CATEGORIES_DELETE = function () {
+        CATEGORIES_DELETE = function() {
             return createEventName.call(this, 'delete');
         },
 
@@ -77,12 +77,12 @@ define(['sulucategory/model/category',
          * @event sulu.category.categories.deleted
          * @param {String|Number} the id of the delted category
          */
-            CATEGORY_DELETED = function () {
+        CATEGORY_DELETED = function() {
             return createEventName.call(this, 'deleted');
         },
 
         /** returns normalized event names */
-            createEventName = function (postFix) {
+        createEventName = function(postFix) {
             return namespace + postFix;
         };
 
@@ -91,7 +91,7 @@ define(['sulucategory/model/category',
         /**
          * Initializes the component
          */
-        initialize: function () {
+        initialize: function() {
             this.categories = new Categories();
             this.locale = null;
 
@@ -104,7 +104,7 @@ define(['sulucategory/model/category',
          * @param id {String|Number} id of the model
          * @returns {Object} the backbone model
          */
-        getCategoryModel: function (id) {
+        getCategoryModel: function(id) {
             if (!!this.categories.get(id)) {
                 return this.categories.get(id);
             } else {
@@ -120,7 +120,7 @@ define(['sulucategory/model/category',
         /**
          * Renderes the component
          */
-        render: function () {
+        render: function() {
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
@@ -133,7 +133,7 @@ define(['sulucategory/model/category',
         /**
          * Binds custom related events
          */
-        bindCustomEvents: function () {
+        bindCustomEvents: function() {
             this.sandbox.on('sulu.header.language-changed', this.renderForm.bind(this));
 
             // navigate to category list
@@ -154,16 +154,16 @@ define(['sulucategory/model/category',
          * @param data {Object} object with the data to update
          * @param callback {Function} callback to call if collection has been saved
          */
-        saveCategory: function (data, callback) {
+        saveCategory: function(data, callback) {
             var category = this.getCategoryModel(data.id);
             category.set(data);
 
             category.save(null, {
-                success: function (result) {
+                success: function(result) {
                     this.sandbox.emit(CATEGORY_CHANGED.call(this), result.toJSON());
                     callback(result.toJSON(), true);
                 }.bind(this),
-                error: function (result, response) {
+                error: function(result, response) {
                     this.sandbox.logger.log('Error while saving category');
                     callback(response.responseJSON, false);
                 }.bind(this)
@@ -176,14 +176,14 @@ define(['sulucategory/model/category',
          * @param callback {Function} callback to execute after a single category got deleted
          * @param finishedCallback {Function} callback to execute after everything got deleted
          */
-        deleteCategories: function (categoryIds, callback, finishedCallback) {
+        deleteCategories: function(categoryIds, callback, finishedCallback) {
             var category, count = 0;
-            this.sandbox.sulu.showDeleteDialog(function (confirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                 if (confirmed === true) {
-                    this.sandbox.util.foreach(categoryIds, function (id) {
+                    this.sandbox.util.foreach(categoryIds, function(id) {
                         category = this.getCategoryModel(id);
                         category.destroy({
-                            success: function () {
+                            success: function() {
                                 if (typeof callback === 'function') {
                                     callback(id);
                                 } else {
@@ -194,7 +194,7 @@ define(['sulucategory/model/category',
                                     finishedCallback();
                                 }
                             }.bind(this),
-                            error: function () {
+                            error: function() {
                                 this.sandbox.logger.log('Error while deleting a single category');
                             }.bind(this)
                         });
@@ -206,7 +206,7 @@ define(['sulucategory/model/category',
         /**
          * Navigates to the category list
          */
-        navigateToList: function () {
+        navigateToList: function() {
             this.sandbox.emit('sulu.router.navigate', 'settings/categories', true, true);
         },
 
@@ -215,7 +215,7 @@ define(['sulucategory/model/category',
          * @param categoryId {Number|String} the id of the category to edit
          * @param tab {String} the tab to route to
          */
-        navigateToForm: function (categoryId, tab) {
+        navigateToForm: function(categoryId, tab) {
             // default tab is details
             tab = (!!tab) ? tab : 'details';
             this.sandbox.emit('sulu.router.navigate', 'settings/categories/edit:' + categoryId + '/' + tab, true, true);
@@ -226,7 +226,7 @@ define(['sulucategory/model/category',
          * @param parentId {Number|String} of the parent-category
          * @param tab {String} the tab to route to
          */
-        navigateToAddForm: function (parentId, tab) {
+        navigateToAddForm: function(parentId, tab) {
             // default tab is details
             tab = (!!tab) ? tab : 'details';
             var route = 'settings/categories/new';
@@ -237,7 +237,7 @@ define(['sulucategory/model/category',
         /**
          * Renders the list-component
          */
-        renderList: function () {
+        renderList: function() {
             var $list = this.sandbox.dom.createElement('<div id="' + constants.listContainerId + '"/>');
             this.html($list);
             this.sandbox.start([
@@ -254,11 +254,11 @@ define(['sulucategory/model/category',
          * Renders the from for add and edit
          * @param language {Object} the language object from the header language changer
          */
-        renderForm: function (language) {
+        renderForm: function(language) {
             this.sandbox.stop('#' + constants.formContainerId);
             var locale = (!!language) ? language.id : undefined;
             var category,
-                action = function (data) {
+                action = function(data) {
                     this.sandbox.start([
                         {
                             name: 'categories/form@sulucategory',
@@ -286,10 +286,10 @@ define(['sulucategory/model/category',
             if (!!category.get('id')) {
                 category.fetch({
                     data: {locale: locale, flat: true},
-                    success: function (result) {
+                    success: function(result) {
                         action(result.toJSON());
                     }.bind(this),
-                    error: function () {
+                    error: function() {
                         this.sandbox.logger.log('Error while fetching a single category');
                     }.bind(this)
                 });

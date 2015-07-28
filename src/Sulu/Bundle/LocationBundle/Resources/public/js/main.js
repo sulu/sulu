@@ -29,12 +29,5 @@ define({
         var sandbox = app.sandbox;
 
         app.components.addSource('sululocation', '/bundles/sululocation/js/components');
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         return '<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>';
-        //     }
-        // });
     }
 });
