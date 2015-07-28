@@ -45,7 +45,7 @@ class PortalLoader extends Loader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load($resource, $type = null)
     {
@@ -61,7 +61,7 @@ class PortalLoader extends Loader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {

@@ -43,7 +43,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
@@ -54,7 +54,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

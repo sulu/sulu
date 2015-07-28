@@ -36,7 +36,7 @@ class DocumentObjectType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -44,7 +44,7 @@ class DocumentObjectType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
@@ -52,7 +52,7 @@ class DocumentObjectType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -39,7 +39,7 @@ class MetadataSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSubscribedEvents()
     {

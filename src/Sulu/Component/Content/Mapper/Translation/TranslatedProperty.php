@@ -296,7 +296,7 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructure()
     {
@@ -304,7 +304,7 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setStructure($structure)
     {

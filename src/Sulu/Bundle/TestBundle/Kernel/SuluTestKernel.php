@@ -67,7 +67,7 @@ class SuluTestKernel extends SuluKernel
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * Add the Sulu environment to the container name
      */

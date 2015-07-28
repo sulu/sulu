@@ -168,7 +168,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
@@ -176,7 +176,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferencedUuids(PropertyInterface $property)
     {

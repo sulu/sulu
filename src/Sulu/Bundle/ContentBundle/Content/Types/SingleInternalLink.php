@@ -50,7 +50,7 @@ class SingleInternalLink extends SimpleContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferencedUuids(PropertyInterface $property)
     {

@@ -69,7 +69,7 @@ abstract class ComplexContentType implements ContentTypeInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
@@ -77,7 +77,7 @@ abstract class ComplexContentType implements ContentTypeInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferencedUuids(PropertyInterface $property)
     {

@@ -83,7 +83,7 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptors($locale)
     {
@@ -139,7 +139,7 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getListFieldDescriptors($locale)
     {
@@ -172,7 +172,7 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findByIdAndLocale($id, $locale)
     {
@@ -185,7 +185,7 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete($id)
     {
@@ -198,7 +198,7 @@ class FilterManager implements FilterManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function save(array $data, $locale, $userId, $id = null)
     {

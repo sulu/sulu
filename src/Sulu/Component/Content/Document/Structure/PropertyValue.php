@@ -30,7 +30,7 @@ class PropertyValue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getValue()
     {
@@ -38,7 +38,7 @@ class PropertyValue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setValue($value)
     {
@@ -46,7 +46,7 @@ class PropertyValue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {

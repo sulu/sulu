@@ -96,14 +96,14 @@ class RdfaCrawler
             $propertyPath = [];
             $indexSequence = [];
             $propertyInstance = $content->getProperty($sequence[0]);
-            for ($i = 1; $i < sizeof($sequence); ++$i) {
+            for ($i = 1; $i < count($sequence); ++$i) {
                 // is not integer
                 if (!ctype_digit(strval($sequence[$i]))) {
                     $propertyPath[] = $sequence[$i];
                     if ($propertyInstance instanceof BlockPropertyInterface) {
-                        $lastIndex = $indexSequence[sizeof($indexSequence) - 1];
+                        $lastIndex = $indexSequence[count($indexSequence) - 1];
 
-                        unset($indexSequence[sizeof($indexSequence) - 1]);
+                        unset($indexSequence[count($indexSequence) - 1]);
                         $indexSequence = array_values($indexSequence);
 
                         $propertyInstance = $propertyInstance->getProperties($lastIndex)->getProperty($sequence[$i]);

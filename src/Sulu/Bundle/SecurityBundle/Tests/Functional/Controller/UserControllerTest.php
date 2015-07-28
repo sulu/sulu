@@ -845,7 +845,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
 
-        $this->assertEquals(1, sizeof($response->userRoles));
+        $this->assertEquals(1, count($response->userRoles));
     }
 
     public function testPostWithoutPassword()

@@ -32,7 +32,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 class CategoryListRepresentation extends ListRepresentation
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {

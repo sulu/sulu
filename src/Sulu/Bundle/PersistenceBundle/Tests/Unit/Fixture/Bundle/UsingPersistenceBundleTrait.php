@@ -22,7 +22,7 @@ class UsingPersistenceBundleTrait extends Bundle
     public $modelInterfaces = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build(ContainerBuilder $container)
     {

@@ -55,7 +55,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
@@ -63,7 +63,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructures($type = Structure::TYPE_PAGE)
     {

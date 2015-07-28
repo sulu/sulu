@@ -178,7 +178,7 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {

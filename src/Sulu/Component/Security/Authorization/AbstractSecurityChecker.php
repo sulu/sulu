@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 abstract class AbstractSecurityChecker implements SecurityCheckerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function checkPermission($subject, $permission)
     {
@@ -45,7 +45,7 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     abstract public function hasPermission($subject, $permission);
 }

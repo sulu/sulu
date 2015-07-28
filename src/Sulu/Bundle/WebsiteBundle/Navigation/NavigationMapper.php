@@ -122,7 +122,7 @@ class NavigationMapper implements NavigationMapperInterface
         $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt]);
         $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
 
-        for ($i = 0; $i < sizeof($result); ++$i) {
+        for ($i = 0; $i < count($result); ++$i) {
             if (!isset($result[$i]['children'])) {
                 $result[$i]['children'] = [];
             }
@@ -214,7 +214,7 @@ class NavigationMapper implements NavigationMapperInterface
         $context = null
     ) {
         $children = [];
-        if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
+        if (is_array($content->getChildren()) && count($content->getChildren()) > 0) {
             $children = $this->generateNavigation(
                 $content->getChildren(),
                 $webspace,

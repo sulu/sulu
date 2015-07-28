@@ -34,7 +34,7 @@ class RestHelper implements RestHelperInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors)
     {

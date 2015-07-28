@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -35,7 +35,7 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOrder()
     {

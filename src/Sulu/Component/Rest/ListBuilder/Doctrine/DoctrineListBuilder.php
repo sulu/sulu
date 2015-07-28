@@ -81,7 +81,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -101,7 +101,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute()
     {

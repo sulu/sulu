@@ -234,7 +234,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -242,7 +242,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setFirstName($firstName)
     {
@@ -252,7 +252,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFirstName()
     {
@@ -260,7 +260,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setMiddleName($middleName)
     {
@@ -270,7 +270,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMiddleName()
     {
@@ -278,7 +278,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLastName($lastName)
     {
@@ -288,7 +288,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLastName()
     {
@@ -307,7 +307,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setTitle($title)
     {
@@ -317,7 +317,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTitle()
     {
@@ -325,7 +325,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setPosition($position)
     {
@@ -349,7 +349,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPosition()
     {
@@ -362,7 +362,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setBirthday($birthday)
     {
@@ -372,7 +372,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getBirthday()
     {
@@ -380,7 +380,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreated()
     {
@@ -388,7 +388,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanged()
     {
@@ -396,7 +396,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addLocale(ContactLocale $locale)
     {
@@ -406,7 +406,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeLocale(ContactLocale $locale)
     {
@@ -414,7 +414,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocales()
     {
@@ -436,7 +436,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanger()
     {
@@ -458,7 +458,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreator()
     {
@@ -466,7 +466,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addNote(Note $note)
     {
@@ -476,7 +476,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeNote(Note $note)
     {
@@ -484,7 +484,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNotes()
     {
@@ -492,7 +492,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addEmail(Email $email)
     {
@@ -502,7 +502,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeEmail(Email $email)
     {
@@ -510,7 +510,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getEmails()
     {
@@ -518,7 +518,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addPhone(Phone $phone)
     {
@@ -528,7 +528,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removePhone(Phone $phone)
     {
@@ -536,7 +536,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPhones()
     {
@@ -544,7 +544,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addFax(Fax $fax)
     {
@@ -554,7 +554,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeFax(Fax $fax)
     {
@@ -562,7 +562,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFaxes()
     {
@@ -570,7 +570,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addUrl(Url $url)
     {
@@ -580,7 +580,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeUrl(Url $url)
     {
@@ -588,7 +588,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUrls()
     {
@@ -596,7 +596,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setFormOfAddress($formOfAddress)
     {
@@ -606,7 +606,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFormOfAddress()
     {
@@ -614,7 +614,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setSalutation($salutation)
     {
@@ -624,7 +624,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSalutation()
     {
@@ -632,7 +632,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setDisabled($disabled)
     {
@@ -642,7 +642,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDisabled()
     {
@@ -650,7 +650,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addTag(Tag $tag)
     {
@@ -660,7 +660,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeTag(Tag $tag)
     {
@@ -668,7 +668,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTags()
     {
@@ -676,7 +676,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTagNameArray()
     {
@@ -692,7 +692,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addAccountContact(AccountContact $accountContact)
     {
@@ -702,7 +702,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeAccountContact(AccountContact $accountContact)
     {
@@ -710,7 +710,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAccountContacts()
     {
@@ -718,7 +718,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setNewsletter($newsletter)
     {
@@ -728,7 +728,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNewsletter()
     {
@@ -736,7 +736,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setGender($gender)
     {
@@ -746,7 +746,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getGender()
     {
@@ -754,7 +754,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMainAccount()
     {
@@ -786,7 +786,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAddresses()
     {
@@ -806,7 +806,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setMainEmail($mainEmail)
     {
@@ -816,7 +816,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMainEmail()
     {
@@ -824,7 +824,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setMainPhone($mainPhone)
     {
@@ -834,7 +834,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMainPhone()
     {
@@ -842,7 +842,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setMainFax($mainFax)
     {
@@ -852,7 +852,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMainFax()
     {
@@ -860,7 +860,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setMainUrl($mainUrl)
     {
@@ -870,7 +870,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMainUrl()
     {
@@ -878,7 +878,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addContactAddress(ContactAddress $contactAddress)
     {
@@ -888,7 +888,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeContactAddress(ContactAddress $contactAddress)
     {
@@ -896,7 +896,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContactAddresses()
     {
@@ -904,7 +904,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMainAddress()
     {
@@ -923,7 +923,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addMedia(Media $media)
     {
@@ -931,7 +931,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeMedia(Media $media)
     {
@@ -939,7 +939,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMedias()
     {
@@ -947,7 +947,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addCategory(Category $category)
     {
@@ -957,7 +957,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeCategory(Category $category)
     {
@@ -965,7 +965,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCategories()
     {
@@ -973,7 +973,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addBankAccount(BankAccount $bankAccount)
     {
@@ -983,7 +983,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeBankAccount(BankAccount $bankAccounts)
     {
@@ -991,7 +991,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getBankAccounts()
     {

@@ -21,7 +21,7 @@ use PHPCR\RepositoryException;
 class PhpcrBuilder extends SuluBuilder
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -29,7 +29,7 @@ class PhpcrBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDependencies()
     {
@@ -37,7 +37,7 @@ class PhpcrBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build()
     {

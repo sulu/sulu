@@ -534,7 +534,7 @@ class PhpcrMapper extends RlpMapper
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;
-        for ($i = 0; $i < sizeof($pathParts); ++$i) {
+        for ($i = 0; $i < count($pathParts); ++$i) {
             if ($curNode->hasNode($pathParts[$i])) {
                 $curNode = $curNode->getNode($pathParts[$i]);
             } else {

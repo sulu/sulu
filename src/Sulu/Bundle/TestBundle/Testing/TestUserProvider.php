@@ -43,7 +43,7 @@ class TestUserProvider implements UserProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUser()
     {

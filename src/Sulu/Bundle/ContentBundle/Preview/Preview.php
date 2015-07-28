@@ -109,7 +109,7 @@ class Preview implements PreviewInterface
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
 
-        if (is_array($changes) && sizeof($changes) > 0) {
+        if (is_array($changes) && count($changes) > 0) {
             foreach ($changes as $property => $data) {
                 $this->update(
                     $userId,
@@ -171,7 +171,7 @@ class Preview implements PreviewInterface
             // length of property path is important to render
             $property = implode(
                 ',',
-                array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
+                array_slice($sequence['sequence'], 0, (-1) * count($sequence['propertyPath']))
             );
         }
 
@@ -247,7 +247,7 @@ class Preview implements PreviewInterface
             $tmp = $data;
             $data = $sequence['property']->getValue();
             $value = &$data;
-            $len = sizeof($sequence['index']);
+            $len = count($sequence['index']);
             for ($i = 0; $i < $len; ++$i) {
                 $value = &$value[$sequence['index'][$i]];
             }

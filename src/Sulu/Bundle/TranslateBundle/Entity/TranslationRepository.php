@@ -44,7 +44,7 @@ class TranslationRepository extends EntityRepository
             );
 
         $result = $query->getResult();
-        if (sizeof($result) == 1) {
+        if (count($result) == 1) {
             return $result[0];
         } else {
             return;

@@ -279,7 +279,7 @@ class CodeController extends RestController implements ClassResourceInterface
             $code->setPackage($em->getReference(self::$packageEntity, $package['id']));
             $code->setLocation($em->getReference(self::$locationEntity, $location['id']));
 
-            if ($translations != null && sizeof($translations) > 0) {
+            if ($translations != null && count($translations) > 0) {
                 foreach ($translations as $translationData) {
                     /** @var Translation $translation */
                     $translation = $translationRepository->findOneBy(

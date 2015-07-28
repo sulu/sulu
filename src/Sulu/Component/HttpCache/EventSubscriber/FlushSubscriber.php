@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class FlushSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

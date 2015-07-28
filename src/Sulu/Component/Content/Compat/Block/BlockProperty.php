@@ -182,7 +182,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function getLength()
     {
-        return sizeof($this->properties);
+        return count($this->properties);
     }
 
     /**

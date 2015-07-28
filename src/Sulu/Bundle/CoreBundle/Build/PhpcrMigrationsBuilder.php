@@ -20,7 +20,7 @@ namespace Sulu\Bundle\CoreBundle\Build;
 class PhpcrMigrationsBuilder extends SuluBuilder
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -28,7 +28,7 @@ class PhpcrMigrationsBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDependencies()
     {
@@ -36,7 +36,7 @@ class PhpcrMigrationsBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build()
     {

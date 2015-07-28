@@ -27,7 +27,7 @@ class TimestampableSubscriber implements EventSubscriber
     const CHANGED_FIELD = 'changed';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSubscribedEvents()
     {

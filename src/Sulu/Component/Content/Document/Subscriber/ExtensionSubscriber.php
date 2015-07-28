@@ -46,7 +46,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -60,7 +60,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($document)
     {
@@ -68,7 +68,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function doHydrate(AbstractMappingEvent $event)
     {
@@ -76,7 +76,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function doPersist(PersistEvent $event)
     {

@@ -98,7 +98,7 @@ class TagsHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush()
     {

@@ -181,7 +181,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $result = $this->loadFixture('template.xml');
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals(0, count($x));
     }
 
     public function testReadTitleInSection()
@@ -243,7 +243,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals(0, count($x));
     }
 
     /**
@@ -562,7 +562,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $result = $this->loadFixture('template_block.xml');
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals(0, count($x));
     }
 
     public function testBlockMultipleTypes()
@@ -774,7 +774,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $result = $this->loadFixture('template_block_types.xml');
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals(0, count($x));
     }
 
     public function testSections()
@@ -970,7 +970,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->loadFixture('template_sections.xml');
         $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals(0, count($x));
     }
 
     public function testReservedName()
@@ -1044,7 +1044,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $result = $this->loadFixture('template_nesting_params.xml');
 
         $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals(0, count($x));
         $this->assertEquals($template, $result);
     }
 

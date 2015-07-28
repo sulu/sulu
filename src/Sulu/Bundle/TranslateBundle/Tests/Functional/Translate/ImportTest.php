@@ -146,7 +146,7 @@ class ImportTest extends SuluTestCase
         $values = array_diff($values, [$translations[2]->getValue()]);
         $this->assertTrue(in_array($translations[3]->getValue(), $values));
         $values = array_diff($values, [$translations[3]->getValue()]);
-        $this->assertEquals(0, sizeof($values));
+        $this->assertEquals(0, count($values));
 
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
         $this->em->clear();

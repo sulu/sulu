@@ -208,7 +208,7 @@ class ContactRepository extends EntityRepository
         $qb = $this->addPagination($qb, $offset, $limit);
 
         // if needed add where statements
-        if (is_array($where) && sizeof($where) > 0) {
+        if (is_array($where) && count($where) > 0) {
             $qb = $this->addWhere($qb, $where);
         }
 

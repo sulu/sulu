@@ -22,7 +22,7 @@ use Sulu\Component\Content\Document\Structure\Structure;
 class StructureSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

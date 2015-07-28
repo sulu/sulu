@@ -335,7 +335,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

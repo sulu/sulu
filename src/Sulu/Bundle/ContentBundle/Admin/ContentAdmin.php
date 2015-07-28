@@ -91,7 +91,7 @@ class ContentAdmin extends Admin
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContexts()
     {

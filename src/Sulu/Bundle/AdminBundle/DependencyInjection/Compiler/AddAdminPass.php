@@ -22,7 +22,7 @@ class AddAdminPass implements CompilerPassInterface
     const ADMIN_TAG = 'sulu.admin';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

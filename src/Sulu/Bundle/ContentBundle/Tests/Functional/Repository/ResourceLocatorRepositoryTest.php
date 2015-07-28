@@ -121,7 +121,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
 
         $result = $this->repository->getHistory($structure->getUuid(), 'sulu_io', 'en');
 
-        $this->assertEquals(2, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals(2, count($result['_embedded']['resourcelocators']));
         $this->assertEquals('/test-1', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
         $this->assertEquals('/test', $result['_embedded']['resourcelocators'][1]['resourceLocator']);
     }
@@ -136,7 +136,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
 
         $result = $this->repository->getHistory($structure->getUuid(), 'sulu_io', 'en');
 
-        $this->assertEquals(2, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals(2, count($result['_embedded']['resourcelocators']));
         $this->assertEquals('/test-2', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
         $this->assertEquals('/test-1', $result['_embedded']['resourcelocators'][1]['resourceLocator']);
     }
@@ -148,7 +148,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $this->repository->delete('/test', 'sulu_io', 'en');
         $result = $this->repository->getHistory($structure->getUuid(), 'sulu_io', 'en');
 
-        $this->assertEquals(1, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals(1, count($result['_embedded']['resourcelocators']));
         $this->assertEquals('/test-1', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
     }
 }

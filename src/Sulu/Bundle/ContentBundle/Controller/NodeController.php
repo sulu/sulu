@@ -50,7 +50,7 @@ class NodeController extends RestController
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale(Request $request)
     {

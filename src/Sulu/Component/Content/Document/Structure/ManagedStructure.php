@@ -50,7 +50,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getProperty($name)
     {
@@ -96,7 +96,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentViewProperty($name)
     {
@@ -147,7 +147,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {

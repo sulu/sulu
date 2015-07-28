@@ -101,7 +101,7 @@ class InternalLinks extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferencedUuids(PropertyInterface $property)
     {
@@ -189,7 +189,7 @@ class InternalLinks extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
