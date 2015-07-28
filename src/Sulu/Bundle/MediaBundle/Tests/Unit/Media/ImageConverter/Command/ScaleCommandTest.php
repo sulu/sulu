@@ -47,10 +47,38 @@ class ScaleCommandTest extends AbstractCommandTest
             [
                 // Command Options
                 'options' => [
-                        'x' => 5000,
-                        'y' => 5000,
-                        'forceRatio' => false,
-                    ],
+                    'x' => 700,
+                    'y' => 250,
+                    'forceRatio' => true,
+                ],
+                // Image width
+                'imageWidth' => 692,
+                'imageHeight' => 230,
+                // Tested Result
+                'width' => 644,
+                'height' => 230,
+            ],
+            [
+                // Command Options
+                'options' => [
+                    'x' => 250,
+                    'y' => 700,
+                    'forceRatio' => true,
+                ],
+                // Image width
+                'imageWidth' => 692,
+                'imageHeight' => 230,
+                // Tested Result
+                'width' => 82,
+                'height' => 230,
+            ],
+            [
+                // Command Options
+                'options' => [
+                    'x' => 5000,
+                    'y' => 5000,
+                    'forceRatio' => false,
+                ],
                 // Tested Result
                 'width' => 700,
                 'height' => 500,
