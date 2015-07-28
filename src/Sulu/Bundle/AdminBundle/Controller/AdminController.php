@@ -11,23 +11,121 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class AdminController extends Controller
+class AdminController
 {
     /**
-     * ID of user data sevice.
+     * @var AuthorizationCheckerInterface
      */
-    const USER_DATA_ID = 'sulu_admin.user_data_service';
+    private $authorizationChecker;
 
     /**
-     * ID of js config service.
+     * @var UrlGeneratorInterface
      */
-    const JS_CONFIG_ID = 'sulu_admin.jsconfig_pool';
+    private $urlGenerator;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var AdminPool
+     */
+    private $adminPool;
+
+    /**
+     * @var JsConfigPool
+     */
+    private $jsConfigPool;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var EngineInterface
+     */
+    private $engine;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * @var string
+     */
+    private $adminName;
+
+    /**
+     * @var array
+     */
+    private $locales;
+
+    /**
+     * @var string
+     */
+    private $suluVersion;
+
+    /**
+     * @var array
+     */
+    private $translatedLocales;
+
+    /**
+     * @var array
+     */
+    private $translations;
+
+    /**
+     * @var string
+     */
+    private $fallbackLocale;
+
+    public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
+        UrlGeneratorInterface $urlGenerator,
+        TokenStorageInterface $tokenStorage,
+        AdminPool $adminPool,
+        JsConfigPool $jsConfigPool,
+        SerializerInterface $serializer,
+        EngineInterface $engine,
+        $environment,
+        $adminName,
+        array $locales,
+        $suluVersion,
+        $translatedLocales,
+        $translations,
+        $fallbackLocale
+    ) {
+        $this->authorizationChecker = $authorizationChecker;
+        $this->urlGenerator = $urlGenerator;
+        $this->tokenStorage = $tokenStorage;
+        $this->adminPool = $adminPool;
+        $this->jsConfigPool = $jsConfigPool;
+        $this->serializer = $serializer;
+        $this->engine = $engine;
+        $this->environment = $environment;
+        $this->adminName = $adminName;
+        $this->locales = $locales;
+        $this->suluVersion = $suluVersion;
+        $this->translatedLocales = $translatedLocales;
+        $this->translations = $translations;
+        $this->fallbackLocale = $fallbackLocale;
+    }
 
     /**
      * Renders admin ui.
@@ -36,43 +134,38 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
-        // get user data
-        $userDataServiceId = $this->container->getParameter(self::USER_DATA_ID);
-
-        $user = array();
-        /** @var UserManagerInterface $userManager */
-        $userManager = $this->get($userDataServiceId);
-
-        if (!$userManager->getCurrentUserData()->isLoggedIn()) {
-            return $this->redirect($this->generateUrl('sulu_admin.login'));
+        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return new RedirectResponse($this->urlGenerator->generate('sulu_admin.login', array()));
         }
 
-        $user = $userManager->getCurrentUserData()->toArray();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         // get js config from bundles
-        $jsConfig = array();
-        if ($this->has(self::JS_CONFIG_ID)) {
-            $jsConfig = $this->get(self::JS_CONFIG_ID);
-            $jsConfig = $jsConfig->getConfigParams();
-        }
+        $jsConfig = $this->jsConfigPool->getConfigParams();
 
         // render template
-        if ($this->get('kernel')->getEnvironment() === 'dev') {
+        if ($this->environment === 'dev') {
             $template = 'SuluAdminBundle:Admin:index.html.twig';
         } else {
             $template = 'SuluAdminBundle:Admin:index.html.dist.twig';
         }
 
-        return $this->render(
+        return $this->engine->renderResponse(
             $template,
             array(
-                'name' => $this->container->getParameter('sulu_admin.name'),
-                'locales' => $this->container->getParameter('sulu_core.locales'),
-                'translated_locales' => $this->container->getParameter('sulu_core.translated_locales'),
-                'translations' => $this->container->getParameter('sulu_core.translations'),
-                'fallback_locale' => $this->container->getParameter('sulu_core.fallback_locale'),
-                'suluVersion' => $this->container->getParameter('sulu.version'),
-                'user' => $user,
+                'name' => $this->adminName,
+                'locales' => $this->locales,
+                'translated_locales' => $this->translatedLocales,
+                'translations' => $this->translations,
+                'fallback_locale' => $this->fallbackLocale,
+                'suluVersion' => $this->suluVersion,
+                'user' => json_decode(
+                    $this->serializer->serialize(
+                        $user,
+                        'json',
+                        SerializationContext::create()->setGroups(['frontend'])
+                    )
+                ),
                 'config' => $jsConfig,
             )
         );
@@ -85,12 +178,9 @@ class AdminController extends Controller
      */
     public function bundlesAction()
     {
-        /** @var AdminPool $pool */
-        $pool = $this->get('sulu_admin.admin_pool');
-
         $admins = [];
 
-        foreach ($pool->getAdmins() as $admin) {
+        foreach ($this->adminPool->getAdmins() as $admin) {
             $name = $admin->getJsBundleName();
             if ($name !== null) {
                 $admins[] = $name;
@@ -109,7 +199,7 @@ class AdminController extends Controller
      */
     public function contextsAction(Request $request)
     {
-        $contexts = $this->get('sulu_admin.admin_pool')->getSecurityContexts();
+        $contexts = $this->adminPool->getSecurityContexts();
         $system = $request->get('system');
 
         $response = isset($system) ? $contexts[$system] : $contexts;
@@ -124,13 +214,6 @@ class AdminController extends Controller
      */
     public function configAction()
     {
-        // get js config from bundles
-        $jsConfig = [];
-        if ($this->has(self::JS_CONFIG_ID)) {
-            $jsConfig = $this->get(self::JS_CONFIG_ID);
-            $jsConfig = $jsConfig->getConfigParams();
-        }
-
-        return new JsonResponse($jsConfig);
+        return new JsonResponse($this->jsConfigPool->getConfigParams());
     }
 }

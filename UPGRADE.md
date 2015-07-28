@@ -62,6 +62,11 @@ Filter values will now be copied from shadow-base locale to shadowed locale. Upg
 app/console phpcr:migrations:migrate
 ```
 
+### User serialization
+
+The groups of the JMSSerializer for the users have changed. Make sure to include the group `fullUser` in the
+`SerializationContext` if you are missing some fields in the serialized User.
+
 ## 1.0.0
 
 ### User / Role management changed

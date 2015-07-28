@@ -12,15 +12,14 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\Webspace\Webspace;
 
 /**
  * @group functional

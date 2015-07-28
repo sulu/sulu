@@ -112,7 +112,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         // set serialization groups
         $view->setSerializationContext(
             SerializationContext::create()->setGroups(
-                ['Default', 'partialContact']
+                ['Default', 'partialContact', 'fullUser']
             )
         );
 
@@ -327,7 +327,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         // set serialization groups
         $view->setSerializationContext(
             SerializationContext::create()->setGroups(
-                ['Default', 'partialContact']
+                ['Default', 'partialContact', 'fullUser']
             )
         );
 

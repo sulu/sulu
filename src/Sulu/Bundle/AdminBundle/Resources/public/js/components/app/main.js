@@ -106,7 +106,6 @@ define(function() {
         initialize: function() {
             this.title = document.title;
             this.$shrinker = null;
-            this.currentRoute = null;
 
             this.initializeRouter();
             this.render();

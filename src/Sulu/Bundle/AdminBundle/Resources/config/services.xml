@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
+        <parameter key="sulu_admin.admin_controller.class">Sulu\Bundle\AdminBundle\Controller\AdminController</parameter>
         <parameter key="sulu_admin.admin_pool.class">Sulu\Bundle\AdminBundle\Admin\AdminPool</parameter>
         <parameter key="sulu_admin.content_navigation_registry.class">Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistry</parameter>
         <parameter key="sulu_admin.js_config_pool.class">Sulu\Bundle\AdminBundle\Admin\JsConfigPool</parameter>
@@ -10,6 +11,23 @@
     </parameters>
 
     <services>
+        <service id="sulu_admin.admin_controller" class="%sulu_admin.admin_controller.class%">
+            <argument type="service" id="security.authorization_checker"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sulu_admin.admin_pool"/>
+            <argument type="service" id="sulu_admin.js_config_pool"/>
+            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="templating"/>
+            <argument>%kernel.environment%</argument>
+            <argument>%sulu_admin.name%</argument>
+            <argument>%sulu_core.locales%</argument>
+            <argument>%sulu.version%</argument>
+            <argument>%sulu_core.translated_locales%</argument>
+            <argument>%sulu_core.translations%</argument>
+            <argument>%sulu_core.fallback_locale%</argument>
+            <tag name="sulu.context" context="admin"/>
+        </service>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
         <service id="sulu_admin.widgets_handler" class="%sulu_admin.widgets_handler.class%">
