@@ -28,7 +28,6 @@
  * @params {String} [options.preSelectedSortMethod] Sort-method to begin with (asc or desc)
  * @params {Array} [options.presentAs] array of presentation-possibilities with id and name property
  * @params {Integer} [options.preSelectedPresentAs] id of the default presentation-mode
- * @params {Integer} [options.limitResult] maximum number of items returned on the request
  * @params {String} [options.instanceName] name of the component instance
  * @params {String} [options.url] url for requesting the items
  * @params {String} [options.dataSourceParameter] parameter for the source id
@@ -45,10 +44,9 @@
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
  * @params {String} [options.columnNavigationResultKey] key for the data in the returning JSON-embedded-result for the column-navigation component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
- * @params {String} [options.pathKey] key for the path in the returning JSON-result
+ * @params {String} [options.fullQualifiedTitleKey] key for the full-qualified-title in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
- * @params {Boolean} [options.limitResultDisabled] if true limit-result overlay-item will be disabled
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
  * @params {String} [options.columnNavigationUrl] url for column navigation
  * @params {Boolean} [options.hideDataSource] if true data-source selection hidden
@@ -106,7 +104,6 @@ define([], function() {
             preSelectedSortMethod: 'asc',
             presentAs: [],
             preSelectedPresentAs: null,
-            limitResult: null,
             instanceName: 'undefined',
             url: '',
             dataSourceParameter: 'dataSource',
@@ -122,10 +119,11 @@ define([], function() {
             limitResultDisabled: false,
             idKey: 'id',
             resultKey: 'items',
+            datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             columnNavigationResultKey: 'nodes',
             titleKey: 'title',
-            pathKey: 'path',
+            fullQualifiedTitleKey: 'fullQualifiedTitle',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
@@ -447,8 +445,8 @@ define([], function() {
             this.overlayData = {
                 dataSource: this.options.dataSource,
                 includeSubFolders: this.options.includeSubFolders,
-                category: this.options.preSelectedCategory,
-                tags: this.options.tags,
+                category: this.options.preSelectedCategory || [],
+                tags: this.options.tags || [],
                 tagOperator: this.options.preSelectedTagOperator,
                 sortBy: this.options.preSelectedSortBy,
                 sortMethod: this.options.preSelectedSortMethod,
@@ -499,7 +497,7 @@ define([], function() {
          */
         insertSource: function() {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
-            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.path, 30, '...'));
+            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
 
             if (typeof(this.overlayData.dataSource) !== 'undefined') {
                 desc = this.sandbox.translate(this.translations.from);
@@ -789,7 +787,7 @@ define([], function() {
 
                 var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
                 this.overlayData.dataSource = item.id;
-                this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(item.path, 30, '...'));
+                this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(item[this.options.fullQualifiedTitleKey], 30, '...'));
                 this.sandbox.dom.data($element, 'id', item.id);
             }.bind(this));
 
@@ -840,7 +838,7 @@ define([], function() {
                 this.$overlayContent.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
-                    dataSourceValStr: this.options.dataSource.path
+                    dataSourceValStr: ''
                 }));
                 this.$overlayContent.append(_.template(templates.overlayContent.subFolders)({
                     includeSubStr: this.sandbox.translate(this.translations.includeSubFolders),
@@ -851,7 +849,7 @@ define([], function() {
             }
             if (!this.options.hideCategories) {
                 this.$overlayContent.append(_.template(templates.overlayContent.categories)({
-                    filterByCatStr: this.sandbox.translate(this.translations.filterByCasrc/Sulu/Bundle/ContentBundle/Tests/Functional/Content/SmartContentQueryBuilderTest.phptegory)
+                    filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
                 }));
             }
             if (!this.options.hideTags) {
@@ -989,12 +987,13 @@ define([], function() {
             data[this.options.sortByParameter] = this.overlayData.sortBy;
             data[this.options.sortMethodParameter] = this.overlayData.sortMethod;
             data[this.options.presentAsParameter] = this.overlayData.presentAs;
-            data[this.options.limitResultParameter] = this.overlayData.limitResult;
+            data[this.options.limitResultParameter] = this.overlayData.limitResult !== '' ?
+                this.overlayData.limitResult : null;
 
             // min source must be selected
-            if (this.overlayData.dataSource.length > 0 && data !== this.URI.data) {
+            if (this.overlayData.dataSource.length > 0 && JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
-                this.URI.data = data;
+                this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
             } else {
                 this.URI.hasChanged = false;
@@ -1015,8 +1014,8 @@ define([], function() {
                     data: this.URI.data,
 
                     success: function(data) {
-                        this.overlayData.title = data[this.options.titleKey];
-                        this.overlayData.path = data[this.options.pathKey] || '/';
+                        this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
+                        this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.fullQualifiedTitleKey];
                         this.items = data._embedded[this.options.resultKey];
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),
