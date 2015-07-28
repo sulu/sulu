@@ -4,6 +4,14 @@
 
 ### Listbuilder
 
+The listbuilder uses now expressions to build the query. In course of these changes some default values have been 
+removed from some methodes of the `AbstractListBuilder because of unclear meaning / effect. Changed function parameters:
+
+- where (conjunction removed)
+- between (conjunction removed)
+
+### Listbuilder
+
 It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
 field, instead of adding a new one. Check if you haven't applied `sort()` multiple times to a listbuilder with the
 purpose of overriding its previous sort field.
