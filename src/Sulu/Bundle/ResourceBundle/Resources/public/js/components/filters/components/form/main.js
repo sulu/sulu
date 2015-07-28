@@ -38,8 +38,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                     {
                         id: 'save-button',
                         icon: 'floppy-o',
-                        iconSize: 'large',
-                        class: 'highlight',
                         position: 1,
                         group: 'left',
                         disabled: true,
@@ -60,7 +58,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             if (!!this.options.data && !!this.options.data.id) {
                 toolbar.template.push({
                     icon: 'trash-o',
-                    iconSize: 'large',
                     group: 'left',
                     id: 'delete-button',
                     position: 30,

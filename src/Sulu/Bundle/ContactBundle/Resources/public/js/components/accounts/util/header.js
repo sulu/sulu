@@ -35,19 +35,16 @@ define(['app-config'], function(AppConfig) {
             var items = [],
                 options = {
                     icon: 'gear',
-                    iconSize: 'large',
                     group: 'left',
                     id: 'options-button',
                     position: 30,
-                    items: []
+                    dropdownItems: []
                 };
 
             // save button
             items.push({
                 id: 'save-button',
                 icon: 'floppy-o',
-                iconSize: 'large',
-                class: 'highlight',
                 position: 1,
                 group: 'left',
                 disabled: true,
@@ -57,7 +54,7 @@ define(['app-config'], function(AppConfig) {
             });
 
             // delete select item
-            options.items.push({
+            options.dropdownItems.push({
                 title: this.sandbox.translate('toolbar.delete'),
                 callback: function() {
                     this.sandbox.emit('sulu.header.toolbar.delete');
@@ -65,7 +62,7 @@ define(['app-config'], function(AppConfig) {
             });
 
             items.push(options);
-            this.sandbox.emit('sulu.header.set-toolbar', {data: items});
+            this.sandbox.emit('sulu.header.set-toolbar', {buttons: items});
         };
 
     return {

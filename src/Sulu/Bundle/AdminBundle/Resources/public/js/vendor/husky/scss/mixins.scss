@@ -5,7 +5,7 @@
     &:-moz-placeholder { @content; }
     &::-moz-placeholder { @content; }
     &:-ms-input-placeholder { @content; }
-    &::-webkit-input-placeholder { @content; } 
+    &::-webkit-input-placeholder { @content; }
 }
 
 @mixin standard-box-shadow($borderSize:3px, $color:rgba(0,0,0,0.08), $blur:0px){

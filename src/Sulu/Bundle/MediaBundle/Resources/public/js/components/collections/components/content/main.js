@@ -56,7 +56,7 @@ define(function() {
                             id: 'settings',
                             icon: 'gear',
                             position: 30,
-                            items: [
+                            dropdownItems: [
                                 {
                                     id: 'collection-move',
                                     title: this.sandbox.translate('sulu.collection.move'),

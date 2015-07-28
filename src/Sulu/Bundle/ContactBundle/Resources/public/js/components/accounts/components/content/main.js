@@ -17,7 +17,7 @@ define(function() {
                 url: '/admin/content-navigations?alias=account'
             },
             toolbar: {
-                template: []
+                template: 'default'
             }
         }
     };

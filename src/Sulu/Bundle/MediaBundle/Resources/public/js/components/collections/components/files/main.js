@@ -157,18 +157,18 @@ define(function() {
             this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
 
             // change the editing language
-            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
         },
 
         /**
          * Changes the editing language
          * @param locale {string} the new locale to edit the collection in
          */
-        changeLanguage: function(locale) {
+        changeLanguage: function(language) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale.localization, breadcrumb: 'true'},
+                this.options.data.id, {locale: language.id, breadcrumb: 'true'},
                 function(collection) {
                     this.options.data = collection;
                     this.setHeaderInfos();
@@ -177,7 +177,7 @@ define(function() {
                     this.options.locale = this.options.data.locale;
                 }.bind(this)
             );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.localization);
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', language.id);
         },
 
         /**
@@ -363,7 +363,7 @@ define(function() {
                             id: 'settings',
                             icon: 'gear',
                             position: 30,
-                            items: [
+                            dropdownItems: [
                                 {
                                     id: 'media-move',
                                     title: this.sandbox.translate('sulu.media.move'),
@@ -379,10 +379,10 @@ define(function() {
                         {
                             id: 'change',
                             icon: 'th-large',
-                            itemsOption: {
-                                markable: true
+                            dropdownOptions: {
+                                markSelected: true
                             },
-                            items: [
+                            dropdownItems: [
                                 {
                                     id: 'small-thumbnails',
                                     title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),

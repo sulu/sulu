@@ -82,17 +82,7 @@ define(['widget-groups'], function(WidgetGroups) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    inHeader: true,
-                    groups: [
-                        {
-                            id: 1,
-                            align: 'left'
-                        },
-                        {
-                            id: 2,
-                            align: 'right'
-                        }
-                    ]
+                    template: 'default'
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),

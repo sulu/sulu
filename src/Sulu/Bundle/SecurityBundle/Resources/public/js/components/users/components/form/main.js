@@ -23,8 +23,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             {
                 id: 'save-button',
                 icon: 'floppy-o',
-                iconSize: 'large',
-                class: 'highlight',
                 position: 1,
                 group: 'left',
                 disabled: true,
@@ -35,11 +33,10 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         ],
         configDropdown = {
             icon: 'gear',
-            iconSize: 'large',
             group: 'left',
             id: 'options-button',
             position: 30,
-            items: [
+            dropdownItems: [
                 {
                     title: this.sandbox.translate('toolbar.delete'),
                     callback: function () {
@@ -58,11 +55,11 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         };
 
         if (!this.user.enabled) {
-            configDropdown.items.push(configItems.confirm);
+            configDropdown.dropdownItems.push(configItems.confirm);
         }
 
         // add workflow items
-        if (configDropdown.items.length > 0) {
+        if (configDropdown.dropdownItems.length > 0) {
             toolbarItems.push(configDropdown);
         }
 

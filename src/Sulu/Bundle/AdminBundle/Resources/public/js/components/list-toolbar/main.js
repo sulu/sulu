@@ -35,8 +35,7 @@ define([], function() {
                     {
                         id: 'add',
                         icon: 'plus-circle',
-                        class: 'highlight-white',
-                        title: 'add',
+                        class: 'highlight',
                         position: 10,
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.add');
@@ -45,7 +44,6 @@ define([], function() {
                     {
                         id: 'delete',
                         icon: 'trash-o',
-                        title: 'delete',
                         position: 20,
                         disabled: true,
                         callback: function() {
@@ -56,7 +54,7 @@ define([], function() {
                         id: 'settings',
                         icon: 'gear',
                         position: 30,
-                        items: [
+                        dropdownItems: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
                                 disabled: true
@@ -77,7 +75,6 @@ define([], function() {
                     {
                         id: 'edit',
                         icon: 'pencil',
-                        title: 'edit',
                         position: 25,
                         disabled: true,
                         callback: function() {
@@ -101,10 +98,10 @@ define([], function() {
                     {
                         id: 'change',
                         icon: 'th-large',
-                        itemsOption: {
-                            markable: true
+                        dropdownOptions: {
+                            markSelected: true
                         },
-                        items: [
+                        dropdownItems: [
                             {
                                 id: 'small-thumbnails',
                                 title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
@@ -134,10 +131,8 @@ define([], function() {
                 var defaults = templates.default.call(this);
                 defaults.splice(1, 0, {
                     icon: 'floppy-o',
-                    iconSize: 'large',
                     disabled: true,
                     id: 'save',
-                    title: this.sandbox.translate('sulu.list-toolbar.save'),
                     callback: function() {
                         this.sandbox.emit('sulu.list-toolbar.save');
                     }.bind(this)
@@ -263,9 +258,9 @@ define([], function() {
 
             for (i = -1, len = template.length; ++i < len;) {
                 item = template[i];
-                if (item.hasOwnProperty('items')) {
+                if (item.hasOwnProperty('dropdownItems')) {
                     // call recursively
-                    item.items = parseTemplateTypes.call(this, item.items);
+                    item.dropdownItems = parseTemplateTypes.call(this, item.dropdownItems);
                 }
                 if (item.hasOwnProperty('type')) {
                     if (item.type === 'columnOptions') {
@@ -277,18 +272,11 @@ define([], function() {
         },
 
         /**
-         * Delegates the start of the toolbar to the header
-         */
-        startToolbarInHeader = function(options) {
-            // remove configured el (let header decide which container to use)
-            this.sandbox.emit('sulu.header.set-toolbar', options);
-        },
-
-        /**
          * Starts the husky-toolbar with given options
          * @param options {object} options The options to pass to the toolbar-component
          */
         startToolbarComponent = function(options) {
+            this.sandbox.dom.addClass(options.el, 'list-toolbar');
             this.sandbox.start([
                 {
                     name: 'toolbar@husky',
@@ -316,28 +304,15 @@ define([], function() {
 
             }
 
-            // emit event to extend toolbar
-            this.sandbox.emit(
-                'sulu.header.toolbar.extend',
-                this.options.context,
-                this.options.template,
-                this.options.instanceName,
-                this.options.datagridInstanceName,
-                this.options.listInfoContainerSelector
-            );
-
             this.options.template = parseTemplateTypes.call(this, this.options.template);
 
             var $container,
                 options = {
                     groups: this.options.groups,
                     hasSearch: true,
-                    data: this.options.template,
+                    buttons: this.options.template,
                     instanceName: this.options.instanceName,
-                    showTitleAsTooltip: this.options.showTitleAsTooltip,
-                    searchOptions: {
-                        placeholderText: 'public.search'
-                    }
+                    showTitleAsTooltip: this.options.showTitleAsTooltip
                 };
 
             if (this.options.hasOwnProperty('hasSearch')) {
@@ -352,18 +327,10 @@ define([], function() {
             if (this.options.parentListener) {
                 this.options.parentListener.call(this);
             }
-
-            // start the toolbar right ahead or delegate the initialization to the header
-            if (this.options.inHeader !== true) {
-                $container = this.sandbox.dom.createElement('<div />');
-                this.html($container);
-                options.el = $container;
-                startToolbarComponent.call(this, options);
-            } else {
-                // hide element-container, because toolbar gets rendered in header
-                this.sandbox.dom.hide(this.$el);
-                startToolbarInHeader.call(this, options);
-            }
+            $container = this.sandbox.dom.createElement('<div />');
+            this.html($container);
+            options.el = $container;
+            startToolbarComponent.call(this, options);
         }
     };
 });
