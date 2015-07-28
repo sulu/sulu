@@ -202,7 +202,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Child 1', $structure->getTitle());
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(2, count($result['_embedded']['nodes']));
     }
 
     /**
@@ -215,7 +215,7 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(2, count($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
         $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
@@ -230,13 +230,13 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, true);
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['nodes']));
         $webspace = $result['_embedded']['nodes'][0];
         $this->assertEquals('Sulu CMF', $webspace['title']);
         $this->assertEquals('/', $webspace['path']);
         $this->assertTrue($webspace['hasSub']);
 
-        $this->assertEquals(2, sizeof($webspace['_embedded']['nodes']));
+        $this->assertEquals(2, count($webspace['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['path']);
         $this->assertTrue($result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['hasSub']);
@@ -251,7 +251,7 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false);
-        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(2, count($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
         $this->assertEquals('ghost', $result['_embedded']['nodes'][0]['type']['name']);
@@ -313,7 +313,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(0, count($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -323,7 +323,7 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['nodes']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
@@ -334,7 +334,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(0, count($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -345,7 +345,7 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['nodes']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
@@ -542,13 +542,13 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2/test1', $secondLayerNodes['_embedded']['nodes'][0]['url']);
@@ -608,13 +608,13 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
@@ -659,13 +659,13 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external']);
@@ -691,14 +691,14 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
     }
@@ -757,7 +757,7 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals($data[1]->getUuid(), $firstLayerNodes['_embedded']['nodes'][0]['internal_link']);
@@ -765,7 +765,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
@@ -809,7 +809,7 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('www.google.at', $firstLayerNodes['_embedded']['nodes'][0]['external']);
@@ -817,7 +817,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external']);
@@ -881,7 +881,7 @@ class NodeRepositoryTest extends SuluTestCase
         //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $this->assertEquals(4, count($test['_embedded']['nodes']));
         $nodes = $test['_embedded']['nodes'];
 
         $this->assertEquals('Test3', $nodes[0]['title']);
@@ -907,7 +907,7 @@ class NodeRepositoryTest extends SuluTestCase
         //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $this->assertEquals(4, count($test['_embedded']['nodes']));
         $nodes = $test['_embedded']['nodes'];
 
         $this->assertEquals('Test4', $nodes[0]['title']);
@@ -985,7 +985,7 @@ class NodeRepositoryTest extends SuluTestCase
         //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $this->assertEquals(4, count($test['_embedded']['nodes']));
         $nodes = $test['_embedded']['nodes'];
 
         $this->assertEquals('Test3', $nodes[0]['title']);

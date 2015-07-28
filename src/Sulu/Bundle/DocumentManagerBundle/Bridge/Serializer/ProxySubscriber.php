@@ -23,7 +23,7 @@ use Sulu\Component\DocumentManager\ClassNameInflector;
 class ProxySubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

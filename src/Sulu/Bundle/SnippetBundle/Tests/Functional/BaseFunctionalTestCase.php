@@ -34,7 +34,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
     protected $car1;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getKernelConfiguration()
     {

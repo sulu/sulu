@@ -130,7 +130,7 @@ class AccountRepository extends NestedTreeRepository
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findByFilter(array $filter)
     {

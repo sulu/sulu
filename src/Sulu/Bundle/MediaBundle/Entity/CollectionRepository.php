@@ -47,7 +47,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $query->setParameter('id', $id);
         $result = $query->getResult();
 
-        if (sizeof($result) === 0) {
+        if (count($result) === 0) {
             return;
         }
 
@@ -85,7 +85,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $dql .= ' AND (collectionMeta.locale = :locale OR defaultMeta != :locale)';
             }
 
-            if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
+            if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
                 $orderBy = [];
                 foreach ($sortBy as $column => $order) {
                     $orderBy[] = 'collectionMeta.' . $column . ' ' . (strtolower($order) === 'asc' ? 'ASC' : 'DESC');
@@ -163,7 +163,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->addSelect('changerContact')
                 */
 
-            if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
+            if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
                     $qb->addOrderBy('collectionMeta.' . $column, strtolower($order) === 'asc' ? 'ASC' : 'DESC');
                 }

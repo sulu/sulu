@@ -89,7 +89,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         // build where clause for datasource
         if ($this->hasConfig('dataSource')) {
             $sql2Where[] = $this->buildDatasourceWhere();
-        } elseif (sizeof($this->ids) === 0) {
+        } elseif (count($this->ids) === 0) {
             $sql2Where[] = sprintf(
                 'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
                 $webspaceKey
@@ -101,11 +101,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             $sql2Where[] = $this->buildTagsWhere($locale);
         }
 
-        if (sizeof($this->ids) > 0) {
+        if (count($this->ids) > 0) {
             $sql2Where[] = $this->buildPageSelector();
         }
 
-        if (sizeof($this->excluded) > 0) {
+        if (count($this->excluded) > 0) {
             $sql2Where = array_merge($sql2Where, $this->buildPageExclude());
         }
 
@@ -121,7 +121,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     {
         $select = [];
 
-        if (sizeof($this->propertiesConfig) > 0) {
+        if (count($this->propertiesConfig) > 0) {
             $this->buildPropertiesSelect($locale, $additionalFields);
         }
 
@@ -254,7 +254,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
             }
 
-            if (sizeof($sql2Where) > 0) {
+            if (count($sql2Where) > 0) {
                 return '(' . implode(' ' . strtoupper($tagOperator) . ' ', $sql2Where) . ')';
             }
         }

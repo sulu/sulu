@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SnippetType extends AbstractStructureBehaviorType
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
@@ -30,7 +30,7 @@ class SnippetType extends AbstractStructureBehaviorType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -45,7 +45,7 @@ class SnippetType extends AbstractStructureBehaviorType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {

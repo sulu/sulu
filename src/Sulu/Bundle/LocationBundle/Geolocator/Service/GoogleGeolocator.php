@@ -40,7 +40,7 @@ class GoogleGeolocator implements GeolocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function locate($query)
     {

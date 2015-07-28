@@ -79,7 +79,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
                 $webspaceKey,
                 $domain
             );
-            if (sizeof($portalUrls) > 0) {
+            if (count($portalUrls) > 0) {
                 return rtrim($portalUrls[0], '/');
             }
         } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {

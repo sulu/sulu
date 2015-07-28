@@ -515,7 +515,7 @@ class NavigationItem implements \Iterator
      */
     public function valid()
     {
-        return $this->position < sizeof($this->children);
+        return $this->position < count($this->children);
     }
 
     /**

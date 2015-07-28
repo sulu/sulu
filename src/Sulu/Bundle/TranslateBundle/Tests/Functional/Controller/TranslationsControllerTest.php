@@ -118,7 +118,7 @@ class TranslationsControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, sizeof($response->_embedded->translations));
+        $this->assertEquals(2, count($response->_embedded->translations));
 
         $item = $response->_embedded->translations[0];
         $this->assertNotNull($item->id);
@@ -173,7 +173,7 @@ class TranslationsControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(3, $response->total);
-        $this->assertEquals(3, sizeof($response->_embedded->translations));
+        $this->assertEquals(3, count($response->_embedded->translations));
 
         foreach ($response->_embedded->translations as $index => $code) {
             if ($code->code == 'code.1') {

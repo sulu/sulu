@@ -27,7 +27,7 @@ use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 class LoadOperators implements FixtureInterface, OrderedFixtureInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -118,7 +118,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOrder()
     {

@@ -51,7 +51,7 @@ class SuluSearchAdmin extends Admin
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContexts()
     {

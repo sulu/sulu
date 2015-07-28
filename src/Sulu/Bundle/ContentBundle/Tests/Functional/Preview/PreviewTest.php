@@ -245,7 +245,7 @@ class PreviewTest extends SuluTestCase
         );
 
         // check result
-        $this->assertEquals(1, sizeof($changes['block,0']));
+        $this->assertEquals(1, count($changes['block,0']));
         $this->assertEquals(
             "\n<h1 property=\"title\">New-Block-Title-1</h1>\n" .
             "<ul>\n" .
@@ -254,7 +254,7 @@ class PreviewTest extends SuluTestCase
             '</ul>',
             $changes['block,0'][0]
         );
-        $this->assertEquals(1, sizeof($changes['block,1']));
+        $this->assertEquals(1, count($changes['block,1']));
         $this->assertEquals(
             "\n<h1 property=\"title\">New-Block-Title-2</h1>\n" .
             "<ul>\n" .
@@ -369,13 +369,13 @@ class PreviewTest extends SuluTestCase
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($changes));
+        $this->assertEquals(2, count($changes));
         $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']);
         $this->assertEquals(['asdf'], $changes['article']);
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(0, sizeof($changes));
+        $this->assertEquals(0, count($changes));
 
         // rerender PREVIEW
         $response = $this->preview->render(1, $data[0]->getUuid(), 'sulu_io', 'en');

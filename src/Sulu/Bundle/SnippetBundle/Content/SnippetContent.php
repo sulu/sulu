@@ -155,7 +155,7 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultParams()
     {
@@ -190,7 +190,7 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
@@ -243,7 +243,7 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferencedUuids(PropertyInterface $property)
     {

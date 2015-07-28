@@ -36,6 +36,6 @@ class Cast extends FunctionNode
 
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        return sprintf('CAST(%s AS %s)',  $this->firstDateExpression->dispatch($sqlWalker), $this->unit);
+        return sprintf('CAST(%s AS %s)', $this->firstDateExpression->dispatch($sqlWalker), $this->unit);
     }
 }

@@ -22,7 +22,7 @@ use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 class ExtensionContainerSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

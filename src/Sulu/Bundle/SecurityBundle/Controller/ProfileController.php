@@ -137,7 +137,7 @@ class ProfileController implements ClassResourceInterface
     }
 
     /**
-     * Deletes a user setting by a given key
+     * Deletes a user setting by a given key.
      *
      * @param Request $request
      *
@@ -165,7 +165,6 @@ class ProfileController implements ClassResourceInterface
             } else {
                 $view = View::create(null, 400);
             }
-
         } catch (RestException $exc) {
             $view = View::create($exc->toArray(), 400);
         }

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class LoadSecurityTypes extends ContainerAware implements FixtureInterface, OrderedFixtureInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -57,7 +57,7 @@ class LoadSecurityTypes extends ContainerAware implements FixtureInterface, Orde
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOrder()
     {

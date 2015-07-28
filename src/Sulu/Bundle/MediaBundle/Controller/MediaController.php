@@ -359,7 +359,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

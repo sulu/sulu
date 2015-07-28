@@ -176,7 +176,7 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
@@ -198,7 +198,7 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getViewData(PropertyInterface $property)
     {

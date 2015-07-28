@@ -22,7 +22,7 @@ class AddJsConfigPass implements CompilerPassInterface
     const CONFIG_TAG = 'sulu.js_config';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

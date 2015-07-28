@@ -1046,36 +1046,36 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
 
-        $this->assertEquals(2, sizeof($response->urls));
+        $this->assertEquals(2, count($response->urls));
         $this->assertEquals('http://example.company.com', $response->urls[0]->url);
         $this->assertEquals('Private', $response->urls[0]->urlType->name);
         $this->assertEquals('http://test.company.com', $response->urls[1]->url);
         $this->assertEquals('Private', $response->urls[1]->urlType->name);
 
-        $this->assertEquals(2, sizeof($response->emails));
+        $this->assertEquals(2, count($response->emails));
         $this->assertEquals('office@company.com', $response->emails[0]->email);
         $this->assertEquals('Private', $response->emails[0]->emailType->name);
         $this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
         $this->assertEquals('Private', $response->emails[1]->emailType->name);
 
-        $this->assertEquals(2, sizeof($response->phones));
+        $this->assertEquals(2, count($response->phones));
         $this->assertEquals('4567890', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
         $this->assertEquals('789456123', $response->phones[1]->phone);
         $this->assertEquals('Private', $response->phones[1]->phoneType->name);
 
-        $this->assertEquals(2, sizeof($response->faxes));
+        $this->assertEquals(2, count($response->faxes));
         $this->assertEquals('4567890-1', $response->faxes[0]->fax);
         $this->assertEquals('Private', $response->faxes[0]->faxType->name);
         $this->assertEquals('789456123-1', $response->faxes[1]->fax);
         $this->assertEquals('Private', $response->faxes[1]->faxType->name);
 
-        $this->assertEquals(2, sizeof($response->notes));
+        $this->assertEquals(2, count($response->notes));
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
             $this->assertEquals('0022', $response->addresses[0]->zip);
@@ -1103,7 +1103,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('ML', $response->addresses[1]->country->code);
             $this->assertEquals('Private', $response->addresses[1]->addressType->name);
         } else {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
             $this->assertEquals('2', $response->addresses[1]->number);
             $this->assertEquals('note', $response->addresses[1]->note);
@@ -1141,36 +1141,36 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
 
-        $this->assertEquals(2, sizeof($response->urls));
+        $this->assertEquals(2, count($response->urls));
         $this->assertEquals('http://example.company.com', $response->urls[0]->url);
         $this->assertEquals('Private', $response->urls[0]->urlType->name);
         $this->assertEquals('http://test.company.com', $response->urls[1]->url);
         $this->assertEquals('Private', $response->urls[1]->urlType->name);
 
-        $this->assertEquals(2, sizeof($response->emails));
+        $this->assertEquals(2, count($response->emails));
         $this->assertEquals('office@company.com', $response->emails[0]->email);
         $this->assertEquals('Private', $response->emails[0]->emailType->name);
         $this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
         $this->assertEquals('Private', $response->emails[1]->emailType->name);
 
-        $this->assertEquals(2, sizeof($response->phones));
+        $this->assertEquals(2, count($response->phones));
         $this->assertEquals('4567890', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
         $this->assertEquals('789456123', $response->phones[1]->phone);
         $this->assertEquals('Private', $response->phones[1]->phoneType->name);
 
-        $this->assertEquals(2, sizeof($response->faxes));
+        $this->assertEquals(2, count($response->faxes));
         $this->assertEquals('4567890-1', $response->faxes[0]->fax);
         $this->assertEquals('Private', $response->faxes[0]->faxType->name);
         $this->assertEquals('789456123-1', $response->faxes[1]->fax);
         $this->assertEquals('Private', $response->faxes[1]->faxType->name);
 
-        $this->assertEquals(2, sizeof($response->notes));
+        $this->assertEquals(2, count($response->notes));
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
             $this->assertEquals('0022', $response->addresses[0]->zip);
@@ -1198,7 +1198,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Private', $response->addresses[1]->addressType->name);
             $this->assertEquals('note1', $response->addresses[1]->note);
         } else {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
             $this->assertEquals('2', $response->addresses[1]->number);
             $this->assertEquals('0022', $response->addresses[1]->zip);
@@ -1256,12 +1256,12 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
 
-        $this->assertEquals(0, sizeof($response->urls));
-        $this->assertEquals(0, sizeof($response->emails));
-        $this->assertEquals(0, sizeof($response->phones));
-        $this->assertEquals(0, sizeof($response->faxes));
-        $this->assertEquals(0, sizeof($response->notes));
-        $this->assertEquals(0, sizeof($response->addresses));
+        $this->assertEquals(0, count($response->urls));
+        $this->assertEquals(0, count($response->emails));
+        $this->assertEquals(0, count($response->phones));
+        $this->assertEquals(0, count($response->faxes));
+        $this->assertEquals(0, count($response->notes));
+        $this->assertEquals(0, count($response->addresses));
     }
 
     public function testPutNotExisting()
@@ -1473,7 +1473,7 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // number of returned contacts has to be less or equal 3
-        $this->assertEquals(3, sizeof($response->contacts));
+        $this->assertEquals(3, count($response->contacts));
 
         // return full number of contacts related to account
         $this->assertEquals($numContacts, $response->numContacts);
@@ -1508,7 +1508,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertGreaterThan(0, $response->numChildren);
 
         // number of returned contacts has to be less or equal 3
-        $this->assertLessThanOrEqual(3, sizeof($response->children));
+        $this->assertLessThanOrEqual(3, count($response->children));
     }
 
     public function testGetDeleteInfoByIdNotExisting()

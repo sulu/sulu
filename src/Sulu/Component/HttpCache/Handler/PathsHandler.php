@@ -62,7 +62,7 @@ class PathsHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function invalidateStructure(StructureInterface $structure)
     {
@@ -74,7 +74,7 @@ class PathsHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush()
     {

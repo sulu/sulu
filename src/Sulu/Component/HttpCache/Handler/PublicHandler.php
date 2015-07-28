@@ -51,7 +51,7 @@ class PublicHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateResponse(Response $response, StructureInterface $structure)
     {

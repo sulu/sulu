@@ -190,7 +190,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNodeName()
     {
@@ -198,7 +198,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTitle()
     {
@@ -206,7 +206,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setTitle($title)
     {
@@ -214,7 +214,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreated()
     {
@@ -222,7 +222,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanged()
     {
@@ -230,7 +230,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreator()
     {
@@ -238,7 +238,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanger()
     {
@@ -246,7 +246,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getParent()
     {
@@ -254,7 +254,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setParent($parent)
     {
@@ -262,7 +262,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getResourceSegment()
     {
@@ -270,7 +270,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setResourceSegment($resourceSegment)
     {
@@ -278,7 +278,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNavigationContexts()
     {
@@ -286,7 +286,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setNavigationContexts(array $navigationContexts = [])
     {
@@ -294,14 +294,14 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRedirectType()
     {
         return $this->redirectType;
     }
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setRedirectType($redirectType)
     {
@@ -309,7 +309,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRedirectTarget()
     {
@@ -317,7 +317,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setRedirectTarget($redirectTarget)
     {
@@ -325,7 +325,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRedirectExternal()
     {
@@ -333,7 +333,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setRedirectExternal($redirectExternal)
     {
@@ -341,7 +341,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getWorkflowStage()
     {
@@ -349,7 +349,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setWorkflowStage($workflowStage)
     {
@@ -357,7 +357,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPublished()
     {
@@ -365,7 +365,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getShadowLocale()
     {
@@ -373,7 +373,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setShadowLocale($shadowLocale)
     {
@@ -381,7 +381,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isShadowLocaleEnabled()
     {
@@ -389,7 +389,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setShadowLocaleEnabled($shadowLocaleEnabled)
     {
@@ -397,7 +397,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUuid()
     {
@@ -405,7 +405,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructureType()
     {
@@ -413,7 +413,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructure()
     {
@@ -421,7 +421,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setStructureType($structureType)
     {
@@ -429,7 +429,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -437,7 +437,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -445,7 +445,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChildren()
     {
@@ -453,7 +453,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPath()
     {
@@ -461,7 +461,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getExtensionsData()
     {
@@ -469,7 +469,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setExtensionsData($extensions)
     {
@@ -477,7 +477,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setExtension($name, $data)
     {
@@ -485,7 +485,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getWebspaceName()
     {
@@ -493,7 +493,7 @@ class BasePageDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSuluOrder()
     {

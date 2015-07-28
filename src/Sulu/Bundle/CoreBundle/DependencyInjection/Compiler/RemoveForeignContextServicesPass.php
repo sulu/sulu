@@ -23,7 +23,7 @@ class RemoveForeignContextServicesPass implements CompilerPassInterface
     const SULU_CONTEXT_TAG = 'sulu.context';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

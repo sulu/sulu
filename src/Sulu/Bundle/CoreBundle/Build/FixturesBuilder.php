@@ -17,7 +17,7 @@ namespace Sulu\Bundle\CoreBundle\Build;
 class FixturesBuilder extends SuluBuilder
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -25,7 +25,7 @@ class FixturesBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDependencies()
     {
@@ -33,7 +33,7 @@ class FixturesBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build()
     {

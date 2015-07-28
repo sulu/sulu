@@ -65,7 +65,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {

@@ -224,7 +224,7 @@ class StructureProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAllMetadata()
     {
@@ -246,7 +246,7 @@ class StructureProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadataForDocument(Document $document)
     {

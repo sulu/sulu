@@ -78,7 +78,7 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptors()
     {
@@ -86,7 +86,7 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptor($key)
     {

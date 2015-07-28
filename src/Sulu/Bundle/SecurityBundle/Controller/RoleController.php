@@ -80,7 +80,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             'name',
             $this->container->getParameter('sulu.model.role.class'),
             'public.name',
-            array(),
+            [],
             false,
             false,
             'string'
@@ -90,7 +90,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             'system',
             $this->container->getParameter('sulu.model.role.class'),
             'security.roles.system',
-            array(),
+            [],
             false,
             false,
             'string'
@@ -497,7 +497,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

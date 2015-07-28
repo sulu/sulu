@@ -278,7 +278,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
-        $this->assertEquals(sizeof($nodes), sizeof($result));
+        $this->assertEquals(count($nodes), count($result));
         foreach ($result as $item) {
             /** @var StructureInterface $expected */
             $expected = $nodes[$item['uuid']];
@@ -296,7 +296,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
-        $this->assertEquals(0, sizeof($result));
+        $this->assertEquals(0, count($result));
     }
 
     public function testIncludeSubFolder()
@@ -316,12 +316,12 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $tDiff = microtime(true) - $tStart;
 
         // nodes + news + products
-        $this->assertEquals(sizeof($nodes) + 2, sizeof($result));
+        $this->assertEquals(count($nodes) + 2, count($result));
 
         $nodes[$news->getUuid()] = $news;
         $nodes[$products->getUuid()] = $products;
 
-        for ($i = 0; $i < sizeof($nodes); ++$i) {
+        for ($i = 0; $i < count($nodes); ++$i) {
             $item = $result[$i];
 
             /** @var StructureInterface $expected */
@@ -399,28 +399,28 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2, sizeof($result));
+        $this->assertEquals($t1t2, count($result));
 
         // tag 1
         $builder->init(
             ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag1->getId()], 'tagOperator' => 'and']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t1, sizeof($result));
+        $this->assertEquals($t1t2 + $t1, count($result));
 
         // tag 2
         $builder->init(
             ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag2->getId()], 'tagOperator' => 'and']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t2, sizeof($result));
+        $this->assertEquals($t1t2 + $t2, count($result));
 
         // tag 3
         $builder->init(
             ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag3->getId()], 'tagOperator' => 'and']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(0, sizeof($result));
+        $this->assertEquals(0, count($result));
     }
 
     public function orderByProvider()
@@ -639,7 +639,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $tDiff = microtime(true) - $tStart;
 
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
         $this->assertArrayHasKey($result[0]['uuid'], $nodes);
         $this->assertArrayHasKey($result[1]['uuid'], $nodes);
     }
@@ -659,7 +659,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(14, sizeof($result));
+        $this->assertEquals(14, count($result));
         unset($uuids[0]);
         foreach ($result as $item) {
             $this->assertContains($item['uuid'], $uuids);
@@ -842,13 +842,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals(1, count($result));
         $this->assertEquals('/team/daniel', $result[0]['url']);
         $this->assertEquals('Daniel', $result[0]['title']);
 
         $result = $this->contentQuery->execute('sulu_io', ['de'], $builder);
 
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
         $this->assertEquals('/team/daniel', $result[0]['url']);
         $this->assertEquals('Daniel', $result[0]['title']);
         $this->assertEquals('/team/johannes', $result[1]['url']);

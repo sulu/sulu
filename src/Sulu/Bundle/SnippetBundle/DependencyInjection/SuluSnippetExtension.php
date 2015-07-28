@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 class SuluSnippetExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {

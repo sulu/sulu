@@ -158,19 +158,19 @@ class TranslationsController extends RestController implements ClassResourceInte
 
             // construct response array
             $translations = [];
-            for ($i = 0; $i < sizeof($codes); ++$i) {
+            for ($i = 0; $i < count($codes); ++$i) {
                 $code = $codes[$i];
 
                 // if no translation available set value null
                 $value = '';
                 $defaultValue = '';
-                if (is_array($code['translations']) && sizeof($code['translations']) == 1) {
+                if (is_array($code['translations']) && count($code['translations']) == 1) {
                     if ($code['translations'][0]['idCatalogues'] == $slug) {
                         $value = $code['translations'][0]['value'];
                     } else {
                         $defaultValue = $code['translations'][0]['value'];
                     }
-                } elseif (is_array($code['translations']) && sizeof($code['translations']) == 2) {
+                } elseif (is_array($code['translations']) && count($code['translations']) == 2) {
                     if ($code['translations'][0]['idCatalogues'] == $slug) {
                         $value = $code['translations'][0]['value'];
                         $defaultValue = $code['translations'][1]['value'];
@@ -195,7 +195,7 @@ class TranslationsController extends RestController implements ClassResourceInte
             }
 
             $response = [
-                'total' => sizeof($translations),
+                'total' => count($translations),
                 '_embedded' => ['translations' => $translations],
             ];
 

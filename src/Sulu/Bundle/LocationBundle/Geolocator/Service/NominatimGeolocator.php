@@ -34,7 +34,7 @@ class NominatimGeolocator implements GeolocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function locate($query)
     {

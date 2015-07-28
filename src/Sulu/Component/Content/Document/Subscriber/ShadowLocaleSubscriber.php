@@ -44,7 +44,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($document)
     {
@@ -52,7 +52,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -96,7 +96,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function doPersist(PersistEvent $event)
     {

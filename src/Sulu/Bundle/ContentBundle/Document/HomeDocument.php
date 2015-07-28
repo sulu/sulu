@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 class HomeDocument extends BasePageDocument implements TitleBehavior
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getResourceSegment()
     {

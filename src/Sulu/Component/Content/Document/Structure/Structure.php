@@ -29,7 +29,7 @@ class Structure implements StructureInterface
     protected $stagedData = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStagedData()
     {
@@ -37,7 +37,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setStagedData(array $stagedData)
     {
@@ -45,7 +45,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function commitStagedData($clearMissingContent)
     {
@@ -54,7 +54,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getProperty($name)
     {
@@ -69,7 +69,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentViewProperty($name)
     {
@@ -77,7 +77,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasProperty($name)
     {
@@ -85,7 +85,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
@@ -93,7 +93,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {
@@ -101,7 +101,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -111,7 +111,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
@@ -119,7 +119,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray()
     {
@@ -132,7 +132,7 @@ class Structure implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function bind($data, $clearMissing = false)
     {
