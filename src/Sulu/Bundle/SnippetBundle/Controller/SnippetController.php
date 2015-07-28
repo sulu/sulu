@@ -257,7 +257,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * trigger a action for given snippet specified over get-action parameter
+     * trigger a action for given snippet specified over get-action parameter.
      *
      * @Post("/snippets/{uuid}")
      *

@@ -149,7 +149,7 @@ class SnippetRepository
     }
 
     /**
-     * Copy snippet from src-locale to dest-locale
+     * Copy snippet from src-locale to dest-locale.
      *
      * @param string $uuid
      * @param int $userId
