@@ -7,6 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
+require.config({
+    paths: {
+        'decorator/contact': '../../sulucontact/js/components/contacts/components/list/contact-view'
+    }
+});
+
 define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
@@ -98,6 +104,7 @@ define(['widget-groups'], function(WidgetGroups) {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    view: 'decorator/contact',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,
