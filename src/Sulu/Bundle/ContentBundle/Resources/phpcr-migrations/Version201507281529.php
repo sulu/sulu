@@ -56,7 +56,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
 
                 $query = $queryManager->createQuery(
                     sprintf(
-                        'SELECT * FROM [nt:unstructured] WHERE [%s] = 4',
+                        'SELECT * FROM [nt:base] WHERE [%s] = 4 AND [jcr:mixinTypes] = "sulu:page"',
                         $propertyEncoder->localizedSystemName('nodeType', $locale)
                     ),
                     'JCR-SQL2'
