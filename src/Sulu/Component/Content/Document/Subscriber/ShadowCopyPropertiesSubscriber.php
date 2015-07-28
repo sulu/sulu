@@ -13,15 +13,56 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
+/**
+ * Copies values for shadow pages.
+ */
+class ShadowCopyPropertiesSubscriber
 {
     const SHADOW_BASE_PROPERTY = 'i18n:*-shadow-base';
     const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
     const CATEGORIES_PROPERTY = 'i18n:%s-excerpt-categories';
     const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
+
+    /**
+     * @var PropertyEncoder
+     */
+    protected $encoder;
+
+    /**
+     * @param PropertyEncoder $encoder
+     */
+    public function __construct(PropertyEncoder $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [Events::PERSIST => 'handlePersist'];
+    }
+
+    /**
+     * Handles persist event of document manager.
+     *
+     * @param PersistEvent $event
+     */
+    public function handlePersist(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
+            return;
+        }
+
+        $this->doPersist($event);
+    }
 
     /**
      * {@inheritdoc}
@@ -138,13 +179,5 @@ class ShadowCopyPropertiesSubscriber extends AbstractMappingSubscriber
     protected function supports($document)
     {
         return $document instanceof ShadowLocaleBehavior && $document instanceof LocaleBehavior;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doHydrate(AbstractMappingEvent $event)
-    {
-        // do nothing
     }
 }
