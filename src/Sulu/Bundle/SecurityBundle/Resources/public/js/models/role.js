@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(relationalModel, HasMany, Permission) {
+define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(RelationalModel, HasMany, Permission) {
 
     'use strict';
 
-    return relationalModel({
+    return RelationalModel({
         urlRoot: '/admin/api/roles',
 
         defaults: function() {

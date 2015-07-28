@@ -62,10 +62,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         if (configDropdown.dropdownItems.length > 0) {
             toolbarItems.push(configDropdown);
         }
-
-        this.sandbox.emit('sulu.header.set-toolbar', {
-            template: toolbarItems
-        });
     };
 
     return {

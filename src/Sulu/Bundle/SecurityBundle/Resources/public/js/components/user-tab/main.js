@@ -8,13 +8,12 @@
  */
 
 define([
-    './models/user',
-    'sulusecurity/models/role',
+    'sulusecurity/models/user',
     'sulusecurity/models/permission',
     'sulucontact/model/contact',
-    './collections/roles',
-    './models/userRole'
-], function(User, Role, Permission, Contact, Roles, UserRole) {
+    'sulusecurity/collections/roles',
+    'sulusecurity/models/userRole'
+], function(User, Permission, Contact, Roles, UserRole) {
 
     'use strict';
 
@@ -23,11 +22,7 @@ define([
         name: 'Sulu Contact Permissions',
 
         initialize: function() {
-
-            if (this.options.display === 'form') {
-                this.renderForm();
-            }
-
+            this.renderForm();
             this.bindCustomEvents();
         },
 
@@ -233,7 +228,7 @@ define([
             this.html($form);
             this.sandbox.start([
                 {
-                    name: 'users/components/form@sulusecurity',
+                    name: 'user-tab/form@sulusecurity',
                     options: {
                         el: $form,
                         data: data
