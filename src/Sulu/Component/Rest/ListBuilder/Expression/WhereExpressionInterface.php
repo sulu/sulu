@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
 /**
- * Interfaces which provides the needed information to build a where-expression
+ * Interfaces which provides the needed information to build a where-expression.
  */
 interface WhereExpressionInterface extends BasicExpressionInterface
 {

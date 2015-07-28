@@ -11,17 +11,16 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
-use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InsufficientExpressionsException;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
- * Combines an array of expressions with OR
+ * Combines an array of expressions with OR.
  */
 class DoctrineOrExpression extends DoctrineConjunctionExpression
 {
     /**
-     * @var $conjunction string
+     * @var string
      */
     private $conjunction = ListBuilderInterface::CONJUNCTION_OR;
 
@@ -37,4 +36,3 @@ class DoctrineOrExpression extends DoctrineConjunctionExpression
         parent::__construct($this->conjunction, $expressions);
     }
 }
-

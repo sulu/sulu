@@ -409,7 +409,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Creates a listbuilder instance
+     * Creates a listbuilder instance.
      *
      * @return DoctrineListBuilder
      */
@@ -423,7 +423,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Applies the filter parameter and hasNoparent parameter for listbuilder
+     * Applies the filter parameter and hasNoparent parameter for listbuilder.
      *
      * @param Request $request
      * @param array $filter

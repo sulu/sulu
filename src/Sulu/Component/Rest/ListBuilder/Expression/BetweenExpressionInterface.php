@@ -11,7 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
 /**
- * Interfaces which provides the needed information to build a between-expression
+ * Interfaces which provides the needed information to build a between-expression.
  */
 interface BetweenExpressionInterface extends BasicExpressionInterface
 {

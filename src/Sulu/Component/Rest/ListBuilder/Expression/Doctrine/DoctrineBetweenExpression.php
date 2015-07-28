@@ -16,24 +16,24 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFie
 use Sulu\Component\Rest\ListBuilder\Expression\BetweenExpressionInterface;
 
 /**
- * Represents a BETWEEN expression for doctrine - needs a field and two values
+ * Represents a BETWEEN expression for doctrine - needs a field and two values.
  */
 class DoctrineBetweenExpression extends AbstractDoctrineExpression implements BetweenExpressionInterface
 {
     /**
-     * Field descriptor used for comparison
+     * Field descriptor used for comparison.
      *
-     * @var $fieldName AbstractDoctrineFieldDescriptor
+     * @var AbstractDoctrineFieldDescriptor
      */
     protected $field;
 
     /**
-     * @var $start
+     * @var
      */
     protected $start;
 
     /**
-     * @var $end
+     * @var
      */
     protected $end;
 
@@ -43,7 +43,6 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
      * @param AbstractDoctrineFieldDescriptor $field
      * @param $start
      * @param $end
-     *
      */
     public function __construct(AbstractDoctrineFieldDescriptor $field, $start, $end)
     {
@@ -53,7 +52,7 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
     }
 
     /**
-     *  Returns a statement for an expression
+     *  Returns a statement for an expression.
      *
      * @param QueryBuilder $queryBuilder
      *

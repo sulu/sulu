@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder\Expression\Exception;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpression;
 
 /**
- * Exceptions is throw when insufficient expressions have been provided
+ * Exceptions is throw when insufficient expressions have been provided.
  */
 class InsufficientExpressionsException extends ExpressionException
 {

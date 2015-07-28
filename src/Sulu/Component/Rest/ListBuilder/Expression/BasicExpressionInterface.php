@@ -12,12 +12,12 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
 /**
- * Interface for basic expressions which have no sub expressions
+ * Interface for basic expressions which have no sub expressions.
  */
 interface BasicExpressionInterface extends ExpressionInterface
 {
     /**
-     * Returns the fieldname
+     * Returns the fieldname.
      *
      * @return string
      */

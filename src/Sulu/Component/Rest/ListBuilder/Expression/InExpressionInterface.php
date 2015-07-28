@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
 /**
- * Interfaces which provides the needed information to build an in-expression
+ * Interfaces which provides the needed information to build an in-expression.
  */
 interface InExpressionInterface extends BasicExpressionInterface
 {

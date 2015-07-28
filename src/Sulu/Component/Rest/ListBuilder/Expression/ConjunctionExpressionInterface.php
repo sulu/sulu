@@ -10,10 +10,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
-use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
-
 /**
- * Interfaces which provides the needed information to build a conjunction-expression
+ * Interfaces which provides the needed information to build a conjunction-expression.
  */
 interface ConjunctionExpressionInterface extends ExpressionInterface
 {
@@ -28,7 +26,7 @@ interface ConjunctionExpressionInterface extends ExpressionInterface
     public function getExpressions();
 
     /**
-     * Returns an array of the used field names of the current expression and all subexpressions
+     * Returns an array of the used field names of the current expression and all subexpressions.
      *
      * @return array
      */

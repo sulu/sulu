@@ -84,7 +84,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $expressions = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setSelectFields($fieldDescriptors)
     {
@@ -272,10 +272,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * Adds a field descriptor
+     * Adds a field descriptor.
+     *
      * @param AbstractFieldDescriptor $fieldDescriptor
      */
-    protected function addFieldDescriptor(AbstractFieldDescriptor $fieldDescriptor){
+    protected function addFieldDescriptor(AbstractFieldDescriptor $fieldDescriptor)
+    {
         $this->fieldDescriptors[$fieldDescriptor->getName()] = $fieldDescriptor;
     }
 
@@ -288,7 +290,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * Adds an expression
+     * Adds an expression.
      *
      * @param ExpressionInterface $expression
      */
@@ -298,27 +300,27 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * Creates a between expression from the given values
+     * Creates a between expression from the given values.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param array $values
      *
      * @return mixed
      */
-    protected abstract function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+    abstract protected function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
-     * Creates an in expression from the given values
+     * Creates an in expression from the given values.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param array $values
      *
      * @return mixed
      */
-    protected abstract function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+    abstract protected function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
-     * Creates an where expression from the given values
+     * Creates an where expression from the given values.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $value
@@ -326,5 +328,5 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @return mixed
      */
-    protected abstract function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
+    abstract protected function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
 }

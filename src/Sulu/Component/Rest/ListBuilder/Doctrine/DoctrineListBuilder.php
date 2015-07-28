@@ -66,7 +66,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $expressions = [];
 
     /**
-     * Array of unique field descriptors from expressions
+     * Array of unique field descriptors from expressions.
+     *
      * @var array
      */
     protected $expressionFields = [];
@@ -334,7 +335,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Evaluates all given expressions and adds them to the query builder
+     * Evaluates all given expressions and adds them to the query builder.
      *
      * @param AbstractDoctrineExpression[] $expressions
      */
@@ -410,7 +411,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns an array of unique expression field descriptors
+     * Returns an array of unique expression field descriptors.
      *
      * @param AbstractDoctrineExpression[] $expressions
      *
@@ -428,7 +429,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns all fieldnames used in the expressions
+     * Returns all fieldnames used in the expressions.
      *
      * @param AbstractDoctrineExpression[] $expressions
      *

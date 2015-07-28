@@ -15,16 +15,16 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 
 /**
- * Abstract definition for expressions used by the DoctrineListbuilder
+ * Abstract definition for expressions used by the DoctrineListbuilder.
  */
 abstract class AbstractDoctrineExpression implements ExpressionInterface
 {
     /**
-     * Returns a statement for an expression
+     * Returns a statement for an expression.
      *
      * @param QueryBuilder $queryBuilder
      *
      * @return string
      */
-    public abstract function getStatement(QueryBuilder $queryBuilder);
+    abstract public function getStatement(QueryBuilder $queryBuilder);
 }

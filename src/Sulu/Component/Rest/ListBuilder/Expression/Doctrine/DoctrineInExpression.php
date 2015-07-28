@@ -16,20 +16,21 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFie
 use Sulu\Component\Rest\ListBuilder\Expression\InExpressionInterface;
 
 /**
- * Represents a IN expression for doctrine - needs a field and an array of values
+ * Represents a IN expression for doctrine - needs a field and an array of values.
  */
 class DoctrineInExpression extends AbstractDoctrineExpression implements InExpressionInterface
 {
     /**
-     * Field descriptor used for comparison
+     * Field descriptor used for comparison.
      *
-     * @var $fieldN AbstractDoctrineFieldDescriptor
+     * @var AbstractDoctrineFieldDescriptor
      */
     protected $field;
 
     /**
-     * Array values to compare
-     * @var $values array
+     * Array values to compare.
+     *
+     * @var array
      */
     protected $values;
 
@@ -69,7 +70,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
     }
 
     /**
-     * Returns a new array without null values
+     * Returns a new array without null values.
      *
      * @param array $values
      *

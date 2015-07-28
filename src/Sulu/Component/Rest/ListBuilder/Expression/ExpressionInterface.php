@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
 /**
- * Base interface for expressions
+ * Base interface for expressions.
  */
 interface ExpressionInterface
 {

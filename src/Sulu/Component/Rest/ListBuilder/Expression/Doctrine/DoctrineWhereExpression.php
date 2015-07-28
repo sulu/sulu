@@ -17,32 +17,32 @@ use Sulu\Component\Rest\ListBuilder\Expression\WhereExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
- * Represents a WHERE expression for doctrine - needs a field, a value and a comparator
+ * Represents a WHERE expression for doctrine - needs a field, a value and a comparator.
  */
 class DoctrineWhereExpression extends AbstractDoctrineExpression implements WhereExpressionInterface
 {
     /**
-     * Field descriptor used for comparison
+     * Field descriptor used for comparison.
      *
-     * @var $fieldName AbstractDoctrineFieldDescriptor
+     * @var AbstractDoctrineFieldDescriptor
      */
     protected $field;
 
     /**
-     * Value which is used to compare
+     * Value which is used to compare.
      *
-     * @var $value
+     * @var
      */
     protected $value;
 
     /**
-     * Comparator to compare values
+     * Comparator to compare values.
      *
-     * @var $comparator AbstractDoctrineFieldDescriptor
+     * @var AbstractDoctrineFieldDescriptor
      */
     protected $comparator;
 
-    function __construct(AbstractDoctrineFieldDescriptor $field, $value, $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL)
+    public function __construct(AbstractDoctrineFieldDescriptor $field, $value, $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL)
     {
         $this->field = $field;
         $this->value = $value;
@@ -108,4 +108,3 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
         return $this->field->getName();
     }
 }
-

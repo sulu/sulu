@@ -17,17 +17,17 @@ use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InsufficientExpressionsException;
 
 /**
- * This class is used as base class for the conjunctions expressions AND and OR
+ * This class is used as base class for the conjunctions expressions AND and OR.
  */
 class DoctrineConjunctionExpression extends AbstractDoctrineExpression implements ConjunctionExpressionInterface
 {
     /**
-     * @var $conjunction string
+     * @var string
      */
     protected $conjunction;
 
     /**
-     * @var $expressions AbstractDoctrineExpression[]
+     * @var AbstractDoctrineExpression[]
      */
     protected $expressions;
 
