@@ -135,7 +135,7 @@ class AdminController
     public function indexAction()
     {
         if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return new RedirectResponse($this->urlGenerator->generate('sulu_admin.login', array()));
+            return new RedirectResponse($this->urlGenerator->generate('sulu_admin.login', []));
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
@@ -152,7 +152,7 @@ class AdminController
 
         return $this->engine->renderResponse(
             $template,
-            array(
+            [
                 'name' => $this->adminName,
                 'locales' => $this->locales,
                 'translated_locales' => $this->translatedLocales,
@@ -167,7 +167,7 @@ class AdminController
                     )
                 ),
                 'config' => $jsConfig,
-            )
+            ]
         );
     }
 

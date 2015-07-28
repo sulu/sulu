@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\PropertyInterface;
@@ -17,24 +18,26 @@ use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Handles the security information on each node
+ * Handles the security information on each node.
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::PERSIST => 'handlePersist',
-            Events::HYDRATE => 'handleHydrate'
-        );
+            Events::HYDRATE => 'handleHydrate',
+        ];
     }
 
     /**
-     * Shows if the given document is supported by this subscriber
+     * Shows if the given document is supported by this subscriber.
+     *
      * @param $document
+     *
      * @return bool
      */
     public function supports($document)
@@ -43,7 +46,8 @@ class SecuritySubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adds the security information to the node
+     * Adds the security information to the node.
+     *
      * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
@@ -72,7 +76,7 @@ class SecuritySubscriber implements EventSubscriberInterface
             return;
         }
 
-        $permissions = array();
+        $permissions = [];
         foreach ($node->getProperties('sec:*') as $property) {
             /** @var PropertyInterface $property */
             $roleName = 'ROLE_' . strtoupper(str_replace('-', '_', substr($property->getName(), 4)));

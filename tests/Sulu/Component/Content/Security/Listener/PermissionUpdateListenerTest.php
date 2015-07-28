@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Content\Security\Listener;
 
 use Prophecy\Argument;
@@ -45,17 +46,17 @@ class PermissionUpdateListenerTest extends \PHPUnit_Framework_TestCase
             new PermissionUpdateEvent(
                 WebspaceBehavior::class,
                 'id',
-                array('ROLE_SULU_USER' => array('view' => true, 'edit' => false))
+                ['ROLE_SULU_USER' => ['view' => true, 'edit' => false]]
             )
         );
 
-        $this->assertEquals(array('ROLE_SULU_USER' => array('view')), $document->getPermissions());
+        $this->assertEquals(['ROLE_SULU_USER' => ['view']], $document->getPermissions());
     }
 
     public function testOnPermissionUpdateWithoutWebspaceBehavior()
     {
         $this->documentManager->find(Argument::any())->shouldNotBeCalled();
 
-        $this->permissionUpdateListener->onPermissionUpdate(new PermissionUpdateEvent('', '', array()));
+        $this->permissionUpdateListener->onPermissionUpdate(new PermissionUpdateEvent('', '', []));
     }
 }

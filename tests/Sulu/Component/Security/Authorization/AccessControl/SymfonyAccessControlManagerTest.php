@@ -184,7 +184,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            [$this->securityIdentity->getRole() => array('view')]
+            [$this->securityIdentity->getRole() => ['view']]
         );
     }
 
@@ -216,7 +216,7 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->setPermissions(
             $objectType,
             $objectId,
-            [$this->securityIdentity->getRole() => array('view')]
+            [$this->securityIdentity->getRole() => ['view']]
         );
     }
 }

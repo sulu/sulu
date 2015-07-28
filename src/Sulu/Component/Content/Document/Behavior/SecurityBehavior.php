@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Content\Document\Behavior;
 
 /**
@@ -26,6 +27,7 @@ interface SecurityBehavior
     /**
      * Returns the permissions for the document, with the role name as key and a boolean array with the permissions as
      * value.
+     *
      * @return array
      */
     public function getPermissions();

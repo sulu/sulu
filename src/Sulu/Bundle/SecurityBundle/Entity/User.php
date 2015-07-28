@@ -98,6 +98,7 @@ class User extends BaseUser
 
     /**
      * {@inheritdoc}
+     *
      * @VirtualProperty
      * @Groups({"frontend"})
      */

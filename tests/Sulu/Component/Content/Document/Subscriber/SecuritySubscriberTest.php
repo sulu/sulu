@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
@@ -31,13 +32,13 @@ class SecuritySubscriberTest extends SubscriberTestCase
         /** @var SecurityBehavior $document */
         $document = $this->prophesize(SecurityBehavior::class);
         $document->getPermissions()->willReturn(
-            array('ROLE_SULU_USER' => array('view', 'add', 'edit'))
+            ['ROLE_SULU_USER' => ['view', 'add', 'edit']]
         );
 
         $this->persistEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
 
-        $this->node->setProperty('sec:sulu-user', array('view', 'add', 'edit'))->shouldBeCalled();
+        $this->node->setProperty('sec:sulu-user', ['view', 'add', 'edit'])->shouldBeCalled();
     }
 }

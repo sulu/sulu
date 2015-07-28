@@ -124,7 +124,6 @@ class PermissionControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-
         array_walk($permissions, function (&$permissionLine) {
             $permissionLine = $permissionLine === 'true' || $permissionLine === true;
         });

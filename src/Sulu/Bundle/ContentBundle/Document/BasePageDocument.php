@@ -502,14 +502,13 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
-
     public function getSuluOrder()
     {
         return $this->suluOrder;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setPermissions(array $permissions)
     {

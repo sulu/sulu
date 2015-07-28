@@ -60,7 +60,8 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setPermissions($type, $identifier, $permissions) {
+    public function setPermissions($type, $identifier, $permissions)
+    {
         foreach ($permissions as $securityIdentity => $permission) {
             $this->setPermission($type, $identifier, $securityIdentity, $permission);
         }
@@ -72,7 +73,7 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
     }
 
     /**
-     * Sets the permission for a single security identity
+     * Sets the permission for a single security identity.
      *
      * @param string $type The type of the object to protect
      * @param string $identifier The identifier of the object to protect

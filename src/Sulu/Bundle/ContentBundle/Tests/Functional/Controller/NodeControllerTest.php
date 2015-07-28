@@ -1426,7 +1426,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testGetWithPermissions()
     {
-        $permissions = array('ROLE_SULU_USER' => array('view', 'edit'));
+        $permissions = ['ROLE_SULU_USER' => ['view', 'edit']];
 
         // create secured page
         $securedPage = $this->documentManager->create('page');
@@ -1434,7 +1434,7 @@ class NodeControllerTest extends SuluTestCase
         $securedPage->setResourceSegment('/secured');
         $securedPage->setStructureType('default');
         $securedPage->setPermissions($permissions);
-        $this->documentManager->persist($securedPage, 'en', array('parent_path' => '/cmf/sulu_io/contents'));
+        $this->documentManager->persist($securedPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
         $client = $this->createAuthenticatedClient();

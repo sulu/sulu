@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Content\Security\Listener;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
@@ -15,7 +16,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
 /**
- * This class listens on permission updates, and set the permission on the document described in the event
+ * This class listens on permission updates, and set the permission on the document described in the event.
  */
 class PermissionUpdateListener
 {
@@ -35,7 +36,7 @@ class PermissionUpdateListener
             return;
         }
 
-        $allowedPermissions = array();
+        $allowedPermissions = [];
         foreach ($event->getPermissions() as $roleName => $permissions) {
             $allowedPermissions[$roleName] = $this->getAllowedPermissions($permissions);
         }
@@ -49,13 +50,15 @@ class PermissionUpdateListener
     }
 
     /**
-     * Extracts the keys of the allowed permissions into an own array
+     * Extracts the keys of the allowed permissions into an own array.
+     *
      * @param $permissions
+     *
      * @return array
      */
     private function getAllowedPermissions($permissions)
     {
-        $allowedPermissions = array();
+        $allowedPermissions = [];
         foreach ($permissions as $permission => $allowed) {
             if ($allowed) {
                 $allowedPermissions[] = $permission;
