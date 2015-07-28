@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.0.4 (2015-07-28)
     * HOTFIX      #1427 [ContentBundle]  Added external link migration
     * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
 
