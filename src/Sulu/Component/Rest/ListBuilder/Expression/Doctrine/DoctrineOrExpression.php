@@ -16,14 +16,14 @@ use Sulu\Component\Rest\ListBuilder\Expression\Exception\InsufficientExpressions
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
- * Combines an array of expressions with AND
+ * Combines an array of expressions with OR
  */
-class DoctrineAndExpression extends DoctrineConjunctionExpression
+class DoctrineOrExpression extends DoctrineConjunctionExpression
 {
     /**
      * @var $conjunction string
      */
-    protected $conjunction = ListBuilderInterface::CONJUNCTION_AND;
+    protected $conjunction = ListBuilderInterface::CONJUNCTION_OR;
 
     /**
      * DoctrineAndExpression constructor.

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sulu CMS.
  *
@@ -60,10 +61,10 @@ class DoctrineInExpression extends AbstractDoctrineExpression
             $statement = ' ' . $this->getFieldName() . ' IN (:' . $paramName . ') ';
 
             if (array_search(null, $this->getValues())) {
-                $statement .= ' OR ' . $paramName . ' IS NULL';
+                $statement .= ' OR ' . $paramName . ' IS NULL ';
             }
         } elseif (array_search(null, $this->getValues())) { // only null in values array
-            $statement .= $paramName . ' IS NULL';
+            $statement .= ' ' . $paramName . ' IS NULL ';
         }
 
         return $statement;
