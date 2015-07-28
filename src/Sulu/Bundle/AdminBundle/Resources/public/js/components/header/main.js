@@ -531,8 +531,8 @@ define([], function () {
         startLanguageChanger: function() {
             if (!!this.options.toolbarLanguageChanger) {
                 var $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.languageChanger)({
-                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale
-                })),
+                        title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale
+                    })),
                     options = constants.languageChangerDefaults;
                 this.sandbox.dom.show(this.$find(constants.rightSelector));
                 this.sandbox.dom.append(this.$find(constants.rightSelector), $element);
@@ -832,7 +832,6 @@ define([], function () {
          * @param highlight {boolean} true to change with a highlight effect
          */
         changeToolbarState: function (type, saved, highlight) {
-
             if (typeof this.options.changeStateCallback === 'function') {
                 this.options.changeStateCallback.call(this, saved, type, highlight);
             }
