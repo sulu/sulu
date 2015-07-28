@@ -16,11 +16,12 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Copies values for shadow pages.
  */
-class ShadowCopyPropertiesSubscriber
+class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 {
     const SHADOW_BASE_PROPERTY = 'i18n:*-shadow-base';
     const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
