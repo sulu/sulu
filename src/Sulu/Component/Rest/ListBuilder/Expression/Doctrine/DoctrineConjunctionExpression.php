@@ -12,12 +12,14 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Rest\ListBuilder\Expression\BasicExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InsufficientExpressionsException;
 
 /**
  * This class is used as base class for the conjunctions expressions AND and OR
  */
-class DoctrineConjunctionExpression extends AbstractDoctrineExpression
+class DoctrineConjunctionExpression extends AbstractDoctrineExpression implements ConjunctionExpressionInterface
 {
     /**
      * @var $conjunction string
@@ -48,11 +50,7 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression
     }
 
     /**
-     *  Returns a statement for an expression
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getStatement(QueryBuilder $queryBuilder)
     {
@@ -63,5 +61,38 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression
         }
 
         return ' (' . implode(' ' . $this->conjunction . ' ', $statements) . ') ';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConjunction()
+    {
+        return $this->conjunction;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExpressions()
+    {
+        return $this->expressions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldNames()
+    {
+        $result = [];
+        foreach ($this->expressions as $expression) {
+            if ($expression instanceof ConjunctionExpressionInterface) {
+                $result = array_merge($result, $expression->getFieldNames());
+            } elseif ($expression instanceof BasicExpressionInterface) {
+                $result[] = $expression->getFieldName();
+            }
+        }
+
+        return $result;
     }
 }

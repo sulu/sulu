@@ -20,7 +20,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 abstract class AbstractDoctrineExpression implements ExpressionInterface
 {
     /**
-     *  Returns a statement for an expression
+     * Returns a statement for an expression
      *
      * @param QueryBuilder $queryBuilder
      *

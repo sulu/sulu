@@ -12,8 +12,12 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression;
 
 /**
- * Base interface for expressions
+ * Interfaces which provides the needed information to build an in-expression
  */
-interface ExpressionInterface
+interface InExpressionInterface extends BasicExpressionInterface
 {
+    /**
+     * @return array
+     */
+    public function getValues();
 }

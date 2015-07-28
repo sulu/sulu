@@ -12,19 +12,21 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Expression\WhereExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
  * Represents a WHERE expression for doctrine - needs a field, a value and a comparator
  */
-class DoctrineWhereExpression extends AbstractDoctrineExpression
+class DoctrineWhereExpression extends AbstractDoctrineExpression implements WhereExpressionInterface
 {
     /**
-     * Name of the field which should be compared
+     * Field descriptor used for comparison
      *
-     * @var $fieldName string
+     * @var $fieldName AbstractDoctrineFieldDescriptor
      */
-    protected $fieldName;
+    protected $field;
 
     /**
      * Value which is used to compare
@@ -36,23 +38,19 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression
     /**
      * Comparator to compare values
      *
-     * @var $comparator $string
+     * @var $comparator AbstractDoctrineFieldDescriptor
      */
     protected $comparator;
 
-    function __construct($fieldName, $value, $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL)
+    function __construct(AbstractDoctrineFieldDescriptor $field, $value, $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL)
     {
-        $this->fieldName = $fieldName;
+        $this->field = $field;
         $this->value = $value;
         $this->comparator = $comparator;
     }
 
     /**
-     * Returns a statement for an expression
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getStatement(QueryBuilder $queryBuilder)
     {
@@ -66,7 +64,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression
             $queryBuilder->setParameter($paramName, $this->getValue());
         }
 
-        return ' ' . $this->getFieldName() . ' ' . $this->getComparator() . ' :' . $paramName . ' ';
+        return ' ' . $this->field->getSelect() . ' ' . $this->getComparator() . ' :' . $paramName . ' ';
     }
 
     /**
@@ -87,7 +85,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getValue()
     {
@@ -95,7 +93,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getComparator()
     {
@@ -103,13 +101,11 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * Returns the fieldname
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getFieldName()
     {
-        return $this->fieldName;
+        return $this->field->getName();
     }
 }
 

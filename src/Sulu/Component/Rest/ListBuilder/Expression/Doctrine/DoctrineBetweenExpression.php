@@ -12,18 +12,20 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Expression\BetweenExpressionInterface;
 
 /**
  * Represents a BETWEEN expression for doctrine - needs a field and two values
  */
-class DoctrineBetweenExpression extends AbstractDoctrineExpression
+class DoctrineBetweenExpression extends AbstractDoctrineExpression implements BetweenExpressionInterface
 {
     /**
-     * Name of the field which should be compared
+     * Field descriptor used for comparison
      *
-     * @var $fieldName string
+     * @var $fieldName AbstractDoctrineFieldDescriptor
      */
-    protected $fieldName;
+    protected $field;
 
     /**
      * @var $start
@@ -38,16 +40,16 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression
     /**
      * DoctrineInExpression constructor.
      *
-     * @param string $fieldName
+     * @param AbstractDoctrineFieldDescriptor $field
      * @param $start
      * @param $end
      *
      */
-    public function __construct($fieldName, $start, $end)
+    public function __construct(AbstractDoctrineFieldDescriptor $field, $start, $end)
     {
         $this->start = $start;
         $this->end = $end;
-        $this->fieldName = $fieldName;
+        $this->field = $field;
     }
 
     /**
@@ -64,11 +66,11 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression
         $queryBuilder->setParameter($paramName1, $this->getStart());
         $queryBuilder->setParameter($paramName2, $this->getEnd());
 
-        return ' ' . $this->getFieldName() . ' BETWEEN :' . $paramName1 . ' AND :' . $paramName2 . ' ';
+        return ' ' . $this->field->getSelect() . ' BETWEEN :' . $paramName1 . ' AND :' . $paramName2 . ' ';
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getStart()
     {
@@ -76,7 +78,7 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getEnd()
     {
@@ -84,12 +86,10 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * Returns the fieldname
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getFieldName()
     {
-        return $this->fieldName;
+        return $this->field->getName();
     }
 }

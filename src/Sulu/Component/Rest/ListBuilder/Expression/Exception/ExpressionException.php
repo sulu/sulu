@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Expression\Exception;
 
+/**
+ * Basic exception in context of expressions
+ */
 class ExpressionException extends \Exception
 {
 }

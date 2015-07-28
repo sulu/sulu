@@ -153,15 +153,13 @@ interface ListBuilderInterface
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should have
      * @param string $comparator The comparator use to compare the values
-     * @param string $conjunction The conjunction to connect the where statements
      *
      * @return mixed
      */
     public function where(
         AbstractFieldDescriptor $fieldDescriptor,
         $value,
-        $comparator = self::WHERE_COMPARATOR_EQUAL,
-        $conjunction = self::CONJUNCTION_AND
+        $comparator = self::WHERE_COMPARATOR_EQUAL
     );
 
     /**
@@ -182,20 +180,19 @@ interface ListBuilderInterface
      * Defines an IN constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param $values
+     * @param array $values
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, $values);
+    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
      * Defines a between constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
-     * @param string $conjunction The conjunction to connect the between statements
      *
      * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND);
+    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
      * The number of total elements for this list.

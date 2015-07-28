@@ -12,18 +12,20 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Expression\InExpressionInterface;
 
 /**
  * Represents a IN expression for doctrine - needs a field and an array of values
  */
-class DoctrineInExpression extends AbstractDoctrineExpression
+class DoctrineInExpression extends AbstractDoctrineExpression implements InExpressionInterface
 {
     /**
-     * Name of the field which should be compared
+     * Field descriptor used for comparison
      *
-     * @var $fieldName string
+     * @var $fieldN AbstractDoctrineFieldDescriptor
      */
-    protected $fieldName;
+    protected $field;
 
     /**
      * Array values to compare
@@ -34,21 +36,17 @@ class DoctrineInExpression extends AbstractDoctrineExpression
     /**
      * DoctrineInExpression constructor.
      *
-     * @param string $fieldName
+     * @param AbstractDoctrineFieldDescriptor $field
      * @param array $values
      */
-    public function __construct($fieldName, array $values)
+    public function __construct(AbstractDoctrineFieldDescriptor $field, array $values)
     {
         $this->values = $values;
-        $this->fieldName = $fieldName;
+        $this->field = $field;
     }
 
     /**
-     *  Returns a statement for an expression
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getStatement(QueryBuilder $queryBuilder)
     {
@@ -57,8 +55,8 @@ class DoctrineInExpression extends AbstractDoctrineExpression
         $statement = '';
 
         if (count($values) > 0) {
-            $queryBuilder->setParameter($paramName, implode(',', $values));
-            $statement = ' ' . $this->getFieldName() . ' IN (:' . $paramName . ') ';
+            $queryBuilder->setParameter($paramName, $values);
+            $statement = ' ' . $this->field->getSelect() . ' IN (:' . $paramName . ') ';
 
             if (array_search(null, $this->getValues())) {
                 $statement .= ' OR ' . $paramName . ' IS NULL ';
@@ -77,7 +75,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression
      *
      * @return array
      */
-    function filterNullValues(array $values)
+    protected function filterNullValues(array $values)
     {
         $result = array_filter(
             $values,
@@ -90,7 +88,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getValues()
     {
@@ -98,12 +96,10 @@ class DoctrineInExpression extends AbstractDoctrineExpression
     }
 
     /**
-     * Returns the fieldname
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getFieldName()
     {
-        return $this->fieldName;
+        return $this->field->getName();
     }
 }
