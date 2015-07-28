@@ -399,7 +399,8 @@ define([], function() {
             this.itemsVisible = this.options.visibleItems;
             this.items = [];
             this.URI = {
-                str: '',
+                data: {},
+                str: this.options.url,
                 hasChanged: false
             };
 
@@ -978,23 +979,22 @@ define([], function() {
          * Generates the URI for the request
          */
         setURI: function() {
-            var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&',
-                newURI = [
-                    this.options.url,
-                    delimiter, this.options.dataSourceParameter, '=', this.overlayData.dataSource,
-                    '&', this.options.includeSubFoldersParameter, '=', this.overlayData.includeSubFolders,
-                    '&', this.options.categoryParameter, '=', this.overlayData.category,
-                    '&', this.options.tagsParameter, '=', this.overlayData.tags,
-                    '&', this.options.tagOperatorParameter, '=', this.overlayData.tagOperator,
-                    '&', this.options.sortByParameter, '=', this.overlayData.sortBy,
-                    '&', this.options.sortMethodParameter, '=', this.overlayData.sortMethod,
-                    '&', this.options.presentAsParameter, '=', this.overlayData.presentAs,
-                    '&', this.options.limitResultParameter, '=', this.overlayData.limitResult
-                ].join('');
+            var data = {};
+
+            data[this.options.dataSourceParameter] = this.overlayData.dataSource;
+            data[this.options.includeSubFoldersParameter] = this.overlayData.includeSubFolders;
+            data[this.options.categoryParameter] = this.overlayData.category;
+            data[this.options.tagsParameter] = this.overlayData.tags;
+            data[this.options.tagOperatorParameter] = this.overlayData.tagOperator;
+            data[this.options.sortByParameter] = this.overlayData.sortBy;
+            data[this.options.sortMethodParameter] = this.overlayData.sortMethod;
+            data[this.options.presentAsParameter] = this.overlayData.presentAs;
+            data[this.options.limitResultParameter] = this.overlayData.limitResult;
+
             // min source must be selected
-            if (this.overlayData.dataSource.length > 0 && newURI !== this.URI.str) {
+            if (this.overlayData.dataSource.length > 0 && data !== this.URI.data) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
-                this.URI.str = newURI;
+                this.URI.data = data;
                 this.URI.hasChanged = true;
             } else {
                 this.URI.hasChanged = false;
@@ -1010,7 +1010,9 @@ define([], function() {
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.startLoader();
                 this.sandbox.util.ajax({
+                    method: 'POST',
                     url: this.URI.str,
+                    data: this.URI.data,
 
                     success: function(data) {
                         this.overlayData.title = data[this.options.titleKey];

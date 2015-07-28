@@ -122,7 +122,7 @@ class ContentDataProvider implements DataProviderInterface
         }
 
         $properties = array_key_exists('properties', $propertyParameter) ?
-            $propertyParameter['properties']->getValue() : null;
+            $propertyParameter['properties']->getValue() : [];
 
         $this->contentQueryBuilder->init(
             [
