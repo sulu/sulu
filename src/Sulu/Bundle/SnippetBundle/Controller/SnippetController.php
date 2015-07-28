@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPCR\NodeInterface;
@@ -19,8 +20,10 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +36,8 @@ use Symfony\Component\Security\Core\SecurityContext;
  */
 class SnippetController implements SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * @var ContentMapper
      */
@@ -249,6 +254,53 @@ class SnippetController implements SecuredControllerInterface
         }
 
         return new JsonResponse();
+    }
+
+    /**
+     * trigger a action for given snippet specified over get-action parameter.
+     *
+     * @Post("/snippets/{uuid}")
+     *
+     * @param string $uuid
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postTriggerAction($uuid, Request $request)
+    {
+        $view = null;
+        $snippet = null;
+
+        $this->initEnv($request);
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'copy-locale':
+                    $destLocale = $this->getRequestParameter($request, 'dest', true);
+
+                    // call repository method
+                    $snippet = $this->snippetRepository->copyLocale(
+                        $uuid,
+                        $this->getUser()->getId(),
+                        $this->languageCode,
+                        explode(',', $destLocale)
+                    );
+                    break;
+                default:
+                    throw new RestException('Unrecognized action: ' . $action);
+            }
+
+            // prepare view
+            $view = View::create(
+                $this->decorateSnippet($snippet->toArray(), $this->languageCode),
+                $snippet !== null ? 200 : 204
+            );
+        } catch (RestException $exc) {
+            $view = View::create($exc->toArray(), 400);
+        }
+
+        return $this->viewHandler->handle($view);
     }
 
     /**

@@ -51154,6 +51154,8 @@ define('husky_extensions/util',[],function() {
 
             /**
              * Returns a parameter value from a given url
+             * Found at http://stackoverflow.com/a/901144
+             * Has limitations e.g. for parameters like a[asf]=value
              * @param name {string} name of the parameter to search for
              * @param url {string}
              * @returns {string}
@@ -51162,6 +51164,7 @@ define('husky_extensions/util',[],function() {
                 name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
                     results = regex.exec(url);
+                    
                 return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
             };
 
