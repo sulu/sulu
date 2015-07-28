@@ -300,17 +300,20 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
         }
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues'));
-        $whereValues = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues');
-        $this->assertEquals(3, $whereValues['title_id']);
-        $this->assertEquals(1, $whereValues['desc_id']);
-
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields'));
-        $whereFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields');
-        $this->assertEquals($fieldDescriptors['title_id'], $whereFields['title_id']);
-        $this->assertEquals($fieldDescriptors['desc_id'], $whereFields['desc_id']);
-
+        $this->assertExpressions();
         $this->doctrineListBuilder->execute();
+    }
+
+    public function assertExpressions()
+    {
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $expressions = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions');
+        $this->assertEquals(3, $expressions[0]->getValue());
+        $this->assertEquals(1, $expressions[1]->getValue());
+
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $this->assertEquals('title_id', $expressions[0]->getFieldName());
+        $this->assertEquals('desc_id', $expressions[1]->getFieldName());
     }
 
     public function testSetWhereWithNull()
@@ -370,16 +373,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues'));
-        $whereNotValues = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues');
-        $this->assertEquals(3, $whereNotValues['title_id']);
-        $this->assertEquals(1, $whereNotValues['desc_id']);
-
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields'));
-        $whereNotFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields');
-        $this->assertEquals($fieldDescriptors['title_id'], $whereNotFields['title_id']);
-        $this->assertEquals($fieldDescriptors['desc_id'], $whereNotFields['desc_id']);
-
+        $this->assertExpressions();
         $this->doctrineListBuilder->execute();
     }
 
@@ -393,7 +387,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder
             ->expects($this->once())
             ->method('andWhere')
-            ->with('(SuluCoreBundle:Example.id IN (:title_id))');
+            ->withAnyParameters();
 
         $this->doctrineListBuilder->execute();
     }
@@ -504,12 +498,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->between($nameFieldDescriptor, [0, 1]);
 
-        $this->queryBuilder->expects($this->once())->method('andWhere')->with(
-            '(SuluCoreBundle:Example.name BETWEEN :name_alias1 AND :name_alias2)'
-        );
+        $this->queryBuilder->expects($this->once())->method('andWhere')->withAnyParameters();
 
-        $this->queryBuilder->expects($this->at(1))->method('setParameter')->with('name_alias1', 0);
-        $this->queryBuilder->expects($this->at(2))->method('setParameter')->with('name_alias2', 1);
+        $this->queryBuilder->expects($this->at(1))->method('setParameter')->withAnyParameters();
+        $this->queryBuilder->expects($this->at(2))->method('setParameter')->withAnyParameters();
 
         $this->doctrineListBuilder->execute();
     }

@@ -66,7 +66,7 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
         $queryBuilder->setParameter($paramName1, $this->getStart());
         $queryBuilder->setParameter($paramName2, $this->getEnd());
 
-        return ' ' . $this->field->getSelect() . ' BETWEEN :' . $paramName1 . ' AND :' . $paramName2 . ' ';
+        return $this->field->getSelect() . ' BETWEEN :' . $paramName1 . ' AND :' . $paramName2;
     }
 
     /**

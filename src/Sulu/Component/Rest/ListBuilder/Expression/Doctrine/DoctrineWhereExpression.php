@@ -57,14 +57,14 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
         $paramName = $this->getFieldName() . uniqid(true);
 
         if ($this->getValue() === null) {
-            return ' ' . $this->getFieldName() . ' ' . $this->convertNullComparator($this->getComparator());
+            return $this->field->getSelect() . ' ' . $this->convertNullComparator($this->getComparator());
         } elseif ($this->getComparator() === 'LIKE') {
             $queryBuilder->setParameter($paramName, '%' . $this->getValue() . '%');
         } else {
             $queryBuilder->setParameter($paramName, $this->getValue());
         }
 
-        return ' ' . $this->field->getSelect() . ' ' . $this->getComparator() . ' :' . $paramName . ' ';
+        return $this->field->getSelect() . ' ' . $this->getComparator() . ' :' . $paramName;
     }
 
     /**

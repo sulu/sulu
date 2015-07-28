@@ -341,7 +341,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function evaluateExpressions(array $expressions)
     {
         foreach ($expressions as $expression) {
-            $this->queryBuilder->andWhere($expression->getStatement($this->queryBuilder));
+            $this->queryBuilder->andWhere('(' . $expression->getStatement($this->queryBuilder) . ')');
         }
     }
 
