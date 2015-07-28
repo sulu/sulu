@@ -231,7 +231,7 @@ define([
             this.sandbox.dom.append(this.$el, $element);
 
             this.sandbox.start([{
-                name: 'collections/components/overlays/collection-select@sulumedia',
+                name: 'collections/overlays/collection-select@sulumedia',
                 options: {
                     el: $element,
                     instanceName: 'move-collection',
@@ -669,7 +669,7 @@ define([
                     this.options.data = collections.toJSON();
                     this.sandbox.start([
                         {
-                            name: 'collections/components/root@sulumedia',
+                            name: 'collections/root@sulumedia',
                             options: {
                                 el: $root,
                                 data: collections.toJSON(),
@@ -702,7 +702,7 @@ define([
                     this.options.data = collection.toJSON();
                     this.sandbox.start([
                         {
-                            name: 'collections/components/edit@sulumedia',
+                            name: 'collections/edit@sulumedia',
                             options: this.sandbox.util.extend(true, {}, {
                                 el: $edit,
                                 data: collection.toJSON(),
@@ -725,7 +725,7 @@ define([
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.start([
                 {
-                    name: 'collections/components/overlays/media-edit@sulumedia',
+                    name: 'collections/overlays/media-edit@sulumedia',
                     options: {
                         el: $container
                     }

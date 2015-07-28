@@ -20,11 +20,11 @@ class MediaContentNavigationProvider implements ContentNavigationProviderInterfa
     {
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
-        $files->setComponent('collections/components/edit/files@sulumedia');
+        $files->setComponent('collections/edit/files@sulumedia');
 
         $settings = new ContentNavigationItem('content-navigation.media.settings');
         $settings->setAction('settings');
-        $settings->setComponent('collections/components/edit/settings@sulumedia');
+        $settings->setComponent('collections/edit/settings@sulumedia');
 
         return [$files, $settings];
     }

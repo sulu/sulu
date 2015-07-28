@@ -249,7 +249,7 @@ define(function() {
          */
         renderSelectCollection: function() {
             this.sandbox.start([{
-                name: 'collections/components/overlays/collection-select@sulumedia',
+                name: 'collections/overlays/collection-select@sulumedia',
                 options: {
                     el: this.$find(constants.moveSelector),
                     instanceName: 'move-media',
