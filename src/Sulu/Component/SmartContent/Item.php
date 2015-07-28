@@ -10,11 +10,14 @@
 
 namespace Sulu\Component\SmartContent;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\SmartContent\Exception\NoSuchPropertyException;
 use Sulu\Component\SmartContent\Exception\NotSupportedException;
 
 /**
  * Base class for DataProvider items.
+ *
+ * @ExclusionPolicy("all")
  */
 abstract class Item implements ItemInterface
 {

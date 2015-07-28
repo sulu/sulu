@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,17 +24,26 @@ class SmartContentItemController extends RestController
 
     public function postItemsAction(Request $request)
     {
-        $providerAlias = $this->getRequestParameter($request, 'alias');
-        $limit = intval($this->getRequestParameter($request, 'limit'));
+        $providerAlias = $this->getRequestParameter($request, 'provider', true);
+        $limit = intval($request->query->get('limit', 3));
+        $excluded = intval($this->getRequestParameter($request, 'excluded', true));
         $filters = $request->request->all();
         $options = [
-            'webspaceKey' => $this->getRequestParameter($request, 'alias'),
-            'locale' => $this->getRequestParameter($request, 'locale')
+            'webspaceKey' => $this->getRequestParameter($request, 'webspace', true),
+            'locale' => $this->getRequestParameter($request, 'locale', true),
         ];
+
+        $filters['excluded'] = [$excluded];
 
         $dataProviderPool = $this->get('sulu_content.smart_content.data_provider_pool');
         $provider = $dataProviderPool->get($providerAlias);
+        $result = $provider->resolveFilters($filters, [], $options);
+        $total = count($result);
 
-        return $this->handleView($this->view($provider->resolveFilters($filters, [], $options, $limit)));
+        return $this->handleView(
+            $this->view(
+                new ListRepresentation($result, 'items', 'post_items', [], 1, $limit, $total)
+            )
+        );
     }
 }
