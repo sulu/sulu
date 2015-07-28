@@ -1,5 +1,15 @@
 # Upgrade
 
+## dev-master
+
+### External link
+
+If you have external-link pages created before 1.0.0 you should run the following command to fix them.
+ 
+```
+app/console phpcr:migrations:migrate
+```
+
 ## 1.0.0
 
 ### User / Role management changed
