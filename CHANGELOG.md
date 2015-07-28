@@ -28,6 +28,10 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* 1.0.4 (2015-07-28)
+    * HOTFIX      #1427 [ContentBundle]  Added external link migration
+    * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
+
 * 1.0.3 (2015-07-23)
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
     * HOTFIX      #1391 [All]            Removed partial load hints
