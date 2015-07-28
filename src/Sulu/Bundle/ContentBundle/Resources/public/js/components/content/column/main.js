@@ -37,6 +37,10 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
          */
         ORDER_BUTTON_ID = 5,
 
+        ACTION_ICON_EDIT = 'fa-pencil',
+
+        ACTION_ICON_VIEW = 'fa-eye',
+
         templates = {
             toggler: [
                 '<div id="show-ghost-pages"></div>',
@@ -421,6 +425,30 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                         selected: this.getLastSelected(),
                         resultKey: 'nodes',
                         url: this.getUrl(),
+                        actionIcon: function(data) {
+                            if (!data.hasOwnProperty('permissions')) {
+                                return ACTION_ICON_EDIT;
+                            }
+
+                            var actionIcon = '';
+                            $.each(data.permissions, function(role, permission) {
+                                if ($.inArray(role, this.sandbox.sulu.user.roles) === -1) {
+                                    return true;
+                                }
+
+                                if ($.inArray('edit', permission) !== -1) {
+                                    actionIcon = ACTION_ICON_EDIT;
+
+                                    return false;
+                                } else if($.inArray('view', permission) !== -1) {
+                                    actionIcon = ACTION_ICON_VIEW;
+
+                                    return false;
+                                }
+                            }.bind(this));
+
+                            return actionIcon;
+                        }.bind(this),
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
