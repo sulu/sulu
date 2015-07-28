@@ -51,6 +51,13 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function down(SessionInterface $session)
+    {
+    }
+
+    /**
      * Upgrade a single webspace.
      *
      * @param Webspace $webspace
@@ -63,9 +70,8 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
         foreach ($webspace->getAllLocalizations() as $localization) {
             $locale = $localization->getLocalization();
             $propertyName = $this->getPropertyName(self::SHADOW_ON_PROPERTY, $locale);
-            if (true === $node->getPropertyValueWithDefault($propertyName, false)) {
-                $this->upgradeNode($node, $locale);
-            }
+
+            $this->upgradeNode($node, $propertyName, $locale);
         }
     }
 
@@ -73,10 +79,19 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
      * Upgrade a single node.
      *
      * @param NodeInterface $node
+     * @param string $propertyName
      * @param string $locale
      */
-    private function upgradeNode(NodeInterface $node, $locale)
+    private function upgradeNode(NodeInterface $node, $propertyName, $locale)
     {
+        foreach ($node->getNodes() as $child) {
+            $this->upgradeNode($child, $propertyName, $locale);
+        }
+
+        if (false === $node->getPropertyValueWithDefault($propertyName, false)) {
+            return;
+        }
+
         $shadowLocale = $node->getPropertyValue($this->getPropertyName(self::SHADOW_BASE_PROPERTY, $locale));
 
         $tags = $this->getTags($node, $shadowLocale);
@@ -147,12 +162,5 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
             sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
             []
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function down(SessionInterface $session)
-    {
     }
 }
