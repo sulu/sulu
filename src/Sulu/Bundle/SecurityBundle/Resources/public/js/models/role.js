@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(RelationalModel, HasMany, Permission) {
+define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(relationalModel, HasMany, Permission) {
 
     'use strict';
 
-    return RelationalModel({
+    return relationalModel({
         urlRoot: '/admin/api/roles',
 
         defaults: function() {
@@ -21,14 +21,12 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(Relation
                 identifier: '',
                 permissions: []
             };
-        }
-        // TODO: fix bug (doesn't save with relations uncommented
-        /*, relations: [
+        }, relations: [
             {
                 type: HasMany,
                 key: 'permissions',
                 relatedModel: Permission
             }
-        ]*/
+        ]
     });
 });

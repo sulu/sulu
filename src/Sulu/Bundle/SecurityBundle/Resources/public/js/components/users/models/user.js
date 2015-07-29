@@ -13,7 +13,7 @@ define([
 
     'use strict';
 
-    return RelationalModel({
+    return new RelationalModel({
 
         urlRoot: '/admin/api/users',
 

@@ -23,13 +23,13 @@ define([
             this.idDelete = null;
             this.loading = 'delete';
 
-            this.bindCustomEvents();
-
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'edit') {
-                this.renderEdit();
+            } else if (this.options.display === 'form') {
+                this.renderForm();
             }
+
+            this.bindCustomEvents();
         },
 
         bindCustomEvents: function() {
@@ -159,7 +159,7 @@ define([
             this.html($list);
             this.sandbox.start([
                 {
-                    name: 'roles/list@sulusecurity',
+                    name: 'roles/components/list@sulusecurity',
                     options: {
                         el: $list
                     }
@@ -167,12 +167,12 @@ define([
             ]);
         },
 
-        renderEdit: function() {
+        renderForm: function() {
             this.role = new Role();
 
-            var $form = this.sandbox.dom.createElement('<div id="roles-edit-container"/>'),
+            var $form = this.sandbox.dom.createElement('<div id="roles-form-container"/>'),
                 component = {
-                    name: 'roles/edit@sulusecurity',
+                    name: 'roles/components/form@sulusecurity',
                     options: {
                         el: $form,
                         data: this.role.defaults()
@@ -193,6 +193,8 @@ define([
                 this.sandbox.start([component]);
             }
         },
+
+        // dialog
 
         /**
          * @var ids - array of ids to delete

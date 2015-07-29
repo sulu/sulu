@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel'], function(RelationalModel) {
+define(['mvc/relationalmodel'], function(relationalModel) {
 
     'use strict';
 
-    return RelationalModel({
+    return relationalModel({
         defaults: function() {
             return {
                 context: '',

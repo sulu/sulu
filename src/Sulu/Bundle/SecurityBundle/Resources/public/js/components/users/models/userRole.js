@@ -11,11 +11,11 @@ define([
     'mvc/relationalmodel',
     'mvc/hasone',
     'sulusecurity/models/role'
-], function(RelationalModel, HasOne, Role) {
+], function(relationalModel, HasOne, Role) {
 
     'use strict';
 
-    return RelationalModel({
+    return relationalModel({
         urlRoot: '/admin/api/roles',
 
         defaults: function() {
