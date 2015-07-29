@@ -45,7 +45,7 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
             throw new InsufficientExpressionsException($expressions);
         }
 
-        $this->$expressions = $expressions;
+        $this->expressions = $expressions;
         $this->conjunction = $conjunction;
     }
 
