@@ -159,12 +159,10 @@ class AdminController
                 'translations' => $this->translations,
                 'fallback_locale' => $this->fallbackLocale,
                 'suluVersion' => $this->suluVersion,
-                'user' => json_decode(
-                    $this->serializer->serialize(
-                        $user,
-                        'json',
-                        SerializationContext::create()->setGroups(['frontend'])
-                    )
+                'user' => $this->serializer->serialize(
+                    $user,
+                    'array',
+                    SerializationContext::create()->setGroups(['frontend'])
                 ),
                 'config' => $jsConfig,
             ]
