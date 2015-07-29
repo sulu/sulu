@@ -37,7 +37,7 @@ class InvalidArgumentException extends ExpressionException
      */
     public function __construct($expression, $argument, $customMessage = null)
     {
-        $this->entity = $expression;
+        $this->expression = $expression;
         $this->argument = $argument;
         $message = 'The "' . $expression . '"-expression requires a valid "' . $argument . '"-argument';
         if ($customMessage != null) {
