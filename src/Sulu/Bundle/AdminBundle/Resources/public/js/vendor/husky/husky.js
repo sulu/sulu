@@ -35328,7 +35328,12 @@ define('__component__$toolbar@husky',[],function() {
             }
 
             //now generate the dropdown
-            this.sandbox.emit(ITEMS_SET.call(this), buttonId, this.items[buttonId].items);
+            this.sandbox.emit(
+                ITEMS_SET.call(this),
+                buttonId,
+                this.items[buttonId].items,
+                this.items[buttonId].itemsOption.preSelected
+            );
         },
 
         /**
