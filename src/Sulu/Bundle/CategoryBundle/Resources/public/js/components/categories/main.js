@@ -120,11 +120,11 @@ define(['sulucategory/model/category',
         /**
          * Renderes the component
          */
-        render: function() {
+        render: function(language) {
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'edit') {
-                this.renderEdit();
+                this.renderEdit(language);
             } else {
                 throw 'display type wrong';
             }
@@ -255,7 +255,7 @@ define(['sulucategory/model/category',
          * @param language {Object} the language object from the header language changer
          */
         renderEdit: function(language) {
-            var locale = (!!language) ? language.id : undefined;
+            var locale = (!!language) ? language.id : this.sandbox.sulu.user.locale;
             var category,
                 action = function(data) {
                     this.sandbox.start([
@@ -264,6 +264,7 @@ define(['sulucategory/model/category',
                             options: {
                                 el: $form,
                                 data: data,
+                                locale: locale,
                                 // TODO options parent is only set in case of 'add'. Parent should also be sent via the api
                                 parent: this.options.parent || null
                             }
