@@ -23,9 +23,12 @@ use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
 use Sulu\Component\Rest\ListBuilder\Expression\BasicExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineBetweenExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -383,31 +386,37 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * {@inheritdoc}
      */
-    protected function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator)
+    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator)
     {
-        if ($fieldDescriptor instanceof DoctrineFieldDescriptor) {
+        if ($fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
             return new DoctrineWhereExpression($fieldDescriptor, $value, $comparator);
         }
+
+        throw new InvalidArgumentException('where', 'fielddescriptor');
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        if ($fieldDescriptor instanceof DoctrineFieldDescriptor) {
+        if ($fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
             return new DoctrineInExpression($fieldDescriptor, $values);
         }
+
+        throw new InvalidArgumentException('in', 'fielddescriptor');
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        if ($fieldDescriptor instanceof DoctrineFieldDescriptor) {
+        if ($fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
             return new DoctrineBetweenExpression($fieldDescriptor, $values[0], $values[1]);
         }
+
+        throw new InvalidArgumentException('between', 'fielddescriptor');
     }
 
     /**
@@ -447,5 +456,29 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return $fieldNames;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createAddExpression(array $expressions)
+    {
+        if (count($expressions) > 0) {
+            return new DoctrineAndExpression($expressions);
+        }
+
+        throw new InvalidArgumentException('and', 'expressions');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createOrExpression(array $expressions)
+    {
+        if (count($expressions) > 0) {
+            return new DoctrineOrExpression($expressions);
+        }
+
+        throw new InvalidArgumentException('or', 'expressions');
     }
 }

@@ -27,6 +27,7 @@ class InsufficientExpressionsException extends ExpressionException
     {
         $this->message = 'An insufficient number of expressions has been provided';
         $this->expressions = $expressions;
+        parent::__construct($this->message);
     }
 
     /**

@@ -290,43 +290,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * Adds an expression.
-     *
-     * @param ExpressionInterface $expression
+     * {@inheritdoc}
      */
     public function addExpression(ExpressionInterface $expression)
     {
-        $this->expressions[] = $expression;
+        if ($expression) {
+            $this->expressions[] = $expression;
+        }
     }
-
-    /**
-     * Creates a between expression from the given values.
-     *
-     * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param array $values
-     *
-     * @return mixed
-     */
-    abstract protected function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
-
-    /**
-     * Creates an in expression from the given values.
-     *
-     * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param array $values
-     *
-     * @return mixed
-     */
-    abstract protected function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
-
-    /**
-     * Creates an where expression from the given values.
-     *
-     * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param $value
-     * @param string $comparator
-     *
-     * @return mixed
-     */
-    abstract protected function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
 }

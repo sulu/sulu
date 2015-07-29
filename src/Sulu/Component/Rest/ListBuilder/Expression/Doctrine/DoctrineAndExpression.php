@@ -22,7 +22,7 @@ class DoctrineAndExpression extends DoctrineConjunctionExpression
     /**
      * @var string
      */
-    private $conjunction = ListBuilderInterface::CONJUNCTION_AND;
+    protected $conjunction = ListBuilderInterface::CONJUNCTION_AND;
 
     /**
      * DoctrineAndExpression constructor.

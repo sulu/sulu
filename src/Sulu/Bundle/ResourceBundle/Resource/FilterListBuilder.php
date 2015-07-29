@@ -16,6 +16,8 @@ use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionFieldNotFoundExceptio
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionTypeMismatchException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -42,8 +44,13 @@ class FilterListBuilder implements FilterListBuilderInterface
     protected $listBuilder;
 
     /**
+     * @var ExpressionInterface[]
+     */
+    protected $expressions = [];
+
+    /**
      * @param FilterManagerInterface $manager
-     * @param RequestStack           $requestStack
+     * @param RequestStack $requestStack
      */
     public function __construct(FilterManagerInterface $manager, RequestStack $requestStack)
     {
@@ -72,22 +79,64 @@ class FilterListBuilder implements FilterListBuilderInterface
 
             if ($filter->getConjunction()) { // do nothing if no conjunction is set
                 foreach ($filter->getConditionGroups() as $conditionGroup) {
-                    $this->processConditionGroup($conditionGroup, $filter->getConjunction());
+                    $this->processConditionGroup($conditionGroup);
                 }
+
+                $this->handleCreatedExpressions($this->expressions, $filter->getConjunction());
             }
         }
+    }
+
+    /**
+     * Handles the previouse created expressions and passes the over to the listbuilder
+     *
+     * @param ExpressionInterface[] $expressions
+     * @param string $conjunction
+     */
+    protected function handleCreatedExpressions(array $expressions, $conjunction)
+    {
+
+        $expressionCounter = count($expressions);
+        switch ($expressionCounter) {
+            case 0: // no expressions - nothing to do
+                break;
+            case 1:
+                $this->listBuilder->addExpression($expressions[0]);
+                break;
+            default:
+                $conjunctionExpression = $this->createConjunctionExpression($expressions, $conjunction);
+                $this->listBuilder->addExpression($conjunctionExpression);
+                break;
+        }
+    }
+
+    /**
+     * Creates a conjunction expression based on the given expressions and conjunction
+     *
+     * @param ExpressionInterface[] $expressions
+     * @param string $conjunction
+     *
+     * @return ConjunctionExpressionInterface
+     */
+    protected function createConjunctionExpression(array $expressions, $conjunction)
+    {
+        // create the appropriate expression
+        if ($conjunction === ListBuilderInterface::CONJUNCTION_AND) {
+            return $this->listBuilder->createAddExpression($expressions);
+        }
+
+        return $this->listBuilder->createOrExpression($expressions);
     }
 
     /**
      * Creates a conditions for a condition group.
      *
      * @param ConditionGroup $conditionGroup
-     * @param string         $conjunction
      *
      * @throws ConditionFieldNotFoundException
      * @throws FeatureNotImplementedException
      */
-    protected function processConditionGroup(ConditionGroup $conditionGroup, $conjunction)
+    protected function processConditionGroup(ConditionGroup $conditionGroup)
     {
         $condition = $conditionGroup->getConditions()[0];
         $fieldDescriptor = $this->listBuilder->getFieldDescriptor($condition->getField());
@@ -97,7 +146,7 @@ class FilterListBuilder implements FilterListBuilderInterface
         }
 
         if (count($conditionGroup->getConditions()) === 1) {
-            $this->createCondition($condition, $fieldDescriptor, $conjunction);
+            $this->createExpression($condition, $fieldDescriptor);
         } elseif (count($conditionGroup->getConditions()) > 1) {
             // TODO implement if needed
             throw new FeatureNotImplementedException('Multiple condition handling not yet implemented!');
@@ -105,21 +154,24 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Creates and adds a simple where condition to the listbuilder.
+     * Creates expressions from conditions and add them to the expressions array
      *
-     * @param Condition               $condition
+     * @param Condition $condition
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string                  $conjunction
      */
-    protected function createCondition(Condition $condition, $fieldDescriptor, $conjunction)
+    protected function createExpression(Condition $condition, $fieldDescriptor)
     {
         $value = $this->getValue($condition);
 
         // relative date for cases like "within a week" or "within this month"
         if ($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
-            $this->listBuilder->between($fieldDescriptor, [$value, new \Datetime()], $conjunction);
+            $this->expressions[] = $this->listBuilder->createBetweenExpression($fieldDescriptor, [$value, new \Datetime()]);
         } else {
-            $this->listBuilder->where($fieldDescriptor, $value, $condition->getOperator(), $conjunction);
+            $this->expressions[] = $this->listBuilder->createWhereExpression(
+                $fieldDescriptor,
+                $value,
+                $condition->getOperator()
+            );
         }
     }
 

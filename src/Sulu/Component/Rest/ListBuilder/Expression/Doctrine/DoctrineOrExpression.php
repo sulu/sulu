@@ -22,7 +22,7 @@ class DoctrineOrExpression extends DoctrineConjunctionExpression
     /**
      * @var string
      */
-    private $conjunction = ListBuilderInterface::CONJUNCTION_OR;
+    protected $conjunction = ListBuilderInterface::CONJUNCTION_OR;
 
     /**
      * DoctrineAndExpression constructor.

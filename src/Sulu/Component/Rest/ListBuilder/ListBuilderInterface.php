@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses.
  */
@@ -223,4 +226,60 @@ interface ListBuilderInterface
      * @return AbstractFieldDescriptor | null
      */
     public function getFieldDescriptor($name);
+
+    /**
+     * Adds an expression.
+     *
+     * @param ExpressionInterface $expression
+     */
+    public function addExpression(ExpressionInterface $expression);
+
+    /**
+     * Creates a between expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+
+    /**
+     * Creates an in expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+
+    /**
+     * Creates an where expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $value
+     * @param string $comparator
+     *
+     * @return mixed
+     */
+    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
+
+    /**
+     * Creates an and expression with the given expressions.
+     *
+     * @param ExpressionInterface[] $expressions
+     *
+     * @return ConjunctionExpressionInterface|null
+     */
+    public function createAddExpression(array $expressions);
+
+    /**
+     * Creates an or expressions with the given expressions
+     *
+     * @param ExpressionInterface[] $expressions
+     *
+     * @return ConjunctionExpressionInterface|null
+     */
+    public function createOrExpression(array $expressions);
 }
