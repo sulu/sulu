@@ -81,7 +81,7 @@ define([
         },
 
         saveDocuments: function(contactId, newMediaIds, removedMediaIds, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.processAjaxForDocuments(newMediaIds, contactId, 'POST', action);
             this.processAjaxForDocuments(removedMediaIds, contactId, 'DELETE', action);
@@ -148,7 +148,7 @@ define([
         },
 
         save: function(data, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.contact.set(data);
 
             this.contact.get('categories').reset();

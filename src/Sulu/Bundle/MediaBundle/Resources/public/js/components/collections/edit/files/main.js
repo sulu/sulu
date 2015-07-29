@@ -299,34 +299,39 @@ define(function() {
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
-                    parentTemplate: 'defaultEditable',
-                    template: this.sandbox.sulu.buttons.get(
-                        {'edit': {
-                            callback: function() {
-                                this.sandbox.emit('sulu.list-toolbar.edit');
-                            }.bind(this)
-                        }},
-                        {'delete': {
-                           callback: function() {
-                               this.sandbox.emit('sulu.list-toolbar.delete');
-                           }.bind(this)
-                        }},
-                        {'settings': {
-                            dropdownItems: [
-                                {
-                                    id: 'media-move',
-                                    title: this.sandbox.translate('sulu.media.move'),
-                                    callback: function() {
-                                        this.startMoveMediaOverlay();
-                                    }.bind(this)
-                                },
-                                {
-                                    type: 'columnOptions'
-                                }
-                            ]
-                        }},
-                        'layout'
-                    )
+                    template: this.sandbox.sulu.buttons.get({
+                        edit: {
+                            options: {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.edit');
+                                }.bind(this)
+                            }
+                        },
+                        delete: {
+                            options: {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.delete');
+                                }.bind(this)
+                            }
+                        },
+                        settings: {
+                            options: {
+                                dropdownItems: [
+                                    {
+                                        id: 'media-move',
+                                        title: this.sandbox.translate('sulu.media.move'),
+                                        callback: function() {
+                                            this.startMoveMediaOverlay();
+                                        }.bind(this)
+                                    },
+                                    {
+                                        type: 'columnOptions'
+                                    }
+                                ]
+                            }
+                        },
+                        layout: {}
+                    })
                 },
                 {
                     el: this.$find(constants.datagridSelector),

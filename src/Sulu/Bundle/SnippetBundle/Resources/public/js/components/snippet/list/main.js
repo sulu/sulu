@@ -39,7 +39,10 @@ define([
     SnippetList.prototype.header = {
         noBack: true,
         toolbar: {
-            buttons: ['add', 'delete']
+            buttons: {
+                add: {},
+                delete: {}
+            }
         }
     };
 

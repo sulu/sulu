@@ -233,9 +233,9 @@ define(['config'], function(Config) {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 if (!!saved) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
                 } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
                 }
             }
             this.saved = saved;

@@ -28,7 +28,7 @@
  * @param {String} [options.scrollDelta] this much pixels must be scrolled before the tabs get hidden or shown
  */
 
-define([], function () {
+define([], function() {
 
     'use strict';
 
@@ -100,7 +100,7 @@ define([], function () {
             ].join('')
         },
 
-        createEventName = function (postfix) {
+        createEventName = function(postfix) {
             return 'sulu.header.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         },
 
@@ -109,7 +109,7 @@ define([], function () {
          *
          * @event sulu.header.[INSTANCE_NAME].initialized
          */
-        INITIALIZED = function () {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -118,7 +118,7 @@ define([], function () {
          *
          * @event sulu.header.[INSTANCE_NAME].back
          */
-        BACK = function () {
+        BACK = function() {
             return createEventName.call(this, 'back');
         },
 
@@ -128,7 +128,7 @@ define([], function () {
          * @event sulu.header.[INSTANCE_NAME].language-changed
          * @param {string} the language which got changed to
          */
-        LANGUAGE_CHANGED = function () {
+        LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
         },
 
@@ -138,7 +138,7 @@ define([], function () {
          * @event sulu.header.[INSTANCE_NAME].tab-changed
          * @param {Object} the tab item switched to
          */
-        TAB_CHANGED = function () {
+        TAB_CHANGED = function() {
             return createEventName.call(this, 'tab-changed');
         },
 
@@ -151,7 +151,7 @@ define([], function () {
          *
          * @event sulu.header.[INSTANCE_NAME].tabs.activate
          */
-        TABS_ACTIVATE = function () {
+        TABS_ACTIVATE = function() {
             return createEventName.call(this, 'tabs.activate');
         },
 
@@ -160,7 +160,7 @@ define([], function () {
          *
          * @event sulu.header.[INSTANCE_NAME].tabs.activate
          */
-        TABS_DEACTIVATE = function () {
+        TABS_DEACTIVATE = function() {
             return createEventName.call(this, 'tabs.deactivate');
         },
 
@@ -171,7 +171,7 @@ define([], function () {
          * @param {string} id The id of the button
          * @param {object} object with a icon and title
          */
-        TOOLBAR_BUTTON_SET = function () {
+        TOOLBAR_BUTTON_SET = function() {
             return createEventName.call(this, 'toolbar.button.set');
         },
 
@@ -181,7 +181,7 @@ define([], function () {
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.loading
          * @param {string} id The id of the item
          */
-        TOOLBAR_ITEM_LOADING = function () {
+        TOOLBAR_ITEM_LOADING = function() {
             return createEventName.call(this, 'toolbar.item.loading');
         },
 
@@ -192,7 +192,7 @@ define([], function () {
          * @param {string} button The id of the button
          * @param {string} item the id or the index of the dropdown-item
          */
-        TOOLBAR_ITEM_CHANGE = function () {
+        TOOLBAR_ITEM_CHANGE = function() {
             return createEventName.call(this, 'toolbar.item.change');
         },
 
@@ -202,7 +202,7 @@ define([], function () {
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.mark
          * @param {string} item The id of the subitem
          */
-        TOOLBAR_ITEM_MARK = function () {
+        TOOLBAR_ITEM_MARK = function() {
             return createEventName.call(this, 'toolbar.item.mark');
         },
 
@@ -212,7 +212,7 @@ define([], function () {
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.show
          * @param {string} button The id of the button
          */
-        TOOLBAR_ITEM_SHOW = function () {
+        TOOLBAR_ITEM_SHOW = function() {
             return createEventName.call(this, 'toolbar.item.show');
         },
 
@@ -223,7 +223,7 @@ define([], function () {
          * @param {string} button The id of the button
          * @param {Boolean} true to highlight the button on change
          */
-        TOOLBAR_ITEM_ENABLE = function () {
+        TOOLBAR_ITEM_ENABLE = function() {
             return createEventName.call(this, 'toolbar.item.enable');
         },
 
@@ -234,7 +234,7 @@ define([], function () {
          * @param {string} button The id of the button
          * @param {Boolean} true to highlight the button on change
          */
-        TOOLBAR_ITEM_DISABLE = function () {
+        TOOLBAR_ITEM_DISABLE = function() {
             return createEventName.call(this, 'toolbar.item.disable');
         },
 
@@ -245,7 +245,7 @@ define([], function () {
          * @param id {string|number} id of the parent item
          * @param items {array} array of items to set
          */
-        TOOLBAR_ITEMS_SET = function () {
+        TOOLBAR_ITEMS_SET = function() {
             return createEventName.call(this, 'toolbar.items.set');
         };
 
@@ -253,7 +253,7 @@ define([], function () {
         /**
          * Initializes the component
          */
-        initialize: function () {
+        initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             // set default callback when no callback is provided
 
@@ -274,7 +274,7 @@ define([], function () {
             this.startLanguageChanger();
             tabsDef = this.startTabs();
 
-            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
+            this.sandbox.data.when(toolbarDef, tabsDef).then(function() {
                 this.sandbox.emit(INITIALIZED.call(this));
                 this.oldScrollPosition = this.sandbox.dom.scrollTop(this.options.scrollContainerSelector);
             }.bind(this));
@@ -283,7 +283,7 @@ define([], function () {
         /**
          * Renders the component
          */
-        render: function () {
+        render: function() {
             // add component-class
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
 
@@ -301,7 +301,7 @@ define([], function () {
         /**
          * Handles the start of the Tabs
          */
-        startTabs: function () {
+        startTabs: function() {
             var def = this.sandbox.data.deferred();
 
             if (this.options.tabsData !== null) {
@@ -317,7 +317,7 @@ define([], function () {
          * Starts the tabs component
          * @param {deferred} def
          */
-        startTabsComponent: function (def) {
+        startTabsComponent: function(def) {
             if (!!this.options.tabsData) {
                 var $container = this.sandbox.dom.createElement('<div/>'),
                     options = {
@@ -332,7 +332,7 @@ define([], function () {
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
 
                 // wait for initialized
-                this.sandbox.once('husky.tabs.header.initialized', function () {
+                this.sandbox.once('husky.tabs.header.initialized', function() {
                     def.resolve();
                 }.bind(this));
 
@@ -350,13 +350,13 @@ define([], function () {
         /**
          * Handles the starting of the toolbar
          */
-        startToolbar: function () {
+        startToolbar: function() {
             var def = this.sandbox.data.deferred();
 
             if (this.options.toolbarDisabled !== true) {
                 var options = this.options.toolbarOptions;
                 options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, options, {
-                    buttons: this.sandbox.sulu.buttons.get.apply(this, this.options.toolbarButtons)
+                    buttons: this.sandbox.sulu.buttons.get.call(this, this.options.toolbarButtons)
                 });
                 // start toolbar component with built options
                 this.startToolbarComponent(options, def);
@@ -409,7 +409,7 @@ define([], function () {
          * @param {object} options The options to pass to the toolbar component
          * @param {deferred} def
          */
-        startToolbarComponent: function (options, def) {
+        startToolbarComponent: function(options, def) {
             var $container = this.sandbox.dom.createElement('<div />'),
             // global default values
                 componentOptions = {
@@ -420,7 +420,7 @@ define([], function () {
 
             // wait for initialized
             if (!!def) {
-                this.sandbox.once('husky.toolbar.' + this.toolbarInstanceName  + '.initialized', function () {
+                this.sandbox.once('husky.toolbar.' + this.toolbarInstanceName + '.initialized', function() {
                     def.resolve();
                 }.bind(this));
             }
@@ -441,7 +441,7 @@ define([], function () {
         /**
          * listens to tab events
          */
-        bindCustomEvents: function () {
+        bindCustomEvents: function() {
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.opened', this.lockToolbarScroll.bind(this));
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.closed', this.unlockToolbarScroll.bind(this));
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.button.changed', this.updateToolbarOverflow.bind(this));
@@ -472,7 +472,7 @@ define([], function () {
                 }
                 this.stopTabContent();
 
-                var $container = this.sandbox.dom.createElement('<div class="' +  constants.tabsContentClass + '"/>');
+                var $container = this.sandbox.dom.createElement('<div class="' + constants.tabsContentClass + '"/>');
                 this.sandbox.dom.append(this.options.tabsContainer, $container);
 
                 options = this.sandbox.util.extend(true, {},
@@ -530,36 +530,36 @@ define([], function () {
         /**
          * Abstracts husky-toolbar events
          */
-        bindAbstractToolbarEvents: function () {
-            this.sandbox.on(TOOLBAR_ITEMS_SET.call(this), function (id, items) {
+        bindAbstractToolbarEvents: function() {
+            this.sandbox.on(TOOLBAR_ITEMS_SET.call(this), function(id, items) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.items.set', id, items);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_BUTTON_SET.call(this), function (id, object) {
+            this.sandbox.on(TOOLBAR_BUTTON_SET.call(this), function(id, object) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.button.set', id, object);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_ITEM_LOADING.call(this), function (id) {
+            this.sandbox.on(TOOLBAR_ITEM_LOADING.call(this), function(id) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.loading', id);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_ITEM_CHANGE.call(this), function (id, name) {
+            this.sandbox.on(TOOLBAR_ITEM_CHANGE.call(this), function(id, name) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.change', id, name);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_ITEM_SHOW.call(this), function (id, name) {
+            this.sandbox.on(TOOLBAR_ITEM_SHOW.call(this), function(id, name) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.show', id, name);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function (id, highlight) {
+            this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function(id, highlight) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', id, highlight);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_ITEM_DISABLE.call(this), function (id, highlight) {
+            this.sandbox.on(TOOLBAR_ITEM_DISABLE.call(this), function(id, highlight) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.disable', id, highlight);
             }.bind(this));
 
-            this.sandbox.on(TOOLBAR_ITEM_MARK.call(this), function (id) {
+            this.sandbox.on(TOOLBAR_ITEM_MARK.call(this), function(id) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.mark', id);
             }.bind(this));
         },
@@ -567,12 +567,12 @@ define([], function () {
         /**
          * Abstracts husky-tabs events
          */
-        bindAbstractTabsEvents: function () {
-            this.sandbox.on(TABS_ACTIVATE.call(this), function () {
+        bindAbstractTabsEvents: function() {
+            this.sandbox.on(TABS_ACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header.deactivate');
             }.bind(this));
 
-            this.sandbox.on(TABS_DEACTIVATE.call(this), function () {
+            this.sandbox.on(TABS_DEACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
         },
@@ -580,8 +580,8 @@ define([], function () {
         /**
          * Bind Dom-events
          */
-        bindDomEvents: function () {
-            this.sandbox.dom.on(this.$el, 'click', function () {
+        bindDomEvents: function() {
+            this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.emit(BACK.call(this));
             }.bind(this), '.' + constants.backClass);
 

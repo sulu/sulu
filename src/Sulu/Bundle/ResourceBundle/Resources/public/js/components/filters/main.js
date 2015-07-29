@@ -96,7 +96,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
          * @param data
          */
         save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.filter = Filter.findOrCreate(data);
             this.filter.saveLocale(this.options.locale, {
                 success: function(response) {

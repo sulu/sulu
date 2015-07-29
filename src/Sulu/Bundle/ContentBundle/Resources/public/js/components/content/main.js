@@ -42,9 +42,9 @@ define([
         },
 
         states = {
-            0: 'state-test',
-            1: 'state-test',
-            2: 'state-publish'
+            0: 'stateTest',
+            1: 'stateTest',
+            2: 'statePublish'
         },
 
         templates = {
@@ -620,7 +620,7 @@ define([
         },
 
         save: function(data, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             var def = this.sandbox.data.deferred();
 
@@ -668,7 +668,7 @@ define([
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while saving profile");
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
+                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                         this.sandbox.emit('sulu.content.contents.save-error');
                     }.bind(this)
                 });
@@ -963,9 +963,9 @@ define([
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 if (saved === true) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
                 } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
                 }
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
@@ -1184,15 +1184,13 @@ define([
                     header = {
                         noBack: true,
                         toolbar: {
-                            buttons: [
-                                {
-                                    id: 'toggler',
-                                    title: 'content.contents.show-ghost-pages',
-                                    content: '<div ' +
-                                             'data-aura-component="toggler@husky" ' +
-                                             'data-aura-instance-name="show-ghost-pages"></div>'
+                            buttons: {
+                                toggler: {
+                                    options: {
+                                        title: 'content.contents.show-ghost-pages',
+                                    }
                                 }
-                            ],
+                            },
                             languageChanger: {
                                 data: localizations,
                                 preSelected: this.options.language
@@ -1249,40 +1247,52 @@ define([
                                 preSelected: this.options.language
                             },
 
-                            buttons: [
-                                'saveWithOptions',
-                                {'template': {
-                                    position: 10,
-                                    dropdownOptions: {
-                                        url: '/admin/content/template?webspace=' + this.options.webspace,
-                                        callback: function(item) {
-                                            this.template = item.template;
-                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                        }.bind(this)
-                                    }
-                                }},
-                                {'settings': {
-                                    dropdownItems: [
-                                        {'delete': {
-                                            disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
-                                            callback: function() {
-                                                this.sandbox.emit('sulu.content.content.delete', this.data.id);
-                                            }.bind(this)
-                                        }},
-                                        {
-                                            title: this.sandbox.translate('toolbar.copy-locale'),
-                                            callback: function() {
-                                                this.startCopyLocalesOverlay();
+                            buttons: {
+                                save: {
+                                    parent: 'saveWithOptions'
+                                },
+                                template: {
+                                    options: {
+                                        dropdownOptions: {
+                                            url: '/admin/content/template?webspace=' + this.options.webspace,
+                                            callback: function(item) {
+                                                this.template = item.template;
+                                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                             }.bind(this)
                                         }
-                                    ]
-                                }},
-                                {
-                                    'state': {
-                                        dropdownItems: ['statePublish', 'stateTest']
+                                    }
+                                },
+                                settings: {
+                                    options: {
+                                        dropdownItems: {
+                                            delete: {
+                                                options: {
+                                                    disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
+                                                    callback: function() {
+                                                        this.sandbox.emit('sulu.content.content.delete', this.data.id);
+                                                    }.bind(this)
+                                                }
+                                            },
+                                            copyLocale: {
+                                                options: {
+                                                    title: this.sandbox.translate('toolbar.copy-locale'),
+                                                    callback: function() {
+                                                        this.startCopyLocalesOverlay();
+                                                    }.bind(this)
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                state: {
+                                    options: {
+                                        dropdownItems: {
+                                            statePublish: {},
+                                            stateTest: {}
+                                        }
                                     }
                                 }
-                            ]
+                            }
                         }
                     };
                 }

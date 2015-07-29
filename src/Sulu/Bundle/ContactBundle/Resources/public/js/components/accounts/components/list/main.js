@@ -70,7 +70,10 @@ define([
                 noBack: true,
 
                 toolbar: {
-                    buttons: ['add', 'delete']
+                    buttons: {
+                        add: {},
+                        delete: {}
+                    }
                 }
             };
         },

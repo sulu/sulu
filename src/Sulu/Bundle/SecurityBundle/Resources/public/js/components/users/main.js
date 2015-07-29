@@ -65,7 +65,7 @@ define([
         },
 
         save: function(data, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);

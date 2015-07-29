@@ -69,7 +69,10 @@ define(function() {
         header: {
             noBack: true,
             toolbar: {
-                buttons: ['add', 'delete']
+                buttons: {
+                    add: {},
+                    delete: {}
+                }
             }
         },
 

@@ -74,7 +74,7 @@ define(function () {
             // activate save-button on key input
             this.sandbox.dom.on(constants.detailsFromSelector, 'change keyup', function () {
                 if (this.saved === true) {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
                     this.saved = false;
                 }
             }.bind(this));
@@ -99,7 +99,7 @@ define(function () {
             if (this.sandbox.form.validate(constants.detailsFromSelector)) {
                 var data = this.sandbox.form.getData(constants.detailsFromSelector);
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
                 this.sandbox.emit('sulu.category.categories.save', this.options.data, this.savedCallback.bind(this, !this.options.data.id, action));
             }
         },
@@ -113,7 +113,7 @@ define(function () {
          */
         savedCallback: function (toEdit, action, result, success) {
             if (success === true) {
-                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
                 this.saved = true;
                 if (action === 'back') {
                     this.sandbox.emit('sulu.category.categories.list');
@@ -124,7 +124,7 @@ define(function () {
                 }
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-save-desc', 'labels.success');
             } else {
-                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
                 if (result.code === 1) {
                     this.sandbox.emit('sulu.labels.error.show', 'labels.error.category-unique-key', 'labels.error');
                 } else {

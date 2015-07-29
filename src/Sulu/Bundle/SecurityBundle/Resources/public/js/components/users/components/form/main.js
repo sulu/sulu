@@ -21,7 +21,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         setHeaderToolbar = function() {
         var toolbarItems = [
             {
-                id: 'save-button',
+                id: 'save',
                 icon: 'floppy-o',
                 position: 1,
                 group: 'left',
@@ -137,9 +137,9 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 if (!!saved) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
                 } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
                 }
             }
             this.saved = saved;
