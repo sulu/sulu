@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder\Expression\Exception;
 /**
  * Exceptions is throw when an invalid parameter is passed to an expression.
  */
-class InvalidArgumentException extends ExpressionException
+class InvalidExpressionArgumentException extends ExpressionException
 {
     /**
      * The argument of the expression, which was invalid.

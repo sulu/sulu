@@ -121,7 +121,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     {
         // create the appropriate expression
         if ($conjunction === ListBuilderInterface::CONJUNCTION_AND) {
-            return $this->listBuilder->createAddExpression($expressions);
+            return $this->listBuilder->createAndExpression($expressions);
         }
 
         return $this->listBuilder->createOrExpression($expressions);

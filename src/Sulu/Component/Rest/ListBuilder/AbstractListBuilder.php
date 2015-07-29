@@ -294,8 +294,6 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function addExpression(ExpressionInterface $expression)
     {
-        if ($expression) {
-            $this->expressions[] = $expression;
-        }
+        $this->expressions[] = $expression;
     }
 }

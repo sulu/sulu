@@ -16,11 +16,15 @@ namespace Sulu\Component\Rest\ListBuilder\Expression;
 interface BetweenExpressionInterface extends BasicExpressionInterface
 {
     /**
+     * Returns the start value used as first value in a between expression.
+     *
      * @return array
      */
     public function getStart();
 
     /**
+     * Returns the end value used as second value in a between expression.
+     *
      * @return array
      */
     public function getEnd();

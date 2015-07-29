@@ -16,11 +16,8 @@ namespace Sulu\Component\Rest\ListBuilder\Expression;
 interface ConjunctionExpressionInterface extends ExpressionInterface
 {
     /**
-     * @return string
-     */
-    public function getConjunction();
-
-    /**
+     * Array of expressions which will be combined.
+     *
      * @return ExpressionInterface[]
      */
     public function getExpressions();

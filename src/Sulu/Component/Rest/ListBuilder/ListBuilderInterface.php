@@ -272,7 +272,7 @@ interface ListBuilderInterface
      *
      * @return ConjunctionExpressionInterface|null
      */
-    public function createAddExpression(array $expressions);
+    public function createAndExpression(array $expressions);
 
     /**
      * Creates an or expressions with the given expressions.

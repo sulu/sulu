@@ -31,7 +31,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
     /**
      * Value which is used to compare.
      *
-     * @var
+     * @var mixed
      */
     protected $value;
 
@@ -42,8 +42,11 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
      */
     protected $comparator;
 
-    public function __construct(AbstractDoctrineFieldDescriptor $field, $value, $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL)
-    {
+    public function __construct(
+        AbstractDoctrineFieldDescriptor $field,
+        $value,
+        $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL
+    ) {
         $this->field = $field;
         $this->value = $value;
         $this->comparator = $comparator;

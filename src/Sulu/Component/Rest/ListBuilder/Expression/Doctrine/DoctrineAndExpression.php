@@ -25,8 +25,6 @@ class DoctrineAndExpression extends DoctrineConjunctionExpression
     protected $conjunction = ListBuilderInterface::CONJUNCTION_AND;
 
     /**
-     * DoctrineAndExpression constructor.
-     *
      * @param AbstractDoctrineExpression[] $expressions
      *
      * @throws InsufficientExpressionsException

@@ -28,7 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineBetweenExpressio
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
-use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidArgumentException;
+use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -318,7 +318,9 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set expressions
         if (!empty($this->expressions)) {
-            $this->evaluateExpressions($this->expressions);
+            foreach ($this->expressions as $expression) {
+                $this->queryBuilder->andWhere('(' . $expression->getStatement($this->queryBuilder) . ')');
+            }
         }
 
         // group by
@@ -335,18 +337,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return $this->queryBuilder;
-    }
-
-    /**
-     * Evaluates all given expressions and adds them to the query builder.
-     *
-     * @param AbstractDoctrineExpression[] $expressions
-     */
-    protected function evaluateExpressions(array $expressions)
-    {
-        foreach ($expressions as $expression) {
-            $this->queryBuilder->andWhere('(' . $expression->getStatement($this->queryBuilder) . ')');
-        }
     }
 
     /**
@@ -388,11 +378,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator)
     {
-        if ($fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
-            return new DoctrineWhereExpression($fieldDescriptor, $value, $comparator);
+        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+            throw new InvalidExpressionArgumentException('where', 'fieldDescriptor');
         }
 
-        throw new InvalidArgumentException('where', 'fielddescriptor');
+        return new DoctrineWhereExpression($fieldDescriptor, $value, $comparator);
     }
 
     /**
@@ -400,11 +390,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        if ($fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
-            return new DoctrineInExpression($fieldDescriptor, $values);
+        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+            throw new InvalidExpressionArgumentException('in', 'fieldDescriptor');
         }
 
-        throw new InvalidArgumentException('in', 'fielddescriptor');
+        return new DoctrineInExpression($fieldDescriptor, $values);
     }
 
     /**
@@ -412,11 +402,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        if ($fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
-            return new DoctrineBetweenExpression($fieldDescriptor, $values[0], $values[1]);
+        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+            throw new InvalidExpressionArgumentException('between', 'fieldDescriptor');
         }
 
-        throw new InvalidArgumentException('between', 'fielddescriptor');
+        return new DoctrineBetweenExpression($fieldDescriptor, $values[0], $values[1]);
     }
 
     /**
@@ -461,13 +451,13 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * {@inheritdoc}
      */
-    public function createAddExpression(array $expressions)
+    public function createAndExpression(array $expressions)
     {
-        if (count($expressions) > 0) {
+        if (count($expressions) > 2) {
             return new DoctrineAndExpression($expressions);
         }
 
-        throw new InvalidArgumentException('and', 'expressions');
+        throw new InvalidExpressionArgumentException('and', 'expressions');
     }
 
     /**
@@ -475,10 +465,10 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function createOrExpression(array $expressions)
     {
-        if (count($expressions) > 0) {
+        if (count($expressions) > 2) {
             return new DoctrineOrExpression($expressions);
         }
 
-        throw new InvalidArgumentException('or', 'expressions');
+        throw new InvalidExpressionArgumentException('or', 'expressions');
     }
 }

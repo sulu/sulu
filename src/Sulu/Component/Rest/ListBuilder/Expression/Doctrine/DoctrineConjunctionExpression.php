@@ -56,19 +56,10 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
     {
         $statements = [];
         foreach ($this->expressions as $expression) {
-            /** @var AbstractDoctrineExpression $expression */
             $statements[] = $expression->getStatement($queryBuilder);
         }
 
         return ' (' . implode(' ' . $this->conjunction . ' ', $statements) . ') ';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConjunction()
-    {
-        return $this->conjunction;
     }
 
     /**

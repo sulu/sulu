@@ -28,12 +28,12 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
     protected $field;
 
     /**
-     * @var
+     * @var mixed
      */
     protected $start;
 
     /**
-     * @var
+     * @var mixed
      */
     protected $end;
 
