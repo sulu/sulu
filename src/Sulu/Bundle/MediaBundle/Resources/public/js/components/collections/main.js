@@ -231,7 +231,7 @@ define([
             this.sandbox.dom.append(this.$el, $element);
 
             this.sandbox.start([{
-                name: 'collections/overlays/collection-select@sulumedia',
+                name: 'collections/overlays/collection-select-overlay@sulumedia',
                 options: {
                     el: $element,
                     instanceName: 'move-collection',
@@ -725,7 +725,7 @@ define([
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.start([
                 {
-                    name: 'collections/overlays/media-edit@sulumedia',
+                    name: 'collections/overlays/media-edit-overlay@sulumedia',
                     options: {
                         el: $container
                     }
