@@ -22,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
+    const ROLE_PREFIX = 'ROLE_';
+
     /**
      * {@inheritdoc}
      */
@@ -62,11 +64,17 @@ class SecuritySubscriber implements EventSubscriberInterface
         $node = $event->getNode();
 
         foreach ($document->getPermissions() as $roleName => $permission) {
-            $roleName = str_replace('_', '-', strtolower(substr($roleName, 5))); // TODO extract this functionality
+            // TODO extract this functionality
+            $roleName = str_replace('_', '-', strtolower(substr($roleName, strlen(static::ROLE_PREFIX))));
             $node->setProperty('sec:' . $roleName, $permission); // TODO use PropertyEncoder, once it is refactored
         }
     }
 
+    /**
+     * Adds the security information to the hydrated object.
+     *
+     * @param HydrateEvent $event
+     */
     public function handleHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();
@@ -79,7 +87,7 @@ class SecuritySubscriber implements EventSubscriberInterface
         $permissions = [];
         foreach ($node->getProperties('sec:*') as $property) {
             /** @var PropertyInterface $property */
-            $roleName = 'ROLE_' . strtoupper(str_replace('-', '_', substr($property->getName(), 4)));
+            $roleName = static::ROLE_PREFIX . strtoupper(str_replace('-', '_', substr($property->getName(), 4)));
             $permissions[$roleName] = $property->getValue();
         }
 
