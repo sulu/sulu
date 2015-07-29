@@ -230,6 +230,28 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
+     * Returns all FieldDescriptors that were passed to list builder
+     *
+     * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
+     *
+     * @return AbstractDoctrineFieldDescriptor[]
+     */
+    protected function getAllFields($onlyReturnFilterFields = false)
+    {
+        $fields = array_merge(
+            $this->searchFields,
+            $this->sortFields,
+            $this->expressionFields
+        );
+
+        if ($onlyReturnFilterFields !== true) {
+            $fields = array_merge($fields, $this->selectFields);
+        }
+
+        return $fields;
+    }
+
+    /**
      * Creates a query-builder for sub-selecting ID's.
      *
      * @param null|string $select
@@ -242,29 +264,50 @@ class DoctrineListBuilder extends AbstractListBuilder
             $select = $this->entityName . '.id';
         }
 
-        $filterFields = array_merge(
-            $this->sortFields,
-            $this->expressionFields,
-            $this->searchFields
-        );
+        // get all filter-fields
+        $filterFields = $this->getAllFields(true);
 
         // get entity names
-        $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
+        $entityNames = $this->getEntityNamesOfFieldDescriptors($filterFields);
 
-        // use fields that have filter functionality or have an inner join
+        // get necessary joins to achieve filtering
+        $addJoins = $this->getNecessaryJoins($entityNames);
+
+        // create querybuilder and add select
+        return $this->createQueryBuilder($addJoins)
+            ->select($select);
+    }
+
+    /**
+     * Function returns all necessary joins for filtering result
+     *
+     * @param string[] $necessaryEntityNames
+     *
+     * @return AbstractDoctrineFieldDescriptor[]
+     */
+    protected function getNecessaryJoins($necessaryEntityNames)
+    {
         $addJoins = [];
-        foreach ($this->getJoins() as $entity => $join) {
-            if (array_search($entity, $filterFields) !== false
-                || $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
+
+        // iterate through all field descriptors to find necessary joins
+        foreach ($this->getAllFields() as $key => $field) {
+            // if field is in any conditional clause -> add join
+            if (array_search($field->getEntityName(), $necessaryEntityNames) !== false
+                && $field->getEntityName() !== $this->entityName
             ) {
-                $addJoins[$entity] = $join;
+                $addJoins = array_merge($addJoins, $field->getJoins());
+            } else {
+                // include inner joins
+                foreach ($field->getJoins() as $entityName => $join) {
+                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER) {
+                        break;
+                    }
+                    $addJoins = array_merge($addJoins, [$entityName => $join]);
+                }
             }
         }
 
-        $queryBuilder = $this->createQueryBuilder($addJoins)
-            ->select($select);
-
-        return $queryBuilder;
+        return $addJoins;
     }
 
     /**

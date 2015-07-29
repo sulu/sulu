@@ -46,6 +46,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     private $query;
 
     /**
+     * @var \ReflectionMethod
+     */
+    private $findIdsByGivenCriteria;
+
+    /**
      * Result of id subquery.
      *
      * @var array
@@ -99,6 +104,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->expects($this->any())->method('dispatch')->with(
             ListBuilderEvents::LISTBUILDER_CREATE, $event
         )->willReturn($event);
+
+        $doctrineListBuilderReflectionClass = new \ReflectionClass($this->doctrineListBuilder);
+        $this->findIdsByGivenCriteria = $doctrineListBuilderReflectionClass->getMethod('findIdsByGivenCriteria');
+        $this->findIdsByGivenCriteria->setAccessible(true);
     }
 
     public function testSetField()
@@ -133,6 +142,118 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->doctrineListBuilder->execute();
+    }
+
+    public function testPreselectWithNoJoins()
+    {
+        $this->doctrineListBuilder->addSelectField(
+            new DoctrineFieldDescriptor(
+                'name',
+                'name_alias',
+                self::$entityName,
+                '',
+                [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        self::$entityName . '.translations'
+                    ),
+                    'anotherEntityName' => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        'anotherEntityName' . '.translations',
+                        null,
+                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                    ),
+                ]
+            )
+        );
+
+        // no joins should be made
+        $this->queryBuilder->expects($this->never())->method('leftJoin')->withAnyParameters();
+        $this->queryBuilder->expects($this->never())->method('innerJoin')->withAnyParameters();
+
+        $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
+    }
+
+    public function testPreselectWithJoins()
+    {
+        $this->doctrineListBuilder->addSelectField(
+            new DoctrineFieldDescriptor(
+                'name',
+                'name_alias',
+                self::$entityName,
+                '',
+                [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        self::$entityName . '.translations',
+                        null,
+                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                    ),
+                    'anotherEntityName' => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        'anotherEntityName' . '.translations',
+                        null,
+                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                    ),
+                ]
+            )
+        );
+
+        $this->queryBuilder->expects($this->exactly(2))->method('innerJoin')->withConsecutive(
+            [
+                self::$entityName . '.translations',
+                self::$translationEntityName,
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+
+            ]
+            ,
+            [
+                'anotherEntityName' . '.translations',
+                'anotherEntityName',
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+            ]
+        );
+
+        $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
+    }
+
+    public function testPreselectWithConditions()
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor(
+            'name',
+            'name_alias',
+            'anotherEntityName',
+            '',
+            [
+                self::$translationEntityName => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    self::$entityName . '.translations'
+                    ),
+                'anotherEntityName' => new DoctrineJoinDescriptor(
+                    self::$translationEntityName,
+                    'anotherEntityName' . '.translations'
+                ),
+            ]
+        );
+
+        $this->doctrineListBuilder->addSelectField($fieldDescriptor);
+        $this->doctrineListBuilder->where($fieldDescriptor, 'test');
+
+        $this->queryBuilder->expects($this->exactly(2))->method('leftJoin')->withConsecutive(
+            [
+                self::$entityName . '.translations',
+                self::$translationEntityName,
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+
+            ],
+            [
+                'anotherEntityName' . '.translations',
+                'anotherEntityName',
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+            ]
+        );
+
+        $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
     }
 
     public function testAddField()
