@@ -275,7 +275,7 @@ interface ListBuilderInterface
     public function createAddExpression(array $expressions);
 
     /**
-     * Creates an or expressions with the given expressions
+     * Creates an or expressions with the given expressions.
      *
      * @param ExpressionInterface[] $expressions
      *

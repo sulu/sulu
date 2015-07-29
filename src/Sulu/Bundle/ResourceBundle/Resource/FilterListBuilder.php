@@ -88,14 +88,13 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Handles the previouse created expressions and passes the over to the listbuilder
+     * Handles the previouse created expressions and passes the over to the listbuilder.
      *
      * @param ExpressionInterface[] $expressions
      * @param string $conjunction
      */
     protected function handleCreatedExpressions(array $expressions, $conjunction)
     {
-
         $expressionCounter = count($expressions);
         switch ($expressionCounter) {
             case 0: // no expressions - nothing to do
@@ -111,7 +110,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Creates a conjunction expression based on the given expressions and conjunction
+     * Creates a conjunction expression based on the given expressions and conjunction.
      *
      * @param ExpressionInterface[] $expressions
      * @param string $conjunction
@@ -154,7 +153,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     }
 
     /**
-     * Creates expressions from conditions and add them to the expressions array
+     * Creates expressions from conditions and add them to the expressions array.
      *
      * @param Condition $condition
      * @param AbstractFieldDescriptor $fieldDescriptor
