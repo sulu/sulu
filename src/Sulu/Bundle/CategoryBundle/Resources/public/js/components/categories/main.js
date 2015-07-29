@@ -14,7 +14,7 @@ define(['sulucategory/model/category',
 
     var constants = {
             listContainerId: 'categories-list-container',
-            formContainerId: 'categories-form-container'
+            editContainerId: 'categories-edit-container'
         },
 
         namespace = 'sulu.category.categories.',
@@ -123,8 +123,8 @@ define(['sulucategory/model/category',
         render: function() {
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'details') {
-                this.renderDetails();
+            } else if (this.options.display === 'edit') {
+                this.renderEdit();
             } else {
                 throw 'display type wrong';
             }
@@ -134,7 +134,8 @@ define(['sulucategory/model/category',
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.header.language-changed', this.renderDetails.bind(this));
+            // Todo: dont rerender the whole parent view on language change. This component should just reload the data and pass it to the views
+            this.sandbox.on('sulu.header.language-changed', this.render.bind(this));
             // navigate to category list
             this.sandbox.on(NAVIGATE_CATEGORY_LIST.call(this), this.navigateToList.bind(this));
             // navigate to category form
@@ -250,28 +251,26 @@ define(['sulucategory/model/category',
         },
 
         /**
-         * Renders the details for add and edit
+         * Renders the edit
          * @param language {Object} the language object from the header language changer
          */
-        renderDetails: function(language) {
-            this.sandbox.stop('#' + constants.formContainerId);
+        renderEdit: function(language) {
             var locale = (!!language) ? language.id : undefined;
             var category,
                 action = function(data) {
                     this.sandbox.start([
                         {
-                            name: 'categories/edit/details@sulucategory',
+                            name: 'categories/edit@sulucategory',
                             options: {
                                 el: $form,
                                 data: data,
-                                activeTab: this.options.content,
                                 // TODO options parent is only set in case of 'add'. Parent should also be sent via the api
                                 parent: this.options.parent || null
                             }
                         }
                     ]);
                 }.bind(this),
-                $form = this.sandbox.dom.createElement('<div id="' + constants.formContainerId + '"/>');
+                $form = this.sandbox.dom.createElement('<div id="' + constants.editContainerId + '"/>');
             this.html($form);
 
             category = this.getCategoryModel(this.options.id);

@@ -23,8 +23,7 @@ class CategoryContentNavigationProvider implements ContentNavigationProviderInte
     {
         $details = new ContentNavigationItem('content-navigation.category.details');
         $details->setAction('details');
-        $details->setComponent('categories@sulucategory');
-        $details->setComponentOptions(['display' => 'details']);
+        $details->setComponent('categories/edit/details@sulucategory');
 
         return [$details];
     }
