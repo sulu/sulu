@@ -38,7 +38,7 @@ define(function() {
                 '           <div class="head-name"><%= name %></div>',
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
-                '       <% if (!!suluUser) { %>',
+                '       <% if (!!isSuluUser) { %>',
                 '       <div class="head-sulubox"></div>',
                 '       <% } %>',
                 '   </div>',
@@ -125,48 +125,17 @@ define(function() {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
-                var id, picture, name, suluUser, location, mail;
+                var id, picture, name, isSuluUser, location, mail;
 
                 id = record[constants.idProperty];;
-                picture = '/bundles/sulucontact/sample.jpg';
+                picture = '/bundles/sulucontact/js/components/contacts/components/list/decorators//sample_avatar.jpg';
                 name = [record['firstName'], record['lastName']].join(' ');
-                suluUser = Math.random()<.3;
+                isSuluUser = Math.random()<.3;
                 location = 'Testhausen 8, AT';
                 mail = record[constants.mailProperty];
 
-                /*
-                // foreach matching configured get the corresponding datum from the record
-                this.sandbox.util.foreach(this.datagrid.matchings, function(matching) {
-                    var argument, result;
-
-                    // get argument
-                    if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        argument = this.thumbnailFormat;
-                    }
-
-                    // process
-                    result = this.datagrid.processContentFilter.call(this.datagrid,
-                        matching.attribute,
-                        record[matching.attribute],
-                        matching.type,
-                        argument
-                    );
-
-                    // get the thumbnail and the title data (to place it on top)
-                    // with the rest generate a description string
-                    if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        imgSrc = result[constants.thumbnailSrcProperty];
-                        imgAlt = result[constants.thumbnailAltProperty];
-                    } else if (matching.type === this.datagrid.types.TITLE) {
-                        title = result;
-                    } else if (matching.type === this.datagrid.types.BYTES) {
-                        description.push(result);
-                    }
-                }.bind(this));
-                */
-
                 // pass the found data to a render method
-                this.renderItem(id, picture, name, suluUser, location, mail);
+                this.renderItem(id, picture, name, isSuluUser, location, mail);
             }.bind(this));
         },
 
@@ -179,12 +148,12 @@ define(function() {
          * @param description {String} the thumbnail description to render
          * @param record {Object} the original data record
          */
-        renderItem: function(id, picture, name, suluUser, location, mail) {
+        renderItem: function(id, picture, name, isSuluUser, location, mail) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
                     picture: picture,
                     name: this.sandbox.util.cropTail(String(name), 32),
-                    suluUser: suluUser,
+                    isSuluUser: isSuluUser,
                     location: this.sandbox.util.cropTail(String(location),26),
                     mail: this.sandbox.util.cropMiddle(String(mail), 26),
                 })

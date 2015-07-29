@@ -9,7 +9,7 @@
 
 require.config({
     paths: {
-        'decorator/contact': '../../sulucontact/js/components/contacts/components/list/contact-view'
+        'decorators/contact': '../../sulucontact/js/components/contacts/components/list/decorators/contact-view'
     }
 });
 
@@ -104,7 +104,8 @@ define(['widget-groups'], function(WidgetGroups) {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
-                    view: 'decorator/contact',
+                    view: 'table',
+                    //view: 'decorators/contact',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,
