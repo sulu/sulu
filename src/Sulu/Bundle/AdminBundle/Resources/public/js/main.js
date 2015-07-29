@@ -22,6 +22,7 @@ require.config({
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content': 'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
+        'aura_extensions/sulu-buttons': 'aura_extensions/sulu-buttons',
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
 
         '__component__$app@suluadmin': 'components/app/main',
@@ -38,6 +39,7 @@ require.config({
         'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension',
+        'aura_extensions/sulu-buttons',
         'aura_extensions/url-manager',
         'widget-groups',
 
@@ -76,14 +78,14 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         });
 
         app.use('aura_extensions/url-manager');
+        app.use('aura_extensions/backbone-relational');
+        app.use('aura_extensions/sulu-content');
+        app.use('aura_extensions/sulu-extension');
+        app.use('aura_extensions/sulu-buttons');
 
         bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');
         }.bind(this));
-
-        app.use('aura_extensions/backbone-relational');
-        app.use('aura_extensions/sulu-content');
-        app.use('aura_extensions/sulu-extension');
 
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 

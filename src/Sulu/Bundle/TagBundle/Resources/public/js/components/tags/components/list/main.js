@@ -13,12 +13,12 @@ define(function() {
 
     var bindCustomEvents = function(instanceNameToolbar) {
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
             }.bind(this));
 
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.tags.delete', ids);
@@ -31,6 +31,12 @@ define(function() {
                     showErrorLabel.call(this,resp.responseJSON.code);
                 }
             }, this);
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
+            }.bind(this));
         },
 
         showErrorLabel = function(code) {
@@ -60,16 +66,11 @@ define(function() {
             }
         },
 
-        header: function() {
-            return {
-                title: 'tag.tags.title',
-                noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'tag.tags.title'}
-                ]
-            };
+        header: {
+            noBack: true,
+            toolbar: {
+                buttons: ['add', 'delete']
+            }
         },
 
         templates: ['/admin/tag/template/tag/list'],
@@ -88,8 +89,7 @@ define(function() {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
-                    instanceName: this.instanceNameToolbar,
-                    inHeader: true
+                    instanceName: this.instanceNameToolbar
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),

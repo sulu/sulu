@@ -124,19 +124,8 @@ define(['sulumedia/model/media'], function(Media) {
         },
 
         render: function() {
-            this.setHeaderInfos();
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
             this.startDatagrid();
-        },
-
-        setHeaderInfos: function() {
-            var breadcrumb = [
-                {title: 'navigation.media'},
-                {title: 'media.collections.title'}
-            ];
-
-            this.sandbox.emit('sulu.header.set-title', 'sulu.media.all');
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         actionCallback: function(id, item) {
@@ -190,8 +179,7 @@ define(['sulumedia/model/media'], function(Media) {
                                 }
                             ]
                         }
-                    ],
-                    inHeader: false
+                    ]
                 },
                 {
                     el: this.$find(constants.datagridSelector),

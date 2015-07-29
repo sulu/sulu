@@ -104,7 +104,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.sandbox.logger.log("no data given");
             }
 
-            this.setTitle();
             this.render();
             this.initializeRoles();
 
@@ -137,8 +136,11 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                if (!!saved) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                }
             }
             this.saved = saved;
         },
@@ -170,26 +172,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 }, this);
             }.bind(this));
 
-        },
-
-        /**
-         * Sets the title to the username
-         * default title as fallback
-         */
-        setTitle: function() {
-            var title = this.sandbox.translate('contact.contacts.title'),
-                breadcrumb = [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
-                ];
-
-            if (!!this.options.data.contact && !!this.options.data.contact.id) {
-                title = this.options.data.contact.fullName;
-                breadcrumb.push({title: '#' + this.options.data.contact.id});
-            }
-
-            this.sandbox.emit('sulu.header.set-title', title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         // Form
@@ -320,7 +302,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             }.bind(this));
 
             // delete contact
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
@@ -330,8 +312,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.setHeaderBar(true);
             }, this);
 
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.save();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.save(action);
             }, this);
 
             this.sandbox.on('sulu.header.back', function(){
@@ -344,7 +326,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             }.bind(this));
         },
 
-        save: function() {
+        save: function(action) {
             // FIXME  Use datamapper instead
 
             var data;
@@ -375,7 +357,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     data.user.password = this.password;
                 }
 
-                this.sandbox.emit('sulu.user.permissions.save', data);
+                this.sandbox.emit('sulu.user.permissions.save', data, action);
             }
         },
 

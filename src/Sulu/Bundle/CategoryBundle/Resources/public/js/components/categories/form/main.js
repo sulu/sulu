@@ -15,7 +15,7 @@ define(function () {
             activeTab: null,
             data: {},
             instanceName: 'category',
-            newCategoryTitle: 'sulu.category.new-category',
+            newCategoryTitle: 'sulu.category.new-category'
         },
 
         tabs = {
@@ -57,16 +57,14 @@ define(function () {
                 this.sandbox.emit('sulu.category.categories.list');
             }.bind(this));
 
-            this.sandbox.on('sulu.header.toolbar.save', this.saveDetails.bind(this));
-            this.sandbox.on('sulu.header.toolbar.delete', this.deleteCategory.bind(this));
+            this.sandbox.on('sulu.toolbar.save', this.saveDetails.bind(this));
+            this.sandbox.on('sulu.toolbar.delete', this.deleteCategory.bind(this));
         },
 
         /**
          * Renders the component
          */
         render: function () {
-            this.setHeaderInfos();
-            this.setLocaleChanger();
             if (this.options.activeTab === tabs.DETAILS) {
                 this.renderDetails();
             }
@@ -90,31 +88,10 @@ define(function () {
             // activate save-button on key input
             this.sandbox.dom.on(constants.detailsFromSelector, 'change keyup', function () {
                 if (this.saved === true) {
-                    this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
                     this.saved = false;
                 }
             }.bind(this));
-        },
-
-        /**
-         * Sets all the Info contained in the header
-         * like breadcrumb or title
-         */
-        setHeaderInfos: function () {
-            this.sandbox.emit('sulu.header.set-title', this.options.data.name || this.options.newCategoryTitle);
-            this.sandbox.emit('sulu.header.set-breadcrumb', [
-                {title: 'navigation.settings'},
-                {title: 'category.categories.title', event: 'sulu.category.categories.list'},
-                {title: this.options.data.name || this.options.newCategoryTitle}
-            ]);
-        },
-
-        /**
-         * Sets the locale-changer-dropdown
-         */
-        setLocaleChanger: function () {
-            this.sandbox.emit('sulu.header.toolbar.item.change', 'locale', this.options.data.locale || this.sandbox.sulu.user.locale);
-            this.sandbox.emit('sulu.header.toolbar.item.show', 'locale');
         },
 
         /**
@@ -132,32 +109,36 @@ define(function () {
         /**
          * Saves the details-tab
          */
-        saveDetails: function () {
+        saveDetails: function (action) {
             if (this.sandbox.form.validate(constants.detailsFromSelector)) {
                 var data = this.sandbox.form.getData(constants.detailsFromSelector);
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-                this.sandbox.emit('sulu.category.categories.save', this.options.data, this.savedCallback.bind(this, !this.options.data.id));
+                this.sandbox.emit('sulu.category.categories.save', this.options.data, this.savedCallback.bind(this, !this.options.data.id, action));
             }
         },
 
         /**
          * Method which gets called after the save-process has finished
          * @param {Boolean} toEdit if true the form will be navigated to the edit-modus
+         * @param {String} action 'new', 'back' or 'edit
          * @param {Object} result the saved category model or the error model
          * @param {Boolean} success to trigger success callback, false to trigger error callback
          */
-        savedCallback: function (toEdit, result, success) {
+        savedCallback: function (toEdit, action, result, success) {
             if (success === true) {
-                this.setHeaderInfos();
-                this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true);
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
                 this.saved = true;
-                if (toEdit === true) {
+                if (action === 'back') {
+                    this.sandbox.emit('sulu.category.categories.list');
+                } else if (action === 'new') {
+                    this.sandbox.emit('sulu.category.categories.form-add', this.options.parent);
+                } else if (toEdit === true) {
                     this.sandbox.emit('sulu.category.categories.form', result.id);
                 }
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-save-desc', 'labels.success');
             } else {
-                this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false, true);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
                 if (result.code === 1) {
                     this.sandbox.emit('sulu.labels.error.show', 'labels.error.category-unique-key', 'labels.error');
                 } else {

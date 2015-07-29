@@ -21,21 +21,21 @@ define([
 
         bindCustomEvents = function() {
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
                 }.bind(this));
             }, this);
 
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.accounts.new');
             }, this);
 
             // checkbox clicked
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
-                this.sandbox.emit('husky.toolbar.accounts.item.' + postfix, 'delete', false);
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
             }.bind(this));
         },
 
@@ -67,13 +67,11 @@ define([
 
         header: function() {
             return {
-                title: 'contact.accounts.title',
                 noBack: true,
 
-                breadcrumb: [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.accounts.title'}
-                ]
+                toolbar: {
+                    buttons: ['add', 'delete']
+                }
             };
         },
 

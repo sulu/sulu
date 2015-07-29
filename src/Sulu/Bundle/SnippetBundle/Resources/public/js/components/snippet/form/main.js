@@ -39,21 +39,18 @@ define([
 
     SnippetForm.prototype.header = function() {
         return {
-            breadcrumb: this.breadcrumb,
-
             tabs: {
                 url: '/admin/content-navigations?alias=snippet'
             },
 
             toolbar: {
-                parentTemplate: 'default',
-
                 languageChanger: {
                     url: '/admin/api/languages',
                     preSelected: this.options.language
                 },
 
-                template: [
+                buttons: [
+                    'saveWithOptions',
                     {
                         id: 'template',
                         icon: 'pencil',
@@ -75,7 +72,10 @@ define([
                                 this.template = item.template;
                             }.bind(this)
                         }
-                    }
+                    },
+                    {settings: {
+                        dropdownItems: ['delete']
+                    }}
                 ]
             }
         };
@@ -83,8 +83,6 @@ define([
 
     SnippetForm.prototype.initialize = function() {
         this.type = (!!this.options.id ? 'edit' : 'add');
-
-        this.headerDef = this.sandbox.data.deferred();
         this.dataDef = this.sandbox.data.deferred();
 
         this.bindModelEvents();
@@ -97,11 +95,6 @@ define([
         // back button
         this.sandbox.on('sulu.header.back', function() {
             this.sandbox.emit('sulu.snippets.snippet.list');
-        }.bind(this));
-
-        // header initialize to set-title
-        this.sandbox.on('husky.toolbar.header.initialized', function() {
-            this.headerDef.resolve();
         }.bind(this));
 
         // get content data
@@ -120,8 +113,6 @@ define([
         this.sandbox.on('sulu.snippets.snippet.saved', function(data) {
             this.data = data;
             this.setHeaderBar(true);
-            this.setTitle(this.data.title);
-
             this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
         }, this);
 
@@ -132,7 +123,7 @@ define([
         }, this);
 
         // content delete
-        this.sandbox.on('sulu.header.toolbar.delete', function() {
+        this.sandbox.on('sulu.toolbar.delete', function() {
             this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
         }, this);
     };
@@ -143,8 +134,11 @@ define([
      */
     SnippetForm.prototype.setHeaderBar = function(saved) {
         if (saved !== this.saved) {
-            var type = (!!this.data && !!this.data.id) ? 'edit' : 'add';
-            this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
+            if (saved === true) {
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+            }
             this.sandbox.emit('sulu.preview.state.change', saved);
         }
         this.saved = saved;
@@ -177,31 +171,6 @@ define([
     SnippetForm.prototype.render = function(data) {
         this.data = data;
         this.template = data.template;
-
-        this.headerDef.then(function() {
-            this.setTitle(data.title);
-        }.bind(this));
-    };
-
-    /**
-     * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
-     * @param {Object} title
-     */
-    SnippetForm.prototype.setTitle = function(title) {
-        var breadcrumb = [
-            {title: 'navigation.snippets'}
-        ];
-
-        if (!!this.options.id && title !== '') {
-            this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(title, 40));
-
-            // breadcrumb
-            breadcrumb.push({title: title});
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        } else {
-            this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('snippets.snippet.title'));
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        }
     };
 
     return new SnippetForm();

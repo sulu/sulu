@@ -45,8 +45,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.contacts.contacts.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.contacts.contacts.save', function(data, action) {
+                this.save(data, action);
             }, this);
 
             // wait for navigation events
@@ -77,17 +77,17 @@ define([
                 'api/contact/positions');
 
             // handling documents
-            this.sandbox.on('sulu.contacts.contacts.medias.save', this.saveDocuments.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
         },
 
-        saveDocuments: function(contactId, newMediaIds, removedMediaIds) {
+        saveDocuments: function(contactId, newMediaIds, removedMediaIds, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
-            this.processAjaxForDocuments(newMediaIds, contactId, 'POST');
-            this.processAjaxForDocuments(removedMediaIds, contactId, 'DELETE');
+            this.processAjaxForDocuments(newMediaIds, contactId, 'POST', action);
+            this.processAjaxForDocuments(removedMediaIds, contactId, 'DELETE', action);
         },
 
-        processAjaxForDocuments: function(mediaIds, contactId, type){
+        processAjaxForDocuments: function(mediaIds, contactId, type, action){
 
             var requests=[],
                 medias=[],
@@ -120,6 +120,7 @@ define([
                     } else if(type === 'POST') {
                         this.sandbox.emit('sulu.contacts.accounts.medias.saved', medias);
                     }
+                    this.afterSaveAction(action, contactId, false);
                 }.bind(this));
             }
         },
@@ -146,7 +147,7 @@ define([
             DeleteDialog.show(this.sandbox, this.contact);
         },
 
-        save: function(data) {
+        save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.contact.set(data);
 
@@ -161,17 +162,25 @@ define([
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!data.id) {
-
                         // TODO update address lists
                         this.sandbox.emit('sulu.contacts.contacts.saved', model);
-                    } else {
-                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id + '/details');
                     }
+                    this.afterSaveAction(action, model.id, !data.id);
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log('error while saving profile');
                 }.bind(this)
             });
+        },
+
+        afterSaveAction: function(action, id, wasAdded) {
+            if (action === 'back') {
+                this.sandbox.emit('sulu.contacts.contacts.list');
+            } else if (action == 'new') {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add', true, true);
+            } else if (wasAdded) {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
+            }
         },
 
         load: function(id) {

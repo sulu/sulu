@@ -11,32 +11,6 @@ define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 
-    var setHeaderToolbar = function() {
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                template: 'default'
-            });
-        },
-
-        /**
-         * Sets the title to the username
-         * default title as fallback
-         */
-        setTitle = function(data) {
-            var title = this.sandbox.translate('contact.contacts.title'),
-                breadcrumb = [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
-                ];
-
-            if (!!data && !!data.id) {
-                title = data.fullName;
-                breadcrumb.push({title: '#' + data.id});
-            }
-
-            this.sandbox.emit('sulu.header.set-title', title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        };
-
     return {
 
         view: true,
@@ -60,14 +34,9 @@ define(['widget-groups'], function(WidgetGroups) {
             this.form = '#documents-form';
             this.newSelections = [];
             this.removedSelections = [];
+            this.saved = true;
 
             this.currentSelection = this.getPropertyFromArrayOfObject(this.options.data.medias, 'id');
-
-            // init header toolbar for contacts
-            if (this.options.params.type === 'contact') {
-                setTitle.call(this, this.options.data);
-                setHeaderToolbar.call(this);
-            }
 
             this.setHeaderBar(true);
             this.render();
@@ -121,11 +90,11 @@ define(['widget-groups'], function(WidgetGroups) {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
 
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 if (this.options.params.type === 'account') {
                     this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
                 } else {
@@ -213,13 +182,12 @@ define(['widget-groups'], function(WidgetGroups) {
 
         /**
          * Submits the selection depending on the type
+         * @param action {String} the action after save
          */
-        submit: function() {
+        submit: function(action) {
             if (this.sandbox.form.validate(this.form)) {
-                if (this.options.params.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections);
-                } else if (this.options.params.type === 'contact') {
-                    this.sandbox.emit('sulu.contacts.contacts.medias.save', this.options.data.id, this.newSelections, this.removedSelections);
+                if (this.options.params.type === 'account' || this.options.params.type === 'contact') {
+                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections, action);
                 } else {
                     this.sandbox.logger.error('Undefined type for documents component!');
                 }
@@ -229,8 +197,11 @@ define(['widget-groups'], function(WidgetGroups) {
         /** @var Bool saved - defines if saved state should be shown */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                if (!!saved) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                }
             }
             this.saved = saved;
         }

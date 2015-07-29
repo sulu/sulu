@@ -41,10 +41,11 @@ Feature: Category management
 
     Scenario: Create a category
         Given I am on "/admin/#settings/categories"
+        And I wait a second
         And I click the add icon
         And I expect a form to appear
         And I fill in "change-name" with "Chocolate"
         And I fill in "change-key" with "chocolate"
         When I click the save icon
-        And I wait to see "Chocolate"
+        And I wait a second
         And the category "chocolate" should exist

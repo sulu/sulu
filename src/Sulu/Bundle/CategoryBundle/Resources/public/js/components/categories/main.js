@@ -265,7 +265,9 @@ define(['sulucategory/model/category',
                             options: {
                                 el: $form,
                                 data: data,
-                                activeTab: this.options.content
+                                activeTab: this.options.content,
+                                // TODO options parent is only set in case of 'add'. Parent should also be sent via the api
+                                parent: this.options.parent || null
                             }
                         }
                     ]);

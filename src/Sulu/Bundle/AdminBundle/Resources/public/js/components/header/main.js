@@ -13,15 +13,12 @@
  * @constructor
  *
  * @param {Object} [options] Configuration object
- * @param {String|Array} [options.toolbarTemplate] Template of items for the toolbar. Can be Object with valid structure (see husky) or a string representing an object with items (e.g. 'default')
- * @param {String|Array} [options.toolbarParentTemplate] same as toolbarTemplate. Gets merged with toolbarTemplate
  * @param {String} [options.instanceName] name of the instance
- * @param {Function} [options.changeStateCallback] Function to execute if the toolbar-state changes
- * @param {Function} [options.parentChangeStateCallback] Same as changeStateCallback
  * @param {Object} [options.tabsData] data to pass to the tabs component. For data-structure markup see husky
  * @param {Object} [options.tabsParentOptions] The options-object of the tabs-parent-component. this options get merged into each tabs-component-option
  * @param {String|Object} [options.tabsContainer] Selector or dom object to insert the the tabs-content into
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
+ * @param {Array} [options.toolbarButtons] Array of arguments to pass to the sulu.buttons.get function to recieve the toolbar-buttons
  * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a default-language changer will be displayed. Can be an object to build a custom language changer
  * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
  * @param {String} [options.toolbarLanguageChanger.preselected] id of the language selected at the beginning
@@ -36,16 +33,13 @@ define([], function () {
     'use strict';
 
     var defaults = {
-            toolbarTemplate: 'default',
-            toolbarParentTemplate: null,
             instanceName: '',
-            changeStateCallback: null,
-            parentChangeStateCallback: null,
             tabsData: null,
             tabsParentOptions: {},
             toolbarOptions: {},
             tabsContainer: null,
             toolbarLanguageChanger: false,
+            toolbarButtons: [],
             toolbarDisabled: false,
             noBack: false,
             scrollContainerSelector: '.content-column > .page',
@@ -126,18 +120,6 @@ define([], function () {
          */
         BACK = function () {
             return createEventName.call(this, 'back');
-        },
-
-        /**
-         * listens on and changes the state of the toolbar
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
-         * @param {string} type 'add' or 'edit'
-         * @param {boolean} saved If false toolbar gets set in dirty state
-         * @param {boolean} highlight True to change with highlight effect
-         */
-        TOOLBAR_STATE_CHANGE = function () {
-            return createEventName.call(this, 'toolbar.state.change');
         },
 
         /**
@@ -239,9 +221,21 @@ define([], function () {
          *
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
          * @param {string} button The id of the button
+         * @param {Boolean} true to highlight the button on change
          */
         TOOLBAR_ITEM_ENABLE = function () {
             return createEventName.call(this, 'toolbar.item.enable');
+        },
+
+        /**
+         * listens on and disables a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
+         * @param {string} button The id of the button
+         * @param {Boolean} true to highlight the button on change
+         */
+        TOOLBAR_ITEM_DISABLE = function () {
+            return createEventName.call(this, 'toolbar.item.disable');
         },
 
         /**
@@ -253,105 +247,6 @@ define([], function () {
          */
         TOOLBAR_ITEMS_SET = function () {
             return createEventName.call(this, 'toolbar.items.set');
-        },
-
-        /**
-         * Predefined toolbar templates
-         * each function must return a an array with items for the toolbar
-         * @type {{default: function}}
-         */
-        toolbarTemplates = {
-            default: function () {
-                return[
-                    {
-                        id: 'save-button',
-                        icon: 'floppy-o',
-                        position: 1,
-                        group: 'left',
-                        disabled: true,
-                        callback: function () {
-                            this.sandbox.emit('sulu.header.toolbar.save');
-                        }.bind(this)
-                    },
-                    {
-                        icon: 'gear',
-                        group: 'left',
-                        id: 'options-button',
-                        position: 30,
-                        dropdownItems: [
-                            {
-                                id: "delete-button",
-                                title: this.sandbox.translate('toolbar.delete'),
-                                callback: function () {
-                                    this.sandbox.emit('sulu.header.toolbar.delete');
-                                }.bind(this)
-                            }
-                        ]
-                    }
-                ];
-            },
-
-            empty: function() {
-                return [];
-            },
-
-            save: function () {
-                return [toolbarTemplates.default.call(this)[0]];
-            }
-        },
-
-        changeStateCallbacks = {
-            default: function (saved, type, highlight) {
-                if (!!saved) {
-                    this.sandbox.emit(
-                        'husky.toolbar.' + this.toolbarInstanceName + '.item.disable', 'save-button',
-                        !!highlight
-                    );
-                } else {
-                    this.sandbox.emit(
-                        'husky.toolbar.' + this.toolbarInstanceName + '.item.enable',
-                        'save-button',
-                        false
-                    );
-                }
-            }
-        },
-
-        /**
-         * Returns a template useable by the toolbar-component
-         * @param {Object|String} template Can be a JSON-string, String representing a function
-         *                        in toolbarTemplates or a valid array of objects
-         * @returns {Object} a template usable by the toolbar-component
-         */
-        getToolbarTemplate = function (template) {
-            var templateObj = template;
-            if (typeof template === 'string') {
-                try {
-                    templateObj = JSON.parse(template);
-                } catch (e) {
-                    if (!!toolbarTemplates[template]) {
-                        templateObj = toolbarTemplates[template].call(this);
-                    } else {
-                        this.sandbox.logger.log('no template found!');
-                    }
-                }
-            } else if (typeof templateObj === 'function') {
-                templateObj = template();
-            }
-            return templateObj;
-        },
-
-        /**
-         * Looks in changeStateCallbacks for a function and returns it
-         * @param {String} template String representing a function in changeStateCallbacks
-         * @returns {Function} the matched function
-         */
-        getChangeToolbarStateCallback = function (template) {
-            if (!!changeStateCallbacks[template]) {
-                return changeStateCallbacks[template];
-            } else {
-                this.sandbox.logger.log('no template found!');
-            }
         };
 
     return {
@@ -361,9 +256,6 @@ define([], function () {
         initialize: function () {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             // set default callback when no callback is provided
-            if (!this.options.changeStateCallback) {
-                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
-            }
 
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
@@ -403,30 +295,6 @@ define([], function () {
                 this.sandbox.dom.hide(this.$find('.' + constants.backClass));
             } else {
                 this.sandbox.dom.show(this.$find('.' + constants.backClass));
-            }
-        },
-
-        /**
-         * Builds the template of items for the Toolbar
-         */
-        buildToolbarTemplate: function (template, parentTemplate) {
-            this.options.toolbarTemplate = getToolbarTemplate.call(this, template);
-            if (!this.options.changeStateCallback || typeof this.options.changeStateCallback !== 'function') {
-                this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, template);
-            }
-
-            // if a parentTemplate is set merge it with the current template
-            if (this.options.toolbarParentTemplate !== null) {
-
-                this.options.toolbarParentTemplate = getToolbarTemplate.call(this, parentTemplate);
-                if (
-                    !this.options.parentChangeStateCallback ||
-                    typeof this.options.parentChangeStateCallback !== 'function'
-                ) {
-                    this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, parentTemplate);
-                }
-
-                this.options.toolbarTemplate = this.options.toolbarTemplate.concat(this.options.toolbarParentTemplate);
             }
         },
 
@@ -480,24 +348,6 @@ define([], function () {
         },
 
         /**
-         * Sets a new toolbar into the header
-         * @param options {Object} toolbar-options. Or options with template and parentTemplate
-         */
-        setToolbar: function (options) {
-            if (!options.template) {
-                this.options.toolbarTemplate = null;
-                this.options.toolbarParentTemplate = null;
-                this.options.toolbarOptions = options;
-            } else {
-                this.options.toolbarTemplate = options.template;
-                this.options.toolbarParentTemplate = (!!options.parentTemplate) ? options.parentTemplate : null;
-                this.options.toolbarOptions = (!!options.toolbarOptions) ? options.toolbarOptions : {};
-            }
-            this.options.toolbarDisabled = false;
-            this.startToolbar();
-        },
-
-        /**
          * Handles the starting of the toolbar
          */
         startToolbar: function () {
@@ -505,17 +355,9 @@ define([], function () {
 
             if (this.options.toolbarDisabled !== true) {
                 var options = this.options.toolbarOptions;
-
-                if (this.options.toolbarTemplate !== null) {
-                    // build icon-template and parent-template and merge all in this.options.toolbarTemplate
-                    this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
-
-                    // add built toolbarTemplate to the toolbar-options
-                    options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, options, {
-                        buttons: this.options.toolbarTemplate
-                    });
-                }
-
+                options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, options, {
+                    buttons: this.sandbox.sulu.buttons.get.apply(this, this.options.toolbarButtons)
+                });
                 // start toolbar component with built options
                 this.startToolbarComponent(options, def);
             } else {
@@ -603,9 +445,6 @@ define([], function () {
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.opened', this.lockToolbarScroll.bind(this));
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.closed', this.unlockToolbarScroll.bind(this));
             this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.button.changed', this.updateToolbarOverflow.bind(this));
-
-            // changes the saved state of the toolbar
-            this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
 
             this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
 
@@ -720,6 +559,10 @@ define([], function () {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', id, highlight);
             }.bind(this));
 
+            this.sandbox.on(TOOLBAR_ITEM_DISABLE.call(this), function (id, highlight) {
+                this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.disable', id, highlight);
+            }.bind(this));
+
             this.sandbox.on(TOOLBAR_ITEM_MARK.call(this), function (id) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.mark', id);
             }.bind(this));
@@ -822,23 +665,6 @@ define([], function () {
          */
         showTabs: function() {
             this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
-        },
-
-        /**
-         * Calles the change states callbacks and passes it the arguments
-         * //todo: make it cleaner!
-         * @param type {string} "edit" or "add"
-         * @param saved {boolean} false if the toolbar should represent a dirty-state
-         * @param highlight {boolean} true to change with a highlight effect
-         */
-        changeToolbarState: function (type, saved, highlight) {
-            if (typeof this.options.changeStateCallback === 'function') {
-                this.options.changeStateCallback.call(this, saved, type, highlight);
-            }
-
-            if (typeof this.options.parentChangeStateCallback === 'function') {
-                this.options.parentChangeStateCallback.call(this, saved, type, highlight);
-            }
         }
     };
 });

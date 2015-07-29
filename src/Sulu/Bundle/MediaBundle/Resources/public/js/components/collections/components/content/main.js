@@ -51,26 +51,25 @@ define(function() {
                     url: '/admin/content-navigations?alias=media'
                 },
                 toolbar: {
-                    template: [
+                    buttons: [
+                        'save',
                         {
-                            id: 'settings',
-                            icon: 'gear',
-                            position: 30,
-                            dropdownItems: [
-                                {
-                                    id: 'collection-move',
-                                    title: this.sandbox.translate('sulu.collection.move'),
-                                    callback: this.startMoveCollectionOverlay.bind(this)
-                                },
-                                {
-                                    id: 'delete',
-                                    title: this.sandbox.translate('sulu.collections.delete-collection'),
-                                    callback: this.deleteCollection.bind(this)
-                                }
-                            ]
+                            'settings': {
+                                dropdownItems: [
+                                    {
+                                        id: 'collection-move',
+                                        title: this.sandbox.translate('sulu.collection.move'),
+                                        callback: this.startMoveCollectionOverlay.bind(this)
+                                    },
+                                    {
+                                        id: 'delete',
+                                        title: this.sandbox.translate('sulu.collections.delete-collection'),
+                                        callback: this.deleteCollection.bind(this)
+                                    }
+                                ]
+                            }
                         }
                     ],
-                    parentTemplate: 'save',
                     languageChanger: {
                         url: '/admin/api/localizations',
                         resultKey: 'localizations',

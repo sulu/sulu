@@ -35,8 +35,8 @@ define([
             }, this);
 
             // save the current
-            this.sandbox.on('sulu.snippets.snippet.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.snippets.snippet.save', function(data, action) {
+                this.save(data, action);
             }, this);
 
             // wait for navigation events
@@ -86,7 +86,7 @@ define([
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
                     }.bind(this));
 
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
                 }
             }.bind(this));
         },
@@ -145,7 +145,7 @@ define([
             ]);
         },
 
-        save: function(data) {
+        save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             if (!!this.template) {
                 data.template = this.template;
@@ -162,7 +162,12 @@ define([
                     var data = response.toJSON();
                     if (!!this.data.id) {
                         this.sandbox.emit('sulu.snippets.snippet.saved', data);
-                    } else {
+                    }
+                    if (action === 'back') {
+                        this.sandbox.emit('sulu.snippets.snippet.list');
+                    } else if (action === 'new') {
+                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
+                    } else if (!this.data.id) {
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
                     }
                 }.bind(this),

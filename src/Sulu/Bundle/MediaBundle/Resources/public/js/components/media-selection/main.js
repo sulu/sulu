@@ -695,8 +695,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                                     }
                                 ]
                             }
-                        ],
-                        inHeader: false
+                        ]
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),

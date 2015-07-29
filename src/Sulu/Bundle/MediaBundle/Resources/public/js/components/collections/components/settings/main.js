@@ -68,7 +68,7 @@ define(function() {
             this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
 
             // save button clicked
-            this.sandbox.on('sulu.header.toolbar.save', this.save.bind(this));
+            this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
         },
 
         /**
@@ -76,25 +76,21 @@ define(function() {
          * @param locale {string} the new locale to edit the collection in
          */
         changeLanguage: function(locale) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale.localization, breadcrumb: 'true'},
+                this.options.data.id, {locale: locale.id, breadcrumb: 'true'},
                 function(collection) {
                     this.options.data = collection;
                     this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
-                    this.setHeaderInfos();
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
                 }.bind(this)
             );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.localization);
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.id);
         },
 
         /**
          * Renderes the files tab
          */
         render: function() {
-            this.setHeaderInfos();
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
             this.sandbox.start('#' + constants.settingsFormId);
             this.sandbox.form.create('#' + constants.settingsFormId);
@@ -110,37 +106,10 @@ define(function() {
             // activate save-button on key input
             this.sandbox.dom.on('#' + constants.settingsFormId, 'change keyup', function() {
                 if (this.saved === true) {
-                    this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
                     this.saved = false;
                 }
             }.bind(this));
-        },
-
-        /**
-         * Sets all the Info contained in the header
-         * like breadcrumb or title
-         */
-        setHeaderInfos: function() {
-            var breadcrumb = [
-                {title: 'navigation.media'},
-                {
-                    title: 'media.collections.title',
-                    event: 'sulu.media.collections.breadcrumb-navigate.root'
-                }
-            ], i, len, data = this.options.data._embedded.breadcrumb || [];
-
-            for (i = 0, len = data.length; i < len; i++) {
-                breadcrumb.push({
-                    title: data[i].title,
-                    event: 'sulu.media.collections.breadcrumb-navigate',
-                    eventArgs: data[i]
-                });
-            }
-
-            breadcrumb.push({title: this.options.data.title});
-
-            this.sandbox.emit('sulu.header.set-title', this.options.data.title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         /**
@@ -162,8 +131,7 @@ define(function() {
          * Method which gets called after the save-process has finished
          */
         savedCallback: function() {
-            this.setHeaderInfos();
-            this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true);
+            this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
             this.saved = true;
             this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-save-desc', 'labels.success');
             this.sandbox.emit('husky.data-navigation.collections.reload');

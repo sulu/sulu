@@ -31,57 +31,33 @@ define([], function() {
 
         templates = {
             default: function() {
-                return [
-                    {
-                        id: 'add',
-                        icon: 'plus-circle',
-                        class: 'highlight',
-                        position: 10,
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.add');
-                        }.bind(this)
-                    },
-                    {
-                        id: 'delete',
-                        icon: 'trash-o',
-                        position: 20,
-                        disabled: true,
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.delete');
-                        }.bind(this)
-                    },
+                return this.sandbox.sulu.buttons.get(
+                    {'settings': {
+                        dropdownItems: [{type: 'columnOptions'}]
+                    }}
+                );
+                /*return [
                     {
                         id: 'settings',
                         icon: 'gear',
                         position: 30,
                         dropdownItems: [
                             {
-                                title: this.sandbox.translate('sulu.list-toolbar.import'),
-                                disabled: true
-                            },
-                            {
-                                title: this.sandbox.translate('sulu.list-toolbar.export'),
-                                disabled: true
-                            },
-                            {
                                 type: 'columnOptions'
                             }
                         ]
                     }
-                ];
+                ];*/
             },
             defaultEditable: function() {
-                return templates.default.call(this).concat([
-                    {
-                        id: 'edit',
-                        icon: 'pencil',
-                        position: 25,
-                        disabled: true,
+                return templates.default.call(this).concat(this.sandbox.sulu.buttons.get(
+                    {'edit': {
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.edit');
                         }.bind(this)
-                    }
-                ]);
+                    }}
+                ));
+
             },
             defaultNoSettings: function() {
                 var defaults = templates.default.call(this);
@@ -94,50 +70,7 @@ define([], function() {
                 return defaults;
             },
             changeable: function() {
-                return [
-                    {
-                        id: 'change',
-                        icon: 'th-large',
-                        dropdownOptions: {
-                            markSelected: true
-                        },
-                        dropdownItems: [
-                            {
-                                id: 'small-thumbnails',
-                                title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
-                                callback: function() {
-                                    this.sandbox.emit('sulu.list-toolbar.change.thumbnail-small');
-                                }.bind(this)
-                            },
-                            {
-                                id: 'big-thumbnails',
-                                title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
-                                callback: function() {
-                                    this.sandbox.emit('sulu.list-toolbar.change.thumbnail-large');
-                                }.bind(this)
-                            },
-                            {
-                                id: 'table',
-                                title: this.sandbox.translate('sulu.list-toolbar.table'),
-                                callback: function() {
-                                    this.sandbox.emit('sulu.list-toolbar.change.table');
-                                }.bind(this)
-                            }
-                        ]
-                    }
-                ];
-            },
-            defaultEditableList: function() {
-                var defaults = templates.default.call(this);
-                defaults.splice(1, 0, {
-                    icon: 'floppy-o',
-                    disabled: true,
-                    id: 'save',
-                    callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.save');
-                    }.bind(this)
-                });
-                return defaults;
+                return this.sandbox.sulu.buttons.get('layout');
             }
         },
         listener = {
@@ -157,14 +90,6 @@ define([], function() {
                 this.sandbox.on('sulu.list-toolbar.' + instanceName + 'edit.state-change', function(enable) {
                     postfix = !!enable ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
-                }.bind(this));
-            },
-            defaultEditableList: function() {
-                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-                listener.default.call(this);
-
-                this.sandbox.on('husky.datagrid.data.changed', function() {
-                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.enable', 'save');
                 }.bind(this));
             }
         },
@@ -312,7 +237,8 @@ define([], function() {
                     hasSearch: true,
                     buttons: this.options.template,
                     instanceName: this.options.instanceName,
-                    showTitleAsTooltip: this.options.showTitleAsTooltip
+                    showTitleAsTooltip: this.options.showTitleAsTooltip,
+                    showTitle: false
                 };
 
             if (this.options.hasOwnProperty('hasSearch')) {

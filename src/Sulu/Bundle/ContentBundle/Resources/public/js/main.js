@@ -15,11 +15,12 @@ require.config({
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
-        "type/block": '../../sulucontent/js/validation/types/block'
+        "type/block": '../../sulucontent/js/validation/types/block',
+        "aura_extensions/sulu-buttons-contentbundle": '../../sulucontent/js/aura_extensions/sulu-buttons'
     }
 });
 
-define(['config'], function(Config) {
+define(['config', 'aura_extensions/sulu-buttons-contentbundle'], function(Config, SuluButtons) {
     return {
 
         name: "Sulu Content Bundle",
@@ -27,6 +28,8 @@ define(['config'], function(Config) {
         initialize: function(app) {
 
             'use strict';
+
+            SuluButtons.initialize(app);
 
             var sandbox = app.sandbox;
 

@@ -42,7 +42,6 @@ Feature: Manage snippets
         And I wait for a data grid to appear
         When I click the edit icon in the row containing "Penguin"
         And I expect a form to appear
-        And I expect to see "Penguin"
         And I fill in "title" with "Duck"
         And I click the save icon
         Then I expect a success notification to appear
