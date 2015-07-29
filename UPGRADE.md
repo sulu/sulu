@@ -10,6 +10,15 @@ removed from some methodes of the `AbstractListBuilder` because of unclear meani
 - where (conjunction removed)
 - between (conjunction removed)
 
+### Security
+
+The security now requires its own phpcr namespace for storing security related information. To register this namespace
+execute the following command.
+
+```bash
+app/console sulu:phpcr:init
+```
+
 ### Enabled listbuilder to have multiple sort fields
 
 It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
