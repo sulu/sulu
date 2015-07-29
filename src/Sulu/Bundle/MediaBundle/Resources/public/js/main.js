@@ -48,6 +48,15 @@ define({
             }
         });
 
+        // show a single collection with files and upload
+        sandbox.mvc.routes.push({
+            route: 'media/collections/edit::id/:content/edit::mediaId',
+            callback: function(id, content, mediaId) {
+                sandbox.sulu.viewStates['media-file-edit-id'] = parseInt(mediaId);
+                sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + id + '/' + content);
+            }
+        });
+
         app.components.before('initialize', function() {
             if (this.name !== 'Sulu App') {
                 return;

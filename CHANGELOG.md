@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1421 [AdminBundle]     New button-api for header and tabs
+    * FEATURE     #1417 [AdminBundle]     Style upgrade for header and tabs
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
