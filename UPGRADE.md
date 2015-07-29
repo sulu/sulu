@@ -4,8 +4,8 @@
 
 ### Listbuilder
 
-The listbuilder uses now expressions to build the query. In course of these changes some default values have been 
-removed from some methodes of the `AbstractListBuilder because of unclear meaning / effect. Changed function parameters:
+The listbuilder uses now expressions to build the query. In course of these changes some default values have been
+removed from some methodes of the `AbstractListBuilder` because of unclear meaning / effect. Changed function parameters:
 
 - where (conjunction removed)
 - between (conjunction removed)
