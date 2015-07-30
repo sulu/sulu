@@ -9,7 +9,7 @@
   padding-right: 10px;
   cursor: pointer;
 }
-/* line 15, ../scss/modules/utility.scss */
+/* line 13, ../scss/modules/utility.scss */
 #contact-form div.remove-email,
 #contact-form div.remove-phone,
 #contact-form div.remove-address, #financials-form div.remove-email,
@@ -17,7 +17,7 @@
 #financials-form div.remove-address {
   display: none;
 }
-/* line 21, ../scss/modules/utility.scss */
+/* line 19, ../scss/modules/utility.scss */
 #contact-form #phones div:hover > div.remove-phone,
 #contact-form #addresses div:hover > div.remove-address,
 #contact-form #emails div:hover > div.remove-email, #financials-form #phones div:hover > div.remove-phone,
@@ -25,7 +25,7 @@
 #financials-form #emails div:hover > div.remove-email {
   display: block;
 }
-/* line 27, ../scss/modules/utility.scss */
+/* line 25, ../scss/modules/utility.scss */
 #contact-form #emails .husky-validate-success label::after,
 #contact-form #phones .husky-validate-success label::after,
 #contact-form #addresses .husky-validate-success label::after, #financials-form #emails .husky-validate-success label::after,
@@ -41,7 +41,7 @@
 #contact-form .m-left-140, #financials-form .m-left-140 {
   margin-left: 140px;
 }
-/* line 40, ../scss/modules/utility.scss */
+/* line 39, ../scss/modules/utility.scss */
 #contact-form .bank-account-remove,
 #contact-form .address-remove, #financials-form .bank-account-remove,
 #financials-form .address-remove {
@@ -52,7 +52,7 @@
 #contact-form .address-row, #financials-form .address-row {
   padding-top: 5px;
 }
-/* line 50, ../scss/modules/utility.scss */
+/* line 49, ../scss/modules/utility.scss */
 #contact-form .bank-account-row:hover .bank-account-remove,
 #contact-form .address-row:hover .address-remove, #financials-form .bank-account-row:hover .bank-account-remove,
 #financials-form .address-row:hover .address-remove {
@@ -107,4 +107,101 @@
 .form-horizontal .form-group .checkbox-container-left {
   text-align: left;
   width: 35px;
+}
+
+/* line 2, ../scss/modules/contacts.scss */
+#people-list .contact-grid {
+  margin: 0 -20px -30px 0;
+}
+/* line 5, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item {
+  width: 190px;
+  height: 260px;
+  margin: 0 20px 30px 0;
+  position: relative;
+  background-color: white;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 3px;
+}
+/* line 16, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head {
+  width: 100%;
+  height: 190px;
+  padding-top: 30px;
+}
+/* line 21, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head .head-container {
+  width: 100px;
+  margin: 0 auto;
+  text-align: center;
+}
+/* line 26, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head .head-container .head-image {
+  height: 100px;
+  border-radius: 50px;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+}
+/* line 32, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head .head-container .head-name {
+  margin-top: 14px;
+  line-height: 18px;
+}
+/* line 38, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head .head-checkbox {
+  display: none;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  margin: 0;
+}
+/* line 47, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head .head-sulubox {
+  display: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  position: absolute;
+  top: 30px;
+  left: 120px;
+  background-color: #52B6CA;
+}
+/* line 60, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head:hover .head-checkbox {
+  display: block;
+}
+/* line 66, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-info {
+  width: 100%;
+  height: 70px;
+  padding: 15px;
+  background-color: #ddd;
+  border-radius: 0 0 3px 3px;
+}
+/* line 74, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-info .info-icon {
+  width: 15px;
+  margin-right: 8px;
+  color: white;
+  text-align: center;
+}
+/* line 82, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-info .info-text {
+  color: #999;
+  font-size: 12px;
+}
+/* line 88, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .action-navigator {
+  cursor: pointer;
+}
+/* line 93, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item.selected .head-checkbox {
+  display: block;
+}
+/* line 99, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item.sulu-user .head-sulubox {
+  display: block;
 }

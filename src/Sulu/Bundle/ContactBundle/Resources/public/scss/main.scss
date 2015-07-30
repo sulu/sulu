@@ -1,1 +1,4 @@
-@import 'modules/utility.scss';
+@import 'mixins.scss',
+        '../../../../AdminBundle/Resources/public/js/vendor/husky/scss/variables',
+        'modules/utility.scss',
+        'modules/contacts.scss';
