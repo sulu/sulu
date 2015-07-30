@@ -28,7 +28,7 @@ class DoctrineAndExpressionTest extends \PHPUnit_Framework_TestCase
      *
      * @var int
      */
-    private $uniqueIdLength = 13;
+    private $uniqueIdLength = 23;
 
     /**
      * @var QueryBuilder
@@ -56,8 +56,8 @@ class DoctrineAndExpressionTest extends \PHPUnit_Framework_TestCase
 
         $statement = $andExpression->getStatement($this->queryBuilder);
         $result = preg_match(
-            '/^ \(SuluCoreBundle:Example\.name1 = :name1[\S]{' . $this->uniqueIdLength .
-            '} AND SuluCoreBundle:Example\.name2 = :name2[\S]{' . $this->uniqueIdLength . '}\)/',
+            '/^SuluCoreBundle:Example\.name1 = :name1[\S]{' . $this->uniqueIdLength .
+            '} AND SuluCoreBundle:Example\.name2 = :name2[\S]{' . $this->uniqueIdLength . '}/',
             $statement
         );
 

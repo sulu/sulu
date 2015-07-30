@@ -319,7 +319,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         // set expressions
         if (!empty($this->expressions)) {
             foreach ($this->expressions as $expression) {
-                $this->queryBuilder->andWhere($expression->getStatement($this->queryBuilder));
+                $this->queryBuilder->andWhere('(' . $expression->getStatement($this->queryBuilder) . ')');
             }
         }
 

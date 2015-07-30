@@ -28,7 +28,7 @@ class DoctrineBetweenExpressionTest extends \PHPUnit_Framework_TestCase
      *
      * @var int
      */
-    private $uniqueIdLength = 13;
+    private $uniqueIdLength = 23;
 
     /**
      * @var QueryBuilder
