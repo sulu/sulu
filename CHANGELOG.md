@@ -49,6 +49,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
     * FEATURE     #1429 [ResourceBundle]  Updated husky and added preselect for filter dropdown
+    * BUGFIX      #1411 [All]             Only take inner-joins into account that are referenced to selected entity +
+                                          Added Tests
     * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
     * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
