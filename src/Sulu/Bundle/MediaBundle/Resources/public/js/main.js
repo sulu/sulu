@@ -75,7 +75,7 @@ define({
                 this.sandbox.dom.append('body', $element);
 
                 this.sandbox.start([{
-                    name: 'collections/overlays/collection-create-overlay@sulumedia',
+                    name: 'collections/collection-create@sulumedia',
                     options: {
                         el: $element,
                         parent: parentId,
