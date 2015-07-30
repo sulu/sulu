@@ -50,8 +50,8 @@ define([], function() {
 
         bindCustomEvents: function() {
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
         },
 
@@ -59,11 +59,11 @@ define([], function() {
             this.sandbox.dom.on(this.$el, 'keyup', this.updateExcerpt.bind(this));
         },
 
-        submit: function() {
+        submit: function(action) {
             this.sandbox.logger.log('save Model');
             if (this.sandbox.form.validate(this.formId)) {
                 this.data.ext.seo = this.sandbox.form.getData(this.formId);
-                this.sandbox.emit('sulu.content.contents.save', this.data);
+                this.sandbox.emit('sulu.content.contents.save', this.data, action);
             }
         },
 

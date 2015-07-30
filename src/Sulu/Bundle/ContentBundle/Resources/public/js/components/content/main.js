@@ -41,6 +41,12 @@ define([
             localizationUrl: '/admin/api/webspace/localizations'
         },
 
+        states = {
+            0: 'stateTest',
+            1: 'stateTest',
+            2: 'statePublish'
+        },
+
         templates = {
             preview: [
                 '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
@@ -272,7 +278,7 @@ define([
             }.bind(this));
 
             // change language
-            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
+            this.sandbox.on('sulu.header.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
@@ -313,7 +319,6 @@ define([
 
                 this.data = data;
                 this.setHeaderBar(true);
-                this.setTitle(this.data);
 
                 // FIXME select should be able to override text in a item
                 this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
@@ -353,7 +358,7 @@ define([
             }.bind(this));
 
             // get changed state
-            this.sandbox.on('sulu.dropdown.state.item-clicked', function(state) {
+            this.sandbox.on('sulu.header.state.changed', function(state) {
                 if (this.state !== state) {
                     this.state = state;
                     this.setHeaderBar(false);
@@ -377,8 +382,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
-                this.save(data).then(function() {
+            this.sandbox.on('sulu.content.contents.save', function(data, action) {
+                this.save(data, action).then(function() {
                     this.loadData();
                 }.bind(this));
             }, this);
@@ -520,7 +525,7 @@ define([
         del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
                     if (!this.content || id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
@@ -614,8 +619,8 @@ define([
             });
         },
 
-        save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+        save: function(data, action) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             var def = this.sandbox.data.deferred();
 
@@ -636,21 +641,34 @@ define([
                 null, {
                     // on success save contents id
                     success: function(response) {
-                        var model = response.toJSON(), route;
+                        var model = response.toJSON(), parent;
                         if (!!this.options.id) {
                             this.sandbox.emit('sulu.content.contents.saved', model.id, model);
                         } else {
-                            route = 'content/contents/' + this.options.webspace + '/' +
-                            this.options.language + '/edit:' + model.id + '/content';
-
                             this.sandbox.sulu.viewStates.justSaved = true;
-                            this.sandbox.emit('sulu.router.navigate', route);
+                        }
+                        if (action === 'back') {
+                            this.sandbox.emit('sulu.content.contents.list');
+                        } else if (action === 'new') {
+                            parent = ((!!this.options.id && model.breadcrumb.length > 1)
+                                         ? model.breadcrumb[model.breadcrumb.length - 1].uuid : null)
+                                     || this.options.parent;
+                            this.sandbox.emit('sulu.router.navigate',
+                                'content/contents/' + this.options.webspace + '/' +
+                                this.options.language + '/add' +  ((!!parent) ? ':' + parent : '') + '/content',
+                                true, true
+                            );
+                        } else if (!this.options.id) {
+                            this.sandbox.emit('sulu.router.navigate',
+                                'content/contents/' + this.options.webspace + '/' +
+                                 this.options.language + '/edit:' + model.id + '/content'
+                            );
                         }
                         def.resolve();
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while saving profile");
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
+                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                         this.sandbox.emit('sulu.content.contents.save-error');
                     }.bind(this)
                 });
@@ -695,8 +713,6 @@ define([
         render: function(data) {
             this.data = data;
             this.headerInitialized.then(function() {
-                this.setTitle(data);
-                this.setBreadcrumb(data);
                 this.setTemplate(data);
                 this.setState(data);
 
@@ -936,54 +952,8 @@ define([
             this.state = data.nodeState;
 
             if (this.state !== '' && this.state !== undefined && this.state !== null) {
-                this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
+                this.sandbox.emit('sulu.header.toolbar.item.change', 'state', states[this.state]);
             }
-        },
-
-        /**
-         * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
-         * @param {Object} data
-         */
-        setTitle: function(data) {
-            if (!!this.options.id && data.title !== '') {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(data.title, 40));
-            } else {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
-            }
-        },
-
-        /**
-         * Sets the breadcrump of the selected node
-         * @param data
-         */
-        setBreadcrumb: function(data) {
-            if (!!data.breadcrumb) {
-                var breadcrumb = [
-                    {
-                        title: this.options.webspace.replace(/_/g, '.'),
-                        event: 'sulu.content.contents.list'
-                    }
-                ], length, i;
-
-                // loop through breadcrumb skip home-page
-                for (i = 0, length = data.breadcrumb.length; ++i < length;) {
-                    breadcrumb.push({
-                        title: data.breadcrumb[i].title,
-                        link: this.getBreadcrumbRoute(data.breadcrumb[i].uuid)
-                    });
-                }
-
-                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-            }
-        },
-
-        /**
-         * Returns routes for the breadcrumbs. Replaces the current uuid with a passed one in the active URI
-         * @param uuid {string} uuid to replace the current one with
-         * @returns {string} the route for the breadcrumb
-         */
-        getBreadcrumbRoute: function(uuid) {
-            return this.sandbox.mvc.history.fragment.replace(this.options.id, uuid);
         },
 
         /**
@@ -992,8 +962,11 @@ define([
          */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.data && !!this.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
+                if (saved === true) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+                }
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
@@ -1209,13 +1182,15 @@ define([
 
                 if (this.options.display === 'column') {
                     header = {
-                        title: this.options.webspace.replace(/_/g, '.'),
                         noBack: true,
-                        breadcrumb: [
-                            {title: this.options.webspace.replace(/_/g, '.')}
-                        ],
                         toolbar: {
-                            template: [],
+                            buttons: {
+                                toggler: {
+                                    options: {
+                                        title: 'content.contents.show-ghost-pages',
+                                    }
+                                }
+                            },
                             languageChanger: {
                                 data: localizations,
                                 preSelected: this.options.language
@@ -1272,90 +1247,52 @@ define([
                                 preSelected: this.options.language
                             },
 
-                            template: [
-                                {
-                                    id: 'save-button',
-                                    icon: 'floppy-o',
-                                    iconSize: 'large',
-                                    class: 'highlight',
-                                    position: 1,
-                                    group: 'left',
-                                    disabled: true,
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.header.toolbar.save');
-                                    }.bind(this)
+                            buttons: {
+                                save: {
+                                    parent: 'saveWithOptions'
                                 },
-                                {
-                                    id: 'template',
-                                    icon: 'pencil',
-                                    iconSize: 'large',
-                                    group: 'left',
-                                    position: 10,
-                                    type: 'select',
-                                    title: '',
-                                    hidden: false,
-                                    itemsOption: {
-                                        url: '/admin/content/template?webspace=' + this.options.webspace,
-                                        titleAttribute: 'title',
-                                        idAttribute: 'template',
-                                        translate: false,
-                                        markable: true,
-                                        callback: function(item) {
-                                            this.template = item.template;
-                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                        }.bind(this)
+                                template: {
+                                    options: {
+                                        dropdownOptions: {
+                                            url: '/admin/content/template?webspace=' + this.options.webspace,
+                                            callback: function(item) {
+                                                this.template = item.template;
+                                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                            }.bind(this)
+                                        }
                                     }
                                 },
-                                {
-                                    icon: 'gear',
-                                    iconSize: 'large',
-                                    group: 'left',
-                                    id: 'options-button',
-                                    position: 30,
-                                    items: [
-                                        {
-                                            title: this.sandbox.translate('toolbar.delete'),
-                                            disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
-                                            callback: function() {
-                                                this.sandbox.emit('sulu.content.content.delete', this.data.id);
-                                            }.bind(this)
-                                        },
-                                        {
-                                            title: this.sandbox.translate('toolbar.copy-locale'),
-                                            callback: function() {
-                                                this.startCopyLocalesOverlay();
-                                            }.bind(this)
+                                settings: {
+                                    options: {
+                                        dropdownItems: {
+                                            delete: {
+                                                options: {
+                                                    disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
+                                                    callback: function() {
+                                                        this.sandbox.emit('sulu.content.content.delete', this.data.id);
+                                                    }.bind(this)
+                                                }
+                                            },
+                                            copyLocale: {
+                                                options: {
+                                                    title: this.sandbox.translate('toolbar.copy-locale'),
+                                                    callback: function() {
+                                                        this.startCopyLocalesOverlay();
+                                                    }.bind(this)
+                                                }
+                                            }
                                         }
-                                    ]
+                                    }
                                 },
-                                {
-                                    id: 'state',
-                                    group: 'left',
-                                    position: 100,
-                                    type: 'select',
-                                    itemsOption: {
-                                        markable: true
-                                    },
-                                    items: [
-                                        {
-                                            id: 2,
-                                            title: this.sandbox.translate('toolbar.state-publish'),
-                                            icon: 'husky-publish',
-                                            callback: function() {
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
-                                            }.bind(this)
-                                        },
-                                        {
-                                            id: 1,
-                                            title: this.sandbox.translate('toolbar.state-test'),
-                                            icon: 'husky-test',
-                                            callback: function() {
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
-                                            }.bind(this)
+                                state: {
+                                    options: {
+                                        dropdownItems: {
+                                            statePublish: {},
+                                            stateTest: {}
                                         }
-                                    ]
+                                    }
                                 }
-                            ]
+                            }
                         }
                     };
                 }

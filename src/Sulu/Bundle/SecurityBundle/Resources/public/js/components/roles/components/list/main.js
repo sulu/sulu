@@ -12,14 +12,20 @@ define(function() {
     'use strict';
 
     var bindCustomEvents = function() {
-        this.sandbox.on('sulu.list-toolbar.add', function() {
+        this.sandbox.on('sulu.toolbar.add', function() {
             this.sandbox.emit('sulu.roles.new');
         }.bind(this));
 
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
+        this.sandbox.on('sulu.toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.roles.delete', ids);
             }.bind(this));
+        }.bind(this));
+
+        // checkbox clicked
+        this.sandbox.on('husky.datagrid.number.selections', function(number) {
+            var postfix = number > 0 ? 'enable' : 'disable';
+            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
         }.bind(this));
     };
 
@@ -36,13 +42,13 @@ define(function() {
 
         header: function() {
             return {
-                title: 'security.roles.title',
                 noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'security.roles.title'}
-                ]
+                toolbar: {
+                    buttons: {
+                        add: {},
+                        delete: {}
+                    }
+                }
             };
         },
 
@@ -60,8 +66,7 @@ define(function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'roles', '/admin/api/roles/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
-                    instanceName: 'roles',
-                    inHeader: true
+                    instanceName: 'roles'
                 },
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),

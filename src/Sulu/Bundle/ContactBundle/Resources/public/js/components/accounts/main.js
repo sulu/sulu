@@ -11,7 +11,6 @@ define([
     'sulucontact/model/account',
     'sulucontact/model/contact',
     'sulucontact/model/accountContact',
-    'accountsutil/header',
     'sulucontact/model/email',
     'sulucontact/model/emailType',
     'sulumedia/model/media',
@@ -21,7 +20,6 @@ define([
     Account,
     Contact,
     AccountContact,
-    AccountsUtilHeader,
     Email,
     EmailType,
     Media,
@@ -44,27 +42,23 @@ define([
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
-                this.renderForm().then(this.setHeader.bind(this));
+                this.renderForm();
             } else if (this.options.display === 'contacts') {
                 this.renderComponent(
                     'accounts/components/',
                     this.options.display,
                     'accounts-form-container', {}
-                ).then(this.setHeader.bind(this));
+                );
             } else if (this.options.display === 'documents') {
                 this.renderComponent(
                     '',
                     this.options.display,
                     'documents-form',
                     {type: 'account'}
-                ).then(this.setHeader.bind(this));
+                );
             } else {
                 throw 'display type wrong';
             }
-        },
-
-        setHeader: function() {
-            AccountsUtilHeader.setHeader.call(this, this.account);
         },
 
         bindCustomEvents: function() {
@@ -152,17 +146,17 @@ define([
             });
         },
 
-        saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+        saveDocuments: function(accountId, newMediaIds, removedMediaIds, action) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
-            this.sandbox.logger.warn('newMediaIds',newMediaIds);
-            this.sandbox.logger.warn('removedMediaIds',removedMediaIds);
+            this.sandbox.logger.warn('newMediaIds', newMediaIds);
+            this.sandbox.logger.warn('removedMediaIds', removedMediaIds);
 
-            this.processAjaxForDocuments(newMediaIds, accountId, 'POST');
-            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE');
+            this.processAjaxForDocuments(newMediaIds, accountId, 'POST', action);
+            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE', action);
         },
 
-        processAjaxForDocuments: function(mediaIds, accountId, type){
+        processAjaxForDocuments: function(mediaIds, accountId, type, action){
 
             var requests=[],
                 medias=[],
@@ -197,7 +191,18 @@ define([
                         this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
                     }
+                    this.afterSaveAction(action, accountId, false);
                 }.bind(this));
+            }
+        },
+
+        afterSaveAction: function(action, id, wasAdded) {
+            if (action == 'back') {
+                this.navigateToList();
+            } else if (action == 'new') {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add', true, true);
+            } else if (wasAdded) {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
             }
         },
 
@@ -299,8 +304,8 @@ define([
         },
 
         // saves an account
-        save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+        save: function(data, action) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.account.set(data);
 
@@ -316,9 +321,8 @@ define([
                     var model = response.toJSON();
                     if (!!data.id) {
                         this.sandbox.emit('sulu.contacts.accounts.saved', model);
-                    } else {
-                        this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }
+                    this.afterSaveAction(action, model.id, !data.id);
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");

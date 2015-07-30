@@ -38,11 +38,6 @@ define(function() {
         ORDER_BUTTON_ID = 5,
 
         templates = {
-            toggler: [
-                '<div id="show-ghost-pages"></div>',
-                '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-            ].join(''),
-
             columnNavigation: function() {
                 return [
                     '<div id="child-column-navigation"/>',
@@ -141,7 +136,7 @@ define(function() {
                 this.localizations = localizations;
             }, this);
 
-            this.sandbox.on('husky.toggler.show-ghost-pages.changed', function(checked) {
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', function(checked) {
                 this.showGhostPages = checked;
                 this.sandbox.sulu.saveUserSetting(SHOW_GHOST_PAGES_KEY, this.showGhostPages);
                 this.startColumnNavigation();
@@ -552,31 +547,9 @@ define(function() {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
-                this.addToggler();
-
                 // start column-navigation
                 this.startColumnNavigation();
             }.bind(this));
-        },
-
-        /**
-         * Generates the toggler and adds it to the header
-         */
-        addToggler: function() {
-            this.sandbox.emit('sulu.header.set-bottom-content', this.sandbox.util.template(templates.toggler)({
-                label: this.sandbox.translate('content.contents.show-ghost-pages')
-            }));
-
-            this.sandbox.start([
-                {
-                    name: 'toggler@husky',
-                    options: {
-                        el: '#show-ghost-pages',
-                        checked: this.showGhostPages,
-                        outline: true
-                    }
-                }
-            ]);
         },
 
         openGhost: function(item) {

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -36,10 +36,8 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             var toolbar = {
                 template: [
                     {
-                        id: 'save-button',
+                        id: 'save',
                         icon: 'floppy-o',
-                        iconSize: 'large',
-                        class: 'highlight',
                         position: 1,
                         group: 'left',
                         disabled: true,
@@ -60,7 +58,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             if (!!this.options.data && !!this.options.data.id) {
                 toolbar.template.push({
                     icon: 'trash-o',
-                    iconSize: 'large',
                     group: 'left',
                     id: 'delete-button',
                     position: 30,
@@ -102,7 +99,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                 this.options.data = model;
                 this.sandbox.form.setData(formSelector, model);
                 this.setHeaderBar(true);
-                this.setHeaderInformation();
             }, this);
 
             // back to list
@@ -139,7 +135,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/form'));
 
-            this.setHeaderInformation();
             this.startOperatorSelection();
 
             if (!this.options.data || !this.options.data.conjunction) {
@@ -202,17 +197,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             }.bind(this)).fail(function(error) {
                 this.sandbox.logger.error("An error occured when setting data!", error);
             }.bind(this));
-        },
-
-        /**
-         * Sets header information like title and breadcrumb
-         */
-        setHeaderInformation: function() {
-            var name = this.options.data ? this.options.data.name : null,
-                id = this.options.data ? this.options.data.id : null;
-
-            HeaderUtil.setTitle(this.sandbox, name);
-            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, id);
         },
 
         /**

@@ -22,13 +22,8 @@ define(function() {
 
         layout: {
             content: {
-                width: 'max',
-                topSpace: false
+                width: 'max'
             }
-        },
-
-        header: {
-            hidden: true
         },
 
         /**

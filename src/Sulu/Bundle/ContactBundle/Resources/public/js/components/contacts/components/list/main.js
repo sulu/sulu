@@ -23,21 +23,21 @@ define(['widget-groups'], function(WidgetGroups) {
 
         bindCustomEvents = function() {
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.contacts.contacts.delete', ids);
                 }.bind(this));
             }, this);
 
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.contacts.new');
             }, this);
 
             // checkbox clicked
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
-                this.sandbox.emit('husky.toolbar.contacts.item.' + postfix, 'delete', false);
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
             }.bind(this));
         },
 
@@ -64,13 +64,13 @@ define(['widget-groups'], function(WidgetGroups) {
         },
 
         header: {
-            title: 'contact.contacts.title',
             noBack: true,
-
-            breadcrumb: [
-                {title: 'navigation.contacts'},
-                {title: 'contact.contacts.title'}
-            ]
+            toolbar: {
+                buttons: {
+                    add: {},
+                    delete: {}
+                }
+            }
         },
 
         templates: ['/admin/contact/template/contact/list'],
@@ -88,17 +88,7 @@ define(['widget-groups'], function(WidgetGroups) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    inHeader: true,
-                    groups: [
-                        {
-                            id: 1,
-                            align: 'left'
-                        },
-                        {
-                            id: 2,
-                            align: 'right'
-                        }
-                    ]
+                    template: 'default'
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
