@@ -249,7 +249,7 @@ define(function() {
          */
         renderSelectCollection: function() {
             this.sandbox.start([{
-                name: 'collections/overlays/collection-select-overlay@sulumedia',
+                name: 'collections/select-overlay@sulumedia',
                 options: {
                     el: this.$find(constants.moveSelector),
                     instanceName: 'move-media',
@@ -281,7 +281,7 @@ define(function() {
                     this.sandbox.emit('husky.datagrid.record.remove', mediaId);
 
                     left--;
-                    if(left === 0){
+                    if (left === 0) {
                         this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-move-desc', 'labels.success');
                     }
                 }.bind(this)
@@ -301,30 +301,36 @@ define(function() {
                     instanceName: this.options.instanceName,
                     parentTemplate: 'defaultEditable',
                     template: this.sandbox.sulu.buttons.get(
-                        {'edit': {
-                            callback: function() {
-                                this.sandbox.emit('sulu.list-toolbar.edit');
-                            }.bind(this)
-                        }},
-                        {'delete': {
-                           callback: function() {
-                               this.sandbox.emit('sulu.list-toolbar.delete');
-                           }.bind(this)
-                        }},
-                        {'settings': {
-                            dropdownItems: [
-                                {
-                                    id: 'media-move',
-                                    title: this.sandbox.translate('sulu.media.move'),
-                                    callback: function() {
-                                        this.startMoveMediaOverlay();
-                                    }.bind(this)
-                                },
-                                {
-                                    type: 'columnOptions'
-                                }
-                            ]
-                        }},
+                        {
+                            'edit': {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.edit');
+                                }.bind(this)
+                            }
+                        },
+                        {
+                            'delete': {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.delete');
+                                }.bind(this)
+                            }
+                        },
+                        {
+                            'settings': {
+                                dropdownItems: [
+                                    {
+                                        id: 'media-move',
+                                        title: this.sandbox.translate('sulu.media.move'),
+                                        callback: function() {
+                                            this.startMoveMediaOverlay();
+                                        }.bind(this)
+                                    },
+                                    {
+                                        type: 'columnOptions'
+                                    }
+                                ]
+                            }
+                        },
                         'layout'
                     )
                 },

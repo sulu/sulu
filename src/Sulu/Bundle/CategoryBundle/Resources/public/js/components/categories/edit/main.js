@@ -26,7 +26,7 @@ define(function () {
                         }}
                     ],
                     languageChanger: {
-                        preSelected: this.options.locale
+                        preSelected: this.sandbox.sulu.user.locale
                     }
                 }
             };

@@ -54,6 +54,7 @@ define(function () {
 
             this.sandbox.on('sulu.toolbar.save', this.saveDetails.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteCategory.bind(this));
+            this.sandbox.on('sulu.category.categories.changed', this.changeHandler.bind(this));
         },
 
         /**
@@ -65,6 +66,11 @@ define(function () {
             this.sandbox.form.setData(constants.detailsFromSelector, this.options.data).then(function () {
                 this.bindDomEvents();
             }.bind(this));
+        },
+
+        changeHandler: function(category) {
+            this.options.data = category;
+            this.sandbox.form.setData(constants.detailsFromSelector, this.options.data);
         },
 
         /**
