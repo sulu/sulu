@@ -33,8 +33,8 @@ define([
 
         bindCustomEvents: function() {
 
-            this.sandbox.on('sulu.user.permissions.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.user.permissions.save', function(data, action) {
+                this.save(data, action);
             }.bind(this));
 
             // load list view
@@ -64,8 +64,8 @@ define([
             }.bind(this));
         },
 
-        save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+        save: function(data, action) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
@@ -122,6 +122,7 @@ define([
                 global: false,
                 success: function(model) {
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
+                    this.afterSaveCallback(action);
                 }.bind(this),
                 error: function(obj, resp) {
                     if (!!resp && !!resp.responseJSON && !!resp.responseJSON.message) {
@@ -134,6 +135,14 @@ define([
                     }
                 }.bind(this)
             });
+        },
+
+        afterSaveCallback: function(action) {
+            if (action === 'back') {
+                this.sandbox.emit('sulu.contacts.contacts.list');
+            } else if (action === 'new') {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add', true, true);
+            }
         },
 
         /**

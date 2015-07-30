@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -68,8 +68,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'filterSearch',
-                    parentTemplate: 'default',
-                    inHeader: true
+                    parentTemplate: 'default'
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
@@ -85,19 +84,10 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         },
 
         /**
-         * Renders the grid and the header information
+         * Renders the grid
          */
         render: function() {
             this.renderGrid();
-            this.setHeaderInformation();
-        },
-
-        /**
-         * Sets header information like title and breadcrumb
-         */
-        setHeaderInformation: function() {
-            HeaderUtil.setTitle(this.sandbox, null);
-            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, null);
         }
     };
 });

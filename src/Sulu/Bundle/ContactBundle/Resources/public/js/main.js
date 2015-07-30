@@ -10,7 +10,6 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'accountsutil/header': '../../sulucontact/js/components/accounts/util/header',
         'type/bic-input': '../../sulucontact/js/input-type/bic-input',
         'type/vat-input': '../../sulucontact/js/input-type/vat-input',
         'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
@@ -18,7 +17,7 @@ require.config({
 
         'aura_extensions/iban': '../../sulucontact/js/aura_extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/input-type/iban-input',
+        'type/iban-input': '../../sulucontact/js/input-type/iban-input'
     },
     shim: {
         'vendor/iban-converter': {
@@ -91,18 +90,10 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
 
             // filter integration
             Config.set('suluresource.filters.type.contacts', {
-                breadCrumb: [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', link: 'contacts/contacts'}
-                ],
                 routeToList: 'contacts/contacts'
             });
 
             Config.set('suluresource.filters.type.accounts', {
-                breadCrumb: [
-                    {title: 'navigation.accounts'},
-                    {title: 'contact.accounts.title', link: 'contacts/accounts'}
-                ],
                 routeToList: 'contacts/accounts'
             });
 
@@ -112,7 +103,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts',
                 callback: function() {
-                    this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
+                    return '<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>';
                 }
             });
 
@@ -120,9 +111,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/add',
                 callback: function(content) {
-                    this.html(
-                        '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form" />'
-                    );
+                    return '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form" />';
                 }
             });
 
@@ -130,9 +119,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/edit::id/:content',
                 callback: function(id, content) {
-                    this.html(
-                            '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
-                    );
+                    return '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
                 }
             });
 
@@ -140,7 +127,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>');
+                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>';
                 }
             });
 
@@ -148,9 +135,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/add',
                 callback: function() {
-                    this.html(
-                        '<div data-aura-component="accounts/components/content@sulucontact"/>'
-                    );
+                    return '<div data-aura-component="accounts/components/content@sulucontact"/>';
                 }
             });
 
@@ -158,9 +143,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/edit::id/:content',
                 callback: function(id, content) {
-                    this.html(
-                            '<div data-aura-component="accounts/components/content@sulucontact" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
-                    );
+                    return '<div data-aura-component="accounts/components/content@sulucontact" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
                 }
             });
         }

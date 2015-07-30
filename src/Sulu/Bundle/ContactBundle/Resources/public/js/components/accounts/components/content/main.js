@@ -17,7 +17,18 @@ define(function() {
                 url: '/admin/content-navigations?alias=account'
             },
             toolbar: {
-                template: []
+                buttons: {
+                    save: {
+                        parent: 'saveWithOptions'
+                    },
+                    settings: {
+                        options: {
+                            dropdownItems: {
+                                delete: {}
+                            }
+                        }
+                    }
+                }
             }
         }
     };

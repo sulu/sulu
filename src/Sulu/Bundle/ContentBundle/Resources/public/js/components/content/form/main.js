@@ -43,8 +43,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }, this);
 
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
         },
 
@@ -437,7 +437,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.animateTemplateDropdown = false;
         },
 
-        submit: function() {
+        submit: function(action) {
             this.sandbox.logger.log('save Model');
             var data;
 
@@ -453,7 +453,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data, action);
             }
         }
     };

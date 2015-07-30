@@ -357,7 +357,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             }, this);
 
             // delete account
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
             }, this);
 
@@ -371,8 +371,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             }, this);
 
             // account saved
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
 
             // back to list
@@ -415,7 +415,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             return newArray;
         },
 
-        submit: function() {
+        submit: function(action) {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
 
@@ -432,15 +432,18 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
 
-                this.sandbox.emit('sulu.contacts.accounts.save', data);
+                this.sandbox.emit('sulu.contacts.accounts.save', data, action);
             }
         },
 
         /** @var Bool saved - defines if saved state should be shown */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                if (!!saved) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+                }
             }
             this.saved = saved;
         },

@@ -186,7 +186,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['Resources/public/**'],
-                tasks: ['publish']
+                tasks: ['compass']
             },
             options: {
                 nospawn: true
