@@ -453,7 +453,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function createAndExpression(array $expressions)
     {
-        if (count($expressions) > 2) {
+        if (count($expressions) >= 2) {
             return new DoctrineAndExpression($expressions);
         }
 
@@ -465,7 +465,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function createOrExpression(array $expressions)
     {
-        if (count($expressions) > 2) {
+        if (count($expressions) >= 2) {
             return new DoctrineOrExpression($expressions);
         }
 

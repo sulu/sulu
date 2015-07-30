@@ -48,10 +48,10 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $value = 'test';
-        $whereExpression = new DoctrineWhereExpression($this->queryBuilder, $fieldDescriptor, $value);
+        $whereExpression = new DoctrineWhereExpression($fieldDescriptor, $value);
 
         // parameter names will be generated (combined with unique ids with length of 23 characters)
-        $statement = $whereExpression->getStatement();
+        $statement = $whereExpression->getStatement($this->queryBuilder);
         $result = preg_match(
             '/^SuluCoreBundle:Example\.name = :name[\S]{' . $this->uniqueIdLength . '}/',
             $statement

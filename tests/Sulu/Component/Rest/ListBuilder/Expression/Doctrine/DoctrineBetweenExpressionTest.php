@@ -49,9 +49,9 @@ class DoctrineBetweenExpressionTest extends \PHPUnit_Framework_TestCase
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $start = 1;
         $end = 2;
-        $whereExpression = new DoctrineBetweenExpression($this->queryBuilder, $fieldDescriptor, $start, $end);
+        $whereExpression = new DoctrineBetweenExpression($fieldDescriptor, $start, $end);
 
-        $statement = $whereExpression->getStatement();
+        $statement = $whereExpression->getStatement($this->queryBuilder);
         $result = preg_match(
             '/^SuluCoreBundle:Example\.name BETWEEN :name[\S]{' . $this->uniqueIdLength .
             '} AND :name[\S]{' . $this->uniqueIdLength . '}/',

@@ -50,11 +50,11 @@ class DoctrineOrExpressionTest extends \PHPUnit_Framework_TestCase
         $value1 = 'test1';
         $fieldDescriptor2 = new DoctrineFieldDescriptor('name2', 'name2', self::$entityName);
         $value2 = 'test2';
-        $whereExpression1 = new DoctrineWhereExpression($this->queryBuilder, $fieldDescriptor1, $value1);
-        $whereExpression2 = new DoctrineWhereExpression($this->queryBuilder, $fieldDescriptor2, $value2);
-        $andExpression = new DoctrineOrExpression($this->queryBuilder, [$whereExpression1, $whereExpression2]);
+        $whereExpression1 = new DoctrineWhereExpression($fieldDescriptor1, $value1);
+        $whereExpression2 = new DoctrineWhereExpression($fieldDescriptor2, $value2);
+        $andExpression = new DoctrineOrExpression([$whereExpression1, $whereExpression2]);
 
-        $statement = $andExpression->getStatement();
+        $statement = $andExpression->getStatement($this->queryBuilder);
         $result = preg_match(
             '/^ \(SuluCoreBundle:Example\.name1 = :name1[\S]{' . $this->uniqueIdLength .
             '} OR SuluCoreBundle:Example\.name2 = :name2[\S]{' . $this->uniqueIdLength . '}\)/',
