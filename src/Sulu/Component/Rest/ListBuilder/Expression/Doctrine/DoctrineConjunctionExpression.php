@@ -59,7 +59,7 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
             $statements[] = $expression->getStatement($queryBuilder);
         }
 
-        return ' (' . implode(' ' . $this->conjunction . ' ', $statements) . ') ';
+        return implode(' ' . $this->conjunction . ' ', $statements);
     }
 
     /**

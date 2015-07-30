@@ -120,7 +120,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     protected function createConjunctionExpression(array $expressions, $conjunction)
     {
         // create the appropriate expression
-        if ($conjunction === ListBuilderInterface::CONJUNCTION_AND) {
+        if (strtoupper($conjunction) === ListBuilderInterface::CONJUNCTION_AND) {
             return $this->listBuilder->createAndExpression($expressions);
         }
 
