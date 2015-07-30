@@ -137,7 +137,7 @@
   text-align: center;
 }
 /* line 26, ../scss/modules/contacts.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .image {
+#people-list .contact-grid .contact-item .item-head .head-container .head-image {
   height: 100px;
   border-radius: 50px;
   -webkit-background-size: contain;
@@ -160,6 +160,7 @@
 }
 /* line 47, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-head .head-sulubox {
+  display: none;
   width: 24px;
   height: 24px;
   border-radius: 12px;
@@ -168,32 +169,39 @@
   left: 120px;
   background-color: #52B6CA;
 }
-/* line 58, ../scss/modules/contacts.scss */
+/* line 60, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 64, ../scss/modules/contacts.scss */
+/* line 66, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
   padding: 15px;
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
-  cursor: pointer;
 }
-/* line 73, ../scss/modules/contacts.scss */
+/* line 74, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-info .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 81, ../scss/modules/contacts.scss */
+/* line 82, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-info .info-text {
   color: #999;
   font-size: 12px;
 }
 /* line 88, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .action-navigator {
+  cursor: pointer;
+}
+/* line 93, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox {
+  display: block;
+}
+/* line 99, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }

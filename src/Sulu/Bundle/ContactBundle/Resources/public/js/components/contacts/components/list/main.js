@@ -105,7 +105,7 @@ define(['widget-groups'], function(WidgetGroups) {
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
                     view: 'table',
-                    //view: 'decorators/contact',
+                    //view: 'decorators/contact', //TODO: implement api for contact-decorator
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,

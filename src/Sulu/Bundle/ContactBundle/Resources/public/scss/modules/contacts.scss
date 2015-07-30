@@ -1,4 +1,4 @@
-#people-list{
+#people-list {
   .contact-grid {
     margin: 0 -20px -30px 0; //outbalance contact-item margins
 
@@ -23,7 +23,7 @@
           margin: 0 auto;
           text-align: center;
 
-          .image {
+          .head-image {
             height: 100px;
             border-radius: 50px;
             @include background-size(contain);
@@ -45,6 +45,8 @@
         }
 
         .head-sulubox {
+          display: none; //show only with sulu-user class
+
           width: 24px;
           height: 24px;
           border-radius: 12px;
@@ -68,7 +70,6 @@
 
         background-color: $grayLighterer;
         border-radius: 0 0 3px 3px;
-        cursor: pointer;
 
         .info-icon {
           width: 15px;
@@ -84,8 +85,18 @@
         }
       }
 
+      .action-navigator {
+        cursor: pointer;
+      }
+
       &.selected {
         .head-checkbox {
+          display: block;
+        }
+      }
+
+      &.sulu-user {
+        .head-sulubox {
           display: block;
         }
       }

@@ -2,6 +2,7 @@
  * @class ThumbnailView (Datagrid Decorator)
  * @constructor
  *
+ * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
  * @param {Object} [viewOptions] Configuration object
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
@@ -22,6 +23,9 @@ define(function() {
         constants = {
             containerClass: 'contact-grid',
             selectedClass: 'selected',
+            suluUserClass: 'sulu-user',
+            actionNavigatorClass: 'action-navigator',
+
             itemHeadClass: 'item-head',
             itemInfoClass: 'item-info',
 
@@ -34,31 +38,22 @@ define(function() {
                 '<div class="contact-item">',
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
-                '           <div class="image" style="background-image: url(\'<%= picture %>\')"></div>',
+                '           <div class="head-image ' + constants.actionNavigatorClass + '" style="background-image: url(\'<%= picture %>\')"></div>',
                 '           <div class="head-name"><%= name %></div>',
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
-                '       <% if (!!isSuluUser) { %>',
                 '       <div class="head-sulubox"></div>',
-                '       <% } %>',
                 '   </div>',
-                '   <div class="' + constants.itemInfoClass + '">',
-                '       <% if (location !== "undefined") { %>',
-                '       <div class="info-row">',
-                '           <span class="fa-map-marker info-icon"></span>',
-                '           <span class="info-text"><%= location %></span>',
-                '       </div>',
-                '       <% } %>',
-                '       <% if (mail !== "undefined") { %>',
-                '       <div class="info-row">',
-                '           <span class="fa-envelope info-icon"></span>',
-                '           <span class="info-text"><%= mail %></span>',
-                '       </div>',
-                '       <% } %>',
-                '   </div>',
+                '   <div class="' + [constants.itemInfoClass, constants.actionNavigatorClass].join(" ") + '"></div>',
                 '</div>'
+            ].join(''),
+            infoRow: [
+                '       <div class="info-row">',
+                '           <span class="<%= icon %> info-icon"></span>',
+                '           <span class="info-text"><%= text %></span>',
+                '       </div>'
             ].join('')
-        }
+        };
 
     return {
 
@@ -111,11 +106,11 @@ define(function() {
          * Bind dom related events for datagrid-view
          */
         bindGeneralDomEvents: function() {
-            this.sandbox.dom.on('.grid', 'click', function() {
-                if (this.options.unselectOnBackgroundClick) {
+            if (this.options.unselectOnBackgroundClick) {
+                this.sandbox.dom.on('.grid', 'click.contact.list', function() {
                     this.unselectAllItems();
-                }
-            }.bind(this));
+                }.bind(this));
+            }
         },
 
         /**
@@ -127,11 +122,11 @@ define(function() {
             this.sandbox.util.foreach(items, function(record) {
                 var id, picture, name, isSuluUser, location, mail;
 
-                id = record[constants.idProperty];;
-                picture = '/bundles/sulucontact/js/components/contacts/components/list/decorators//sample_avatar.jpg';
-                name = [record['firstName'], record['lastName']].join(' ');
-                isSuluUser = Math.random()<.3;
-                location = 'Testhausen 8, AT';
+                id = record[constants.idProperty];
+                picture = '/bundles/sulucontact/js/components/contacts/components/list/decorators//sample_avatar.jpg'; //TODO: use api information
+                name = [record['firstName'], record['lastName']].join(' '); //TODO: use full-name
+                isSuluUser = Math.random() < .3; //TODO: use api information
+                location = 'Testhausen 8, AT'; //TODO: use api information
                 mail = record[constants.mailProperty];
 
                 // pass the found data to a render method
@@ -154,23 +149,51 @@ define(function() {
                     picture: picture,
                     name: this.sandbox.util.cropTail(String(name), 32),
                     isSuluUser: isSuluUser,
-                    location: this.sandbox.util.cropTail(String(location),26),
-                    mail: this.sandbox.util.cropMiddle(String(mail), 26),
                 })
             );
+
+            if (!!isSuluUser) {
+                this.sandbox.dom.addClass(this.$items[id], constants.suluUserClass);
+            }
+
+            if (!!location) {
+                this.addInfoRowToItem(this.$items[id], 'fa-map-marker', location);
+            }
+
+            if (!!mail) {
+                this.addInfoRowToItem(this.$items[id], 'fa-envelope', mail);
+            }
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
                 this.selectItem(id);
             }
+
             this.sandbox.dom.append(this.$el, this.$items[id]);
             this.bindItemDomEvents(id);
+        },
+
+        /**
+         * Add an info-row to the given item
+         * @param $item
+         * @param icon icon-class of the info-row
+         * @param text text of the info row
+         */
+        addInfoRowToItem: function($item, icon, text) {
+            this.sandbox.dom.append(this.sandbox.dom.find('.' + constants.itemInfoClass, $item),
+                this.sandbox.dom.createElement(
+                    this.sandbox.util.template(templates.infoRow)({
+                        icon: icon,
+                        text: this.sandbox.util.cropMiddle(String(text), 26),
+                    })
+                )
+            )
         },
 
         /**
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.grid', 'click');
+            this.sandbox.dom.off('.grid', 'click.contact.list');
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -182,7 +205,7 @@ define(function() {
             this.sandbox.dom.on(this.$items[id], 'click', function() {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
-            }.bind(this), "." + constants.itemInfoClass);
+            }.bind(this), "." + constants.actionNavigatorClass);
 
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
