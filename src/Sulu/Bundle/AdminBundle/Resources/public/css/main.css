@@ -579,18 +579,18 @@ input, select {
 .sulu-header {
   width: 100%;
   height: 50px;
+  background: #52B6CA;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 120;
 }
-/* line 9, ../scss/modules/header.scss */
+/* line 10, ../scss/modules/header.scss */
 .sulu-header .toolbar-row {
   display: table;
   table-layout: fixed;
   height: 50px;
   width: 100%;
-  background: #52B6CA;
   position: relative;
   z-index: 1000;
 }
@@ -634,7 +634,7 @@ input, select {
 /* line 47, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .right-container {
   display: table-cell;
-  width: 120px;
+  width: 108px;
   height: 50px;
   vertical-align: top;
   position: relative;
@@ -714,11 +714,11 @@ input, select {
   margin-bottom: 89px;
 }
 
-/* line 123, ../scss/modules/header.scss */
-.small-fixed .sulu-header .inner {
-  margin-left: 10px;
-  margin-right: 10px;
+/* line 122, ../scss/modules/header.scss */
+.fixed .toolbar-row {
+  max-width: 1000px;
 }
+
 /* line 127, ../scss/modules/header.scss */
 .small-fixed .tabs-row .tabs {
   padding-left: 10px;
