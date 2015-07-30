@@ -74,6 +74,7 @@ define([], function() {
 
         templates = {
             toolbarRow: [
+                '<div class="blue-row"></div>',
                 '<div class="toolbar-row">',
                 '   <div class="left-container ' + constants.backClass + '">',
                 '       <span class="fa-' + constants.backIcon + '"></span>',

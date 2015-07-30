@@ -1,12 +1,20 @@
 .sulu-header {
     width: 100%;
     height: $headerHeight;
-    background: $blue;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 120;
 
+    .blue-row {
+        background: $blue;
+        height: $headerHeight;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 900;
+    }
     .toolbar-row {
         display: table;
         table-layout: fixed;
