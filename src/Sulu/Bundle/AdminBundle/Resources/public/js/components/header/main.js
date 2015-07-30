@@ -448,10 +448,7 @@ define([], function () {
 
             this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
 
-            // load component on start
             this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
-
-            // load component after click
             this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
 
             this.bindAbstractToolbarEvents();
@@ -465,7 +462,6 @@ define([], function () {
         tabChangedHandler: function(tabItem) {
             if (!!tabItem.component) {
                 var options;
-                tabItem = tabItem || this.options.tabsData.items[0];
                 if (!tabItem.forceReload && tabItem.action === this.tabsAction) {
                     return false; // no reload required
                 }

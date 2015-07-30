@@ -11,42 +11,27 @@ define(function() {
 
     'use strict';
 
-    var constants = {
-            mediaLanguageStorageKey: 'mediaLanguage'
-        },
+    var namespace = 'sulu.media.collections.edit.',
 
-        namespace = 'sulu.media.collections-edit.',
+    /**
+     * emitted if the collection object has changed
+     * @event sulu.media.collections.edit.updated
+     * @param data {Object} the new collection object
+     */
+    UPDATED = function() {
+        return createEventName.call(this, 'updated');
+    },
 
-        /**
-         * sets the locale
-         * @event sulu.media.collections.collection-list
-         * @param {String} the new locale
-         */
-        SET_LOCALE = function() {
-            return createEventName.call(this, 'set-locale');
-        },
-
-        /**
-         * sets the locale
-         * @event sulu.media.collections.collection-list
-         * @param {Function} the callback to pass the locale to
-         */
-        GET_LOCALE = function() {
-            return createEventName.call(this, 'get-locale');
-        },
-
-        /** returns normalized event names */
-        createEventName = function(postFix) {
-            return namespace + postFix;
-        };
+    /** returns normalized event names */
+    createEventName = function(postFix) {
+        return namespace + postFix;
+    };
 
     return {
 
         header: function() {
-            // init locale
-            this.locale = this.sandbox.sulu.getUserSetting(constants.mediaLanguageStorageKey) || this.sandbox.sulu.user.locale;
-
             return {
+                noBack: true,
                 tabs: {
                     url: '/admin/content-navigations?alias=media'
                 },
@@ -74,11 +59,21 @@ define(function() {
                         url: '/admin/api/localizations',
                         resultKey: 'localizations',
                         titleAttribute: 'localization',
-                        preSelected: this.locale
+                        preSelected: this.options.locale
                     }
-                },
-                noBack: true
+                }
             };
+        },
+
+        initialize: function() {
+            this.bindCustomEvents();
+        },
+
+        bindCustomEvents: function() {
+            // move collection overlay
+            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
+            // change the editing language
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
         },
 
         /**
@@ -93,6 +88,21 @@ define(function() {
          */
         startMoveCollectionOverlay: function() {
             this.sandbox.emit('sulu.media.collection-select.move-collection.open');
+        },
+
+        /**
+         * Changes the editing language
+         * @param language {string} the new locale to edit the collection in
+         */
+        changeLanguage: function(language) {
+            this.sandbox.emit(
+                'sulu.media.collections.reload-collection',
+                this.options.data.id, {locale: language.id, breadcrumb: 'true'},
+                function(collection) {
+                    this.sandbox.emit(UPDATED.call(this), collection);
+                }.bind(this)
+            );
+            this.sandbox.emit('sulu.media.collections.set-locale', language.id);
         },
 
         /**
@@ -111,28 +121,6 @@ define(function() {
 
             this.sandbox.emit('sulu.media.collection-select.move-collection.restart');
             this.sandbox.emit('sulu.media.collection-select.move-collection.close');
-        },
-
-        initialize: function() {
-            this.bindCustomEvents();
-        },
-
-        bindCustomEvents: function() {
-            this.sandbox.on(SET_LOCALE.call(this), this.setLocale.bind(this));
-            this.sandbox.on(GET_LOCALE.call(this), this.getLocale.bind(this));
-
-            // move collection overlay
-            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
-        },
-
-        setLocale: function(locale) {
-            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale);
-
-            this.locale = locale;
-        },
-
-        getLocale: function(callback) {
-            callback(this.locale);
         }
     };
 });

@@ -227,6 +227,7 @@ define(function() {
          *          tabs: {
          *              url: 'url/to/tabsData',
          *              container: '#my-container-selector',
+         *              active: 'details'
          *          },
          *          toolbar {
          *              languageChanger: true

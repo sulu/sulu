@@ -25,7 +25,9 @@ define(function () {
                             dropdownItems: ['delete']
                         }}
                     ],
-                    languageChanger: true
+                    languageChanger: {
+                        preSelected: this.sandbox.sulu.user.locale
+                    }
                 }
             };
         }

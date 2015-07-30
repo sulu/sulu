@@ -36,15 +36,15 @@ define({
         sandbox.mvc.routes.push({
             route: 'media/collections/root',
             callback: function() {
-                return '<div data-aura-component="collections/components/root@sulumedia" />';
+                return '<div data-aura-component="collections@sulumedia"  data-aura-display="root"/>';
             }
         });
 
         // show a single collection with files and upload
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content',
-            callback: function(id, content) {
-                return '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
+            callback: function(id) {
+                return '<div data-aura-component="collections@sulumedia" data-aura-display="edit" data-aura-id="' + id + '"/>';
             }
         });
 
@@ -75,7 +75,7 @@ define({
                 this.sandbox.dom.append('body', $element);
 
                 this.sandbox.start([{
-                    name: 'collections/components/collection-create@sulumedia',
+                    name: 'collections/collection-create@sulumedia',
                     options: {
                         el: $element,
                         parent: parentId,

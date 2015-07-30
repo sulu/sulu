@@ -12,14 +12,9 @@ define(function () {
     'use strict';
 
     var defaults = {
-            activeTab: null,
             data: {},
             instanceName: 'category',
             newCategoryTitle: 'sulu.category.new-category'
-        },
-
-        tabs = {
-            DETAILS: 'details'
         },
 
         constants = {
@@ -59,32 +54,29 @@ define(function () {
 
             this.sandbox.on('sulu.toolbar.save', this.saveDetails.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteCategory.bind(this));
-        },
-
-        /**
-         * Renders the component
-         */
-        render: function () {
-            if (this.options.activeTab === tabs.DETAILS) {
-                this.renderDetails();
-            }
+            this.sandbox.on('sulu.category.categories.changed', this.changeHandler.bind(this));
         },
 
         /**
          * Renderes the details tab
          */
-        renderDetails: function () {
+        render: function () {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/category/template/category/form/details'));
             this.sandbox.form.create(constants.detailsFromSelector);
             this.sandbox.form.setData(constants.detailsFromSelector, this.options.data).then(function () {
-                this.bindDetailsDomEvents();
+                this.bindDomEvents();
             }.bind(this));
+        },
+
+        changeHandler: function(category) {
+            this.options.data = category;
+            this.sandbox.form.setData(constants.detailsFromSelector, this.options.data);
         },
 
         /**
          * Binds DOM-Events for the details tab
          */
-        bindDetailsDomEvents: function () {
+        bindDomEvents: function () {
             // activate save-button on key input
             this.sandbox.dom.on(constants.detailsFromSelector, 'change keyup', function () {
                 if (this.saved === true) {

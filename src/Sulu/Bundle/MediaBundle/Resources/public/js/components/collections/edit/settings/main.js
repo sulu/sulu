@@ -50,41 +50,26 @@ define(function() {
 
             this.bindCustomEvents();
             this.render();
-
-            // shows a delete success label. If a collection just got deleted
-            this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.collection-deleted-desc');
         },
 
         /**
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            // load collections list if back icon is clicked
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.media.collections.list');
-            }.bind(this));
-
-            // change the editing language
-            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
+            // update the data
+            this.sandbox.on('sulu.media.collections.edit.updated', this.updateData.bind(this));
 
             // save button clicked
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
         },
 
         /**
-         * Changes the editing language
-         * @param locale {string} the new locale to edit the collection in
+         * Updates the data and reloads the grid
+         * @param data {Object} the new collection object
          */
-        changeLanguage: function(locale) {
-            this.sandbox.emit(
-                'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale.id, breadcrumb: 'true'},
-                function(collection) {
-                    this.options.data = collection;
-                    this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
-                }.bind(this)
-            );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.id);
+        updateData: function(data) {
+            this.options.data = data;
+            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
         },
 
         /**

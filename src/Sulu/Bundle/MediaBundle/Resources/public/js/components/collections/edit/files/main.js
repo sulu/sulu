@@ -77,9 +77,6 @@ define(function() {
 
             this.bindCustomEvents();
             this.render();
-
-            // shows a delete success label. If a collection just got deleted
-            this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.collection-deleted-desc');
         },
 
         /**
@@ -109,11 +106,6 @@ define(function() {
             this.sandbox.on('sulu.toolbar.change.thumbnail-large', function() {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: true});
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
-            }.bind(this));
-
-            // load collections list if back icon is clicked
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.media.collections.list');
             }.bind(this));
 
             // if files got uploaded to the server add them to the datagrid
@@ -151,25 +143,8 @@ define(function() {
             // move
             this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
 
-            // change the editing language
-            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
-        },
-
-        /**
-         * Changes the editing language
-         * @param locale {string} the new locale to edit the collection in
-         */
-        changeLanguage: function(language) {
-            this.sandbox.emit(
-                'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: language.id, breadcrumb: 'true'},
-                function(collection) {
-                    this.options.data = collection;
-                    this.sandbox.emit('husky.datagrid.url.update', {locale: this.options.data.locale});
-                    this.options.locale = this.options.data.locale;
-                }.bind(this)
-            );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', language.id);
+            // update the data
+            this.sandbox.on('sulu.media.collections.edit.updated', this.updateData.bind(this));
         },
 
         /**
@@ -186,6 +161,16 @@ define(function() {
             if (update === true) {
                 this.sandbox.emit('husky.datagrid.records.change', media);
             }
+        },
+
+        /**
+         * Updates the data and reloads the grid
+         * @param data {Object} the new collection object
+         */
+        updateData: function(data) {
+            this.options.data = data;
+            this.options.locale = this.options.data.locale;
+            this.sandbox.emit('husky.datagrid.url.update', {locale: this.options.locale});
         },
 
         /**
@@ -264,7 +249,7 @@ define(function() {
          */
         renderSelectCollection: function() {
             this.sandbox.start([{
-                name: 'collections/components/collection-select@sulumedia',
+                name: 'collections/select-overlay@sulumedia',
                 options: {
                     el: this.$find(constants.moveSelector),
                     instanceName: 'move-media',
@@ -296,7 +281,7 @@ define(function() {
                     this.sandbox.emit('husky.datagrid.record.remove', mediaId);
 
                     left--;
-                    if(left === 0){
+                    if (left === 0) {
                         this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-move-desc', 'labels.success');
                     }
                 }.bind(this)
@@ -316,30 +301,36 @@ define(function() {
                     instanceName: this.options.instanceName,
                     parentTemplate: 'defaultEditable',
                     template: this.sandbox.sulu.buttons.get(
-                        {'edit': {
-                            callback: function() {
-                                this.sandbox.emit('sulu.list-toolbar.edit');
-                            }.bind(this)
-                        }},
-                        {'delete': {
-                           callback: function() {
-                               this.sandbox.emit('sulu.list-toolbar.delete');
-                           }.bind(this)
-                        }},
-                        {'settings': {
-                            dropdownItems: [
-                                {
-                                    id: 'media-move',
-                                    title: this.sandbox.translate('sulu.media.move'),
-                                    callback: function() {
-                                        this.startMoveMediaOverlay();
-                                    }.bind(this)
-                                },
-                                {
-                                    type: 'columnOptions'
-                                }
-                            ]
-                        }},
+                        {
+                            'edit': {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.edit');
+                                }.bind(this)
+                            }
+                        },
+                        {
+                            'delete': {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.delete');
+                                }.bind(this)
+                            }
+                        },
+                        {
+                            'settings': {
+                                dropdownItems: [
+                                    {
+                                        id: 'media-move',
+                                        title: this.sandbox.translate('sulu.media.move'),
+                                        callback: function() {
+                                            this.startMoveMediaOverlay();
+                                        }.bind(this)
+                                    },
+                                    {
+                                        type: 'columnOptions'
+                                    }
+                                ]
+                            }
+                        },
                         'layout'
                     )
                 },
