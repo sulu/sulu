@@ -203,14 +203,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             [
                 self::$entityName . '.translations',
                 self::$translationEntityName,
-                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
 
-            ]
-            ,
+            ],
             [
                 'anotherEntityName' . '.translations',
                 'anotherEntityName',
-                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
             ]
         );
 
@@ -243,13 +242,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             [
                 self::$entityName . '.translations',
                 self::$translationEntityName,
-                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
 
             ],
             [
                 'anotherEntityName' . '.translations',
                 'anotherEntityName',
-                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH
+                DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
             ]
         );
 

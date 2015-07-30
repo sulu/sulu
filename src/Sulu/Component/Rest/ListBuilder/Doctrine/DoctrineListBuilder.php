@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -230,7 +229,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns all FieldDescriptors that were passed to list builder
+     * Returns all FieldDescriptors that were passed to list builder.
      *
      * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
      *
@@ -279,7 +278,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Function returns all necessary joins for filtering result
+     * Function returns all necessary joins for filtering result.
      *
      * @param string[] $necessaryEntityNames
      *
