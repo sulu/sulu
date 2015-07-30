@@ -29,11 +29,12 @@ abstract class AbstractDoctrineExpression implements ExpressionInterface
     abstract public function getStatement(QueryBuilder $queryBuilder);
 
     /**
-     * Returns a unique id as string
+     * Returns a unique id as string.
      *
      * @return string
      */
-    public function getUniqueId(){
-        return  str_replace('.', '_',uniqid('', true));
+    public function getUniqueId()
+    {
+        return  str_replace('.', '_', uniqid('', true));
     }
 }

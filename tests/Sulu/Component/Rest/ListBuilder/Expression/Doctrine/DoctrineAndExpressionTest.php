@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
@@ -26,6 +25,7 @@ class DoctrineAndExpressionTest extends \PHPUnit_Framework_TestCase
      * http://php.net/manual/en/function.uniqid.php
      * With an empty prefix, the returned string will be 13 characters long. If more_entropy is TRUE,
      * it will be 23 characters.
+     *
      * @var int
      */
     private $uniqueIdLength = 13;
