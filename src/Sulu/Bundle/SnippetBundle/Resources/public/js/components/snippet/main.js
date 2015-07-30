@@ -146,7 +146,7 @@ define([
         },
 
         save: function(data, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             if (!!this.template) {
                 data.template = this.template;
             } else {

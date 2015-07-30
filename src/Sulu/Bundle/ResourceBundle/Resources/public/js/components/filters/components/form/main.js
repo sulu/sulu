@@ -36,7 +36,7 @@ define(['config'], function(Config) {
             var toolbar = {
                 template: [
                     {
-                        id: 'save-button',
+                        id: 'save',
                         icon: 'floppy-o',
                         position: 1,
                         group: 'left',

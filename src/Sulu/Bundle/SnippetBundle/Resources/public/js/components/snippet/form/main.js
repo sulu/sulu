@@ -48,35 +48,32 @@ define([
                     url: '/admin/api/languages',
                     preSelected: this.options.language
                 },
-
-                buttons: [
-                    'saveWithOptions',
-                    {
-                        id: 'template',
-                        icon: 'pencil',
-                        group: 'left',
-                        position: 10,
-                        title: '',
-                        hidden: false,
-                        dropdownOptions: {
-                            url: '/admin/api/snippet/types',
-                            titleAttribute: 'title',
-                            idAttribute: 'template',
-                            markSelected: true,
-                            changeButton: true,
-                            callback: function(item) {
-                                if (!!this.template) {
-                                    this.setHeaderBar(false);
-                                }
-                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                this.template = item.template;
-                            }.bind(this)
+                buttons: {
+                    save: {
+                        parent: 'saveWithOptions'
+                    },
+                    template: {
+                        options: {
+                            dropdownOptions: {
+                                url: '/admin/api/snippet/types',
+                                callback: function(item) {
+                                    if (!!this.template) {
+                                        this.setHeaderBar(false);
+                                    }
+                                    this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                    this.template = item.template;
+                                }.bind(this)
+                            }
                         }
                     },
-                    {settings: {
-                        dropdownItems: ['delete']
-                    }}
-                ]
+                    settings: {
+                        options: {
+                            dropdownItems: {
+                                delete: {}
+                            }
+                        }
+                    }
+                }
             }
         };
     };
@@ -135,9 +132,9 @@ define([
     SnippetForm.prototype.setHeaderBar = function(saved) {
         if (saved !== this.saved) {
             if (saved === true) {
-                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save-button', true);
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
             } else {
-                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button', false);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
             }
             this.sandbox.emit('sulu.preview.state.change', saved);
         }

@@ -19,15 +19,19 @@ define(function () {
                     url: '/admin/content-navigations?alias=category'
                 },
                 toolbar: {
-                    buttons: [
-                        'saveWithOptions',
-                        {'settings': {
-                            dropdownItems: ['delete']
-                        }}
-                    ],
-                    languageChanger: {
-                        preSelected: this.sandbox.sulu.user.locale
-                    }
+                    buttons: {
+                        save: {
+                            parent: 'saveWithOptions'
+                        },
+                        settings: {
+                            options: {
+                                dropdownItems: {
+                                    delete: {}
+                                }
+                            }
+                        }
+                    },
+                    languageChanger: true
                 }
             };
         }

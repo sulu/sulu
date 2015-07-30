@@ -299,24 +299,23 @@ define(function() {
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
-                    parentTemplate: 'defaultEditable',
-                    template: this.sandbox.sulu.buttons.get(
-                        {
-                            'edit': {
+                    template: this.sandbox.sulu.buttons.get({
+                        edit: {
+                            options: {
                                 callback: function() {
                                     this.sandbox.emit('sulu.list-toolbar.edit');
                                 }.bind(this)
                             }
                         },
-                        {
-                            'delete': {
+                        delete: {
+                            options: {
                                 callback: function() {
                                     this.sandbox.emit('sulu.list-toolbar.delete');
                                 }.bind(this)
                             }
                         },
-                        {
-                            'settings': {
+                        settings: {
+                            options: {
                                 dropdownItems: [
                                     {
                                         id: 'media-move',
@@ -331,8 +330,8 @@ define(function() {
                                 ]
                             }
                         },
-                        'layout'
-                    )
+                        layout: {}
+                    })
                 },
                 {
                     el: this.$find(constants.datagridSelector),

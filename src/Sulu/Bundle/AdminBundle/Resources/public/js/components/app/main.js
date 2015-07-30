@@ -252,7 +252,7 @@ define(function() {
          * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the browser-url will be updated
          * @param forceReload {Boolean} force page to reload
          */
-        navigate: function (route, trigger, forceReload) {
+        navigate: function(route, trigger, forceReload) {
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
@@ -270,7 +270,7 @@ define(function() {
         /**
          * Cleans things up before navigating
          */
-        beforeNavigateCleanup: function () {
+        beforeNavigateCleanup: function() {
             this.sandbox.stop('.sulu-header');
             this.sandbox.stop('#content > *');
             this.sandbox.stop('#sidebar > *');
@@ -307,7 +307,7 @@ define(function() {
             }.bind(this));
 
             // content tabs event
-            this.sandbox.on('husky.tabs.header.item.select', function (event) {
+            this.sandbox.on('husky.tabs.header.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
 
@@ -503,10 +503,9 @@ define(function() {
         /**
          * Emits the router.navigate event
          * @param event
-         * @param {boolean} loader If true a loader will be displayed
          * @param {boolean} updateNavigation If true the navigation will be updated with the passed route
          */
-        emitNavigationEvent: function (event, updateNavigation) {
+        emitNavigationEvent: function(event, updateNavigation) {
             if (updateNavigation === true) {
                 this.selectNavigationItem(event.action);
             }

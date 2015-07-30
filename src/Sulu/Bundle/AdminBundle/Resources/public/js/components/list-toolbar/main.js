@@ -31,32 +31,25 @@ define([], function() {
 
         templates = {
             default: function() {
-                return this.sandbox.sulu.buttons.get(
-                    {'settings': {
-                        dropdownItems: [{type: 'columnOptions'}]
-                    }}
-                );
-                /*return [
-                    {
-                        id: 'settings',
-                        icon: 'gear',
-                        position: 30,
-                        dropdownItems: [
-                            {
-                                type: 'columnOptions'
+                return this.sandbox.sulu.buttons.get({
+                        settings: {
+                            options: {
+                                dropdownItems: [{type: 'columnOptions'}]
                             }
-                        ]
+                        }
                     }
-                ];*/
+                );
             },
             defaultEditable: function() {
-                return templates.default.call(this).concat(this.sandbox.sulu.buttons.get(
-                    {'edit': {
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.edit');
-                        }.bind(this)
-                    }}
-                ));
+                return templates.default.call(this).concat(this.sandbox.sulu.buttons.get({
+                        edit: {
+                            options: {
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.edit');
+                                }.bind(this)
+                            }
+                        }
+                    }));
 
             },
             defaultNoSettings: function() {
@@ -70,7 +63,9 @@ define([], function() {
                 return defaults;
             },
             changeable: function() {
-                return this.sandbox.sulu.buttons.get('layout');
+                return this.sandbox.sulu.buttons.get({
+                    layout: {}
+                });
             }
         },
         listener = {

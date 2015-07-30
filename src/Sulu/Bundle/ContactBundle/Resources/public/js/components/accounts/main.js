@@ -147,7 +147,7 @@ define([
         },
 
         saveDocuments: function(accountId, newMediaIds, removedMediaIds, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.sandbox.logger.warn('newMediaIds', newMediaIds);
             this.sandbox.logger.warn('removedMediaIds', removedMediaIds);
@@ -305,7 +305,7 @@ define([
 
         // saves an account
         save: function(data, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.account.set(data);
 

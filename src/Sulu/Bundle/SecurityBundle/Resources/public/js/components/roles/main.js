@@ -72,7 +72,7 @@ define([
 
         // saves the data, which is thrown together with a sulu.roles.save event
         save: function(data, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.role.set(data);
             this.role.save(null, {
                 success: function(data) {
@@ -91,7 +91,7 @@ define([
                     this.showErrorLabel(response.responseJSON.code);
                     this.sandbox.logger.log('An error occured while saving a role');
 
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                 }.bind(this)
             });
         },

@@ -231,7 +231,16 @@ define(function() {
          *          },
          *          toolbar {
          *              languageChanger: true
-         *              buttons: ['save', {'edit': {callback: myNewCallback.bind(this}}]
+         *              buttons: {
+         *                  save: {},
+         *                  settings: {
+         *                      options: {
+         *                          dropdownItems: {
+         *                              delete: {}
+         *                          }
+         *                      }
+         *                  }
+         *              }
          *          }
          *      }
          *

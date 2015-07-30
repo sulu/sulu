@@ -16,11 +16,11 @@ require.config({
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
-        "aura_extensions/sulu-buttons-contentbundle": '../../sulucontent/js/aura_extensions/sulu-buttons'
+        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
     }
 });
 
-define(['config', 'aura_extensions/sulu-buttons-contentbundle'], function(Config, SuluButtons) {
+define(['config', 'extensions/sulu-buttons-contentbundle'], function(Config, ContentButtons) {
     return {
 
         name: "Sulu Content Bundle",
@@ -29,9 +29,9 @@ define(['config', 'aura_extensions/sulu-buttons-contentbundle'], function(Config
 
             'use strict';
 
-            SuluButtons.initialize(app);
-
             var sandbox = app.sandbox;
+            sandbox.sulu.buttons.push(ContentButtons.getButtons());
+            sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
 
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 

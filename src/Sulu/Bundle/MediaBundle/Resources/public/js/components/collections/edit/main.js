@@ -36,10 +36,10 @@ define(function() {
                     url: '/admin/content-navigations?alias=media'
                 },
                 toolbar: {
-                    buttons: [
-                        'save',
-                        {
-                            'settings': {
+                    buttons: {
+                        save: {},
+                        settings: {
+                            options: {
                                 dropdownItems: [
                                     {
                                         id: 'collection-move',
@@ -54,7 +54,7 @@ define(function() {
                                 ]
                             }
                         }
-                    ],
+                    },
                     languageChanger: {
                         url: '/admin/api/localizations',
                         resultKey: 'localizations',
