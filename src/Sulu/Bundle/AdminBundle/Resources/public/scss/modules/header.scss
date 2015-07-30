@@ -1,6 +1,7 @@
 .sulu-header {
     width: 100%;
     height: $headerHeight;
+    background: $blue;
     position: absolute;
     top: 0;
     left: 0;
@@ -11,7 +12,6 @@
         table-layout: fixed;
         height: $headerHeight;
         width: 100%;
-        background: $blue;
         position: relative;
         z-index: 1000;
 
@@ -46,7 +46,7 @@
         }
         .right-container {
             display: table-cell;
-            width: 120px;
+            width: 108px;
             height: $headerHeight;
             vertical-align: top;
             position: relative;
@@ -118,12 +118,12 @@
         }
     }
 }
-
-.small-fixed {
-    .sulu-header .inner {
-        margin-left: $contentPaddingLeftSmall;
-        margin-right: $contentPaddingRightSmall;
+.fixed {
+    .toolbar-row {
+        max-width: $contentFixedWidth + 100px;
     }
+}
+.small-fixed {
     .tabs-row .tabs {
         padding-left: $contentPaddingLeftSmall;
     }
