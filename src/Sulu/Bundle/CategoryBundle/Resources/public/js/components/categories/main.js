@@ -14,7 +14,7 @@ define(['sulucategory/model/category',
 
     var constants = {
             listContainerId: 'categories-list-container',
-            formContainerId: 'categories-form-container'
+            editContainerId: 'categories-edit-container'
         },
 
         namespace = 'sulu.category.categories.',
@@ -81,6 +81,15 @@ define(['sulucategory/model/category',
             return createEventName.call(this, 'deleted');
         },
 
+        /**
+         * emited when a single category got changed
+         * @event sulu.category.categories.changed
+         * @param {Object} the new category data
+         */
+        CATEGORY_CHANGED = function() {
+            return createEventName.call(this, 'changed');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix) {
             return namespace + postFix;
@@ -93,7 +102,7 @@ define(['sulucategory/model/category',
          */
         initialize: function() {
             this.categories = new Categories();
-            this.locale = null;
+            this.locale = this.sandbox.sulu.user.locale;
 
             this.bindCustomEvents();
             this.render();
@@ -123,8 +132,8 @@ define(['sulucategory/model/category',
         render: function() {
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'details') {
-                this.renderDetails();
+            } else if (this.options.display === 'edit') {
+                this.renderEdit();
             } else {
                 throw 'display type wrong';
             }
@@ -134,7 +143,7 @@ define(['sulucategory/model/category',
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.header.language-changed', this.renderDetails.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
             // navigate to category list
             this.sandbox.on(NAVIGATE_CATEGORY_LIST.call(this), this.navigateToList.bind(this));
             // navigate to category form
@@ -234,6 +243,17 @@ define(['sulucategory/model/category',
         },
 
         /**
+         * Changes the language of the category and emits a change event
+         * @param language {Object} the language object with an id property
+         */
+        changeLanguage: function(language) {
+            this.locale = language.id;
+            this.fetchCategory(this.locale, function(category) {
+                this.sandbox.emit(CATEGORY_CHANGED.call(this), category);
+            }.bind(this));
+        },
+
+        /**
          * Renders the list-component
          */
         renderList: function() {
@@ -250,31 +270,12 @@ define(['sulucategory/model/category',
         },
 
         /**
-         * Renders the details for add and edit
-         * @param language {Object} the language object from the header language changer
+         * Fetches the category for a given locale
+         * @param locale {String} The locale the fetch the category for
+         * @param callback {Function} callback to execute
          */
-        renderDetails: function(language) {
-            this.sandbox.stop('#' + constants.formContainerId);
-            var locale = (!!language) ? language.id : undefined;
-            var category,
-                action = function(data) {
-                    this.sandbox.start([
-                        {
-                            name: 'categories/edit/details@sulucategory',
-                            options: {
-                                el: $form,
-                                data: data,
-                                activeTab: this.options.content,
-                                // TODO options parent is only set in case of 'add'. Parent should also be sent via the api
-                                parent: this.options.parent || null
-                            }
-                        }
-                    ]);
-                }.bind(this),
-                $form = this.sandbox.dom.createElement('<div id="' + constants.formContainerId + '"/>');
-            this.html($form);
-
-            category = this.getCategoryModel(this.options.id);
+        fetchCategory: function(locale, callback) {
+            var category = this.getCategoryModel(this.options.id);
             if (!!locale) {
                 category.set({locale: locale});
             }
@@ -286,15 +287,37 @@ define(['sulucategory/model/category',
                 category.fetch({
                     data: {locale: locale, flat: true},
                     success: function(result) {
-                        action(result.toJSON());
+                        callback(result.toJSON());
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log('Error while fetching a single category');
                     }.bind(this)
                 });
             } else {
-                action(category.toJSON());
+                callback(category.toJSON());
             }
+        },
+
+        /**
+         * Renders the edit
+         */
+        renderEdit: function() {
+                var action = function(data) {
+                    this.sandbox.start([
+                        {
+                            name: 'categories/edit@sulucategory',
+                            options: {
+                                el: $form,
+                                data: data,
+                                // TODO options parent is only set in case of 'add'. Parent should also be sent via the api
+                                parent: this.options.parent || null
+                            }
+                        }
+                    ]);
+                }.bind(this),
+                $form = this.sandbox.dom.createElement('<div id="' + constants.editContainerId + '"/>');
+            this.html($form);
+            this.fetchCategory(this.locale, action);
         }
     };
 });

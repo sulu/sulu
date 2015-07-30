@@ -35,22 +35,22 @@ define({
 
         sandbox.mvc.routes.push({
             route: 'settings/categories/new/:parent/:content',
-            callback: function(parent, content) {
-                return '<div data-aura-component="categories/edit@sulucategory" data-aura-parent="'+ parent +'"/>';
+            callback: function(parent) {
+                return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-parent="'+ parent +'"/>';
             }
         });
 
         sandbox.mvc.routes.push({
             route: 'settings/categories/new/:content',
             callback: function() {
-                return '<div data-aura-component="categories/edit@sulucategory"/>';
+                return '<div data-aura-component="categories@sulucategory" data-aura-display="edit"/>';
             }
         });
 
         sandbox.mvc.routes.push({
             route: 'settings/categories/edit::id/:content',
-            callback: function(id, content) {
-                return '<div data-aura-component="categories/edit@sulucategory" data-aura-id="'+ id +'"/>';
+            callback: function(id) {
+                return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-id="'+ id +'"/>';
             }
         });
     }

@@ -249,7 +249,7 @@ define(function() {
          */
         renderSelectCollection: function() {
             this.sandbox.start([{
-                name: 'collections/overlays/collection-select@sulumedia',
+                name: 'collections/select-overlay@sulumedia',
                 options: {
                     el: this.$find(constants.moveSelector),
                     instanceName: 'move-media',
@@ -281,7 +281,7 @@ define(function() {
                     this.sandbox.emit('husky.datagrid.record.remove', mediaId);
 
                     left--;
-                    if(left === 0){
+                    if (left === 0) {
                         this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-move-desc', 'labels.success');
                     }
                 }.bind(this)
