@@ -51,7 +51,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
      */
     public function getStatement(QueryBuilder $queryBuilder)
     {
-        $paramName = $this->getFieldName() . uniqid(true);
+        $paramName = $this->getFieldName() . $this->getUniqueId();
         $values = $this->filterNullValues($this->getValues());
         $statement = '';
 

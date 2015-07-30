@@ -60,8 +60,8 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
      */
     public function getStatement(QueryBuilder $queryBuilder)
     {
-        $paramName1 = $this->getFieldName() . uniqid(true);
-        $paramName2 = $this->getFieldName() . uniqid(true);
+        $paramName1 = $this->getFieldName() . $this->getUniqueId();
+        $paramName2 = $this->getFieldName() . $this->getUniqueId();
         $queryBuilder->setParameter($paramName1, $this->getStart());
         $queryBuilder->setParameter($paramName2, $this->getEnd());
 

@@ -57,7 +57,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
      */
     public function getStatement(QueryBuilder $queryBuilder)
     {
-        $paramName = $this->getFieldName() . uniqid(true);
+        $paramName = $this->getFieldName() . $this->getUniqueId();
 
         if ($this->getValue() === null) {
             return $this->field->getSelect() . ' ' . $this->convertNullComparator($this->getComparator());
