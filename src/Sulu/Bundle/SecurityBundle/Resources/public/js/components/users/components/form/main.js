@@ -200,11 +200,12 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         render: function() {
             var headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
-                user: !!this.user ? this.user : null,
+                user: (!!this.user.username) ? this.user : null, // (!!this.user) is always true because user alsways an object
                 headline: headline
             }));
             this.sandbox.start(this.$el);
             this.startLanguageDropdown();
+            this.bindFormEvents();
             setHeaderToolbar.call(this);
         },
 
@@ -230,6 +231,18 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     }
                 }
             ]);
+        },
+
+        bindFormEvents: function() {
+            /*
+            this.sandbox.dom.one(this.$el, 'focus', function() {
+                this.sandbox.dom.val('input[type="password"]', '');
+            }.bind(this), 'input[type="password"]');
+            */
+
+            this.sandbox.dom.one(this.$el, 'keyup', function() {
+                this.sandbox.dom.data('#password', 'changed', true);
+            }.bind(this), 'input[type="password"]');
         },
 
         bindRoleTableEvents: function() {
@@ -374,7 +387,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     data.user.id = this.user.id;
                 }
 
-                if (!!this.password && this.password !== '') {
+                if (!!this.sandbox.dom.data('#password', 'changed') && !!this.password && this.password !== '') {
                     data.user.password = this.password;
                 }
 
