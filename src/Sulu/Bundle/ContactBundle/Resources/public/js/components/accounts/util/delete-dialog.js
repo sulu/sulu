@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontact/model/account'], function(Account) {
+define(['sulucontact/models/account'], function(Account) {
     'use strict';
 
     var constants = {

@@ -10,8 +10,8 @@
 define([
     'mvc/relationalmodel',
     'mvc/hasone',
-    'sulucontact/model/account',
-    'sulucontact/model/contact'
+    'sulucontact/models/account',
+    'sulucontact/models/contact'
 ], function(RelationalModel, HasOne, Account, Contact) {
     return RelationalModel({
         url: function() {

@@ -8,11 +8,11 @@
  */
 
 define([
-    'sulucontact/model/account',
-    'sulucontact/model/contact',
-    'sulucontact/model/accountContact',
-    'sulucontact/model/email',
-    'sulucontact/model/emailType',
+    'sulucontact/models/account',
+    'sulucontact/models/contact',
+    'sulucontact/models/accountContact',
+    'sulucontact/models/email',
+    'sulucontact/models/emailType',
     'sulumedia/model/media',
     'sulucategory/model/category',
     'accountsutil/delete-dialog'
@@ -49,7 +49,7 @@ define([
                     this.options.display,
                     'accounts-form-container', {}
                 );
-            } else if (this.options.display === 'documents') {
+            } else if (this.options.display === 'documents-tab') {
                 this.renderComponent(
                     '',
                     this.options.display,

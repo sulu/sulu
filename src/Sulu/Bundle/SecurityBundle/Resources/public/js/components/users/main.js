@@ -11,7 +11,7 @@ define([
     './models/user',
     'sulusecurity/models/role',
     'sulusecurity/models/permission',
-    'sulucontact/model/contact',
+    'sulucontact/models/contact',
     './collections/roles',
     './models/userRole'
 ], function(User, Role, Permission, Contact, Roles, UserRole) {
