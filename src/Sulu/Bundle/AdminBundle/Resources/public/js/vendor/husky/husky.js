@@ -35557,7 +35557,7 @@ define('__component__$toolbar@husky',[],function() {
                 align: 'right'
             };
 
-            this.options.groups.push(searchGroup);
+            this.options.groups.unshift(searchGroup);
 
             // push search item
             data.push({

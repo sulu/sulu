@@ -29,7 +29,7 @@ define([], function() {
                 },
                 {
                     id: 2,
-                    align: 'left'
+                    align: 'right'
                 }
             ],
             columnOptions: {

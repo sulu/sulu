@@ -105,7 +105,6 @@ define(['app-config'], function(AppConfig) {
                 icon: 'filter',
                 title: this.sandbox.translate('resource.filter'),
                 group: 2,
-                position: 1,
                 dropdownOptions: {
                     url: url,
                     resultKey: 'filters',
