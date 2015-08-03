@@ -131,9 +131,10 @@ define(function() {
 
         /**
          * starts overlay
+         * @param $element
          * @param {Object} def
          */
-        startOverlay = function(def) {
+        startOverlay = function($element, def) {
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -172,10 +173,8 @@ define(function() {
         /**
          * start select in overlay
          * @param {String[]} languages
-         * @param {Object} def
-         * @returns {*}
          */
-        startSelect = function(languages, def) {
+        startSelect = function(languages) {
             this.sandbox.start([
                 {
                     name: 'select@husky',
@@ -188,8 +187,6 @@ define(function() {
                     }
                 }
             ]);
-
-            return def.promise();
         },
 
         /**
@@ -250,8 +247,10 @@ define(function() {
             this.sandbox.on('husky.select.copy-locale-to.deselected.item', deselectHandler.bind(this));
             this.sandbox.on('husky.select.copy-locale-to.selected.item', selectHandler.bind(this));
 
-            startOverlay.call(this, def);
-            startSelect.call(languages, def);
+            startOverlay.call(this, $element, def);
+            startSelect.call(this, languages);
+
+            return def.promise();
         }
     };
 });
