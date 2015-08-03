@@ -36,7 +36,7 @@ define([
     AccountManager.prototype = {
 
         initialize: function() {
-            this.sandbox = window.App; // TODO: inject context
+            this.sandbox = window.App; // TODO: inject context. find better solution
             this.account = new Account();
         },
 
