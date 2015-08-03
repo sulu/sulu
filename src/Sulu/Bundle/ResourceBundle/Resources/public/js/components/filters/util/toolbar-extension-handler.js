@@ -42,30 +42,8 @@ define(['app-config'], function(AppConfig) {
                 toolbarItems.push(filterDropDown);
                 this.sandbox.off(updateEventName);
                 this.sandbox.on(updateEventName, updateFilterResult.bind(this));
-
-                //if (!!this.filter) { // when a filter is loaded via user settings then set selected filter in dropdown
-                //    updateSelectedInFilterSelect.call(this, toolbarInstanceName, this.filter);
-                //}
             }
         },
-
-        ///**
-        // * Setts the correct filter selected in the filter select dropdown if filter was loaded from user settings
-        // *
-        // * @param toolbarInstanceName {String}
-        // * @param filter {Object}
-        // */
-        //updateSelectedInFilterSelect = function(toolbarInstanceName, filter) {
-        //    this.sandbox.on('husky.toolbar.' + toolbarInstanceName + '.items.set', function(buttonId) {
-        //        if (buttonId === constants.toolbarSelectButtonId) {
-        //            this.sandbox.emit(
-        //                'husky.toolbar.' + toolbarInstanceName + '.item.change',
-        //                constants.toolbarSelectButtonId,
-        //                filter.id
-        //            );
-        //        }
-        //    }, this);
-        //},
 
         /**
          * Starts and updates the info container component
