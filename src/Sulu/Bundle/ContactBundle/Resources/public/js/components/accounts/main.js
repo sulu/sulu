@@ -52,37 +52,37 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.contacts.account.delete', this.del.bind(this));
+            this.sandbox.on('sulu.contacts.account.delete', this.del.bind(this)); // todo: manager-service
 
             // save the current package
-            this.sandbox.on('sulu.contacts.accounts.save', this.save.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.save', this.save.bind(this)); // done
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this)); // todo: navigate-service
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this));
+            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this)); // todo: navigate-service
 
             // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this)); // todo: navigate-service
 
             // delete selected contacts
-            this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this)); // todo: manager-service
 
             // adds a new accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this)); // todo: manager-service
 
             // removes accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this)); // todo: manager-service
 
             // set main contact
-            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this)); // todo: manager-service
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', this.navigateToList.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.list', this.navigateToList.bind(this)); // todo: navigate-service
 
             // handling documents
-            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this)); // todo: manager-service
 
             // receive form of address values via template
             this.sandbox.on('sulu.contacts.set-types', function(types) {

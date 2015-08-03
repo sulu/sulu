@@ -37,7 +37,7 @@ define([
 
         initialize: function() {
             this.sandbox = window.App; // TODO: inject context. find better solution
-            this.account = new Account();
+            this.account = null;
         },
 
         /**
@@ -45,9 +45,7 @@ define([
          */
         getAccount: function(id) {
             var promise = this.sandbox.data.deferred();
-
-            this.account.clear();
-            this.account.set({id: id});
+            this.account = Account.findOrCreate({id: id});
 
             this.account.fetch({
                 success: function(model) {
@@ -70,12 +68,12 @@ define([
          */
         save: function(data) {
             var promise = this.sandbox.data.deferred();
-            this.account.clear();
+            this.account = Account.findOrCreate({id: data.id});
             this.account.set(data);
 
             this.account.get('categories').reset();
-            this.sandbox.util.foreach(data.categories, function(id){
-                var category = Category.findOrCreate({id: id});
+            this.sandbox.util.foreach(data.categories, function(categoryId){
+                var category = Category.findOrCreate({id: categoryId});
                 this.account.get('categories').add(category);
             }.bind(this));
 
@@ -96,19 +94,21 @@ define([
 
         /**
          * Removes multiple account-contacts
+         * @param id The id of the account to delete the contacts from
          * @param ids {Array} the id's of the account-contacts to delete
          */
-        removeAccountContacts: function(ids) {
+        removeAccountContacts: function(id, ids) {
             // show warning
+            this.account = Account.findOrCreate({id: id});
             this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
                 // get ids of selected contacts
                 var accountContact;
-                this.sandbox.util.foreach(ids, function(id) {
+                this.sandbox.util.foreach(ids, function(contactId) {
                     // set account and contact as well as  id to contacts id(so that request is going to be sent)
-                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
+                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: contactId}), account: this.account});
                     accountContact.destroy({
                         success: function() {
-                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);
+                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', contactId);
                         }.bind(this),
                         error: function() {
                             this.sandbox.logger.log("error while deleting AccountContact");
