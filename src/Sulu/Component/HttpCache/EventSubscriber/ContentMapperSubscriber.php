@@ -33,7 +33,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     private $structureInvalidationStack = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

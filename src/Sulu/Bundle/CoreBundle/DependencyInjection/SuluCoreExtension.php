@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class SuluCoreExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function prepend(ContainerBuilder $container)
     {
@@ -73,7 +73,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {

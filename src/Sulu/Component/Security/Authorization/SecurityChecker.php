@@ -38,7 +38,7 @@ class SecurityChecker extends AbstractSecurityChecker
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasPermission($subject, $permission)
     {

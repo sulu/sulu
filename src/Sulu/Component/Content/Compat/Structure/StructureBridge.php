@@ -88,7 +88,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLanguageCode($locale)
     {
@@ -96,7 +96,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLanguageCode()
     {
@@ -108,7 +108,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setWebspaceKey($webspace)
     {
@@ -116,7 +116,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getWebspaceKey()
     {
@@ -124,7 +124,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUuid()
     {
@@ -132,7 +132,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setUuid($uuid)
     {
@@ -140,7 +140,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreator()
     {
@@ -148,7 +148,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCreator($userId)
     {
@@ -156,7 +156,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanger()
     {
@@ -164,7 +164,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setChanger($userId)
     {
@@ -172,7 +172,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreated()
     {
@@ -180,7 +180,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCreated(\DateTime $created)
     {
@@ -188,7 +188,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanged()
     {
@@ -196,7 +196,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setChanged(\DateTime $changed)
     {
@@ -204,7 +204,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getKey()
     {
@@ -212,7 +212,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getInternal()
     {
@@ -220,7 +220,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getProperty($name)
     {
@@ -234,7 +234,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasProperty($name)
     {
@@ -242,7 +242,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getProperties($flatten = false)
     {
@@ -261,7 +261,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setHasChildren($hasChildren)
     {
@@ -269,7 +269,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getHasChildren()
     {
@@ -277,7 +277,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setChildren($children)
     {
@@ -285,7 +285,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChildren()
     {
@@ -304,7 +304,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPublishedState()
     {
@@ -312,7 +312,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setPublished($published)
     {
@@ -320,7 +320,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPublished()
     {
@@ -328,7 +328,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPropertyValue($name)
     {
@@ -336,7 +336,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPropertyNames()
     {
@@ -344,7 +344,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setType($type)
     {
@@ -352,7 +352,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -369,7 +369,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPath()
     {
@@ -377,7 +377,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setPath($path)
     {
@@ -385,7 +385,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setHasTranslation($hasTranslation)
     {
@@ -393,7 +393,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getHasTranslation()
     {
@@ -401,7 +401,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray($complete = true)
     {
@@ -485,14 +485,14 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function jsonSerialize()
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
@@ -500,7 +500,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPropertiesByTagName($tagName)
     {
@@ -513,7 +513,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPropertyValueByTagName($tagName)
     {
@@ -521,7 +521,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasTag($tag)
     {
@@ -529,7 +529,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNodeType()
     {
@@ -541,23 +541,25 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNodeName()
     {
-        if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
-            return $this->getDocument()->getRedirectTarget()->getTitle();
-        }
+        if ($this->getDocument() instanceof RedirectTypeBehavior) {
+            if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
+                return $this->getDocument()->getRedirectTarget()->getTitle();
+            }
 
-        if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
-            return $this->getDocument()->getTitle();
+            if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
+                return $this->getDocument()->getTitle();
+            }
         }
 
         return $this->getDocument()->getTitle();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocalizedTitle($languageCode)
     {
@@ -565,7 +567,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNodeState()
     {
@@ -589,7 +591,7 @@ class StructureBridge implements StructureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function copyFrom(StructureInterface $structure)
     {

@@ -20,7 +20,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class SuluVersionPass implements CompilerPassInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

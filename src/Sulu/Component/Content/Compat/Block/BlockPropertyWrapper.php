@@ -276,7 +276,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc.
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {
@@ -284,7 +284,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc.
+     * {@inheritdoc}
      */
     public function getStructure()
     {
@@ -292,7 +292,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc.
+     * {@inheritdoc}
      */
     public function setStructure($structure)
     {

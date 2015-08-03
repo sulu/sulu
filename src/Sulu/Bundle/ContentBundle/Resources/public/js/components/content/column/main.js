@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
 
     'use strict';
 
@@ -49,37 +49,6 @@ define(function() {
                 return [
                     '<div id="child-table"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
-                ].join('');
-            },
-
-            openGhost: function() {
-                return [
-                    '<div class="copy-locale-overlay-content grid">',
-                    '   <div class="grid-row">',
-                    '       <p class="info">',
-                    this.sandbox.translate('content.contents.settings.copy-locale.info'),
-                    '       </p>',
-                    '   </div>',
-                    '   <div class="grid-row">',
-                    '       <div class="custom-radio">',
-                    '           <input type="radio" name="action" id="copy-locale-new" checked="checked"/>',
-                    '           <span class="icon"></span>',
-                    '       </div>',
-                    '       <label for="copy-locale-new">',
-                    this.sandbox.translate('content.contents.settings.copy-locale.new'),
-                    '       </label>',
-                    '   </div>',
-                    '   <div class="grid-row">',
-                    '       <div class="custom-radio">',
-                    '           <input type="radio" name="action" id="copy-locale-copy"/>',
-                    '           <span class="icon"></span>',
-                    '       </div>',
-                    '       <label for="copy-locale-copy">',
-                    this.sandbox.translate('content.contents.settings.copy-locale.copy'),
-                    '       </label>',
-                    '       <div id="copy-locale-overlay-select" />',
-                    '   </div>',
-                    '</div>'
                 ].join('');
             }
         };
@@ -124,7 +93,21 @@ define(function() {
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
                 } else {
-                    this.openGhost(item);
+                    OpenGhost.openGhost.call(this, item).then(function(copy, src) {
+                        if (!!copy) {
+                            this.sandbox.emit(
+                                'sulu.content.contents.copy-locale',
+                                item.id,
+                                src,
+                                [this.options.language],
+                                function() {
+                                    this.sandbox.emit('sulu.content.contents.load', item);
+                                }.bind(this)
+                            );
+                        } else {
+                            this.sandbox.emit('sulu.content.contents.load', item);
+                        }
+                    }.bind(this));
                 }
             }, this);
 
@@ -578,18 +561,6 @@ define(function() {
             this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
                 this.sandbox.dom.prop('#copy-locale-copy', 'checked', true)
             }.bind(this));
-
-            this.sandbox.start([
-                {
-                    name: 'select@husky',
-                    options: {
-                        el: '#copy-locale-overlay-select',
-                        instanceName: 'copy-locale-to',
-                        defaultLabel: this.sandbox.translate('content.contents.settings.copy-locale.select-default'),
-                        data: item.concreteLanguages
-                    }
-                }
-            ]);
         }
     };
 });

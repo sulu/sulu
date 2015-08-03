@@ -34,7 +34,7 @@ abstract class SuluTestCase extends BaseTestCase
     /**
      * Create a new SuluTestKernel and pass the sulu.context to it.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException If the found kernel does
      *                                  not extend SuluTestKernel

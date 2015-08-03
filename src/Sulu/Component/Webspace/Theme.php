@@ -144,7 +144,7 @@ class Theme implements ArrayableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {

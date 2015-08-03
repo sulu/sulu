@@ -24,7 +24,7 @@ use Sulu\Component\Content\Document\Structure\Structure;
 class StructureHandler implements SubscribingHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribingMethods()
     {

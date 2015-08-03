@@ -271,7 +271,7 @@ class NodeRepository implements NodeRepositoryInterface
             $excludeGhosts,
             $flat ? 1 : $depth
         );
-        $result['total'] = sizeof($result['_embedded']['nodes']);
+        $result['total'] = count($result['_embedded']['nodes']);
 
         return $result;
     }
@@ -306,7 +306,7 @@ class NodeRepository implements NodeRepositoryInterface
             '_embedded' => [
                 'nodes' => $result,
             ],
-            'total' => sizeof($result),
+            'total' => count($result),
             '_links' => [
                 'self' => ['href' => $this->apiBasePath . '?ids=' . $idString],
             ],
@@ -447,7 +447,7 @@ class NodeRepository implements NodeRepositoryInterface
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
 
             $result['_embedded']['nodes'] = $data;
-            $result['total'] = sizeof($result['_embedded']['nodes']);
+            $result['total'] = count($result['_embedded']['nodes']);
         } else {
             $result = $data;
         }

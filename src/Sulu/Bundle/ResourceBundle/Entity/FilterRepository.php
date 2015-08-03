@@ -22,7 +22,7 @@ use Doctrine\ORM\NoResultException;
 class FilterRepository extends EntityRepository implements FilterRepositoryInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findByIdAndLocale($id, $locale)
     {
@@ -38,7 +38,7 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findByUserAndContextAndLocale($locale, $context, $userId)
     {
@@ -84,7 +84,7 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findById($id)
     {

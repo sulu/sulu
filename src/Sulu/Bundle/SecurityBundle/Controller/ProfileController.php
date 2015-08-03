@@ -135,4 +135,40 @@ class ProfileController implements ClassResourceInterface
 
         return $this->viewHandler->handle($view);
     }
+
+    /**
+     * Deletes a user setting by a given key.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function deleteSettingsAction(Request $request)
+    {
+        $key = $request->get('key');
+
+        try {
+            if (!$key) {
+                throw new MissingArgumentException(static::$entityNameUserSetting, 'key');
+            }
+
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // get setting
+            // TODO: move this logic into own service (UserSettingManager?)
+            $setting = $this->userSettingRepository->findOneBy(['user' => $user, 'key' => $key]);
+
+            if ($setting) {
+                $this->objectManager->remove($setting);
+                $this->objectManager->flush();
+                $view = View::create(null, 204);
+            } else {
+                $view = View::create(null, 400);
+            }
+        } catch (RestException $exc) {
+            $view = View::create($exc->toArray(), 400);
+        }
+
+        return $this->viewHandler->handle($view);
+    }
 }

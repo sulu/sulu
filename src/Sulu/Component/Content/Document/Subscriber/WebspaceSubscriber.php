@@ -36,7 +36,7 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

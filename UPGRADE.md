@@ -1,6 +1,6 @@
 # Upgrade
 
-## Dev-develop
+## dev-develop
 
 ### Header-toolbar and tabs
 The header got a complete redesign, the breadcrumb, title and bottom-content are not available anymore. Also the event `header.set-toolbar` got removed. A sulu-header can still be initialized via the header property when a view-component gets started.
@@ -34,6 +34,25 @@ purpose of overriding its previous sort field.
 
 ```bash
 app/console doctrine:schema:update --force
+```
+
+## 1.0.4
+
+### External link
+
+If you have external-link pages created before 1.0.0 you should run the following command to fix them.
+ 
+```
+app/console phpcr:migrations:migrate
+```
+
+### Shadow-Pages
+
+Filter values will now be copied from shadow-base locale to shadowed locale. Upgrade your data with following command:
+
+```bash
+app/console phpcr:migrations:migrate
+>>>>>>> master
 ```
 
 ## 1.0.0

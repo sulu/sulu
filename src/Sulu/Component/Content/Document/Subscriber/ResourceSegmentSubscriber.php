@@ -32,7 +32,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

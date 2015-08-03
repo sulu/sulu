@@ -187,6 +187,26 @@
             };
 
             /**
+             * deletes data locally and in the database
+             * @param key
+             */
+            app.sandbox.sulu.deleteUserSetting = function(key) {
+                delete app.sandbox.sulu.userSettings[key];
+
+                var data = {
+                    key: key
+                };
+
+                // save to server
+                app.sandbox.util.ajax({
+                    type: 'DELETE',
+                    url: '/admin/security/profile/settings',
+                    data: data
+                });
+            };
+
+
+            /**
              * Shows a standard delete warning dialog
              * @param callback {Function} callback function to execute after dialog got closed. The callback gets always
              *                            executed (with true or false as first argument, whether the dialog got
@@ -398,7 +418,8 @@
                                     limit: limit
                                 }
                             },
-                            gridOptions;
+                            gridOptions,
+                            datagridEventNamespace = 'husky.datagrid.';
 
                         if (!!limit) {
                             gridDefaults.paginationOptions = paginationOptionsDefaults;
@@ -408,6 +429,7 @@
 
                         // replace default order by custom order settings
                         gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
+                        this.sandbox.emit('sulu.list.preload', gridOptions);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =
@@ -429,13 +451,17 @@
                             }
                         ]);
 
+                        if(!!gridOptions.instanceName) {
+                            datagridEventNamespace += gridOptions.instanceName + '.'
+                        }
+
                         // save page size when changed
-                        this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
+                        this.sandbox.on(datagridEventNamespace + 'page-size.changed', function(size) {
                             this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
                         }.bind(this));
 
                         // save sorting when changed
-                        this.sandbox.on('husky.datagrid.data.sort', function(data) {
+                        this.sandbox.on(datagridEventNamespace + 'data.sort', function(data) {
                             this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
                     };

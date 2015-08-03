@@ -13,6 +13,11 @@ define([
 
     'use strict';
 
+    var constants = {
+        datagridInstanceName: 'tags',
+        toolbarInstanceName: 'saveToolbar'
+    };
+
     return {
 
         initialize: function() {
@@ -48,10 +53,11 @@ define([
                         var tag = new Tag({id: id});
                         tag.destroy({
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.record.remove', id);
+                                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
+                                this.sandbox.emit('husky.toolbar.' + constants.toolbarInstanceName + '.item.disable', 'delete');
                             }.bind(this),
                             error: function() {
-                                this.sandbox.logger.log('error while removing tag with id '+id);
+                                this.sandbox.logger.log('error while removing tag with id ' + id);
                             }.bind(this)
                         });
                     }.bind(this));

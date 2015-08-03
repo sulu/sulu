@@ -2,10 +2,19 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+<<<<<<< HEAD
     * FEATURE     #1421 [AdminBundle]     New button-api for header and tabs
     * FEATURE     #1417 [AdminBundle]     Style upgrade for header and tabs
+=======
+    * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
+    * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
+>>>>>>> bf815334911f7f011038a14f68d28ef778aa1e4f
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
     * BUGFIX      #1388 [ContactBundle]   Fixed issue with multiple instances of the contact-form component
+    * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
+    * FEATURE     #1398 [SecurityBundle]  Integrated filters for roles
+    * FEATURE     #1398 [TagBundle]       Integrated filters for tags
+    * FEATURE     #1370 [SnippetBundle]   Added copy-locale for snippet UI 
     * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
                                           then select data
@@ -22,6 +31,11 @@ CHANGELOG for Sulu
     * BUGFIX      #1191 [AdminBundle]     Fixed unique Navigation ID
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
+    * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
+
+* 1.0.4 (2015-07-28)
+    * HOTFIX      #1427 [ContentBundle]  Added external link migration
+    * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
 
 * 1.0.3 (2015-07-23)
     * HOTFIX      #1394 [MediaBundle]    Added regex replace for media download to avoid umlauts error
@@ -91,6 +105,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1203 [AdminBundle]    Fixed routes for tabs
     * BUGFIX      #1199 [ContentBundle]  URL of shadow pages are not delivered in the urls array
     * BUGFIX      #1207 [ContentBundle]  Added additional query before generate new url
+    * BUGFIX      #1188 [MediaBundle]    Fixed new fileversion thumbnail update
     * BUGFIX      #1169 [AdminBundle]    Fixed sidebar issue (prepending div instead of appending)
     * ENHANCEMENT #1159 [SecurityBundle] Change role naming to keep symfony2 conventions.
     * BUGFIX      #1156 [MediaBundle]    Fix mimetype check for ghostscript

@@ -125,7 +125,7 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPortals()
     {
@@ -133,7 +133,7 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUrls($environment)
     {
@@ -147,7 +147,7 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPortalInformations($environment)
     {
@@ -155,7 +155,7 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAllLocalizations()
     {

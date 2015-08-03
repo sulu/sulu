@@ -61,7 +61,7 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
     private $output;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -88,7 +88,7 @@ EOT
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {

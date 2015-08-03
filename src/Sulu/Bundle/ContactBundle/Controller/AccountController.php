@@ -1327,7 +1327,7 @@ class AccountController extends RestController implements ClassResourceInterface
             [],
             true,
             false,
-            'number',
+            'integer',
             '50px'
         );
 

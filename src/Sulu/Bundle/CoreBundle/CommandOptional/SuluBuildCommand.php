@@ -21,7 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 class SuluBuildCommand extends BuildCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {

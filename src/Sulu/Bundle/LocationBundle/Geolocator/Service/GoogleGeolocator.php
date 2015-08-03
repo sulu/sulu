@@ -15,6 +15,7 @@ use Guzzle\Http\ClientInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Geolocator which uses the google geocoding API.
@@ -39,7 +40,7 @@ class GoogleGeolocator implements GeolocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function locate($query)
     {
@@ -59,7 +60,7 @@ class GoogleGeolocator implements GeolocatorInterface
         $response = $request->getResponse();
 
         if ($response->getStatusCode() != 200) {
-            throw new GeolocatorHttpException($response->getStatusCode(), sprintf(
+            throw new HttpException($response->getStatusCode(), sprintf(
                 'Server at "%s" returned HTTP "%s". Body: ', $client->getUrl(), $response->getStatusCode()
             ));
         }

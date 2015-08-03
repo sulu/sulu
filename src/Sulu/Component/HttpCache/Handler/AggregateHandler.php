@@ -49,7 +49,7 @@ class AggregateHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function invalidateStructure(StructureInterface $structure)
     {
@@ -69,7 +69,7 @@ class AggregateHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
@@ -89,7 +89,7 @@ class AggregateHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush()
     {

@@ -32,7 +32,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     protected static $entityName = 'SuluContactBundle:Position';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected static $entityKey = 'positions';
 

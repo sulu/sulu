@@ -11,28 +11,33 @@
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
-use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapper;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 /**
  * handles snippets.
  */
 class SnippetController implements SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * @var ContentMapper
      */
@@ -129,7 +134,7 @@ class SnippetController implements SecuredControllerInterface
             );
         }
 
-        $data = array();
+        $data = [];
 
         foreach ($snippets as $snippet) {
             $data[] = $snippet->toArray();
@@ -252,6 +257,53 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
+     * trigger a action for given snippet specified over get-action parameter.
+     *
+     * @Post("/snippets/{uuid}")
+     *
+     * @param string $uuid
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postTriggerAction($uuid, Request $request)
+    {
+        $view = null;
+        $snippet = null;
+
+        $this->initEnv($request);
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'copy-locale':
+                    $destLocale = $this->getRequestParameter($request, 'dest', true);
+
+                    // call repository method
+                    $snippet = $this->snippetRepository->copyLocale(
+                        $uuid,
+                        $this->getUser()->getId(),
+                        $this->languageCode,
+                        explode(',', $destLocale)
+                    );
+                    break;
+                default:
+                    throw new RestException('Unrecognized action: ' . $action);
+            }
+
+            // prepare view
+            $view = View::create(
+                $this->decorateSnippet($snippet->toArray(), $this->languageCode),
+                $snippet !== null ? 200 : 204
+            );
+        } catch (RestException $exc) {
+            $view = View::create($exc->toArray(), 400);
+        }
+
+        return $this->viewHandler->handle($view);
+    }
+
+    /**
      * TODO refactor.
      *
      * @return JsonResponse
@@ -259,8 +311,8 @@ class SnippetController implements SecuredControllerInterface
     public function getSnippetFieldsAction()
     {
         return new JsonResponse(
-            array(
-                array(
+            [
+                [
                     'name' => 'title',
                     'translation' => 'public.title',
                     'disabled' => false,
@@ -270,8 +322,8 @@ class SnippetController implements SecuredControllerInterface
                     'width' => '',
                     'minWidth' => '100px',
                     'editable' => false,
-                ),
-                array(
+                ],
+                [
                     'name' => 'template',
                     'translation' => 'snippets.list.template',
                     'disabled' => false,
@@ -281,8 +333,8 @@ class SnippetController implements SecuredControllerInterface
                     'width' => '',
                     'minWidth' => '',
                     'editable' => false,
-                ),
-                array(
+                ],
+                [
                     'name' => 'id',
                     'translation' => 'public.id',
                     'disabled' => true,
@@ -292,8 +344,8 @@ class SnippetController implements SecuredControllerInterface
                     'width' => '50px',
                     'minWidth' => '',
                     'editable' => false,
-                ),
-                array(
+                ],
+                [
                     'name' => 'created',
                     'translation' => 'public.created',
                     'disabled' => true,
@@ -303,8 +355,8 @@ class SnippetController implements SecuredControllerInterface
                     'width' => '',
                     'minWidth' => '',
                     'editable' => false,
-                ),
-                array(
+                ],
+                [
                     'name' => 'changed',
                     'translation' => 'public.changed',
                     'disabled' => true,
@@ -314,8 +366,8 @@ class SnippetController implements SecuredControllerInterface
                     'width' => '',
                     'minWidth' => '',
                     'editable' => false,
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -369,7 +421,7 @@ class SnippetController implements SecuredControllerInterface
      */
     private function decorateSnippets(array $snippets, $locale)
     {
-        $res = array();
+        $res = [];
         foreach ($snippets as $snippet) {
             $res[] = $this->decorateSnippet($snippet, $locale);
         }
@@ -384,23 +436,23 @@ class SnippetController implements SecuredControllerInterface
     {
         return array_merge(
             $snippet,
-            array(
-                '_links' => array(
+            [
+                '_links' => [
                     'self' => $this->urlGenerator->generate(
                         'get_snippet',
-                        array('uuid' => $snippet['id'], 'language' => $locale)
+                        ['uuid' => $snippet['id'], 'language' => $locale]
                     ),
                     'delete' => $this->urlGenerator->generate(
                         'delete_snippet',
-                        array('uuid' => $snippet['id'], 'language' => $locale)
+                        ['uuid' => $snippet['id'], 'language' => $locale]
                     ),
-                    'new' => $this->urlGenerator->generate('post_snippet', array('language' => $locale)),
+                    'new' => $this->urlGenerator->generate('post_snippet', ['language' => $locale]),
                     'update' => $this->urlGenerator->generate(
                         'put_snippet',
-                        array('uuid' => $snippet['id'], 'language' => $locale)
+                        ['uuid' => $snippet['id'], 'language' => $locale]
                     ),
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -417,10 +469,10 @@ class SnippetController implements SecuredControllerInterface
      */
     private function getReferentialIntegrityResponse($webspace, $references)
     {
-        $data = array(
-            'structures' => array(),
-            'other' => array(),
-        );
+        $data = [
+            'structures' => [],
+            'other' => [],
+        ];
 
         foreach ($references as $reference) {
             if ($reference->getParent()->isNodeType('sulu:page')) {
@@ -440,7 +492,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale(Request $request)
     {
@@ -448,7 +500,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

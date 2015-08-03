@@ -52,7 +52,7 @@ class LanguageController extends Controller implements ClassResourceInterface
 
         $data = [
             '_embedded' => $localizations,
-            'total' => sizeof($localizations),
+            'total' => count($localizations),
         ];
 
         return new JsonResponse($data);

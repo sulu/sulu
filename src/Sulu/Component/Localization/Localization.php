@@ -241,7 +241,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        if ($this->getChildren() !== null && sizeof($this->getChildren()) > 0) {
+        if ($this->getChildren() !== null && count($this->getChildren()) > 0) {
             foreach ($this->getChildren() as $child) {
                 $localizations[] = $child;
                 $localizations = array_merge($localizations, $child->getAllLocalizations());
@@ -271,7 +271,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {

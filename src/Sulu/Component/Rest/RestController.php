@@ -341,7 +341,7 @@ abstract class RestController extends FOSRestController
         $response = [
             '_links' => $this->getHalLinks($entities, $pages, true),
             '_embedded' => $entities,
-            'total' => sizeof($entities),
+            'total' => count($entities),
             'page' => $listHelper->getPage(),
             'pages' => $pages,
             'limit' => $listHelper->getLimit(),
@@ -413,7 +413,7 @@ abstract class RestController extends FOSRestController
         $sortable = [];
         if ($returnListLinks && count($entities) > 0) {
             $keys = [];
-            if (sizeof($this->sortable) > 0) {
+            if (count($this->sortable) > 0) {
                 $keys = $this->sortable;
             } elseif (is_array($entities[0])) {
                 $keys = array_keys($entities[0]);
@@ -651,7 +651,7 @@ abstract class RestController extends FOSRestController
         // FIXME: this is just a hack to avoid relations that start with index != 0
         // FIXME: otherwise deserialization process will parse relations as object instead of an array
         // reindex entities
-        if (sizeof($entities) > 0 && method_exists($entities, 'getValues')) {
+        if (count($entities) > 0 && method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

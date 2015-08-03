@@ -1620,7 +1620,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     private function resetIndexOfSubentites($entities)
     {
-        if (sizeof($entities) > 0 && method_exists($entities, 'getValues')) {
+        if (count($entities) > 0 && method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

@@ -70,7 +70,7 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptor($key)
     {

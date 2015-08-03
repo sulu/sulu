@@ -178,13 +178,18 @@ define([
             });
         },
 
-        load: function(id, language) {
+        load: function(id, language, forceReload) {
             if (!language) {
                 language = this.options.language;
             }
 
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language + '/edit:' + id);
+            this.sandbox.emit(
+                'sulu.router.navigate',
+                'snippet/snippets/' + language + '/edit:' + id,
+                undefined, undefined,
+                forceReload
+            );
         },
 
         add: function(language) {
@@ -236,6 +241,19 @@ define([
                 callbackFunction.bind(this, false),
                 callbackFunction.bind(this, true)
             );
+        },
+
+        /**
+         * Returns copy snippet from a given locale to a array of other locales url
+         * @param {string} id
+         * @param {string} src
+         * @param {string[]} dest
+         * @returns {string}
+         */
+        getCopyLocaleUrl: function(id, src, dest) {
+            return [
+                '/admin/api/snippets/', id, '?language=', src, '&dest=', dest, '&action=copy-locale'
+            ].join('');
         }
     };
 

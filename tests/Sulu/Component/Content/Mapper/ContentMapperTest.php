@@ -950,14 +950,14 @@ class ContentMapperTest extends SuluTestCase
         $contentRootNode = $root->getNode('cmf/sulu_io/contents');
 
         $newsNode = $contentRootNode->getNode('news');
-        $this->assertEquals(2, sizeof($newsNode->getNodes()));
+        $this->assertEquals(2, count($newsNode->getNodes()));
         $this->assertEquals('News', $newsNode->getPropertyValue($this->languageNamespace . ':de-title'));
 
         $testNewsNode = $newsNode->getNode('testnews-1');
         $this->assertEquals('Testnews-1', $testNewsNode->getPropertyValue($this->languageNamespace . ':de-title'));
 
         $testNewsNode = $newsNode->getNode('testnews-2');
-        $this->assertEquals(1, sizeof($testNewsNode->getNodes()));
+        $this->assertEquals(1, count($testNewsNode->getNodes()));
         $this->assertEquals('Testnews-2', $testNewsNode->getPropertyValue($this->languageNamespace . ':de-title'));
 
         $subTestNewsNode = $testNewsNode->getNode('testnews-2-1');
@@ -1046,24 +1046,24 @@ class ContentMapperTest extends SuluTestCase
 
         // get root children
         $children = $this->mapper->loadByParent(null, 'sulu_io', 'de');
-        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals(1, count($children));
 
         $this->assertEquals('News', $children[0]->title);
 
         // get children from 'News'
         $rootChildren = $this->mapper->loadByParent($root->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals(2, sizeof($rootChildren));
+        $this->assertEquals(2, count($rootChildren));
 
         $this->assertEquals('Testnews-1', $rootChildren[0]->title);
         $this->assertEquals('Testnews-2', $rootChildren[1]->title);
 
         $testNewsChildren = $this->mapper->loadByParent($child->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals(1, sizeof($testNewsChildren));
+        $this->assertEquals(1, count($testNewsChildren));
 
         $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
 
         $nodes = $this->mapper->loadByParent($root->getUuid(), 'sulu_io', 'de', null);
-        $this->assertEquals(3, sizeof($nodes));
+        $this->assertEquals(3, count($nodes));
     }
 
     public function testLoadByParentFlat()
@@ -1075,20 +1075,20 @@ class ContentMapperTest extends SuluTestCase
         $child = $data['child'];
 
         $children = $this->mapper->loadByParent(null, 'sulu_io', 'de', 2, true);
-        $this->assertEquals(3, sizeof($children));
+        $this->assertEquals(3, count($children));
         $this->assertEquals('News', $children[0]->title);
         $this->assertEquals('Testnews-1', $children[1]->title);
         $this->assertEquals('Testnews-2', $children[2]->title);
 
         $children = $this->mapper->loadByParent(null, 'sulu_io', 'de', 3, true);
-        $this->assertEquals(4, sizeof($children));
+        $this->assertEquals(4, count($children));
         $this->assertEquals('News', $children[0]->title);
         $this->assertEquals('Testnews-1', $children[1]->title);
         $this->assertEquals('Testnews-2', $children[2]->title);
         $this->assertEquals('Testnews-2-1', $children[3]->title);
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'sulu_io', 'de', 3, true);
-        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals(1, count($children));
         $this->assertEquals('Testnews-2-1', $children[0]->title);
     }
 
@@ -1102,13 +1102,13 @@ class ContentMapperTest extends SuluTestCase
 
         $children = $this->mapper->loadByParent(null, 'sulu_io', 'de', 2, false);
         // /News
-        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals(1, count($children));
         $this->assertEquals('News', $children[0]->title);
         $this->assertEquals('/news', $children[0]->getPath());
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
-        $this->assertEquals(0, sizeof($tmp->getChildren()));
+        $this->assertEquals(0, count($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->title);
         $this->assertEquals('/news/testnews-1', $tmp->getPath());
 
@@ -1121,19 +1121,19 @@ class ContentMapperTest extends SuluTestCase
 
         $children = $this->mapper->loadByParent(null, 'sulu_io', 'de', 3, false);
         // /News
-        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals(1, count($children));
         $this->assertEquals('News', $children[0]->title);
         $this->assertEquals('/news', $children[0]->getPath());
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
-        $this->assertEquals(0, sizeof($tmp->getChildren()));
+        $this->assertEquals(0, count($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->title);
         $this->assertEquals('/news/testnews-1', $tmp->getPath());
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
-        $this->assertEquals(1, sizeof($tmp->getChildren()));
+        $this->assertEquals(1, count($tmp->getChildren()));
         $this->assertEquals('Testnews-2', $tmp->title);
         $this->assertEquals('/news/testnews-2', $tmp->getPath());
 
@@ -1145,7 +1145,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/news/testnews-2/testnews-2-1', $tmp->getPath());
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'sulu_io', 'de', 3, false);
-        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals(1, count($children));
         $this->assertEquals('Testnews-2-1', $children[0]->title);
         $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->getPath());
     }
@@ -1268,7 +1268,7 @@ class ContentMapperTest extends SuluTestCase
         }
 
         $result = $this->mapper->loadByParent($root->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals(1, count($result));
     }
 
     public function testCleanUp()
@@ -1400,11 +1400,11 @@ class ContentMapperTest extends SuluTestCase
 
         $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'de', 'sulu_io');
 
-        $this->assertEquals(5, sizeof($result));
+        $this->assertEquals(5, count($result));
 
         $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'de', 'sulu_io', 2);
 
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
     }
 
     public function testSameName()
@@ -1446,7 +1446,7 @@ class ContentMapperTest extends SuluTestCase
         /** @var BreadcrumbItemInterface[] $result */
         $result = $this->mapper->loadBreadcrumb($data['subchild']->getUuid(), 'de', 'sulu_io');
 
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals(0, $result[0]->getDepth());
         $this->assertEquals('Start Page', $result[0]->getTitle());
 
@@ -1537,7 +1537,7 @@ class ContentMapperTest extends SuluTestCase
         // both pages exists in en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'en', 1, true, false, false);
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals('en', $result[0]->getLanguageCode());
         $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
         $this->assertNull($result[0]->getType());
@@ -1552,7 +1552,7 @@ class ContentMapperTest extends SuluTestCase
         // both pages exists in en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'en', 1, true, false, true);
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
         $this->assertEquals('en', $result[0]->getLanguageCode());
         $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
         $this->assertNull($result[0]->getType());
@@ -1563,7 +1563,7 @@ class ContentMapperTest extends SuluTestCase
         // both pages are ghosts in en_us from en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'en_us', 1, true, false, false);
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals('en_us', $result[0]->getLanguageCode());
         $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
@@ -1580,12 +1580,12 @@ class ContentMapperTest extends SuluTestCase
         // no page exists in en_us without ghosts
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'en_us', 1, true, false, true);
-        $this->assertEquals(0, sizeof($result));
+        $this->assertEquals(0, count($result));
 
         // one page not exists in de (ghost from de_at), other exists in de
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'de', 1, true, false, false);
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
@@ -1600,7 +1600,7 @@ class ContentMapperTest extends SuluTestCase
         // one page exists in de (without ghosts)
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'de', 1, true, false, true);
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
         $this->assertNull($result[0]->getType());
@@ -1611,7 +1611,7 @@ class ContentMapperTest extends SuluTestCase
         // one page not exists in de_at (ghost from de), other exists in de_at
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'de', 1, true, false, false);
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
@@ -1626,7 +1626,7 @@ class ContentMapperTest extends SuluTestCase
         // one page not exists in de_at (ghost from de), other exists in de_at
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'de_at', 1, true, false, false);
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals('de_at', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
         $this->assertNull($result[0]->getType());
@@ -1642,7 +1642,7 @@ class ContentMapperTest extends SuluTestCase
         // both pages are ghosts in es from en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'es', 1, true, false, false);
-        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(3, count($result));
         $this->assertEquals('es', $result[0]->getLanguageCode());
         $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
@@ -1659,7 +1659,7 @@ class ContentMapperTest extends SuluTestCase
         // no page exists in en_us without ghosts
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'sulu_io', 'es', 1, true, false, true);
-        $this->assertEquals(0, sizeof($result));
+        $this->assertEquals(0, count($result));
 
         // load content as de -> no ghost content
         $result = $this->mapper->load($data['news-de_at']->getUuid(), 'sulu_io', 'de', false);
@@ -2731,16 +2731,16 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals(2, $result->getChanger());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->loadByParent($data[6]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(1, sizeof($test));
+        $this->assertEquals(1, count($test));
 
         $test = $this->mapper->loadByParent($data[7]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(1, sizeof($test));
+        $this->assertEquals(1, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, sizeof($test));
+        $this->assertEquals(2, count($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
@@ -2783,16 +2783,16 @@ class ContentMapperTest extends SuluTestCase
         $this->documentManager->clear();
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, sizeof($test));
+        $this->assertEquals(2, count($test));
 
         $test = $this->mapper->loadByParent($data[6]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(1, sizeof($test));
+        $this->assertEquals(1, count($test));
 
         $test = $this->mapper->loadByParent($data[7]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(1, sizeof($test));
+        $this->assertEquals(1, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/test', $test->getResourceLocator());
@@ -2817,10 +2817,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals(2, $result->getChanger());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, sizeof($test));
+        $this->assertEquals(2, count($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
@@ -2839,10 +2839,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals(2, $result->getChanger());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, sizeof($test));
+        $this->assertEquals(2, count($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
@@ -2868,10 +2868,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('de', $result->getType()->getValue());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, sizeof($test));
+        $this->assertEquals(2, count($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
@@ -2901,10 +2901,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-1/subpage/subsubpage/subsubsubpage', $test[1]->url);
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/subpage', $test->getResourceLocator());
@@ -2947,10 +2947,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-1/sub-1-1/subpage/subsubpage', $test[1]->url);
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, sizeof($test));
+        $this->assertEquals(3, count($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/sub-1', $test->getResourceLocator());
@@ -3307,7 +3307,7 @@ class ContentMapperTest extends SuluTestCase
         }
 
         $result = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals(0, sizeof($result));
+        $this->assertEquals(0, count($result));
     }
 
     /**

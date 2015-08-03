@@ -30,7 +30,7 @@ class OperatorManager implements OperatorManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findAllByLocale($locale)
     {

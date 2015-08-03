@@ -8,8 +8,10 @@
  */
 
 define([
-    'sulusnippet/components/snippet/main'
-], function(BaseSnippet) {
+    'sulusnippet/components/snippet/main',
+    'sulucontent/components/copy-locale-overlay/main',
+    'sulucontent/components/open-ghost-overlay/main'
+], function(BaseSnippet, CopyLocale, OpenGhost) {
 
     'use strict';
 
@@ -88,9 +90,48 @@ define([
                 searchInstanceName: 'snippets',
                 searchFields: ['title'], // TODO ???
                 resultKey: 'snippets',
-                actionCallback: function(id) {
-                    this.sandbox.emit('sulu.snippets.snippet.load', id);
-                }.bind(this)
+                actionCallback: function(id, item) {
+                    if (!item.type || item.type.name !== 'ghost') {
+                        this.sandbox.emit('sulu.snippets.snippet.load', id);
+                    } else {
+                        OpenGhost.openGhost.call(this, item).then(function(copy, src) {
+                            if (!!copy) {
+                                CopyLocale.copyLocale.call(
+                                    this,
+                                    item.id,
+                                    src,
+                                    [this.options.language],
+                                    function() {
+                                        this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                    }.bind(this)
+                                );
+                            } else {
+                                this.sandbox.emit('sulu.snippets.snippet.load', id);
+                            }
+                        }.bind(this));
+                    }
+                }.bind(this),
+                viewOptions: {
+                    table: {
+                        badges: [
+                            {
+                                column: 'title',
+                                callback: function(item, badge) {
+                                    if (!!item.type &&
+                                        item.type.name === 'ghost' &&
+                                        item.type.value !== this.options.language
+                                    ) {
+                                        badge.title = item.type.value;
+
+                                        return badge;
+                                    }
+
+                                    return false;
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                }
             }
         );
     };

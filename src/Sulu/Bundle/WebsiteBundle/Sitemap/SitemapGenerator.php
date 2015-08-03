@@ -46,7 +46,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
@@ -59,13 +59,13 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generate($webspaceKey, $locale, $flat = false)
     {
         $webspaceSitemapInformation = $this->getWebspaceSitemap($webspaceKey);
         $sitemap = $this->generateByLocals($webspaceKey, [$locale], $flat);
-        if (sizeof($sitemap) === 1 && !$flat) {
+        if (count($sitemap) === 1 && !$flat) {
             $sitemap = $sitemap[0];
         }
         $webspaceSitemapInformation->setSitemap(

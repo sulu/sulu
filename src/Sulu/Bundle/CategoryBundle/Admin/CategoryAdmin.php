@@ -63,7 +63,7 @@ class CategoryAdmin extends Admin
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContexts()
     {

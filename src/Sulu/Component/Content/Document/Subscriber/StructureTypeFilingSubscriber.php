@@ -20,7 +20,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AbstractFilingSubscr
 class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function supports($document)
     {
@@ -28,7 +28,7 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getParentName($document)
     {

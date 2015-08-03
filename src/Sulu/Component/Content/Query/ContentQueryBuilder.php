@@ -158,7 +158,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
                 %s %s",
             implode(', ', $select),
             $where,
-            sizeof($order) > 0 ? 'ORDER BY' : '',
+            count($order) > 0 ? 'ORDER BY' : '',
             implode(', ', $order)
         );
 

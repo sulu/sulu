@@ -78,7 +78,7 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptors()
     {
@@ -86,7 +86,7 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptor($key)
     {
@@ -297,7 +297,7 @@ class TagManager implements TagManagerInterface
             [],
             true,
             false,
-            '',
+            'integer',
             '50px'
         );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
@@ -308,7 +308,7 @@ class TagManager implements TagManagerInterface
             [],
             false,
             true,
-            '',
+            'string',
             '',
             '',
             true,
@@ -349,7 +349,9 @@ class TagManager implements TagManagerInterface
                         self::$userEntityName . '.contact'
                     ),
             ],
-            true
+            true,
+            false,
+            'string'
         );
     }
 }

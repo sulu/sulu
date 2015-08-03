@@ -25,7 +25,7 @@ class HttpCache extends HttpCacheAbstract
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
@@ -39,7 +39,7 @@ class HttpCache extends HttpCacheAbstract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function invalidate(Request $request, $catch = false)
     {
@@ -58,7 +58,7 @@ class HttpCache extends HttpCacheAbstract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function isFreshEnough(Request $request, Response $entry)
     {

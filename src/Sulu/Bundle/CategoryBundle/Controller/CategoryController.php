@@ -359,7 +359,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

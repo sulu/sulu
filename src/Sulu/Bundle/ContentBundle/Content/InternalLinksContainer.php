@@ -126,7 +126,7 @@ class InternalLinksContainer implements ArrayableInterface
     private function loadData()
     {
         $result = [];
-        if ($this->ids !== null && sizeof($this->ids) > 0) {
+        if ($this->ids !== null && count($this->ids) > 0) {
             $this->contentQueryBuilder->init(
                 [
                     'ids' => $this->ids,

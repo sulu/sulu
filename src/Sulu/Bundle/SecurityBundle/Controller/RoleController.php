@@ -73,19 +73,27 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $this->container->getParameter('sulu.model.role.class'),
             'public.id',
             [],
-            false, false, '', '50px'
+            false, false, 'integer', '50px'
         );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
             $this->container->getParameter('sulu.model.role.class'),
-            'public.name'
+            'public.name',
+            [],
+            false,
+            false,
+            'string'
         );
         $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
             'system',
             'system',
             $this->container->getParameter('sulu.model.role.class'),
-            'security.roles.system'
+            'security.roles.system',
+            [],
+            false,
+            false,
+            'string'
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
@@ -489,7 +497,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

@@ -227,19 +227,19 @@ class CodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->assertEquals(4, $response->total);
-        $this->assertEquals(4, sizeof($response->_embedded->codes));
+        $this->assertEquals(4, count($response->_embedded->codes));
 
         $this->assertEquals($this->code1->getCode(), $response->_embedded->codes[0]->code);
-        $this->assertEquals(1, sizeof($response->_embedded->codes[0]->translations));
+        $this->assertEquals(1, count($response->_embedded->codes[0]->translations));
 
         $this->assertEquals($this->code2->getCode(), $response->_embedded->codes[1]->code);
-        $this->assertEquals(1, sizeof($response->_embedded->codes[1]->translations));
+        $this->assertEquals(1, count($response->_embedded->codes[1]->translations));
 
         $this->assertEquals($this->code3->getCode(), $response->_embedded->codes[2]->code);
-        $this->assertEquals(2, sizeof($response->_embedded->codes[2]->translations));
+        $this->assertEquals(2, count($response->_embedded->codes[2]->translations));
 
         $this->assertEquals($this->code4->getCode(), $response->_embedded->codes[3]->code);
-        $this->assertEquals(0, sizeof($response->_embedded->codes[3]->translations));
+        $this->assertEquals(0, count($response->_embedded->codes[3]->translations));
     }
 
     public function testGetAllFiltered()
@@ -248,30 +248,30 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, sizeof($response->_embedded->codes));
+        $this->assertEquals(3, count($response->_embedded->codes));
 
         $this->assertNotNull($response->_embedded->codes[0]->id);
-        $this->assertEquals(1, sizeof($response->_embedded->codes[0]->translations));
+        $this->assertEquals(1, count($response->_embedded->codes[0]->translations));
 
         $this->assertNotNull($response->_embedded->codes[1]->id);
-        $this->assertEquals(1, sizeof($response->_embedded->codes[1]->translations));
+        $this->assertEquals(1, count($response->_embedded->codes[1]->translations));
 
         $this->assertNotNull($response->_embedded->codes[2]->id);
-        $this->assertEquals(0, sizeof($response->_embedded->codes[2]->translations));
+        $this->assertEquals(0, count($response->_embedded->codes[2]->translations));
 
         $this->client->request('GET', '/api/codes?catalogueId= ' . $this->catalogue2->getId());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, sizeof($response->_embedded->codes));
+        $this->assertEquals(3, count($response->_embedded->codes));
 
-        $this->assertEquals(1, sizeof($response->_embedded->codes[0]->translations));
+        $this->assertEquals(1, count($response->_embedded->codes[0]->translations));
         $this->assertNotNull($response->_embedded->codes[0]->id);
 
-        $this->assertEquals(0, sizeof($response->_embedded->codes[1]->translations));
+        $this->assertEquals(0, count($response->_embedded->codes[1]->translations));
         $this->assertNotNull($response->_embedded->codes[1]->id);
 
-        $this->assertEquals(0, sizeof($response->_embedded->codes[2]->translations));
+        $this->assertEquals(0, count($response->_embedded->codes[2]->translations));
         $this->assertNotNull($response->_embedded->codes[2]->id);
     }
 
@@ -281,7 +281,7 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(0, sizeof($response->_embedded->codes));
+        $this->assertEquals(0, count($response->_embedded->codes));
         $this->assertEquals(0, $response->total);
     }
 
@@ -291,7 +291,7 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(0, sizeof($response->_embedded->codes));
+        $this->assertEquals(0, count($response->_embedded->codes));
         $this->assertEquals(0, $response->total);
     }
 
@@ -301,14 +301,14 @@ class CodeControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, sizeof($response->_embedded->codes));
+        $this->assertEquals(2, count($response->_embedded->codes));
         $this->assertEquals(2, $response->total);
 
         $this->client->request('GET', '/api/codes?limit=2&page=2');
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, sizeof($response->_embedded->codes));
+        $this->assertEquals(1, count($response->_embedded->codes));
         $this->assertEquals(1, $response->total);
     }
 
@@ -453,13 +453,13 @@ class CodeControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/codes?flat=true&packageId=' . $this->package1->getId() . '');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(3, sizeof($response->_embedded->codes));
+        $this->assertEquals(3, count($response->_embedded->codes));
         $this->assertEquals(3, $response->total);
 
         $this->client->request('GET', '/api/codes?flat=true&packageId=' . $this->package2->getId() . '');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(1, sizeof($response->_embedded->codes));
+        $this->assertEquals(1, count($response->_embedded->codes));
         $this->assertEquals(1, $response->total);
 
         $this->assertEquals($this->code3->getCode(), $response->_embedded->codes[0]->code);
@@ -473,7 +473,7 @@ class CodeControllerTest extends SuluTestCase
         );
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(3, sizeof($response->_embedded->codes));
+        $this->assertEquals(3, count($response->_embedded->codes));
         $this->assertEquals(3, $response->total);
 
         $this->assertEquals($this->code4->getCode(), $response->_embedded->codes[0]->code);
@@ -537,7 +537,7 @@ class CodeControllerTest extends SuluTestCase
         $this->assertEquals(($request['frontend'] == '0') ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
-        $this->assertEquals(2, sizeof($response->translations));
+        $this->assertEquals(2, count($response->translations));
         $this->assertEquals($request['translations'][0]['value'], $response->translations[0]->value);
         $this->assertEquals($request['translations'][1]['value'], $response->translations[1]->value);
     }
@@ -672,7 +672,7 @@ class CodeControllerTest extends SuluTestCase
         $this->assertEquals(($request['frontend'] == '0') ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
-        $this->assertEquals(3, sizeof($response->translations));
+        $this->assertEquals(3, count($response->translations));
         $values = [
             $request['translations'][0]['value'],
             $request['translations'][1]['value'],
@@ -684,7 +684,7 @@ class CodeControllerTest extends SuluTestCase
         $values = array_diff($values, [$response->translations[1]->value]);
         $this->assertTrue(in_array($response->translations[2]->value, $values));
         $values = array_diff($values, [$response->translations[2]->value]);
-        $this->assertEquals(0, sizeof($values));
+        $this->assertEquals(0, count($values));
     }
 
     public function testPutNotExisting()

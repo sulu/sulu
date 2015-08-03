@@ -46,6 +46,14 @@ define(['config'], function(Config) {
                 ]
             );
 
+            Config.set('suluresource.filters.type.roles', {
+                breadCrumb: [
+                    {title: 'navigation.settings'},
+                    {title: 'security.roles.title', link: 'settings/roles'}
+                ],
+                routeToList: 'settings/roles'
+            });
+
             app.components.addSource('sulusecurity', '/bundles/sulusecurity/js/components');
 
             // list all roles

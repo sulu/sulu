@@ -140,7 +140,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $fieldDescriptors;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setSelectFields($fieldDescriptors)
     {
@@ -156,7 +156,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addSelectField(AbstractFieldDescriptor $fieldDescriptor)
     {
@@ -176,7 +176,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSelectField($fieldName)
     {
@@ -188,7 +188,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasSelectField($name)
     {
@@ -204,7 +204,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setFieldDescriptors(array $fieldDescriptors)
     {
@@ -212,7 +212,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldDescriptor($fieldName)
     {
@@ -224,7 +224,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addSearchField(AbstractFieldDescriptor $fieldDescriptor)
     {
@@ -234,7 +234,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search($search)
     {
@@ -242,7 +242,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
@@ -253,7 +253,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function limit($limit)
     {
@@ -263,7 +263,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLimit()
     {
@@ -271,7 +271,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCurrentPage($page)
     {
@@ -281,7 +281,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCurrentPage()
     {
@@ -289,7 +289,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::CONJUNCTION_AND)
     {
@@ -311,7 +311,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function in(AbstractFieldDescriptor $fieldDescriptor, $values)
     {
@@ -320,7 +320,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND)
     {
@@ -330,7 +330,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor)
     {

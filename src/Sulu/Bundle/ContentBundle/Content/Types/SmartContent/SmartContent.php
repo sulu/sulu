@@ -180,7 +180,7 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultParams()
     {
@@ -220,7 +220,7 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
@@ -253,7 +253,7 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferencedUuids(PropertyInterface $property)
     {
@@ -347,7 +347,7 @@ class SmartContent extends ComplexContentType
 
         $data = $container->getData([$excludeUuid], $loadLimit, $offset);
 
-        if (sizeof($data) > $limit) {
+        if (count($data) > $limit) {
             $container->setHasNextPage(true);
             $data = array_splice($data, 0, $limit);
         } else {

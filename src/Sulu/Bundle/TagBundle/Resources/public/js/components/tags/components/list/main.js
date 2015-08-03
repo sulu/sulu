@@ -11,29 +11,45 @@ define(function() {
 
     'use strict';
 
-    var bindCustomEvents = function(instanceNameToolbar) {
+    var constants = {
+            datagridInstanceName: 'tags',
+            instanceNameToolbar: 'saveToolbar'
+        },
+
+        bindCustomEvents = function() {
             // add clicked
             this.sandbox.on('sulu.toolbar.add', function() {
-                this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.add', {
+                    id: '',
+                    name: '',
+                    changed: '',
+                    created: '',
+                    author: ''
+                });
             }.bind(this));
 
             // delete clicked
             this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.tags.delete', ids);
                 }.bind(this));
             }, this);
 
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('husky.toolbar.' + constants.instanceNameToolbar + '.item.' + postfix, 'delete', false);
+            }.bind(this));
+
             // error - non unique tag name
-            this.sandbox.on('husky.datagrid.data.save.failed', function(resp) {
-                if(!!resp.responseJSON && !!resp.responseJSON.code) {
-                    showErrorLabel.call(this,resp.responseJSON.code);
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.data.save.failed', function(resp) {
+                if (!!resp.responseJSON && !!resp.responseJSON.code) {
+                    showErrorLabel.call(this, resp.responseJSON.code);
                 }
             }, this);
 
             // checkbox clicked
-            this.sandbox.on('husky.datagrid.number.selections', function(number) {
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
             }.bind(this));
@@ -58,7 +74,6 @@ define(function() {
 
     return {
         view: true,
-        instanceNameToolbar: 'saveToolbar',
 
         layout: {
             content: {
@@ -80,7 +95,7 @@ define(function() {
 
         initialize: function() {
             this.render();
-            bindCustomEvents.call(this, this.instanceNameToolbar);
+            bindCustomEvents.call(this);
         },
 
         render: function() {
@@ -92,20 +107,23 @@ define(function() {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
-                    instanceName: this.instanceNameToolbar
+                    instanceName: constants.instanceNameToolbar
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     resultKey: 'tags',
                     searchFields: ['name'],
+                    instanceName: constants.datagridInstanceName,
                     viewOptions: {
                         table: {
                             editable: true,
                             validation: true
                         }
                     }
-                }
+                },
+                'tags',
+                '#tags-list-info'
             );
         }
     };

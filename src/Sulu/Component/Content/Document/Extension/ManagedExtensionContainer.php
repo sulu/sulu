@@ -120,7 +120,7 @@ class ManagedExtensionContainer extends ExtensionContainer
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray()
     {

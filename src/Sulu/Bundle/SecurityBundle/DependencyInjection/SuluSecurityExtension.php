@@ -25,7 +25,7 @@ class SuluSecurityExtension extends Extension
     use PersistenceExtensionTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {

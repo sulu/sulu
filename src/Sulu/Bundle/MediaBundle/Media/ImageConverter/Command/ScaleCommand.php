@@ -74,7 +74,7 @@ class ScaleCommand implements CommandInterface
             }
 
             if ($newHeight > $size->getHeight()) {
-                list($newHeight, $newWidth) = $this->getSizeInSameRatio(
+                list($newWidth, $newHeight) = $this->getSizeInSameRatio(
                     $newWidth,
                     $newHeight,
                     $size->getHeight()

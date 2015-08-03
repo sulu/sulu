@@ -14,6 +14,10 @@ define([
 
     'use strict';
 
+    var constants = {
+        datagridInstanceName: 'roles'
+    };
+
     return {
 
         name: 'Sulu Security Role',
@@ -144,7 +148,7 @@ define([
                     if (!!navigate) {
                         this.sandbox.emit('sulu.router.navigate', 'settings/roles');
                     } else {
-                        this.sandbox.emit('husky.datagrid.record.remove', id);
+                        this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
                     }
                 }.bind(this),
                 error: function() {

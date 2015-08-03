@@ -9,16 +9,21 @@
 
 define([
     'sulusnippet/components/snippet/main',
-    'sulusnippet/model/snippet'
-], function(BaseSnippet, Snippet) {
+    'sulusnippet/model/snippet',
+    'sulucontent/components/copy-locale-overlay/main'
+], function(BaseSnippet, Snippet, CopyLocale) {
 
     'use strict';
 
-    var SnippetForm = function() {
-        BaseSnippet.call(this);
+    var constants = {
+            localizationUrl: '/admin/api/localizations'
+        },
 
-        return this;
-    };
+        SnippetForm = function() {
+            BaseSnippet.call(this);
+
+            return this;
+        };
 
     SnippetForm.prototype = Object.create(BaseSnippet.prototype);
     SnippetForm.prototype.constructor = BaseSnippet;
@@ -69,7 +74,23 @@ define([
                     settings: {
                         options: {
                             dropdownItems: {
-                                delete: {}
+                                delete: {
+                                    options: {
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
+                                        }.bind(this)
+                                    }
+                                },
+                                copyLocale: {
+                                    options: {
+                                        title: this.sandbox.translate('toolbar.copy-locale'),
+                                        callback: function() {
+                                            CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                                this.load(this.data.id, this.options.language, true);
+                                            }.bind(this));
+                                        }.bind(this)
+                                    }
+                                }
                             }
                         }
                     }
@@ -85,7 +106,21 @@ define([
         this.bindModelEvents();
         this.bindCustomEvents();
 
+        this.loadLocalizations();
+
         this.loadData();
+    };
+
+    SnippetForm.prototype.loadLocalizations = function() {
+        this.sandbox.util.load(constants.localizationUrl)
+            .then(function(data) {
+                this.localizations = data._embedded.localizations.map(function(localization) {
+                    return {
+                        id: localization.localization,
+                        title: localization.localization
+                    };
+                });
+            }.bind(this));
     };
 
     SnippetForm.prototype.bindCustomEvents = function() {
@@ -117,11 +152,6 @@ define([
         this.sandbox.on('sulu.snippets.snippet.save-error', function() {
             this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
             this.setHeaderBar(false);
-        }, this);
-
-        // content delete
-        this.sandbox.on('sulu.toolbar.delete', function() {
-            this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
         }, this);
     };
 
@@ -171,4 +201,5 @@ define([
     };
 
     return new SnippetForm();
-});
+})
+;

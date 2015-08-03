@@ -215,7 +215,7 @@ class ListQueryBuilder
 
         $fieldsWhere = array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
 
-        if ($fieldsWhere != null && sizeof($fieldsWhere) >= 0) {
+        if ($fieldsWhere != null && count($fieldsWhere) >= 0) {
             foreach ($fieldsWhere as $field) {
                 $this->performSelectFromField($field, $prefix);
             }
@@ -255,11 +255,11 @@ class ListQueryBuilder
         }
 
         // If field is delimited and is a Relation
-        if (sizeof($fieldParts) >= 2 && $this->isRelation($fieldParts[0])) {
+        if (count($fieldParts) >= 2 && $this->isRelation($fieldParts[0])) {
             $this->joins .= $this->generateJoins($fieldParts, $prefix);
             if (in_array($field, $this->fields)) {
                 // last element is column name and next-to-last is the associationPrefix
-                $i = sizeof($fieldParts) - 1;
+                $i = count($fieldParts) - 1;
 
                 // {associationPrefix}.{columnName} {alias}
                 $parent = $fieldParts[$i - 1];
@@ -316,7 +316,7 @@ class ListQueryBuilder
     {
         $i = 0;
         $result = '';
-        while ($i <= sizeof($fieldParts) - 2) {
+        while ($i <= count($fieldParts) - 2) {
             if (!in_array($fieldParts[$i], $this->prefixes)) {
                 $result .= $this->generateJoin(
                     ($i == 0) ? $prefix : $fieldParts[$i - 1],
@@ -391,7 +391,7 @@ class ListQueryBuilder
     {
         $result = '';
         // Only return where clause if there actually is some data
-        if (sizeof($this->where) > 0 || sizeof($this->searchFields) > 0) {
+        if (count($this->where) > 0 || count($this->searchFields) > 0) {
             $wheres = [];
             $searches = [];
 
@@ -405,10 +405,10 @@ class ListQueryBuilder
             foreach ($fields as $key) {
                 $keys = explode('_', $key);
                 $prefixActual = $prefix;
-                if (sizeof($keys) == 1) {
+                if (count($keys) == 1) {
                     $col = $keys[0];
                 } else {
-                    $i = sizeof($keys);
+                    $i = count($keys);
                     $prefixActual = $keys[$i - 2];
                     $col = $keys[$i - 1];
                 }
@@ -459,7 +459,7 @@ class ListQueryBuilder
     {
         $result = '';
         // If sorting is defined
-        if ($this->sorting != null && sizeof($this->sorting) > 0) {
+        if ($this->sorting != null && count($this->sorting) > 0) {
             $orderBy = '';
             // TODO OrderBy relations translations_value
             foreach ($this->sorting as $col => $dir) {

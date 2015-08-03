@@ -45,7 +45,7 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRepository()
     {

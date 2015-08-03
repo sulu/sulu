@@ -14,23 +14,30 @@ require.config({
     }
 });
 
-define({
+define(['config'], function(Config) {
 
-    name: "SuluTagBundle",
+    'use strict';
 
-    initialize: function(app) {
+    return {
 
-        'use strict';
+        name: "SuluTagBundle",
 
-        var sandbox = app.sandbox;
+        initialize: function(app) {
 
-        app.components.addSource('sulutag', '/bundles/sulutag/js/components');
+            var sandbox = app.sandbox;
 
-        sandbox.mvc.routes.push({
-             route: 'settings/tags',
-             callback: function(){
-                 return '<div data-aura-component="tags@sulutag" data-aura-display="list"/>';
-             }
-        });
-    }
+            Config.set('suluresource.filters.type.tags', {
+                routeToList: 'settings/tags'
+            });
+
+            app.components.addSource('sulutag', '/bundles/sulutag/js/components');
+
+            sandbox.mvc.routes.push({
+                route: 'settings/tags',
+                callback: function() {
+                    return '<div data-aura-component="tags@sulutag" data-aura-display="list"/>';
+                }
+            });
+        }
+    };
 });

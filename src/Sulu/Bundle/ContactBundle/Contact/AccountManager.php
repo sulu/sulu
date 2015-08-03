@@ -265,7 +265,7 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deleteAllRelations($entity)
     {

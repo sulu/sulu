@@ -358,6 +358,24 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals(409, $response->getStatusCode());
     }
 
+    public function testCopyLocale()
+    {
+        $snippet = $this->documentManager->create('snippet');
+        $snippet->setStructureType('hotel');
+        $snippet->setTitle('Hotel de');
+        $this->documentManager->persist($snippet, 'de');
+        $this->documentManager->flush();
+
+        $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
+        $this->assertEquals('Hotel de', $newPage->getTitle());
+
+        $newPage = $this->documentManager->find($snippet->getUuid(), 'de');
+        $this->assertEquals('Hotel de', $newPage->getTitle());
+    }
+
     private function loadFixtures()
     {
         // HOTELS
