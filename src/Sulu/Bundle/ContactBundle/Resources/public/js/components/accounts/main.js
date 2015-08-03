@@ -8,6 +8,7 @@
  */
 
 define([
+    'services/sulucontact/account-manager',
     'sulucontact/models/account',
     'sulucontact/models/contact',
     'sulucontact/models/accountContact',
@@ -17,6 +18,7 @@ define([
     'sulucategory/model/category',
     'accountsutil/delete-dialog'
 ], function(
+    AccountManager,
     Account,
     Contact,
     AccountContact,
@@ -143,15 +145,11 @@ define([
             this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE', action);
         },
 
-        processAjaxForDocuments: function(mediaIds, accountId, type, action){
+        processAjaxForDocuments: function(mediaIds, accountId, type, action) {
+            var requests=[], medias=[], url;
 
-            var requests=[],
-                medias=[],
-                url;
-
-            if(mediaIds.length > 0) {
+            if(!!mediaIds.length) {
                 this.sandbox.util.each(mediaIds, function(index, id) {
-
                     if(type === 'DELETE') {
                         url = '/admin/api/accounts/' + accountId + '/medias/' + id;
                     } else if(type === 'POST') {
@@ -172,10 +170,8 @@ define([
 
                 this.sandbox.util.when.apply(null, requests).then(function() {
                     if(type === 'DELETE') {
-                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.removed', medias);
                     } else if(type === 'POST') {
-                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
                     }
                     this.afterSaveAction(action, accountId, false);
@@ -211,22 +207,6 @@ define([
             }.bind(this), '#main-contact');
         },
 
-        /**
-         * loads contact by id
-         */
-        getAccount: function(id) {
-            this.account = new Account({id: id});
-            this.account.fetch({
-                success: function(model) {
-                    this.account = model;
-                    this.dfdAccount.resolve();
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log('error while fetching contact');
-                }.bind(this)
-            });
-        },
-
         // sets main contact
         setMainContact: function(id) {
             // set mainContact
@@ -243,7 +223,8 @@ define([
             // set id to contacts id;
             var accountContact = AccountContact.findOrCreate({
                 id: id,
-                contact: Contact.findOrCreate({id: id}), account: this.account});
+                contact: Contact.findOrCreate({id: id}), account: this.account
+            });
 
             if (!!position) {
                 accountContact.set({position: position});
@@ -266,23 +247,7 @@ define([
          * @param ids
          */
         removeAccountContacts: function(ids) {
-            // show warning
-            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
-                // get ids of selected contacts
-                var accountContact;
-                this.sandbox.util.foreach(ids, function(id) {
-                    // set account and contact as well as  id to contacts id(so that request is going to be sent)
-                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
-                    accountContact.destroy({
-                        success: function() {
-                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);
-                        }.bind(this),
-                        error: function() {
-                            this.sandbox.logger.log("error while deleting AccountContact");
-                        }.bind(this)
-                    });
-                }.bind(this));
-            }.bind(this));
+            AccountManager.removeAccountContacts(ids);
         },
 
         // show confirmation and delete account
@@ -293,29 +258,12 @@ define([
         // saves an account
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
-
-            this.account.get('categories').reset();
-            this.sandbox.util.foreach(data.categories, function(id){
-                var category = Category.findOrCreate({id: id});
-                this.account.get('categories').add(category);
+            AccountManager.save(data).then(function(account) {
+                if (!!data.id) {
+                    this.sandbox.emit('sulu.contacts.accounts.saved', account);
+                }
+                this.afterSaveAction(action, account.id, !account.id);
             }.bind(this));
-            delete data.categories;
-
-            this.account.set(data);
-
-            this.account.save(null, {
-                // on success save contacts id
-                success: function(response) {
-                    var model = response.toJSON();
-                    if (!!data.id) {
-                        this.sandbox.emit('sulu.contacts.accounts.saved', model);
-                    }
-                    this.afterSaveAction(action, model.id, !data.id);
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving profile");
-                }.bind(this)
-            });
         },
 
         load: function(id) {

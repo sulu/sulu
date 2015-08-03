@@ -77,9 +77,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
 
-            this.instanceNameTypeOverlay = 'accountCategories';
-            this.contactBySystemURL = 'api/contacts?bySystem=true';
-
             this.render();
             this.setHeaderBar(true);
             this.listenForChange();

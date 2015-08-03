@@ -17,7 +17,9 @@ require.config({
 
         'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/validation/iban-input'
+        'type/iban-input': '../../sulucontact/js/validation/iban-input',
+
+        'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager'
     },
     shim: {
         'vendor/iban-converter': {
