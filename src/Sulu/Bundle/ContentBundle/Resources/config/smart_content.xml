@@ -6,11 +6,11 @@
         <parameter key="sulu_content.smart_content.data_provider_pool.class">Sulu\Component\SmartContent\DataProviderPool</parameter>
 
         <!-- content provider -->
-        <parameter key="sulu_content.smart_content.data_provider.content.query_builder.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder</parameter>
-        <parameter key="sulu_content.smart_content.data_provider.content.class">Sulu\Bundle\ContentBundle\Content\SmartContent\ContentDataProvider</parameter>
+        <parameter key="sulu_content.smart_content.data_provider.content.query_builder.class">Sulu\Component\Content\SmartContent\QueryBuilder</parameter>
+        <parameter key="sulu_content.smart_content.data_provider.content.class">Sulu\Component\Content\SmartContent\ContentDataProvider</parameter>
 
         <!-- content type -->
-        <parameter key="sulu_content.smart_content.content_type.class">Sulu\Bundle\ContentBundle\Content\SmartContent\SmartContentType</parameter>
+        <parameter key="sulu_content.smart_content.content_type.class">Sulu\Component\SmartContent\ContentType</parameter>
     </parameters>
     <services>
         <!-- data provider -->

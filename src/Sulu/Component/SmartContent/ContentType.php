@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\SmartContent;
+namespace Sulu\Component\SmartContent;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Content type for smart selection
  */
-class SmartContentType extends ComplexContentType
+class ContentType extends ComplexContentType
 {
     /**
      * @var string
