@@ -9,8 +9,8 @@
 
 define([
     'mvc/relationalstore',
-    'text!sulucontact/components/accounts/contacts/contact-relation.form.html',
-    'text!sulucontact/components/accounts/contacts/contact.form.html',
+    'text!sulucontact/components/accounts/edit/contacts/contact-relation.form.html',
+    'text!sulucontact/components/accounts/edit/contacts/contact.form.html',
     'config',
     'widget-groups'
 ], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups) {

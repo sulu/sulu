@@ -45,7 +45,7 @@ define([
                 this.renderForm();
             } else if (this.options.display === 'contacts') {
                 this.renderComponent(
-                    'accounts/',
+                    'accounts/edit/',
                     this.options.display,
                     'accounts-form-container', {}
                 );
@@ -422,7 +422,7 @@ define([
                 this.account.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'accounts/form@sulucontact', options: { el: $form, data: model.toJSON()}}
+                            {name: 'accounts/edit/form@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
                         dfd.resolve();
                     }.bind(this),
