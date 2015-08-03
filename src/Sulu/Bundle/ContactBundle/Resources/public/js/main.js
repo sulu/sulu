@@ -111,7 +111,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/add',
                 callback: function(content) {
-                    return '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form" />';
+                    return '<div data-aura-component="contacts/edit@sulucontact" data-aura-display="content" data-aura-content="form" />';
                 }
             });
 
@@ -119,7 +119,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/edit::id/:content',
                 callback: function(id, content) {
-                    return '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
+                    return '<div data-aura-component="contacts/edit@sulucontact" data-aura-display="content" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
                 }
             });
 

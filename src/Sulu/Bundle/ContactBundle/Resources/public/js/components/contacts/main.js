@@ -216,7 +216,7 @@ define([
             var $list = this.sandbox.dom.createElement('<div id="contacts-list-container"/>');
             this.html($list);
             this.sandbox.start([
-                {name: 'contacts/components/list@sulucontact', options: { el: $list}}
+                {name: 'contacts/list@sulucontact', options: { el: $list}}
             ]);
         },
 
@@ -233,7 +233,7 @@ define([
                 this.contact.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'contacts/components/form@sulucontact', options: { el: $form, data: model.toJSON()}}
+                            {name: 'contacts/edit/form@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
                     }.bind(this),
                     error: function() {
@@ -242,7 +242,7 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: $form, data: this.contact.toJSON()}}
+                    {name: 'contacts/edit/form@sulucontact', options: { el: $form, data: this.contact.toJSON()}}
                 ]);
             }
         },
