@@ -15,7 +15,8 @@ define(['app-config', 'config'], function(AppConfig, Config) {
             filterListUrl: 'resource/filters/',
             manageFilters: 'manage',
             filtersUrl: 'api/filters?flat=true&context=',
-            filterUrl: 'resource/filters/'
+            filterUrl: 'resource/filters/',
+            toolbarSelectButtonId: 'filters'
         },
 
         /**
@@ -101,7 +102,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          */
         getFilterDropdown = function(context, dataGridInstanceName, url) {
             return {
-                id: 'filters',
+                id: constants.toolbarSelectButtonId,
                 icon: 'filter',
                 title: this.sandbox.translate('resource.filter'),
                 group: 2,
@@ -113,6 +114,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                     resultKey: 'filters',
                     titleAttribute: 'name',
                     idAttribute: 'id',
+                    preSelected: !!this.filter ? parseInt(this.filter.id) : null,
                     translate: false,
                     languageNamespace: 'toolbar.',
                     markable: true,
@@ -193,9 +195,6 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 gridOptions.url = url + 'filter=' + filter.id;
 
                 this.sandbox.once('husky.datagrid.' + gridOptions.instanceName + '.loaded', updateFilterResult.bind(this));
-
-                // TODO show result component for initial load
-                // TODO check unset of filter and also setting
             }
         },
 
