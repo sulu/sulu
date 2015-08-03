@@ -53,6 +53,7 @@
  * @params {Boolean} [options.hideCategories] if true categories hidden
  * @params {Boolean} [options.hideTags] if true tags hidden
  * @params {Boolean} [options.hideSortBy] if true sort by hidden
+ * @params {Boolean} [options.hidePresentAs] if true present-as hidden
  * @params {Boolean} [options.hideLimit] if true limit hidden
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
@@ -133,6 +134,7 @@ define([], function() {
             hideTags: false,
             hideSortBy: false,
             hideLimit: false,
+            hidePresentAs: false,
             title: 'Smart-Content'
         },
 
@@ -871,7 +873,7 @@ define([], function() {
             this.$overlayContent.append('<div class="clear"></div>');
 
             // only if data exists
-            if (!!this.options.presentAs && this.options.presentAs.length > 0) {
+            if (!this.options.hidePresentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
                 this.$overlayContent.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));

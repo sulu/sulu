@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\SmartContent;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\SmartContent\Configuration\CategoriesConfiguration;
 use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -59,7 +58,7 @@ class ContentDataProvider implements DataProviderInterface
     public function getConfiguration(array $propertyParameter)
     {
         if (!$this->configuration) {
-            return $this->initConfiguration($propertyParameter);
+            return $this->initConfiguration();
         }
 
         return $this->configuration;
@@ -68,26 +67,23 @@ class ContentDataProvider implements DataProviderInterface
     /**
      * Initiate configuration
      *
-     * @param array $propertyParameter
-     *
      * @return ProviderConfigurationInterface
      */
-    private function initConfiguration(array $propertyParameter)
+    private function initConfiguration()
     {
         // TODO
         // * datasource configuration
-        // * categories root
         // * sorting
-        // * present as
 
         $this->configuration = new ProviderConfiguration();
-        $this->configuration->setDatasource(new ComponentConfiguration('', array()));
         $this->configuration->setTags(true);
-        $this->configuration->setCategories(new CategoriesConfiguration());
-        $this->configuration->setSorting(array());
+        $this->configuration->setCategories(true);
         $this->configuration->setLimit(true);
-        $this->configuration->setPresentAs(array());
+        $this->configuration->setPresentAs(true);
         $this->configuration->setPaginated(true);
+
+        $this->configuration->setDatasource(new ComponentConfiguration('', array()));
+        $this->configuration->setSorting([]);
 
         return $this->configuration;
     }
@@ -99,7 +95,6 @@ class ContentDataProvider implements DataProviderInterface
     {
         return [
             'properties' => new PropertyParameter('properties', [], 'collection'),
-            'present_as' => new PropertyParameter('present_as', [], 'collection'),
         ];
     }
 

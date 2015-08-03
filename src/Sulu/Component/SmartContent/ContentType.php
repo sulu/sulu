@@ -15,8 +15,6 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\SmartContent\DataProviderInterface;
-use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -154,14 +152,26 @@ class ContentType extends ComplexContentType
      */
     public function getDefaultParams(PropertyInterface $property = null)
     {
+        $provider = $this->getProvider($property);
+        $configuration = $provider->getConfiguration(array());
+
+        $defaults = array(
+            'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+            'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+            'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
+            'present_as' => new PropertyParameter('present_as', [], 'collection'),
+            'has_datasource' => $configuration->hasDatasource(),
+            'has_tags' => $configuration->hasTags(),
+            'has_categories' => $configuration->hasCategories(),
+            'has_sorting' => $configuration->hasSorting(),
+            'has_limit' => $configuration->hasLimit(),
+            'has_present_as' => $configuration->hasPresentAs(),
+        );
 
         return array_merge(
             parent::getDefaultParams(),
-            array(
-                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
-            ),
-            $this->getProvider($property)->getDefaultPropertyParameter()
+            $defaults,
+            $provider->getDefaultPropertyParameter()
         );
     }
 
@@ -236,6 +246,7 @@ class ContentType extends ComplexContentType
         // append view data
         $filters['page'] = $page;
         $filters['hasNextPage'] = $provider->getHasNextPage();
+        $filters['paginated'] = $configuration->getPaginated();
         $property->setValue($filters);
 
         // save result in cache
@@ -264,6 +275,7 @@ class ContentType extends ComplexContentType
                 'limitResult' => null,
                 'page' => null,
                 'hasNextPage' => null,
+                'paginated' => false,
             ],
             $config
         );
