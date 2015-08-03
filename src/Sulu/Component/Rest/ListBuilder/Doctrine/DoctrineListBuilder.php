@@ -241,7 +241,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $fields = array_merge(
             $this->searchFields,
             $this->sortFields,
-            $this->expressionFields
+            $this->getUniqueExpressionFieldDescriptors($this->expressions)
         );
 
         if ($onlyReturnFilterFields !== true) {
@@ -463,13 +463,18 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function getUniqueExpressionFieldDescriptors(array $expressions)
     {
-        $descriptors = [];
-        $uniqueNames = array_unique($this->getAllFieldNames($expressions));
-        foreach ($uniqueNames as $uniqueName) {
-            $descriptors[] = $this->fieldDescriptors[$uniqueName];
+        if (count($this->expressionFields) === 0) {
+            $descriptors = [];
+            $uniqueNames = array_unique($this->getAllFieldNames($expressions));
+            foreach ($uniqueNames as $uniqueName) {
+                $descriptors[] = $this->fieldDescriptors[$uniqueName];
+            }
+
+            $this->expressionFields = $descriptors;
+            return $descriptors;
         }
 
-        return $descriptors;
+        return $this->expressionFields;
     }
 
     /**
