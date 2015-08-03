@@ -41,21 +41,8 @@ define([
         renderByDisplay: function() {
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'form') {
-                this.renderForm();
-            } else if (this.options.display === 'contacts') {
-                this.renderComponent(
-                    'accounts/edit/',
-                    this.options.display,
-                    'accounts-form-container', {}
-                );
-            } else if (this.options.display === 'documents-tab') {
-                this.renderComponent(
-                    '',
-                    this.options.display,
-                    'documents-form',
-                    {type: 'account'}
-                );
+            } else if (this.options.display === 'edit') {
+                this.renderEdit();
             } else {
                 throw 'display type wrong';
             }
@@ -307,13 +294,14 @@ define([
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
-            this.account.set(data);
-
             this.account.get('categories').reset();
-            this.sandbox.util.foreach(data.categories,function(id){
+            this.sandbox.util.foreach(data.categories, function(id){
                 var category = Category.findOrCreate({id: id});
                 this.account.get('categories').add(category);
             }.bind(this));
+            delete data.categories;
+
+            this.account.set(data);
 
             this.account.save(null, {
                 // on success save contacts id
@@ -331,23 +319,19 @@ define([
         },
 
         load: function(id) {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
         loadContact: function(id) {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
         },
 
         add: function() {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
         },
 
         delAccounts: function(ids) {
             if (ids.length < 1) {
-                // TODO: translations
                 this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
                 return;
             }
@@ -367,82 +351,32 @@ define([
             ]);
         },
 
-        /**
-         * Adds a container with the given id and starts a component with the given name in it
-         * @param path path to component
-         * @param componentName
-         * @param containerId
-         * @param params additional params
-         * @returns {*}
-         * @param namespace
-         */
-        renderComponent: function(path, componentName, containerId, params, namespace) {
-            var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
-                dfd = this.sandbox.data.deferred();
-
-            this.html($form);
-
-            if (!!this.options.id) {
-                this.account = new Account({id: this.options.id});
-                this.account.fetch({
-                    success: function(model) {
-                        this.account = model;
-                        this.sandbox.start([
-                            {
-                                name: path + componentName + '@' + (!!namespace ? namespace : 'sulucontact'),
-                                options: {
-                                    el: $form,
-                                    data: model.toJSON(),
-                                    params: !!params ? params : {}
-                                }
-                            }
-                        ]);
-                        dfd.resolve();
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
-                        dfd.reject();
-                    }.bind(this)
-                });
-            }
-            return dfd.promise();
-        },
-
-        renderForm: function() {
-            // load data and show form
+        renderEdit: function() {
             this.account = new Account();
-
-            var accTypeId,
-                $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
-                dfd = this.sandbox.data.deferred();
-            this.html($form);
+            var $edit = this.sandbox.dom.createElement('<div id="accounts-edit-container"/>'),
+                startComponent = function(model) {
+                    this.sandbox.start([{
+                        name: 'accounts/edit@sulucontact',
+                        options: {
+                            el: $edit,
+                            data: model.toJSON(),
+                            id: this.options.id
+                        }
+                    }]);
+                };
+            this.html($edit);
 
             if (!!this.options.id) {
                 this.account = new Account({id: this.options.id});
                 this.account.fetch({
-                    success: function(model) {
-                        this.sandbox.start([
-                            {name: 'accounts/edit/form@sulucontact', options: { el: $form, data: model.toJSON()}}
-                        ]);
-                        dfd.resolve();
-                    }.bind(this),
+                    success: startComponent.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching contact");
-                        dfd.reject();
                     }.bind(this)
                 });
             } else {
-                this.renderCreateForm(dfd, $form);
+                startComponent(this.account.toJSON());
             }
-            return dfd.promise();
-        },
-
-        renderCreateForm: function(dfd, $form) {
-            this.sandbox.start([
-                {name: 'accounts/form@sulucontact', options: {el: $form, data: this.account.toJSON()}}
-            ]);
-
-            dfd.resolve();
         },
 
         showDeleteConfirmation: function(ids) {
