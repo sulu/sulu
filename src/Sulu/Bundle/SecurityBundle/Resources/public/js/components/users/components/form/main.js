@@ -234,11 +234,9 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         },
 
         bindFormEvents: function() {
-            /*
             this.sandbox.dom.one(this.$el, 'focus', function() {
                 this.sandbox.dom.val('input[type="password"]', '');
             }.bind(this), 'input[type="password"]');
-            */
 
             this.sandbox.dom.one(this.$el, 'keyup', function() {
                 this.sandbox.dom.data('#password', 'changed', true);
