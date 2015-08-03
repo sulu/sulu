@@ -20,13 +20,11 @@ class ContactContentNavigationProvider implements ContentNavigationProviderInter
     {
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
-        $details->setComponent('contacts@sulucontact');
-        $details->setComponentOptions(['display' => 'form']);
+        $details->setComponent('contacts/edit/details@sulucontact');
 
         $documents = new ContentNavigationItem('content-navigation.contacts.documents');
         $documents->setAction('documents');
-        $documents->setComponent('contacts@sulucontact');
-        $documents->setComponentOptions(['display' => 'documents-tab']);
+        $documents->setComponent('documents-tab@sulucontact');
         $documents->setDisplay(['edit']);
 
         return [$details, $documents];

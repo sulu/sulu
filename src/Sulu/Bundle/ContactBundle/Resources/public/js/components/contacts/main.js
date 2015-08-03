@@ -29,10 +29,8 @@ define([
 
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'form') {
-                this.renderForm();
-            } else if (this.options.display === 'documents-tab') {
-                this.renderComponent('', this.options.display, 'documents-form', {type: 'contact'});
+            } else if (this.options.display === 'edit') {
+                this.renderEdit();
             } else {
                 throw 'display type wrong';
             }
@@ -220,87 +218,35 @@ define([
             ]);
         },
 
-        renderForm: function() {
+        renderEdit: function() {
             // load data and show form
             this.contact = new Contact();
 
-            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
-            this.html($form);
+            var $edit = this.sandbox.dom.createElement('<div id="contacts-edit-container"/>'),
+                startComponent = function(model) {
+                    this.sandbox.start([{
+                        name: 'contacts/edit@sulucontact',
+                        options: {
+                            el: $edit,
+                            data: model.toJSON(),
+                            id: this.options.id,
+                            params: {type: 'contact'} //required for documents-tab
+                        }
+                    }]);
+                };
+            this.html($edit);
 
             if (!!this.options.id) {
                 this.contact = new Contact({id: this.options.id});
-                //contact = this.getModel(this.options.id);
                 this.contact.fetch({
-                    success: function(model) {
-                        this.sandbox.start([
-                            {name: 'contacts/edit/form@sulucontact', options: { el: $form, data: model.toJSON()}}
-                        ]);
-                    }.bind(this),
+                    success: startComponent.bind(this),
                     error: function() {
                         this.sandbox.logger.log('error while fetching contact');
                     }.bind(this)
                 });
             } else {
-                this.sandbox.start([
-                    {name: 'contacts/edit/form@sulucontact', options: { el: $form, data: this.contact.toJSON()}}
-                ]);
+                startComponent.call(this, this.contact);
             }
-        },
-
-        /**
-         * Adds a container with the given id and starts a component with the given name in it
-         * @param path path to component
-         * @param componentName
-         * @param containerId
-         * @param params additional params
-         * @returns {*}
-         */
-        renderComponent: function(path, componentName, containerId, params) {
-            var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
-                dfd = this.sandbox.data.deferred();
-
-            this.html($form);
-
-            if (!!this.options.id) {
-                this.contact = new Contact({id: this.options.id});
-                this.contact.fetch({
-                    success: function(model) {
-                        this.contact = model;
-                        this.sandbox.start([
-                            {
-                                name: path + componentName + '@sulucontact',
-                                options: {
-                                    el: $form,
-                                    data: model.toJSON(),
-                                    params: !!params ? params : {}
-                                }
-                            }
-                        ]);
-                        dfd.resolve();
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
-                        dfd.reject();
-                    }.bind(this)
-                });
-            }
-            return dfd.promise();
-        },
-
-        /**
-         * loads contact by id
-         */
-        getContact: function(id) {
-            this.contact = new Contact({id: id});
-            this.contact.fetch({
-                success: function(model) {
-                    this.contact = model;
-                    this.dfdContact.resolve();
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log('error while fetching contact');
-                }.bind(this)
-            });
         },
 
         /**
