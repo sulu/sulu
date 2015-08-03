@@ -34,7 +34,7 @@ class AccountContentNavigationProvider implements ContentNavigationProviderInter
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');
         $documents->setComponent('accounts@sulucontact');
-        $documents->setComponentOptions(['display' => 'documents']);
+        $documents->setComponentOptions(['display' => 'documents-tab']);
         $documents->setDisplay(['edit']);
 
         return [$details, $contacts, $documents];

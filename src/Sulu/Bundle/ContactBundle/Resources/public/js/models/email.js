@@ -10,19 +10,19 @@
 define([
     'mvc/relationalmodel',
     'mvc/hasone',
-    'sulucontact/model/faxType'
-], function(RelationalModel, HasOne, FaxType) {
+    'sulucontact/models/emailType'
+], function(RelationalModel, HasOne, EmailType) {
     return RelationalModel({
         urlRoot: '',
         defaults: {
             id: null,
-            fax: '',
-            faxType: null
+            email: '',
+            emailType: null
         }, relations: [
             {
                 type: HasOne,
-                key: 'faxType',
-                relatedModel: FaxType
+                key: 'emailType',
+                relatedModel: EmailType
             }
         ]
     });

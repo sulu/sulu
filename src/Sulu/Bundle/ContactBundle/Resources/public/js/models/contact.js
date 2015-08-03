@@ -10,41 +10,50 @@
 define([
     'mvc/relationalmodel',
     'mvc/hasmany',
-    'sulucontact/model/account',
-    'sulucontact/model/email',
-    'sulucontact/model/phone',
-    'sulucontact/model/address',
-    'sulucontact/model/url',
-    'sulucontact/model/note',
     'mvc/hasone',
-    'sulucontact/model/accountContact',
-    'sulucontact/model/bankAccount',
-    'sulucontact/model/contact',
-    'sulucontact/model/accountMedia',
+    'sulucontact/models/account',
+    'sulucontact/models/email',
+    'sulucontact/models/phone',
+    'sulucontact/models/address',
+    'sulucontact/models/note',
+    'sulucontact/models/accountContact',
+    'sulucontact/models/contactMedia',
+    'sulucontact/models/bankAccount',
     'sulucategory/model/category'
-], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountContact, BankAccount, Contact, Media, Category) {
+], function(RelationalModel, HasMany, HasOne, Account, Email, Phone, Address, Note, AccountContact, Media, BankAccount, Category) {
 
     'use strict';
 
     return RelationalModel({
-        urlRoot: '/admin/api/accounts',
+        urlRoot: '/admin/api/contacts',
         defaults: function() {
             return {
                 id: null,
-                name: '',
-                corporation: '',
+                firstName: '',
+                middleName: '',
+                lastName: '',
+                birthday: '',
+                title: '',
+                position: '',
+                account: null,
                 emails: [],
-                phones: [],
-                addresses: [],
-                notes: [],
-                bankAccount: [],
-                urls: [],
                 accountContacts: [],
-                mainContact: null,
+                phones: [],
+                notes: [],
+                addresses: [],
+                formOfAddress: '',
+                salutation: '',
+                disabled: false,
                 medias: [],
+                bankAccount: [],
                 categories: []
             };
         }, relations: [
+            {
+                type: HasOne,
+                key: 'account',
+                relatedModel: Account
+            },
             {
                 type: HasMany,
                 key: 'emails',
@@ -62,13 +71,8 @@ define([
             },
             {
                 type: HasMany,
-                key: 'urls',
-                relatedModel: Url
-            },
-            {
-                type: HasMany,
-                key: 'bankAccounts',
-                relatedModel: BankAccount
+                key: 'accountContacts',
+                relatedModel: AccountContact
             },
             {
                 type: HasMany,
@@ -77,17 +81,13 @@ define([
             },
             {
                 type: HasMany,
-                key: 'accountContacts',
-                relatedModel: AccountContact
-            },
-            {
-                key: 'mainContact',
-                relatedModel: Contact
+                key: 'medias',
+                relatedModel: Media
             },
             {
                 type: HasMany,
-                key: 'medias',
-                relatedModel: Media
+                key: 'bankAccounts',
+                relatedModel: BankAccount
             },
             {
                 type: HasMany,

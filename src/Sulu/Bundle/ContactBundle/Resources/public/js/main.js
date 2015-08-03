@@ -10,14 +10,14 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'type/bic-input': '../../sulucontact/js/input-type/bic-input',
-        'type/vat-input': '../../sulucontact/js/input-type/vat-input',
+        'type/bic-input': '../../sulucontact/js/validation/types/bicInput',
+        'type/vat-input': '../../sulucontact/js/validation/types/vatInput',
         'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
         'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
 
-        'aura_extensions/iban': '../../sulucontact/js/aura_extensions/iban',
+        'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/input-type/iban-input'
+        'type/iban-input': '../../sulucontact/js/validation/types/ibanInput'
     },
     shim: {
         'vendor/iban-converter': {
@@ -26,7 +26,7 @@ require.config({
     }
 });
 
-define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
+define(['config', 'extensions/iban'], function(Config, IbanExtension) {
 
     'use strict';
 

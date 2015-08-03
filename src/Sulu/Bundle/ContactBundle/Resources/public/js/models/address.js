@@ -10,8 +10,8 @@
 define([
     'mvc/relationalmodel',
     'mvc/hasone',
-    'sulucontact/model/country',
-    'sulucontact/model/addressType'
+    'sulucontact/models/country',
+    'sulucontact/models/addressType'
 ], function(RelationalModel, HasOne, Country, AddressType) {
     return RelationalModel({
         urlRoot: '',

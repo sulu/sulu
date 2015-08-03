@@ -8,9 +8,9 @@
  */
 
 define([
-    'sulucontact/model/contact',
-    'sulucontact/model/title',
-    'sulucontact/model/position',
+    'sulucontact/models/contact',
+    'sulucontact/models/title',
+    'sulucontact/models/position',
     'sulucategory/model/category',
     'contactsutil/delete-dialog'
 ], function(Contact, Title, Position, Category, DeleteDialog) {
@@ -31,7 +31,7 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
-            } else if (this.options.display === 'documents') {
+            } else if (this.options.display === 'documents-tab') {
                 this.renderComponent('', this.options.display, 'documents-form', {type: 'contact'});
             } else {
                 throw 'display type wrong';
