@@ -471,6 +471,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
 
             $this->expressionFields = $descriptors;
+
             return $descriptors;
         }
 
