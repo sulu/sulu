@@ -87,7 +87,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }.bind(this));
 
             this.sandbox.on('sulu.header.language-changed', function(locale) {
-                this.load(this.options.id, locale);
+                this.load(this.options.id, locale.id);
             }, this);
         },
 

@@ -111,9 +111,7 @@ define(['app-config'], function(AppConfig) {
                     resultKey: 'filters',
                     titleAttribute: 'name',
                     idAttribute: 'id',
-                    languageNamespace: 'toolbar.',
                     markSelected: true,
-                    changeButton: true,
                     callback: function(item) {
                         applyFilterToList.call(this, item, dataGridInstanceName, context);
                     }.bind(this)
@@ -225,7 +223,7 @@ define(['app-config'], function(AppConfig) {
                     return;
                 }
 
-                this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
+                this.sandbox.on('sulu.list-toolbar.extend', extendToolbar.bind(this));
                 this.sandbox.on('sulu.router.navigate', resetOnNavigate.bind(this));
                 this.sandbox.on('sulu.list.preload', appendFilterToUrl.bind(this));
             });
