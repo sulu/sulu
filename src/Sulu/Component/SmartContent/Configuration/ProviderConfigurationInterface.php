@@ -10,11 +10,21 @@
 
 namespace Sulu\Component\SmartContent\Configuration;
 
+use Sulu\Component\Content\Compat\PropertyParameter;
+
 /**
  * Provides configuration for smart-content.
  */
 interface ProviderConfigurationInterface
 {
+    /**
+     * Returns TRUE if datasource should be displayed.
+     * Configuration will be returned from 'getDatasource()'
+     *
+     * @return bool
+     */
+    public function hasDatasource();
+
     /**
      * Returns configuration for datasource.
      * If NULL no datasource will be displayed.
@@ -24,44 +34,46 @@ interface ProviderConfigurationInterface
     public function getDatasource();
 
     /**
-     * Indicates filter by tags is possible.
-     * If FALSE no tags will be displayed.
+     * Returns TRUE if tags should be displayed.
      *
      * @return boolean
      */
-    public function getTags();
+    public function hasTags();
 
     /**
-     * Returns configuration for categories.
-     * If NULL no categories will be displayed.
+     * Returns TRUE if categories should be displayed.
      *
-     * @return null|CategoriesConfigurationInterface
+     * @return bool
      */
-    public function getCategories();
+    public function hasCategories();
+
+    /**
+     * Returns TRUE if sorting should be displayed.
+     *
+     * @return bool
+     */
+    public function hasSorting();
 
     /**
      * Returns items for sorting select.
-     * If NULL no sorting select will be displayed.
      *
-     * @return null|KeyTitlePairInterface[]
+     * @return PropertyParameter[]
      */
     public function getSorting();
 
     /**
-     * Indicates limitation is possible.
-     * If FALSE no tags will be displayed.
+     * Returns TRUE if limit should be displayed.
      *
      * @return boolean
      */
-    public function getLimit();
+    public function hasLimit();
 
     /**
-     * Returns items for present as select.
-     * If NULL no present as select will be displayed.
+     * Returns TRUE if present as should be displayed.
      *
-     * @return null|KeyTitlePairInterface[]
+     * @return bool
      */
-    public function getPresentAs();
+    public function hasPresentAs();
 
     /**
      * Indicates pagination is possible.

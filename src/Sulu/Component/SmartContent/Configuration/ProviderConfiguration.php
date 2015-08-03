@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\SmartContent\Configuration;
 
+use Sulu\Component\Content\Compat\PropertyParameter;
+
 /**
  * Provides configuration for smart-content.
  */
@@ -21,34 +23,42 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     private $datasource;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $tags;
 
     /**
-     * @var CategoriesConfigurationInterface
+     * @var bool
      */
     private $categories;
 
     /**
-     * @var KeyTitlePairInterface[]
+     * @var PropertyParameter[]
      */
     private $sorting;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $limit;
 
     /**
-     * @var KeyTitlePairInterface[]
+     * @var bool
      */
     private $presentAs;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $paginated;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasDatasource()
+    {
+        return $this->datasource !== null && $this->datasource !== false;
+    }
 
     /**
      * {@inheritdoc}
@@ -69,13 +79,13 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getTags()
+    public function hasTags()
     {
         return $this->tags;
     }
 
     /**
-     * @param boolean $tags
+     * @param bool $tags
      */
     public function setTags($tags)
     {
@@ -85,13 +95,13 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategories()
+    public function hasCategories()
     {
         return $this->categories;
     }
 
     /**
-     * @param CategoriesConfigurationInterface $categories
+     * @param bool $categories
      */
     public function setCategories($categories)
     {
@@ -107,7 +117,15 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     }
 
     /**
-     * @param KeyTitlePairInterface[] $sorting
+     * {@inheritdoc}
+     */
+    public function hasSorting()
+    {
+        return $this->sorting !== null && $this->sorting !== false;
+    }
+
+    /**
+     * @param PropertyParameter[] $sorting
      */
     public function setSorting($sorting)
     {
@@ -117,13 +135,13 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getLimit()
+    public function hasLimit()
     {
         return $this->limit;
     }
 
     /**
-     * @param boolean $limit
+     * @param bool $limit
      */
     public function setLimit($limit)
     {
@@ -133,13 +151,13 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getPresentAs()
+    public function hasPresentAs()
     {
         return $this->presentAs;
     }
 
     /**
-     * @param KeyTitlePairInterface[] $presentAs
+     * @param bool $presentAs
      */
     public function setPresentAs($presentAs)
     {
@@ -155,7 +173,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     }
 
     /**
-     * @param boolean $paginated
+     * @param bool $paginated
      */
     public function setPaginated($paginated)
     {
