@@ -10,14 +10,14 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'type/bic-input': '../../sulucontact/js/validation/bic-input',
-        'type/vat-input': '../../sulucontact/js/validation/vat-input',
+        'type/bic-input': '../../sulucontact/js/validation/types/bicInput',
+        'type/vat-input': '../../sulucontact/js/validation/types/vatInput',
         'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
         'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
 
         'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/validation/iban-input'
+        'type/iban-input': '../../sulucontact/js/validation/types/ibanInput'
     },
     shim: {
         'vendor/iban-converter': {
