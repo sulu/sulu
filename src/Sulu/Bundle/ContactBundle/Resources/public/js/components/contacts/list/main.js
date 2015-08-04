@@ -13,7 +13,10 @@ require.config({
     }
 });
 
-define(['widget-groups'], function(WidgetGroups) {
+define([
+    'services/sulucontact/contact-manager',
+    'services/sulucontact/contact-router',
+    'widget-groups'], function(ContactManager, ContactRouter, WidgetGroups) {
 
     'use strict';
 
@@ -31,7 +34,7 @@ define(['widget-groups'], function(WidgetGroups) {
 
             // add clicked
             this.sandbox.on('sulu.toolbar.add', function() {
-                this.sandbox.emit('sulu.contacts.contacts.new');
+                ContactRouter.toAdd();
             }, this);
 
             // checkbox clicked
@@ -47,7 +50,7 @@ define(['widget-groups'], function(WidgetGroups) {
         },
 
         acitonCallback = function(id) {
-            this.sandbox.emit('sulu.contacts.contacts.load', id);
+            ContactRouter.toEdit(id);
         };
 
     return {

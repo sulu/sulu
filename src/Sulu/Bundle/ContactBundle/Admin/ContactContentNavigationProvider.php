@@ -25,6 +25,7 @@ class ContactContentNavigationProvider implements ContentNavigationProviderInter
         $documents = new ContentNavigationItem('content-navigation.contacts.documents');
         $documents->setAction('documents');
         $documents->setComponent('documents-tab@sulucontact');
+        $documents->setComponentOptions(['type' => 'contact']);
         $documents->setDisplay(['edit']);
 
         return [$details, $documents];
