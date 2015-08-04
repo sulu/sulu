@@ -21,7 +21,7 @@ class DataProviderPool implements DataProviderPoolInterface
     /**
      * @var DataProviderInterface[]
      */
-    private $providers = array();
+    private $providers = [];
 
     /**
      * {@inheritdoc}

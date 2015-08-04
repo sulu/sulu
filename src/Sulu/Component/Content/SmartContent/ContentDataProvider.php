@@ -51,7 +51,6 @@ class ContentDataProvider implements DataProviderInterface
         $this->contentQueryExecutor = $contentQueryExecutor;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -65,7 +64,7 @@ class ContentDataProvider implements DataProviderInterface
     }
 
     /**
-     * Initiate configuration
+     * Initiate configuration.
      *
      * @return ProviderConfigurationInterface
      */
@@ -82,7 +81,7 @@ class ContentDataProvider implements DataProviderInterface
         $this->configuration->setPresentAs(true);
         $this->configuration->setPaginated(true);
 
-        $this->configuration->setDatasource(new ComponentConfiguration('', array()));
+        $this->configuration->setDatasource(new ComponentConfiguration('', []));
         $this->configuration->setSorting([
             new PropertyParameter('title', 'smart-content.title'),
             new PropertyParameter('published', 'public.published'),
@@ -154,13 +153,13 @@ class ContentDataProvider implements DataProviderInterface
             [
                 'config' => $filters,
                 'properties' => $properties,
-                'excluded' => $filters['excluded']
+                'excluded' => $filters['excluded'],
             ]
         );
 
         if ($pageSize !== null) {
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
-            $this->hasNextPage = (sizeof($result) > $pageSize);
+            $this->hasNextPage = (count($result) > $pageSize);
 
             return $this->decorate(array_splice($result, 0, $pageSize));
         } else {

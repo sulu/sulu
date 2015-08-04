@@ -11,7 +11,7 @@
 namespace Sulu\Component\SmartContent\Exception;
 
 /**
- * Indicates a not existing DataProvider
+ * Indicates a not existing DataProvider.
  */
 class DataProviderNotExistsException extends DataProviderException
 {
