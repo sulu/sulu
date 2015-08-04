@@ -30,6 +30,7 @@
                  class="%sulu_content.smart_content.data_provider.content.class%">
             <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
 
             <tag name="sulu.smart_content.data_provider" alias="content"/>
         </service>

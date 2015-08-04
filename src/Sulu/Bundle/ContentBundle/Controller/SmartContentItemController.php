@@ -34,6 +34,10 @@ class SmartContentItemController extends RestController
 
         $filters['excluded'] = [$excluded];
 
+        if(isset($filters['tags'])){
+            $filters['tags'] = $this->get('sulu_tag.tag_manager')->resolveTagNames($filters['tags']);
+        }
+
         $dataProviderPool = $this->get('sulu_content.smart_content.data_provider_pool');
         $provider = $dataProviderPool->get($providerAlias);
         $items = $provider->resolveFilters($filters, [], $options, $request->get('limitResult'));

@@ -18,6 +18,7 @@
         <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
         <parameter key="sulu_contact.contact_title_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository</parameter>
         <parameter key="sulu_contact.smart_content.data_provider.contact.class">Sulu\Component\Contact\SmartContent\ContactDataProvider</parameter>
+        <parameter key="sulu_contact.contact_account.repository.class">Sulu\Component\Contact\Repository\AccountContactRepository</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
@@ -71,8 +72,16 @@
 
         <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>
 
+        <service id="sulu_contact.contact_account.repository" class="%sulu_contact.contact_account.repository.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="string">%sulu_contact.contact.entity%</argument>
+            <argument type="string">%sulu_contact.account.entity%</argument>
+        </service>
+
         <service id="sulu_contact.smart_content.data_provider.contact"
                  class="%sulu_contact.smart_content.data_provider.contact.class%">
+            <argument type="service" id="sulu_contact.contact_account.repository"/>
+
             <tag name="sulu.smart_content.data_provider" alias="contact"/>
         </service>
     </services>

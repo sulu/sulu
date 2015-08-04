@@ -213,13 +213,18 @@ class ContentType extends ComplexContentType
         $filters = $property->getValue();
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
+        // resolve tags to id
+        if (!empty($filters['tags'])) {
+            $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
+        }
+
         // get provider
         $provider = $this->getProvider($property);
-        $configuration = $provider->getConfiguration($params);
+        $configuration = $provider->getConfiguration();
 
         // prepare pagination, limitation and options
         $page = 1;
-        $limit = (array_key_exists('limitResult', $filters) && $configuration->getLimit()) ?
+        $limit = (array_key_exists('limitResult', $filters) && $configuration->hasLimit()) ?
             $filters['limitResult'] : null;
         $options = [
             'webspaceKey' => $property->getStructure()->getWebspaceKey(),

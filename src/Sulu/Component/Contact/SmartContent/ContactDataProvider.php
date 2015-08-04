@@ -10,7 +10,10 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Component\Contact\Repository\AccountContactRepositoryInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
@@ -29,6 +32,11 @@ class ContactDataProvider implements DataProviderInterface
      * @var AccountContactRepositoryInterface
      */
     private $repository;
+
+    public function __construct(AccountContactRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * {@inheritdoc}
@@ -50,11 +58,12 @@ class ContactDataProvider implements DataProviderInterface
     private function initConfiguration()
     {
         $this->configuration = new ProviderConfiguration();
-        $this->configuration->setTags(false);
+        $this->configuration->setTags(true);
         $this->configuration->setCategories(false);
         $this->configuration->setLimit(true);
         $this->configuration->setPresentAs(true);
         $this->configuration->setPaginated(true);
+        $this->configuration->setSorting([new PropertyParameter('c.name', 'public.name')]);
 
         return $this->configuration;
     }
@@ -78,7 +87,7 @@ class ContactDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        return [];
+        return $this->decorate($this->repository->findBy($filters, $limit, $page, $pageSize));
     }
 
     /**
@@ -96,5 +105,28 @@ class ContactDataProvider implements DataProviderInterface
     {
         // TODO getHasNextPage()
         return false;
+    }
+
+    /**
+     * Decorates result with item class.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function decorate(array $data)
+    {
+        return array_map(
+            function ($item) {
+                if ($item instanceof Contact) {
+                    return new ContactDataItem($item);
+                } elseif ($item instanceof Account) {
+                    return new AccountDataItem($item);
+                }
+
+                return;
+            },
+            $data
+        );
     }
 }
