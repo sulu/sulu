@@ -90,7 +90,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         unsetFilter = function() {
             this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.unmark', this.filter.id);
             this.filter = null;
-            saveFilterUserSetting.call(this, null, this.datagridInstance);
+            saveFilterUserSetting.call(this, null);
         },
 
         /**
@@ -156,23 +156,23 @@ define(['app-config', 'config'], function(AppConfig, Config) {
 
         /**
          * Returns a setting key for filters
-         * @param datagridInstance
+         * @param context
          * @returns {string}
          */
-        getFilterSettingKey = function(datagridInstance) {
-            return datagridInstance + 'Filter'
+        getFilterSettingKey = function(context) {
+            return context + 'Filter'
         },
 
         /**
          * Creates or updates user setting for each applied filter
          * @param filter {Object}
-         * @param datagridInstance {String}
+         * @param context {String}
          */
-        saveFilterUserSetting = function(filter, datagridInstance) {
+        saveFilterUserSetting = function(filter, context) {
             if (!!filter) {
-                this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, datagridInstance), filter);
+                this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, context), filter);
             } else {
-                this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, datagridInstance));
+                this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, context));
             }
         },
 
@@ -210,7 +210,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 this.filter = item;
                 this.filterUrl = createUrlToFilterDetails.call(this);
                 this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
-                saveFilterUserSetting.call(this, item, instanceName);
+                saveFilterUserSetting.call(this, item, context);
             } else {
                 this.filter = null;
                 this.filterUrl = null;

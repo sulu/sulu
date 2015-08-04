@@ -156,7 +156,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
                 return;
             }
-            this.showDeleteConfirmation(ids, function(wasConfirmed, removeAttributes) {
+            this.showDeleteConfirmation(ids, function(wasConfirmed) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
 
