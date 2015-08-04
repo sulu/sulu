@@ -12,5 +12,4 @@ namespace Sulu\Component\SmartContent\Exception;
 
 class NotSupportedException extends \Exception
 {
-
 }

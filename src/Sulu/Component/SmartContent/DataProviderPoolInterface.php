@@ -33,7 +33,7 @@ interface DataProviderPoolInterface
      *
      * @param string $alias identify the DataProvider
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($alias);
 

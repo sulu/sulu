@@ -26,40 +26,40 @@ class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
 
         $pool2->add('test-1', $provider1->reveal());
 
-        return array(
-            array(
+        return [
+            [
                 $pool1,
-                array(
-                    array('alias' => 'test', 'provider' => $provider1->reveal()),
-                ),
-                array(
+                [
+                    ['alias' => 'test', 'provider' => $provider1->reveal()],
+                ],
+                [
                     'test' => $provider1->reveal(),
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 $pool1,
-                array(
-                    array('alias' => 'test', 'provider' => $provider1->reveal()),
-                    array('alias' => 'test', 'provider' => $provider2->reveal()),
-                ),
-                array(
+                [
+                    ['alias' => 'test', 'provider' => $provider1->reveal()],
+                    ['alias' => 'test', 'provider' => $provider2->reveal()],
+                ],
+                [
                     'test' => $provider1->reveal(),
-                ),
-                DataProviderAliasAlreadyExistsException::class
-            ),
-            array(
+                ],
+                DataProviderAliasAlreadyExistsException::class,
+            ],
+            [
                 $pool2,
-                array(
-                    array('alias' => 'test-2', 'provider' => $provider2->reveal()),
-                    array('alias' => 'test-3', 'provider' => $provider3->reveal()),
-                ),
-                array(
+                [
+                    ['alias' => 'test-2', 'provider' => $provider2->reveal()],
+                    ['alias' => 'test-3', 'provider' => $provider3->reveal()],
+                ],
+                [
                     'test-1' => $provider1->reveal(),
                     'test-2' => $provider2->reveal(),
                     'test-3' => $provider3->reveal(),
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -84,18 +84,18 @@ class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
         $provider = $this->prophesize(DataProviderInterface::class);
         $pool->add('test', $provider->reveal());
 
-        return array(
-            array(
+        return [
+            [
                 $pool,
                 'test',
                 true,
-            ),
-            array(
+            ],
+            [
                 $pool,
                 'test-1',
                 false,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -112,19 +112,19 @@ class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
         $provider = $this->prophesize(DataProviderInterface::class);
         $pool->add('test', $provider->reveal());
 
-        return array(
-            array(
+        return [
+            [
                 $pool,
                 'test',
                 $provider->reveal(),
-            ),
-            array(
+            ],
+            [
                 $pool,
                 'test-1',
                 null,
                 DataProviderNotExistsException::class,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -148,19 +148,19 @@ class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
         $pool1->add('test-1', $provider1->reveal());
         $pool1->add('test-2', $provider2->reveal());
 
-        return array(
-            array(
+        return [
+            [
                 $pool1,
-                array(
+                [
                     'test-1' => $provider1->reveal(),
                     'test-2' => $provider2->reveal(),
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 $pool2,
-                array(),
-            ),
-        );
+                [],
+            ],
+        ];
     }
 
     /**

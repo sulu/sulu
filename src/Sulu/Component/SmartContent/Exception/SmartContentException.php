@@ -11,9 +11,8 @@
 namespace Sulu\Component\SmartContent\Exception;
 
 /**
- * Basic Exception of SmartContent component
+ * Basic Exception of SmartContent component.
  */
 class SmartContentException extends \Exception
 {
-
 }

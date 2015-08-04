@@ -56,6 +56,6 @@ class ContentDataItem extends Item
      */
     public function getImage()
     {
-        return null;
+        return;
     }
 }
