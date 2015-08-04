@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel","mvc/hasone","sulucontact/models/emailType"],function(a,b,c){return a({urlRoot:"",defaults:{id:null,email:"",emailType:null},relations:[{type:b,key:"emailType",relatedModel:c}]})});

@@ -8,6 +8,7 @@
  */
 
 define([
+    'services/sulucontact/account-manager',
     'sulucontact/models/account',
     'sulucontact/models/contact',
     'sulucontact/models/accountContact',
@@ -17,6 +18,7 @@ define([
     'sulucategory/model/category',
     'accountsutil/delete-dialog'
 ], function(
+    AccountManager,
     Account,
     Contact,
     AccountContact,
@@ -41,21 +43,8 @@ define([
         renderByDisplay: function() {
             if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display === 'form') {
-                this.renderForm();
-            } else if (this.options.display === 'contacts') {
-                this.renderComponent(
-                    'accounts/components/',
-                    this.options.display,
-                    'accounts-form-container', {}
-                );
-            } else if (this.options.display === 'documents-tab') {
-                this.renderComponent(
-                    '',
-                    this.options.display,
-                    'documents-form',
-                    {type: 'account'}
-                );
+            } else if (this.options.display === 'edit') {
+                this.renderEdit();
             } else {
                 throw 'display type wrong';
             }
@@ -63,37 +52,37 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.contacts.account.delete', this.del.bind(this));
+            this.sandbox.on('sulu.contacts.account.delete', this.del.bind(this)); // todo: manager-service
 
             // save the current package
-            this.sandbox.on('sulu.contacts.accounts.save', this.save.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.save', this.save.bind(this)); // done
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this)); // done
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this));
+            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this)); // done
 
             // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this)); // done
 
             // delete selected contacts
-            this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this)); // todo: manager-service
 
             // adds a new accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this)); // done
 
             // removes accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this)); // done
 
             // set main contact
-            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this)); // done
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', this.navigateToList.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.list', this.navigateToList.bind(this)); // done
 
             // handling documents
-            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this)); // done
 
             // receive form of address values via template
             this.sandbox.on('sulu.contacts.set-types', function(types) {
@@ -147,24 +136,21 @@ define([
         },
 
         saveDocuments: function(accountId, newMediaIds, removedMediaIds, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+            AccountManager.saveDocuments(accountId, newMediaIds, removedMediaIds);
+            /*this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.sandbox.logger.warn('newMediaIds', newMediaIds);
             this.sandbox.logger.warn('removedMediaIds', removedMediaIds);
 
             this.processAjaxForDocuments(newMediaIds, accountId, 'POST', action);
-            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE', action);
+            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE', action);*/
         },
 
-        processAjaxForDocuments: function(mediaIds, accountId, type, action){
+        processAjaxForDocuments: function(mediaIds, accountId, type, action) {
+            var requests=[], medias=[], url;
 
-            var requests=[],
-                medias=[],
-                url;
-
-            if(mediaIds.length > 0) {
+            if(!!mediaIds.length) {
                 this.sandbox.util.each(mediaIds, function(index, id) {
-
                     if(type === 'DELETE') {
                         url = '/admin/api/accounts/' + accountId + '/medias/' + id;
                     } else if(type === 'POST') {
@@ -185,10 +171,8 @@ define([
 
                 this.sandbox.util.when.apply(null, requests).then(function() {
                     if(type === 'DELETE') {
-                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.removed', medias);
                     } else if(type === 'POST') {
-                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
                     }
                     this.afterSaveAction(action, accountId, false);
@@ -224,54 +208,13 @@ define([
             }.bind(this), '#main-contact');
         },
 
-        /**
-         * loads contact by id
-         */
-        getAccount: function(id) {
-            this.account = new Account({id: id});
-            this.account.fetch({
-                success: function(model) {
-                    this.account = model;
-                    this.dfdAccount.resolve();
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log('error while fetching contact');
-                }.bind(this)
-            });
-        },
-
         // sets main contact
         setMainContact: function(id) {
-            // set mainContact
-            this.account.set({mainContact: Contact.findOrCreate({id: id})});
-            this.account.save(null, {
-                patch: true,
-                success: function() {
-                    // TODO: show success label
-                }.bind(this)
-            });
+            AccountManager.setMainContact(this.account.get('id'), id);
         },
 
         addAccountContact: function(id, position) {
-            // set id to contacts id;
-            var accountContact = AccountContact.findOrCreate({
-                id: id,
-                contact: Contact.findOrCreate({id: id}), account: this.account});
-
-            if (!!position) {
-                accountContact.set({position: position});
-            }
-
-            accountContact.save(null, {
-                // on success save contacts id
-                success: function(response) {
-                    var model = response.toJSON();
-                    this.sandbox.emit('sulu.contacts.accounts.contact.saved', model);
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving contact");
-                }.bind(this)
-            });
+            AccountManager.addAccountContact(this.account.get('id'), id, position);
         },
 
         /**
@@ -279,23 +222,7 @@ define([
          * @param ids
          */
         removeAccountContacts: function(ids) {
-            // show warning
-            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
-                // get ids of selected contacts
-                var accountContact;
-                this.sandbox.util.foreach(ids, function(id) {
-                    // set account and contact as well as  id to contacts id(so that request is going to be sent)
-                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
-                    accountContact.destroy({
-                        success: function() {
-                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);
-                        }.bind(this),
-                        error: function() {
-                            this.sandbox.logger.log("error while deleting AccountContact");
-                        }.bind(this)
-                    });
-                }.bind(this));
-            }.bind(this));
+            AccountManager.removeAccountContacts(this.account.get('id'), ids);
         },
 
         // show confirmation and delete account
@@ -306,48 +233,28 @@ define([
         // saves an account
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
-
-            this.account.set(data);
-
-            this.account.get('categories').reset();
-            this.sandbox.util.foreach(data.categories,function(id){
-                var category = Category.findOrCreate({id: id});
-                this.account.get('categories').add(category);
+            AccountManager.save(data).then(function(account) {
+                if (!!data.id) {
+                    this.sandbox.emit('sulu.contacts.accounts.saved', account);
+                }
+                this.afterSaveAction(action, account.id, !account.id);
             }.bind(this));
-
-            this.account.save(null, {
-                // on success save contacts id
-                success: function(response) {
-                    var model = response.toJSON();
-                    if (!!data.id) {
-                        this.sandbox.emit('sulu.contacts.accounts.saved', model);
-                    }
-                    this.afterSaveAction(action, model.id, !data.id);
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving profile");
-                }.bind(this)
-            });
         },
 
         load: function(id) {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
         loadContact: function(id) {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
         },
 
         add: function() {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
         },
 
         delAccounts: function(ids) {
             if (ids.length < 1) {
-                // TODO: translations
                 this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
                 return;
             }
@@ -359,7 +266,7 @@ define([
             this.html($list);
             this.sandbox.start([
                 {
-                    name: 'accounts/components/list@sulucontact',
+                    name: 'accounts/list@sulucontact',
                     options: {
                         el: $list
                     }
@@ -367,82 +274,32 @@ define([
             ]);
         },
 
-        /**
-         * Adds a container with the given id and starts a component with the given name in it
-         * @param path path to component
-         * @param componentName
-         * @param containerId
-         * @param params additional params
-         * @returns {*}
-         * @param namespace
-         */
-        renderComponent: function(path, componentName, containerId, params, namespace) {
-            var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
-                dfd = this.sandbox.data.deferred();
-
-            this.html($form);
-
-            if (!!this.options.id) {
-                this.account = new Account({id: this.options.id});
-                this.account.fetch({
-                    success: function(model) {
-                        this.account = model;
-                        this.sandbox.start([
-                            {
-                                name: path + componentName + '@' + (!!namespace ? namespace : 'sulucontact'),
-                                options: {
-                                    el: $form,
-                                    data: model.toJSON(),
-                                    params: !!params ? params : {}
-                                }
-                            }
-                        ]);
-                        dfd.resolve();
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
-                        dfd.reject();
-                    }.bind(this)
-                });
-            }
-            return dfd.promise();
-        },
-
-        renderForm: function() {
-            // load data and show form
+        renderEdit: function() {
             this.account = new Account();
-
-            var accTypeId,
-                $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
-                dfd = this.sandbox.data.deferred();
-            this.html($form);
+            var $edit = this.sandbox.dom.createElement('<div id="accounts-edit-container"/>'),
+                startComponent = function(model) {
+                    this.sandbox.start([{
+                        name: 'accounts/edit@sulucontact',
+                        options: {
+                            el: $edit,
+                            data: model.toJSON(),
+                            id: this.options.id
+                        }
+                    }]);
+                };
+            this.html($edit);
 
             if (!!this.options.id) {
                 this.account = new Account({id: this.options.id});
                 this.account.fetch({
-                    success: function(model) {
-                        this.sandbox.start([
-                            {name: 'accounts/components/form@sulucontact', options: { el: $form, data: model.toJSON()}}
-                        ]);
-                        dfd.resolve();
-                    }.bind(this),
+                    success: startComponent.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching contact");
-                        dfd.reject();
                     }.bind(this)
                 });
             } else {
-                this.renderCreateForm(dfd, $form);
+                startComponent(this.account.toJSON());
             }
-            return dfd.promise();
-        },
-
-        renderCreateForm: function(dfd, $form) {
-            this.sandbox.start([
-                {name: 'accounts/components/form@sulucontact', options: {el: $form, data: this.account.toJSON()}}
-            ]);
-
-            dfd.resolve();
         },
 
         showDeleteConfirmation: function(ids) {
