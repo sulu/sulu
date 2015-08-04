@@ -14,11 +14,11 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Symfony\Component\HttpFoundation\Request;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This controller handles settings that are not limited to one user only
+ * This controller handles settings that are not limited to one user only.
  */
 class SettingController extends RestController implements ClassResourceInterface
 {
@@ -28,7 +28,7 @@ class SettingController extends RestController implements ClassResourceInterface
     protected static $entityName = 'SuluSecurityBundle:UserSetting';
 
     /**
-     * Removes a setting with specific key and value for all users
+     * Removes a setting with specific key and value for all users.
      *
      * @param Request $request
      *
@@ -60,7 +60,7 @@ class SettingController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns the setting manager
+     * Returns the setting manager.
      *
      * @return object
      */

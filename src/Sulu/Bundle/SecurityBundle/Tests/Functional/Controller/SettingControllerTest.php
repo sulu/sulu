@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class SettingControllerTest extends SuluTestCase
 {
@@ -137,7 +137,7 @@ class SettingControllerTest extends SuluTestCase
             'setting-key'
         );
 
-        $settingResult2 = $this->getSettingForByKeyAndUser (
+        $settingResult2 = $this->getSettingForByKeyAndUser(
             $this->user2,
             'setting-key'
         );
@@ -175,7 +175,7 @@ class SettingControllerTest extends SuluTestCase
             'setting-key2'
         );
 
-        $settingResult2 = $this->getSettingForByKeyAndUser (
+        $settingResult2 = $this->getSettingForByKeyAndUser(
             $this->user2,
             'setting-key2'
         );
@@ -198,7 +198,7 @@ class SettingControllerTest extends SuluTestCase
             'setting-key'
         );
 
-        $settingResult2 = $this->getSettingForByKeyAndUser (
+        $settingResult2 = $this->getSettingForByKeyAndUser(
             $this->user2,
             'setting-key'
         );
@@ -207,7 +207,7 @@ class SettingControllerTest extends SuluTestCase
     }
 
     /**
-     * Creates a setting for the user associated with the client
+     * Creates a setting for the user associated with the client.
      *
      * @param string $key
      * @param mixed $value
@@ -222,7 +222,7 @@ class SettingControllerTest extends SuluTestCase
     }
 
     /**
-     * Returns a setting for a user and a key
+     * Returns a setting for a user and a key.
      *
      * @param User $user
      * @param string $key

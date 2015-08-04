@@ -14,7 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\UserSettingManager;
 interface UserSettingManagerInterface
 {
     /**
-     * Removes setting for all users by key and value
+     * Removes setting for all users by key and value.
      *
      * @param string $key
      * @param mixed $value

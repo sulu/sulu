@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 interface UserSettingRepositoryInterface extends ObjectRepository
 {
     /**
-     * Retrieves all settings by key and value
+     * Retrieves all settings by key and value.
      *
      * @param string $key
      * @param mixed $value

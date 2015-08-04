@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 
 /**
- * Handles operations on settings for multiple or single users
+ * Handles operations on settings for multiple or single users.
  */
 class UserSettingManager implements UserSettingManagerInterface
 {
@@ -33,14 +33,14 @@ class UserSettingManager implements UserSettingManagerInterface
      * @param ObjectManager $em
      * @param UserSettingRepositoryInterface $repository
      */
-    function __construct(ObjectManager $em, UserSettingRepositoryInterface $repository)
+    public function __construct(ObjectManager $em, UserSettingRepositoryInterface $repository)
     {
         $this->repository = $repository;
         $this->em = $em;
     }
 
     /**
-     * Removes setting for all users by key and value
+     * Removes setting for all users by key and value.
      *
      * @param string $key
      * @param mixed $value
