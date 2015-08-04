@@ -136,9 +136,7 @@ define([
         },
 
         saveDocuments: function(accountId, newMediaIds, removedMediaIds, action) {
-            AccountManager.saveDocuments(accountId, newMediaIds, removedMediaIds).then(function() {
-                alert('bam')
-            });
+            AccountManager.saveDocuments(accountId, newMediaIds, removedMediaIds);
             /*this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.sandbox.logger.warn('newMediaIds', newMediaIds);

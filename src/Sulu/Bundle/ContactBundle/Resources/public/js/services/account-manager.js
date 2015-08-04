@@ -161,9 +161,6 @@ define([
                     accountContact.destroy({
                         success: function() {
                             mediator.emit('sulu.contacts.accounts.contacts.removed', contactId);
-                        }.bind(this),
-                        error: function() {
-                            mediator.logger.log("error while deleting AccountContact");
                         }.bind(this)
                     });
                 }.bind(this));
