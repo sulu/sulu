@@ -29,9 +29,7 @@ define([
             this.bindCustomEvents();
             this.bindSidebarEvents();
 
-            if (this.options.display === 'list') {
-                this.renderList();
-            } else if (this.options.display === 'edit') {
+            if (this.options.display === 'edit') {
                 this.renderEdit();
             } else {
                 throw 'display type wrong';
@@ -104,8 +102,6 @@ define([
                 }
                 this.afterSaveAction(action, account.id, !data.id);
             }.bind(this));
-
-            this.contact.set(data);
         },
 
         afterSaveAction: function(action, id, wasAdded) {

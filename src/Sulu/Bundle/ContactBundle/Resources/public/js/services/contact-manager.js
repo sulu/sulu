@@ -8,77 +8,139 @@
  */
 
 define([
+        'services/husky/util',
+        'services/husky/mediator',
         'sulucontact/models/contact',
         'sulucontact/models/title',
         'sulucontact/models/position',
         'sulucategory/model/category',
         'sulumedia/model/media',
-    ], function(Contact,
+    ], function(util,
+                mediator,
+                Contact,
                 Title,
                 Position,
                 Category) {
 
         'use strict';
 
-        var instance = null;
+        var instance = null,
 
-        function ContactManager() {
-            this.initialize();
-        }
+        /**
+         * Removes medias from contact
+         * @param mediaIds Array of medias to delete
+         * @param contactId The contact to delete the medias from
+         * @private
+         */
+        removeDocuments = function(mediaIds, contactId) {
+            var requests = [],
+                promise = $.Deferred();
+            if (!!mediaIds.length) {
+                util.each(mediaIds, function(index, id) {
+                    requests.push(
+                        util.ajax({
+                            url: '/admin/api/contacts/' + contactId + '/medias/' + id,
+                            data: {mediaId: id},
+                            type: 'DELETE'
+                        }).fail(function() {
+                            mediator.logger.error("Error while deleting documents!");
+                        }.bind(this))
+                    );
+                }.bind(this));
+
+                util.when.apply(null, requests).then(function() {
+                    promise.resolve();
+                }.bind(this));
+
+            } else {
+                promise.resolve();
+            }
+            return promise;
+        },
+
+        /**
+         * Adds medias to an contact
+         * @param mediaIds Array of medias to add
+         * @param contactId The contact to add the medias to
+         * @private
+         */
+        addDocuments = function(mediaIds, contactId) {
+            var requests = [],
+                promise = $.Deferred();
+            if (!!mediaIds.length) {
+                util.each(mediaIds, function(index, id) {
+                    requests.push(
+                        util.ajax({
+                            url: '/admin/api/contacts/' + contactId + '/medias',
+                            data: {mediaId: id},
+                            type: 'POST'
+                        }).fail(function() {
+                            mediator.logger.error("Error while saving documents!");
+                        }.bind(this))
+                    );
+                }.bind(this));
+
+                util.when.apply(null, requests).then(function() {
+                    promise.resolve();
+                }.bind(this));
+
+            } else {
+                promise.resolve();
+            }
+            return promise;
+        };
+
+
+        /** @constructor **/
+        function ContactManager() {}
 
         ContactManager.prototype = {
 
-            initialize: function() {
-                this.sandbox = window.App; // TODO: inject context. find better solution
-                this.contact = null;
-            },
-
             /**
-             * loads contact by id
+             * Load contact by given id
+             * @param contactId
+             * @returns promise
              */
             load: function(contactId) {
-                var promise = this.sandbox.data.deferred();
+                var promise = $.Deferred();
+                var contact = Contact.findOrCreate({id: contactId});
 
-                this.contact = Contact.findOrCreate({id: contactId});
-
-                this.contact.fetch({
-                    success: function(model) {
-                        this.contact = model;
-                        promise.resolve(model);
+                contact.fetch({
+                    success: function(response) {
+                        promise.resolve(response);
                     }.bind(this),
                     error: function() {
-                        this.sandbox.logger.log('error while fetching contact');
+                        mediator.logger.log('error while fetching contact');
                         promise.fail();
                     }.bind(this)
                 });
+
                 return promise;
             },
 
             /**
-             * Saves a contact
-             * @param data {Object} the account data to save
+             * Save given contact data
+             * @param data {Object} the contact data to save
              * @returns promise
              */
             save: function(data) {
-                var promise = this.sandbox.data.deferred();
+                var promise = $.Deferred();
+                var contact = Contact.findOrCreate({id: data.id});
+                contact.set(data);
 
-                this.contact = Contact.findOrCreate({id: data.id});
-                this.contact.set(data);
-
-                this.contact.get('categories').reset();
-                this.sandbox.util.foreach(data.categories, function(id) {
+                contact.get('categories').reset();
+                util.foreach(data.categories, function(id) {
                     var category = Category.findOrCreate({id: id});
-                    this.contact.get('categories').add(category);
+                    contact.get('categories').add(category);
                 }.bind(this));
 
-                this.contact.save(null, {
+                contact.save(null, {
                     // on success save contacts id
                     success: function(response) {
-                        var model = response.toJSON();
-                        promise.resolve(model);
+                        promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
-                        this.sandbox.logger.error('error while saving contact');
+                        mediator.logger.error('error while saving contact');
                         promise.fail();
                     }.bind(this)
                 });
@@ -87,81 +149,18 @@ define([
             },
 
             /**
-             * Removes medias from an account
-             * @param mediaIds Array of medias to delete
-             * @param contactId The account to delete the medias from
-             * @private
-             */
-            removeDocuments: function(mediaIds, contactId) {
-                var requests = [],
-                    promise = this.sandbox.data.deferred();
-                if (!!mediaIds.length) {
-                    this.sandbox.util.each(mediaIds, function(index, id) {
-                        requests.push(
-                            this.sandbox.util.ajax({
-                                url: '/admin/api/contacts/' + contactId + '/medias/' + id,
-                                data: {mediaId: id},
-                                type: 'DELETE'
-                            }).fail(function() {
-                                this.sandbox.logger.error("Error while deleting documents!");
-                            }.bind(this))
-                        );
-                    }.bind(this));
-
-                    this.sandbox.util.when.apply(null, requests).then(function() {
-                        promise.resolve();
-                    }.bind(this));
-
-                } else {
-                    promise.resolve();
-                }
-                return promise;
-            },
-
-            /**
-             * Adds medias to an account
-             * @param mediaIds Array of medias to add
-             * @param contactId The account to add the medias to
-             * @private
-             */
-            addDocuments: function(mediaIds, contactId) {
-                var requests = [], promise = this.sandbox.data.deferred();
-                if (!!mediaIds.length) {
-                    this.sandbox.util.each(mediaIds, function(index, id) {
-                        requests.push(
-                            this.sandbox.util.ajax({
-                                url: '/admin/api/contacts/' + contactId + '/medias',
-                                data: {mediaId: id},
-                                type: 'POST'
-                            }).fail(function() {
-                                this.sandbox.logger.error("Error while saving documents!");
-                            }.bind(this))
-                        );
-                    }.bind(this));
-
-                    this.sandbox.util.when.apply(null, requests).then(function() {
-                        promise.resolve();
-                    }.bind(this));
-
-                } else {
-                    promise.resolve();
-                }
-                return promise;
-            },
-
-            /**
-             * Adds/Removes documents to or from an account
-             * @param contactId Id of the account to save the media for
+             * Adds/Removes documents to or from contact
+             * @param contactId Id of the contact to save the media for
              * @param newMediaIds Array of media ids to add
              * @param removedMediaIds Array of media ids to remove
              */
             saveDocuments: function(contactId, newMediaIds, removedMediaIds) {
-                var savePromise = this.sandbox.data.deferred(),
+                var savePromise = $.Deferred(),
 
-                    addPromise = this.addDocuments.call(this, newMediaIds, contactId),
-                    removePromise = this.removeDocuments.call(this, removedMediaIds, contactId);
+                    addPromise = addDocuments.call(this, newMediaIds, contactId),
+                    removePromise = removeDocuments.call(this, removedMediaIds, contactId);
 
-                this.sandbox.util.when(removePromise, addPromise).then(function() {
+                util.when(removePromise, addPromise).then(function() {
                     savePromise.resolve();
                 }.bind(this));
 
