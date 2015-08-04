@@ -15,5 +15,5 @@ namespace Sulu\Component\Contact\Repository;
  */
 interface AccountContactRepositoryInterface
 {
-    public function findBy($filters, $limit, $page, $pageSize);
+    public function findBy($filters, $page, $pageSize);
 }

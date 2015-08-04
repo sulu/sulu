@@ -987,7 +987,7 @@ define([], function() {
                 this.overlayData.limitResult : null;
 
             // min source must be selected
-            if ((this.overlayData.dataSource === null || this.overlayData.dataSource.length > 0) &&
+            if ((this.options.hideDataSource || this.overlayData.dataSource.length > 0) &&
                 JSON.stringify(data) !== JSON.stringify(this.URI.data)
             ) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
