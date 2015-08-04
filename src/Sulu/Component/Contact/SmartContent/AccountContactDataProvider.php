@@ -13,7 +13,6 @@ namespace Sulu\Component\Contact\SmartContent;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Component\Contact\Repository\AccountContactRepositoryInterface;
-use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
@@ -21,7 +20,7 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 /**
  * DataProvider for contact.
  */
-class ContactDataProvider implements DataProviderInterface
+class AccountContactDataProvider implements DataProviderInterface
 {
     /**
      * @var ProviderConfigurationInterface
@@ -32,6 +31,11 @@ class ContactDataProvider implements DataProviderInterface
      * @var AccountContactRepositoryInterface
      */
     private $repository;
+
+    /**
+     * @var bool
+     */
+    private $hasNextPage;
 
     public function __construct(AccountContactRepositoryInterface $repository)
     {
@@ -60,10 +64,9 @@ class ContactDataProvider implements DataProviderInterface
         $this->configuration = new ProviderConfiguration();
         $this->configuration->setTags(true);
         $this->configuration->setCategories(false);
-        $this->configuration->setLimit(true);
+        $this->configuration->setLimit(false);
         $this->configuration->setPresentAs(true);
-        $this->configuration->setPaginated(true);
-        $this->configuration->setSorting([new PropertyParameter('c.name', 'public.name')]);
+        $this->configuration->setPaginated(false);
 
         return $this->configuration;
     }
@@ -87,7 +90,9 @@ class ContactDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        return $this->decorate($this->repository->findBy($filters, $limit, $page, $pageSize));
+        $result = $this->repository->findBy($filters, $page, $pageSize);
+
+        return $this->decorate($result);
     }
 
     /**
@@ -103,8 +108,10 @@ class ContactDataProvider implements DataProviderInterface
      */
     public function getHasNextPage()
     {
-        // TODO getHasNextPage()
-        return false;
+        $result = $this->hasNextPage;
+        $this->hasNextPage = null;
+
+        return $result;
     }
 
     /**

@@ -43,20 +43,32 @@ class AccountContactRepository implements AccountContactRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findBy($filters, $limit, $page, $pageSize)
+    public function findBy($filters, $page, $pageSize)
     {
+        // TODO
+        // * tagOperator
         $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('c')
-            ->addSelect('a')
+            ->select('a')
+            ->addSelect('c')
             ->from($this->contactEntityName, 'c')
-            ->join('c.tags', 'ctags')
-            ->from($this->accountEntityName, 'a')
-            ->join('a.tags', 'atags')
-            ->where('ctags.id IN (:tags)')
-            ->orwhere('atags.id IN (:tags)');
+            ->from($this->accountEntityName, 'a');
+
+        if (isset($filters['tags']) && sizeof($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'or') {
+            $queryBuilder->join('c.tags', 'ctags')
+                ->join('a.tags', 'atags')
+                ->where('ctags.id IN (:tags)')
+                ->orwhere('atags.id IN (:tags)');
+        }
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('tags', $filters['tags']);
+        if (isset($filters['tags'])) {
+            $query->setParameter('tags', $filters['tags']);
+        }
+
+        if ($page !== null && $pageSize > 0) {
+            $query->setMaxResults($pageSize);
+            $query->setFirstResult($page * $pageSize);
+        }
 
         return $query->getResult();
     }
