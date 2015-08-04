@@ -35,7 +35,9 @@
         <parameter key="sulu_security.entity.role">SuluSecurityBundle:Role</parameter>
         <parameter key="sulu_security.entity.group">SuluSecurityBundle:Group</parameter>
         <parameter key="sulu_security.entity.user_setting">SuluSecurityBundle:UserSetting</parameter>
+        <parameter key="sulu_security.entity.user_setting">SuluSecurityBundle:UserSetting</parameter>
         <parameter key="sulu_security.profile_controller.class">Sulu\Bundle\SecurityBundle\Controller\ProfileController</parameter>
+        <parameter key="sulu_security.user_setting_manager.class">Sulu\Bundle\SecurityBundle\UserSettingManager\UserSettingManager</parameter>
     </parameters>
 
     <services>
@@ -143,5 +145,11 @@
         <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
             <tag name="massive_build.builder" />
         </service>
+
+        <service id="sulu_security.user_setting_manager" class="%sulu_security.user_setting_manager.class%">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="sulu_security.user_setting_repository"/>
+        </service>
+
     </services>
 </container>
