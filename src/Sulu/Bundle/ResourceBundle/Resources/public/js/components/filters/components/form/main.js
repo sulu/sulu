@@ -27,7 +27,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         templates: ['/admin/resource/template/filter/form'],
 
         header: function() {
-            return  {
+            return {
                 toolbar: this.getToolbar()
             };
         },
@@ -56,7 +56,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             return toolbar;
         },
 
-        appendToolbarDeleteButton: function(toolbar){
+        appendToolbarDeleteButton: function(toolbar) {
             if (!!this.options.data && !!this.options.data.id) {
                 toolbar.template.push({
                     icon: 'trash-o',
@@ -94,7 +94,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
             // filter delete
             this.sandbox.on('sulu.header.toolbar.delete', function() {
-                this.sandbox.emit('sulu.resource.filters.delete', this.sandbox.dom.val('#id'), this.options.type);
+                this.sandbox.emit('sulu.resource.filters.delete', this.options.data, this.options.context);
             }.bind(this));
 
             // filter saved
@@ -107,7 +107,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.resource.filters.list', this.options.type);
+                this.sandbox.emit('sulu.resource.filters.list', this.options.context);
             }, this);
         },
 
@@ -130,7 +130,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                     data.conjunction = data.conjunction.id;
                 }
 
-                data.context = this.options.type;
+                data.context = this.options.context;
 
                 this.sandbox.emit('sulu.resource.filters.save', data);
             }
@@ -152,9 +152,9 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         /**
          * Starts the condition selection component
          */
-        startOperatorSelection: function(){
+        startOperatorSelection: function() {
             var $element = this.sandbox.dom.find(constants.conditionSelector),
-                typeConfig = this.getConfigForType(this.options.type),
+                contextConfig = this.getConfigForContext(this.options.context),
                 conditionGroups = !!this.options.data ? this.options.data.conditionGroups : null;
 
             this.sandbox.start([
@@ -162,7 +162,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                     name: 'condition-selection@suluresource',
                     options: {
                         el: $element,
-                        fieldsUrl: typeConfig.fields,
+                        fieldsUrl: contextConfig.fields,
                         operatorsUrl: constants.operatorsUrl,
                         data: conditionGroups,
                         validationSelector: formSelector
@@ -172,12 +172,12 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         },
 
         /**
-         * Returns the config for a type or null if it does not exist
-         * @param type
+         * Returns the config for a context or null if it does not exist
+         * @param context
          * @returns {*}
          */
-        getConfigForType: function(type){
-            return this.config[type] ? this.config[type] : null;
+        getConfigForContext: function(context) {
+            return this.config[context] ? this.config[context] : null;
         },
 
         /**
@@ -212,7 +212,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                 id = this.options.data ? this.options.data.id : null;
 
             HeaderUtil.setTitle(this.sandbox, name);
-            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, id);
+            HeaderUtil.setBreadCrumb(this.sandbox, this.options.context, id);
         },
 
         /**

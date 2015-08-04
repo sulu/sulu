@@ -40,6 +40,16 @@ class SettingControllerTest extends SuluTestCase
     protected $setting2;
 
     /**
+     * @var UserSetting
+     */
+    protected $setting3;
+
+    /**
+     * @var UserSetting
+     */
+    protected $setting4;
+
+    /**
      * @var User
      */
     protected $user1;
@@ -82,6 +92,18 @@ class SettingControllerTest extends SuluTestCase
         $this->setting2->setValue('setting-value');
         $this->setting2->setUser($this->user2);
         $this->em->persist($this->setting2);
+
+        $this->setting3 = new UserSetting();
+        $this->setting3->setKey('setting-key2');
+        $this->setting3->setValue('{"id": "1", "name": "setting-value"}');
+        $this->setting3->setUser($this->user1);
+        $this->em->persist($this->setting3);
+
+        $this->setting4 = new UserSetting();
+        $this->setting4->setKey('setting-key2');
+        $this->setting4->setValue('{"id": "1", "name": "setting-value"}');
+        $this->setting4->setUser($this->user2);
+        $this->em->persist($this->setting4);
         $this->em->flush();
     }
 
@@ -104,7 +126,7 @@ class SettingControllerTest extends SuluTestCase
 
         $this->client->request(
             'DELETE',
-            '/api/settings',
+            '/api/setting',
             ['key' => 'setting-key', 'value' => 'setting-value']
         );
 
@@ -123,11 +145,49 @@ class SettingControllerTest extends SuluTestCase
         $this->assertNull($settingResult2);
     }
 
+    public function testDeleteSettingsExistingWithJSONValues()
+    {
+        $settingResult1 = $this->getSettingForByKeyAndUser(
+            $this->user1,
+            'setting-key2'
+        );
+
+        $settingResult2 = $this->getSettingForByKeyAndUser(
+            $this->user2,
+            'setting-key2'
+        );
+
+        $this->assertEquals($this->setting3->getKey(), $settingResult1->getKey());
+        $this->assertEquals($this->setting3->getValue(), $settingResult1->getValue());
+        $this->assertEquals($this->setting4->getKey(), $settingResult2->getKey());
+        $this->assertEquals($this->setting4->getValue(), $settingResult2->getValue());
+
+        $this->client->request(
+            'DELETE',
+            '/api/setting',
+            ['key' => 'setting-key2', 'value' => '{"id": "1", "name": "setting-value"}']
+        );
+
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+
+        $settingResult1 = $this->getSettingForByKeyAndUser(
+            $this->user1,
+            'setting-key2'
+        );
+
+        $settingResult2 = $this->getSettingForByKeyAndUser (
+            $this->user2,
+            'setting-key2'
+        );
+        $this->assertNull($settingResult1);
+        $this->assertNull($settingResult2);
+    }
+
     public function testDeleteSettingsNotExisting()
     {
         $this->client->request(
             'DELETE',
-            '/api/settings',
+            '/api/setting',
             ['key' => 'setting-key666', 'value' => 'setting-value666']
         );
 

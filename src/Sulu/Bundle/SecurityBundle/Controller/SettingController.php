@@ -36,7 +36,7 @@ class SettingController extends RestController implements ClassResourceInterface
      *
      * @throws MissingArgumentException
      */
-    public function cdeleteAction(Request $request)
+    public function deleteAction(Request $request)
     {
         $key = $request->get('key');
         $value = $request->get('value');

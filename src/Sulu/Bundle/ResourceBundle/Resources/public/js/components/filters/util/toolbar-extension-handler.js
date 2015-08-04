@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'config'], function(AppConfig, Config) {
+define(['app-config', 'config', 'filtersutil/filter'], function(AppConfig, Config, FilterUtil) {
 
     'use strict';
 
@@ -155,33 +155,26 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         },
 
         /**
-         * Returns a setting key for filters
-         * @param context
-         * @returns {string}
-         */
-        getFilterSettingKey = function(context) {
-            return context + 'Filter'
-        },
-
-        /**
          * Creates or updates user setting for each applied filter
          * @param filter {Object}
          * @param context {String}
          */
         saveFilterUserSetting = function(filter, context) {
             if (!!filter) {
-                this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, context), filter);
+                var value = FilterUtil.getFilterSettingValue(filter);
+                this.sandbox.sulu.saveUserSetting(FilterUtil.getFilterSettingKey.call(this, context), value);
             } else {
-                this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, context));
+                this.sandbox.sulu.deleteUserSetting(FilterUtil.getFilterSettingKey.call(this, context));
             }
         },
 
         /**
          * Appends filter param from user settings to datagrid url if setting exists
          * @param gridOptions
+         * @param context
          */
-        appendFilterToUrl = function(gridOptions) {
-            var key = getFilterSettingKey.call(this, gridOptions.instanceName),
+        appendFilterToUrl = function(gridOptions, context) {
+            var key = FilterUtil.getFilterSettingKey.call(this, context),
                 url = gridOptions.url,
                 filter = this.sandbox.sulu.getUserSetting(key);
 

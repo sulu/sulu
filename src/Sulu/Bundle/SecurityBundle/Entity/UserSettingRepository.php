@@ -26,6 +26,10 @@ class UserSettingRepository extends EntityRepository implements UserSettingRepos
      */
     public function getSettingsByKeyAndValue($key, $value)
     {
+        if(is_array($value)){
+           $value = json_encode($value);
+        }
+
         try {
             $qb = $this->createQueryBuilder('setting')
                 ->where('setting.key=:key')

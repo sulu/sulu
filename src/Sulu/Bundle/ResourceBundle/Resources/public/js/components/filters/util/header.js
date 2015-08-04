@@ -32,15 +32,15 @@ define(['config'], function(Config) {
          * Sets the correct breadcrumb for the filter
          *
          * @param sandbox
-         * @param type
+         * @param context
          * @param id
          */
-        setBreadCrumb: function(sandbox, type, id) {
-            var filterConfig = Config.get('suluresource.filters.type.' + type),
+        setBreadCrumb: function(sandbox, context, id) {
+            var filterConfig = Config.get('suluresource.filters.type.' + context),
                 breadcrumb = [];
 
-            if (!!type && !!filterConfig && !!filterConfig.breadCrumb) {
-                breadcrumb = Config.get('suluresource.filters.type.' + type).breadCrumb;
+            if (!!context && !!filterConfig && !!filterConfig.breadCrumb) {
+                breadcrumb = Config.get('suluresource.filters.type.' + context).breadCrumb;
             }
 
             breadcrumb.push({title: 'resource.filter'});

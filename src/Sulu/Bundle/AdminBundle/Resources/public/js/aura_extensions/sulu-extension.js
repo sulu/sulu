@@ -225,7 +225,7 @@
                 // save to server
                 app.sandbox.util.ajax({
                     type: 'DELETE',
-                    url: '/admin/api/settings',
+                    url: '/admin/api/setting',
                     data: data
                 });
             };
@@ -454,7 +454,7 @@
 
                         // replace default order by custom order settings
                         gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
-                        this.sandbox.emit('sulu.list.preload', gridOptions);
+                        this.sandbox.emit('sulu.list.preload', gridOptions, context);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =

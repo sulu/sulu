@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Modified handling of settings within filters
+
+When a filter gets deleted related settings will be delete too. Also the setting value that gets stored within the 
+setting value changed. Therefore the existing filter settings are not valid anymore. Remove them with the following 
+query from the database.
+
+```
+DELETE FROM se_user_settings WHERE settingsKey LIKE '%Filter';
+```
+
 ### Modified listbuilder to work with expressions
 
 The listbuilder uses now expressions to build the query. In course of these changes some default values have been
@@ -44,7 +54,6 @@ Filter values will now be copied from shadow-base locale to shadowed locale. Upg
 
 ```bash
 app/console phpcr:migrations:migrate
->>>>>>> master
 ```
 
 ## 1.0.0
