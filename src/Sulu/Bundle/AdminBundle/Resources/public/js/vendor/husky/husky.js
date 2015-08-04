@@ -30589,7 +30589,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         cellActionCallback: function(event) {
             var recordId = this.sandbox.dom.data(this.sandbox.dom.parent(event.currentTarget), 'id');
-            this.datagrid.itemAction.call(this.datagrid, recordId);
+            if (!!this.table.rows[recordId] && !this.table.rows[recordId].hasChildren) {
+                this.datagrid.itemAction.call(this.datagrid, recordId);
+            }
         },
 
         /**
@@ -40571,6 +40573,11 @@ define('__component__$ckeditor@husky',[], function() {
          * Binds Events to emit a custom changed event
          */
         bindChangeEvents: function() {
+            this.editor.on('dialogShow', function() {
+                this.sandbox.dom.addClass(this.sandbox.dom.parent('.cke_dialog_ui_button_ok'), 'sulu_ok_button');
+                this.sandbox.dom.addClass(this.sandbox.dom.parent('.cke_dialog_ui_button_cancel'), 'sulu_cancel_button');
+            }.bind(this));
+
             this.editor.on('change', function() {
                 this.emitChangedEvent();
             }.bind(this));
