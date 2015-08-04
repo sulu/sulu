@@ -27264,7 +27264,7 @@ define('services/husky/mediator',[],function() {
 
     Mediator.prototype.off = window.Husky.off;
 
-    Mediator.prototype.emit = window.Husky.on;
+    Mediator.prototype.emit = window.Husky.emit;
 
     return Mediator.getInstance();
 });
