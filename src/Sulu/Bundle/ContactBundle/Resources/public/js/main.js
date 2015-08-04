@@ -19,7 +19,8 @@ require.config({
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
         'type/iban-input': '../../sulucontact/js/validation/iban-input',
 
-        'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager'
+        'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
+        'services/sulucontact/account-router': '../../sulucontact/js/services/account-router'
     },
     shim: {
         'vendor/iban-converter': {
@@ -129,7 +130,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>';
+                    return '<div data-aura-component="accounts/list@sulucontact"/>';
                 }
             });
 

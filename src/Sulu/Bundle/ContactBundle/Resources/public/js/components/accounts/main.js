@@ -58,13 +58,13 @@ define([
             this.sandbox.on('sulu.contacts.accounts.save', this.save.bind(this)); // done
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this)); // todo: navigate-service
+            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this)); // done
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this)); // todo: navigate-service
+            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this)); // done
 
             // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this)); // todo: navigate-service
+            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this)); // done
 
             // delete selected contacts
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this)); // todo: manager-service

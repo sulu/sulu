@@ -8,10 +8,10 @@
  */
 
 define([
-    'mvc/relationalstore',
+    'services/sulucontact/account-router',
     'app-config',
     'widget-groups'
-], function(RelationalStore, AppConfig, WidgetGroups) {
+], function(AccountRouter, AppConfig, WidgetGroups) {
 
     'use strict';
 
@@ -29,7 +29,7 @@ define([
 
             // add clicked
             this.sandbox.on('sulu.toolbar.add', function() {
-                this.sandbox.emit('sulu.contacts.accounts.new');
+                AccountRouter.toAdd();
             }, this);
 
             // checkbox clicked
@@ -48,7 +48,7 @@ define([
         },
 
         actionCallback = function(id) {
-            this.sandbox.emit('sulu.contacts.accounts.load', id);
+            AccountRouter.toEdit(id);
         };
 
     return {
@@ -87,7 +87,7 @@ define([
 
         render: function() {
 
-            RelationalStore.reset(); //FIXME really necessary?
+            //RelationalStore.reset(); //FIXME really necessary?
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
