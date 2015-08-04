@@ -17,6 +17,7 @@
         <parameter key="sulu_contact.contact.entity">SuluContactBundle:Contact</parameter>
         <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
         <parameter key="sulu_contact.contact_title_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository</parameter>
+        <parameter key="sulu_contact.smart_content.data_provider.contact.class">Sulu\Component\Contact\SmartContent\ContactDataProvider</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
@@ -69,5 +70,10 @@
         </service>
 
         <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>
+
+        <service id="sulu_contact.smart_content.data_provider.contact"
+                 class="%sulu_contact.smart_content.data_provider.contact.class%">
+            <tag name="sulu.smart_content.data_provider" alias="contact"/>
+        </service>
     </services>
 </container>

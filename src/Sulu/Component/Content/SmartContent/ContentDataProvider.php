@@ -70,10 +70,6 @@ class ContentDataProvider implements DataProviderInterface
      */
     private function initConfiguration()
     {
-        // TODO
-        // * datasource configuration
-        // * sorting
-
         $this->configuration = new ProviderConfiguration();
         $this->configuration->setTags(true);
         $this->configuration->setCategories(false);
