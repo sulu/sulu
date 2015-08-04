@@ -62,7 +62,7 @@ interface DataProviderInterface
      *
      * @return ItemInterface
      */
-    public function resolveDatasource($datasource, array $propertyParameter,array $options);
+    public function resolveDatasource($datasource, array $propertyParameter, array $options);
 
     /**
      * Returns TRUE if next page exists for last resolveFilters call.

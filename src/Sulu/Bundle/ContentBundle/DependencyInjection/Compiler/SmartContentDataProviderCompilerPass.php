@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Collects all data provider for smart content
+ * Collects all data provider for smart content.
  */
 class SmartContentDataProviderCompilerPass implements CompilerPassInterface
 {
@@ -23,7 +23,7 @@ class SmartContentDataProviderCompilerPass implements CompilerPassInterface
     const STRUCTURE_EXTENSION_TAG = 'sulu.smart_content.data_provider';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

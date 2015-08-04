@@ -11,7 +11,7 @@
 namespace Sulu\Component\SmartContent\Exception;
 
 /**
- * Indicates an error of duplicated using of an alias for DataProvider
+ * Indicates an error of duplicated using of an alias for DataProvider.
  */
 class DataProviderAliasAlreadyExistsException extends DataProviderException
 {
