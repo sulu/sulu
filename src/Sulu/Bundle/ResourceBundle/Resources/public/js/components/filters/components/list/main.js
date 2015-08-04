@@ -13,7 +13,7 @@ define(['config'], function(Config) {
 
     var bindCustomEvents = function() {
         // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
+        this.sandbox.on('sulu.toolbar.add', function() {
             this.sandbox.emit('sulu.resource.filters.new');
         }.bind(this));
 
@@ -26,7 +26,7 @@ define(['config'], function(Config) {
         }.bind(this));
 
         // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
+        this.sandbox.on('sulu.toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.resource.filters.delete', ids);
             }.bind(this));
@@ -48,8 +48,13 @@ define(['config'], function(Config) {
 
         header: function() {
             return {
-                title: 'resource.filter',
-                noBack: false
+                noBack: false,
+                toolbar: {
+                    buttons: {
+                        add: {},
+                        delete: {}
+                    }
+                }
             };
         },
 
@@ -68,7 +73,7 @@ define(['config'], function(Config) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'filterSearch',
-                    parentTemplate: 'default'
+                    template: 'default'
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),

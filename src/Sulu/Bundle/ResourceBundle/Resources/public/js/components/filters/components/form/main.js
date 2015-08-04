@@ -28,44 +28,22 @@ define(['config'], function(Config) {
 
         header: function() {
             return  {
-                toolbar: this.getToolbar()
-            };
-        },
-
-        getToolbar: function() {
-            var toolbar = {
-                template: [
-                    {
-                        id: 'save',
-                        icon: 'floppy-o',
-                        position: 1,
-                        group: 'left',
-                        disabled: true,
-                        callback: function() {
-                            this.sandbox.emit('sulu.header.toolbar.save');
-                        }.bind(this)
+                toolbar: {
+                    buttons: {
+                        save: {},
+                        settings: {
+                            options: {
+                                dropdownItems: {
+                                    delete: {}
+                                }
+                            }
+                        }
+                    },
+                    languageChanger: {
+                        preSelected: this.options.locale
                     }
-                ],
-                languageChanger: {
-                    preSelected: this.options.locale
                 }
             };
-            this.appendToolbarDeleteButton(toolbar);
-            return toolbar;
-        },
-
-        appendToolbarDeleteButton: function(toolbar){
-            if (!!this.options.data && !!this.options.data.id) {
-                toolbar.template.push({
-                    icon: 'trash-o',
-                    group: 'left',
-                    id: 'delete-button',
-                    position: 30,
-                    callback: function() {
-                        this.sandbox.emit('sulu.header.toolbar.delete');
-                    }.bind(this)
-                });
-            }
         },
 
         initialize: function() {
@@ -81,7 +59,7 @@ define(['config'], function(Config) {
 
         bindCustomEvents: function() {
             // filter save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
+            this.sandbox.on('sulu.toolbar.save', function() {
                 this.save();
             }.bind(this));
 
@@ -90,7 +68,7 @@ define(['config'], function(Config) {
             }.bind(this));
 
             // filter delete
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('sulu.resource.filters.delete', this.sandbox.dom.val('#id'), this.options.type);
             }.bind(this));
 
@@ -205,8 +183,11 @@ define(['config'], function(Config) {
          */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                if (!!saved) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+                }
             }
             this.saved = saved;
         },
