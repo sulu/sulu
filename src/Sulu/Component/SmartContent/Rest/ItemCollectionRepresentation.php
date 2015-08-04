@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\SmartContent\ItemInterface;
 
 /**
- * Provides a collection of items and the datasource
+ * Provides a collection of items and the datasource.
  *
  * @ExclusionPolicy("all")
  */

@@ -48,7 +48,7 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns parameters for given property merged wit default parameters
+     * Returns parameters for given property merged wit default parameters.
      *
      * @param PropertyInterface $property
      *

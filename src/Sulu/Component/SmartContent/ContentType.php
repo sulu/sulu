@@ -19,7 +19,7 @@ use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Content type for smart selection
+ * Content type for smart selection.
  */
 class ContentType extends ComplexContentType
 {
@@ -44,7 +44,7 @@ class ContentType extends ComplexContentType
     private $requestStack;
 
     /**
-     * Contains cached values
+     * Contains cached values.
      *
      * @var array
      */
@@ -52,6 +52,7 @@ class ContentType extends ComplexContentType
 
     /**
      * SmartContentType constructor.
+     *
      * @param string $template
      * @param TagManagerInterface $tagManager
      * @param DataProviderPoolInterface $dataProviderPool
@@ -68,7 +69,6 @@ class ContentType extends ComplexContentType
         $this->requestStack = $requestStack;
         $this->template = $template;
     }
-
 
     /**
      * {@inheritdoc}
@@ -148,14 +148,14 @@ class ContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         $provider = $this->getProvider($property);
         $configuration = $provider->getConfiguration();
 
-        $defaults = array(
+        $defaults = [
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
@@ -166,7 +166,7 @@ class ContentType extends ComplexContentType
             'has_sorting' => $configuration->hasSorting(),
             'has_limit' => $configuration->hasLimit(),
             'has_present_as' => $configuration->hasPresentAs(),
-        );
+        ];
 
         return array_merge(
             parent::getDefaultParams(),
@@ -222,7 +222,7 @@ class ContentType extends ComplexContentType
             $filters['limitResult'] : null;
         $options = [
             'webspaceKey' => $property->getStructure()->getWebspaceKey(),
-            'locale' => $property->getStructure()->getLanguageCode()
+            'locale' => $property->getStructure()->getLanguageCode(),
         ];
 
         if (isset($params['max_per_page']) && $configuration->getPaginated()) {
@@ -284,7 +284,7 @@ class ContentType extends ComplexContentType
     }
 
     /**
-     * Returns provider for given property
+     * Returns provider for given property.
      *
      * @param PropertyInterface $property
      *

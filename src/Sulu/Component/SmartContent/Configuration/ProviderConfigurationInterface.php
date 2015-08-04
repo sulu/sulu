@@ -19,7 +19,7 @@ interface ProviderConfigurationInterface
 {
     /**
      * Returns TRUE if datasource should be displayed.
-     * Configuration will be returned from 'getDatasource()'
+     * Configuration will be returned from 'getDatasource()'.
      *
      * @return bool
      */
@@ -36,7 +36,7 @@ interface ProviderConfigurationInterface
     /**
      * Returns TRUE if tags should be displayed.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasTags();
 
@@ -64,7 +64,7 @@ interface ProviderConfigurationInterface
     /**
      * Returns TRUE if limit should be displayed.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasLimit();
 
@@ -78,7 +78,7 @@ interface ProviderConfigurationInterface
     /**
      * Indicates pagination is possible.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPaginated();
 }
