@@ -144,11 +144,19 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('build', [
-        'replace:build',
-        'uglify',
+    grunt.registerTask('build:css', [
         'compass:dev',
         'cssmin'
+    ]);
+
+    grunt.registerTask('build:js', [
+        'replace:build',
+        'uglify'
+    ]);
+
+    grunt.registerTask('build', [
+        'build:js',
+        'build:css'
     ]);
 
     grunt.registerTask('default', [
