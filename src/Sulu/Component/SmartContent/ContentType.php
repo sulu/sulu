@@ -166,6 +166,7 @@ class ContentType extends ComplexContentType
             'has_sorting' => $configuration->hasSorting(),
             'has_limit' => $configuration->hasLimit(),
             'has_present_as' => $configuration->hasPresentAs(),
+            'datasource' => $configuration->getDatasource(),
         ];
 
         return array_merge(

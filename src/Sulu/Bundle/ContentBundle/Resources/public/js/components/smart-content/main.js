@@ -1,12 +1,10 @@
-/**
- * This file is part of Husky frontend development framework.
+/*
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
- *
- * @module husky/components/smart-content
  */
 
 /**
@@ -42,19 +40,19 @@
  * @params {String} [options.idKey] key for the id in the returning JSON-result
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
- * @params {String} [options.columnNavigationResultKey] key for the data in the returning JSON-embedded-result for the column-navigation component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
  * @params {String} [options.fullQualifiedTitleKey] key for the full-qualified-title in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
- * @params {String} [options.columnNavigationUrl] url for column navigation
  * @params {Boolean} [options.hideDataSource] if true data-source selection hidden
  * @params {Boolean} [options.hideCategories] if true categories hidden
  * @params {Boolean} [options.hideTags] if true tags hidden
  * @params {Boolean} [options.hideSortBy] if true sort by hidden
  * @params {Boolean} [options.hidePresentAs] if true present-as hidden
  * @params {Boolean} [options.hideLimit] if true limit hidden
+ * @params {Boolean} [options.datasourceName] name of datasource component
+ * @params {Boolean} [options.datasourceOptions] options of datasource component
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
  * @params {String} [options.translations.noContentFound] translation key
@@ -122,20 +120,20 @@ define([], function() {
             resultKey: 'items',
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
-            columnNavigationResultKey: 'nodes',
             titleKey: 'title',
             fullQualifiedTitleKey: 'fullQualifiedTitle',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
-            columnNavigationUrl: '',
             hideDataSource: false,
             hideCategories: false,
             hideTags: false,
             hideSortBy: false,
             hideLimit: false,
             hidePresentAs: false,
-            title: 'Smart-Content'
+            title: 'Smart-Content',
+            datasourceName: null,
+            datasourceOptions: {}
         },
 
         sortMethods = {
@@ -720,9 +718,40 @@ define([], function() {
         startOverlay: function() {
             this.initOverlayContent();
 
-            var $element = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.$el, $element);
+            var $element = this.sandbox.dom.createElement('<div/>'),
+                slides = [
+                    {
+                        title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
+                        data: this.$overlayContent,
+                        okCallback: function() {
+                            this.itemsVisible = this.options.visibleItems;
+                            this.getOverlayData();
+                        }.bind(this)
+                    }
+                ];
 
+            if (!this.options.hideDataSource) {
+                slides.push({
+                    title: this.sandbox.translate(this.translations.chooseDataSource),
+                    data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
+                    cssClass: 'data-source-slide',
+                    okInactive: true,
+                    cancelDefaultText: this.sandbox.translate(this.translations.chooseDataSourceCancel),
+                    buttons: [
+                        {
+                            type: 'cancel',
+                            inactive: false,
+                            align: 'center'
+                        }
+                    ],
+                    cancelCallback: function() {
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
+                        return false;
+                    }.bind(this)
+                });
+            }
+
+            this.sandbox.dom.append(this.$el, $element);
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -733,97 +762,63 @@ define([], function() {
                         container: this.$el,
                         instanceName: 'smart-content.' + this.options.instanceName,
                         skin: 'wide',
-                        slides: [
-                            {
-                                title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
-                                data: this.$overlayContent,
-                                okCallback: function() {
-                                    this.itemsVisible = this.options.visibleItems;
-                                    this.getOverlayData();
-                                }.bind(this)
-                            },
-                            {
-                                title: this.sandbox.translate(this.translations.chooseDataSource),
-                                data: '<div id="column-navigation-' + this.options.instanceName + '"/>',
-                                cssClass: 'column-navigation-slide',
-                                okInactive: true,
-                                okDefaultText: this.sandbox.translate(this.translations.chooseDataSourceOk),
-                                cancelDefaultText: this.sandbox.translate(this.translations.chooseDataSourceCancel),
-                                buttons: [
-                                    {
-                                        type: 'cancel',
-                                        inactive: false,
-                                        align: 'center'
-                                    }
-                                ],
-                                cancelCallback: function() {
-                                    this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
-                                    return false;
-                                }.bind(this)
-                            }
-                        ]
+                        slides: slides
                     }
                 }
             ]);
 
-            this.bindColumnNavigationEvents();
+            this.bindDatasourceEvents();
         },
 
         /**
-         * column navigation events
+         * datasource events
          */
-        bindColumnNavigationEvents: function() {
-            // init column navigation after initialize of overlay
-            this.sandbox.on('husky.overlay.smart-content.' + this.options.instanceName + '.initialized', this.initColumnNavigation.bind(this));
+        bindDatasourceEvents: function() {
+            // init datasource navigation after initialize of overlay
+            this.sandbox.on(
+                'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
+                this.initDatasource.bind(this)
+            );
 
-            // adopt height of column navigation once
+            // adopt height of datasource once
             this.sandbox.once('husky.overlay.smart-content.' + this.options.instanceName + '.opened', function() {
-                // set height of smart-content column navigation slide (missing margins)
+                // set height of smart-content datasource slide (missing margins)
                 var height = this.sandbox.dom.outerHeight('.smart-content-overlay .slide-0 .overlay-content') + 24;
                 this.sandbox.dom.css('.smart-content-overlay .slide-1 .overlay-content', 'height', height + 'px');
             }.bind(this));
 
-            // activate button OK when a page is selected
-            this.sandbox.on('husky.column-navigation.smart-content' + this.options.instanceName +'.action', function(item) {
-                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
-
-                var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
-                this.overlayData.dataSource = item.id;
-                this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(item[this.options.fullQualifiedTitleKey], 30, '...'));
-                this.sandbox.dom.data($element, 'id', item.id);
-            }.bind(this));
-
-            // slide to column navigation by click on the action button
+            // slide to datasource by click on the action button
             this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-right');
             }.bind(this), '#select-data-source-action');
         },
 
         /**
-         * initialize column navigation
+         * initialize datasource navigation
          */
-        initColumnNavigation: function() {
-            var url = this.options.columnNavigationUrl.replace(
-                '{id=dataSource&}',
-                (!!this.overlayData.dataSource ? 'id=' + this.overlayData.dataSource + '&' : '')
-            );
+        initDatasource: function() {
+            var componentDefaults = {
+                    el: '#data-source-' + this.options.instanceName,
+                    selected: this.overlayData.dataSource,
+                    webspace: this.options.webspace,
+                    locale: this.options.locale,
+                    instanceName: this.options.instanceName,
+                    selectCallback: function(id, fullQualifiedTitle) {
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
+
+                        var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
+                        this.overlayData.dataSource = id;
+                        this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(fullQualifiedTitle, 30, '...'));
+                        this.sandbox.dom.data($element, 'id', id);
+                    }.bind(this)
+                },
+                componentOptions = this.sandbox.util.extend(true, {}, componentDefaults, this.options.datasourceOptions);
 
             this.sandbox.start(
                 [
                     {
-                        name: 'column-navigation@husky',
-                        options: {
-                            el: '#column-navigation-' + this.options.instanceName + '',
-                            url: url,
-                            selected: this.overlayData.dataSource,
-                            instanceName: 'smart-content' + this.options.instanceName,
-                            responsive: false,
-                            actionIcon: 'fa-check',
-                            showOptions: false,
-                            sortable: false,
-                            showStatus: false,
-                            resultKey: this.options.columnNavigationResultKey
-                        }
+                        name: this.options.datasourceName,
+                        options: componentOptions
                     }
                 ]
             );
