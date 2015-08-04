@@ -55,7 +55,7 @@ class ContentDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $propertyParameter)
+    public function getConfiguration()
     {
         if (!$this->configuration) {
             return $this->initConfiguration();
@@ -77,13 +77,18 @@ class ContentDataProvider implements DataProviderInterface
 
         $this->configuration = new ProviderConfiguration();
         $this->configuration->setTags(true);
-        $this->configuration->setCategories(true);
+        $this->configuration->setCategories(false);
         $this->configuration->setLimit(true);
         $this->configuration->setPresentAs(true);
         $this->configuration->setPaginated(true);
 
         $this->configuration->setDatasource(new ComponentConfiguration('', array()));
-        $this->configuration->setSorting([]);
+        $this->configuration->setSorting([
+            new PropertyParameter('title', 'smart-content.title'),
+            new PropertyParameter('published', 'public.published'),
+            new PropertyParameter('created', 'public.created'),
+            new PropertyParameter('changed', 'public.changed'),
+        ]);
 
         return $this->configuration;
     }

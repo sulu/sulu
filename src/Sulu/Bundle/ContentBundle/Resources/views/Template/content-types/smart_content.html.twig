@@ -21,4 +21,4 @@
      data-aura-column-navigation-result-key="nodes"
      data-aura-url="/admin/api/items?{% if webspaceKey != '' %}webspace={{ webspaceKey }}&{% endif %}locale={{ languageCode }}&excluded=<%= options.id %>&provider={{ params.provider.value }}"
      data-aura-tags-auto-complete-url="/admin/api/tags?flat=true&sortBy=name&searchFields=name"
-     data-aura-sort-by='[{"id":"title","name":"<%= translate("smart-content.title") %>"},{"id":"published","name":"<%= translate("public.published") %>"},{"id":"created","name":"<%= translate("public.created") %>"},{"id":"changed","name":"<%= translate("public.changed") %>"}]'></div>
+     data-aura-sort-by='{{ sulu_parameter_to_select(params.sorting.value, userLocale)|json_encode }}'></div>

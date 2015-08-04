@@ -153,7 +153,7 @@ class ContentType extends ComplexContentType
     public function getDefaultParams(PropertyInterface $property = null)
     {
         $provider = $this->getProvider($property);
-        $configuration = $provider->getConfiguration(array());
+        $configuration = $provider->getConfiguration();
 
         $defaults = array(
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),

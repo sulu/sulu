@@ -869,10 +869,9 @@ define([], function() {
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
                 this.$overlayContent.append(_.template(templates.overlayContent.sortMethod)());
-            }
-            this.$overlayContent.append('<div class="clear"></div>');
 
-            // only if data exists
+                this.$overlayContent.append('<div class="clear"></div>');
+            }
             if (!this.options.hidePresentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
                 this.$overlayContent.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
