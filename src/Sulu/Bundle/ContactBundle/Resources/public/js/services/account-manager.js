@@ -98,13 +98,12 @@ define([
          * loads contact by id
          */
         getAccount: function(id) {
-            var promise = $.Deferred();
-            this.account = Account.findOrCreate({id: id});
+            var promise = $.Deferred(),
+                account = Account.findOrCreate({id: id});
 
-            this.account.fetch({
-                success: function(model) {
-                    this.account = model;
-                    promise.resolve(model);
+            account.fetch({
+                success: function() {
+                    promise.resolve(account.toJSON());
                 }.bind(this),
                 error: function() {
                     promise.fail();
@@ -120,21 +119,20 @@ define([
          * @returns promise
          */
         save: function(data) {
-            var promise = $.Deferred();
-            this.account = Account.findOrCreate({id: data.id});
-            this.account.set(data);
+            var promise = $.Deferred(),
+            account = Account.findOrCreate({id: data.id});
+            account.set(data);
 
-            this.account.get('categories').reset();
+            account.get('categories').reset();
             util.foreach(data.categories, function(categoryId){
                 var category = Category.findOrCreate({id: categoryId});
-                this.account.get('categories').add(category);
+                account.get('categories').add(category);
             }.bind(this));
 
-            this.account.save(null, {
+            account.save(null, {
                 // on success save contacts id
                 success: function(response) {
-                    var model = response.toJSON();
-                    promise.resolve(model);
+                    promise.resolve(response.toJSON());
                 }.bind(this),
                 error: function() {
                     promise.fail();
@@ -151,13 +149,13 @@ define([
          */
         removeAccountContacts: function(id, ids) {
             // show warning
-            this.account = Account.findOrCreate({id: id});
+            var account = Account.findOrCreate({id: id});
             mediator.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
                 // get ids of selected contacts
                 var accountContact;
                 util.foreach(ids, function(contactId) {
                     // set account and contact as well as  id to contacts id(so that request is going to be sent)
-                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: contactId}), account: this.account});
+                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: contactId}), account: account});
                     accountContact.destroy({
                         success: function() {
                             mediator.emit('sulu.contacts.accounts.contacts.removed', contactId);

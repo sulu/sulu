@@ -98,8 +98,8 @@ define([
              * @returns promise
              */
             load: function(contactId) {
-                var promise = $.Deferred();
-                var contact = Contact.findOrCreate({id: contactId});
+                var promise = $.Deferred(),
+                    contact = Contact.findOrCreate({id: contactId});
 
                 contact.fetch({
                     success: function(response) {
