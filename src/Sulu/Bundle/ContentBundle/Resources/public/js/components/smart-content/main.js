@@ -1030,7 +1030,7 @@ define([], function() {
 
         /**
          * Gets the values of all user inputs of the overlay
-         * event is emited on which the associeted component responses
+         * event is emitted on which the associated component responses
          */
         getOverlayData: function() {
             var categoryDef, tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
