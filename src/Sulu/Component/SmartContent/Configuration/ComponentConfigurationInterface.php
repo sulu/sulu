@@ -20,12 +20,12 @@ interface ComponentConfigurationInterface
      *
      * @return string
      */
-    public function getComponent();
+    public function getName();
 
     /**
      * Returns options for javascript component.
      *
      * @return array
      */
-    public function getComponentOptions();
+    public function getOptions();
 }

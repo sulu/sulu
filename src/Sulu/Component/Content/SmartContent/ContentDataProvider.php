@@ -81,7 +81,15 @@ class ContentDataProvider implements DataProviderInterface
         $this->configuration->setPresentAs(true);
         $this->configuration->setPaginated(true);
 
-        $this->configuration->setDatasource(new ComponentConfiguration('', []));
+        $this->configuration->setDatasource(
+            new ComponentConfiguration(
+                'content-datasource@sulucontent',
+                [
+                    'url' => '/admin/api/nodes?{id=dataSource&}tree=true&webspace-node=true&webspace={webspace}&language={locale}',
+                    'resultKey' => 'nodes',
+                ]
+            )
+        );
         $this->configuration->setSorting([
             new PropertyParameter('title', 'smart-content.title'),
             new PropertyParameter('published', 'public.published'),

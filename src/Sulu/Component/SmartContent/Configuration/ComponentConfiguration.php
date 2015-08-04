@@ -34,7 +34,7 @@ class ComponentConfiguration implements ComponentConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getComponent()
+    public function getName()
     {
         return $this->component;
     }
@@ -50,7 +50,7 @@ class ComponentConfiguration implements ComponentConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getComponentOptions()
+    public function getOptions()
     {
         return $this->componentOptions;
     }
