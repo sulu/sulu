@@ -42,9 +42,9 @@ define(['widget-groups'], function(WidgetGroups) {
             this.render();
 
             if (!!this.options.data && !!this.options.data.id) {
-                if (this.options.params.type === 'contact' && WidgetGroups.exists('contact-detail')) {
+                if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
                     this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.data.id);
-                } else if (this.options.params.type === 'account' && WidgetGroups.exists('account-detail')) {
+                } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
                     this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
                 }
             }
@@ -95,7 +95,7 @@ define(['widget-groups'], function(WidgetGroups) {
             }, this);
 
             this.sandbox.on('sulu.toolbar.delete', function() {
-                if (this.options.params.type === 'account') {
+                if (this.options.type === 'account') {
                     this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
                 } else {
                     this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
@@ -103,7 +103,7 @@ define(['widget-groups'], function(WidgetGroups) {
             }, this);
 
             this.sandbox.on('sulu.header.back', function() {
-                if (this.options.params.type === 'account') {
+                if (this.options.type === 'account') {
                     this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
                 } else {
                     this.sandbox.emit('sulu.contacts.contacts.list');
@@ -185,8 +185,8 @@ define(['widget-groups'], function(WidgetGroups) {
          * @param action {String} the action after save
          */
         submit: function(action) {
-            if (this.sandbox.form.validate(this.form)) {
-                if (this.options.params.type === 'account' || this.options.params.type === 'contact') {
+             if (this.sandbox.form.validate(this.form)) {
+                if (this.options.type === 'account' || this.options.type === 'contact') {
                     this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections, action);
                 } else {
                     this.sandbox.logger.error('Undefined type for documents component!');

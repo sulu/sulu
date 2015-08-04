@@ -31,6 +31,7 @@ class AccountContentNavigationProvider implements ContentNavigationProviderInter
         $documents->setAction('documents');
         $documents->setComponent('documents-tab@sulucontact');
         $documents->setDisplay(['edit']);
+        $documents->setComponentOptions(['type' => 'account']);
 
         return [$details, $contacts, $documents];
     }

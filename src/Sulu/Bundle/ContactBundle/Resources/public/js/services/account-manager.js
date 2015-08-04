@@ -8,6 +8,8 @@
  */
 
 define([
+    'services/husky/util',
+    'services/husky/mediator',
     'sulucontact/models/account',
     'sulucontact/models/contact',
     'sulucontact/models/accountContact',
@@ -17,6 +19,8 @@ define([
     'sulucategory/model/category',
     'sulucategory/model/category'
 ], function(
+    util,
+    mediator,
     Account,
     Contact,
     AccountContact,
@@ -27,24 +31,74 @@ define([
 
     'use strict';
 
-    var instance = null;
+    var instance = null,
 
-    function AccountManager() {
-        this.initialize();
-    }
+        /**
+         * Removes medias from an account
+         * @param mediaIds Array of medias to delete
+         * @param accountId The account to delete the medias from
+         * @private
+         */
+        removeDocuments = function(mediaIds, accountId) {
+            var requests=[],
+                promise = $.Deferred();
+            if(!!mediaIds.length) {
+                util.each(mediaIds, function(index, id) {
+                    requests.push(
+                        util.ajax({
+                            url: '/admin/api/accounts/' + accountId + '/medias/' + id,
+                            data: {mediaId: id},
+                            type: 'DELETE'
+                        })
+                    );
+                }.bind(this));
+                util.when.apply(null, requests).then(function() {
+                    promise.resolve();
+                }.bind(this));
+            } else {
+                promise.resolve();
+            }
+            return promise;
+        },
+
+        /**
+         * Adds medias to an account
+         * @param mediaIds Array of medias to add
+         * @param accountId The account to add the medias to
+         * @private
+         */
+        addDocuments = function(mediaIds, accountId) {
+            var requests=[],
+                promise = $.Deferred();
+            if(!!mediaIds.length) {
+                util.each(mediaIds, function(index, id) {
+                    requests.push(
+                        util.ajax({
+                            url: '/admin/api/accounts/' + accountId + '/medias',
+                            data: {mediaId: id},
+                            type: 'POST'
+                        })
+                    );
+                }.bind(this));
+                util.when.apply(null, requests).then(function() {
+                    promise.resolve();
+                }.bind(this));
+            } else {
+                promise.resolve();
+            }
+            return promise;
+        };
+
+    /** @constructor **/
+    function AccountManager() {}
 
     AccountManager.prototype = {
-
-        initialize: function() {
-            this.sandbox = window.App; // TODO: inject context. find better solution
-            this.account = null;
-        },
 
         /**
          * loads contact by id
          */
         getAccount: function(id) {
-            var promise = this.sandbox.data.deferred();
+            var promise = $.Deferred();
             this.account = Account.findOrCreate({id: id});
 
             this.account.fetch({
@@ -53,7 +107,6 @@ define([
                     promise.resolve(model);
                 }.bind(this),
                 error: function() {
-                    this.sandbox.logger.log('error while fetching contact');
                     promise.fail();
                 }.bind(this)
             });
@@ -67,12 +120,12 @@ define([
          * @returns promise
          */
         save: function(data) {
-            var promise = this.sandbox.data.deferred();
+            var promise = $.Deferred();
             this.account = Account.findOrCreate({id: data.id});
             this.account.set(data);
 
             this.account.get('categories').reset();
-            this.sandbox.util.foreach(data.categories, function(categoryId){
+            util.foreach(data.categories, function(categoryId){
                 var category = Category.findOrCreate({id: categoryId});
                 this.account.get('categories').add(category);
             }.bind(this));
@@ -84,7 +137,6 @@ define([
                     promise.resolve(model);
                 }.bind(this),
                 error: function() {
-                    this.sandbox.logger.error("error while saving account");
                     promise.fail();
                 }.bind(this)
             });
@@ -100,22 +152,88 @@ define([
         removeAccountContacts: function(id, ids) {
             // show warning
             this.account = Account.findOrCreate({id: id});
-            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
+            mediator.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
                 // get ids of selected contacts
                 var accountContact;
-                this.sandbox.util.foreach(ids, function(contactId) {
+                util.foreach(ids, function(contactId) {
                     // set account and contact as well as  id to contacts id(so that request is going to be sent)
                     accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: contactId}), account: this.account});
                     accountContact.destroy({
                         success: function() {
-                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', contactId);
+                            mediator.emit('sulu.contacts.accounts.contacts.removed', contactId);
                         }.bind(this),
                         error: function() {
-                            this.sandbox.logger.log("error while deleting AccountContact");
+                            mediator.logger.log("error while deleting AccountContact");
                         }.bind(this)
                     });
                 }.bind(this));
             }.bind(this));
+        },
+
+        /**
+         * Save a new account-contact relationshop
+         * @param id The id of the account
+         * @param contactId The id of the contact
+         * @param position The position the contact has witih the account
+         */
+        addAccountContact: function(id, contactId, position) {
+            var promise = $.Deferred(),
+                account = Account.findOrCreate({id: id});
+            var accountContact = AccountContact.findOrCreate({
+                id: contactId,
+                contact: Contact.findOrCreate({id: contactId}), account: account
+            });
+
+            if (!!position) {
+                accountContact.set({position: position});
+            }
+
+            accountContact.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    promise.resolve(model);
+                }.bind(this),
+                error: function() {
+                    promise.fail();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
+         * Sets the main contact for an account
+         * @param id The id of the account
+         * @param contactId the id of the contact
+         */
+        setMainContact: function(id, contactId) {
+            var promise = $.Deferred(),
+                account = Account.findOrCreate({id: id});
+            account.set({mainContact: Contact.findOrCreate({id: contactId})});
+            account.save(null, {
+                patch: true,
+                success: function() {
+                    promise.resolve();
+                }.bind(this)
+            });
+            return promise;
+        },
+
+        /**
+         * Adds/Removes documents to or from an account
+         * @param accountId Id of the account to save the media for
+         * @param newMediaIds Array of media ids to add
+         * @param removedMediaIds Array of media ids to remove
+         */
+        saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
+            var savePromise = $.Deferred(),
+                addPromise = addDocuments.call(this, newMediaIds, accountId),
+                removePromise = removeDocuments.call(this, removedMediaIds, accountId);
+            util.when(removePromise, addPromise).then(function() {
+                savePromise.resolve();
+            }.bind(this));
+            return savePromise;
         }
     };
 

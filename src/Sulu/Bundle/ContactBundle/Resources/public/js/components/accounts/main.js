@@ -70,19 +70,19 @@ define([
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this)); // todo: manager-service
 
             // adds a new accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this)); // todo: manager-service
+            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this)); // done
 
             // removes accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this)); // todo: manager-service
+            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this)); // done
 
             // set main contact
-            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this)); // todo: manager-service
+            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this)); // done
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', this.navigateToList.bind(this)); // todo: navigate-service
+            this.sandbox.on('sulu.contacts.accounts.list', this.navigateToList.bind(this)); // done
 
             // handling documents
-            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this)); // todo: manager-service
+            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this)); // done
 
             // receive form of address values via template
             this.sandbox.on('sulu.contacts.set-types', function(types) {
@@ -136,13 +136,16 @@ define([
         },
 
         saveDocuments: function(accountId, newMediaIds, removedMediaIds, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+            AccountManager.saveDocuments(accountId, newMediaIds, removedMediaIds).then(function() {
+                alert('bam')
+            });
+            /*this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.sandbox.logger.warn('newMediaIds', newMediaIds);
             this.sandbox.logger.warn('removedMediaIds', removedMediaIds);
 
             this.processAjaxForDocuments(newMediaIds, accountId, 'POST', action);
-            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE', action);
+            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE', action);*/
         },
 
         processAjaxForDocuments: function(mediaIds, accountId, type, action) {
@@ -209,37 +212,11 @@ define([
 
         // sets main contact
         setMainContact: function(id) {
-            // set mainContact
-            this.account.set({mainContact: Contact.findOrCreate({id: id})});
-            this.account.save(null, {
-                patch: true,
-                success: function() {
-                    // TODO: show success label
-                }.bind(this)
-            });
+            AccountManager.setMainContact(this.account.get('id'), id);
         },
 
         addAccountContact: function(id, position) {
-            // set id to contacts id;
-            var accountContact = AccountContact.findOrCreate({
-                id: id,
-                contact: Contact.findOrCreate({id: id}), account: this.account
-            });
-
-            if (!!position) {
-                accountContact.set({position: position});
-            }
-
-            accountContact.save(null, {
-                // on success save contacts id
-                success: function(response) {
-                    var model = response.toJSON();
-                    this.sandbox.emit('sulu.contacts.accounts.contact.saved', model);
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving contact");
-                }.bind(this)
-            });
+            AccountManager.addAccountContact(this.account.get('id'), id, position);
         },
 
         /**
@@ -247,7 +224,7 @@ define([
          * @param ids
          */
         removeAccountContacts: function(ids) {
-            AccountManager.removeAccountContacts(ids);
+            AccountManager.removeAccountContacts(this.account.get('id'), ids);
         },
 
         // show confirmation and delete account

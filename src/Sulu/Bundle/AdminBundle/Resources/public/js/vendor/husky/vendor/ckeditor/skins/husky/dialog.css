@@ -243,11 +243,11 @@ div.cke_disabled .cke_dialog_ui_labeled_content div * {
     width: 100%
 }
 
-.cke_dialog_footer .cke_dialog_ui_hbox_first {
+.cke_dialog_footer .sulu_cancel_button {
     display: none;
 }
 
-.cke_dialog_footer .cke_dialog_ui_hbox_last {
+.cke_dialog_footer .sulu_ok_button {
     padding: 5px;
     text-align: center;
 }
