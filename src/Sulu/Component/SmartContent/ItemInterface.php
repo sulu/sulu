@@ -13,8 +13,15 @@ namespace Sulu\Component\SmartContent;
 /**
  * Item to display in smart-content UI.
  */
-interface ItemInterface extends \ArrayAccess
+interface ItemInterface
 {
+    /**
+     * Returns resource behind the item.
+     *
+     * @return mixed
+     */
+    public function getResource();
+
     /**
      * Returns id of item.
      *

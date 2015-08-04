@@ -19,7 +19,7 @@ use Sulu\Component\SmartContent\Exception\NotSupportedException;
  *
  * @ExclusionPolicy("all")
  */
-abstract class Item implements ItemInterface
+abstract class Item implements ItemInterface, \ArrayAccess
 {
     /**
      * @var array

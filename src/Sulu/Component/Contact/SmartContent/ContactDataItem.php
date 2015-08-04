@@ -8,19 +8,30 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Contact\Repository;
+namespace Sulu\Component\Contact\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Component\SmartContent\Item;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Component\SmartContent\ItemInterface;
 
 /**
- * Represents item in content data provider.
+ * Represents contact item in contact data provider.
  *
  * @ExclusionPolicy("all")
  */
-class ContactDataItem extends Item
+class ContactDataItem implements ItemInterface
 {
+    /**
+     * @var Contact
+     */
+    private $entity;
+
+    public function __construct(Contact $entity)
+    {
+        $this->entity = $entity;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -28,7 +39,7 @@ class ContactDataItem extends Item
      */
     public function getId()
     {
-        return $this->get('id');
+        return $this->entity->getId();
     }
 
     /**
@@ -38,7 +49,7 @@ class ContactDataItem extends Item
      */
     public function getTitle()
     {
-        return $this->get('name');
+        return $this->entity->getFullName();
     }
 
     /**
@@ -48,7 +59,7 @@ class ContactDataItem extends Item
      */
     public function getFullQualifiedTitle()
     {
-        return $this->get('name');
+        return $this->entity->getFullName();
     }
 
     /**
@@ -59,5 +70,13 @@ class ContactDataItem extends Item
     public function getImage()
     {
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResource()
+    {
+        return $this->entity;
     }
 }

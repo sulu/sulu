@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\SmartContent;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -34,6 +35,11 @@ class ContentDataProvider implements DataProviderInterface
     private $contentQueryExecutor;
 
     /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
      * @var ProviderConfigurationInterface
      */
     private $configuration;
@@ -45,10 +51,12 @@ class ContentDataProvider implements DataProviderInterface
 
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
-        ContentQueryExecutor $contentQueryExecutor
+        ContentQueryExecutor $contentQueryExecutor,
+        DocumentManagerInterface $documentManager
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
+        $this->documentManager = $documentManager;
     }
 
     /**
@@ -127,7 +135,7 @@ class ContentDataProvider implements DataProviderInterface
             $this->contentQueryBuilder
         );
 
-        $items = $this->decorate($result);
+        $items = $this->decorate($result, $options['locale']);
 
         return $items[0];
     }
@@ -165,9 +173,9 @@ class ContentDataProvider implements DataProviderInterface
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
             $this->hasNextPage = (count($result) > $pageSize);
 
-            return $this->decorate(array_splice($result, 0, $pageSize));
+            return $this->decorate(array_splice($result, 0, $pageSize), $options['locale']);
         } else {
-            return $this->decorate($this->load($options, $limit));
+            return $this->decorate($this->load($options, $limit), $options['locale']);
         }
     }
 
@@ -229,14 +237,16 @@ class ContentDataProvider implements DataProviderInterface
      * Decorates result with item class.
      *
      * @param array $data
+     * @param string $locale
      *
      * @return array
      */
-    private function decorate(array $data)
+    private function decorate(array $data, $locale)
     {
         return array_map(
-            function ($item) {
-                return new ContentDataItem($item);
+            function ($item) use ($locale) {
+                // TODO proxy ...
+                return new ContentDataItem($item, $this->documentManager->find($item['uuid'], $locale));
             },
             $data
         );

@@ -121,7 +121,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      */
     public function hasSorting()
     {
-        return $this->sorting !== null && $this->sorting !== false;
+        return sizeof($this->sorting) > 0;
     }
 
     /**

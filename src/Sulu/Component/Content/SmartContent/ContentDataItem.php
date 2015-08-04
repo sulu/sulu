@@ -22,6 +22,24 @@ use Sulu\Component\SmartContent\Item;
 class ContentDataItem extends Item
 {
     /**
+     * @var mixed
+     */
+    private $resource;
+
+    public function __construct(array $data, $resource)
+    {
+        parent::__construct($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @VirtualProperty()
