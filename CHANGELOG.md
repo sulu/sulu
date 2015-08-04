@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX	  #1443 [ResourceBundle]  Fixed issue when a filter in the user settings  gets removed
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
     * FEATURE     #1429 [ResourceBundle]  Updated husky and added preselect for filter dropdown

@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig) {
+define([
+    'suluresource/models/filter',
+    'app-config',
+    'filtersutil/filter'
+], function(Filter, AppConfig, FilterUtil) {
 
     'use strict';
 
@@ -70,11 +74,11 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 this.save(data);
             }.bind(this));
 
-            this.sandbox.on(FILTER_DELETE, function(data, type) {
+            this.sandbox.on(FILTER_DELETE, function(data, context) {
                 if (this.sandbox.util.typeOf(data) === 'array') {
-                    this.deleteFilters(data);
+                    this.deleteFilters(data, context);
                 } else {
-                    this.deleteFilter(data, type);
+                    this.deleteFilter(data, context);
                 }
             }.bind(this));
 
@@ -82,8 +86,8 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 this.load(id, AppConfig.getUser().locale);
             }.bind(this));
 
-            this.sandbox.on(FILTER_LIST, function(type) {
-                this.sandbox.emit('sulu.router.navigate', constants.baseFilterRoute + '/' + type);
+            this.sandbox.on(FILTER_LIST, function(context) {
+                this.sandbox.emit('sulu.router.navigate', constants.baseFilterRoute + '/' + context);
             }.bind(this));
 
             this.sandbox.on('sulu.header.language-changed', function(locale) {
@@ -119,17 +123,17 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         newFilter: function() {
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'resource/filters/' + this.options.type + '/' + AppConfig.getUser().locale + '/add'
+                'resource/filters/' + this.options.context + '/' + AppConfig.getUser().locale + '/add'
             );
         },
 
         /**
          * Deletes a filter by id and navigates back to the list view
-         * @param id
-         * @param type
+         * @param filter
+         * @param context
          */
-        deleteFilter: function(id, type) {
-            if (!id && id != 0) {
+        deleteFilter: function(filter, context) {
+            if (!filter.id && filter.id != 0) {
                 // TODO: translations
                 this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
                 return;
@@ -137,12 +141,14 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             this.showDeleteConfirmation(id, function(wasConfirmed) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
-                    var filter = Filter.findOrCreate({id: id});
-                    filter.destroy({
+                    var filterModel = Filter.findOrCreate({id: filter.id});
+                    this.adjustSettingsForFilter(filter, context);
+
+                    filterModel.destroy({
                         success: function() {
                             this.sandbox.emit(
                                 'sulu.router.navigate',
-                                'resource/filters/' + type
+                                'resource/filters/' + context
                             );
                         }.bind(this)
                     });
@@ -150,19 +156,20 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }.bind(this));
         },
 
-        deleteFilters: function(ids) {
+        deleteFilters: function(ids, context) {
             if (ids.length < 1) {
                 // TODO: translations
                 this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
                 return;
             }
-            this.showDeleteConfirmation(ids, function(wasConfirmed, removeAttributes) {
+
+            this.showDeleteConfirmation(ids, function(wasConfirmed) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
-
                     var url = '/admin/api/filters?ids=' + ids.join(','),
                         idsToDelete = ids.slice();
 
+                    this.adjustSettingsForMultipleFilters(ids, context);
                     this.sandbox.util.ajax({
                         url: url,
                         type: 'DELETE',
@@ -179,6 +186,25 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                     });
                 }
             }.bind(this));
+        },
+
+        adjustSettingsForMultipleFilters: function(ids, context) {
+            // TODO this should be refactored when the settings are refactored - same goes for other settings within
+            // the filter components https://github.com/sulu-io/sulu/issues/1441
+            this.sandbox.util.foreach(ids, function(id) {
+                var filter = Filter.findOrCreate({id: id});
+                filter.fetchLocale(SULU.user.locale, {
+                    success: function(model) {
+                        this.adjustSettingsForFilter(model.toJSON(), context);
+                    }.bind(this)
+                });
+            }.bind(this));
+        },
+
+        adjustSettingsForFilter: function(filter, context) {
+            var settingKey = FilterUtil.getFilterSettingKey(context),
+                settingValue = FilterUtil.getFilterSettingValue(filter);
+            this.sandbox.sulu.deleteSettingsByKeyAndValue(settingKey, settingValue);
         },
 
         showDeleteConfirmation: function(ids, callbackFunction) {
@@ -204,7 +230,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         load: function(id, locale) {
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'resource/filters/' + this.options.type + '/' + locale + '/' + 'edit:' + id + '/details'
+                'resource/filters/' + this.options.context + '/' + locale + '/' + 'edit:' + id + '/details'
             );
         },
 
@@ -218,7 +244,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                     options: {
                         el: $form,
                         locale: this.options.locale,
-                        type: this.options.type
+                        context: this.options.context
                     }
                 };
 
@@ -248,7 +274,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                     name: 'filters/components/list@suluresource',
                     options: {
                         el: $list,
-                        type: this.options.type
+                        context: this.options.context
                     }
                 }
             ]);

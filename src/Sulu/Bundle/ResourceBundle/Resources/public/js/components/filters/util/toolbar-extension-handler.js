@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'config'], function(AppConfig, Config) {
+define(['app-config', 'config', 'filtersutil/filter'], function(AppConfig, Config, FilterUtil) {
 
     'use strict';
 
@@ -90,7 +90,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         unsetFilter = function() {
             this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.unmark', this.filter.id);
             this.filter = null;
-            saveFilterUserSetting.call(this, null, this.datagridInstance);
+            saveFilterUserSetting.call(this, null);
         },
 
         /**
@@ -155,33 +155,26 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         },
 
         /**
-         * Returns a setting key for filters
-         * @param datagridInstance
-         * @returns {string}
-         */
-        getFilterSettingKey = function(datagridInstance) {
-            return datagridInstance + 'Filter'
-        },
-
-        /**
          * Creates or updates user setting for each applied filter
          * @param filter {Object}
-         * @param datagridInstance {String}
+         * @param context {String}
          */
-        saveFilterUserSetting = function(filter, datagridInstance) {
+        saveFilterUserSetting = function(filter, context) {
             if (!!filter) {
-                this.sandbox.sulu.saveUserSetting(getFilterSettingKey.call(this, datagridInstance), filter);
+                var value = FilterUtil.getFilterSettingValue(filter);
+                this.sandbox.sulu.saveUserSetting(FilterUtil.getFilterSettingKey.call(this, context), value);
             } else {
-                this.sandbox.sulu.deleteUserSetting(getFilterSettingKey.call(this, datagridInstance));
+                this.sandbox.sulu.deleteUserSetting(FilterUtil.getFilterSettingKey.call(this, context));
             }
         },
 
         /**
          * Appends filter param from user settings to datagrid url if setting exists
          * @param gridOptions
+         * @param context
          */
-        appendFilterToUrl = function(gridOptions) {
-            var key = getFilterSettingKey.call(this, gridOptions.instanceName),
+        appendFilterToUrl = function(gridOptions, context) {
+            var key = FilterUtil.getFilterSettingKey.call(this, context),
                 url = gridOptions.url,
                 filter = this.sandbox.sulu.getUserSetting(key);
 
@@ -210,7 +203,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 this.filter = item;
                 this.filterUrl = createUrlToFilterDetails.call(this);
                 this.sandbox.emit('husky.datagrid.' + instanceName + '.url.update', {filter: item.id});
-                saveFilterUserSetting.call(this, item, instanceName);
+                saveFilterUserSetting.call(this, item, context);
             } else {
                 this.filter = null;
                 this.filterUrl = null;

@@ -205,6 +205,30 @@
                 });
             };
 
+            /**
+             * deletes settings data locally and in the database for all users with the same setting key and value
+             * @param key
+             * @param value
+             */
+            app.sandbox.sulu.deleteSettingsByKeyAndValue = function(key, value) {
+                var setting = app.sandbox.sulu.userSettings[key];
+
+                if (!!setting && ((typeof value !== 'object' && setting === value) || app.sandbox.util.compare(setting, value))) {
+                    delete app.sandbox.sulu.userSettings[key];
+                }
+
+                var data = {
+                    key: key,
+                    value: value
+                };
+
+                // save to server
+                app.sandbox.util.ajax({
+                    type: 'DELETE',
+                    url: '/admin/api/setting',
+                    data: data
+                });
+            };
 
             /**
              * Shows a standard delete warning dialog
@@ -430,7 +454,7 @@
 
                         // replace default order by custom order settings
                         gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
-                        this.sandbox.emit('sulu.list.preload', gridOptions);
+                        this.sandbox.emit('sulu.list.preload', gridOptions, context);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =

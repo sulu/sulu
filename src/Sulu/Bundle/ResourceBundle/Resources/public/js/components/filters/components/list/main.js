@@ -19,8 +19,8 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
 
         // back button clicked
         this.sandbox.on('sulu.header.back', function() {
-            var config = Config.get('suluresource.filters.type.' + this.options.type);
-            if(config.routeToList) {
+            var config = Config.get('suluresource.filters.type.' + this.options.context);
+            if (config.routeToList) {
                 this.sandbox.emit('sulu.router.navigate', config.routeToList);
             }
         }.bind(this));
@@ -28,7 +28,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         // delete clicked
         this.sandbox.on('sulu.list-toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.resource.filters.delete', ids);
+                this.sandbox.emit('sulu.resource.filters.delete', ids, this.options.context);
             }.bind(this));
         }.bind(this));
     };
@@ -73,7 +73,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
-                    url: '/admin/api/filters?flat=true&context='+this.options.type,
+                    url: '/admin/api/filters?flat=true&context=' + this.options.context,
                     resultKey: 'filters',
                     searchInstanceName: 'filterSearch',
                     searchFields: ['name'],
@@ -97,7 +97,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
          */
         setHeaderInformation: function() {
             HeaderUtil.setTitle(this.sandbox, null);
-            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, null);
+            HeaderUtil.setBreadCrumb(this.sandbox, this.options.context, null);
         }
     };
 });

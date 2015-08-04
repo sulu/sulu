@@ -100,7 +100,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
 
             Config.set('suluresource.filters.type.accounts', {
                 breadCrumb: [
-                    {title: 'navigation.accounts'},
+                    {title: 'navigation.contacts'},
                     {title: 'contact.accounts.title', link: 'contacts/accounts'}
                 ],
                 routeToList: 'contacts/accounts'

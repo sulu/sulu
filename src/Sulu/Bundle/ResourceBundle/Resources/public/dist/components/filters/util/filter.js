@@ -1,0 +1,1 @@
+define([],function(){"use strict";return{getFilterSettingKey:function(a){return a+"Filter"},getFilterSettingValue:function(a){return{id:a.id+"",name:a.name,context:a.context}}}});
