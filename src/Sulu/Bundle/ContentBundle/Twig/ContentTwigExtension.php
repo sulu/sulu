@@ -142,7 +142,7 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * @param PropertyParameter[] $parameters
-     * @param string              $locale
+     * @param string $locale
      *
      * @return array
      */
@@ -151,9 +151,10 @@ class ContentTwigExtension extends \Twig_Extension
         $result = [];
 
         foreach ($parameters as $parameter) {
+            $name = $parameter->hasTitle($locale) ? $parameter->getTitle($locale) : $parameter->getValue();
             $result[] = [
                 'id' => $parameter->getName(),
-                'name' => $parameter->getTitle($locale),
+                'name' => $name,
             ];
         }
 

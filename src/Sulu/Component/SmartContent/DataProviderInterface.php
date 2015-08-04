@@ -21,11 +21,9 @@ interface DataProviderInterface
     /**
      * Returns configuration for smart-content.
      *
-     * @param PropertyParameter[] $propertyParameter
-     *
      * @return ProviderConfigurationInterface
      */
-    public function getConfiguration(array $propertyParameter);
+    public function getConfiguration();
 
     /**
      * Returns default parameter.
