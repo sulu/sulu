@@ -499,7 +499,7 @@ define([], function() {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
             this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
 
-            if (typeof(this.overlayData.dataSource) !== 'undefined') {
+            if (!this.options.hideDataSource && typeof(this.overlayData.dataSource) !== 'undefined') {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
@@ -987,7 +987,9 @@ define([], function() {
                 this.overlayData.limitResult : null;
 
             // min source must be selected
-            if (this.overlayData.dataSource.length > 0 && JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
+            if ((this.overlayData.dataSource === null || this.overlayData.dataSource.length > 0) &&
+                JSON.stringify(data) !== JSON.stringify(this.URI.data)
+            ) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
                 this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
@@ -1010,8 +1012,10 @@ define([], function() {
                     data: this.URI.data,
 
                     success: function(data) {
-                        this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
-                        this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.fullQualifiedTitleKey];
+                        if (!this.options.hideDataSource) {
+                            this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
+                            this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.fullQualifiedTitleKey];
+                        }
                         this.items = data._embedded[this.options.resultKey];
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),

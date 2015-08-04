@@ -35,7 +35,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @var PropertyParameter[]
      */
-    private $sorting;
+    private $sorting = [];
 
     /**
      * @var bool
