@@ -42,9 +42,7 @@ define([
                             url: '/admin/api/contacts/' + contactId + '/medias/' + id,
                             data: {mediaId: id},
                             type: 'DELETE'
-                        }).fail(function() {
-                            mediator.logger.error("Error while deleting documents!");
-                        }.bind(this))
+                        })
                     );
                 }.bind(this));
 
@@ -74,9 +72,7 @@ define([
                             url: '/admin/api/contacts/' + contactId + '/medias',
                             data: {mediaId: id},
                             type: 'POST'
-                        }).fail(function() {
-                            mediator.logger.error("Error while saving documents!");
-                        }.bind(this))
+                        })
                     );
                 }.bind(this));
 
@@ -110,7 +106,6 @@ define([
                         promise.resolve(response);
                     }.bind(this),
                     error: function() {
-                        mediator.logger.log('error while fetching contact');
                         promise.fail();
                     }.bind(this)
                 });
@@ -140,7 +135,6 @@ define([
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
-                        mediator.logger.error('error while saving contact');
                         promise.fail();
                     }.bind(this)
                 });
