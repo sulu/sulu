@@ -23,11 +23,7 @@ define([
         name: 'Sulu Contact Permissions',
 
         initialize: function() {
-
-            if (this.options.display === 'form') {
-                this.renderForm();
-            }
-
+            this.renderForm();
             this.bindCustomEvents();
         },
 

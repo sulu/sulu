@@ -17,9 +17,12 @@ require.config({
 
         'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
+        'type/iban-input': '../../sulucontact/js/validation/types/ibanInput',
+
+        'services/sulucontact/contact-manager': '../../sulucontact/js/services/contact-manager',
         'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
         'services/sulucontact/account-router': '../../sulucontact/js/services/account-router',
-        'type/iban-input': '../../sulucontact/js/validation/types/ibanInput'
+        'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router'
     },
 
     shim: {
@@ -106,7 +109,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts',
                 callback: function() {
-                    return '<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>';
+                    return '<div data-aura-component="contacts/list@sulucontact"/>';
                 }
             });
 
@@ -114,7 +117,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/add',
                 callback: function(content) {
-                    return '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form" />';
+                    return '<div data-aura-component="contacts@sulucontact" data-aura-display="edit" />';
                 }
             });
 
@@ -122,7 +125,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/edit::id/:content',
                 callback: function(id, content) {
-                    return '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
+                    return '<div data-aura-component="contacts@sulucontact" data-aura-display="edit" data-aura-id="' + id + '"/>';
                 }
             });
 
