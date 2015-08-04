@@ -22,6 +22,16 @@ define([], function() {
             parentListener: null,
             instanceName: 'content',
             showTitleAsTooltip: true,
+            groups: [
+                {
+                    id: 1,
+                    align: 'left'
+                },
+                {
+                    id: 2,
+                    align: 'right'
+                }
+            ],
             columnOptions: {
                 disabled: false,
                 data: [],
@@ -223,6 +233,16 @@ define([], function() {
                 this.options.template = mergeTemplates.call(this, this.options.parentTemplate, this.options.template);
 
             }
+
+            // emit event to extend toolbar
+            this.sandbox.emit(
+                'sulu.list-toolbar.extend',
+                this.options.context,
+                this.options.template,
+                this.options.instanceName,
+                this.options.datagridInstanceName,
+                this.options.listInfoContainerSelector
+            );
 
             this.options.template = parseTemplateTypes.call(this, this.options.template);
 

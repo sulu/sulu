@@ -20,8 +20,11 @@ require.config({
         'type/iban-input': '../../sulucontact/js/validation/types/ibanInput',
 
         'services/sulucontact/contact-manager': '../../sulucontact/js/services/contact-manager',
+        'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
+        'services/sulucontact/account-router': '../../sulucontact/js/services/account-router',
         'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router'
     },
+
     shim: {
         'vendor/iban-converter': {
             exports: 'IBAN'
@@ -130,7 +133,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>';
+                    return '<div data-aura-component="accounts/list@sulucontact"/>';
                 }
             });
 
@@ -138,15 +141,15 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/add',
                 callback: function() {
-                    return '<div data-aura-component="accounts/components/content@sulucontact"/>';
+                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="edit"/>';
                 }
             });
 
             //show for for editing an account
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/edit::id/:content',
-                callback: function(id, content) {
-                    return '<div data-aura-component="accounts/components/content@sulucontact" data-aura-content="' + content + '" data-aura-id="' + id + '"/>';
+                callback: function(id) {
+                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="edit" data-aura-id="' + id + '"/>';
                 }
             });
         }

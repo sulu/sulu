@@ -1,0 +1,1 @@
+define(function(){"use strict";return{header:{tabs:{url:"/admin/content-navigations?alias=account"},toolbar:{buttons:{save:{parent:"saveWithOptions"},settings:{options:{dropdownItems:{"delete":{}}}}}}}}});
