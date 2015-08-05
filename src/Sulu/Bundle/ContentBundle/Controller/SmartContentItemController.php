@@ -24,7 +24,6 @@ class SmartContentItemController extends RestController
 
     /**
      * Resolves filter for smart-content UI.
-     * Filter will be passed by post-parameter.
      *
      * @param Request $request
      *
@@ -33,11 +32,11 @@ class SmartContentItemController extends RestController
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      * @throws \Sulu\Component\SmartContent\Exception\DataProviderNotExistsException
      */
-    public function postItemsAction(Request $request)
+    public function getItemsAction(Request $request)
     {
         // prepare filters and options
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
-        $filters = $request->request->all();
+        $filters = $request->query->all();
         $filters['excluded'] = [$this->getRequestParameter($request, 'excluded', true)];
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace', true),

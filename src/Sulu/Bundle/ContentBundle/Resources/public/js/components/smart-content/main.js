@@ -1007,7 +1007,7 @@ define([], function() {
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.startLoader();
                 this.sandbox.util.ajax({
-                    method: 'POST',
+                    method: 'GET',
                     url: this.URI.str,
                     data: this.URI.data,
 
