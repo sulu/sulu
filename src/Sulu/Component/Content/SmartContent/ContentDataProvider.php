@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
@@ -49,14 +52,21 @@ class ContentDataProvider implements DataProviderInterface
      */
     private $hasNextPage;
 
+    /**
+     * @var LazyLoadingValueHolderFactory
+     */
+    private $proxyFactory;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutor $contentQueryExecutor,
-        DocumentManagerInterface $documentManager
+        DocumentManagerInterface $documentManager,
+        LazyLoadingValueHolderFactory $proxyFactory
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->documentManager = $documentManager;
+        $this->proxyFactory = $proxyFactory;
     }
 
     /**
@@ -245,8 +255,23 @@ class ContentDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
-                // TODO proxy ...
-                return new ContentDataItem($item, $this->documentManager->find($item['uuid'], $locale));
+                $resource = $this->proxyFactory->createProxy(
+                    PageDocument::class,
+                    function (
+                        & $wrappedObject,
+                        LazyLoadingInterface $proxy,
+                        $method,
+                        array $parameters,
+                        & $initializer
+                    ) use ($item, $locale) {
+                        $initializer = null;
+                        $wrappedObject = $this->documentManager->find($item['uuid'], $locale);
+
+                        return true;
+                    }
+                );
+
+                return new ContentDataItem($item, $resource);
             },
             $data
         );

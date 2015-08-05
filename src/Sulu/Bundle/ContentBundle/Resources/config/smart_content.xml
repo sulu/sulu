@@ -8,6 +8,7 @@
         <!-- content provider -->
         <parameter key="sulu_content.smart_content.data_provider.content.query_builder.class">Sulu\Component\Content\SmartContent\QueryBuilder</parameter>
         <parameter key="sulu_content.smart_content.data_provider.content.class">Sulu\Component\Content\SmartContent\ContentDataProvider</parameter>
+        <parameter key="sulu_content.smart_content.data_provider.content.proxy_factory.class">ProxyManager\Factory\LazyLoadingValueHolderFactory</parameter>
 
         <!-- content type -->
         <parameter key="sulu_content.smart_content.content_type.class">Sulu\Component\SmartContent\ContentType</parameter>
@@ -19,6 +20,8 @@
         </service>
 
         <!-- content provider -->
+        <service id="sulu_content.smart_content.data_provider.content.proxy_factory"
+                 class="%sulu_content.smart_content.data_provider.content.proxy_factory.class%"/>
         <service id="sulu_content.smart_content.data_provider.content.query_builder"
                  class="%sulu_content.smart_content.data_provider.content.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
@@ -31,6 +34,7 @@
             <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_content.smart_content.data_provider.content.proxy_factory"/>
 
             <tag name="sulu.smart_content.data_provider" alias="content"/>
         </service>
