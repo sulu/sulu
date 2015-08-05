@@ -298,7 +298,7 @@ define([
                     }.bind(this)
                 });
             } else {
-                startComponent(this.account.toJSON());
+                startComponent.call(this, this.account);
             }
         },
 

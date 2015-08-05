@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config', 'widget-groups'], function(Config, WidgetGroups) {
+define(['config', 'widget-groups', 'services/sulucontact/account-manager'], function(Config, WidgetGroups, AccountManager) {
 
     'use strict';
 
@@ -67,7 +67,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
+            
             this.form = '#contact-form';
             this.formContactFields = '#contact-fields';
 
@@ -77,13 +77,16 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
 
-            this.render();
-            this.setHeaderBar(true);
-            this.listenForChange();
+            AccountManager.loadOrNew(this.options.id).then(function(data) {
+                this.data = data;
+                this.render();
+                this.setHeaderBar(true);
+                this.listenForChange();
 
-            if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('account-detail')) {
-                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
-            }
+                if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
+                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
+                }
+            }.bind(this));
         },
 
         initSidebar: function(url, id) {
@@ -103,8 +106,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             data = this.initContactData();
 
             excludeItem = [];
-            if (!!this.options.data.id) {
-                excludeItem.push({id: this.options.data.id});
+            if (!!this.data.id) {
+                excludeItem.push({id: this.data.id});
             }
 
             options = Config.get('sulucontact.components.autocomplete.default.account');
@@ -139,8 +142,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
         // show tags and activate keylistener
         setTags: function() {
             var uid = this.sandbox.util.uniqueId();
-            if (this.options.data.id) {
-                uid += '-' + this.options.data.id;
+            if (this.data.id) {
+                uid += '-' + this.data.id;
             }
             this.autoCompleteInstanceName += uid;
 
@@ -231,7 +234,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
         },
 
         initContactData: function() {
-            var contactJson = this.options.data;
+            var contactJson = this.data;
 
             this.sandbox.util.foreach(fields, function(field) {
                 if (!contactJson.hasOwnProperty(field)) {
@@ -355,13 +358,13 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
             // delete account
             this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
+                this.sandbox.emit('sulu.contacts.account.delete', this.data.id);
             }, this);
 
             // account saved
             this.sandbox.on('sulu.contacts.accounts.saved', function(data) {
                 // reset forms data
-                this.options.data = data;
+                this.data = data;
                 this.initContactData();
                 this.setFormData(data);
                 this.setHeaderBar(true);
@@ -374,7 +377,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
+                this.sandbox.emit('sulu.contacts.accounts.list', this.data);
             }, this);
 
             this.sandbox.on('sulu.contact-form.added.bank-account', function() {

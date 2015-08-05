@@ -138,20 +138,20 @@ define([
             this.contact = new Contact();
 
             var $edit = this.sandbox.dom.createElement('<div id="contacts-edit-container"/>'),
-                startComponent = function(model) {
+                startComponent = function(contact) {
                     this.sandbox.start([{
                         name: 'contacts/edit@sulucontact',
                         options: {
                             el: $edit,
-                            data: model.toJSON(),
-                            id: this.options.id,
+                            data: contact,
+                            id: this.options.id
                         }
                     }]);
                 };
             this.html($edit);
 
             if (!!this.options.id) {
-                ContactManager.load(this.options.id).then(function(contact) {
+                ContactManager.loadOrNew(this.options.id).then(function(contact) {
                         startComponent.call(this, contact);
                 }.bind(this))
             } else {

@@ -97,18 +97,23 @@ define([
         /**
          * loads contact by id
          */
-        getAccount: function(id) {
+        loadOrNew: function(id) {
             var promise = $.Deferred(),
+                account;
+            if (!id) {
+                account = new Account();
+                promise.resolve(account.toJSON());
+            } else {
                 account = Account.findOrCreate({id: id});
-
-            account.fetch({
-                success: function() {
-                    promise.resolve(account.toJSON());
-                }.bind(this),
-                error: function() {
-                    promise.fail();
-                }.bind(this)
-            });
+                account.fetch({
+                    success: function() {
+                        promise.resolve(account.toJSON());
+                    }.bind(this),
+                    error: function() {
+                        promise.fail();
+                    }.bind(this)
+                });
+            }
 
             return promise;
         },
