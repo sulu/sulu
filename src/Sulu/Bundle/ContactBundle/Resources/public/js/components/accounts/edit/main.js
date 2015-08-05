@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulucontact/account-router'], function(AccountRouter) {
+define([
+    'services/sulucontact/account-manager',
+    'services/sulucontact/account-router',
+    'services/sulucontact/account-delete-dialog',], function(AccountManager, AccountRouter, DeleteDialog) {
 
     'use strict';
 
@@ -25,7 +28,7 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
                         delete: {}
                     }
                 }
-            }
+            };
         },
 
         initialize: function() {
@@ -43,9 +46,11 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
         },
 
         deleteAccount: function() {
-            if (!!this.options.id) {
-                alert('delete');
-            }
+            DeleteDialog.showDialog([this.options.id], function(deleteContacts){
+                AccountManager.delete(this.options.id, deleteContacts).then(function() {
+                    AccountRouter.toList();
+                }.bind(this));
+            }.bind(this));
         },
 
         /**

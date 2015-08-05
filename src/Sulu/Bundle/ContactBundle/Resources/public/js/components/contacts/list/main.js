@@ -28,7 +28,8 @@ define([
         bindCustomEvents = function() {
             // delete clicked
             this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', callDeleteDialog.bind(this));
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected',
+                    deleteCallback.bind(this));
             }, this);
 
             // add clicked
@@ -43,12 +44,7 @@ define([
             }, this);
         },
 
-        callDeleteDialog = function(ids){
-            if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
-                return;
-            }
-
+        deleteCallback = function(ids){
             DeleteDialog.showDialog(ids, function() {
                 ids.forEach(function(id) {
                     ContactManager.delete(id).then(function() {

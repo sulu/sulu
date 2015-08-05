@@ -262,39 +262,5 @@ define([
                 }
             ]);
         },
-
-        renderEdit: function() {
-            this.account = new Account();
-            var $edit = this.sandbox.dom.createElement('<div id="accounts-edit-container"/>'),
-                startComponent = function(model) {
-                    this.sandbox.start([{
-                        name: 'accounts/edit@sulucontact',
-                        options: {
-                            el: $edit,
-                            data: model.toJSON(),
-                            id: this.options.id
-                        }
-                    }]);
-                };
-            this.html($edit);
-
-            if (!!this.options.id) {
-                this.account = new Account({id: this.options.id});
-                this.account.fetch({
-                    success: startComponent.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
-                    }.bind(this)
-                });
-            } else {
-                startComponent.call(this, this.account);
-            }
-        },
-
-        showDeleteConfirmation: function(ids) {
-            DeleteDialog.showDialog(ids, function(deleteContacts) {
-                alert('delContacts: ' + deleteContacts);
-            });
-        }
     };
 });

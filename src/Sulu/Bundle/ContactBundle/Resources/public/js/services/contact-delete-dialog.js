@@ -17,6 +17,10 @@ define(['services/husky/mediator'], function(mediator) {
          * @param okCallback function to execute on deletion confirmed
          */
         showDialog: function(ids, okCallback) {
+            if (!(ids instanceof Array)){
+                ids = [ids]; //enable integer input
+            }
+
             // no account selected, do not show dialog
             if (ids.length === 0) {
                 return;
@@ -26,6 +30,7 @@ define(['services/husky/mediator'], function(mediator) {
             mediator.emit(
                 'sulu.overlay.show-warning',
                 'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
                 null,
                 okCallback.bind(this, true)
             );
