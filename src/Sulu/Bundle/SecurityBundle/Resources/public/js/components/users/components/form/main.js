@@ -221,7 +221,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 }
             }
 
-            this.systemLanguage = AppConfig.getUser().locale;
+            this.systemLanguage = this.user.locale;
 
             this.sandbox.start([
                 {
