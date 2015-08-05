@@ -16,7 +16,7 @@ require.config({
 define([
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router',
-    'contactsutil/delete-dialog',
+    'services/sulucontact/contact-delete-dialog',
     'widget-groups'], function(ContactManager, ContactRouter, DeleteDialog, WidgetGroups) {
 
     'use strict';
@@ -49,11 +49,7 @@ define([
                 return;
             }
 
-            DeleteDialog.showConfirmDialog(function(wasConfirmed) {
-                if (!wasConfirmed){
-                    return;
-                }
-
+            DeleteDialog.showDialog(ids, function() {
                 ids.forEach(function(id) {
                     ContactManager.delete(id).then(function() {
                         this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
