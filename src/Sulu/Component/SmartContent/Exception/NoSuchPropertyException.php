@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\SmartContent\Exception;
 
+/**
+ * The requested property was not found.
+ */
 class NoSuchPropertyException extends \Exception
 {
 }

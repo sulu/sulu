@@ -29,6 +29,8 @@ class ContentDataItem extends Item
     public function __construct(array $data, $resource)
     {
         parent::__construct($data);
+
+        $this->resource = $resource;
     }
 
     /**

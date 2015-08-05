@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\SmartContent\Exception;
 
+/**
+ * The requested feature is not supported.
+ */
 class NotSupportedException extends \Exception
 {
 }

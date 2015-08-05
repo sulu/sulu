@@ -16,7 +16,7 @@ namespace Sulu\Component\SmartContent;
 interface ItemInterface
 {
     /**
-     * Returns resource behind the item.
+     * Returns the resource which belongs to the item.
      *
      * @return mixed
      */
