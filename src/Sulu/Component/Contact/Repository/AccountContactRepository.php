@@ -45,11 +45,12 @@ class AccountContactRepository implements AccountContactRepositoryInterface
      */
     public function findBy($filters, $page, $pageSize)
     {
-        // TODO
-        // * tagOperator
+        $parameter = array();
+
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('a')
             ->addSelect('c')
+            ->distinct()
             ->from($this->contactEntityName, 'c')
             ->from($this->accountEntityName, 'a');
 
@@ -58,15 +59,36 @@ class AccountContactRepository implements AccountContactRepositoryInterface
                 ->join('a.tags', 'atags')
                 ->where('ctags.id IN (:tags)')
                 ->orwhere('atags.id IN (:tags)');
+
+            $parameter['tags'] = $filters['tags'];
+        }
+
+        // works if there are at least one account and contact with this tags
+        // if only contact/account has this tags they will not show ...
+        if (isset($filters['tags']) && sizeof($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'and') {
+            $contactExpr = $queryBuilder->expr()->andX();
+            $accountExpr = $queryBuilder->expr()->andX();
+
+            $len = sizeof($filters['tags']);
+            for ($i = 0; $i < $len; $i++) {
+                $queryBuilder->join('c.tags', 'ctags' . $i)
+                    ->join('a.tags', 'atags' . $i);
+
+                $contactExpr->add($queryBuilder->expr()->eq('ctags' . $i . '.id', ':tag' . $i));
+                $accountExpr->add($queryBuilder->expr()->eq('atags' . $i . '.id', ':tag' . $i));
+
+                $parameter['tag' . $i] = $filters['tags'][$i];
+            }
+            $queryBuilder->andWhere($queryBuilder->expr()->andX($contactExpr, $accountExpr));
         }
 
         $query = $queryBuilder->getQuery();
-        if (isset($filters['tags'])) {
-            $query->setParameter('tags', $filters['tags']);
+        foreach ($parameter as $name => $value) {
+            $query->setParameter($name, $value);
         }
 
         if ($page !== null && $pageSize > 0) {
-            $query->setMaxResults($pageSize);
+            $query->setMaxResults($pageSize + 1);
             $query->setFirstResult($page * $pageSize);
         }
 
