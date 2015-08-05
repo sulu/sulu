@@ -62,10 +62,16 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
 
     'use strict';
 
-    var language = AppConfig.getUser().locale,
+    var locale = AppConfig.getUser().locale,
+        translations = AppConfig.getTranslations(),
+        fallbackLocale = AppConfig.getFallbackLocale(),
         app;
 
-    require(['text!/admin/bundles', 'text!/admin/translations/sulu.' + language + '.json'], function(text, messagesText) {
+    if (translations.indexOf(locale) === -1) {
+        locale = fallbackLocale;
+    }
+
+    require(['text!/admin/bundles', 'text!/admin/translations/sulu.' + locale + '.json'], function(text, messagesText) {
         var bundles = JSON.parse(text),
             messages = JSON.parse(messagesText);
 
@@ -74,7 +80,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
                 enable: AppConfig.getDebug()
             },
             culture: {
-                name: language,
+                name: locale,
                 messages: messages
             }
         });
