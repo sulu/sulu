@@ -170,7 +170,7 @@ define([
         },
 
         /**
-         * Save a new account-contact relationshop
+         * Save a new account-contact relationship
          * @param id The id of the account
          * @param contactId The id of the contact
          * @param position The position the contact has witih the account

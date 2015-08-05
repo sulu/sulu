@@ -25,11 +25,7 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
                         settings: {
                             options: {
                                 dropdownItems: {
-                                    delete: {
-                                        options: {
-                                            callback: this.deleteAccount.bind(this)
-                                        }
-                                    }
+                                    delete: {}
                                 }
                             }
                         }
@@ -48,6 +44,7 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
             this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
             this.sandbox.on('sulu.tab.dirty', this.tabDirty.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
+            this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
         },
 
         deleteAccount: function() {
@@ -66,12 +63,14 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
         },
 
-        afterSave: function() {
+        afterSave: function(savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
             if (this.afterSaveAction == 'back') {
                 AccountRouter.toList();
             } else if (this.afterSaveAction == 'new') {
                 AccountRouter.toAdd();
+            } else if (!this.options.id) {
+                AccountRouter.toEdit(savedData.id);
             }
         }
     };

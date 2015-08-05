@@ -14,8 +14,8 @@ define([
     'config',
     'widget-groups',
     'services/sulucontact/account-manager',
-    'services/sulucontact/account-router'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager, AccountRouter) {
+    'services/sulucontact/contact-router'
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager, ContactRouter) {
 
     'use strict';
 
@@ -27,22 +27,11 @@ define([
             contactListSelector: '#people-list'
         },
 
-        companyPosition = null,
-
-        actionCallback = function(item) {
-            this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
-            this.sandbox.emit('sulu.contacts.contact.load', item);
+        actionCallback = function(contactId) {
+            ContactRouter.toEdit(contactId);
         },
 
         bindCustomEvents = function() {
-            // delete clicked
-            // TODO: dont listen on
-            this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.contacts.accounts.delete', ids);
-                }.bind(this));
-            }, this);
-
             // add new record to datagrid
             this.sandbox.on('sulu.contacts.accounts.contact.saved', function(model) {
                 this.sandbox.emit('husky.datagrid.record.add', model);
@@ -61,12 +50,12 @@ define([
 
             // when radio button is clicked
             this.sandbox.on('husky.datagrid.radio.selected', function(id) {
-                this.sandbox.emit('sulu.contacts.accounts.contacts.set-main', id);
+                AccountManager.setMainContact(this.data.id, id);
             }, this);
 
             // when a position is selected in the company overlay
             this.sandbox.on('husky.select.company-position-select.selected.item', function(id) {
-                companyPosition = id;
+                this.companyPosition = id;
             }, this);
 
             this.sandbox.dom.on('husky.datagrid.number.selections', function(number) {
@@ -200,8 +189,6 @@ define([
                 .fail(function(textStatus, error) {
                     this.sandbox.logger.error(textStatus, error);
                 }.bind(this));
-
-            this.data = data;
         },
 
         // triggers removal of account contact relation
@@ -258,7 +245,7 @@ define([
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
-                this.sandbox.emit('sulu.contacts.accounts.contact.save', id, companyPosition);
+                AccountManager.addAccountContact(this.options.id, id, this.companyPosition)
             }
         };
 
@@ -281,17 +268,15 @@ define([
 
         initialize: function() {
             AccountManager.loadOrNew(this.options.id).then(function(data) {
-                
                 this.data = data;
                 this.formOfAddress = null;
+                this.companyPosition = null;
                 bindCustomEvents.call(this);
                 this.render();
 
                 if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
                     this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
                 }
-
-                this.sandbox.emit('sulu.contacts.accounts.contacts.initialized');
             }.bind(this));
         },
 
@@ -300,9 +285,6 @@ define([
         },
 
         render: function() {
-
-            //RelationalStore.reset(); //FIXME really necessary?
-
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // init list-toolbar and datagrid

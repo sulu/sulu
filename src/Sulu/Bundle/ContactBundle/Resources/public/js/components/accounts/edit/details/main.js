@@ -405,11 +405,7 @@ define([
                     id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
                 AccountManager.save(data).then(function(savedData) {
-                    this.sandbox.emit('sulu.tab.saved');
-                    // reset forms data
-                    if (!this.data.id) {
-                        AccountRouter.toEdit(savedData.id);
-                    }
+                    this.sandbox.emit('sulu.tab.saved', savedData);
                     this.data = savedData;
                     this.initContactData();
                     this.setFormData(this.data);

@@ -168,8 +168,8 @@ function(WidgetGroups, AccountManager, ContactManager) {
 
         save: function() {
              if (this.sandbox.form.validate(this.form)) {
-                 this.manager.saveDocuments(this.data.id, this.newSelections, this.removedSelections).then(function() {
-                     this.sandbox.emit('sulu.tab.saved');
+                 this.manager.saveDocuments(this.data.id, this.newSelections, this.removedSelections).then(function(data) {
+                     this.sandbox.emit('sulu.tab.saved', data);
                  }.bind(this));
             }
         }
