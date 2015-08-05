@@ -26,69 +26,70 @@ define([
 
         var instance = null,
 
-        /**
-         * Removes medias from contact
-         * @param mediaIds Array of medias to delete
-         * @param contactId The contact to delete the medias from
-         * @private
-         */
-        removeDocuments = function(mediaIds, contactId) {
-            var requests = [],
-                promise = $.Deferred();
-            if (!!mediaIds.length) {
-                util.each(mediaIds, function(index, id) {
-                    requests.push(
-                        util.ajax({
-                            url: '/admin/api/contacts/' + contactId + '/medias/' + id,
-                            data: {mediaId: id},
-                            type: 'DELETE'
-                        })
-                    );
-                }.bind(this));
+            /**
+             * Removes medias from contact
+             * @param mediaIds Array of medias to delete
+             * @param contactId The contact to delete the medias from
+             * @private
+             */
+            removeDocuments = function(mediaIds, contactId) {
+                var requests = [],
+                    promise = $.Deferred();
+                if (!!mediaIds.length) {
+                    util.each(mediaIds, function(index, id) {
+                        requests.push(
+                            util.ajax({
+                                url: '/admin/api/contacts/' + contactId + '/medias/' + id,
+                                data: {mediaId: id},
+                                type: 'DELETE'
+                            })
+                        );
+                    }.bind(this));
 
-                util.when.apply(null, requests).then(function() {
+                    util.when.apply(null, requests).then(function() {
+                        promise.resolve();
+                    }.bind(this));
+
+                } else {
                     promise.resolve();
-                }.bind(this));
+                }
+                return promise;
+            },
 
-            } else {
-                promise.resolve();
-            }
-            return promise;
-        },
+            /**
+             * Adds medias to an contact
+             * @param mediaIds Array of medias to add
+             * @param contactId The contact to add the medias to
+             * @private
+             */
+            addDocuments = function(mediaIds, contactId) {
+                var requests = [],
+                    promise = $.Deferred();
+                if (!!mediaIds.length) {
+                    util.each(mediaIds, function(index, id) {
+                        requests.push(
+                            util.ajax({
+                                url: '/admin/api/contacts/' + contactId + '/medias',
+                                data: {mediaId: id},
+                                type: 'POST'
+                            })
+                        );
+                    }.bind(this));
 
-        /**
-         * Adds medias to an contact
-         * @param mediaIds Array of medias to add
-         * @param contactId The contact to add the medias to
-         * @private
-         */
-        addDocuments = function(mediaIds, contactId) {
-            var requests = [],
-                promise = $.Deferred();
-            if (!!mediaIds.length) {
-                util.each(mediaIds, function(index, id) {
-                    requests.push(
-                        util.ajax({
-                            url: '/admin/api/contacts/' + contactId + '/medias',
-                            data: {mediaId: id},
-                            type: 'POST'
-                        })
-                    );
-                }.bind(this));
+                    util.when.apply(null, requests).then(function() {
+                        promise.resolve();
+                    }.bind(this));
 
-                util.when.apply(null, requests).then(function() {
+                } else {
                     promise.resolve();
-                }.bind(this));
-
-            } else {
-                promise.resolve();
-            }
-            return promise;
-        };
+                }
+                return promise;
+            };
 
 
         /** @constructor **/
-        function ContactManager() {}
+        function ContactManager() {
+        }
 
         ContactManager.prototype = {
 
@@ -97,18 +98,23 @@ define([
              * @param contactId
              * @returns promise
              */
-            load: function(contactId) {
-                var promise = $.Deferred();
-                var contact = Contact.findOrCreate({id: contactId});
-
-                contact.fetch({
-                    success: function(response) {
-                        promise.resolve(response);
-                    }.bind(this),
-                    error: function() {
-                        promise.fail();
-                    }.bind(this)
-                });
+            loadOrNew: function(contactId) {
+                var promise = $.Deferred(),
+                    contact;
+                if (!contactId) {
+                    contact = new Contact();
+                    promise.resolve(contact.toJSON());
+                } else {
+                    contact = Contact.findOrCreate({id: contactId});
+                    contact.fetch({
+                        success: function(response) {
+                            promise.resolve(response.toJSON());
+                        }.bind(this),
+                        error: function() {
+                            promise.fail();
+                        }.bind(this)
+                    });
+                }
 
                 return promise;
             },
