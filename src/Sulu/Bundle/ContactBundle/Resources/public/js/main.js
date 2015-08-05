@@ -12,8 +12,6 @@ require.config({
         sulucontact: '../../sulucontact/js',
         'type/bic-input': '../../sulucontact/js/validation/types/bicInput',
         'type/vat-input': '../../sulucontact/js/validation/types/vatInput',
-        'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
-        'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
 
         'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
@@ -135,7 +133,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>';
+                    return '<div data-aura-component="accounts/list@sulucontact" data-aura-display="list"/>';
                 }
             });
 

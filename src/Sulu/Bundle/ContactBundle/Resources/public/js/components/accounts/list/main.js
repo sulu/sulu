@@ -8,10 +8,11 @@
  */
 
 define([
+    'services/sulucontact/account-manager',
     'services/sulucontact/account-router',
-    'app-config',
+    'services/sulucontact/account-delete-dialog',
     'widget-groups'
-], function(AccountRouter, AppConfig, WidgetGroups) {
+], function(AccountManager, AccountRouter, DeleteDialog, WidgetGroups) {
 
     'use strict';
 
@@ -22,9 +23,8 @@ define([
         bindCustomEvents = function() {
             // delete clicked
             this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.contacts.accounts.delete', ids);
-                }.bind(this));
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected',
+                    deleteCallback.bind(this));
             }, this);
 
             // add clicked
@@ -36,6 +36,16 @@ define([
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
+            }, this);
+        },
+
+        deleteCallback = function(ids) {
+            DeleteDialog.showDialog(ids, function(deleteContacts){
+                ids.forEach(function(id) {
+                    AccountManager.delete(id, deleteContacts).then(function() {
+                        this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
         },
 

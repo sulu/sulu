@@ -14,8 +14,7 @@ define([
     'sulucontact/models/title',
     'sulucontact/models/position',
     'sulucategory/model/category',
-    'contactsutil/delete-dialog'
-], function(ContactManager, ContactRouter, Contact, Title, Position, Category, DeleteDialog) {
+], function(ContactManager, ContactRouter, Contact, Title, Position, Category) {
 
     'use strict';
 
@@ -68,7 +67,7 @@ define([
 
         saveDocuments: function(contactId, newMediaIds, removedMediaIds, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
-            ContactManager.saveDocuments(contactId, newMediaIds, removedMediaIds)
+            ContactManager.saveDocuments(contactId, newMediaIds, removedMediaIds);
         },
 
         /**

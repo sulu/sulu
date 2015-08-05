@@ -11,8 +11,7 @@ define([
     'config',
     'widget-groups',
     'services/sulucontact/account-manager',
-    'services/sulucontact/account-router'
-], function(Config, WidgetGroups, AccountManager, AccountRouter) {
+], function(Config, WidgetGroups, AccountManager) {
 
     'use strict';
 
@@ -75,8 +74,6 @@ define([
             
             this.form = '#contact-form';
             this.formContactFields = '#contact-fields';
-
-            this.saved = true;
             this.autoCompleteInstanceName = 'contacts-';
 
             this.dfdListenForChange = this.sandbox.data.deferred();
@@ -117,7 +114,7 @@ define([
             options = Config.get('sulucontact.components.autocomplete.default.account');
             options.el = '#company';
             options.value = !!data.parent ? data.parent : null;
-            options.instanceName = 'companyAccount' + data.id,
+            options.instanceName = 'companyAccount' + data.id;
 
             this.sandbox.start([
                 {
@@ -344,7 +341,6 @@ define([
         },
 
         bindCustomEvents: function() {
-
             this.sandbox.on('sulu.contact-form.added.address', function() {
                 this.numberOfAddresses++;
                 this.updateAddressesAddIcon(this.numberOfAddresses);

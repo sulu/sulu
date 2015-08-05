@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulucontact/account-router'], function(AccountRouter) {
+define([
+    'services/sulucontact/account-manager',
+    'services/sulucontact/account-router',
+    'services/sulucontact/account-delete-dialog',], function(AccountManager, AccountRouter, DeleteDialog) {
 
     'use strict';
 
@@ -31,7 +34,7 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
                         }
                     }
                 }
-            }
+            };
         },
 
         initialize: function() {
@@ -41,16 +44,18 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.header.back', AccountRouter.toList);
-            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
             this.sandbox.on('sulu.tab.dirty', this.tabDirty.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
+            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
         },
 
         deleteAccount: function() {
-            if (!!this.options.id) {
-                alert('delete');
-            }
+            DeleteDialog.showDialog([this.options.id], function(deleteContacts){
+                AccountManager.delete(this.options.id, deleteContacts).then(function() {
+                    AccountRouter.toList();
+                }.bind(this));
+            }.bind(this));
         },
 
         save: function(action) {
@@ -65,9 +70,9 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
 
         afterSave: function(savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            if (this.afterSaveAction == 'back') {
+            if (this.afterSaveAction === 'back') {
                 AccountRouter.toList();
-            } else if (this.afterSaveAction == 'new') {
+            } else if (this.afterSaveAction === 'new') {
                 AccountRouter.toAdd();
             } else if (!this.options.id) {
                 AccountRouter.toEdit(savedData.id);
