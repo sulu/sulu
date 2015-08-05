@@ -86,9 +86,6 @@ define([
         },
 
         render: function() {
-
-            //RelationalStore.reset(); //FIXME really necessary?
-
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
             // init list-toolbar and datagrid

@@ -46,7 +46,7 @@ define([
                         );
                     }.bind(this));
 
-                    util.when.apply(null, requests).then(function() {
+                    $.when.apply(null, requests).then(function() {
                         promise.resolve();
                     }.bind(this));
 
@@ -76,7 +76,7 @@ define([
                         );
                     }.bind(this));
 
-                    util.when.apply(null, requests).then(function() {
+                    $.when.apply(null, requests).then(function() {
                         promise.resolve();
                     }.bind(this));
 
@@ -181,7 +181,7 @@ define([
                     addPromise = addDocuments.call(this, newMediaIds, contactId),
                     removePromise = removeDocuments.call(this, removedMediaIds, contactId);
 
-                util.when(removePromise, addPromise).then(function() {
+                $.when(removePromise, addPromise).then(function() {
                     savePromise.resolve();
                 }.bind(this));
 

@@ -27051,6 +27051,7 @@ define('services/husky/util',[],function() {
                 s = 'null';
             }
         }
+
         return s;
     };
 
@@ -27089,7 +27090,6 @@ define('services/husky/util',[],function() {
         if (typeof(dataType) !== 'undefined') {
             settings.dataType = dataType;
         }
-
         this.ajax(settings);
 
         return deferred.promise();
@@ -27134,6 +27134,7 @@ define('services/husky/util',[],function() {
         }
 
         substrLength = Math.floor((maxLength - delimiter.length) / 2);
+
         return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
     },
 
@@ -27172,6 +27173,7 @@ define('services/husky/util',[],function() {
                 return false;
             }
         }
+
         return true;
     };
 
@@ -27205,6 +27207,7 @@ define('services/husky/util',[],function() {
         if ($.isArray(object)) {
             parent = [];
         }
+
         return $.extend(true, parent, object);
     };
 
@@ -27241,6 +27244,7 @@ define('services/husky/util',[],function() {
         if (instance == null) {
             instance = new Util();
         }
+
         return instance;
     };
 
