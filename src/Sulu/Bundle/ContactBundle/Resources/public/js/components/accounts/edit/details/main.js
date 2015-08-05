@@ -400,11 +400,12 @@ define([
                 data.parent = {
                     id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
+                this.sandbox.emit('sulu.tab.saving');
                 AccountManager.save(data).then(function(savedData) {
-                    this.sandbox.emit('sulu.tab.saved', savedData);
                     this.data = savedData;
                     this.initContactData();
                     this.setFormData(this.data);
+                    this.sandbox.emit('sulu.tab.saved', savedData);
                 }.bind(this));
             }
         },

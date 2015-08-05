@@ -168,6 +168,7 @@ function(WidgetGroups, AccountManager, ContactManager) {
 
         save: function() {
              if (this.sandbox.form.validate(this.form)) {
+                 this.sandbox.emit('sulu.tab.saving');
                  this.manager.saveDocuments(this.data.id, this.newSelections, this.removedSelections).then(function(data) {
                      this.sandbox.emit('sulu.tab.saved', data);
                  }.bind(this));
