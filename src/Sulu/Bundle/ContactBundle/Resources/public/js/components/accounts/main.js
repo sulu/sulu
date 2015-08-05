@@ -16,7 +16,7 @@ define([
     'sulucontact/models/emailType',
     'sulumedia/model/media',
     'sulucategory/model/category',
-    'accountsutil/delete-dialog'
+    'services/sulucontact/account-delete-dialog'
 ], function(
     AccountManager,
     Account,
@@ -247,7 +247,7 @@ define([
                 this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
                 return;
             }
-            this.showDeleteConfirmation(ids);
+            this.showDeleteConfirmation.call(this, ids);
         },
 
         renderList: function() {
@@ -292,17 +292,9 @@ define([
         },
 
         showDeleteConfirmation: function(ids) {
-            if (ids.length === 0) {
-                return;
-            } else if (ids.length === 1) {
-                // if only one account was selected - get related sub-companies and contacts (and show the first 3 ones)
-                //this.confirmSingleDeleteDialog(ids[0], callbackFunction);
-                DeleteDialog.showForSingle(this.sandbox, Account.findOrCreate({id:ids[0]}), ids[0], true)
-            } else {
-                // if multiple accounts were selected, get related sub-companies and show simplified message
-                //this.confirmMultipleDeleteDialog(ids, callbackFunction);
-                DeleteDialog.showForMultiple(this.sandbox, ids);
-            }
+            DeleteDialog.showDialog(ids, function(deleteContacts) {
+                alert('delContacts: ' + deleteContacts);
+            });
         }
     };
 });

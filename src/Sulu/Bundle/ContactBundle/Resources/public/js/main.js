@@ -22,7 +22,9 @@ require.config({
         'services/sulucontact/contact-manager': '../../sulucontact/js/services/contact-manager',
         'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
         'services/sulucontact/account-router': '../../sulucontact/js/services/account-router',
-        'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router'
+        'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router',
+        'services/sulucontact/account-delete-dialog': '../../sulucontact/js/services/account-delete-dialog',
+        'services/sulucontact/contact-delete-dialog': '../../sulucontact/js/services/contact-delete-dialog'
     },
 
     shim: {
@@ -133,7 +135,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    return '<div data-aura-component="accounts/list@sulucontact"/>';
+                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>';
                 }
             });
 
