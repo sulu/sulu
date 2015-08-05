@@ -36,11 +36,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $container->setParameter('sulu_core.locales', array_keys($config['locales']));
-        $container->setParameter('sulu_core.translated_locales', $config['locales']);
-        $container->setParameter('sulu_core.translations', $config['translations']);
-        $container->setParameter('sulu_core.fallback_locale', $config['fallback_locale']);
-
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 
@@ -83,6 +78,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $container->setParameter('sulu_core.locales', array_keys($config['locales']));
+        $container->setParameter('sulu_core.translated_locales', $config['locales']);
+        $container->setParameter('sulu_core.translations', $config['translations']);
+        $container->setParameter('sulu_core.fallback_locale', $config['fallback_locale']);
 
         $container->setParameter('sulu.cache_dir', $config['cache_dir']);
 
