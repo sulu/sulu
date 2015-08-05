@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['widget-groups'], function(WidgetGroups) {
+define([
+    'widget-groups',
+    'services/sulucontact/account-manager',
+    'services/sulucontact/contact-manager'],
+    function(WidgetGroups, AccountManager, ContactManager) {
 
     'use strict';
 
@@ -31,23 +35,26 @@ define(['widget-groups'], function(WidgetGroups) {
 
         initialize: function() {
 
+            this.manager = (this.options.type === 'contact') ? ContactManager : AccountManager;
             this.form = '#documents-form';
             this.newSelections = [];
             this.removedSelections = [];
             this.saved = true;
 
-            this.currentSelection = this.getPropertyFromArrayOfObject(this.options.data.medias, 'id');
+            this.manager.loadOrNew(this.options.id).then(function(data) {
+                this.data = data;
+                this.currentSelection = this.getPropertyFromArrayOfObject(this.data.medias, 'id');
+                this.setHeaderBar(true);
+                this.render();
 
-            this.setHeaderBar(true);
-            this.render();
-
-            if (!!this.options.data && !!this.options.data.id) {
-                if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
-                    this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.data.id);
-                } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
-                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+                if (!!this.data && !!this.data.id) {
+                    if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
+                        this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.data.id);
+                    } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
+                        this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
+                    }
                 }
-            }
+            }.bind(this));
         },
 
         getPropertyFromArrayOfObject: function(data, propertyName) {
@@ -69,7 +76,7 @@ define(['widget-groups'], function(WidgetGroups) {
         },
 
         render: function() {
-            var data = this.options.data;
+            var data = this.data;
             this.html(this.renderTemplate(this.templates[0]));
             this.initForm(data);
 
@@ -96,15 +103,15 @@ define(['widget-groups'], function(WidgetGroups) {
 
             this.sandbox.on('sulu.toolbar.delete', function() {
                 if (this.options.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
+                    this.sandbox.emit('sulu.contacts.account.delete', this.data.id);
                 } else {
-                    this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
+                    this.sandbox.emit('sulu.contacts.contact.delete', this.data.id);
                 }
             }, this);
 
             this.sandbox.on('sulu.header.back', function() {
                 if (this.options.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
+                    this.sandbox.emit('sulu.contacts.accounts.list', this.data);
                 } else {
                     this.sandbox.emit('sulu.contacts.contacts.list');
                 }
@@ -187,7 +194,7 @@ define(['widget-groups'], function(WidgetGroups) {
         submit: function(action) {
              if (this.sandbox.form.validate(this.form)) {
                 if (this.options.type === 'account' || this.options.type === 'contact') {
-                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections, action);
+                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.data.id, this.newSelections, this.removedSelections, action);
                 } else {
                     this.sandbox.logger.error('Undefined type for documents component!');
                 }

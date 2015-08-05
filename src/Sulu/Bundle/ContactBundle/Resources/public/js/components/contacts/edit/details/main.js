@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config', 'widget-groups'], function(Config, WidgetGroups) {
+define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], function(Config, WidgetGroups, ContactManager) {
 
     'use strict';
 
@@ -80,17 +80,20 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     this.dfdAllFieldsInitialized.resolve();
                 }.bind(this));
 
-                this.render();
-                this.listenForChange();
+                ContactManager.loadOrNew(this.options.id).then(function(data) {
+                    this.data = data;
+                    this.render();
+                    this.listenForChange();
 
-                if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('contact-detail')) {
-                    this.initSidebar(
-                        '/admin/widget-groups/contact-detail?contact=',
-                        this.options.data.id
-                    );
-                }
+                    if (!!this.data && !!this.data.id && WidgetGroups.exists('contact-detail')) {
+                        this.initSidebar(
+                            '/admin/widget-groups/contact-detail?contact=',
+                            this.data.id
+                        );
+                    }
 
-                this.setHeaderBar(true);
+                    this.setHeaderBar(true);
+                }.bind(this));
             },
 
             initSidebar: function(url, id) {
@@ -121,8 +124,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             // show tags and activate keylistener
             setTags: function() {
                 var uid = this.sandbox.util.uniqueId();
-                if (this.options.data.id) {
-                    uid += '-' + this.options.data.id;
+                if (this.data.id) {
+                    uid += '-' + this.data.id;
                 }
                 this.autoCompleteInstanceName += uid;
 
@@ -266,12 +269,12 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
                 // delete contact
                 this.sandbox.on('sulu.toolbar.delete', function() {
-                    this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
+                    this.sandbox.emit('sulu.contacts.contact.delete', this.data.id);
                 }, this);
 
                 // contact saved
                 this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
-                    this.options.data = data;
+                    this.data = data;
                     this.initContactData();
                     this.setFormData(data);
                     this.setHeaderBar(true);
@@ -319,7 +322,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             },
 
             initContactData: function() {
-                var contactJson = this.options.data;
+                var contactJson = this.data;
 
                 this.sandbox.util.foreach(fields, function(field) {
                     if (!contactJson.hasOwnProperty(field)) {

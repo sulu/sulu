@@ -12,8 +12,9 @@ define([
     'text!sulucontact/components/accounts/edit/contacts/contact-relation.form.html',
     'text!sulucontact/components/accounts/edit/contacts/contact.form.html',
     'config',
-    'widget-groups'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups) {
+    'widget-groups',
+    'services/sulucontact/account-manager'
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager) {
 
     'use strict';
 
@@ -42,7 +43,7 @@ define([
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
+                this.sandbox.emit('sulu.contacts.accounts.list', this.data);
             }, this);
 
             // add new record to datagrid
@@ -136,7 +137,7 @@ define([
         addNewContact = function(){
             if (this.sandbox.form.validate(constants.newContactFormSelector)) {
                 var data = this.sandbox.form.getData(constants.newContactFormSelector);
-                data.account = this.options.data;
+                data.account = this.data;
                 this.sandbox.emit('sulu.contacts.accounts.new.contact', data);
                 return true;
             } else {
@@ -282,16 +283,20 @@ define([
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
+            AccountManager.loadOrNew(this.options.id).then(function(data) {
+                
+                this.data = data;
+                this.formOfAddress = null;
+                this.render();
+                bindCustomEvents.call(this);
 
-            this.formOfAddress = null;
-            this.render();
-            bindCustomEvents.call(this);
+                if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
+                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
+                }
 
-            if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('account-detail')) {
-                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
-            }
-
-            this.sandbox.emit('sulu.contacts.accounts.contacts.initialized');
+                this.sandbox.emit('sulu.contacts.accounts.contacts.initialized');
+                
+            }.bind(this));
         },
 
         initSidebar: function(url, id) {
@@ -300,9 +305,7 @@ define([
 
         render: function() {
 
-            RelationalStore.reset(); //FIXME really necessary?
-
-            this.sandbox.emit('sulu.', this.options.account);
+            //RelationalStore.reset(); //FIXME really necessary?
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
@@ -315,7 +318,7 @@ define([
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
-                    url: '/admin/api/accounts/' + this.options.data.id + '/contacts?flat=true',
+                    url: '/admin/api/accounts/' + this.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
