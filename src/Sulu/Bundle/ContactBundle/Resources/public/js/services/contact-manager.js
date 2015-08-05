@@ -120,6 +120,27 @@ define([
             },
 
             /**
+             * Delete contact by given id
+             * @param contactId
+             * @returns promise
+             */
+            delete: function(contactId) {
+                var promise = $.Deferred();
+                var contact = Contact.findOrCreate({id: contactId});
+
+                contact.destroy({
+                    success: function() {
+                        promise.resolve();
+                    }.bind(this),
+                    error: function() {
+                        promise.fail();
+                    }.bind(this)
+                });
+
+                return promise;
+            },
+
+            /**
              * Save given contact data
              * @param data {Object} the contact data to save
              * @returns promise

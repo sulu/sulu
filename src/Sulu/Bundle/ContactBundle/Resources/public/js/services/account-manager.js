@@ -95,7 +95,9 @@ define([
     AccountManager.prototype = {
 
         /**
-         * loads contact by id
+         * Load or create account by given id
+         * @param id
+         * @returns promise
          */
         loadOrNew: function(id) {
             var promise = $.Deferred(),
@@ -119,7 +121,32 @@ define([
         },
 
         /**
-         * Saves an account
+         * Delete account by given id
+         * @param accountId of the account to remove
+         * @param removeContacts specifies if the associated contacts are removed too. default: false
+         * @returns {*}
+         */
+        delete: function(accountId, removeContacts) {
+            var promise = $.Deferred();
+            var account = Account.findOrCreate({id: accountId});
+
+            account.destroy({
+                data: {removeContacts: !!removeContacts},
+                processData: true,
+
+                success: function() {
+                    promise.resolve();
+                }.bind(this),
+                error: function() {
+                    promise.fail();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
+         * Save given account data
          * @param data {Object} the account data to save
          * @returns promise
          */
@@ -234,7 +261,56 @@ define([
                 savePromise.resolve();
             }.bind(this));
             return savePromise;
-        }
+        },
+
+        /**
+         * Load delete-related information for account by given id
+         * @param id
+         * @returns promise
+         */
+        loadDeleteInfo: function(id) {
+            var promise = $.Deferred();
+
+            util.ajax({
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                type: 'GET',
+                url: '/admin/api/accounts/' + id + '/deleteinfo',
+
+                success: function(response) {
+                    promise.resolve(response);
+                }.bind(this),
+            });
+
+            return promise;
+        },
+
+        /**
+         * Load delete-related information for deleting multiple accounts
+         * @param ids of the accounts to delete
+         * @returns promise
+         */
+        loadMultipleDeleteInfo: function(ids) {
+            var promise = $.Deferred();
+
+            util.ajax({
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                type: 'GET',
+                url: '/admin/api/accounts/multipledeleteinfo',
+                data: {ids: ids},
+
+                success: function(response) {
+                    promise.resolve(response);
+                }.bind(this)
+            });
+
+            return promise;
+        },
     };
 
     AccountManager.getInstance = function() {

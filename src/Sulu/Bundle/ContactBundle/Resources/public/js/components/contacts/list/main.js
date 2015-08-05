@@ -16,7 +16,8 @@ require.config({
 define([
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router',
-    'widget-groups'], function(ContactManager, ContactRouter, WidgetGroups) {
+    'services/sulucontact/contact-delete-dialog',
+    'widget-groups'], function(ContactManager, ContactRouter, DeleteDialog, WidgetGroups) {
 
     'use strict';
 
@@ -27,9 +28,7 @@ define([
         bindCustomEvents = function() {
             // delete clicked
             this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-                }.bind(this));
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', callDeleteDialog.bind(this));
             }, this);
 
             // add clicked
@@ -41,6 +40,21 @@ define([
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
+            }, this);
+        },
+
+        callDeleteDialog = function(ids){
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
+                return;
+            }
+
+            DeleteDialog.showDialog(ids, function() {
+                ids.forEach(function(id) {
+                    ContactManager.delete(id).then(function() {
+                        this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
         },
 
@@ -49,7 +63,7 @@ define([
             this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
         },
 
-        acitonCallback = function(id) {
+        actionCallback = function(id) {
             ContactRouter.toEdit(id);
         };
 
@@ -103,7 +117,7 @@ define([
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
-                    actionCallback: acitonCallback.bind(this)
+                    actionCallback: actionCallback.bind(this)
                 },
                 'contacts',
                 '#people-list-info'
