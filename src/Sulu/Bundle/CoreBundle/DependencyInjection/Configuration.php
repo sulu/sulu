@@ -57,11 +57,17 @@ class Configuration implements ConfigurationInterface
      */
     private function getLocaleConfiguration(NodeBuilder $rootNode)
     {
-        $rootNode->arrayNode('locales')
-            ->isRequired()
-            ->useAttributeAsKey('locale')
-            ->prototype('scalar')->end()
-        ->end();
+        $rootNode
+            ->arrayNode('locales')
+                ->isRequired()
+                ->useAttributeAsKey('locale')
+                ->prototype('scalar')->end()
+            ->end()
+            ->arrayNode('translations')
+                ->isRequired()
+                ->prototype('scalar')->end()
+            ->end()
+            ->scalarNode('fallback_locale')->end();
     }
 
     /**
