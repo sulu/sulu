@@ -1,5 +1,21 @@
 # Upgrade
 
+## 1.0.6
+
+### Configuration
+
+The syntax of `sulu_core.locales` configuration has changed. It has to be defined with a translation. Additional the
+translations of backend (currently only en/de) and a fallback locale can be configured.
+
+```
+sulu_core:
+    locales:
+        de: Deutsch
+        en: English
+    fallback_locale: 'en'
+    translations: ['de', 'en']
+```
+
 ## 1.0.4
 
 ### External link

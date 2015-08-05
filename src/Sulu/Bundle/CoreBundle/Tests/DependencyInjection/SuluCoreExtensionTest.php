@@ -26,7 +26,9 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
     public function testLoadNoConfig()
     {
         $this->load([
-            'locales' => ['en', 'de'],
+            'locales' => ['en' => 'English', 'de' => 'Deutsch'],
+            'translations' => ['de', 'en'],
+            'fallback_locale' => 'en',
         ]);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             'sulu.cache.warmer.structure', 'kernel.cache_warmer'
@@ -49,12 +51,42 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                     'paths' => [],
                 ],
             ],
-            'locales' => ['en', 'de'],
+            'locales' => ['en' => 'English', 'de' => 'Deutsch'],
+            'translations' => ['de', 'en'],
+            'fallback_locale' => 'en',
         ]);
 
         $this->assertEquals(
             'barfoo',
             $this->container->getParameter('sulu.content.structure.default_type.snippet')
+        );
+    }
+
+    public function testLocales()
+    {
+        $this->load(
+            [
+                'locales' => ['en' => 'English', 'de' => 'Deutsch', 'fr' => 'France'],
+                'translations' => ['de', 'en'],
+                'fallback_locale' => 'en',
+            ]
+        );
+
+        $this->assertEquals(
+            ['en', 'de', 'fr'],
+            $this->container->getParameter('sulu_core.locales')
+        );
+        $this->assertEquals(
+            ['en' => 'English', 'de' => 'Deutsch', 'fr' => 'France'],
+            $this->container->getParameter('sulu_core.translated_locales')
+        );
+        $this->assertEquals(
+            ['de', 'en'],
+            $this->container->getParameter('sulu_core.translations')
+        );
+        $this->assertEquals(
+            'en',
+            $this->container->getParameter('sulu_core.fallback_locale')
         );
     }
 }
