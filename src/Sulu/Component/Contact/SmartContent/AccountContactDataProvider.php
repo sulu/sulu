@@ -66,7 +66,7 @@ class AccountContactDataProvider implements DataProviderInterface
         $this->configuration->setCategories(false);
         $this->configuration->setLimit(false);
         $this->configuration->setPresentAs(true);
-        $this->configuration->setPaginated(false);
+        $this->configuration->setPaginated(true);
 
         return $this->configuration;
     }
@@ -92,6 +92,12 @@ class AccountContactDataProvider implements DataProviderInterface
     ) {
         $result = $this->repository->findBy($filters, $page, $pageSize);
 
+        $this->hasNextPage = false;
+        if ($pageSize !== null && sizeof($result) > $pageSize) {
+            $this->hasNextPage = true;
+            $result = array_splice($result, 0, $pageSize);
+        }
+
         return $this->decorate($result);
     }
 
@@ -104,7 +110,7 @@ class AccountContactDataProvider implements DataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritdoc}tur
      */
     public function getHasNextPage()
     {
