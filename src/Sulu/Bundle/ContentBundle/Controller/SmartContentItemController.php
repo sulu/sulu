@@ -22,24 +22,38 @@ class SmartContentItemController extends RestController
 {
     use RequestParametersTrait;
 
+    /**
+     * Resolves filter for smart-content UI.
+     * Filter will be passed by post-parameter.
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Sulu\Component\Rest\Exception\MissingParameterException
+     * @throws \Sulu\Component\SmartContent\Exception\DataProviderNotExistsException
+     */
     public function postItemsAction(Request $request)
     {
+        // prepare filters and options
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
-        $excluded = intval($this->getRequestParameter($request, 'excluded', true));
         $filters = $request->request->all();
+        $filters['excluded'] = [$this->getRequestParameter($request, 'excluded', true)];
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace', true),
             'locale' => $this->getRequestParameter($request, 'locale', true),
         ];
 
-        $filters['excluded'] = [$excluded];
-
-        if(isset($filters['tags'])){
+        // resolve tags if they exists in filters
+        if (isset($filters['tags'])) {
             $filters['tags'] = $this->get('sulu_tag.tag_manager')->resolveTagNames($filters['tags']);
         }
 
+        // prepare provider
         $dataProviderPool = $this->get('sulu_content.smart_content.data_provider_pool');
         $provider = $dataProviderPool->get($providerAlias);
+
+        // resolve datasource and items
         $items = $provider->resolveFilters($filters, [], $options, $request->get('limitResult'));
         $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
 
