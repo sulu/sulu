@@ -16,57 +16,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             localizationConnector: '-',
             permissionGridId: '#permissions-grid',
             permissionLoaderClass: '.permission-loader'
-        },
-
-        setHeaderToolbar = function() {
-        var toolbarItems = [
-            {
-                id: 'save',
-                icon: 'floppy-o',
-                position: 1,
-                group: 'left',
-                disabled: true,
-                callback: function () {
-                    this.sandbox.emit('sulu.header.toolbar.save');
-                }.bind(this)
-            }
-        ],
-        configDropdown = {
-            icon: 'gear',
-            group: 'left',
-            id: 'options-button',
-            position: 30,
-            dropdownItems: [
-                {
-                    title: this.sandbox.translate('toolbar.delete'),
-                    callback: function () {
-                        this.sandbox.emit('sulu.header.toolbar.delete');
-                    }.bind(this)
-                }
-            ]
-        },
-        configItems = {
-            confirm: {
-                title: this.sandbox.translate('security.user.activate'),
-                callback: function () {
-                    this.sandbox.emit('sulu.user.activate');
-                }.bind(this)
-            }
         };
-
-        if (!this.user.enabled) {
-            configDropdown.dropdownItems.push(configItems.confirm);
-        }
-
-        // add workflow items
-        if (configDropdown.dropdownItems.length > 0) {
-            toolbarItems.push(configDropdown);
-        }
-
-        this.sandbox.emit('sulu.header.set-toolbar', {
-            template: toolbarItems
-        });
-    };
 
     return {
 
@@ -89,7 +39,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         view: true,
 
         initialize: function() {
-            this.saved = true;
             this.formId = '#permissions-form';
             this.selectedRoles = [];
             this.deselectedRoles = [];
@@ -105,12 +54,9 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             }
 
             this.render();
+            this.listenForChange();
             this.initializeRoles();
-
             this.bindCustomEvents();
-
-            this.initializeHeaderbar();
-
             this.sandbox.form.create(this.formId);
 
             if (!!this.options.data.contact && !!this.options.data.contact.id && WidgetGroups.exists('contact-detail')) {
@@ -125,56 +71,34 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
-        // Headerbar
-        initializeHeaderbar: function() {
-            this.currentType = '';
-            this.currentState = '';
-
-            this.setHeaderBar(true);
-            this.listenForChange();
-        },
-
-        setHeaderBar: function(saved) {
-            if (saved !== this.saved) {
-                if (!!saved) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-                } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-                }
-            }
-            this.saved = saved;
-        },
-
         listenForChange: function() {
 
             this.sandbox.dom.on(this.formId, 'change', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this), '.changeListener select, ' +
                 '.changeListener input, ' +
                 '.changeListener textarea');
 
             this.sandbox.dom.on(this.formId, 'keyup', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this), '.changeListener select, ' +
             '.changeListener input, ' +
             '.changeListener textarea');
 
             this.sandbox.on('husky.select.systemLanguage.selected.item', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
 
             this.sandbox.util.each(this.roles, function(index, value) {
                 this.sandbox.on('husky.select.languageSelector' + value.id + '.selected.item', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }, this);
                 this.sandbox.on('husky.select.languageSelector' + value.id + '.deselected.item', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }, this);
             }.bind(this));
 
         },
-
-        // Form
 
         render: function() {
             var headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
@@ -184,7 +108,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             }));
             this.sandbox.start(this.$el);
             this.startLanguageDropdown();
-            setHeaderToolbar.call(this);
         },
 
         /**
@@ -276,8 +199,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.sandbox.dom.addClass($element, 'is-selected');
                 this.sandbox.dom.prop($element, 'checked', true);
                 this.selectedRoles.push(roleId);
-
-                this.sandbox.logger.log(roleId, "role selected");
             }
         },
 
@@ -298,27 +219,9 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         this.sandbox.logger.warn('Unrecognized error code!', code);
                         break;
                 }
-                this.setHeaderBar(true);
             }.bind(this));
 
-            // delete contact
-            this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
-            }, this);
-
-            this.sandbox.on('sulu.user.permissions.saved', function(model) {
-                this.user = model;
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.permission-save-desc', 'labels.success');
-                this.setHeaderBar(true);
-            }, this);
-
-            this.sandbox.on('sulu.toolbar.save', function(action) {
-                this.save(action);
-            }, this);
-
-            this.sandbox.on('sulu.header.back', function(){
-                this.sandbox.emit('sulu.contacts.contacts.list');
-            }, this);
+            this.sandbox.on('sulu.tab.save', this.save, this);
 
             // update systemLanguage on dropdown select
             this.sandbox.on('husky.select.systemLanguage.selected.item', function(locale) {
@@ -328,13 +231,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
         save: function(action) {
             // FIXME  Use datamapper instead
-
             var data;
-
             if (this.sandbox.form.validate(this.formId)) {
-
-                this.sandbox.logger.log('validation succeeded');
-
                 data = {
                     user: {
                         username: this.sandbox.dom.val('#username'),
@@ -346,18 +244,19 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),
                     deselectedRoles: this.deselectedRoles
                 };
-
                 this.password = this.sandbox.dom.val('#password');
-
                 if (!!this.user && !!this.user.id) {
                     data.user.id = this.user.id;
                 }
-
                 if (!!this.password && this.password !== '') {
                     data.user.password = this.password;
                 }
-
+                this.sandbox.emit('sulu.tab.saving');
                 this.sandbox.emit('sulu.user.permissions.save', data, action);
+                this.sandbox.once('sulu.user.permissions.saved', function(model) {
+                    this.user = model;
+                    this.sandbox.emit('sulu.tab.saved');
+                }.bind(this));
             }
         },
 
@@ -368,16 +267,12 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
             this.sandbox.util.each(this.selectedRoles, function(index, value) {
                 $tr = this.sandbox.dom.find('#languageSelector' + value);
-
                 config = {};
                 config.roleId = value;
-
                 this.sandbox.emit('husky.select.languageSelector' + value + '.get-checked', function(selected) {
                     config.selection = selected;
                 });
-
                 data.push(config);
-
             }.bind(this));
 
             return data;

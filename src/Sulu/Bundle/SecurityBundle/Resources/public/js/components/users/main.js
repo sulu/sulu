@@ -33,34 +33,12 @@ define([
                 this.save(data, action);
             }.bind(this));
 
-            // load list view
-            this.sandbox.on('sulu.contacts.contacts.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-            }, this);
-
-            // delete contact
-            this.sandbox.on('sulu.user.permissions.delete', function(id) {
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                        var contactModel = Contact.findOrCreate({id: id});
-
-                        this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                        contactModel.destroy({
-                            success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-                            }.bind(this)
-
-                        });
-                    }
-                }.bind(this));
-            }, this);
-
             this.sandbox.on('sulu.user.activate', function() {
                 this.enableUser();
             }.bind(this));
         },
 
-        save: function(data, action) {
+        save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.user.set('username', data.user.username);
@@ -73,11 +51,9 @@ define([
             } else {
                 this.user.set('password', '');
             }
-
             // prepare deselected roles
             this.sandbox.util.each(data.deselectedRoles, function(index, value) {
                 var userRole;
-
                 if (this.user.get('userRoles').length > 0) {
 
                     userRole = this.user.get('userRoles').findWhere(
@@ -89,7 +65,6 @@ define([
                         this.user.get('userRoles').remove(userRole);
                     }
                 }
-
             }.bind(this));
 
             // prepare selected roles
@@ -118,7 +93,6 @@ define([
                 global: false,
                 success: function(model) {
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
-                    this.afterSaveCallback(action);
                 }.bind(this),
                 error: function(obj, resp) {
                     if (!!resp && !!resp.responseJSON && !!resp.responseJSON.message) {
@@ -131,14 +105,6 @@ define([
                     }
                 }.bind(this)
             });
-        },
-
-        afterSaveCallback: function(action) {
-            if (action === 'back') {
-                this.sandbox.emit('sulu.contacts.contacts.list');
-            } else if (action === 'new') {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add', true, true);
-            }
         },
 
         /**
