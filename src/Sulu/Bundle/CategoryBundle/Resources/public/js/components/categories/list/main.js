@@ -33,7 +33,7 @@ define(function () {
                 toolbar: {
                     buttons: {
                         add: {},
-                        delete: {}
+                        deleteSelected: {}
                     }
                 }
             };
@@ -55,7 +55,7 @@ define(function () {
             // checkbox clicked
             this.sandbox.on('husky.datagrid.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
-                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'delete', false);
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
             }.bind(this));
         },
 

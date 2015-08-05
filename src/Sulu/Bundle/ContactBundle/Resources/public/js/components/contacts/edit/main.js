@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define([
+        'services/sulucontact/contact-router'
+    ],
+    function(ContactRouter) {
 
     'use strict';
 
@@ -21,14 +24,65 @@ define(function() {
                     save: {
                         parent: 'saveWithOptions'
                     },
-                    settings: {
-                        options: {
-                            dropdownItems: {
-                                delete: {}
-                            }
-                        }
-                    }
+                    delete: {}
                 }
+            }
+        },
+
+        initialize: function() {
+            this.bindCustomEvents();
+        },
+
+        bindCustomEvents: function() {
+            this.sandbox.on('sulu.header.back', ContactRouter.toList);
+            this.sandbox.on('sulu.toolbar.delete', this.deleteContact.bind(this));
+            this.sandbox.on('sulu.tab.dirty', this.enableSave.bind(this));
+            this.sandbox.on('sulu.toolbar.save', this.saveTab.bind(this));
+            this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
+            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
+        },
+
+        deleteContact: function() {
+            if (!!this.options.id) {
+                alert('delete');
+            }
+        },
+
+        /**
+         * Sets the save-button into loading-state and tells the tab to save itselve
+         * @param action {String} the after-save action
+         */
+        saveTab: function(action) {
+            this.afterSaveAction = action;
+            this.sandbox.emit('sulu.tab.save');
+        },
+
+        /**
+         * Sets the save-button in loading-state
+         */
+        loadingSave: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+        },
+
+        /**
+         * Enables the save-button
+         */
+        enableSave: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+        },
+
+        /**
+         * Executes the after save action: Navigates to edit, add or list
+         * @param savedData {Object} the data after the save-process has finished
+         */
+        afterSave: function(savedData) {
+            this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+            if (this.afterSaveAction === 'back') {
+                ContactRouter.toList();
+            } else if (this.afterSaveAction === 'new') {
+                ContactRouter.toAdd();
+            } else if (!this.options.id) {
+                ContactRouter.toEdit(savedData.id);
             }
         }
     };

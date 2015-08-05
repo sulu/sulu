@@ -152,7 +152,7 @@ define([
          */
         save: function(data) {
             var promise = $.Deferred(),
-            account = (!!data.id) ? Account.findOrCreate({id: data.id}) : new Account();
+            account = Account.findOrCreate({id: data.id});
             account.set(data);
 
             account.get('categories').reset();

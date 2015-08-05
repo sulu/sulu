@@ -91,8 +91,6 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                             this.data.id
                         );
                     }
-
-                    this.setHeaderBar(true);
                 }.bind(this));
             },
 
@@ -267,28 +265,8 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                     this.updateAddressesAddIcon(this.numberOfAddresses);
                 }, this);
 
-                // delete contact
-                this.sandbox.on('sulu.toolbar.delete', function() {
-                    this.sandbox.emit('sulu.contacts.contact.delete', this.data.id);
-                }, this);
-
-                // contact saved
-                this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
-                    this.data = data;
-                    this.initContactData();
-                    this.setFormData(data);
-                    this.setHeaderBar(true);
-                }, this);
-
                 // contact save
-                this.sandbox.on('sulu.toolbar.save', function(action) {
-                    this.submit(action);
-                }, this);
-
-                // back to list
-                this.sandbox.on('sulu.header.back', function() {
-                    this.sandbox.emit('sulu.contacts.contacts.list');
-                }, this);
+                this.sandbox.on('sulu.tab.save', this.save, this);
 
                 this.sandbox.on('husky.input.birthday.initialized', function() {
                     this.dfdBirthdayIsSet.resolve();
@@ -400,41 +378,27 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                 return field;
             },
 
-            submit: function(action) {
-                this.sandbox.logger.log('save Model');
-
+            save: function() {
                 if (this.sandbox.form.validate(form)) {
                     var data = this.sandbox.form.getData(form);
-
                     if (data.id === '') {
                         delete data.id;
                     }
-
-                    // set tags
                     data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
 
                     // FIXME auto complete in mapper
                     // only get id, if auto-complete is not empty:
-
                     data.account = {
                         id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
                     };
-
-                    this.sandbox.logger.log('log data', data);
-                    this.sandbox.emit('sulu.contacts.contacts.save', data, action);
+                    this.sandbox.emit('sulu.tab.saving');
+                    ContactManager.save(data).then(function(savedData) {
+                        this.data = data;
+                        this.initContactData();
+                        this.setFormData(this.data);
+                        this.sandbox.emit('sulu.tab.saved', savedData);
+                    }.bind(this));
                 }
-            },
-
-            // @var Bool saved - defines if saved state should be shown
-            setHeaderBar: function(saved) {
-                if (saved !== this.saved) {
-                    if (!!saved) {
-                        this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-                    } else {
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-                    }
-                }
-                this.saved = saved;
             },
 
             /**
@@ -445,11 +409,11 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                 var instance = 'husky.select.' + instanceName;
                 this.sandbox.on(instance + '.selected.item', function(id) {
                     if (id > 0) {
-                        this.setHeaderBar(false);
+                        this.sandbox.emit('sulu.tab.dirty');
                     }
                 }.bind(this));
                 this.sandbox.on(instance + '.deselected.item', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this));
             },
 
@@ -471,19 +435,19 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                 this.sandbox.data.when(this.dfdAllFieldsInitialized).then(function() {
 
                     this.sandbox.dom.on('#contact-form', 'change', function() {
-                        this.setHeaderBar(false);
+                        this.sandbox.emit('sulu.tab.dirty');
                     }.bind(this), '.changeListener select, ' +
                     '.changeListener input, ' +
                     '.changeListener textarea');
 
                     this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                        this.setHeaderBar(false);
+                        this.sandbox.emit('sulu.tab.dirty');
                     }.bind(this), '.changeListener select, ' +
                     '.changeListener input, ' +
                     '.changeListener textarea');
 
                     this.sandbox.on('sulu.contact-form.changed', function() {
-                        this.setHeaderBar(false);
+                        this.sandbox.emit('sulu.tab.dirty');
                     }.bind(this));
 
                     // disable position dropdown when company is empty
@@ -504,7 +468,7 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                 }.bind(this));
 
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this));
 
                 this.initializeDropDownListender(
