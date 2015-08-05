@@ -21,6 +21,22 @@ define(function() {
             return config.user;
         },
 
+        getLocales: function(translated) {
+            if (!!translated) {
+                return config.translatedLocales;
+            }
+
+            return config.locales;
+        },
+
+        getTranslations: function() {
+            return config.translations;
+        },
+
+        getFallbackLocale: function() {
+            return config.fallbackLocale;
+        },
+
         getSection: function(name) {
             return (!!config.sections[name]) ? config.sections[name] : null;
         },

@@ -31,6 +31,12 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* 1.0.6 (2015-08-05)
+    * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
+
+* 1.0.5 (2015-08-03)
+    * HOTFIX      #--   [AdminBundle]    Fixed ckeditor overlay buttons for windows
+
 * 1.0.4 (2015-07-28)
     * HOTFIX      #1427 [ContentBundle]  Added external link migration
     * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
