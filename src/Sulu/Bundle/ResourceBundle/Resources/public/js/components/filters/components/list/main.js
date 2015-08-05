@@ -31,6 +31,12 @@ define(['config'], function(Config) {
                 this.sandbox.emit('sulu.resource.filters.delete', ids);
             }.bind(this));
         }.bind(this));
+
+        // checkbox clicked
+        this.sandbox.on('husky.datagrid.number.selections', function(number) {
+            var postfix = number > 0 ? 'enable' : 'disable';
+            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+        }, this);
     };
 
     return {
@@ -52,7 +58,7 @@ define(['config'], function(Config) {
                 toolbar: {
                     buttons: {
                         add: {},
-                        delete: {}
+                        deleteSelected: {}
                     }
                 }
             };

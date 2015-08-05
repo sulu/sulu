@@ -10,14 +10,14 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'type/bic-input': '../../sulucontact/js/validation/types/bicInput',
-        'type/vat-input': '../../sulucontact/js/validation/types/vatInput',
+        'type/bic-input': '../../sulucontact/js/validation/types/bic-input',
+        'type/vat-input': '../../sulucontact/js/validation/types/vat-input',
+        'type/iban-input': '../../sulucontact/js/validation/types/iban-input',
         'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
         'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
 
         'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/validation/types/ibanInput',
 
         'services/sulucontact/contact-manager': '../../sulucontact/js/services/contact-manager',
         'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
@@ -118,8 +118,8 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             // show form for new contacts
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/add',
-                callback: function(content) {
-                    return '<div data-aura-component="contacts@sulucontact" data-aura-display="edit" />';
+                callback: function() {
+                    return '<div data-aura-component="contacts/edit@sulucontact"/>';
                 }
             });
 
@@ -127,7 +127,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/edit::id/:content',
                 callback: function(id) {
-                    return '<div data-aura-component="contacts@sulucontact" data-aura-display="edit" data-aura-id="' + id + '"/>';
+                    return '<div data-aura-component="contacts/edit@sulucontact" data-aura-id="' + id + '"/>';
                 }
             });
 
@@ -135,7 +135,7 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    return '<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>';
+                    return '<div data-aura-component="accounts/list@sulucontact"/>';
                 }
             });
 

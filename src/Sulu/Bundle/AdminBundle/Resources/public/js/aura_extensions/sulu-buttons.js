@@ -142,11 +142,21 @@
                     }
                 },
                 {
-                    name: 'delete',
+                    name: 'deleteSelected',
                     template: {
                         icon: 'trash-o',
                         title: 'public.delete-selected',
                         disabled: true,
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.delete');
+                        }
+                    }
+                },
+                {
+                    name: 'delete',
+                    template: {
+                        icon: 'trash-o',
+                        title: 'public.delete',
                         callback: function() {
                             app.sandbox.emit('sulu.toolbar.delete');
                         }

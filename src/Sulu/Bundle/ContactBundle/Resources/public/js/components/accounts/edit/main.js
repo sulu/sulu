@@ -22,13 +22,7 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
                         save: {
                             parent: 'saveWithOptions'
                         },
-                        settings: {
-                            options: {
-                                dropdownItems: {
-                                    delete: {}
-                                }
-                            }
-                        }
+                        delete: {}
                     }
                 }
             }
@@ -41,9 +35,10 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.header.back', AccountRouter.toList);
-            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
-            this.sandbox.on('sulu.tab.dirty', this.tabDirty.bind(this));
+            this.sandbox.on('sulu.tab.dirty', this.enableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
+            this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
+            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
         },
 
@@ -53,21 +48,38 @@ define(['services/sulucontact/account-router'], function(AccountRouter) {
             }
         },
 
+        /**
+         * Sets the save-button into loading-state and tells the tab to save itselve
+         * @param action {String} the after-save action
+         */
         save: function(action) {
             this.afterSaveAction = action;
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.sandbox.emit('sulu.tab.save');
         },
 
-        tabDirty: function() {
+        /**
+         * Enables the save-button
+         */
+        enableSave: function() {
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
         },
 
+        /**
+         * Sets the save-button in loading-state
+         */
+        loadingSave: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+        },
+
+        /**
+         * Executes the after save action: Navigates to edit, add or list
+         * @param savedData {Object} the data after the save-process has finished
+         */
         afterSave: function(savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            if (this.afterSaveAction == 'back') {
+            if (this.afterSaveAction === 'back') {
                 AccountRouter.toList();
-            } else if (this.afterSaveAction == 'new') {
+            } else if (this.afterSaveAction === 'new') {
                 AccountRouter.toAdd();
             } else if (!this.options.id) {
                 AccountRouter.toEdit(savedData.id);
