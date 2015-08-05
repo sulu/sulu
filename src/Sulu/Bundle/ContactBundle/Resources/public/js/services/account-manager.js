@@ -52,7 +52,7 @@ define([
                         })
                     );
                 }.bind(this));
-                util.when.apply(null, requests).then(function() {
+                $.when.apply(null, requests).then(function() {
                     promise.resolve();
                 }.bind(this));
             } else {
@@ -80,7 +80,7 @@ define([
                         })
                     );
                 }.bind(this));
-                util.when.apply(null, requests).then(function() {
+                $.when.apply(null, requests).then(function() {
                     promise.resolve();
                 }.bind(this));
             } else {
@@ -125,7 +125,7 @@ define([
          */
         save: function(data) {
             var promise = $.Deferred(),
-            account = Account.findOrCreate({id: data.id});
+            account = (!!data.id) ? Account.findOrCreate({id: data.id}) : new Account();
             account.set(data);
 
             account.get('categories').reset();
@@ -135,7 +135,6 @@ define([
             }.bind(this));
 
             account.save(null, {
-                // on success save contacts id
                 success: function(response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
@@ -230,7 +229,7 @@ define([
             var savePromise = $.Deferred(),
                 addPromise = addDocuments.call(this, newMediaIds, accountId),
                 removePromise = removeDocuments.call(this, removedMediaIds, accountId);
-            util.when(removePromise, addPromise).then(function() {
+            $.when(addPromise, removePromise).then(function() {
                 savePromise.resolve();
             }.bind(this));
             return savePromise;

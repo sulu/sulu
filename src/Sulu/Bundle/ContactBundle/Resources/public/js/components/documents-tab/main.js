@@ -11,7 +11,7 @@ define([
     'widget-groups',
     'services/sulucontact/account-manager',
     'services/sulucontact/contact-manager'],
-    function(WidgetGroups, AccountManager, ContactManager) {
+function(WidgetGroups, AccountManager, ContactManager) {
 
     'use strict';
 
@@ -39,12 +39,11 @@ define([
             this.form = '#documents-form';
             this.newSelections = [];
             this.removedSelections = [];
-            this.saved = true;
 
             this.manager.loadOrNew(this.options.id).then(function(data) {
                 this.data = data;
                 this.currentSelection = this.getPropertyFromArrayOfObject(this.data.medias, 'id');
-                this.setHeaderBar(true);
+                this.sandbox.emit('sulu.tab.dirty');
                 this.render();
 
                 if (!!this.data && !!this.data.id) {
@@ -97,28 +96,10 @@ define([
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.toolbar.save', function(action) {
-                this.submit(action);
-            }, this);
-
-            this.sandbox.on('sulu.toolbar.delete', function() {
-                if (this.options.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.account.delete', this.data.id);
-                } else {
-                    this.sandbox.emit('sulu.contacts.contact.delete', this.data.id);
-                }
-            }, this);
-
-            this.sandbox.on('sulu.header.back', function() {
-                if (this.options.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.accounts.list', this.data);
-                } else {
-                    this.sandbox.emit('sulu.contacts.contacts.list');
-                }
-            }, this);
+            this.sandbox.on('sulu.tab.save', this.save.bind(this));
 
             this.sandbox.on('sulu.media-selection.document-selection.data-changed', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }, this);
 
             this.sandbox.on('sulu.contacts.contacts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
@@ -133,7 +114,6 @@ define([
         },
 
         resetAndRemoveFromCurrent: function(data) {
-            this.setHeaderBar(true);
             this.newSelections = [];
             this.removedSelections = [];
             this.sandbox.util.foreach(data, function(id) {
@@ -146,7 +126,6 @@ define([
         },
 
         resetAndAddToCurrent: function(data) {
-            this.setHeaderBar(true);
             this.newSelections = [];
             this.removedSelections = [];
             this.currentSelection = this.currentSelection.concat(data);
@@ -187,30 +166,12 @@ define([
             }
         },
 
-        /**
-         * Submits the selection depending on the type
-         * @param action {String} the action after save
-         */
-        submit: function(action) {
+        save: function() {
              if (this.sandbox.form.validate(this.form)) {
-                if (this.options.type === 'account' || this.options.type === 'contact') {
-                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.data.id, this.newSelections, this.removedSelections, action);
-                } else {
-                    this.sandbox.logger.error('Undefined type for documents component!');
-                }
+                 this.manager.saveDocuments(this.data.id, this.newSelections, this.removedSelections).then(function() {
+                     this.sandbox.emit('sulu.tab.saved');
+                 }.bind(this));
             }
-        },
-
-        /** @var Bool saved - defines if saved state should be shown */
-        setHeaderBar: function(saved) {
-            if (saved !== this.saved) {
-                if (!!saved) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-                } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-                }
-            }
-            this.saved = saved;
         }
     };
 });

@@ -7,7 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config', 'widget-groups', 'services/sulucontact/account-manager'], function(Config, WidgetGroups, AccountManager) {
+define([
+    'config',
+    'widget-groups',
+    'services/sulucontact/account-manager',
+    'services/sulucontact/account-router'
+], function(Config, WidgetGroups, AccountManager, AccountRouter) {
 
     'use strict';
 
@@ -80,7 +85,6 @@ define(['config', 'widget-groups', 'services/sulucontact/account-manager'], func
             AccountManager.loadOrNew(this.options.id).then(function(data) {
                 this.data = data;
                 this.render();
-                this.setHeaderBar(true);
                 this.listenForChange();
 
                 if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
@@ -314,11 +318,6 @@ define(['config', 'widget-groups', 'services/sulucontact/account-manager'], func
             }.bind(this));
         },
 
-        // sets headline title to account name
-        updateHeadline: function() {
-            this.sandbox.emit('sulu.header.set-title', this.sandbox.dom.val(this.titleField));
-        },
-
         /**
          * Adds or removes icon to add addresses
          * @param numberOfAddresses
@@ -356,29 +355,8 @@ define(['config', 'widget-groups', 'services/sulucontact/account-manager'], func
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
 
-            // delete account
-            this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('sulu.contacts.account.delete', this.data.id);
-            }, this);
-
             // account saved
-            this.sandbox.on('sulu.contacts.accounts.saved', function(data) {
-                // reset forms data
-                this.data = data;
-                this.initContactData();
-                this.setFormData(data);
-                this.setHeaderBar(true);
-            }, this);
-
-            // account saved
-            this.sandbox.on('sulu.toolbar.save', function(action) {
-                this.submit(action);
-            }, this);
-
-            // back to list
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list', this.data);
-            }, this);
+            this.sandbox.on('sulu.tab.save', this.save, this);
 
             this.sandbox.on('sulu.contact-form.added.bank-account', function() {
                 this.numberOfBankAccounts++;
@@ -415,56 +393,47 @@ define(['config', 'widget-groups', 'services/sulucontact/account-manager'], func
             return newArray;
         },
 
-        submit: function(action) {
+        save: function() {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
-
-                if (data.id === '') {
+                if (!data.id) {
                     delete data.id;
                 }
-
                 data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
-
-                this.updateHeadline();
-
                 // FIXME auto complete in mapper
                 data.parent = {
                     id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
-
-                this.sandbox.emit('sulu.contacts.accounts.save', data, action);
+                AccountManager.save(data).then(function(savedData) {
+                    this.sandbox.emit('sulu.tab.saved');
+                    // reset forms data
+                    if (!this.data.id) {
+                        AccountRouter.toEdit(savedData.id);
+                    }
+                    this.data = savedData;
+                    this.initContactData();
+                    this.setFormData(this.data);
+                }.bind(this));
             }
-        },
-
-        /** @var Bool saved - defines if saved state should be shown */
-        setHeaderBar: function(saved) {
-            if (saved !== this.saved) {
-                if (!!saved) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-                } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-                }
-            }
-            this.saved = saved;
         },
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this), '.changeListener select, ' +
                 '.changeListener input, ' +
                 '.changeListener textarea');
 
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this), '.changeListener select, ' +
                 '.changeListener input, ' +
                 '.changeListener textarea');
 
                 // if a field-type gets changed or a field gets deleted
                 this.sandbox.on('sulu.contact-form.changed', function() {
-                    this.setHeaderBar(false);
+                    this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this));
             }.bind(this));
         },

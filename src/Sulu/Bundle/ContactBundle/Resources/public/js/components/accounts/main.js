@@ -84,19 +84,8 @@ define([
             // handling documents
             this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this)); // done
 
-            // receive form of address values via template
-            this.sandbox.on('sulu.contacts.set-types', function(types) {
-                this.formOfAddress = types.formOfAddress;
-                this.emailTypes = types.emailTypes;
-            }.bind(this));
-
-            // pass them on to the contact tab when fully loaded
-            this.sandbox.on('sulu.contacts.accounts.contacts.initialized', function() {
-                this.sandbox.emit('sulu.contacts.accounts.set-form-of-address', this.formOfAddress);
-            }.bind(this));
-
             // add a new contact
-            this.sandbox.on('sulu.contacts.accounts.new.contact', this.createNewContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.new.contact', this.createNewContact.bind(this)); // todo: use contact-manager
         },
 
         /**

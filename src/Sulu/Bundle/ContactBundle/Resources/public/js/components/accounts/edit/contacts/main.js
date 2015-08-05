@@ -13,8 +13,9 @@ define([
     'text!sulucontact/components/accounts/edit/contacts/contact.form.html',
     'config',
     'widget-groups',
-    'services/sulucontact/account-manager'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager) {
+    'services/sulucontact/account-manager',
+    'services/sulucontact/account-router'
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager, AccountRouter) {
 
     'use strict';
 
@@ -35,15 +36,11 @@ define([
 
         bindCustomEvents = function() {
             // delete clicked
+            // TODO: dont listen on
             this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
                 }.bind(this));
-            }, this);
-
-            // back to list
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list', this.data);
             }, this);
 
             // add new record to datagrid
@@ -80,9 +77,9 @@ define([
                 }
             }.bind(this));
 
-            // new contact related events
-            this.sandbox.on('sulu.contacts.accounts.set-form-of-address' , function(types){
-                this.formOfAddress = types;
+            // receive form of address values via template
+            this.sandbox.once('sulu.contacts.set-types', function(types) {
+                this.formOfAddress = types.formOfAddress;
             }.bind(this));
 
             this.sandbox.on('husky.overlay.new-contact.opened' , function(){
@@ -287,15 +284,14 @@ define([
                 
                 this.data = data;
                 this.formOfAddress = null;
-                this.render();
                 bindCustomEvents.call(this);
+                this.render();
 
                 if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
                     this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
                 }
 
                 this.sandbox.emit('sulu.contacts.accounts.contacts.initialized');
-                
             }.bind(this));
         },
 
