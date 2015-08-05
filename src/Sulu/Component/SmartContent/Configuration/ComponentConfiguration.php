@@ -62,4 +62,15 @@ class ComponentConfiguration implements ComponentConfigurationInterface
     {
         $this->componentOptions = $componentOptions;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    function jsonSerialize()
+    {
+        return [
+            'name' => $this->getName(),
+            'options' => $this->getOptions(),
+        ];
+    }
 }

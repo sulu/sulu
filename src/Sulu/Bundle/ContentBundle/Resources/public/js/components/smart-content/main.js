@@ -45,14 +45,8 @@
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
- * @params {Boolean} [options.hideDataSource] if true data-source selection hidden
- * @params {Boolean} [options.hideCategories] if true categories hidden
- * @params {Boolean} [options.hideTags] if true tags hidden
- * @params {Boolean} [options.hideSortBy] if true sort by hidden
- * @params {Boolean} [options.hidePresentAs] if true present-as hidden
- * @params {Boolean} [options.hideLimit] if true limit hidden
- * @params {Boolean} [options.datasourceName] name of datasource component
- * @params {Boolean} [options.datasourceOptions] options of datasource component
+ * @params {Boolean} [options.has] activates or deactivates features (default all false)
+ * @params {Boolean} [options.datasource] name and options of datasource component
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
  * @params {String} [options.translations.noContentFound] translation key
@@ -125,15 +119,9 @@ define([], function() {
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
-            hideDataSource: false,
-            hideCategories: false,
-            hideTags: false,
-            hideSortBy: false,
-            hideLimit: false,
-            hidePresentAs: false,
+            has: {},
             title: 'Smart-Content',
-            datasourceName: null,
-            datasourceOptions: {}
+            datasource: null
         },
 
         sortMethods = {
@@ -499,7 +487,7 @@ define([], function() {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
             this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
 
-            if (!this.options.hideDataSource && typeof(this.overlayData.dataSource) !== 'undefined') {
+            if (!!this.options.has.datasource && typeof(this.overlayData.dataSource) !== 'undefined') {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
@@ -730,7 +718,7 @@ define([], function() {
                     }
                 ];
 
-            if (!this.options.hideDataSource) {
+            if (!!this.options.has.datasource) {
                 slides.push({
                     title: this.sandbox.translate(this.translations.chooseDataSource),
                     data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
@@ -812,12 +800,12 @@ define([], function() {
                         this.sandbox.dom.data($element, 'id', id);
                     }.bind(this)
                 },
-                componentOptions = this.sandbox.util.extend(true, {}, componentDefaults, this.options.datasourceOptions);
+                componentOptions = this.sandbox.util.extend(true, {}, componentDefaults, this.options.datasource.options);
 
             this.sandbox.start(
                 [
                     {
-                        name: this.options.datasourceName,
+                        name: this.options.datasource.name,
                         options: componentOptions
                     }
                 ]
@@ -831,7 +819,7 @@ define([], function() {
 
             this.$overlayContent = this.sandbox.dom.createElement(_.template(templates.overlayContent.main)());
 
-            if (!this.options.hideDataSource) {
+            if (!!this.options.has.datasource) {
                 this.$overlayContent.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
@@ -844,12 +832,12 @@ define([], function() {
                 }));
                 this.$overlayContent.append('<div class="clear"></div>');
             }
-            if (!this.options.hideCategories) {
+            if (!!this.options.has.categories) {
                 this.$overlayContent.append(_.template(templates.overlayContent.categories)({
                     filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
                 }));
             }
-            if (!this.options.hideTags) {
+            if (!!this.options.has.tags) {
                 this.$overlayContent.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
@@ -859,7 +847,7 @@ define([], function() {
                 }));
                 this.$overlayContent.append('<div class="clear"></div>');
             }
-            if (!this.options.hideSortBy) {
+            if (!!this.options.has.sorting) {
                 this.$overlayContent.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
@@ -867,12 +855,12 @@ define([], function() {
 
                 this.$overlayContent.append('<div class="clear"></div>');
             }
-            if (!this.options.hidePresentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
+            if (!!this.options.has.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
                 this.$overlayContent.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
-            if (!this.options.hideLimit) {
+            if (!!this.options.has.limit) {
                 this.$overlayContent.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
                     limitResult: (this.options.limitResult > 0) ? this.options.limitResult : '',
@@ -987,7 +975,7 @@ define([], function() {
                 this.overlayData.limitResult : null;
 
             // min source must be selected
-            if ((this.options.hideDataSource || this.overlayData.dataSource.length > 0) &&
+            if ((!this.options.has.datasource || this.overlayData.dataSource.length > 0) &&
                 JSON.stringify(data) !== JSON.stringify(this.URI.data)
             ) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
@@ -1012,7 +1000,7 @@ define([], function() {
                     data: this.URI.data,
 
                     success: function(data) {
-                        if (!this.options.hideDataSource) {
+                        if (!!this.options.has.datasource) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
                             this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.fullQualifiedTitleKey];
                         }

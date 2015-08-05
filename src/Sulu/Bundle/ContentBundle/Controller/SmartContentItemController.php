@@ -38,6 +38,7 @@ class SmartContentItemController extends RestController
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
         $filters = $request->query->all();
         $filters['excluded'] = [$this->getRequestParameter($request, 'excluded', true)];
+        $filters = array_filter($filters);
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace', true),
             'locale' => $this->getRequestParameter($request, 'locale', true),
@@ -53,7 +54,12 @@ class SmartContentItemController extends RestController
         $provider = $dataProviderPool->get($providerAlias);
 
         // resolve datasource and items
-        $items = $provider->resolveFilters($filters, [], $options, $request->get('limitResult'));
+        $items = $provider->resolveFilters(
+            $filters,
+            [],
+            $options,
+            (isset($filters['limitResult']) ? $filters['limitResult'] : null)
+        );
         $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
 
         return $this->handleView($this->view(new ItemCollectionRepresentation($items, $datasource)));

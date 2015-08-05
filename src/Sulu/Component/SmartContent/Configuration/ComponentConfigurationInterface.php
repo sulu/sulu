@@ -13,7 +13,7 @@ namespace Sulu\Component\SmartContent\Configuration;
 /**
  * Interface for component configuration.
  */
-interface ComponentConfigurationInterface
+interface ComponentConfigurationInterface extends \JsonSerializable
 {
     /**
      * Returns name of javascript component.
