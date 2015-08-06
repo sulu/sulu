@@ -112,10 +112,10 @@ define([
             this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
         },
 
-        resetAndRemoveFromCurrent: function(data) {
+        resetAndRemoveFromCurrent: function(parentId, mediaIds) {
             this.newSelections = [];
             this.removedSelections = [];
-            this.sandbox.util.foreach(data, function(id) {
+            this.sandbox.util.foreach(mediaIds, function(id) {
                 if (this.currentSelection.indexOf(id) > -1) {
                     this.currentSelection.splice(this.currentSelection.indexOf(id), 1);
                 }
@@ -124,10 +124,10 @@ define([
             this.setForm(this.currentSelection);
         },
 
-        resetAndAddToCurrent: function(data) {
+        resetAndAddToCurrent: function(parentId, mediaIds) {
             this.newSelections = [];
             this.removedSelections = [];
-            this.currentSelection = this.currentSelection.concat(data);
+            this.currentSelection = this.currentSelection.concat(mediaIds);
             this.setForm(this.currentSelection);
         },
 

@@ -101,7 +101,7 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.account.documents.removed', mediaIds);
+                mediator.emit('sulu.contacts.account.documents.removed', accountId, mediaId);
                 promise.resolve();
             }.bind(this));
 
@@ -150,7 +150,7 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.account.documents.added', mediaIds);
+                mediator.emit('sulu.contacts.account.documents.added', accountId, mediaId);
                 promise.resolve();
             }.bind(this));
 
