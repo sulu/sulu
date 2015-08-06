@@ -9,7 +9,7 @@
 
 require.config({
     paths: {
-        'decorators/contact': '../../sulucontact/js/components/contacts/components/list/decorators/contact-view'
+        'decorators/contact': '../../sulucontact/js/components/contacts/list/decorators/contact-view'
     }
 });
 

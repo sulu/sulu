@@ -54,6 +54,15 @@
           top: 30px;
           left: 120px;
           background-color: $blue;
+
+          .sulubox-signet{
+            width: 16px;
+            height: 16px;
+            @include centerFixedSizeBlock(16px, 16px);
+
+            background: url("../js/components/contacts/list/decorators/sulu-signet.svg") no-repeat center center;
+            @include background-size(contain);
+          }
         }
 
         &:hover {

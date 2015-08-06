@@ -39,10 +39,10 @@ define(function() {
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="head-image ' + constants.actionNavigatorClass + '" style="background-image: url(\'<%= picture %>\')"></div>',
-                '           <div class="head-name"><%= name %></div>',
+                '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
-                '       <div class="head-sulubox"></div>',
+                '       <div class="head-sulubox"><div class="sulubox-signet"></div></div>',
                 '   </div>',
                 '   <div class="' + [constants.itemInfoClass, constants.actionNavigatorClass].join(" ") + '"></div>',
                 '</div>'
@@ -107,7 +107,7 @@ define(function() {
          */
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('.grid', 'click.contact.list', function() {
+                this.sandbox.dom.on('.page', 'click.contact.list', function() {
                     this.unselectAllItems();
                 }.bind(this));
             }
@@ -123,7 +123,7 @@ define(function() {
                 var id, picture, name, isSuluUser, location, mail;
 
                 id = record[constants.idProperty];
-                picture = '/bundles/sulucontact/js/components/contacts/components/list/decorators//sample_avatar.jpg'; //TODO: use api information
+                picture = '/bundles/sulucontact/js/components/contacts/list/decorators/sample_avatar.jpg'; //TODO: use api information
                 name = [record['firstName'], record['lastName']].join(' '); //TODO: use full-name
                 isSuluUser = Math.random() < .3; //TODO: use api information
                 location = 'Testhausen 8, AT'; //TODO: use api information
@@ -193,7 +193,7 @@ define(function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.grid', 'click.contact.list');
+            this.sandbox.dom.off('.page', 'click.contact.list');
             this.sandbox.dom.remove(this.$el);
         },
 

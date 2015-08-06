@@ -169,11 +169,26 @@
   left: 120px;
   background-color: #52B6CA;
 }
-/* line 60, ../scss/modules/contacts.scss */
+/* line 58, ../scss/modules/contacts.scss */
+#people-list .contact-grid .contact-item .item-head .head-sulubox .sulubox-signet {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  background: url("../js/components/contacts/list/decorators/sulu-signet.svg") no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+}
+/* line 69, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 66, ../scss/modules/contacts.scss */
+/* line 75, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
@@ -181,27 +196,27 @@
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 74, ../scss/modules/contacts.scss */
+/* line 83, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-info .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 82, ../scss/modules/contacts.scss */
+/* line 91, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .item-info .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 88, ../scss/modules/contacts.scss */
+/* line 97, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 93, ../scss/modules/contacts.scss */
+/* line 102, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 99, ../scss/modules/contacts.scss */
+/* line 108, ../scss/modules/contacts.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }
