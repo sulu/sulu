@@ -58,6 +58,11 @@ define([
             return promise;
         },
 
+        /**
+         * Removes account contact relation
+         * @param accountId The id of the account to delete the contacts from
+         * @param contactId The id of the account-contact to delete
+         */
         removeAccountContact = function(accountId, contactId) {
             var promise = $.Deferred(),
                 account = Account.findOrCreate({id: accountId}),
@@ -103,8 +108,8 @@ define([
         },
 
         /**
-         * Removes medias from an account
-         * @param mediaIds Array of medias to delete
+         * Removes media from an account
+         * @param mediaId media to delete
          * @param accountId The account to delete the medias from
          * @private
          */
@@ -151,8 +156,8 @@ define([
         },
 
         /**
-         * Adds medias to an account
-         * @param mediaIds Array of medias to add
+         * Adds media to an account
+         * @param mediaId media to add
          * @param accountId The account to add the medias to
          * @private
          */
@@ -337,6 +342,7 @@ define([
                     promise.resolve();
                 }.bind(this)
             });
+
             return promise;
         },
 
@@ -347,13 +353,15 @@ define([
          * @param removedMediaIds Array of media ids to remove
          */
         saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
-            var savePromise = $.Deferred(),
+            var promise = $.Deferred(),
                 addPromise = addDocuments.call(this, accountId, newMediaIds),
                 removePromise = removeDocuments.call(this, accountId, removedMediaIds);
+
             $.when(addPromise, removePromise).then(function() {
-                savePromise.resolve();
+                promise.resolve();
             }.bind(this));
-            return savePromise;
+
+            return promise;
         },
 
         /**

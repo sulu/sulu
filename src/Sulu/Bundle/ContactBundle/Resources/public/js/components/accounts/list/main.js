@@ -28,7 +28,7 @@ define([
             }, this);
 
             // remove from datagrid when deleted
-            this.sandbox.on('sulu.contacts.accounts.deleted', function(accountId) {
+            this.sandbox.on('sulu.contacts.account.deleted', function(accountId) {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', accountId);
             }, this);
 
