@@ -152,6 +152,30 @@ define([
             },
 
             /**
+             * Delete multiple contacts by array of given ids
+             * @param contactIds of the accounts to remove
+             * @returns promise
+             */
+            deleteMultiple: function(contactIds) {
+                var requests=[],
+                    promise = $.Deferred();
+
+                if (!!contactIds.length) {
+                    util.each(contactIds, function(index, id) {
+                        requests.push(this.delete(id));
+                    }.bind(this));
+
+                    $.when.apply(null, requests).then(function() {
+                        promise.resolve();
+                    }.bind(this));
+                } else {
+                    promise.resolve();
+                }
+
+                return promise;
+            },
+
+            /**
              * Save given contact data
              * @param data {Object} the contact data to save
              * @returns promise

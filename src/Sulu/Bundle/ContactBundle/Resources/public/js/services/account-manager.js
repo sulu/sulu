@@ -139,7 +139,7 @@ define([
          * Delete account by given id
          * @param accountId of the account to remove
          * @param removeContacts specifies if the associated contacts are removed too. default: false
-         * @returns {*}
+         * @returns promise
          */
         delete: function(accountId, removeContacts) {
             var promise = $.Deferred(),
@@ -157,6 +157,31 @@ define([
                     promise.fail();
                 }.bind(this)
             });
+
+            return promise;
+        },
+
+        /**
+         * Delete multiple accounts by array of given ids
+         * @param accountIds of the accounts to remove
+         * @param removeContacts specifies if the associated contacts are removed too. default: false
+         * @returns promise
+         */
+        deleteMultiple: function(accountIds, removeContacts) {
+            var requests=[],
+                promise = $.Deferred();
+
+            if (!!accountIds.length) {
+                util.each(accountIds, function(index, id) {
+                        requests.push(this.delete(id, removeContacts));
+                }.bind(this));
+
+                $.when.apply(null, requests).then(function() {
+                    promise.resolve();
+                }.bind(this));
+            } else {
+                promise.resolve();
+            }
 
             return promise;
         },
@@ -198,7 +223,6 @@ define([
          * @param contactIds {Array} the id's of the account-contacts to delete
          */
         removeAccountContacts: function(accountId, contactIds) {
-            // show warning
             // todo: remove dialog from manager!
             var account = Account.findOrCreate({id: accountId});
             mediator.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
