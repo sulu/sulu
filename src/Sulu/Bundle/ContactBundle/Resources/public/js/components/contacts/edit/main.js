@@ -9,8 +9,7 @@
 
 define([
         'services/sulucontact/contact-router'
-    ],
-    function(ContactRouter) {
+    ], function(ContactRouter) {
 
     'use strict';
 

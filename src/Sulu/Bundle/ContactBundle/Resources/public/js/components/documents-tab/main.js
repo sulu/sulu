@@ -10,8 +10,8 @@
 define([
     'widget-groups',
     'services/sulucontact/account-manager',
-    'services/sulucontact/contact-manager'],
-function(WidgetGroups, AccountManager, ContactManager) {
+    'services/sulucontact/contact-manager'
+], function(WidgetGroups, AccountManager, ContactManager) {
 
     'use strict';
 
@@ -34,7 +34,6 @@ function(WidgetGroups, AccountManager, ContactManager) {
         templates: ['/admin/contact/template/basic/documents'],
 
         initialize: function() {
-
             this.manager = (this.options.type === 'contact') ? ContactManager : AccountManager;
             this.form = '#documents-form';
             this.newSelections = [];

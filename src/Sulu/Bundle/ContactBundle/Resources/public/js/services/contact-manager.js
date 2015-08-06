@@ -188,11 +188,65 @@ define([
                 }.bind(this));
 
                 return savePromise;
+            },
+
+            /**
+             * Deletes a contact-title with a given id
+             * @param id The id of the contact-title to delete
+             */
+            deleteTitle: function(id) {
+                var deletePromise = $.Deferred(),
+                    title = Title.findOrCreate({id: id});
+                title.destroy({
+                    success: function() {
+                        deletePromise.resolve();
+                    }.bind(this)
+                });
+                return deletePromise;
+            },
+
+            /**
+             * Saves an array of contact-titles
+             * @param data The array of contact-titles to save
+             */
+            saveTitles: function(data) {
+                var savePromise = $.Deferred();
+                util.save('api/contact/titles', 'PATCH', data).then(function(response) {
+                    savePromise.resolve(response);
+                });
+                return savePromise;
+            },
+
+            /**
+             * Delete a position with a given id
+             * @param id The id of the position to delete
+             */
+            deletePosition: function(id) {
+                var deletePromise = $.Deferred(),
+                    position = Position.findOrCreate({id: id});
+                position.destroy({
+                    success: function() {
+                        deletePromise.resolve();
+                    }.bind(this)
+                });
+                return deletePromise;
+            },
+
+            /**
+             * Saves an array of positions
+             * @param data The array of positions to save
+             */
+            savePositions: function(data) {
+                var savePromise = $.Deferred();
+                util.save('api/contact/positions', 'PATCH', data).then(function(response) {
+                    savePromise.resolve(response);
+                });
+                return savePromise;
             }
         };
 
         ContactManager.getInstance = function() {
-            if (instance == null) {
+            if (instance === null) {
                 instance = new ContactManager();
             }
             return instance;

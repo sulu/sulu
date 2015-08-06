@@ -30,7 +30,7 @@ define(['services/husky/mediator'], function(mediator) {
          * Navigates to the add-page of a new account
          */
         toAdd: function() {
-            mediator.emit('sulu.router.navigate', 'contacts/contacts/add');
+            mediator.emit('sulu.router.navigate', 'contacts/contacts/add', true, true);
         },
 
         /**
