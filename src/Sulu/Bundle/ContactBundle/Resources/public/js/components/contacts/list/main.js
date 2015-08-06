@@ -17,7 +17,8 @@ define([
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router',
     'services/sulucontact/contact-delete-dialog',
-    'widget-groups'], function(ContactManager, ContactRouter, DeleteDialog, WidgetGroups) {
+    'widget-groups'
+], function(ContactManager, ContactRouter, DeleteDialog, WidgetGroups) {
 
     'use strict';
 

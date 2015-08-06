@@ -11,8 +11,7 @@ define([
         'services/sulucontact/contact-manager',
         'services/sulucontact/contact-router',
         'services/sulucontact/contact-delete-dialog'
-    ],
-    function(ContactManager, ContactRouter, DeleteDialog) {
+    ],function(ContactManager, ContactRouter, DeleteDialog) {
 
     'use strict';
 

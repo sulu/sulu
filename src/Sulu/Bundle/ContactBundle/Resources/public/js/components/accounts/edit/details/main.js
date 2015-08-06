@@ -24,10 +24,8 @@ define([
             tagsId: '#tags',
             addressAddId: '#address-add',
             addAddressWrapper: '.grid-row',
-
             bankAccountsId: '#bankAccounts',
             bankAccountAddSelector: '.bank-account-add',
-
             editFormSelector: '#contact-edit-form'
         },
 
@@ -75,7 +73,6 @@ define([
             this.form = '#contact-form';
             this.formContactFields = '#contact-fields';
             this.autoCompleteInstanceName = 'contacts-';
-
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
 
@@ -132,15 +129,14 @@ define([
             ]);
 
             this.initForm(data);
-
             this.setTags();
-
-            this.bindDomEvents();
             this.bindCustomEvents();
             this.bindTagEvents(data);
         },
 
-        // show tags and activate keylistener
+        /**
+         * show tags and activate keylistener
+         */
         setTags: function() {
             var uid = this.sandbox.util.uniqueId();
             if (this.data.id) {
@@ -329,15 +325,6 @@ define([
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
             }
-        },
-
-        bindDomEvents: function() {
-            this.sandbox.dom.keypress(this.form, function(event) {
-                if (event.which === 13) {
-                    event.preventDefault();
-                    this.submit();
-                }
-            }.bind(this));
         },
 
         bindCustomEvents: function() {

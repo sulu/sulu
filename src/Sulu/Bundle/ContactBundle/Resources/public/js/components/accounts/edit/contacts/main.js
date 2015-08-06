@@ -128,6 +128,10 @@ define([
             }
         },
 
+        /**
+         * Creates an overlay to connect an existing contact to the account
+         * @param data
+         */
         createRelationOverlay = function(data) {
             var template, $overlay, $list, options;
 
@@ -188,7 +192,9 @@ define([
                 }.bind(this));
         },
 
-        // triggers removal of account contact relation
+        /**
+         * Removes all all contacts which are selected in the datagrid from the account
+         */
         removeContactFromAccount = function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 if (ids.length > 0) {
@@ -197,7 +203,6 @@ define([
             }.bind(this));
         },
 
-        // list-toolbar template
         listTemplate = function() {
             return [
                 {
