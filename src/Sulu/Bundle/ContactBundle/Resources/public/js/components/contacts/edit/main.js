@@ -8,8 +8,10 @@
  */
 
 define([
-        'services/sulucontact/contact-router'
-    ], function(ContactRouter) {
+        'services/sulucontact/contact-manager',
+        'services/sulucontact/contact-router',
+        'services/sulucontact/contact-delete-dialog'
+    ],function(ContactManager, ContactRouter, DeleteDialog) {
 
     'use strict';
 
@@ -42,9 +44,11 @@ define([
         },
 
         deleteContact: function() {
-            if (!!this.options.id) {
-                alert('delete');
-            }
+            DeleteDialog.showDialog([this.options.id], function(){
+                ContactManager.delete(this.options.id).then(function() {
+                    ContactRouter.toList();
+                }.bind(this));
+            }.bind(this));
         },
 
         /**

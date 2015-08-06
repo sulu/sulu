@@ -27,6 +27,11 @@ define([
                     deleteCallback.bind(this));
             }, this);
 
+            // remove from datagrid when deleted
+            this.sandbox.on('sulu.contacts.accounts.deleted', function(accountId) {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', accountId);
+            }, this);
+
             // add clicked
             this.sandbox.on('sulu.toolbar.add', function() {
                 AccountRouter.toAdd();
@@ -41,11 +46,7 @@ define([
 
         deleteCallback = function(ids) {
             DeleteDialog.showDialog(ids, function(deleteContacts){
-                ids.forEach(function(id) {
-                    AccountManager.delete(id, deleteContacts).then(function() {
-                        this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
-                    }.bind(this));
-                }.bind(this));
+                AccountManager.deleteMultiple(ids, deleteContacts);
             }.bind(this));
         },
 
