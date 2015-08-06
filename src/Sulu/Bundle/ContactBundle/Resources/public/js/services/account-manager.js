@@ -39,16 +39,21 @@ define([
          * @param accountId The account to delete the medias from
          * @private
          */
-        removeDocuments = function(mediaIds, accountId) {
+        removeDocuments = function(accountId, mediaIds) {
             var requests=[],
                 promise = $.Deferred();
+
             if(!!mediaIds.length) {
                 util.each(mediaIds, function(index, id) {
                     requests.push(
                         util.ajax({
                             url: '/admin/api/accounts/' + accountId + '/medias/' + id,
                             data: {mediaId: id},
-                            type: 'DELETE'
+                            type: 'DELETE',
+
+                            success: function() {
+                                mediator.emit('sulu.contacts.accounts.documents.removed', accountId, id);
+                            }.bind(this)
                         })
                     );
                 }.bind(this));
@@ -58,6 +63,7 @@ define([
             } else {
                 promise.resolve();
             }
+
             return promise;
         },
 
@@ -70,13 +76,18 @@ define([
         addDocuments = function(mediaIds, accountId) {
             var requests=[],
                 promise = $.Deferred();
+
             if(!!mediaIds.length) {
                 util.each(mediaIds, function(index, id) {
                     requests.push(
                         util.ajax({
                             url: '/admin/api/accounts/' + accountId + '/medias',
                             data: {mediaId: id},
-                            type: 'POST'
+                            type: 'POST',
+
+                            success: function() {
+                                mediator.emit('sulu.contacts.accounts.documents.added', accountId, id);
+                            }.bind(this)
                         })
                     );
                 }.bind(this));
@@ -86,6 +97,7 @@ define([
             } else {
                 promise.resolve();
             }
+
             return promise;
         };
 
@@ -96,19 +108,22 @@ define([
 
         /**
          * Load or create account by given id
-         * @param id
+         * @param accountId
          * @returns promise
          */
-        loadOrNew: function(id) {
+        loadOrNew: function(accountId) {
             var promise = $.Deferred(),
                 account;
-            if (!id) {
+
+            if (!accountId) {
                 account = new Account();
+                mediator.emit('sulu.contacts.accounts.created');
                 promise.resolve(account.toJSON());
             } else {
-                account = Account.findOrCreate({id: id});
+                account = Account.findOrCreate({id: accountId});
                 account.fetch({
                     success: function() {
+                        mediator.emit('sulu.contacts.accounts.loaded', accountId);
                         promise.resolve(account.toJSON());
                     }.bind(this),
                     error: function() {
@@ -127,14 +142,15 @@ define([
          * @returns {*}
          */
         delete: function(accountId, removeContacts) {
-            var promise = $.Deferred();
-            var account = Account.findOrCreate({id: accountId});
+            var promise = $.Deferred(),
+                account = Account.findOrCreate({id: accountId});
 
             account.destroy({
                 data: {removeContacts: !!removeContacts},
                 processData: true,
 
                 success: function() {
+                    mediator.emit('sulu.contacts.accounts.deleted', accountId);
                     promise.resolve();
                 }.bind(this),
                 error: function() {
@@ -152,7 +168,7 @@ define([
          */
         save: function(data) {
             var promise = $.Deferred(),
-            account = Account.findOrCreate({id: data.id});
+                account = Account.findOrCreate({id: data.id});
             account.set(data);
 
             account.get('categories').reset();
@@ -163,6 +179,7 @@ define([
 
             account.save(null, {
                 success: function(response) {
+                    mediator.emit('sulu.contacts.accounts.saved', response.toJSON.id);
                     promise.resolve(response.toJSON());
                 }.bind(this),
                 error: function() {
@@ -175,21 +192,22 @@ define([
 
         /**
          * Removes multiple account-contacts
-         * @param id The id of the account to delete the contacts from
-         * @param ids {Array} the id's of the account-contacts to delete
+         * @param accountId The id of the account to delete the contacts from
+         * @param contactIds {Array} the id's of the account-contacts to delete
          */
-        removeAccountContacts: function(id, ids) {
+        removeAccountContacts: function(accountId, contactIds) {
             // show warning
-            var account = Account.findOrCreate({id: id});
+            // todo: remove dialog from manager!
+            var account = Account.findOrCreate({id: accountId});
             mediator.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
                 // get ids of selected contacts
                 var accountContact;
-                util.foreach(ids, function(contactId) {
+                util.foreach(contactIds, function(contactId) {
                     // set account and contact as well as  id to contacts id(so that request is going to be sent)
-                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: contactId}), account: account});
+                    accountContact = AccountContact.findOrCreate({id: accountId, contact: Contact.findOrCreate({id: contactId}), account: account});
                     accountContact.destroy({
                         success: function() {
-                            mediator.emit('sulu.contacts.accounts.contacts.removed', contactId);
+                            mediator.emit('sulu.contacts.accounts.contacts.removed', accountId, contactId);
                         }.bind(this)
                     });
                 }.bind(this));
@@ -198,16 +216,16 @@ define([
 
         /**
          * Save a new account-contact relationship
-         * @param id The id of the account
+         * @param accountId The id of the account
          * @param contactId The id of the contact
          * @param position The position the contact has witih the account
          */
-        addAccountContact: function(id, contactId, position) {
+        addAccountContact: function(accountId, contactId, position) {
             var promise = $.Deferred(),
-                account = Account.findOrCreate({id: id});
-            var accountContact = AccountContact.findOrCreate({
-                id: contactId,
-                contact: Contact.findOrCreate({id: contactId}), account: account
+                account = Account.findOrCreate({id: accountId}),
+                accountContact = AccountContact.findOrCreate({
+                    id: contactId,
+                    contact: Contact.findOrCreate({id: contactId}), account: account
             });
 
             if (!!position) {
@@ -217,8 +235,8 @@ define([
             accountContact.save(null, {
                 // on success save contacts id
                 success: function(response) {
-                    var model = response.toJSON();
-                    promise.resolve(model);
+                    mediator.emit('sulu.contacts.accounts.contacts.saved', accountId, contactId);
+                    promise.resolve(response.toJSON());
                 }.bind(this),
                 error: function() {
                     promise.fail();
@@ -230,16 +248,17 @@ define([
 
         /**
          * Sets the main contact for an account
-         * @param id The id of the account
+         * @param accountId The id of the account
          * @param contactId the id of the contact
          */
-        setMainContact: function(id, contactId) {
+        setMainContact: function(accountId, contactId) {
             var promise = $.Deferred(),
-                account = Account.findOrCreate({id: id});
+                account = Account.findOrCreate({id: accountId});
             account.set({mainContact: Contact.findOrCreate({id: contactId})});
             account.save(null, {
                 patch: true,
                 success: function() {
+                    mediator.emit('sulu.contacts.accounts.maincontact.set', accountId, contactId);
                     promise.resolve();
                 }.bind(this)
             });
@@ -254,8 +273,8 @@ define([
          */
         saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
             var savePromise = $.Deferred(),
-                addPromise = addDocuments.call(this, newMediaIds, accountId),
-                removePromise = removeDocuments.call(this, removedMediaIds, accountId);
+                addPromise = addDocuments.call(this, accountId, newMediaIds),
+                removePromise = removeDocuments.call(this, accountId, removedMediaIds);
             $.when(addPromise, removePromise).then(function() {
                 savePromise.resolve();
             }.bind(this));
@@ -264,10 +283,10 @@ define([
 
         /**
          * Load delete-related information for account by given id
-         * @param id
+         * @param accountId
          * @returns promise
          */
-        loadDeleteInfo: function(id) {
+        loadDeleteInfo: function(accountId) {
             var promise = $.Deferred();
 
             util.ajax({
@@ -276,9 +295,10 @@ define([
                 },
 
                 type: 'GET',
-                url: '/admin/api/accounts/' + id + '/deleteinfo',
+                url: '/admin/api/accounts/' + accountId + '/deleteinfo',
 
                 success: function(response) {
+                    mediator.emit('sulu.contacts.accounts.deleteinfo.loaded', accountId);
                     promise.resolve(response);
                 }.bind(this),
             });
@@ -288,10 +308,10 @@ define([
 
         /**
          * Load delete-related information for deleting multiple accounts
-         * @param ids of the accounts to delete
+         * @param accountIds of the accounts to delete
          * @returns promise
          */
-        loadMultipleDeleteInfo: function(ids) {
+        loadMultipleDeleteInfo: function(accountIds) {
             var promise = $.Deferred();
 
             util.ajax({
@@ -301,9 +321,10 @@ define([
 
                 type: 'GET',
                 url: '/admin/api/accounts/multipledeleteinfo',
-                data: {ids: ids},
+                data: {ids: accountIds},
 
                 success: function(response) {
+                    mediator.emit('sulu.contacts.accounts.deleteinfo.loaded', accountIds);
                     promise.resolve(response);
                 }.bind(this)
             });
@@ -313,7 +334,7 @@ define([
     };
 
     AccountManager.getInstance = function() {
-        if (instance == null) {
+        if (instance === null) {
             instance = new AccountManager();
         }
         return instance;

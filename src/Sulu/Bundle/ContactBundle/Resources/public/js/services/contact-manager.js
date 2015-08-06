@@ -32,7 +32,7 @@ define([
              * @param contactId The contact to delete the medias from
              * @private
              */
-            removeDocuments = function(mediaIds, contactId) {
+            removeDocuments = function(contactId, mediaIds) {
                 var requests = [],
                     promise = $.Deferred();
                 if (!!mediaIds.length) {
@@ -41,7 +41,11 @@ define([
                             util.ajax({
                                 url: '/admin/api/contacts/' + contactId + '/medias/' + id,
                                 data: {mediaId: id},
-                                type: 'DELETE'
+                                type: 'DELETE',
+
+                                success: function() {
+                                    mediator.emit('sulu.contacts.contacts.documents.removed', contactId, id);
+                                }.bind(this)
                             })
                         );
                     }.bind(this));
@@ -62,7 +66,7 @@ define([
              * @param contactId The contact to add the medias to
              * @private
              */
-            addDocuments = function(mediaIds, contactId) {
+            addDocuments = function(contactId, mediaIds) {
                 var requests = [],
                     promise = $.Deferred();
                 if (!!mediaIds.length) {
@@ -71,7 +75,11 @@ define([
                             util.ajax({
                                 url: '/admin/api/contacts/' + contactId + '/medias',
                                 data: {mediaId: id},
-                                type: 'POST'
+                                type: 'POST',
+
+                                success: function() {
+                                    mediator.emit('sulu.contacts.contacts.documents.added', contactId, id);
+                                }.bind(this)
                             })
                         );
                     }.bind(this));
@@ -103,11 +111,13 @@ define([
                     contact;
                 if (!contactId) {
                     contact = new Contact();
+                    mediator.emit('sulu.contacts.contacts.created');
                     promise.resolve(contact.toJSON());
                 } else {
                     contact = Contact.findOrCreate({id: contactId});
                     contact.fetch({
                         success: function(response) {
+                            mediator.emit('sulu.contacts.contacts.loaded', contactId);
                             promise.resolve(response.toJSON());
                         }.bind(this),
                         error: function() {
@@ -130,6 +140,7 @@ define([
 
                 contact.destroy({
                     success: function() {
+                        mediator.emit('sulu.contacts.contacts.deleted', contactId);
                         promise.resolve();
                     }.bind(this),
                     error: function() {
@@ -157,8 +168,8 @@ define([
                 }.bind(this));
 
                 contact.save(null, {
-                    // on success save contacts id
                     success: function(response) {
+                        mediator.emit('sulu.contacts.contacts.saved', response.toJSON.id);
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
@@ -178,8 +189,8 @@ define([
             saveDocuments: function(contactId, newMediaIds, removedMediaIds) {
                 var savePromise = $.Deferred(),
 
-                    addPromise = addDocuments.call(this, newMediaIds, contactId),
-                    removePromise = removeDocuments.call(this, removedMediaIds, contactId);
+                    addPromise = addDocuments.call(this, contactId, newMediaIds),
+                    removePromise = removeDocuments.call(this, contactId, removedMediaIds);
 
                 $.when(removePromise, addPromise).then(function() {
                     savePromise.resolve();
@@ -190,7 +201,7 @@ define([
         };
 
         ContactManager.getInstance = function() {
-            if (instance == null) {
+            if (instance === null) {
                 instance = new ContactManager();
             }
             return instance;
