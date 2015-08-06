@@ -171,11 +171,13 @@ define([
                 account = Account.findOrCreate({id: data.id});
             account.set(data);
 
-            account.get('categories').reset();
-            util.foreach(data.categories, function(categoryId){
-                var category = Category.findOrCreate({id: categoryId});
-                account.get('categories').add(category);
-            }.bind(this));
+            if (!!data.categories) {
+                account.get('categories').reset();
+                util.foreach(data.categories, function(categoryId) {
+                    var category = Category.findOrCreate({id: categoryId});
+                    account.get('categories').add(category);
+                }.bind(this));
+            }
 
             account.save(null, {
                 success: function(response) {

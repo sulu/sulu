@@ -14,8 +14,9 @@ define([
     'config',
     'widget-groups',
     'services/sulucontact/account-manager',
+    'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager, ContactRouter) {
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager, ContactManager, ContactRouter) {
 
     'use strict';
 
@@ -32,17 +33,6 @@ define([
         },
 
         bindCustomEvents = function() {
-            // add new record to datagrid
-            this.sandbox.on('sulu.contacts.accounts.contact.saved', function(model) {
-                this.sandbox.emit('husky.datagrid.record.add', model);
-            }, this);
-
-            // add new record to datagrid
-            this.sandbox.on('sulu.contacts.accounts.contact.created', function(model) {
-                model.position = model.position.position;
-                this.sandbox.emit('husky.datagrid.record.add', model);
-            }, this);
-
             // remove record from datagrid
             this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
@@ -69,6 +59,7 @@ define([
             // receive form of address values via template
             this.sandbox.once('sulu.contacts.set-types', function(types) {
                 this.formOfAddress = types.formOfAddress;
+                this.emailTypes = types.emailTypes;
             }.bind(this));
 
             this.sandbox.on('husky.overlay.new-contact.opened' , function(){
@@ -124,7 +115,13 @@ define([
             if (this.sandbox.form.validate(constants.newContactFormSelector)) {
                 var data = this.sandbox.form.getData(constants.newContactFormSelector);
                 data.account = this.data;
-                this.sandbox.emit('sulu.contacts.accounts.new.contact', data);
+                data.emails = [{
+                    email: data.email,
+                    emailType: this.emailTypes[0]
+                }];
+                ContactManager.save(data).then(function(contact) {
+                    this.sandbox.emit('husky.datagrid.record.add', contact);
+                }.bind(this));
                 return true;
             } else {
                 return false;
@@ -192,11 +189,10 @@ define([
         },
 
         // triggers removal of account contact relation
-        removeContact = function() {
+        removeContactFromAccount = function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 if (ids.length > 0) {
-                    // and trigger deletion
-                    this.sandbox.emit('sulu.contacts.accounts.contacts.remove', ids);
+                    AccountManager.removeAccountContacts(this.data.id, ids);
                 }
             }.bind(this));
         },
@@ -232,7 +228,7 @@ define([
                         {
                             id: 'delete',
                             title: this.sandbox.translate('contact.accounts.contact-remove'),
-                            callback: removeContact.bind(this),
+                            callback: removeContactFromAccount.bind(this),
                             disabled: true
                         }
                     ]
@@ -245,7 +241,10 @@ define([
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
-                AccountManager.addAccountContact(this.options.id, id, this.companyPosition)
+                AccountManager.addAccountContact(this.options.id, id, this.companyPosition);
+                ContactManager.loadOrNew(id).then(function(contact) {
+                    this.sandbox.emit('husky.datagrid.record.add', contact);
+                }.bind(this));
             }
         };
 
@@ -292,7 +291,8 @@ define([
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    template: listTemplate.call(this)
+                    template: listTemplate.call(this),
+                    hasSearch: false
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),

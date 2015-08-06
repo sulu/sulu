@@ -161,11 +161,13 @@ define([
                 var contact = Contact.findOrCreate({id: data.id});
                 contact.set(data);
 
-                contact.get('categories').reset();
-                util.foreach(data.categories, function(id) {
-                    var category = Category.findOrCreate({id: id});
-                    contact.get('categories').add(category);
-                }.bind(this));
+                if (!!data.categories) {
+                    contact.get('categories').reset();
+                    util.foreach(data.categories, function(id) {
+                        var category = Category.findOrCreate({id: id});
+                        contact.get('categories').add(category);
+                    }.bind(this));
+                }
 
                 contact.save(null, {
                     success: function(response) {
