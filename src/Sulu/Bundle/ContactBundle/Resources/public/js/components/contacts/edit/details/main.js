@@ -288,6 +288,13 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                     this.updateBankAccountAddIcon(this.numberOfBankAccounts);
                 }, this);
 
+                this.initializeDropDownListener(
+                    'title-select',
+                    'api/contact/titles');
+                this.initializeDropDownListener(
+                    'position-select',
+                    'api/contact/positions');
+
                 this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
             },
 
@@ -405,7 +412,7 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
              * Register events for editable drop downs
              * @param instanceName
              */
-            initializeDropDownListender: function(instanceName) {
+            initializeDropDownListener: function(instanceName) {
                 var instance = 'husky.select.' + instanceName;
                 this.sandbox.on(instance + '.selected.item', function(id) {
                     if (id > 0) {
@@ -414,6 +421,38 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                 }.bind(this));
                 this.sandbox.on(instance + '.deselected.item', function() {
                     this.sandbox.emit('sulu.tab.dirty');
+                }.bind(this));
+                this.sandbox.on(instance + '.delete', this.deleteSelectData.bind(this, instanceName));
+                this.sandbox.on(instance + '.save', this.saveSelectData.bind(this, instanceName));
+            },
+
+            /**
+             * Saves the data of the editable selects
+             * @param type The type of the editable select
+             * @param data The data to save
+             */
+            saveSelectData: function(type, data) {
+                var method = (type === 'title-select') ? ContactManager.saveTitles : ContactManager.savePositions;
+                method(data).then(function(response) {
+                    this.sandbox.emit(
+                        'husky.select.' + type + '.update',
+                        response,
+                        [response[response.length - 1]], // preselected
+                        true,
+                        true
+                    );
+                }.bind(this));
+            },
+
+            /**
+             * Deletes the data of the editable selects
+             * @param type The type of the editable select
+             * @param ids The ids of the data to delete
+             */
+            deleteSelectData: function(type, ids) {
+                var method = (type === 'title-select') ? ContactManager.deleteTitle : ContactManager.deletePosition;
+                this.sandbox.util.foreach(ids, function(id) {
+                    method(id);
                 }.bind(this));
             },
 
@@ -470,13 +509,6 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
                     this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this));
-
-                this.initializeDropDownListender(
-                    'title-select',
-                    'api/contact/titles');
-                this.initializeDropDownListender(
-                    'position-select',
-                    'api/contact/positions');
             },
 
             /**
