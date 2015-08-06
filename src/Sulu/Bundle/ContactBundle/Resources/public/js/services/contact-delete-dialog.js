@@ -13,11 +13,12 @@ define(['services/husky/mediator'], function(mediator) {
     return {
 
         /**
-         * @param ids
-         * @param okCallback function to execute on deletion confirmed
+         * Show contact confirm-delete dialog
+         * @param ids contacts which are deleted, if dialog is confirmed
+         * @param okCallback function which is executed, if dialog is confirmed
          */
         showDialog: function(ids, okCallback) {
-            if (!(ids instanceof Array)){
+            if (!$.isArray(ids)){
                 ids = [ids]; //enable integer input
             }
 

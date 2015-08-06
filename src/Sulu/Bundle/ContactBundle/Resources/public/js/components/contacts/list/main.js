@@ -34,7 +34,7 @@ define([
             }, this);
 
             // remove from datagrid when deleted
-            this.sandbox.on('sulu.contacts.contacts.deleted', function(contactId) {
+            this.sandbox.on('sulu.contacts.contact.deleted', function(contactId) {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', contactId);
             }, this);
 
@@ -52,7 +52,7 @@ define([
 
         deleteCallback = function(ids){
             DeleteDialog.showDialog(ids, function() {
-                    ContactManager.deleteMultiple(ids);
+                    ContactManager.delete(ids);
             }.bind(this));
         },
 

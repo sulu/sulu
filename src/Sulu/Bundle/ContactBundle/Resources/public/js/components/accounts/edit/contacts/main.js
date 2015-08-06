@@ -34,8 +34,8 @@ define([
 
         bindCustomEvents = function() {
             // remove record from datagrid
-            this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
-                this.sandbox.emit('husky.datagrid.record.remove', id);
+            this.sandbox.on('sulu.contacts.account.contact.removed', function(accountId, contactId) {
+                this.sandbox.emit('husky.datagrid.record.remove', contactId);
             }, this);
 
             // when radio button is clicked
@@ -62,7 +62,7 @@ define([
                 this.emailTypes = types.emailTypes;
             }.bind(this));
 
-            this.sandbox.on('husky.overlay.new-contact.opened' , function(){
+            this.sandbox.on('husky.overlay.new-contact.opened', function() {
                 var $form = this.sandbox.dom.find(constants.newContactFormSelector, this.$el);
                 this.sandbox.start($form);
                 this.sandbox.form.create(constants.newContactFormSelector);
@@ -111,7 +111,7 @@ define([
         /**
          * adds a new contact to an account when the form is valid
          */
-        addNewContact = function(){
+        addNewContact = function() {
             if (this.sandbox.form.validate(constants.newContactFormSelector)) {
                 var data = this.sandbox.form.getData(constants.newContactFormSelector);
                 data.account = this.data;
@@ -197,9 +197,10 @@ define([
          */
         removeContactFromAccount = function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                if (ids.length > 0) {
-                    AccountManager.removeAccountContacts(this.data.id, ids);
-                }
+                this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null,
+                    function() {
+                        AccountManager.removeAccountContacts(this.data.id, ids);
+                    }.bind(this));
             }.bind(this));
         },
 
@@ -241,7 +242,7 @@ define([
             ];
         },
 
-        // adds a new contact relation
+    // adds a new contact relation
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');

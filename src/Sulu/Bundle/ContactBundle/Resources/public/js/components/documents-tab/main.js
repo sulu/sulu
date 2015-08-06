@@ -101,21 +101,21 @@ define([
                 this.sandbox.emit('sulu.tab.dirty');
             }, this);
 
-            this.sandbox.on('sulu.contacts.contacts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
-            this.sandbox.on('sulu.contacts.accounts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.account.documents.removed', this.resetAndRemoveFromCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.contact.documents.removed', this.resetAndRemoveFromCurrent.bind(this));
 
-            this.sandbox.on('sulu.contacts.accounts.medias.saved', this.resetAndAddToCurrent.bind(this));
-            this.sandbox.on('sulu.contacts.contacts.medias.saved', this.resetAndAddToCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.account.documents.added', this.resetAndAddToCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.contact.documents.added', this.resetAndAddToCurrent.bind(this));
 
             this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
             this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
             this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
         },
 
-        resetAndRemoveFromCurrent: function(data) {
+        resetAndRemoveFromCurrent: function(parentId, mediaIds) {
             this.newSelections = [];
             this.removedSelections = [];
-            this.sandbox.util.foreach(data, function(id) {
+            this.sandbox.util.foreach(mediaIds, function(id) {
                 if (this.currentSelection.indexOf(id) > -1) {
                     this.currentSelection.splice(this.currentSelection.indexOf(id), 1);
                 }
@@ -124,10 +124,10 @@ define([
             this.setForm(this.currentSelection);
         },
 
-        resetAndAddToCurrent: function(data) {
+        resetAndAddToCurrent: function(parentId, mediaIds) {
             this.newSelections = [];
             this.removedSelections = [];
-            this.currentSelection = this.currentSelection.concat(data);
+            this.currentSelection = this.currentSelection.concat(mediaIds);
             this.setForm(this.currentSelection);
         },
 
