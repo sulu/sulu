@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1438860818148.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1438865672884.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.css"/>
@@ -25,6 +25,10 @@
         <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
     </head>
     <body>
+        <div class="spinner initial-loader">
+            <div class="double-bounce1 bouncer"></div>
+            <div class="double-bounce2 bouncer"></div>
+        </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
                     {% if user.username is not defined %}
@@ -77,7 +81,7 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1438860818148" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1438865672884" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 
     </body>
 </html>
