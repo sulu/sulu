@@ -17,16 +17,7 @@ define([
     'sulumedia/model/media',
     'sulucategory/model/category',
     'services/sulucontact/account-delete-dialog'
-], function(
-    AccountManager,
-    Account,
-    Contact,
-    AccountContact,
-    Email,
-    EmailType,
-    Media,
-    Category,
-    DeleteDialog) {
+], function(AccountManager, Account, Contact, AccountContact, Email, EmailType, Media, Category, DeleteDialog) {
 
     'use strict';
 

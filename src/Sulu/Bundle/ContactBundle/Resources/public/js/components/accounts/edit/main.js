@@ -10,7 +10,8 @@
 define([
     'services/sulucontact/account-manager',
     'services/sulucontact/account-router',
-    'services/sulucontact/account-delete-dialog',], function(AccountManager, AccountRouter, DeleteDialog) {
+    'services/sulucontact/account-delete-dialog',
+], function(AccountManager, AccountRouter, DeleteDialog) {
 
     'use strict';
 

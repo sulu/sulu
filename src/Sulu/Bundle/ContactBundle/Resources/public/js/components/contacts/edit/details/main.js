@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], function(Config, WidgetGroups, ContactManager) {
+define([
+    'config',
+    'widget-groups',
+    'services/sulucontact/contact-manager'
+], function(Config, WidgetGroups, ContactManager) {
 
     'use strict';
 
@@ -19,10 +23,8 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
             addressAddId: '#address-add',
             addAddressWrapper: '.grid-row',
             addressesSelector: '#addresses',
-
             bankAccountsId: '#bankAccounts',
             bankAccountAddSelector: '.bank-account-add',
-
             editFormSelector: '#contact-edit-form'
         },
 
@@ -36,496 +38,481 @@ define(['config', 'widget-groups', 'services/sulucontact/contact-manager'], func
             ].join('')
         };
 
-    return (function() {
-        return {
+    return {
 
-            view: true,
+        view: true,
 
-            layout: function() {
-                return {
-                    content: {
-                        width: 'fixed'
-                    },
-                    sidebar: {
-                        width: 'max',
-                        cssClasses: 'sidebar-padding-50'
-                    }
-                };
-            },
-
-            templates: ['/admin/contact/template/contact/form'],
-
-            customTemplates: {
-                addAddressesIcon: [
-                    '<div class="grid-row">',
-                    '    <div class="grid-col-12">',
-                    '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
-                    '   </div>',
-                    '</div>'
-                ].join('')
-            },
-
-            initialize: function() {
-                this.saved = true;
-                this.formId = '#contact-form';
-                this.autoCompleteInstanceName = 'accounts-';
-
-                this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
-                this.dfdListenForChange = this.sandbox.data.deferred();
-                this.dfdFormIsSet = this.sandbox.data.deferred();
-                this.dfdBirthdayIsSet = this.sandbox.data.deferred();
-
-                // define when all fields are initialized
-                this.sandbox.data.when(this.dfdListenForChange, this.dfdBirthdayIsSet).then(function() {
-                    this.dfdAllFieldsInitialized.resolve();
-                }.bind(this));
-
-                ContactManager.loadOrNew(this.options.id).then(function(data) {
-                    this.data = data;
-                    this.render();
-                    this.listenForChange();
-
-                    if (!!this.data && !!this.data.id && WidgetGroups.exists('contact-detail')) {
-                        this.initSidebar(
-                            '/admin/widget-groups/contact-detail?contact=',
-                            this.data.id
-                        );
-                    }
-                }.bind(this));
-            },
-
-            initSidebar: function(url, id) {
-                this.sandbox.emit('sulu.sidebar.set-widget', url + id);
-            },
-
-            render: function() {
-                this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
-                this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
-
-                this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
-
-                this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
-
-                var data = this.initContactData();
-
-                this.companyInstanceName = 'companyContact' + data.id;
-
-                this.initForm(data);
-
-                this.setTags(data);
-
-                this.bindDomEvents();
-                this.bindCustomEvents();
-                this.bindTagEvents(data);
-            },
-
-            // show tags and activate keylistener
-            setTags: function() {
-                var uid = this.sandbox.util.uniqueId();
-                if (this.data.id) {
-                    uid += '-' + this.data.id;
+        layout: function() {
+            return {
+                content: {
+                    width: 'fixed'
+                },
+                sidebar: {
+                    width: 'max',
+                    cssClasses: 'sidebar-padding-50'
                 }
-                this.autoCompleteInstanceName += uid;
+            };
+        },
 
-                this.dfdFormIsSet.then(function() {
-                    this.sandbox.start([
-                        {
-                            name: 'auto-complete-list@husky',
-                            options: {
-                                el: '#tags',
-                                instanceName: this.autoCompleteInstanceName,
-                                getParameter: 'search',
-                                itemsKey: 'tags',
-                                remoteUrl: '/admin/api/tags?flat=true&sortBy=name&searchFields=name',
-                                completeIcon: 'tag',
-                                noNewTags: true
-                            }
-                        }
-                    ]);
-                }.bind(this));
-            },
+        templates: ['/admin/contact/template/contact/form'],
 
-            bindTagEvents: function(data) {
+        customTemplates: {
+            addAddressesIcon: [
+                '<div class="grid-row">',
+                '    <div class="grid-col-12">',
+                '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
+                '   </div>',
+                '</div>'
+            ].join('')
+        },
 
-                if (!!data.tags && data.tags.length > 0) {
-                    // set tags after auto complete list was initialized
-                    this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.initialized', function() {
-                        this.sandbox.emit('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.set-tags', data.tags);
-                    }.bind(this));
-                    // listen for change after items have been added
-                    this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.items-added', function() {
-                        this.dfdListenForChange.resolve();
-                    }.bind(this));
-                } else {
-                    this.dfdListenForChange.resolve();
-                }
-            },
+        initialize: function() {
+            this.saved = true;
+            this.formId = '#contact-form';
+            this.autoCompleteInstanceName = 'accounts-';
 
-            setDefaults: function(defaultTypes) {
-                this.defaultTypes = defaultTypes;
-            },
+            this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
+            this.dfdListenForChange = this.sandbox.data.deferred();
+            this.dfdFormIsSet = this.sandbox.data.deferred();
+            this.dfdBirthdayIsSet = this.sandbox.data.deferred();
 
-            /**
-             * is getting called when template is initialized
-             * @param types
-             */
-            setTypes: function(types) {
-                this.fieldTypes = types;
-            },
+            // define when all fields are initialized
+            this.sandbox.data.when(this.dfdListenForChange, this.dfdBirthdayIsSet).then(function() {
+                this.dfdAllFieldsInitialized.resolve();
+            }.bind(this));
 
-            setFormData: function(data, startForm) {
-                this.numberOfBankAccounts = !!data.bankAccounts ? data.bankAccounts.length : 0;
-                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+            ContactManager.loadOrNew(this.options.id).then(function(data) {
+                this.data = data;
+                this.render();
+                this.listenForChange();
 
-                // add collection filters to form
-                this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
-                this.sandbox.form.setData(form, data).then(function() {
-
-                    if (!!startForm) {
-                        this.sandbox.start(form);
-                    } else {
-                        this.sandbox.start('#contact-fields');
-                    }
-
-                    this.sandbox.emit('sulu.contact-form.add-required', ['email']);
-                    this.sandbox.emit('sulu.contact-form.content-set');
-                    this.dfdFormIsSet.resolve();
-                }.bind(this)).fail(function(error) {
-                    this.sandbox.logger.error("An error occured when setting data!", error);
-                }.bind(this));
-            },
-
-            initForm: function(data) {
-                var options = Config.get('sulucontact.components.autocomplete.default.account');
-                options.el = '#company';
-                options.value = !!data.account ? data.account : '';
-                options.instanceName = this.companyInstanceName;
-
-                this.sandbox.start([
-                    {
-                        name: 'auto-complete@husky',
-                        options: options
-                    }
-                ]);
-
-                this.numberOfAddresses = data.addresses.length;
-                this.updateAddressesAddIcon(this.numberOfAddresses);
-
-                // when  contact-form is initalized
-                this.sandbox.on('sulu.contact-form.initialized', function() {
-                    // set form data
-                    var formObject = this.sandbox.form.create(form);
-                    formObject.initialized.then(function() {
-                        this.setFormData(data, true);
-                    }.bind(this));
-                }.bind(this));
-
-                // initialize contact form
-                this.sandbox.start([
-                    {
-                        name: 'contact-form@sulucontact',
-                        options: {
-                            el: constants.editFormSelector,
-                            fieldTypes: this.fieldTypes,
-                            defaultTypes: this.defaultTypes
-                        }
-                    }
-                ]);
-            },
-
-            /**
-             * Adds or removes icon to add addresses
-             * @param numberOfAddresses
-             */
-            updateAddressesAddIcon: function(numberOfAddresses) {
-                var $addIcon = this.sandbox.dom.find(constants.addressAddId),
-                    addIcon;
-
-                if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
-                    addIcon = this.sandbox.dom.createElement(this.customTemplates.addAddressesIcon);
-                    this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
-                } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
-                    this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
-                    this.sandbox.emit('sulu.contact-form.update.addAddressLabel', constants.addressesSelector);
-                }
-            },
-
-            bindDomEvents: function() {
-            },
-
-            bindCustomEvents: function() {
-
-                this.sandbox.on('sulu.contact-form.added.address', function() {
-                    this.numberOfAddresses++;
-                    this.updateAddressesAddIcon(this.numberOfAddresses);
-                }, this);
-
-                this.sandbox.on('sulu.contact-form.removed.address', function() {
-                    this.numberOfAddresses--;
-                    this.updateAddressesAddIcon(this.numberOfAddresses);
-                }, this);
-
-                // contact save
-                this.sandbox.on('sulu.tab.save', this.save, this);
-
-                this.sandbox.on('husky.input.birthday.initialized', function() {
-                    this.dfdBirthdayIsSet.resolve();
-                }, this);
-
-                this.sandbox.once('husky.select.position-select.initialize', function() {
-                    if (!this.sandbox.dom.find('#' + this.companyInstanceName).val()) {
-                        this.enablePositionDropdown(false);
-                    }
-                }, this);
-
-                this.sandbox.on('sulu.contact-form.added.bank-account', function() {
-                    this.numberOfBankAccounts++;
-                    this.updateBankAccountAddIcon(this.numberOfBankAccounts);
-                }, this);
-
-                this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
-                    this.numberOfBankAccounts--;
-                    this.updateBankAccountAddIcon(this.numberOfBankAccounts);
-                }, this);
-
-                this.initializeDropDownListener(
-                    'title-select',
-                    'api/contact/titles');
-                this.initializeDropDownListener(
-                    'position-select',
-                    'api/contact/positions');
-
-                this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
-            },
-
-            /**
-             * Does some cleanup with aura components
-             */
-            cleanUp: function() {
-                // stop contact form before leaving
-                this.sandbox.stop(constants.editFormSelector);
-            },
-
-            initContactData: function() {
-                var contactJson = this.data;
-
-                this.sandbox.util.foreach(fields, function(field) {
-                    if (!contactJson.hasOwnProperty(field)) {
-                        contactJson[field] = [];
-                    }
-                });
-
-                contactJson.emails = this.fillFields(contactJson.emails, 1, {
-                    id: null,
-                    email: '',
-                    emailType: this.defaultTypes.emailType
-                });
-                contactJson.phones = this.fillFields(contactJson.phones, 1, {
-                    id: null,
-                    phone: '',
-                    phoneType: this.defaultTypes.phoneType
-                });
-                contactJson.faxes = this.fillFields(contactJson.faxes, 1, {
-                    id: null,
-                    fax: '',
-                    faxType: this.defaultTypes.faxType
-                });
-                contactJson.notes = this.fillFields(contactJson.notes, 1, {
-                    id: null,
-                    value: ''
-                });
-                contactJson.urls = this.fillFields(contactJson.urls, 0, {
-                    id: null,
-                    url: '',
-                    urlType: this.defaultTypes.urlType
-                });
-
-                return contactJson;
-            },
-
-            typeClick: function(event, $element) {
-                this.sandbox.logger.log('email click', event);
-                $element.find('*.type-value').data('element').setValue(event);
-            },
-
-            /**
-             * Takes an array of fields and fields it up with empty fields till a minimum amount
-             * @param field {Object} array of fields to manipulate
-             * @param minAmount {Number} minimum amount of fields to exist
-             * @param value {Object} empty object to insert (for minimum amount of fields)
-             * @returns {Object} manipulated fields array
-             */
-            fillFields: function(field, minAmount, value) {
-                var i = -1, length = field.length, attributes;
-
-                // if minimum fields stated is bigger than the actual length loop more times
-                if (length < minAmount) {
-                    length = minAmount;
-                }
-
-                for (; ++i < length;) {
-                    // construct the attributes object for fields under and equal the minimum amount
-                    if ((i + 1) > minAmount) {
-                        attributes = {};
-                    } else {
-                        attributes = {
-                            permanent: true
-                        };
-                    }
-
-                    // if no more fields exists push new, empty fields
-                    if (!field[i]) {
-                        field.push(value);
-                        field[field.length - 1].attributes = attributes;
-                    } else {
-                        field[i].attributes = attributes;
-                    }
-                }
-
-                return field;
-            },
-
-            save: function() {
-                if (this.sandbox.form.validate(form)) {
-                    var data = this.sandbox.form.getData(form);
-                    if (data.id === '') {
-                        delete data.id;
-                    }
-                    data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
-
-                    // FIXME auto complete in mapper
-                    // only get id, if auto-complete is not empty:
-                    data.account = {
-                        id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
-                    };
-                    this.sandbox.emit('sulu.tab.saving');
-                    ContactManager.save(data).then(function(savedData) {
-                        this.data = data;
-                        this.initContactData();
-                        this.setFormData(this.data);
-                        this.sandbox.emit('sulu.tab.saved', savedData);
-                    }.bind(this));
-                }
-            },
-
-            /**
-             * Register events for editable drop downs
-             * @param instanceName
-             */
-            initializeDropDownListener: function(instanceName) {
-                var instance = 'husky.select.' + instanceName;
-                this.sandbox.on(instance + '.selected.item', function(id) {
-                    if (id > 0) {
-                        this.sandbox.emit('sulu.tab.dirty');
-                    }
-                }.bind(this));
-                this.sandbox.on(instance + '.deselected.item', function() {
-                    this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this));
-                this.sandbox.on(instance + '.delete', this.deleteSelectData.bind(this, instanceName));
-                this.sandbox.on(instance + '.save', this.saveSelectData.bind(this, instanceName));
-            },
-
-            /**
-             * Saves the data of the editable selects
-             * @param type The type of the editable select
-             * @param data The data to save
-             */
-            saveSelectData: function(type, data) {
-                var method = (type === 'title-select') ? ContactManager.saveTitles : ContactManager.savePositions;
-                method(data).then(function(response) {
-                    this.sandbox.emit(
-                        'husky.select.' + type + '.update',
-                        response,
-                        [response[response.length - 1]], // preselected
-                        true,
-                        true
+                if (!!this.data && !!this.data.id && WidgetGroups.exists('contact-detail')) {
+                    this.initSidebar(
+                        '/admin/widget-groups/contact-detail?contact=',
+                        this.data.id
                     );
-                }.bind(this));
-            },
-
-            /**
-             * Deletes the data of the editable selects
-             * @param type The type of the editable select
-             * @param ids The ids of the data to delete
-             */
-            deleteSelectData: function(type, ids) {
-                var method = (type === 'title-select') ? ContactManager.deleteTitle : ContactManager.deletePosition;
-                this.sandbox.util.foreach(ids, function(id) {
-                    method(id);
-                }.bind(this));
-            },
-
-            /**
-             * Enables or disables the position dropdown
-             * @param data - event
-             */
-            enablePositionDropdown: function(enable) {
-                if (!!enable) {
-                    this.sandbox.emit('husky.select.position-select.enable');
-                } else {
-                    this.sandbox.emit('husky.select.position-select.disable');
                 }
-            },
+            }.bind(this));
+        },
 
-            // event listens for changes in form
-            listenForChange: function() {
-                // listen for change after TAGS and BIRTHDAY-field have been set
-                this.sandbox.data.when(this.dfdAllFieldsInitialized).then(function() {
+        initSidebar: function(url, id) {
+            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
+        },
 
-                    this.sandbox.dom.on('#contact-form', 'change', function() {
-                        this.sandbox.emit('sulu.tab.dirty');
-                    }.bind(this), '.changeListener select, ' +
-                    '.changeListener input, ' +
-                    '.changeListener textarea');
+        render: function() {
+            this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
+            this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
+            this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
+            var data = this.initContactData();
+            this.companyInstanceName = 'companyContact' + data.id;
+            this.initForm(data);
+            this.setTags(data);
+            this.bindCustomEvents();
+            this.bindTagEvents(data);
+        },
 
-                    this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                        this.sandbox.emit('sulu.tab.dirty');
-                    }.bind(this), '.changeListener select, ' +
-                    '.changeListener input, ' +
-                    '.changeListener textarea');
+        // show tags and activate keylistener
+        setTags: function() {
+            var uid = this.sandbox.util.uniqueId();
+            if (this.data.id) {
+                uid += '-' + this.data.id;
+            }
+            this.autoCompleteInstanceName += uid;
 
-                    this.sandbox.on('sulu.contact-form.changed', function() {
-                        this.sandbox.emit('sulu.tab.dirty');
-                    }.bind(this));
-
-                    // disable position dropdown when company is empty
-                    this.sandbox.dom.on('#company', 'keyup', function(data) {
-                        if (!data.target.value) {
-                            this.enablePositionDropdown(false);
+            this.dfdFormIsSet.then(function() {
+                this.sandbox.start([
+                    {
+                        name: 'auto-complete-list@husky',
+                        options: {
+                            el: '#tags',
+                            instanceName: this.autoCompleteInstanceName,
+                            getParameter: 'search',
+                            itemsKey: 'tags',
+                            remoteUrl: '/admin/api/tags?flat=true&sortBy=name&searchFields=name',
+                            completeIcon: 'tag',
+                            noNewTags: true
                         }
-                    }.bind(this));
+                    }
+                ]);
+            }.bind(this));
+        },
 
-                    // enabel position dropdown only if something got selected
-                    this.companySelected = 'husky.auto-complete.' +
-                    this.companyInstanceName +
-                    '.select';
-                    this.sandbox.on(this.companySelected, function() {
-                        this.enablePositionDropdown(true);
-                    }.bind(this));
-
+        bindTagEvents: function(data) {
+            if (!!data.tags && data.tags.length > 0) {
+                // set tags after auto complete list was initialized
+                this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.initialized', function() {
+                    this.sandbox.emit('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.set-tags', data.tags);
                 }.bind(this));
-
-                this.sandbox.on('husky.select.form-of-address.selected.item', function() {
-                    this.sandbox.emit('sulu.tab.dirty');
+                // listen for change after items have been added
+                this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.items-added', function() {
+                    this.dfdListenForChange.resolve();
                 }.bind(this));
-            },
+            } else {
+                this.dfdListenForChange.resolve();
+            }
+        },
 
-            /**
-             * Adds or removes icon to add bank accounts depending on the number of bank accounts
-             * @param numberOfBankAccounts
-             */
-            updateBankAccountAddIcon: function(numberOfBankAccounts) {
-                var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
-                    addIcon;
+        setDefaults: function(defaultTypes) {
+            this.defaultTypes = defaultTypes;
+        },
 
-                if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
-                    addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
-                    this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
-                } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
-                    this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
+        /**
+         * is getting called when template is initialized
+         * @param types
+         */
+        setTypes: function(types) {
+            this.fieldTypes = types;
+        },
+
+        setFormData: function(data, startForm) {
+            this.numberOfBankAccounts = !!data.bankAccounts ? data.bankAccounts.length : 0;
+            this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+
+            // add collection filters to form
+            this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
+            this.sandbox.form.setData(form, data).then(function() {
+
+                if (!!startForm) {
+                    this.sandbox.start(form);
+                } else {
+                    this.sandbox.start('#contact-fields');
+                }
+
+                this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                this.sandbox.emit('sulu.contact-form.content-set');
+                this.dfdFormIsSet.resolve();
+            }.bind(this)).fail(function(error) {
+                this.sandbox.logger.error("An error occured when setting data!", error);
+            }.bind(this));
+        },
+
+        initForm: function(data) {
+            var options = Config.get('sulucontact.components.autocomplete.default.account');
+            options.el = '#company';
+            options.value = !!data.account ? data.account : '';
+            options.instanceName = this.companyInstanceName;
+
+            this.sandbox.start([
+                {
+                    name: 'auto-complete@husky',
+                    options: options
+                }
+            ]);
+
+            this.numberOfAddresses = data.addresses.length;
+            this.updateAddressesAddIcon(this.numberOfAddresses);
+
+            // when  contact-form is initalized
+            this.sandbox.on('sulu.contact-form.initialized', function() {
+                // set form data
+                var formObject = this.sandbox.form.create(form);
+                formObject.initialized.then(function() {
+                    this.setFormData(data, true);
+                }.bind(this));
+            }.bind(this));
+
+            // initialize contact form
+            this.sandbox.start([
+                {
+                    name: 'contact-form@sulucontact',
+                    options: {
+                        el: constants.editFormSelector,
+                        fieldTypes: this.fieldTypes,
+                        defaultTypes: this.defaultTypes
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Adds or removes icon to add addresses
+         * @param numberOfAddresses
+         */
+        updateAddressesAddIcon: function(numberOfAddresses) {
+            var $addIcon = this.sandbox.dom.find(constants.addressAddId),
+                addIcon;
+
+            if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
+                addIcon = this.sandbox.dom.createElement(this.customTemplates.addAddressesIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
+            } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
+                this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
+                this.sandbox.emit('sulu.contact-form.update.addAddressLabel', constants.addressesSelector);
+            }
+        },
+
+        bindCustomEvents: function() {
+
+            this.sandbox.on('sulu.contact-form.added.address', function() {
+                this.numberOfAddresses++;
+                this.updateAddressesAddIcon(this.numberOfAddresses);
+            }, this);
+
+            this.sandbox.on('sulu.contact-form.removed.address', function() {
+                this.numberOfAddresses--;
+                this.updateAddressesAddIcon(this.numberOfAddresses);
+            }, this);
+
+            // contact save
+            this.sandbox.on('sulu.tab.save', this.save, this);
+
+            this.sandbox.on('husky.input.birthday.initialized', function() {
+                this.dfdBirthdayIsSet.resolve();
+            }, this);
+
+            this.sandbox.once('husky.select.position-select.initialize', function() {
+                if (!this.sandbox.dom.find('#' + this.companyInstanceName).val()) {
+                    this.enablePositionDropdown(false);
+                }
+            }, this);
+
+            this.sandbox.on('sulu.contact-form.added.bank-account', function() {
+                this.numberOfBankAccounts++;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+            }, this);
+
+            this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
+                this.numberOfBankAccounts--;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+            }, this);
+
+            this.initializeDropDownListener(
+                'title-select',
+                'api/contact/titles');
+            this.initializeDropDownListener(
+                'position-select',
+                'api/contact/positions');
+
+            this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
+        },
+
+        /**
+         * Does some cleanup with aura components
+         */
+        cleanUp: function() {
+            // stop contact form before leaving
+            this.sandbox.stop(constants.editFormSelector);
+        },
+
+        initContactData: function() {
+            var contactJson = this.data;
+
+            this.sandbox.util.foreach(fields, function(field) {
+                if (!contactJson.hasOwnProperty(field)) {
+                    contactJson[field] = [];
+                }
+            });
+
+            contactJson.emails = this.fillFields(contactJson.emails, 1, {
+                id: null,
+                email: '',
+                emailType: this.defaultTypes.emailType
+            });
+            contactJson.phones = this.fillFields(contactJson.phones, 1, {
+                id: null,
+                phone: '',
+                phoneType: this.defaultTypes.phoneType
+            });
+            contactJson.faxes = this.fillFields(contactJson.faxes, 1, {
+                id: null,
+                fax: '',
+                faxType: this.defaultTypes.faxType
+            });
+            contactJson.notes = this.fillFields(contactJson.notes, 1, {
+                id: null,
+                value: ''
+            });
+            contactJson.urls = this.fillFields(contactJson.urls, 0, {
+                id: null,
+                url: '',
+                urlType: this.defaultTypes.urlType
+            });
+
+            return contactJson;
+        },
+
+        typeClick: function(event, $element) {
+            $element.find('*.type-value').data('element').setValue(event);
+        },
+
+        /**
+         * Takes an array of fields and fields it up with empty fields till a minimum amount
+         * @param field {Object} array of fields to manipulate
+         * @param minAmount {Number} minimum amount of fields to exist
+         * @param value {Object} empty object to insert (for minimum amount of fields)
+         * @returns {Object} manipulated fields array
+         */
+        fillFields: function(field, minAmount, value) {
+            var i = -1, length = field.length, attributes;
+
+            // if minimum fields stated is bigger than the actual length loop more times
+            if (length < minAmount) {
+                length = minAmount;
+            }
+
+            for (; ++i < length;) {
+                // construct the attributes object for fields under and equal the minimum amount
+                if ((i + 1) > minAmount) {
+                    attributes = {};
+                } else {
+                    attributes = {
+                        permanent: true
+                    };
+                }
+
+                // if no more fields exists push new, empty fields
+                if (!field[i]) {
+                    field.push(value);
+                    field[field.length - 1].attributes = attributes;
+                } else {
+                    field[i].attributes = attributes;
                 }
             }
-        };
-    })();
+
+            return field;
+        },
+
+        save: function() {
+            if (this.sandbox.form.validate(form)) {
+                var data = this.sandbox.form.getData(form);
+                if (data.id === '') {
+                    delete data.id;
+                }
+                data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
+
+                // FIXME auto complete in mapper
+                // only get id, if auto-complete is not empty:
+                data.account = {
+                    id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
+                };
+                this.sandbox.emit('sulu.tab.saving');
+                ContactManager.save(data).then(function(savedData) {
+                    this.data = data;
+                    this.initContactData();
+                    this.setFormData(this.data);
+                    this.sandbox.emit('sulu.tab.saved', savedData);
+                }.bind(this));
+            }
+        },
+
+        /**
+         * Register events for editable drop downs
+         * @param instanceName
+         */
+        initializeDropDownListener: function(instanceName) {
+            var instance = 'husky.select.' + instanceName;
+            this.sandbox.on(instance + '.selected.item', function(id) {
+                if (id > 0) {
+                    this.sandbox.emit('sulu.tab.dirty');
+                }
+            }.bind(this));
+            this.sandbox.on(instance + '.deselected.item', function() {
+                this.sandbox.emit('sulu.tab.dirty');
+            }.bind(this));
+            this.sandbox.on(instance + '.delete', this.deleteSelectData.bind(this, instanceName));
+            this.sandbox.on(instance + '.save', this.saveSelectData.bind(this, instanceName));
+        },
+
+        /**
+         * Saves the data of the editable selects
+         * @param type The type of the editable select
+         * @param data The data to save
+         */
+        saveSelectData: function(type, data) {
+            var method = (type === 'title-select') ? ContactManager.saveTitles : ContactManager.savePositions;
+            method(data).then(function(response) {
+                this.sandbox.emit(
+                    'husky.select.' + type + '.update',
+                    response,
+                    [response[response.length - 1]], // preselected
+                    true,
+                    true
+                );
+            }.bind(this));
+        },
+
+        /**
+         * Deletes the data of the editable selects
+         * @param type The type of the editable select
+         * @param ids The ids of the data to delete
+         */
+        deleteSelectData: function(type, ids) {
+            var method = (type === 'title-select') ? ContactManager.deleteTitle : ContactManager.deletePosition;
+            this.sandbox.util.foreach(ids, function(id) {
+                method(id);
+            }.bind(this));
+        },
+
+        /**
+         * Enables or disables the position dropdown
+         * @param data - event
+         */
+        enablePositionDropdown: function(enable) {
+            if (!!enable) {
+                this.sandbox.emit('husky.select.position-select.enable');
+            } else {
+                this.sandbox.emit('husky.select.position-select.disable');
+            }
+        },
+
+        // event listens for changes in form
+        listenForChange: function() {
+            // listen for change after TAGS and BIRTHDAY-field have been set
+            this.sandbox.data.when(this.dfdAllFieldsInitialized).then(function() {
+
+                this.sandbox.dom.on('#contact-form', 'change', function() {
+                    this.sandbox.emit('sulu.tab.dirty');
+                }.bind(this), '.changeListener select, ' +
+                '.changeListener input, ' +
+                '.changeListener textarea');
+
+                this.sandbox.dom.on('#contact-form', 'keyup', function() {
+                    this.sandbox.emit('sulu.tab.dirty');
+                }.bind(this), '.changeListener select, ' +
+                '.changeListener input, ' +
+                '.changeListener textarea');
+
+                this.sandbox.on('sulu.contact-form.changed', function() {
+                    this.sandbox.emit('sulu.tab.dirty');
+                }.bind(this));
+
+                // disable position dropdown when company is empty
+                this.sandbox.dom.on('#company', 'keyup', function(data) {
+                    if (!data.target.value) {
+                        this.enablePositionDropdown(false);
+                    }
+                }.bind(this));
+
+                // enabel position dropdown only if something got selected
+                this.companySelected = 'husky.auto-complete.' +
+                this.companyInstanceName +
+                '.select';
+                this.sandbox.on(this.companySelected, function() {
+                    this.enablePositionDropdown(true);
+                }.bind(this));
+
+            }.bind(this));
+
+            this.sandbox.on('husky.select.form-of-address.selected.item', function() {
+                this.sandbox.emit('sulu.tab.dirty');
+            }.bind(this));
+        },
+
+        /**
+         * Adds or removes icon to add bank accounts depending on the number of bank accounts
+         * @param numberOfBankAccounts
+         */
+        updateBankAccountAddIcon: function(numberOfBankAccounts) {
+            var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
+                addIcon;
+
+            if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
+                addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+            } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
+                this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
+            }
+        }
+    };
 });

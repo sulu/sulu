@@ -17,7 +17,7 @@ define(function() {
     'use strict';
 
     var defaults = {
-            unselectOnBackgroundClick: true,
+            unselectOnBackgroundClick: true
         },
 
         constants = {
@@ -30,7 +30,7 @@ define(function() {
             itemInfoClass: 'item-info',
 
             idProperty: 'id',
-            mailProperty: 'mainEmail',
+            mailProperty: 'mainEmail'
         },
 
         templates = {
@@ -183,10 +183,10 @@ define(function() {
                 this.sandbox.dom.createElement(
                     this.sandbox.util.template(templates.infoRow)({
                         icon: icon,
-                        text: this.sandbox.util.cropMiddle(String(text), 26),
+                        text: this.sandbox.util.cropMiddle(String(text), 26)
                     })
                 )
-            )
+            );
         },
 
         /**

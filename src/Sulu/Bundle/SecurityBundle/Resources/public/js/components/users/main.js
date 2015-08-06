@@ -39,8 +39,6 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
-
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
             this.user.set('locale', data.user.locale);
@@ -56,11 +54,9 @@ define([
                 var userRole;
                 if (this.user.get('userRoles').length > 0) {
 
-                    userRole = this.user.get('userRoles').findWhere(
-                        {
+                    userRole = this.user.get('userRoles').findWhere({
                             role: this.roles.get(value)
-                        }
-                    );
+                        });
                     if (!!userRole) {
                         this.user.get('userRoles').remove(userRole);
                     }
@@ -73,12 +69,9 @@ define([
                     tmp;
 
                 if (this.user.get('userRoles').length > 0) {
-
-                    tmp = this.user.get('userRoles').findWhere(
-                        {
+                    tmp = this.user.get('userRoles').findWhere({
                             role: this.roles.get(value.roleId)
-                        }
-                    );
+                        });
                     if (!!tmp) {
                         userRole = tmp;
                     }
@@ -202,8 +195,6 @@ define([
                     }}
             ]);
         },
-
-        // dialog
 
         /**
          * @var ids - array of ids to delete
