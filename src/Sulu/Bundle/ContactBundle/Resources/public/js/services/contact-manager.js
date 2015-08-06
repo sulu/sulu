@@ -67,7 +67,7 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.contacts.contact.documents.removed', contactId, mediaId);
+                    mediator.emit('sulu.contacts.contact.documents.removed', contactId, mediaIds);
                     promise.resolve();
                 }.bind(this));
 
@@ -85,7 +85,6 @@ define([
 
                 util.ajax({
                     url: '/admin/api/contacts/' + contactId + '/medias/' + mediaId,
-                    data: {mediaId: mediaId},
                     type: 'DELETE',
 
                     success: function() {
@@ -116,7 +115,7 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.contacts.contact.documents.added', contactId, mediaId);
+                    mediator.emit('sulu.contacts.contact.documents.added', contactId, mediaIds);
                     promise.resolve();
                 }.bind(this));
 

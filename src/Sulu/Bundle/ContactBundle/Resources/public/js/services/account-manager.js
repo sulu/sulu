@@ -101,7 +101,7 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.account.documents.removed', accountId, mediaId);
+                mediator.emit('sulu.contacts.account.documents.removed', accountId, mediaIds);
                 promise.resolve();
             }.bind(this));
 
@@ -119,7 +119,6 @@ define([
 
             util.ajax({
                 url: '/admin/api/accounts/' + accountId + '/medias/' + mediaId,
-                data: {mediaId: mediaId},
                 type: 'DELETE',
 
                 success: function() {
@@ -150,7 +149,7 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.account.documents.added', accountId, mediaId);
+                mediator.emit('sulu.contacts.account.documents.added', accountId, mediaIds);
                 promise.resolve();
             }.bind(this));
 
