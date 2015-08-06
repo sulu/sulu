@@ -41,6 +41,23 @@ input, select {
   padding-bottom: 20px;
 }
 
+/* line 50, ../scss/modules/base.scss */
+.initial-loader {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 55, ../scss/modules/base.scss */
+.initial-loader .bouncer {
+  background: #ccc;
+}
+
 /*----------------------------------------*/
 /* line 4, ../scss/modules/layout.scss */
 #main {

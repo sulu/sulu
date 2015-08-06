@@ -45,3 +45,14 @@ input, select {
 .list-toolbar {
     padding-bottom: 20px;
 }
+
+
+.initial-loader {
+    $dimension: 100px;
+    width: $dimension;
+    height: $dimension;
+    @include centerBlock();
+    .bouncer {
+        background: $grayLighter;
+    }
+}

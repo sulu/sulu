@@ -27,6 +27,10 @@
         <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
     </head>
     <body>
+        <div class="spinner initial-loader">
+            <div class="double-bounce1 bouncer"></div>
+            <div class="double-bounce2 bouncer"></div>
+        </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
                     {% if user.username is not defined %}

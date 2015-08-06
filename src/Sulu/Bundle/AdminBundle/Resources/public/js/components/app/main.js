@@ -17,6 +17,7 @@ define(function() {
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
             fixedWidthClass: 'fixed',
             smallFixedClass: 'small-fixed',
+            initialLoaderClass: 'initial-loader',
             maxWidthClass: 'max',
             columnSelector: '.content-column',
             noLeftSpaceClass: 'no-left-space',
@@ -317,6 +318,7 @@ define(function() {
 
             // select right navigation-item on navigation startup
             this.sandbox.on('husky.navigation.initialized', function() {
+                this.sandbox.dom.remove('.' + constants.initialLoaderClass);
                 if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
                     this.selectNavigationItem(this.sandbox.mvc.history.fragment);
                 }
