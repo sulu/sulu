@@ -101,11 +101,11 @@ define([
                 this.sandbox.emit('sulu.tab.dirty');
             }, this);
 
-            this.sandbox.on('sulu.contacts.contacts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
-            this.sandbox.on('sulu.contacts.accounts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.account.documents.removed', this.resetAndRemoveFromCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.contact.documents.removed', this.resetAndRemoveFromCurrent.bind(this));
 
-            this.sandbox.on('sulu.contacts.accounts.medias.saved', this.resetAndAddToCurrent.bind(this));
-            this.sandbox.on('sulu.contacts.contacts.medias.saved', this.resetAndAddToCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.account.documents.added', this.resetAndAddToCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.contact.documents.added', this.resetAndAddToCurrent.bind(this));
 
             this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
             this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
