@@ -144,7 +144,7 @@ define([
 
     return {
         showDialog: function(ids, okCallback) {
-            if (!(ids instanceof Array)){
+            if (!$.isArray(ids)){
                 ids = [ids]; //enable integer input
             }
 

@@ -17,7 +17,7 @@ define(['services/husky/mediator'], function(mediator) {
          * @param okCallback function to execute on deletion confirmed
          */
         showDialog: function(ids, okCallback) {
-            if (!(ids instanceof Array)){
+            if (!$.isArray(ids)){
                 ids = [ids]; //enable integer input
             }
 
