@@ -103,8 +103,6 @@ define([
             );
         },
 
-
-
         renderConfirmMultipleDeleteDialog = function(deleteInfo, okCallback) {
             var content = 'contact.accounts.delete.desc',
                 title = 'sulu.overlay.be-careful',
@@ -146,6 +144,10 @@ define([
 
     return {
         showDialog: function(ids, okCallback) {
+            if (!(ids instanceof Array)){
+                ids = [ids]; //enable integer input
+            }
+
             if (ids.length === 0) {
                 // no account selected, do not show dialog
                 return;
@@ -153,12 +155,12 @@ define([
                 // if only one account was selected - get related sub-companies and contacts (and show the first 3 ones)
                 AccountManager.loadDeleteInfo(ids[0]).then(function(deleteInfo) {
                     renderConfirmSingleDeleteDialog(deleteInfo, okCallback);
-                })
+                });
             } else {
                 // if multiple accounts were selected, get related sub-companies and show simplified message
                 AccountManager.loadMultipleDeleteInfo(ids).then(function(deleteInfo) {
                     renderConfirmMultipleDeleteDialog(deleteInfo, okCallback);
-                })
+                });
             }
         }
     };
