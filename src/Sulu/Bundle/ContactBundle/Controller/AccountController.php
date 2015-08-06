@@ -22,6 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -378,8 +379,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
             $fieldDescriptors = $this->getFieldDescriptors();
-            $listBuilder = $this->generateFlatListBuilder($request, $filter);
+            $listBuilder = $this->generateFlatListBuilder();
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+            $this->applyRequestParameters($request, $filter, $listBuilder);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
@@ -407,19 +409,28 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @param Request $request
-     * @param $filter
+     * Creates a listbuilder instance.
      *
-     * @return \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder
+     * @return DoctrineListBuilder
      */
-    protected function generateFlatListBuilder(Request $request, $filter)
+    protected function generateFlatListBuilder()
     {
-
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
         $listBuilder = $factory->create($this->getAccountEntityName());
 
+        return $listBuilder;
+    }
+
+    /**
+     * Applies the filter parameter and hasNoparent parameter for listbuilder.
+     *
+     * @param Request $request
+     * @param array $filter
+     * @param DoctrineListBuilder $listBuilder
+     */
+    protected function applyRequestParameters(Request $request, $filter, $listBuilder)
+    {
         if (json_decode($request->get('hasNoParent', null))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
         }
@@ -431,8 +442,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 $listBuilder->where($this->getFieldDescriptors()[$key], $value);
             }
         }
-
-        return $listBuilder;
     }
 
     /**
@@ -542,7 +551,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Edits the existing contact with the given id.
      *
-     * @param int     $id      The id of the contact to update
+     * @param int $id The id of the contact to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -589,7 +598,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * processes given entity for put.
      *
      * @param AccountInterface $account
-     * @param Request          $request
+     * @param Request $request
      *
      * @throws EntityNotFoundException
      * @throws RestException
@@ -637,7 +646,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * set parent to account.
      *
-     * @param array            $parentData
+     * @param array $parentData
      * @param AccountInterface $account
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -704,8 +713,8 @@ class AccountController extends RestController implements ClassResourceInterface
      * process geiven entity for patch.
      *
      * @param AccountInterface $account
-     * @param Request          $request
-     * @param ObjectManager    $entityManager
+     * @param Request $request
+     * @param ObjectManager $entityManager
      */
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
@@ -725,7 +734,9 @@ class AccountController extends RestController implements ClassResourceInterface
 
         // check if mainContact is set
         if (($mainContactRequest = $request->get('mainContact')) !== null) {
-            $mainContact = $entityManager->getRepository($this->container->getParameter('sulu.model.contact.class'))->find($mainContactRequest['id']);
+            $mainContact = $entityManager->getRepository(
+                $this->container->getParameter('sulu.model.contact.class')
+            )->find($mainContactRequest['id']);
             if ($mainContact) {
                 $account->setMainContact($mainContact);
             }

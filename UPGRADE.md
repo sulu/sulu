@@ -19,6 +19,15 @@ Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` 
 The 'inHeader' option got removed and is not supported anymore. `Sulu.buttons` are used internally and can be passed via the template which is recommended instead of using string templates.
 
 ### Listbuilder
+### Modified listbuilder to work with expressions
+
+The listbuilder uses now expressions to build the query. In course of these changes some default values have been
+removed from some methodes of the `AbstractListBuilder` because of unclear meaning / effect. Changed function parameters:
+
+- where (conjunction removed)
+- between (conjunction removed)
+
+### Enabled listbuilder to have multiple sort fields
 
 It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
 field, instead of adding a new one. Check if you haven't applied `sort()` multiple times to a listbuilder with the
@@ -34,6 +43,22 @@ purpose of overriding its previous sort field.
 
 ```bash
 app/console doctrine:schema:update --force
+```
+
+## 1.0.6
+
+### Configuration
+
+The syntax of `sulu_core.locales` configuration has changed. It has to be defined with a translation. Additional the
+translations of backend (currently only en/de) and a fallback locale can be configured.
+
+```
+sulu_core:
+    locales:
+        de: Deutsch
+        en: English
+    fallback_locale: 'en'
+    translations: ['de', 'en']
 ```
 
 ## 1.0.4
@@ -52,7 +77,6 @@ Filter values will now be copied from shadow-base locale to shadowed locale. Upg
 
 ```bash
 app/console phpcr:migrations:migrate
->>>>>>> master
 ```
 
 ## 1.0.0

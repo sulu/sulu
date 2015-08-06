@@ -35,7 +35,7 @@
                  data-aura-user-name="{{ user.fullname }}"
                  data-aura-system-name="{{ name }}"
                  data-aura-system-version="{{ suluVersion }}"
-                 data-aura-user-locales='["en", "de"]'
+                 data-aura-user-locales='{{ locales | json_encode }}'
                  data-aura-user-locale="{{ user.locale }}"
                  data-aura-logout-route="{{ user.logout }}"
                  class="navigation-column">
@@ -68,7 +68,10 @@
                     }
                 },
                 sections: {{ config | json_encode }},
-                locales: {{ locales | json_encode }}
+                locales: {{ locales | json_encode }},
+                translatedLocales: {{ translated_locales | json_encode }},
+                translations: {{ translations | json_encode }},
+                fallbackLocale: '{{ fallback_locale }}'
             };
             {% endautoescape %}
 

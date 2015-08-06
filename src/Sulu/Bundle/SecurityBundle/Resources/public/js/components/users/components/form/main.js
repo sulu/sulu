@@ -72,7 +72,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         },
 
         listenForChange: function() {
-
             this.sandbox.dom.on(this.formId, 'change', function() {
                 this.sandbox.emit('sulu.tab.dirty');
             }.bind(this), '.changeListener select, ' +
@@ -114,7 +113,17 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
          * Starts the dropdown for the system language
          */
         startLanguageDropdown: function() {
-            this.systemLanguage = AppConfig.getUser().locale;
+            var translatedLocales = AppConfig.getLocales(true),
+                data = [],
+                key;
+
+            for (key in translatedLocales) {
+                if (translatedLocales.hasOwnProperty(key)) {
+                    data.push({id: key, name: translatedLocales[key]});
+                }
+            }
+
+            this.systemLanguage = this.user.locale;
 
             this.sandbox.start([
                 {
@@ -124,10 +133,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         instanceName: 'systemLanguage',
                         defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                         value: 'name',
-                        data: [
-                            {id: "de", name: "Deutsch"},
-                            {id: "en", name: "English"}
-                        ],
+                        data: data,
                         preSelectedElements: [this.systemLanguage]
                     }
                 }

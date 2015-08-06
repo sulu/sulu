@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
     /**
@@ -56,74 +58,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $limit = null;
 
     /**
-     * The fields to be checked.
-     *
-     * @var array
-     */
-    protected $whereFields = [];
-
-    /**
-     * The values the where fields should have.
-     *
-     * @var array
-     */
-    protected $whereValues = [];
-
-    /**
-     * The comparators the where fields should use.
-     *
-     * @var array
-     */
-    protected $whereComparators = [];
-
-    /**
-     * The conjunctions for the where clauses.
-     *
-     * @var array
-     */
-    protected $whereConjunctions = [];
-
-    /**
      * group by fields.
      *
      * @var array
      */
     protected $groupByFields = [];
-
-    /**
-     * The fields which will be used for in-clauses.
-     *
-     * @var array
-     */
-    protected $inFields = [];
-
-    /**
-     * The fields which will be used for between-clauses.
-     *
-     * @var array
-     */
-    protected $betweenFields = [];
-
-    /**
-     * The values for the in-clauses.
-     *
-     * @var array
-     */
-    protected $inValues = [];
-
-    /**
-     * The values for the between-clauses.
-     *
-     * @var array
-     */
-    protected $betweenValues = [];
-
-    /**
-     * The conjunctions for the between clauses.
-     *
-     * @var array
-     */
-    protected $betweenConjunctions = [];
 
     /**
      * The page the resulting query will be returning.
@@ -137,7 +76,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $fieldDescriptors;
+    protected $fieldDescriptors = [];
+
+    /**
+     * @var ExpressionInterface[]
+     */
+    protected $expressions = [];
 
     /**
      * {@inheritdoc}
@@ -291,42 +235,50 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL, $conjunction = self::CONJUNCTION_AND)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
-        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereValues[$fieldDescriptor->getName()] = $value;
-        $this->whereComparators[$fieldDescriptor->getName()] = $comparator;
-        $this->whereConjunctions[$fieldDescriptor->getName()] = $conjunction;
+        $this->expressions[] = $this->createWhereExpression($fieldDescriptor, $value, $comparator);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
      * @deprecated use where instead
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $value
      */
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
     {
-        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereValues[$fieldDescriptor->getName()] = $value;
-        $this->whereComparators[$fieldDescriptor->getName()] = self::WHERE_COMPARATOR_UNEQUAL;
-        $this->whereConjunctions[$fieldDescriptor->getName()] = self::CONJUNCTION_AND;
+        $this->expressions[] = $this->createWhereExpression($fieldDescriptor, $value, self::WHERE_COMPARATOR_UNEQUAL);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, $values)
+    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        $this->inFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->inValues[$fieldDescriptor->getName()] = $values;
+        $this->expressions[] = $this->createInExpression($fieldDescriptor, $values);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND)
+    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->betweenValues[$fieldDescriptor->getName()] = $values;
-        $this->betweenConjunctions[$fieldDescriptor->getName()] = $conjunction;
+        $this->expressions[] = $this->createBetweenExpression($fieldDescriptor, $values);
+        $this->addFieldDescriptor($fieldDescriptor);
+    }
+
+    /**
+     * Adds a field descriptor.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     */
+    protected function addFieldDescriptor(AbstractFieldDescriptor $fieldDescriptor)
+    {
+        $this->fieldDescriptors[$fieldDescriptor->getName()] = $fieldDescriptor;
     }
 
     /**
@@ -335,5 +287,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor)
     {
         $this->groupByFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addExpression(ExpressionInterface $expression)
+    {
+        $this->expressions[] = $expression;
     }
 }

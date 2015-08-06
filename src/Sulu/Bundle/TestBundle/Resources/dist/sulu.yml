@@ -44,7 +44,11 @@ sulu_core:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
                      type: "page"
     webspace: ~
-    locales: [ "en", "de" ]
+    locales:
+        de: Deutsch
+        en: English
+    translations: ['de', 'en']
+    fallback_locale: 'en'
 
 sulu_admin:
     name: SULU 2.0

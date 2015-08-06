@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses.
  */
@@ -153,15 +156,13 @@ interface ListBuilderInterface
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should have
      * @param string $comparator The comparator use to compare the values
-     * @param string $conjunction The conjunction to connect the where statements
      *
      * @return mixed
      */
     public function where(
         AbstractFieldDescriptor $fieldDescriptor,
         $value,
-        $comparator = self::WHERE_COMPARATOR_EQUAL,
-        $conjunction = self::CONJUNCTION_AND
+        $comparator = self::WHERE_COMPARATOR_EQUAL
     );
 
     /**
@@ -182,20 +183,19 @@ interface ListBuilderInterface
      * Defines an IN constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param $values
+     * @param array $values
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, $values);
+    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
      * Defines a between constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
-     * @param string $conjunction The conjunction to connect the between statements
      *
      * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values, $conjunction = self::CONJUNCTION_AND);
+    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
      * The number of total elements for this list.
@@ -226,4 +226,60 @@ interface ListBuilderInterface
      * @return AbstractFieldDescriptor | null
      */
     public function getFieldDescriptor($name);
+
+    /**
+     * Adds an expression.
+     *
+     * @param ExpressionInterface $expression
+     */
+    public function addExpression(ExpressionInterface $expression);
+
+    /**
+     * Creates a between expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+
+    /**
+     * Creates an in expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+
+    /**
+     * Creates an where expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $value
+     * @param string $comparator
+     *
+     * @return mixed
+     */
+    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
+
+    /**
+     * Creates an and expression with the given expressions.
+     *
+     * @param ExpressionInterface[] $expressions
+     *
+     * @return ConjunctionExpressionInterface|null
+     */
+    public function createAndExpression(array $expressions);
+
+    /**
+     * Creates an or expressions with the given expressions.
+     *
+     * @param ExpressionInterface[] $expressions
+     *
+     * @return ConjunctionExpressionInterface|null
+     */
+    public function createOrExpression(array $expressions);
 }
