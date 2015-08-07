@@ -16,18 +16,39 @@ define([
     'use strict';
 
     return {
-        header: {
-            tabs: {
-                url: '/admin/content-navigations?alias=contact'
-            },
-            toolbar: {
-                buttons: {
-                    save: {
-                        parent: 'saveWithOptions'
-                    },
-                    delete: {}
+
+        /**
+         * Returns the header config for this main-view
+         * if an existing contact is edited a delete-button and a toggler get added
+         * @return {Object} the header config object
+         */
+        header: function() {
+            var config = {
+                tabs: {
+                    url: '/admin/content-navigations?alias=contact',
+                    options: {
+                        disablerToggler: 'husky.toggler.sulu-toolbar'
+                    }
+                },
+                toolbar: {
+                    buttons: {
+                        save: {
+                            parent: 'saveWithOptions'
+                        }
+                    }
                 }
+            };
+            if (!!this.options.id) {
+                config.toolbar.buttons.delete = {};
+                config.toolbar.buttons.disabler = {
+                    parent: 'toggler',
+                    options: {
+                        title: 'public.locked',
+                        hidden: true
+                    }
+                };
             }
+            return config;
         },
 
         initialize: function() {
@@ -38,9 +59,8 @@ define([
             this.sandbox.on('sulu.header.back', ContactRouter.toList);
             this.sandbox.on('sulu.toolbar.delete', this.deleteContact.bind(this));
             this.sandbox.on('sulu.tab.dirty', this.enableSave.bind(this));
-            this.sandbox.on('sulu.toolbar.save', this.saveTab.bind(this));
+            this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
-            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
         },
 
         deleteContact: function() {
@@ -52,12 +72,27 @@ define([
         },
 
         /**
-         * Sets the save-button into loading-state and tells the tab to save itselve
-         * @param action {String} the after-save action
+         * Saves the tab and returns a after the tab has saved itselve
+         * @returns promise with the saved data
          */
-        saveTab: function(action) {
-            this.afterSaveAction = action;
+        saveTab: function() {
+            var promise = $.Deferred();
+            this.sandbox.once('sulu.tab.saved', function(savedData) {
+                promise.resolve(savedData);
+            }.bind(this));
             this.sandbox.emit('sulu.tab.save');
+            return promise;
+        },
+
+        /**
+         * Saves all the data and executes the afterSave-method
+         * @param action
+         */
+        save: function(action) {
+            this.afterSaveAction = action;
+            this.saveTab().then(function(savedData) {
+                this.afterSave(savedData);
+            }.bind(this));
         },
 
         /**

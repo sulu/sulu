@@ -16,8 +16,14 @@ define([
     'use strict';
 
     return {
+
+        /**
+         * Returns the header config for this main-view
+         * if an existing contact is edited a delete-button and a toggler get added
+         * @return {Object} the header config object
+         */
         header: function() {
-            return {
+            var config = {
                 tabs: {
                     url: '/admin/content-navigations?alias=account'
                 },
@@ -25,11 +31,14 @@ define([
                     buttons: {
                         save: {
                             parent: 'saveWithOptions'
-                        },
-                        delete: {}
+                        }
                     }
                 }
             };
+            if (!!this.options.id) {
+                config.toolbar.buttons.delete = {};
+            }
+            return config;
         },
 
         initialize: function() {

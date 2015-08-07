@@ -102,35 +102,20 @@
             </div>
         </div>
         <div class="grid-row">
-            <div class="grid-col-6">
-                <div class="form-group">
-                    <label for="birthday"><%=translate('contact.contacts.birthday')%></label>
+            <div class="form-group">
+                <label for="birthday"><%=translate('contact.contacts.birthday')%></label>
 
-                    <div id="birthday"
-                         data-form="true"
-                         data-type="husky-input"
-                         data-aura-component="input@husky"
-                         data-aura-datepicker-options='{"startDate":"1900-01-01", "endDate": "<%= new Date() %>"}'
-                         data-aura-skin="date"
-                         data-aura-instance-name="birthday"
-                         data-aura-input-id="input-birthday"
-                         data-aura-input-name="input-birthday"
-                         data-mapper-property="birthday"></div>
+                <div id="birthday"
+                     data-form="true"
+                     data-type="husky-input"
+                     data-aura-component="input@husky"
+                     data-aura-datepicker-options='{"startDate":"1900-01-01", "endDate": "<%= new Date() %>"}'
+                     data-aura-skin="date"
+                     data-aura-instance-name="birthday"
+                     data-aura-input-id="input-birthday"
+                     data-aura-input-name="input-birthday"
+                     data-mapper-property="birthday"></div>
 
-                </div>
-            </div>
-            <div class="grid-col-6">
-                <div class="form-group">
-                    <label for="disabled"><%=translate('public.locked')%></label>
-
-                    <div>
-                        <div class="custom-checkbox">
-                            <input class="form-element husky-validate" type="checkbox" id="disabled"
-                                   data-mapper-property="disabled">
-                            <span class="icon"></span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

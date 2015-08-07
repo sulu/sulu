@@ -1,4 +1,4 @@
-#contact-form,#financials-form {
+#contact-form, #financials-form {
   img.logo {
     padding-top: 30px;
     max-height: 140px;
@@ -28,12 +28,8 @@
     content: "";
   }
 
-  .address-add {
-      padding: 3px;
-  }
-
-  .m-left-140{
-      margin-left:140px;
+  .m-left-140 {
+    margin-left: 140px;
   }
 
   .bank-account-remove,
@@ -43,62 +39,53 @@
   }
 
   .address-row {
-      padding-top: 5px;
-      
+    padding-top: 5px;
+
   }
   .bank-account-row:hover .bank-account-remove,
   .address-row:hover .address-remove {
-    display:inline;
+    display: inline;
   }
 
 }
 
 .dark-divider {
-    height: 0;
-    margin:0 0 20px 0;
-    border: 0;
-    outline:none;
-    border-bottom:1px solid #ccc;
+  height: 0;
+  margin: 0 0 20px 0;
+  border: 0;
+  outline: none;
+  border-bottom: 1px solid #ccc;
 }
 
 #contact-options-dropdown {
-    display: none;
-
-    &.is-active {
-        display: block;
-    }
+  display: block;
+  cursor: pointer;
 }
 
 #contact-edit-form {
-    &:hover {
-        #contact-options-dropdown {
-            display: block;
-        }
+  .comma-before {
+    &:before {
+      content: ',';
+      margin-left: -4px; // this is a fix for parent controller dividing child spans 4px when set to display:inline-block;
+      margin-right: 4px;
     }
+  }
 
-    .comma-before {
-        &:before {
-            content: ',';
-            margin-left: -4px; // this is a fix for parent controller dividing child spans 4px when set to display:inline-block;
-            margin-right: 4px;
-        }
+  label {
+    line-height: 14px;
+    text-overflow: hidden;
+    &.hidden {
+      display: none;
     }
-
-    label {
-        line-height:14px;
-        text-overflow: hidden;
-        &.hidden {
-          display: none;
-        }
-    }
+  }
 }
 
 #categories .husky-datagrid .husky-table {
-    overflow: auto;
-    max-height: 350px;
+  overflow: auto;
+  max-height: 350px;
 }
 
 .form-horizontal .form-group .checkbox-container-left {
-    text-align: left;
-    width: 35px;
+  text-align: left;
+  width: 35px;
 }

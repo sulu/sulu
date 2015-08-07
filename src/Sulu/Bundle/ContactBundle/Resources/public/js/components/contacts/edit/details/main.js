@@ -95,11 +95,17 @@ define([
             }.bind(this));
         },
 
+        destroy: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
+        },
+
         initSidebar: function(url, id) {
             this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {
+            this.sandbox.emit(this.options.disablerToggler + '.change', this.data.disabled);
+            this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
@@ -243,7 +249,6 @@ define([
         },
 
         bindCustomEvents: function() {
-
             this.sandbox.on('sulu.contact-form.added.address', function() {
                 this.numberOfAddresses++;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
@@ -284,7 +289,18 @@ define([
                 'position-select',
                 'api/contact/positions');
 
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this))
+
             this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
+        },
+
+        /**
+         * Disables or enables the contact
+         * @param disable {Boolean} true to disable, false to enable
+         */
+        toggleDisableContact: function(disable) {
+            this.data.disabled = disable;
+            this.sandbox.emit('sulu.tab.dirty');
         },
 
         /**
@@ -375,7 +391,7 @@ define([
 
         save: function() {
             if (this.sandbox.form.validate(form)) {
-                var data = this.sandbox.form.getData(form);
+                var data = this.sandbox.util.extend(true, {}, this.sandbox.form.getData(form), this.data);
                 if (data.id === '') {
                     delete data.id;
                 }

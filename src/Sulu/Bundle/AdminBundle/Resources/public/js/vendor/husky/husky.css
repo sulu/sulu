@@ -5852,17 +5852,15 @@ hr.divider.small {
 /* line 48, ../scss/modules/core.scss */
 .options-toggle {
   background-color: #f1f1f1;
-  padding-left: 10px;
-  font-size: 15px;
+  font-size: 16px;
   color: black;
 }
-/* line 54, ../scss/modules/core.scss */
+/* line 53, ../scss/modules/core.scss */
 .options-toggle::after {
   content: "";
   display: inline-block;
   position: relative;
-  top: -4px;
-  margin-left: 5px;
+  top: -2px;
   width: 0;
   height: 0;
   border-left: 3px solid transparent;
@@ -7580,15 +7578,20 @@ a.btn-black, a.btn-highlight {
   background-color: #52B6CA;
   padding: 0 10px;
   height: 20px;
-  line-height: 20px;
+  line-height: 18px;
   vertical-align: middle;
   cursor: pointer;
 }
 /* line 157, ../scss/modules/btns.scss */
 .addButton:before {
   content: "";
-  font-size: 10px;
-  padding-right: 5px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+/* line 163, ../scss/modules/btns.scss */
+.addButton span {
+  padding-left: 5px;
+  vertical-align: middle;
 }
 
 /* line 5, ../scss/modules/pagination.scss */
@@ -8416,74 +8419,85 @@ a.btn-black, a.btn-highlight {
   color: #999;
 }
 /* line 151, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-item.disabled::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+/* line 162, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight {
   background-color: #52B6CA;
   border-color: transparent;
 }
-/* line 155, ../scss/modules/toolbar.scss */
+/* line 166, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight.disabled:hover, .husky-toolbar .toolbar-item.highlight.disabled {
   background-color: #ccc;
   border-color: transparent;
   color: #1e1e1e;
 }
-/* line 162, ../scss/modules/toolbar.scss */
+/* line 173, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight:hover {
   background-color: #5ebbce;
 }
-/* line 165, ../scss/modules/toolbar.scss */
+/* line 176, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight:active {
   background-color: #66bed0;
 }
-/* line 169, ../scss/modules/toolbar.scss */
+/* line 180, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight > span {
   color: #fff;
 }
-/* line 172, ../scss/modules/toolbar.scss */
+/* line 183, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight > span.dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 177, ../scss/modules/toolbar.scss */
+/* line 188, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight.is-expanded {
   background-color: #52B6CA;
 }
-/* line 182, ../scss/modules/toolbar.scss */
+/* line 193, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray {
   background-color: #ccc;
   border-color: transparent;
 }
-/* line 186, ../scss/modules/toolbar.scss */
+/* line 197, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray:hover {
   background-color: #ccc;
 }
-/* line 189, ../scss/modules/toolbar.scss */
+/* line 200, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray:active {
   background-color: #ccc;
 }
-/* line 195, ../scss/modules/toolbar.scss */
+/* line 206, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-expanded {
   background-color: #ccc;
 }
-/* line 198, ../scss/modules/toolbar.scss */
+/* line 209, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-expanded ul.toolbar-dropdown-menu {
   display: block;
 }
-/* line 204, ../scss/modules/toolbar.scss */
+/* line 215, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-loading .title, .husky-toolbar .toolbar-item.is-loading .icon, .husky-toolbar .toolbar-item.is-loading .dropdown-toggle, .husky-toolbar .toolbar-item.is-loading .dropdown-toggle::after {
   display: none;
 }
-/* line 209, ../scss/modules/toolbar.scss */
+/* line 220, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item:hover {
   background-color: #ccc;
 }
-/* line 212, ../scss/modules/toolbar.scss */
+/* line 223, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item:active {
   background-color: #c4c4c4;
 }
-/* line 218, ../scss/modules/toolbar.scss */
+/* line 229, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .icon + .title:not(:empty) {
   padding-left: 10px;
 }
-/* line 223, ../scss/modules/toolbar.scss */
+/* line 234, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu {
   background-color: white;
   border: 1px solid #ccc;
@@ -8503,12 +8517,12 @@ a.btn-black, a.btn-highlight {
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
-/* line 243, ../scss/modules/toolbar.scss */
+/* line 254, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 248, ../scss/modules/toolbar.scss */
+/* line 259, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li {
   display: list-item;
   float: none;
@@ -8522,22 +8536,22 @@ a.btn-black, a.btn-highlight {
   padding: 0 20px;
   text-align: left;
 }
-/* line 261, ../scss/modules/toolbar.scss */
+/* line 272, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li a {
   color: black;
   text-decoration: none;
   padding: 0;
 }
-/* line 267, ../scss/modules/toolbar.scss */
+/* line 278, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.is-selected, .husky-toolbar .toolbar-dropdown-menu li:hover {
   background-color: #52B6CA;
   color: #fff;
 }
-/* line 271, ../scss/modules/toolbar.scss */
+/* line 282, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.is-selected a, .husky-toolbar .toolbar-dropdown-menu li:hover a {
   color: #fff;
 }
-/* line 277, ../scss/modules/toolbar.scss */
+/* line 288, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.marked::before {
   content: "";
   display: block;
@@ -8546,100 +8560,100 @@ a.btn-black, a.btn-highlight {
   left: 7px;
   font-size: 12px;
 }
-/* line 288, ../scss/modules/toolbar.scss */
+/* line 299, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover, .husky-toolbar .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 292, ../scss/modules/toolbar.scss */
+/* line 303, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover a, .husky-toolbar .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 298, ../scss/modules/toolbar.scss */
+/* line 309, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li:active {
   background-color: #66bed0;
 }
-/* line 302, ../scss/modules/toolbar.scss */
+/* line 313, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #ddd;
 }
-/* line 309, ../scss/modules/toolbar.scss */
+/* line 320, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 321, ../scss/modules/toolbar.scss */
+/* line 332, ../scss/modules/toolbar.scss */
 .husky-toolbar.big {
   height: 50px;
 }
-/* line 324, ../scss/modules/toolbar.scss */
+/* line 335, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group {
   height: 50px;
   float: none;
   display: inline-block;
   vertical-align: top;
 }
-/* line 329, ../scss/modules/toolbar.scss */
+/* line 340, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:first-child {
   border-left: 1px solid #74C4D4;
   border-radius: 0;
 }
-/* line 333, ../scss/modules/toolbar.scss */
+/* line 344, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:last-child {
   border-radius: 0;
 }
-/* line 338, ../scss/modules/toolbar.scss */
+/* line 349, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item {
   border: none;
   border-right: 1px solid #74C4D4;
   padding: 0 20px;
   border-radius: 0;
 }
-/* line 343, ../scss/modules/toolbar.scss */
+/* line 354, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon, .husky-toolbar.big .toolbar-item .title {
   color: #fff;
   line-height: 50px;
 }
-/* line 347, ../scss/modules/toolbar.scss */
+/* line 358, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon {
   font-size: 20px;
 }
-/* line 350, ../scss/modules/toolbar.scss */
+/* line 361, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon + .title {
   margin-top: -6px;
 }
-/* line 353, ../scss/modules/toolbar.scss */
+/* line 364, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 356, ../scss/modules/toolbar.scss */
+/* line 367, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle {
   padding-left: 20px;
   padding-right: 20px;
   margin-right: -20px;
 }
-/* line 361, ../scss/modules/toolbar.scss */
+/* line 372, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item:hover {
   background: #74C4D4;
 }
-/* line 367, ../scss/modules/toolbar.scss */
+/* line 378, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:hover {
   background: transparent;
 }
-/* line 370, ../scss/modules/toolbar.scss */
+/* line 381, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .icon, .husky-toolbar.big .toolbar-item.disabled .title, .husky-toolbar.big .toolbar-item.disabled:hover .icon, .husky-toolbar.big .toolbar-item.disabled:hover .title {
   color: #74C4D4;
 }
-/* line 373, ../scss/modules/toolbar.scss */
+/* line 384, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .dropdown-toggle::after, .husky-toolbar.big .toolbar-item.disabled:hover .dropdown-toggle::after {
   border-top-color: #74C4D4;
 }
-/* line 378, ../scss/modules/toolbar.scss */
+/* line 389, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white {
   background-color: #fff;
   height: 30px;
@@ -8649,25 +8663,25 @@ a.btn-black, a.btn-highlight {
   margin-top: 10px;
   margin-right: 10px;
 }
-/* line 386, ../scss/modules/toolbar.scss */
+/* line 397, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .title {
   text-align: left;
   color: #000;
   line-height: 30px;
 }
-/* line 391, ../scss/modules/toolbar.scss */
+/* line 402, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .dropdown-toggle::after {
   border-top-color: #000;
 }
-/* line 394, ../scss/modules/toolbar.scss */
+/* line 405, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white:last-child, .husky-toolbar.big .toolbar-item.highlight-white:first-child {
   border-radius: 3px;
 }
-/* line 400, ../scss/modules/toolbar.scss */
+/* line 411, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-search {
   padding-top: 10px;
 }
-/* line 404, ../scss/modules/toolbar.scss */
+/* line 415, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .item-loader {
   margin-top: 15px;
 }
