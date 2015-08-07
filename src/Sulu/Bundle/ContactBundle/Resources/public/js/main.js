@@ -23,7 +23,9 @@ require.config({
         'services/sulucontact/account-router': '../../sulucontact/js/services/account-router',
         'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router',
         'services/sulucontact/account-delete-dialog': '../../sulucontact/js/services/account-delete-dialog',
-        'services/sulucontact/contact-delete-dialog': '../../sulucontact/js/services/contact-delete-dialog'
+        'services/sulucontact/contact-delete-dialog': '../../sulucontact/js/services/contact-delete-dialog',
+
+        'extensions/sulu-buttons-contactbundle': '../../sulucontact/js/extensions/sulu-buttons'
     },
 
     shim: {
@@ -33,7 +35,7 @@ require.config({
     }
 });
 
-define(['config', 'extensions/iban'], function(Config, IbanExtension) {
+define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], function(Config, ContactButtons, IbanExtension) {
 
     'use strict';
 
@@ -49,6 +51,9 @@ define(['config', 'extensions/iban'], function(Config, IbanExtension) {
 
             sandbox.urlManager.setUrl('contact', 'contacts/contacts/edit:<%= id %>/details');
             sandbox.urlManager.setUrl('account', 'contacts/accounts/edit:<%= id %>/details');
+
+            sandbox.sulu.buttons.push(ContactButtons.getButtons());
+            sandbox.sulu.buttons.dropdownItems.push(ContactButtons.getDropdownItems());
 
             Config.set('sulucontact.components.autocomplete.default.contact', {
                 remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName&limit=25',
