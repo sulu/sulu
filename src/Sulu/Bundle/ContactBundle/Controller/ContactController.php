@@ -49,6 +49,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
+    protected static $countryEntityName = 'SuluContactBundle:Country';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
     // serialization groups for contact
@@ -208,6 +209,32 @@ class ContactController extends RestController implements ClassResourceInterface
                 self::$addressEntityName => new DoctrineJoinDescriptor(
                     self::$addressEntityName,
                     self::$contactAddressEntityName . '.address'
+                ),
+            ],
+            false,
+            true,
+            'string'
+        );
+
+        $this->fieldDescriptors['countryCode'] = new DoctrineFieldDescriptor(
+            'code',
+            'countryCode',
+            self::$countryEntityName,
+            'contact.address.countryCode',
+            [
+                self::$contactAddressEntityName => new DoctrineJoinDescriptor(
+                    self::$contactAddressEntityName,
+                    $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
+                    self::$contactAddressEntityName . '.main = true',
+                    'LEFT'
+                ),
+                self::$addressEntityName => new DoctrineJoinDescriptor(
+                    self::$addressEntityName,
+                    self::$contactAddressEntityName . '.address'
+                ),
+                self::$countryEntityName => new DoctrineJoinDescriptor(
+                    self::$countryEntityName,
+                    self::$addressEntityName . '.country'
                 ),
             ],
             false,

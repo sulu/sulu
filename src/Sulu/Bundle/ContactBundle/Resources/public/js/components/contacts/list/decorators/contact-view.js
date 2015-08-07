@@ -28,9 +28,6 @@ define(function() {
 
             itemHeadClass: 'item-head',
             itemInfoClass: 'item-info',
-
-            idProperty: 'id',
-            mailProperty: 'mainEmail'
         },
 
         templates = {
@@ -53,7 +50,17 @@ define(function() {
                 '           <span class="info-text"><%= text %></span>',
                 '       </div>'
             ].join('')
-        };
+        },
+
+        concatFields = function(fields, seperator){
+            var strings = [];
+            fields.forEach(function(field){
+               if (!!field) {
+                   strings.push(field);
+               }
+            });
+            return strings.join(seperator);
+        }
 
     return {
 
@@ -122,12 +129,14 @@ define(function() {
             this.sandbox.util.foreach(items, function(record) {
                 var id, picture, name, isSuluUser, location, mail;
 
-                id = record[constants.idProperty];
+                id = record['id'];
                 picture = '/bundles/sulucontact/js/components/contacts/list/decorators/sample_avatar.jpg'; //TODO: use api information
-                name = [record['firstName'], record['lastName']].join(' '); //TODO: use full-name
                 isSuluUser = Math.random() < .3; //TODO: use api information
-                location = 'Testhausen 8, AT'; //TODO: use api information
-                mail = record[constants.mailProperty];
+                mail = record['mainEmail'];
+
+                // concat firstName and lastName because fullName should not be default
+                name = concatFields([record['firstName'], record['lastName']], ' ');
+                location = concatFields([record['city'], record['countryCode']], ', ');
 
                 // pass the found data to a render method
                 this.renderItem(id, picture, name, isSuluUser, location, mail);
