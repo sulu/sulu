@@ -40736,12 +40736,14 @@ define('__component__$ckeditor@husky',[], function() {
         getConfig = function() {
             var config = this.sandbox.util.extend(false, {}, this.options);
 
-            config.toolbar = [
-                {name: 'semantics', items: ['Format']},
-                {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
-                {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-                {name: 'list', items: ['NumberedList', 'BulletedList']}
-            ];
+            if (!config.toolbar) {
+                config.toolbar = [
+                    {name: 'semantics', items: ['Format']},
+                    {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
+                    {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                    {name: 'list', items: ['NumberedList', 'BulletedList']}
+                ];
+            }
 
             // activate paste from Word
             if (this.options.pasteFromWord === true) {

@@ -2,6 +2,27 @@
 
 ## dev-develop
 
+### Registering JS-Routes
+When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html('<div data-aura-component="componentToStart@mybundle"/>)' - make your callback returning the component.
+So for example the follwoing:
+```
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        this.html('<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>');
+    }
+});
+```
+becomes:
+```
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        return '<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>';
+    }
+});
+```
+
 ### Header-toolbar and tabs
 The header got a complete redesign, the breadcrumb, title and bottom-content are not available anymore. Also the event `header.set-toolbar` got removed. A sulu-header can still be initialized via the header property when a view-component gets started.
 
