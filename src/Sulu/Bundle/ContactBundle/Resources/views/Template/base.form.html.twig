@@ -1,4 +1,4 @@
-<form id="contact-form" class="form-horizontal">
+<form id="contact-form">
     <input type="hidden" data-mapper-property="id"/>
 
     <div class="grid">
@@ -14,7 +14,7 @@
                     </span>
                 </div>
 
-                <div class="grid-row small" id="addresses" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl","empty-tpl":"address-empty-tpl"}]'>
+                <div class="grid-row form-horizontal small" id="addresses" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl","empty-tpl":"address-empty-tpl"}]'>
 
                     <script type="text/template" id="address-empty-tpl">
                         <div class="grid-col-12 floating">
@@ -90,7 +90,7 @@
                     </script>
                 </div>
 
-                <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
+                <div class="grid-row form-horizontal small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
                     <script type="text/template" id="email-tpl">
                         <div class="grid-col-6 floating">
                             <~ var uid = _.uniqueId('email_') ~>
@@ -208,7 +208,7 @@
                     </script>
                 </div>
 
-                <div class="grid-row" data-type="collection" data-mapper-property='{"data":"notes","tpl":"note-tpl"}'>
+                <div class="grid-row form-horizontal" data-type="collection" data-mapper-property='{"data":"notes","tpl":"note-tpl"}'>
                     <script type="text/template" id="note-tpl">
                         <div class="grid-col-12 floating">
                             <~ var uid = _.uniqueId('note_') ~>
@@ -226,7 +226,7 @@
 
                 <h2 class="divider"><%=translate('contact.accounts.bank-accounts')%></h2>
 
-                <div class="grid-row" id="bankAccounts" data-type="collection" data-mapper-property='[{"data":"bankAccounts","tpl":"bank-account-tpl","empty-tpl":"bank-account-empty-tpl"}]'>
+                <div class="grid-row small form-horizontal" id="bankAccounts" data-type="collection" data-mapper-property='[{"data":"bankAccounts","tpl":"bank-account-tpl","empty-tpl":"bank-account-empty-tpl"}]'>
                     <script type="text/template" id="bank-account-empty-tpl">
                         <div class="grid-col-12 floating">
                             <div class="form-group">
@@ -241,8 +241,8 @@
                     </script>
 
                     <script type="text/template" id="bank-account-tpl">
-                        <div class="grid-row m-bottom-0 bank-account-component">
-                            <div class="grid-col-12 floating">
+                        <div class="grid-col-12 floating m-top-0 bank-account-component">
+                            <div class="">
                                 <div class="form-group">
                                     <label><%=translate('contact.accounts.bankAccount.label')%></label>
 

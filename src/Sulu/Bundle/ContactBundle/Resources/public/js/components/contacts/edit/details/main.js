@@ -31,8 +31,15 @@ define([
         customTemplates = {
             addBankAccountsIcon: [
                 '<div class="grid-row">',
-                '    <div class="grid-col-12">',
-                '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
+                '   <div class="grid-col-12">',
+                '       <div class="addButton bank-account-add m-left-140"></div>',
+                '   </div>',
+                '</div>'
+            ].join(''),
+            addAddressesIcon: [
+                '<div class="grid-row">',
+                '   <div class="grid-col-12">',
+                '       <div class="addButton address-add m-left-140"></div>',
                 '   </div>',
                 '</div>'
             ].join('')
@@ -55,16 +62,6 @@ define([
         },
 
         templates: ['/admin/contact/template/contact/form'],
-
-        customTemplates: {
-            addAddressesIcon: [
-                '<div class="grid-row">',
-                '    <div class="grid-col-12">',
-                '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
-                '   </div>',
-                '</div>'
-            ].join('')
-        },
 
         initialize: function() {
             this.saved = true;
@@ -240,7 +237,7 @@ define([
                 addIcon;
 
             if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
-                addIcon = this.sandbox.dom.createElement(this.customTemplates.addAddressesIcon);
+                addIcon = this.sandbox.dom.createElement(customTemplates.addAddressesIcon);
                 this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));

@@ -59,6 +59,7 @@ define([
             this.sandbox.on('sulu.header.back', ContactRouter.toList);
             this.sandbox.on('sulu.toolbar.delete', this.deleteContact.bind(this));
             this.sandbox.on('sulu.tab.dirty', this.enableSave.bind(this));
+            this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
         },
@@ -89,9 +90,8 @@ define([
          * @param action
          */
         save: function(action) {
-            this.afterSaveAction = action;
             this.saveTab().then(function(savedData) {
-                this.afterSave(savedData);
+                this.afterSave(action, savedData);
             }.bind(this));
         },
 
@@ -110,14 +110,22 @@ define([
         },
 
         /**
+         * Disables the save-button
+         */
+        disableSave: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', false);
+        },
+
+        /**
          * Executes the after save action: Navigates to edit, add or list
+         * @param action {String} the after-save action
          * @param savedData {Object} the data after the save-process has finished
          */
-        afterSave: function(savedData) {
+        afterSave: function(action, savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            if (this.afterSaveAction === 'back') {
+            if (action === 'back') {
                 ContactRouter.toList();
-            } else if (this.afterSaveAction === 'new') {
+            } else if (action === 'new') {
                 ContactRouter.toAdd();
             } else if (!this.options.id) {
                 ContactRouter.toEdit(savedData.id);

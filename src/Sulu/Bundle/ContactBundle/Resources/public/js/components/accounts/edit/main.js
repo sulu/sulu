@@ -43,15 +43,14 @@ define([
 
         initialize: function() {
             this.bindCustomEvents();
-            this.afterSaveAction = '';
         },
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.header.back', AccountRouter.toList);
             this.sandbox.on('sulu.tab.dirty', this.enableSave.bind(this));
+            this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
-            this.sandbox.on('sulu.tab.saved', this.afterSave.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
         },
 
@@ -68,8 +67,22 @@ define([
          * @param action {String} the after-save action
          */
         save: function(action) {
-            this.afterSaveAction = action;
+            this.saveTab().then(function(savedData) {
+                this.afterSave(action, savedData);
+            }.bind(this));
+        },
+
+        /**
+         * Saves the tab and returns a after the tab has saved itselve
+         * @returns promise with the saved data
+         */
+        saveTab: function() {
+            var promise = $.Deferred();
+            this.sandbox.once('sulu.tab.saved', function(savedData) {
+                promise.resolve(savedData);
+            }.bind(this));
             this.sandbox.emit('sulu.tab.save');
+            return promise;
         },
 
         /**
@@ -77,6 +90,13 @@ define([
          */
         enableSave: function() {
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+        },
+
+        /**
+         * Disables the save-button
+         */
+        disableSave: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', false);
         },
 
         /**
@@ -88,13 +108,14 @@ define([
 
         /**
          * Executes the after save action: Navigates to edit, add or list
+         * @param action {String} the after-save action
          * @param savedData {Object} the data after the save-process has finished
          */
-        afterSave: function(savedData) {
+        afterSave: function(action, savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            if (this.afterSaveAction === 'back') {
+            if (action === 'back') {
                 AccountRouter.toList();
-            } else if (this.afterSaveAction === 'new') {
+            } else if (action === 'new') {
                 AccountRouter.toAdd();
             } else if (!this.options.id) {
                 AccountRouter.toEdit(savedData.id);
