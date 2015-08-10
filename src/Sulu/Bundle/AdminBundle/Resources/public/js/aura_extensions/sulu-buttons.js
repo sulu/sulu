@@ -129,6 +129,25 @@
                 return buttons;
             };
 
+            /**
+             * Returns a copy of a sulu-button. This method can be used when you want to provide your own
+             * button which has a lot of similar properties as a standard sulu-button. If so you can just
+             * fetch the sulu-button override some properties and publish it under a new name
+             * @example
+             *
+             *      var button = app.sandbox.sulu.buttons.getApiButton('layout');
+             *      button.dropdownItems = {
+             *          table: {},
+             *          myOwnDropdownItem: {}
+             *      };
+             *      app.sandbox.sulu.buttons.add('my-button-name', button);
+             *
+             * @param name {String} the name of the sulu-button to fetch
+             */
+            app.sandbox.sulu.buttons.getApiButton = function(name) {
+                return app.sandbox.util.extend(true, {}, buttonsPool[name]);
+            };
+
             adminButtons = [
                 {
                     name: 'add',

@@ -9,7 +9,7 @@
 
 require.config({
     paths: {
-        'decorators/contact': '../../sulucontact/js/components/contacts/components/list/decorators/contact-view'
+        'decorators/contact-card': '../../sulucontact/js/components/contacts/list/decorators/contact-view'
     }
 });
 
@@ -23,7 +23,8 @@ define([
     'use strict';
 
     var constants = {
-            datagridInstanceName: 'contacts'
+            datagridInstanceName: 'contacts',
+            listViewStorageKey: 'contactListView'
         },
 
         bindCustomEvents = function() {
@@ -48,6 +49,16 @@ define([
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
             }, this);
+
+            this.sandbox.on('sulu.toolbar.change.table', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'table');
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.change.contact-card', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'decorators/contact-card');
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'decorators/contact-card');
+            }.bind(this));
         },
 
         deleteCallback = function(ids){
@@ -103,15 +114,25 @@ define([
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
-                    template: 'default'
+                    template: this.sandbox.sulu.buttons.get({
+                        settings: {
+                            options: {
+                                dropdownItems: [
+                                    {
+                                        type: 'columnOptions'
+                                    }
+                                ]
+                            }
+                        },
+                        layoutContact: {}
+                    })
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
-                    view: 'table',
-                    //view: 'decorators/contact', //TODO: implement api for contact-decorator
-                    searchFields: ['fullName'],
+                    //TODO: implement api for contact-cards
+                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/contact-card',
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
