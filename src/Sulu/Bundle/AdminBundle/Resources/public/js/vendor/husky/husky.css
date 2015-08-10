@@ -5846,7 +5846,7 @@ hr.divider.small {
   position: absolute;
   right: 0;
   top: 5px;
-  z-index: 100;
+  z-index: 10;
 }
 
 /* line 48, ../scss/modules/core.scss */

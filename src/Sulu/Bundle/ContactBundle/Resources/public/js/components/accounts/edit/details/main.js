@@ -53,7 +53,10 @@ define([
         layout: function() {
             return {
                 content: {
-                    width: 'fixed'
+                    width: 'max',
+                    leftSpace: false,
+                    rightSpace: false,
+                    topSpace: false,
                 },
                 sidebar: {
                     width: 'max',
@@ -84,12 +87,20 @@ define([
             }.bind(this));
         },
 
+        destroy: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
+            this.cleanUp();
+        },
+
         initSidebar: function(url, id) {
             this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {
             var data, excludeItem, options;
+
+            this.sandbox.emit(this.options.disablerToggler + '.change', !!this.data.disabled);
+            this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
 
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
@@ -348,7 +359,16 @@ define([
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
-            this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableAccount.bind(this));
+        },
+
+        /**
+         * Disables or enables the account
+         * @param disable {Boolean} true to disable, false to enable
+         */
+        toggleDisableAccount: function(disable) {
+            this.data.disabled = !!disable;
+            this.sandbox.emit('sulu.tab.dirty');
         },
 
         /**
@@ -396,17 +416,9 @@ define([
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on('#contact-form', 'change', function() {
+                this.sandbox.dom.on('#contact-form', 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this), '.changeListener select, ' +
-                '.changeListener input, ' +
-                '.changeListener textarea');
-
-                this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                    this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this), '.changeListener select, ' +
-                '.changeListener input, ' +
-                '.changeListener textarea');
+                }.bind(this), 'select, ' + 'input, ' + 'textarea');
 
                 // if a field-type gets changed or a field gets deleted
                 this.sandbox.on('sulu.contact-form.changed', function() {

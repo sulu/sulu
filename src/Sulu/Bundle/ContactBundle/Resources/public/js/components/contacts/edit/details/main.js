@@ -96,6 +96,7 @@ define([
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
+            this.cleanUp();
         },
 
         initSidebar: function(url, id) {
@@ -289,8 +290,6 @@ define([
                 'api/contact/positions');
 
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
-
-            this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
         },
 
         /**
@@ -476,17 +475,9 @@ define([
             // listen for change after TAGS and BIRTHDAY-field have been set
             this.sandbox.data.when(this.dfdAllFieldsInitialized).then(function() {
 
-                this.sandbox.dom.on('#contact-form', 'change', function() {
+                this.sandbox.dom.on('#contact-form', 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this), '.changeListener select, ' +
-                '.changeListener input, ' +
-                '.changeListener textarea');
-
-                this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                    this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this), '.changeListener select, ' +
-                '.changeListener input, ' +
-                '.changeListener textarea');
+                }.bind(this), 'select, ' + 'input, ' + 'textarea');
 
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.sandbox.emit('sulu.tab.dirty');

@@ -9,9 +9,7 @@
   }
 
   .highlight-section .content {
-      padding-right: $contentPaddingRight;
-      padding-left: 20px;
-      padding-top: 20px;
+      padding: 20px $contentPaddingRight 0 20px;
   }
 
   .control-label {

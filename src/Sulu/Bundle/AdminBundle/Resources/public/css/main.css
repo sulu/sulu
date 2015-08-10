@@ -82,6 +82,16 @@ input, select {
   width: calc(100% - 310px);
   float: left;
 }
+/* line 32, ../js/vendor/husky/scss/mixins.scss */
+.highlight-section .content:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 81, ../scss/modules/base.scss */
+.highlight-section .content:only-child {
+  width: 100%;
+}
 
 /*----------------------------------------*/
 /* line 4, ../scss/modules/layout.scss */

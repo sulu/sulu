@@ -25,7 +25,10 @@ define([
         header: function() {
             var config = {
                 tabs: {
-                    url: '/admin/content-navigations?alias=account'
+                    url: '/admin/content-navigations?alias=account',
+                    options: {
+                        disablerToggler: 'husky.toggler.sulu-toolbar'
+                    }
                 },
                 toolbar: {
                     buttons: {
@@ -37,6 +40,13 @@ define([
             };
             if (!!this.options.id) {
                 config.toolbar.buttons.delete = {};
+                config.toolbar.buttons.disabler = {
+                    parent: 'toggler',
+                    options: {
+                        title: 'public.locked',
+                        hidden: true
+                    }
+                };
             }
             return config;
         },

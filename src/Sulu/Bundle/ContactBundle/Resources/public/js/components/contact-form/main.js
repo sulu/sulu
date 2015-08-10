@@ -183,6 +183,10 @@ define([
                 removeBankAccount.call(this, event.currentTarget);
             }.bind(this), '.bank-account-remove');
 
+            this.sandbox.dom.on(this.$el, 'change keyup', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this), '.husky-overlay-container');
+
             this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
                 addBankAccount.call(this, event.currentTarget);
