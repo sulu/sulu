@@ -329,7 +329,7 @@ define([
 
             if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
                 addIcon = this.sandbox.dom.createElement(customTemplates.addAddressesIcon);
-                this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
+                this.sandbox.dom.after(this.$find('#addresses'), addIcon);
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
             }
@@ -418,7 +418,7 @@ define([
             this.dfdListenForChange.then(function() {
                 this.sandbox.dom.on('#contact-form', 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this), 'select, ' + 'input, ' + 'textarea');
+                }.bind(this), 'select, input, textarea');
 
                 // if a field-type gets changed or a field gets deleted
                 this.sandbox.on('sulu.contact-form.changed', function() {
@@ -437,7 +437,7 @@ define([
 
             if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
                 addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
-                this.sandbox.dom.after(this.sandbox.dom.find('#bankAccounts'), addIcon);
+                this.sandbox.dom.after(this.$find('#bankAccounts'), addIcon);
             } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
             }
