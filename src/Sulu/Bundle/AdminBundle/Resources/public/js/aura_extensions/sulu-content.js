@@ -211,7 +211,8 @@ define(function() {
          * @param {Object} [header.tabs] Object that contains configurations for the tabs.
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
-         * @param {String} [header.tabs.data] tabs-data to pass to the header if no tabs-url is specified
+         * @param {Object} [header.tabs.data] tabs-data to pass to the header if no tabs-url is specified
+         * @param {Object} [header.tabs.options] options that get passed to all tab-components
          * @param {String|Object} [header.tabs.container] the container to render the tabs-content in.
          *        If not set the content gets insertet directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
@@ -227,7 +228,9 @@ define(function() {
          *          tabs: {
          *              url: 'url/to/tabsData',
          *              container: '#my-container-selector',
-         *              active: 'details'
+         *              options: {
+         *                  myOptions: 'toPassToAllTabs'
+         *              }
          *          },
          *          toolbar {
          *              languageChanger: true
@@ -287,7 +290,8 @@ define(function() {
 
                         tabsData: tabsData,
                         tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,
-                        tabsParentOption: this.options
+                        tabsParentOption: this.options,
+                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
                     }
                 }]);
 

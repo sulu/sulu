@@ -42,7 +42,6 @@ define([
             this.manager.loadOrNew(this.options.id).then(function(data) {
                 this.data = data;
                 this.currentSelection = this.getPropertyFromArrayOfObject(this.data.medias, 'id');
-                this.sandbox.emit('sulu.tab.dirty');
                 this.render();
 
                 if (!!this.data && !!this.data.id) {

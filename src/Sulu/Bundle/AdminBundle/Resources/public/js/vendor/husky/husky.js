@@ -35462,13 +35462,7 @@ define('__component__$toolbar@husky',[],function() {
             this.sandbox.dom.preventDefault(event);
 
             var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
-                $parent = (!!this.items[item.parentId]) ? this.items[item.parentId].$el : null,
-                $content = this.sandbox.dom.find('.content', this.items[item.id].$el);
-
-            // forward click event to icon content
-            if (!!$content.length) {
-                this.sandbox.dom.click(this.sandbox.dom.children($content));
-            }
+                $parent = (!!this.items[item.parentId]) ? this.items[item.parentId].$el : null;
 
             // stop if loading or the dropdown gets opened
             if (item.loading || (!!item.dropdownItems && item.dropdownOptions.onlyOnClickOnArrow !== true) ||
@@ -35495,7 +35489,13 @@ define('__component__$toolbar@husky',[],function() {
         triggerSelectEvent = function(item, $parent) {
 
             var parentItem,
-                original = item._original || item;
+                original = item._original || item,
+                $content = this.sandbox.dom.find('.content', this.items[item.id].$el);
+
+            // forward click to content
+            if (!!$content.length) {
+                this.sandbox.dom.click(this.sandbox.dom.children($content));
+            }
 
             // check if has parent and type of parent
             if (item.parentId) {
@@ -35957,8 +35957,10 @@ define('__component__$toolbar@husky',[],function() {
 
                     insertSearch.call(this, $listItem);
                 } else {
-                    // create icon span
-                    this.sandbox.dom.append($listItem, '<span class="' + createIconSupportClass.call(this, item) + '" />');
+                    if (!!item.icon) {
+                        // create icon span
+                        this.sandbox.dom.append($listItem, '<span class="' + createIconSupportClass.call(this, item) + '" />');
+                    }
 
                     // create content span
                     if (!!item.content) {

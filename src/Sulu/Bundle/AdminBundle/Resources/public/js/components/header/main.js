@@ -16,6 +16,7 @@
  * @param {String} [options.instanceName] name of the instance
  * @param {Object} [options.tabsData] data to pass to the tabs component. For data-structure markup see husky
  * @param {Object} [options.tabsParentOptions] The options-object of the tabs-parent-component. this options get merged into each tabs-component-option
+ * @param {Object} [options.tabsOption] an object of options which gets merged into each tabs-component option
  * @param {String|Object} [options.tabsContainer] Selector or dom object to insert the the tabs-content into
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
  * @param {Array} [options.toolbarButtons] Array of arguments to pass to the sulu.buttons.get function to recieve the toolbar-buttons
@@ -36,6 +37,7 @@ define([], function() {
             instanceName: '',
             tabsData: null,
             tabsParentOptions: {},
+            tabsOption: {},
             toolbarOptions: {},
             tabsContainer: null,
             toolbarLanguageChanger: false,
@@ -215,6 +217,16 @@ define([], function() {
          */
         TOOLBAR_ITEM_SHOW = function() {
             return createEventName.call(this, 'toolbar.item.show');
+        },
+
+        /**
+         * listens on and hides a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.hide
+         * @param {string} button The id of the button
+         */
+        TOOLBAR_ITEM_HIDE = function() {
+            return createEventName.call(this, 'toolbar.item.hide');
         },
 
         /**
@@ -483,6 +495,7 @@ define([], function() {
 
                 options = this.sandbox.util.extend(true, {},
                     this.options.tabsParentOption,
+                    this.options.tabsOption,
                     {el: $container},
                     tabItem.componentOptions);
                 this.sandbox.start([{
@@ -555,6 +568,10 @@ define([], function() {
 
             this.sandbox.on(TOOLBAR_ITEM_SHOW.call(this), function(id, name) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.show', id, name);
+            }.bind(this));
+
+            this.sandbox.on(TOOLBAR_ITEM_HIDE.call(this), function(id, name) {
+                this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.hide', id, name);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function(id, highlight) {
