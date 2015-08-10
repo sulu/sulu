@@ -127,10 +127,12 @@ define(function() {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
+
+
                 var id, picture, name, isSuluUser, location, mail;
 
                 id = record['id'];
-                picture = record['avatar'];
+                picture = this.processThumbnailFilter(record);
                 isSuluUser = Math.random() < .5; //TODO: use api information
                 mail = record['mainEmail'];
 
@@ -141,6 +143,17 @@ define(function() {
                 // pass the found data to a render method
                 this.renderItem(id, picture, name, isSuluUser, location, mail);
             }.bind(this));
+        },
+
+        processThumbnailFilter: function(record) {
+            var result = this.datagrid.processContentFilter.call(
+                this.datagrid,
+                'thumbnails',
+                record['thumbnails'],
+                this.datagrid.types.THUMBNAILS,
+                '200x200'
+            );
+            return result.url;
         },
 
         /**
