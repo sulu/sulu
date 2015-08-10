@@ -49,6 +49,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
+    protected static $countryEntityName = 'SuluContactBundle:Country';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
     // serialization groups for contact
@@ -208,6 +209,32 @@ class ContactController extends RestController implements ClassResourceInterface
                 self::$addressEntityName => new DoctrineJoinDescriptor(
                     self::$addressEntityName,
                     self::$contactAddressEntityName . '.address'
+                ),
+            ],
+            false,
+            true,
+            'string'
+        );
+
+        $this->fieldDescriptors['countryCode'] = new DoctrineFieldDescriptor(
+            'code',
+            'countryCode',
+            self::$countryEntityName,
+            'contact.address.countryCode',
+            [
+                self::$contactAddressEntityName => new DoctrineJoinDescriptor(
+                    self::$contactAddressEntityName,
+                    $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
+                    self::$contactAddressEntityName . '.main = true',
+                    'LEFT'
+                ),
+                self::$addressEntityName => new DoctrineJoinDescriptor(
+                    self::$addressEntityName,
+                    self::$contactAddressEntityName . '.address'
+                ),
+                self::$countryEntityName => new DoctrineJoinDescriptor(
+                    self::$countryEntityName,
+                    self::$addressEntityName . '.country'
                 ),
             ],
             false,
@@ -476,8 +503,15 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
+            // add fake avatar to all entries
+            // todo: implement real avatar field
+            $entrySet = $listBuilder->execute();
+            foreach ($entrySet as $key => $value) {
+                $entrySet[$key]['thumbnails']['200x200'] = 'https://connectere.files.wordpress.com/2013/07/lacombe_001_sq-a4d9e855a2531a163e115237039bbeadf5cf76f2-s6-c30.jpg';
+            }
+
             $list = new ListRepresentation(
-                $listBuilder->execute(),
+                $entrySet,
                 self::$entityKey,
                 'get_contacts',
                 $request->query->all(),
