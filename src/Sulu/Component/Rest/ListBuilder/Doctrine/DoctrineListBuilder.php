@@ -101,7 +101,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         } elseif ($numResults == 1) {
             $result = array_values($result[0]);
 
-            return $result[0];
+            return (int) $result[0];
         }
 
         return 0;

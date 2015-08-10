@@ -4,6 +4,10 @@ CHANGELOG for Sulu
 * dev-develop
     * FEATURE     #1421 [AdminBundle]     New button-api for header and tabs
     * FEATURE     #1417 [AdminBundle]     Style upgrade for header and tabs
+    * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
+    * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
+    * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
+    * FEATURE     #1429 [ResourceBundle]  Updated husky and added preselect for filter dropdown
     * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
     * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
