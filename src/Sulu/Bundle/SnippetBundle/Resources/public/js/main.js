@@ -14,56 +14,57 @@ require.config({
     }
 });
 
-define({
+define(['config'], function(Config) {
+    return {
 
-    name: "Sulu Snippet Bundle",
+        name: "Sulu Snippet Bundle",
 
-    initialize: function(app) {
+        initialize: function(app) {
 
-        'use strict';
+            'use strict';
 
-        var sandbox = app.sandbox;
+            var sandbox = app.sandbox;
 
-        app.components.addSource('sulusnippet', '/bundles/sulusnippet/js/components');
+            app.components.addSource('sulusnippet', '/bundles/sulusnippet/js/components');
 
-        sandbox.urlManager.setUrl('snippet', 'snippet/snippets/<%= languageCode %>/edit:<%= id %>');
+            sandbox.urlManager.setUrl('snippet', 'snippet/snippets/<%= languageCode %>/edit:<%= id %>');
 
-        function getContentLanguage() {
-            // FIXME do not use user locale as default use default language of system instead
-            return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;
+            function getContentLanguage() {
+                return sandbox.sulu.getUserSetting('contentLanguage') || Object.keys(Config.get('sulu-content').locales)[0];
+            }
+
+            // list all contents for a language
+            sandbox.mvc.routes.push({
+                route: 'snippet/snippets',
+                callback: function() {
+                    var language = getContentLanguage();
+                    sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language);
+                }
+            });
+
+            // list all snippets for a language
+            sandbox.mvc.routes.push({
+                route: 'snippet/snippets/:language',
+                callback: function(language) {
+                    this.html('<div data-aura-component="snippet/list@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>');
+                }
+            });
+
+            // edit form
+            sandbox.mvc.routes.push({
+                route: 'snippet/snippets/:language/edit::id',
+                callback: function(language, id) {
+                    this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '"/>');
+                }
+            });
+
+            // add form
+            sandbox.mvc.routes.push({
+                route: 'snippet/snippets/:language/add',
+                callback: function(language) {
+                    this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>');
+                }
+            });
         }
-
-        // list all contents for a language
-        sandbox.mvc.routes.push({
-            route: 'snippet/snippets',
-            callback: function() {
-                var language = getContentLanguage();
-                sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language);
-            }
-        });
-
-        // list all snippets for a language
-        sandbox.mvc.routes.push({
-            route: 'snippet/snippets/:language',
-            callback: function(language) {
-                this.html('<div data-aura-component="snippet/list@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>');
-            }
-        });
-
-        // edit form
-        sandbox.mvc.routes.push({
-            route: 'snippet/snippets/:language/edit::id',
-            callback: function(language, id) {
-                this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '"/>');
-            }
-        });
-
-        // add form
-        sandbox.mvc.routes.push({
-            route: 'snippet/snippets/:language/add',
-            callback: function(language) {
-                this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>');
-            }
-        });
     }
 });
