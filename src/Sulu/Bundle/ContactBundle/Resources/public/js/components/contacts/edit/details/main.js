@@ -21,10 +21,9 @@ define([
         constants = {
             tagsId: '#tags',
             addressAddId: '#address-add',
+            bankAccountAddId: '#bank-account-add',
             addAddressWrapper: '.grid-row',
-            addressesSelector: '#addresses',
-            bankAccountsId: '#bankAccounts',
-            bankAccountAddSelector: '.bank-account-add',
+            addBankAccountsWrapper: '.grid-row',
             editFormSelector: '#contact-edit-form'
         },
 
@@ -32,14 +31,14 @@ define([
             addBankAccountsIcon: [
                 '<div class="grid-row">',
                 '   <div class="grid-col-12">',
-                '       <div class="addButton bank-account-add m-left-140"></div>',
+                '       <div id="bank-account-add" class="addButton bank-account-add m-left-140"></div>',
                 '   </div>',
                 '</div>'
             ].join(''),
             addAddressesIcon: [
                 '<div class="grid-row">',
                 '   <div class="grid-col-12">',
-                '       <div class="addButton address-add m-left-140"></div>',
+                '       <div id="address-add" class="addButton address-add m-left-140"></div>',
                 '   </div>',
                 '</div>'
             ].join('')
@@ -233,7 +232,7 @@ define([
          * @param numberOfAddresses
          */
         updateAddressesAddIcon: function(numberOfAddresses) {
-            var $addIcon = this.sandbox.dom.find(constants.addressAddId),
+            var $addIcon = this.$find(constants.addressAddId),
                 addIcon;
 
             if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
@@ -241,18 +240,18 @@ define([
                 this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
-                this.sandbox.emit('sulu.contact-form.update.addAddressLabel', constants.addressesSelector);
+                this.sandbox.emit('sulu.contact-form.update.addAddressLabel', '#addresses');
             }
         },
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.contact-form.added.address', function() {
-                this.numberOfAddresses++;
+                this.numberOfAddresses += 1;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
 
             this.sandbox.on('sulu.contact-form.removed.address', function() {
-                this.numberOfAddresses--;
+                this.numberOfAddresses -= 1;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
 
@@ -270,12 +269,12 @@ define([
             }, this);
 
             this.sandbox.on('sulu.contact-form.added.bank-account', function() {
-                this.numberOfBankAccounts++;
+                this.numberOfBankAccounts += 1;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
             this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
-                this.numberOfBankAccounts--;
+                this.numberOfBankAccounts -= 1;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
@@ -286,7 +285,7 @@ define([
                 'position-select',
                 'api/contact/positions');
 
-            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this))
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('sulu.router.navigate', this.cleanUp.bind(this));
         },
@@ -388,7 +387,7 @@ define([
 
         save: function() {
             if (this.sandbox.form.validate(form)) {
-                var data = this.sandbox.util.extend(true, {}, this.sandbox.form.getData(form), this.data);
+                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(form));
                 if (data.id === '') {
                     delete data.id;
                 }
@@ -517,12 +516,12 @@ define([
          * @param numberOfBankAccounts
          */
         updateBankAccountAddIcon: function(numberOfBankAccounts) {
-            var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
+            var $addIcon = this.$find(constants.bankAccountAddId),
                 addIcon;
 
             if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
                 addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
-                this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find('#bankAccounts'), addIcon);
             } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
             }

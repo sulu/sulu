@@ -23,9 +23,9 @@ define([
         constants = {
             tagsId: '#tags',
             addressAddId: '#address-add',
+            bankAccountAddId: '#bank-account-add',
             addAddressWrapper: '.grid-row',
-            bankAccountsId: '#bankAccounts',
-            bankAccountAddSelector: '.bank-account-add',
+            addBankAccountsWrapper: '.grid-row',
             editFormSelector: '#contact-edit-form'
         },
 
@@ -33,14 +33,14 @@ define([
             addBankAccountsIcon: [
                 '<div class="grid-row">',
                 '   <div class="grid-col-12">',
-                '       <div class="addButton bank-account-add m-left-140"></div>',
+                '       <div id="bank-account-add" class="addButton bank-account-add m-left-140"></div>',
                 '   </div>',
                 '</div>'
             ].join(''),
             addAddressesIcon: [
                 '<div class="grid-row">',
                 '   <div class="grid-col-12">',
-                '       <div class="addButton address-add m-left-140"></div>',
+                '       <div id="address-add" class="addButton address-add m-left-140"></div>',
                 '   </div>',
                 '</div>'
             ].join('')
@@ -313,7 +313,7 @@ define([
          * @param numberOfAddresses
          */
         updateAddressesAddIcon: function(numberOfAddresses) {
-            var $addIcon = this.sandbox.dom.find(constants.addressAddId),
+            var $addIcon = this.$find(constants.addressAddId),
                 addIcon;
 
             if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
@@ -326,12 +326,12 @@ define([
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.contact-form.added.address', function() {
-                this.numberOfAddresses++;
+                this.numberOfAddresses += 1;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
 
             this.sandbox.on('sulu.contact-form.removed.address', function() {
-                this.numberOfAddresses--;
+                this.numberOfAddresses -= 1;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
 
@@ -339,12 +339,12 @@ define([
             this.sandbox.on('sulu.tab.save', this.save, this);
 
             this.sandbox.on('sulu.contact-form.added.bank-account', function() {
-                this.numberOfBankAccounts++;
+                this.numberOfBankAccounts += 1;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
             this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
-                this.numberOfBankAccounts--;
+                this.numberOfBankAccounts -= 1;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
@@ -375,7 +375,7 @@ define([
 
         save: function() {
             if (this.sandbox.form.validate(this.form)) {
-                var data = this.sandbox.form.getData(this.form);
+                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(this.form));
                 if (!data.id) {
                     delete data.id;
                 }
@@ -420,12 +420,12 @@ define([
          * @param numberOfBankAccounts
          */
         updateBankAccountAddIcon: function(numberOfBankAccounts) {
-            var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
+            var $addIcon = this.$find(constants.bankAccountAddId),
                 addIcon;
 
             if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
                 addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
-                this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find('#bankAccounts'), addIcon);
             } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
             }
