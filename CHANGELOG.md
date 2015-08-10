@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1468 [SnippetBundle]  Fixed default language for snippets in administration
+
 * 1.0.6 (2015-08-05)
     * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
 
