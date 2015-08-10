@@ -1,15 +1,26 @@
+/*----------------------------------------*/
 /* line 2, ../scss/modules/utility.scss */
 #contact-form img.logo, #financials-form img.logo {
   padding-top: 30px;
   max-height: 140px;
 }
 /* line 7, ../scss/modules/utility.scss */
+#contact-form > .fixed-width, #financials-form > .fixed-width {
+  padding: 0 50px 0 50px;
+}
+/* line 11, ../scss/modules/utility.scss */
+#contact-form .highlight-section .content, #financials-form .highlight-section .content {
+  padding-right: 50px;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+/* line 17, ../scss/modules/utility.scss */
 #contact-form .control-label, #financials-form .control-label {
   padding-left: 5px;
   padding-right: 10px;
   cursor: pointer;
 }
-/* line 13, ../scss/modules/utility.scss */
+/* line 23, ../scss/modules/utility.scss */
 #contact-form div.remove-email,
 #contact-form div.remove-phone,
 #contact-form div.remove-address, #financials-form div.remove-email,
@@ -17,7 +28,7 @@
 #financials-form div.remove-address {
   display: none;
 }
-/* line 19, ../scss/modules/utility.scss */
+/* line 29, ../scss/modules/utility.scss */
 #contact-form #phones div:hover > div.remove-phone,
 #contact-form #addresses div:hover > div.remove-address,
 #contact-form #emails div:hover > div.remove-email, #financials-form #phones div:hover > div.remove-phone,
@@ -25,7 +36,7 @@
 #financials-form #emails div:hover > div.remove-email {
   display: block;
 }
-/* line 25, ../scss/modules/utility.scss */
+/* line 35, ../scss/modules/utility.scss */
 #contact-form #emails .husky-validate-success label::after,
 #contact-form #phones .husky-validate-success label::after,
 #contact-form #addresses .husky-validate-success label::after, #financials-form #emails .husky-validate-success label::after,
@@ -33,29 +44,29 @@
 #financials-form #addresses .husky-validate-success label::after {
   content: "";
 }
-/* line 31, ../scss/modules/utility.scss */
+/* line 41, ../scss/modules/utility.scss */
 #contact-form .m-left-140, #financials-form .m-left-140 {
   margin-left: 140px;
 }
-/* line 35, ../scss/modules/utility.scss */
+/* line 45, ../scss/modules/utility.scss */
 #contact-form .bank-account-remove,
 #contact-form .address-remove, #financials-form .bank-account-remove,
 #financials-form .address-remove {
   display: none;
   padding: 3px;
 }
-/* line 41, ../scss/modules/utility.scss */
+/* line 51, ../scss/modules/utility.scss */
 #contact-form .address-row, #financials-form .address-row {
   padding-top: 5px;
 }
-/* line 45, ../scss/modules/utility.scss */
+/* line 55, ../scss/modules/utility.scss */
 #contact-form .bank-account-row:hover .bank-account-remove,
 #contact-form .address-row:hover .address-remove, #financials-form .bank-account-row:hover .bank-account-remove,
 #financials-form .address-row:hover .address-remove {
   display: inline;
 }
 
-/* line 52, ../scss/modules/utility.scss */
+/* line 62, ../scss/modules/utility.scss */
 .dark-divider {
   height: 0;
   margin: 0 0 20px 0;
@@ -64,35 +75,35 @@
   border-bottom: 1px solid #ccc;
 }
 
-/* line 60, ../scss/modules/utility.scss */
+/* line 70, ../scss/modules/utility.scss */
 #contact-options-dropdown {
   display: block;
   cursor: pointer;
 }
 
-/* line 67, ../scss/modules/utility.scss */
+/* line 77, ../scss/modules/utility.scss */
 #contact-edit-form .comma-before:before {
   content: ',';
   margin-left: -4px;
   margin-right: 4px;
 }
-/* line 74, ../scss/modules/utility.scss */
+/* line 84, ../scss/modules/utility.scss */
 #contact-edit-form label {
   line-height: 14px;
   text-overflow: hidden;
 }
-/* line 77, ../scss/modules/utility.scss */
+/* line 87, ../scss/modules/utility.scss */
 #contact-edit-form label.hidden {
   display: none;
 }
 
-/* line 83, ../scss/modules/utility.scss */
+/* line 93, ../scss/modules/utility.scss */
 #categories .husky-datagrid .husky-table {
   overflow: auto;
   max-height: 350px;
 }
 
-/* line 88, ../scss/modules/utility.scss */
+/* line 98, ../scss/modules/utility.scss */
 .form-horizontal .form-group .checkbox-container-left {
   text-align: left;
   width: 35px;

@@ -4,6 +4,16 @@
     max-height: 140px;
   }
 
+  & > .fixed-width {
+      padding: 0 $contentPaddingLeft 0 $contentPaddingRight;
+  }
+
+  .highlight-section .content {
+      padding-right: $contentPaddingRight;
+      padding-left: 20px;
+      padding-top: 20px;
+  }
+
   .control-label {
     padding-left: 5px;
     padding-right: 10px;

@@ -60,6 +60,11 @@
         }
     }
 
+    .fixed-width {
+        min-width: $contentMinWidth;
+        width: $contentFixedWidth;
+    }
+
     &.no-left-space {
         .page {
             padding-left: 0;
@@ -175,17 +180,27 @@
 
 // 1. collapses the content-column to medium width
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column.fixed {
-        #content {
-            width: $contentFixedMediumWidth;
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            #content {
+                width: $contentFixedMediumWidth;
+            }
         }
+      .fixed-width {
+          width: $contentFixedMediumWidth;
+      }
     }
 }
 
 // 2. collapses the content-column to small width
 @media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column.fixed {
-        #content {
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            #content {
+                width: $contentFixedSmallWidth;
+            }
+        }
+        .fixed-width {
             width: $contentFixedSmallWidth;
         }
     }
@@ -198,9 +213,15 @@
         height: 0;
     }
 
-    .has-visible-sidebar .content-column.fixed {
-        float: none;
-        #content {
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            float: none;
+            #content {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
             max-width: $contentFixedWidth;
             width: auto;
         }
@@ -218,14 +239,19 @@
 
 // 1. makes the content-column fit the screen
 @media only screen and (max-width: 50px + $contentFixedWidth) {
-    .has-no-visible-sidebar .content-column.fixed {
-        float: none;
-        #content {
+    .has-no-visible-sidebar .content-column {
+        &.fixed {
+            float: none;
+            #content {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
             max-width: $contentFixedWidth;
             width: auto;
         }
     }
-
 }
 
 //
@@ -235,9 +261,15 @@
 
 // 1. makes the content-column fit the rest of the screen
 @media only screen and (max-width: 250px + $contentFixedWidth + $sidebarFixedWidth) {
-    .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
-        float: none;
-        #content {
+    .has-visible-sidebar .sidebar-column.fixed + .content-column {
+        &.fixed {
+            float: none;
+            #content {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
             max-width: $contentFixedWidth;
             width: auto;
         }

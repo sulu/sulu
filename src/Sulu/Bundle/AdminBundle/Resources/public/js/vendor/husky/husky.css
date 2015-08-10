@@ -6193,22 +6193,26 @@ hr.divider.small {
   border-color: #ccc;
 }
 /* line 19, ../scss/modules/form.scss */
-.form-element.input-large, .input-large.husky-input {
+.form-element.input-large, .form-element.input-bold, .input-bold.husky-input, .input-large.husky-input {
   height: 40px;
   padding: 0 10px;
 }
 /* line 24, ../scss/modules/form.scss */
+.form-element.input-bold, .input-bold.husky-input {
+  font-size: 24px;
+}
+/* line 29, ../scss/modules/form.scss */
 .form-element[readonly], [readonly].husky-input {
   background: none;
   color: #999;
 }
 
-/* line 32, ../scss/modules/form.scss */
+/* line 36, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 37, ../scss/modules/form.scss */
+/* line 41, ../scss/modules/form.scss */
 input
 .input-description {
   margin-top: -5px;
@@ -6216,31 +6220,31 @@ input
   color: #999;
 }
 
-/* line 44, ../scss/modules/form.scss */
+/* line 48, ../scss/modules/form.scss */
 .input-placeholder-style, input::-webkit-input-placeholder, input:-moz-placeholder, input ::-moz-placeholder, input :-ms-input-placeholder {
   color: #999;
   font-weight: normal;
 }
 
-/* line 56, ../scss/modules/form.scss */
+/* line 60, ../scss/modules/form.scss */
 input ::-moz-placeholder {
   /* Firefox 19+ */
 }
 
-/* line 70, ../scss/modules/form.scss */
+/* line 75, ../scss/modules/form.scss */
 .form-group,
 .form-group-vertical,
 .form-vertical .form-group {
   min-height: 30px;
 }
-/* line 75, ../scss/modules/form.scss */
+/* line 80, ../scss/modules/form.scss */
 .form-group > :first-child,
 .form-group-vertical > :first-child,
 .form-vertical .form-group > :first-child {
   height: 20px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
-/* line 80, ../scss/modules/form.scss */
+/* line 85, ../scss/modules/form.scss */
 .form-group > :nth-child(2),
 .form-group-vertical > :nth-child(2),
 .form-vertical .form-group > :nth-child(2) {
@@ -6248,34 +6252,34 @@ input ::-moz-placeholder {
   vertical-align: middle;
 }
 
-/* line 88, ../scss/modules/form.scss */
+/* line 93, ../scss/modules/form.scss */
 .form-horizontal .form-group {
   display: table;
   table-layout: fixed;
   width: 100%;
 }
-/* line 94, ../scss/modules/form.scss */
+/* line 99, ../scss/modules/form.scss */
 .form-horizontal .form-group > * {
   display: table-cell;
 }
-/* line 98, ../scss/modules/form.scss */
+/* line 103, ../scss/modules/form.scss */
 .form-horizontal .form-group > :first-child {
   text-align: right;
   vertical-align: middle;
   padding-right: 20px;
   width: 140px;
 }
-/* line 105, ../scss/modules/form.scss */
+/* line 110, ../scss/modules/form.scss */
 .form-horizontal .form-group label.top {
   vertical-align: top;
   padding-top: 5px;
 }
-/* line 110, ../scss/modules/form.scss */
+/* line 115, ../scss/modules/form.scss */
 .form-horizontal .form-group > :nth-child(2) {
   width: 100%;
 }
 
-/* line 120, ../scss/modules/form.scss */
+/* line 123, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
@@ -6283,33 +6287,33 @@ label {
   cursor: pointer;
   white-space: nowrap;
 }
-/* line 127, ../scss/modules/form.scss */
+/* line 130, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 132, ../scss/modules/form.scss */
+/* line 135, ../scss/modules/form.scss */
 label .form-element, label .husky-input {
   margin-top: 5px;
   border: 1px solid #ccc;
 }
-/* line 137, ../scss/modules/form.scss */
+/* line 140, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
   vertical-align: middle;
 }
-/* line 143, ../scss/modules/form.scss */
+/* line 146, ../scss/modules/form.scss */
 label.spacing-right {
   margin-right: 10px;
 }
-/* line 146, ../scss/modules/form.scss */
+/* line 149, ../scss/modules/form.scss */
 label.spacing-left {
   margin-left: 10px;
 }
 
-/* line 153, ../scss/modules/form.scss */
+/* line 156, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 15px;
   height: 15px;
@@ -6319,12 +6323,12 @@ label.spacing-left {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 165, ../scss/modules/form.scss */
+/* line 168, ../scss/modules/form.scss */
 .custom-checkbox.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 170, ../scss/modules/form.scss */
+/* line 173, ../scss/modules/form.scss */
 .custom-checkbox input {
   opacity: 0;
   width: 15px;
@@ -6337,20 +6341,20 @@ label.spacing-left {
   padding: 0;
   cursor: pointer;
 }
-/* line 184, ../scss/modules/form.scss */
+/* line 187, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon, .custom-checkbox input.is-checked + .icon {
   border-color: #5DC774;
   background-color: #5DC774;
   color: #fff;
 }
-/* line 188, ../scss/modules/form.scss */
+/* line 191, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after {
   display: inline-block;
   margin-top: -1px;
   margin-left: -1px;
   content: "";
 }
-/* line 198, ../scss/modules/form.scss */
+/* line 201, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
   position: absolute;
   top: 0px;
@@ -6367,27 +6371,27 @@ label.spacing-left {
   border-radius: 2px;
 }
 
-/* line 222, ../scss/modules/form.scss */
+/* line 225, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 226, ../scss/modules/form.scss */
+/* line 229, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 230, ../scss/modules/form.scss */
+/* line 233, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 234, ../scss/modules/form.scss */
+/* line 237, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 238, ../scss/modules/form.scss */
+/* line 241, ../scss/modules/form.scss */
 textarea.form-element, textarea.husky-input {
   width: 100%;
   height: 40px;
@@ -6396,14 +6400,14 @@ textarea.form-element, textarea.husky-input {
   font-size: 14px;
   font-family: inherit;
 }
-/* line 245, ../scss/modules/form.scss */
+/* line 248, ../scss/modules/form.scss */
 textarea.form-element.small, textarea.small.husky-input {
   height: 70px;
   min-height: 70px;
   padding: 5px;
 }
 
-/* line 254, ../scss/modules/form.scss */
+/* line 257, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -6413,12 +6417,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 264, ../scss/modules/form.scss */
+/* line 267, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 269, ../scss/modules/form.scss */
+/* line 272, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -6431,11 +6435,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 283, ../scss/modules/form.scss */
+/* line 286, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: #fff;
 }
-/* line 286, ../scss/modules/form.scss */
+/* line 289, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -6444,7 +6448,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5DC774;
 }
-/* line 297, ../scss/modules/form.scss */
+/* line 300, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -6460,28 +6464,28 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
 }
 
-/* line 319, ../scss/modules/form.scss */
+/* line 321, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 324, ../scss/modules/form.scss */
+/* line 326, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #ccc !important;
 }
-/* line 327, ../scss/modules/form.scss */
+/* line 329, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 334, ../scss/modules/form.scss */
+/* line 336, ../scss/modules/form.scss */
 .cke_hidpi .cke_dialog_close_button {
   background-image: none !important;
 }
 
-/* line 340, ../scss/modules/form.scss */
+/* line 342, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #EA524E;
@@ -9273,18 +9277,17 @@ a.btn-black, a.btn-highlight {
 }
 /* line 44, ../scss/modules/select.scss */
 .husky-select-container.disabled .dropdown-label {
-  background: #ddd;
   color: #666;
   cursor: default;
 }
-/* line 51, ../scss/modules/select.scss */
+/* line 50, ../scss/modules/select.scss */
 .husky-select-container .husky-select-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   display: block;
 }
-/* line 58, ../scss/modules/select.scss */
+/* line 57, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list {
   width: 100%;
   /*display: inline-block;*/
@@ -9297,107 +9300,107 @@ a.btn-black, a.btn-highlight {
   z-index: 2000;
   border-radius: 3px;
 }
-/* line 70, ../scss/modules/select.scss */
+/* line 69, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .divider {
   max-width: 100%;
   height: 1px;
   background-color: #ccc;
   margin: 5px 0 10px;
 }
-/* line 77, ../scss/modules/select.scss */
+/* line 76, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list.top {
   top: inherit;
   bottom: 5px;
 }
-/* line 82, ../scss/modules/select.scss */
+/* line 81, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
   cursor: default;
 }
-/* line 86, ../scss/modules/select.scss */
+/* line 85, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
   color: #999;
 }
-/* line 90, ../scss/modules/select.scss */
+/* line 89, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
   display: inline;
   width: 20px;
   margin-right: 10px;
   padding-top: 7px;
 }
-/* line 96, ../scss/modules/select.scss */
+/* line 95, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .item-value {
   display: inline;
   line-height: 30px;
 }
-/* line 101, ../scss/modules/select.scss */
+/* line 100, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 106, ../scss/modules/select.scss */
+/* line 105, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul input {
   margin: 0;
 }
-/* line 110, ../scss/modules/select.scss */
+/* line 109, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li {
   padding: 0px 10px 0px 20px;
   clear: both;
   height: 30px;
 }
-/* line 115, ../scss/modules/select.scss */
+/* line 114, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li > div {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-/* line 121, ../scss/modules/select.scss */
+/* line 120, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52B6CA;
   cursor: pointer;
 }
-/* line 126, ../scss/modules/select.scss */
+/* line 125, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value {
   color: #fff;
 }
-/* line 130, ../scss/modules/select.scss */
+/* line 129, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover > div {
   color: #fff;
 }
-/* line 138, ../scss/modules/select.scss */
+/* line 137, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
   font-size: 10px;
   line-height: 20px;
 }
-/* line 142, ../scss/modules/select.scss */
+/* line 141, ../scss/modules/select.scss */
 .husky-select-container.small .toggle-icon {
   line-height: 20px;
 }
-/* line 145, ../scss/modules/select.scss */
+/* line 144, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
   border-radius: 2px;
 }
-/* line 151, ../scss/modules/select.scss */
+/* line 150, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list.top {
   top: auto;
   bottom: -3px;
 }
-/* line 159, ../scss/modules/select.scss */
+/* line 158, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
   background: #fff;
 }
-/* line 165, ../scss/modules/select.scss */
+/* line 164, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
   background: #52B6CA;
   color: #fff;
 }
-/* line 171, ../scss/modules/select.scss */
+/* line 170, ../scss/modules/select.scss */
 .husky-select-container select {
   opacity: 0;
   position: absolute;

@@ -1,7 +1,12 @@
-<form id="contact-form">
+<form id="contact-form" class="grid">
     <input type="hidden" data-mapper-property="id"/>
 
-    <div class="grid">
+    <div class="highlight-section">
+        {% block highlight %}
+        {% endblock %}
+    </div>
+
+    <div class="fixed-width">
         {% block static %}
         {% endblock %}
 
@@ -265,10 +270,7 @@
             </div>
         {% endblock %}
 
-    </div>
-
-    {% block tags %}
-        <div class="grid">
+        {% block tags %}
             <div class="grid-row">
                 <h2 class="divider"><%= translate('contact.contacts.assignment') %></h2>
             </div>
@@ -278,9 +280,8 @@
                     <div id="tags"></div>
                 </div>
             </div>
-        </div>
-    {% endblock %}
-
+        {% endblock %}
+    </div>
 </form>
 
 {% block data %}

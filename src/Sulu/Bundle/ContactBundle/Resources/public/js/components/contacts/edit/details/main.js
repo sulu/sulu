@@ -51,7 +51,10 @@ define([
         layout: function() {
             return {
                 content: {
-                    width: 'fixed'
+                    width: 'max',
+                    leftSpace: false,
+                    topSpace: false,
+                    rightSpace: false
                 },
                 sidebar: {
                     width: 'max',
