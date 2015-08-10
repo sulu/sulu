@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Updates the cached security settings on the nodes
+ * Updates the cached security settings on the nodes.
  */
 class MaintainNodeSecurityCommand extends ContainerAwareCommand
 {
@@ -89,7 +89,7 @@ class MaintainNodeSecurityCommand extends ContainerAwareCommand
         );
 
         $document->setPermissions($permissions);
-        $this->documentManager->persist($document, 'en');
+        $this->documentManager->persist($document, 'en'); // TODO remove language as soon as possible
 
         foreach ($document->getChildren() as $childDocument) {
             $this->updateDocument($output, $childDocument, $depth + 1);
