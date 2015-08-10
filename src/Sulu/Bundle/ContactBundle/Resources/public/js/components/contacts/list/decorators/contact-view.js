@@ -130,8 +130,8 @@ define(function() {
                 var id, picture, name, isSuluUser, location, mail;
 
                 id = record['id'];
-                picture = '/bundles/sulucontact/js/components/contacts/list/decorators/sample_avatar.jpg'; //TODO: use api information
-                isSuluUser = Math.random() < .3; //TODO: use api information
+                picture = record['avatar'];
+                isSuluUser = Math.random() < .5; //TODO: use api information
                 mail = record['mainEmail'];
 
                 // concat firstName and lastName because fullName should not be default
