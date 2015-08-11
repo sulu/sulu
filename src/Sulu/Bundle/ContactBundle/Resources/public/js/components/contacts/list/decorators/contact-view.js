@@ -160,7 +160,7 @@ define(function() {
                 'thumbnails',
                 record['thumbnails'],
                 this.datagrid.types.THUMBNAILS,
-                '200x200'
+                '100x100'
             );
             return result.url;
         },
