@@ -506,7 +506,7 @@ class ContactController extends RestController implements ClassResourceInterface
             // add fake avatar to all entries
             // todo: implement real avatar field
             $entrySet = $listBuilder->execute();
-            foreach ($entrySet as $key => $value){
+            foreach ($entrySet as $key => $value) {
                 $entrySet[$key]['thumbnails']['100x100'] =
                     'https://connectere.files.wordpress.com/2013/07/lacombe_001_sq-a4d9e855a2531a163e115237039bbeadf5cf76f2-s6-c30.jpg';
             }
