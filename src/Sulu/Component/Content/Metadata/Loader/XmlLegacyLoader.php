@@ -16,6 +16,7 @@ use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
+use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -213,8 +214,8 @@ class XmlLegacyLoader implements LoaderInterface
             throw new ReservedPropertyNameException($templateKey, $result['name']);
         }
 
-        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
-        $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
+        $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
+        $result['multilingual'] = $this->getValueFromXPath('@multilingual', $xpath, $node, true);
         $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
@@ -233,7 +234,7 @@ class XmlLegacyLoader implements LoaderInterface
             ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass']
         );
 
-        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
+        $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
         $result['type'] = 'block';
         $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
@@ -456,18 +457,6 @@ class XmlLegacyLoader implements LoaderInterface
     }
 
     /**
-     * returns boolean value of path.
-     */
-    private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
-    {
-        if (($value = $this->getValueFromXPath($path, $xpath, $context)) != null) {
-            return $value === 'true' ? true : false;
-        } else {
-            return $default;
-        }
-    }
-
-    /**
      * returns value of path.
      */
     private function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
@@ -481,6 +470,14 @@ class XmlLegacyLoader implements LoaderInterface
             $item = $result->item(0);
             if ($item === null) {
                 return $default;
+            }
+
+            if ('true' === $item->nodeValue) {
+                return true;
+            }
+
+            if ('false' === $item->nodeValue) {
+                return false;
             }
 
             return $item->nodeValue;

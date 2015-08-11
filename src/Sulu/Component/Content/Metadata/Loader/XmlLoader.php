@@ -21,8 +21,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
  * Load structure structure from an XML file.
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class XmlLoader extends XmlLegacyLoader
 {

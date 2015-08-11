@@ -55,6 +55,17 @@
             <params>
                 <param name="minLinks" value="1"/>
                 <param name="maxLinks" value="10"/>
+                <param name="displayOptions" type="collection">
+                    <param name="leftTop" value="true"/>
+                    <param name="top" value="false"/>
+                    <param name="rightTop" value="true"/>
+                    <param name="left" value="false"/>
+                    <param name="middle" value="false"/>
+                    <param name="right" value="false"/>
+                    <param name="leftBottom" value="true"/>
+                    <param name="bottom" value="false"/>
+                    <param name="rightBottom" value="true"/>
+                </param>
             </params>
         </property>
     </properties>
