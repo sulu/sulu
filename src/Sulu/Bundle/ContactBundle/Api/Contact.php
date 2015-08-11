@@ -41,9 +41,13 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Contact extends ApiWrapper
 {
+
+    /** @var Media */
+    private $avatar = null;
+
     /**
      * @param ContactEntity $contact
-     * @param string        $locale  The locale of this product
+     * @param string $locale The locale of this product
      */
     public function __construct(ContactEntity $contact, $locale)
     {
@@ -654,6 +658,29 @@ class Contact extends ApiWrapper
     public function getDisabled()
     {
         return $this->entity->getDisabled();
+    }
+
+    /**
+     * Sets the avatar (media-api object)
+     * @param Media $avatar
+     */
+    public function setAvatar(Media $avatar) {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * Get the contacts avatar and return the array of different formats
+     *
+     * @return array
+     * @VirtualProperty
+     * @SerializedName("avatar")
+     * @Groups({"fullContact","partialContact"})
+     */
+    public function getAvatar() {
+        if ($this->avatar) {
+            return $this->avatar->getFormats();
+        }
+        return;
     }
 
     /**

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -23,10 +22,13 @@ use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+
 
 class ContactManager extends AbstractContactManager
 {
@@ -39,6 +41,11 @@ class ContactManager extends AbstractContactManager
      * @var ContactTitleRepository
      */
     private $contactTitleRepository;
+
+    /**
+     * @var MediaManagerInterface
+     */
+    protected $mediaManager;
 
     /**
      * @var ContactRepository
@@ -55,6 +62,7 @@ class ContactManager extends AbstractContactManager
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
+        MediaManagerInterface $mediaManager,
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
         ContactRepository $contactRepository
@@ -63,6 +71,7 @@ class ContactManager extends AbstractContactManager
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
+        $this->mediaManager = $mediaManager;
     }
 
     /**
@@ -385,7 +394,7 @@ class ContactManager extends AbstractContactManager
             return;
         }
 
-        return new ContactApi($contact, $locale, $this->tagManager);
+        return $this->getApiObject($contact, $locale);
     }
 
     /**
@@ -399,7 +408,7 @@ class ContactManager extends AbstractContactManager
     public function getContact($contact, $locale)
     {
         if ($contact) {
-            return new ContactApi($contact, $locale, $this->tagManager);
+            return $this->getApiObject($contact, $locale);
         } else {
             return;
         }
@@ -467,6 +476,21 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
+     * Takes a contact entity and a locale and returns the api object
+     * @param Contact $contact
+     * @param String $locale
+     * @return ContactApi
+     */
+    protected function getApiObject($contact, $locale) {
+        $apiObject = new ContactApi($contact, $locale);
+        if ($contact->getAvatar()) {
+            $apiAvatar = $this->getMediaManager()->getById($contact->getAvatar()->getId(), $locale);
+            $apiObject->setAvatar($apiAvatar);
+        }
+        return $apiObject;
+    }
+
+    /**
      * Return property for key or given default value.
      *
      * @param array  $data
@@ -508,5 +532,15 @@ class ContactManager extends AbstractContactManager
     public function getContactEntityName()
     {
         return $this->contactRepository->getClassName();
+    }
+
+    /**
+     * Returns the media manager.
+     *
+     * @return MediaManagerInterface
+     */
+    protected function getMediaManager()
+    {
+        return $this->mediaManager;
     }
 }

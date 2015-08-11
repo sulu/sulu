@@ -535,6 +535,13 @@ interface ContactInterface
     public function getMedias();
 
     /**
+     * Get the contacts avatar
+     *
+     * @return Media
+     */
+    public function getAvatar();
+
+    /**
      * Add category.
      *
      * @param Category $category
