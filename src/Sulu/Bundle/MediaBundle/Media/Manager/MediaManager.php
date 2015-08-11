@@ -145,8 +145,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         $downloadPath,
         $maxFileSize
-    )
-    {
+    ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;

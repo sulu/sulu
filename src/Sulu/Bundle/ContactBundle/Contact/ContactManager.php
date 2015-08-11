@@ -65,8 +65,7 @@ class ContactManager extends AbstractContactManager
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
         ContactRepository $contactRepository
-    )
-    {
+    ) {
         parent::__construct($em, $tagManager);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
@@ -175,8 +174,7 @@ class ContactManager extends AbstractContactManager
         $id = null,
         $patch = false,
         $flush = true
-    )
-    {
+    ) {
         /*
          * TODO: https://github.com/sulu-io/sulu/pull/1171
          * This method needs to be refactored since in the first

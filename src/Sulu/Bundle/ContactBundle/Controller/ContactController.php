@@ -680,6 +680,7 @@ class ContactController extends RestController implements ClassResourceInterface
      *
      * @param array $contacts
      * @param String $locale
+     *
      * @return array of contacts-data with added avatar-data
      */
     private function addAvatars($contacts, $locale)
@@ -689,6 +690,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 ->getById($contact['id'], $locale)
                 ->getAvatar()['thumbnails'];
         }
+
         return $contacts;
     }
 
