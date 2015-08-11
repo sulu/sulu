@@ -298,9 +298,9 @@ define([
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
-                    searchFields: ['fullName'],
                     resultKey: 'contacts',
                     actionCallback: actionCallback.bind(this),
+                    searchFields: ['fullName'],
                     contentFilters: {
                         isMainContact: 'radio'
                     },

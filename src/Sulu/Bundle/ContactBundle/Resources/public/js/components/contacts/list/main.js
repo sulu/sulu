@@ -131,7 +131,7 @@ define([
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
-                    //TODO: implement api for contact-cards
+                    searchFields: ['fullName'],
                     view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/contact-card',
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,
