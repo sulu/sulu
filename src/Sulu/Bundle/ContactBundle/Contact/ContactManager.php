@@ -498,7 +498,7 @@ class ContactManager extends AbstractContactManager
      *
      * @param Contact $contact
      * @param String $locale
-     * 
+     *
      * @return ContactApi
      */
     protected function getApiObject($contact, $locale)
@@ -508,6 +508,7 @@ class ContactManager extends AbstractContactManager
             $apiAvatar = $this->getMediaManager()->getById($contact->getAvatar()->getId(), $locale);
             $apiObject->setAvatar($apiAvatar);
         }
+
         return $apiObject;
     }
 
