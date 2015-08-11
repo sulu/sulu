@@ -7,22 +7,15 @@
         return {
 
             getButtons: function() {
-                return [
-                    {
-                        name: 'layoutContact',
-                        template: {
-                            icon: 'th-large',
-                            title: 'public.layout',
-                            dropdownOptions: {
-                                markSelected: true
-                            },
-                            dropdownItems: {
-                                table: {},
-                                contactCards: {}
-                            }
-                        }
-                    },
-                ];
+                var layoutButton = app.sandbox.sulu.buttons.getApiButton('layout');
+                layoutButton.dropdownItems = {
+                    table: {},
+                    contactCards: {}
+                };
+                return [{
+                    name: 'layoutContact',
+                    template: layoutButton
+                }];
             },
 
             getDropdownItems: function() {
@@ -30,10 +23,10 @@
                     {
                         name: 'contactCards',
                         template: {
-                            title: 'sulu.toolbar.contact-cards', // todo: add translation
+                            title: 'sulu.toolbar.contact-cards',
                             callback: function() {
-                                app.sandbox.emit('sulu.toolbar.change.contact-card');
-                            }
+                                this.sandbox.emit('sulu.toolbar.change.contact-card');
+                            }.bind(app)
                         }
                     }
                 ];

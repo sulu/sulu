@@ -142,3 +142,8 @@
         }
     }
 }
+.no-top-space .sulu-header.has-tabs + .page {
+    &::before {
+        margin-bottom: $tabsHeight - 1px;
+    }
+}
