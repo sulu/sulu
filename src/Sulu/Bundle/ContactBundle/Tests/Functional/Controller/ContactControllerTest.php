@@ -29,12 +29,12 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Position;
-use Sulu\Bundle\MediaBundle\Entity\File;
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactControllerTest extends SuluTestCase
@@ -247,7 +247,8 @@ class ContactControllerTest extends SuluTestCase
         $this->contactPosition = $position;
     }
 
-    public function initAvatar() {
+    public function initAvatar()
+    {
         $collectionType = new CollectionType();
         $collectionType->setName('My collection type');
         $this->em->persist($collectionType);
@@ -284,7 +285,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($avatar);
         $this->em->persist($file);
 
-        $this->avatar =  $avatar;
+        $this->avatar = $avatar;
     }
 
     public function testGetById()
@@ -499,7 +500,7 @@ class ContactControllerTest extends SuluTestCase
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
                 'avatar' => [
-                    'id' => $this->avatar->getId()
+                    'id' => $this->avatar->getId(),
                 ],
                 'account' => [
                     'id' => $this->account1->getId(),
@@ -846,7 +847,7 @@ class ContactControllerTest extends SuluTestCase
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
                 'avatar' => [
-                    'id' => $this->avatar->getId()
+                    'id' => $this->avatar->getId(),
                 ],
                 'emails' => [
                     [

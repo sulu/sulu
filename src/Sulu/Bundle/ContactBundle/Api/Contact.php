@@ -41,7 +41,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Contact extends ApiWrapper
 {
-
     /** @var Media */
     private $avatar = null;
 
@@ -661,28 +660,32 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Sets the avatar (media-api object)
+     * Sets the avatar (media-api object).
+     *
      * @param Media $avatar
      */
-    public function setAvatar(Media $avatar) {
+    public function setAvatar(Media $avatar)
+    {
         $this->avatar = $avatar;
     }
 
     /**
-     * Get the contacts avatar and return the array of different formats
+     * Get the contacts avatar and return the array of different formats.
      *
      * @return Media
      * @VirtualProperty
      * @SerializedName("avatar")
      * @Groups({"fullContact","partialContact"})
      */
-    public function getAvatar() {
+    public function getAvatar()
+    {
         if ($this->avatar) {
             return [
                 'id' => $this->avatar->getId(),
-                'thumbnails' => $this->avatar->getFormats()
+                'thumbnails' => $this->avatar->getFormats(),
             ];
         }
+
         return;
     }
 

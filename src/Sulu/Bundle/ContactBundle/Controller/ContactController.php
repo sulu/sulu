@@ -676,7 +676,8 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Takes an array with contact-data and adds the corresponding avatar-data
+     * Takes an array with contact-data and adds the corresponding avatar-data.
+     *
      * @param array $contacts
      * @param String $locale
      * @return array of contacts-data with added avatar-data

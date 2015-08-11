@@ -121,17 +121,17 @@ class MediaManager implements MediaManagerInterface
     public $count;
 
     /**
-     * @param MediaRepositoryInterface      $mediaRepository
+     * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepositoryInterface $collectionRepository
-     * @param UserRepositoryInterface       $userRepository
-     * @param EntityManager                 $em
-     * @param StorageInterface              $storage
-     * @param FileValidatorInterface        $validator
-     * @param FormatManagerInterface        $formatManager
-     * @param TagManagerInterface           $tagManager
-     * @param TypeManagerInterface          $typeManager
-     * @param string                        $downloadPath
-     * @param string                        $maxFileSize
+     * @param UserRepositoryInterface $userRepository
+     * @param EntityManager $em
+     * @param StorageInterface $storage
+     * @param FileValidatorInterface $validator
+     * @param FormatManagerInterface $formatManager
+     * @param TagManagerInterface $tagManager
+     * @param TypeManagerInterface $typeManager
+     * @param string $downloadPath
+     * @param string $maxFileSize
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
@@ -145,7 +145,8 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         $downloadPath,
         $maxFileSize
-    ) {
+    )
+    {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -346,6 +347,7 @@ class MediaManager implements MediaManagerInterface
     public function getById($id, $locale)
     {
         $mediaEntity = $this->getEntityById($id);
+
         return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
@@ -533,8 +535,8 @@ class MediaManager implements MediaManagerInterface
     /**
      * Prepares data.
      *
-     * @param UploadedFile  $uploadedFile
-     * @param array         $data
+     * @param UploadedFile $uploadedFile
+     * @param array $data
      * @param UserInterface $user
      *
      * @return Media
