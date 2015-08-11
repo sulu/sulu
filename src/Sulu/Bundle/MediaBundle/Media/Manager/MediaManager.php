@@ -345,12 +345,21 @@ class MediaManager implements MediaManagerInterface
      */
     public function getById($id, $locale)
     {
+        $mediaEntity = $this->getEntityById($id);
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEntityById($id)
+    {
         $mediaEntity = $this->mediaRepository->findMediaById($id);
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
 
-        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        return $mediaEntity;
     }
 
     /**
@@ -425,11 +434,7 @@ class MediaManager implements MediaManagerInterface
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
-        $mediaEntity = $this->mediaRepository->findMediaById($data['id']);
-        if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
-        }
-
+        $mediaEntity = $this->getEntityById($data['id']);
         $mediaEntity->setChanger($user);
         $mediaEntity->setChanged(new \DateTime());
 
@@ -718,11 +723,7 @@ class MediaManager implements MediaManagerInterface
      */
     public function delete($id)
     {
-        $mediaEntity = $this->mediaRepository->findMediaById($id);
-
-        if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $id . ' not found.');
-        }
+        $mediaEntity = $this->getEntityById($id);
 
         /** @var File $file */
         foreach ($mediaEntity->getFiles() as $file) {

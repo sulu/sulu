@@ -295,6 +295,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getLastName()
     {
         return $this->lastName;

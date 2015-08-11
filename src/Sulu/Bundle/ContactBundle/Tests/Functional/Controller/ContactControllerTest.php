@@ -30,12 +30,18 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactControllerTest extends SuluTestCase
 {
     private $contactPosition = null;
     private $contactTitle = null;
+    private $avatar = null;
 
     public function setUp()
     {
@@ -232,10 +238,53 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->persist($category2);
 
+        $this->initAvatar();
+        $contact->setAvatar($this->avatar);
+
         $this->em->flush();
 
         $this->contactTitle = $title;
         $this->contactPosition = $position;
+    }
+
+    public function initAvatar() {
+        $collectionType = new CollectionType();
+        $collectionType->setName('My collection type');
+        $this->em->persist($collectionType);
+
+        $collection = new Collection();
+        $collection->setType($collectionType);
+        $this->em->persist($collection);
+
+        $imageType = new MediaType();
+        $imageType->setName('image');
+        $imageType->setDescription('This is an image');
+        $this->em->persist($imageType);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('avatar.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $avatar = new Media();
+        $avatar->setType($imageType);
+        $avatar->setCollection($collection);
+        $avatar->addFile($file);
+        $file->setMedia($avatar);
+        $this->em->persist($avatar);
+        $this->em->persist($file);
+
+        $this->avatar =  $avatar;
     }
 
     public function testGetById()
@@ -268,6 +317,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
         $this->assertEquals($this->addressType->getId(), $response->addresses[0]->addressType->id);
+
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
         $this->assertEquals(1, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->salutation);
@@ -444,6 +498,9 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
+                'avatar' => [
+                    'id' => $this->avatar->getId()
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -573,6 +630,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
         $this->assertEquals(0, $response->disabled);
 
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
+
         $this->assertEquals(2, count($response->categories));
 
         $client->request('GET', '/api/contacts/' . $response->id);
@@ -604,6 +666,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
@@ -778,6 +845,9 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
+                'avatar' => [
+                    'id' => $this->avatar->getId()
+                ],
                 'emails' => [
                     [
                         'id' => $this->email->getId(),
@@ -923,6 +993,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
 
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
+
         $this->assertEquals(2, count($response->categories));
 
         $client->request('GET', '/api/contacts/' . $response->id);
@@ -957,6 +1032,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
         $this->assertEquals(2, count($response->categories));
     }

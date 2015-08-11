@@ -671,14 +671,17 @@ class Contact extends ApiWrapper
     /**
      * Get the contacts avatar and return the array of different formats
      *
-     * @return array
+     * @return Media
      * @VirtualProperty
      * @SerializedName("avatar")
      * @Groups({"fullContact","partialContact"})
      */
     public function getAvatar() {
         if ($this->avatar) {
-            return $this->avatar->getFormats();
+            return [
+                'id' => $this->avatar->getId(),
+                'thumbnails' => $this->avatar->getFormats()
+            ];
         }
         return;
     }

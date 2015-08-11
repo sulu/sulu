@@ -686,7 +686,7 @@ class ContactController extends RestController implements ClassResourceInterface
         foreach ($contacts as $key => $contact) {
             $contacts[$key]['avatar'] = $this->getContactManager()
                 ->getById($contact['id'], $locale)
-                ->getAvatar();
+                ->getAvatar()['thumbnails'];
         }
         return $contacts;
     }

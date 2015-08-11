@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -48,6 +49,15 @@ interface MediaManagerInterface
      * @return Media
      */
     public function getById($id, $locale);
+
+    /**
+     * Returns a media entity with a given id
+     *
+     * @param int   $id
+     *
+     * @return MediaEntity
+     */
+    public function getEntityById($id);
 
     /**
      * Returns the medias with the given ids in the specified order.

@@ -542,6 +542,13 @@ interface ContactInterface
     public function getAvatar();
 
     /**
+     * Sets the avatar for the contact
+     *
+     * @param Media $avatar
+     */
+    public function setAvatar($avatar);
+
+    /**
      * Add category.
      *
      * @param Category $category

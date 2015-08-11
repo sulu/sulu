@@ -184,6 +184,7 @@ class ContactManager extends AbstractContactManager
          */
         $firstName = $this->getProperty($data, 'firstName');
         $lastName = $this->getProperty($data, 'lastName');
+        $avatar = $this->getProperty($data, 'avatar');
 
         if ($id) {
             /** @var Contact $contact */
@@ -232,6 +233,9 @@ class ContactManager extends AbstractContactManager
         if (!$patch || $lastName !== null) {
             $contact->setLastName($lastName);
         }
+        if (!$patch || $avatar !== null) {
+            $this->setAvatar($contact, $avatar);
+        }
 
         // Set title relation on contact
         $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
@@ -266,7 +270,7 @@ class ContactManager extends AbstractContactManager
                 $parent = $this->accountRepository->findAccountById($parentData['id']);
                 if (!$parent) {
                     throw new EntityNotFoundException(
-                        $this->getAccountEntityName(),
+                        self::$accountContactEntityName,
                         $parentData['id']
                     );
                 }
@@ -473,6 +477,19 @@ class ContactManager extends AbstractContactManager
                 $this->em->remove($accountContact);
             }
         }
+    }
+
+    /**
+     * Sets a media with a given id as the avatar of a given contact
+     * @param Contact $contact
+     * @param array $avatar with id property
+     */
+    private function setAvatar(Contact $contact, $avatar) {
+        $mediaEntity = null;
+        if (is_array($avatar) && $this->getProperty($avatar, 'id')) {
+            $mediaEntity = $this->getMediaManager()->getEntityById($this->getProperty($avatar, 'id'));
+        }
+        $contact->setAvatar($mediaEntity);
     }
 
     /**
