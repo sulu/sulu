@@ -498,6 +498,7 @@ class ContactManager extends AbstractContactManager
      *
      * @param Contact $contact
      * @param String $locale
+     * 
      * @return ContactApi
      */
     protected function getApiObject($contact, $locale)
