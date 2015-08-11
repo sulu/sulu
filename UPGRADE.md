@@ -19,6 +19,12 @@ execute the following command.
 app/console sulu:phpcr:init
 ```
 
+You also have to execute the following command once, in order to update the security information on the nodes.
+
+```bash
+app/console sulu:content:security:maintain
+```
+
 ### Enabled listbuilder to have multiple sort fields
 
 It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
