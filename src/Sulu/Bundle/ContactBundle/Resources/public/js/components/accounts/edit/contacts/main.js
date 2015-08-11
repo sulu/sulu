@@ -48,14 +48,6 @@ define([
                 this.companyPosition = id;
             }, this);
 
-            this.sandbox.dom.on('husky.datagrid.number.selections', function(number) {
-                if (number > 0) {
-                    this.sandbox.emit('husky.toolbar.contacts.item.enable', 'delete');
-                } else {
-                    this.sandbox.emit('husky.toolbar.contacts.item.disable', 'delete');
-                }
-            }.bind(this));
-
             // receive form of address values via template
             this.sandbox.once('sulu.contacts.set-types', function(types) {
                 this.formOfAddress = types.formOfAddress;
@@ -109,6 +101,15 @@ define([
         },
 
         /**
+         * Takes a contact and returns a flat version
+         * @param contact {Object} the contact to create a flat version for
+         */
+        toFlat = function(contact) {
+            contact.position = contact.position.position;
+            return contact;
+        },
+
+        /**
          * adds a new contact to an account when the form is valid
          */
         addNewContact = function() {
@@ -120,7 +121,7 @@ define([
                     emailType: this.emailTypes[0]
                 }];
                 ContactManager.save(data).then(function(contact) {
-                    this.sandbox.emit('husky.datagrid.record.add', contact);
+                    this.sandbox.emit('husky.datagrid.record.add', toFlat(contact));
                 }.bind(this));
                 return true;
             } else {
@@ -182,6 +183,7 @@ define([
                                 returnValue: 'id',
                                 data: response._embedded.positions,
                                 noNewValues: true,
+                                deselectField: 'select.no-choice',
                                 isNative: true
                             }
                         }
@@ -205,51 +207,43 @@ define([
         },
 
         listTemplate = function() {
-            return [
-                {
-                    id: 'add',
-                    icon: 'plus-circle',
-                    position: 1,
-                    class: 'highlight',
-                    dropdownItems: [
-                        {
-                            id: 'add-account-contact',
-                            title: this.sandbox.translate('contact.account.add-account-contact'),
-                            callback: createRelationOverlay.bind(this)
-                        },
-                        {
-                            id: 'add-new-contact-to-account',
-                            title: this.sandbox.translate('contact.accounts.add-new-contact-to-account'),
-                            callback: createContactOverlay.bind(this)
+            return this.sandbox.sulu.buttons.get({
+                add: {
+                    options: {
+                        dropdownItems: {
+                            addExisting: {
+                                options: {
+                                    id: 'add-account-contact',
+                                    title: this.sandbox.translate('contact.account.add-account-contact'),
+                                    callback: createRelationOverlay.bind(this)
+                                }
+                            },
+                            addNew: {
+                                options: {
+                                    id: 'add-new-contact-to-account',
+                                    title: this.sandbox.translate('contact.accounts.add-new-contact-to-account'),
+                                    callback: createContactOverlay.bind(this)
+                                }
+                            }
                         }
-                    ],
-                    callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.add');
-                    }.bind(this)
+                    }
                 },
-                {
-                    id: 'settings',
-                    icon: 'gear',
-                    dropdownItems: [
-                        {
-                            id: 'delete',
-                            title: this.sandbox.translate('contact.accounts.contact-remove'),
-                            callback: removeContactFromAccount.bind(this),
-                            disabled: true
-                        }
-                    ]
+                deleteSelected: {
+                    options: {
+                        callback: removeContactFromAccount.bind(this)
+                    }
                 }
-            ];
+            });
         },
 
-    // adds a new contact relation
+        // adds a new contact relation
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
                 AccountManager.addAccountContact(this.options.id, id, this.companyPosition);
                 ContactManager.loadOrNew(id).then(function(contact) {
-                    this.sandbox.emit('husky.datagrid.record.add', contact);
+                    this.sandbox.emit('husky.datagrid.record.add', toFlat(contact));
                 }.bind(this));
             }
         };
@@ -298,15 +292,15 @@ define([
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     template: listTemplate.call(this),
-                    hasSearch: false
+                    hasSearch: true
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
-                    searchFields: ['fullName'],
                     resultKey: 'contacts',
                     actionCallback: actionCallback.bind(this),
+                    searchFields: ['fullName'],
                     contentFilters: {
                         isMainContact: 'radio'
                     },

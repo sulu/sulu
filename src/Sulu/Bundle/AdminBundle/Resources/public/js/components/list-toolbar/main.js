@@ -84,12 +84,12 @@ define([], function() {
                     postfix;
                 this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     postfix = number > 0 ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'deleteSelected', false);
                 }.bind(this));
 
                 this.sandbox.on('sulu.list-toolbar.' + instanceName + 'delete.state-change', function(enable) {
                     postfix = !!enable ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'deleteSelected', false);
                 }.bind(this));
 
                 this.sandbox.on('sulu.list-toolbar.' + instanceName + 'edit.state-change', function(enable) {
