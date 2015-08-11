@@ -52,14 +52,20 @@ define(function() {
             ].join('')
         },
 
-        concatFields = function(fields, seperator){
+        /**
+         * Concat the entries of the given fields array to a single string. null-entries of the array are ignored
+         * @param fields (Array)
+         * @param separator String which separates two entries of the array
+         * @returns {string}
+         */
+        concatFields = function(fields, separator) {
             var strings = [];
-            fields.forEach(function(field){
-               if (!!field) {
-                   strings.push(field);
-               }
+            fields.forEach(function(field) {
+                if (!!field) {
+                    strings.push(field);
+                }
             });
-            return strings.join(seperator);
+            return strings.join(separator);
         }
 
     return {
@@ -114,7 +120,7 @@ define(function() {
          */
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('.page', 'click.contact.list', function() {
+                this.sandbox.dom.on('.body', 'click.contact.list', function() {
                     this.unselectAllItems();
                 }.bind(this));
             }
@@ -127,12 +133,10 @@ define(function() {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
-
-
                 var id, picture, name, isSuluUser, location, mail;
 
                 id = record['id'];
-                picture = this.processThumbnailFilter(record);
+                picture = this.getContactThumbnailUrl(record);
                 isSuluUser = Math.random() < .5; //TODO: use api information
                 mail = record['mainEmail'];
 
@@ -145,13 +149,18 @@ define(function() {
             }.bind(this));
         },
 
-        processThumbnailFilter: function(record) {
+        /**
+         * Returns the url to the downsized contact-picture of the given contact-record
+         * @param record
+         * @returns url
+         */
+        getContactThumbnailUrl: function(record) {
             var result = this.datagrid.processContentFilter.call(
                 this.datagrid,
                 'thumbnails',
                 record['thumbnails'],
                 this.datagrid.types.THUMBNAILS,
-                '200x200'
+                '100x100'
             );
             return result.url;
         },
@@ -215,7 +224,7 @@ define(function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.page', 'click.contact.list');
+            this.sandbox.dom.off('.body', 'click.contact.list');
             this.sandbox.dom.remove(this.$el);
         },
 
