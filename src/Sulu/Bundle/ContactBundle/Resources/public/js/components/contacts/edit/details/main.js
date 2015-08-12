@@ -156,8 +156,8 @@ define([
                         el: constants.avatarDropzoneSelector,
                         instanceName: 'contact-avatar',
                         titleKey: '',
-                        descriptionKey: 'Drop or click to change',
-                        url: '/admin/api/media?collection=1', //todo: use system collection
+                        descriptionKey: 'Drop or click to change avatar', // todo: use translation key
+                        url: '/admin/api/media?collection=1', // todo: use system collection
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
