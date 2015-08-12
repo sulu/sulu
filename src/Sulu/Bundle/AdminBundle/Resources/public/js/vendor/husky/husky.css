@@ -961,7 +961,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   padding: 0;
   height: 20px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .breadcrumb:after {
   clear: both;
   content: ' ';
@@ -5672,7 +5672,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   text-align: center;
   border-radius: 0 0 3px 3px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .overlay-footer:after {
   clear: both;
   content: ' ';
@@ -7603,7 +7603,7 @@ a.btn-black, a.btn-highlight {
   margin-top: 20px;
   font-size: 12px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .pagination-wrapper:after {
   clear: both;
   content: ' ';
@@ -7732,7 +7732,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-input:after {
   clear: both;
   content: ' ';
@@ -8057,23 +8057,23 @@ a.btn-black, a.btn-highlight {
   background-color: #999;
   color: #3e3e3e;
 }
-/* line 4, ../scss/mixins.scss */
+/* line 5, ../scss/mixins.scss */
 .search-container .search-input.placeholder {
   color: #3e3e3e;
 }
-/* line 5, ../scss/mixins.scss */
+/* line 6, ../scss/mixins.scss */
 .search-container .search-input:-moz-placeholder {
   color: #3e3e3e;
 }
-/* line 6, ../scss/mixins.scss */
+/* line 7, ../scss/mixins.scss */
 .search-container .search-input::-moz-placeholder {
   color: #3e3e3e;
 }
-/* line 7, ../scss/mixins.scss */
+/* line 8, ../scss/mixins.scss */
 .search-container .search-input:-ms-input-placeholder {
   color: #3e3e3e;
 }
-/* line 8, ../scss/mixins.scss */
+/* line 9, ../scss/mixins.scss */
 .search-container .search-input::-webkit-input-placeholder {
   color: #3e3e3e;
 }
@@ -8098,7 +8098,7 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   vertical-align: middle;
   margin: auto;
-  background-color: transparent;
+  background-color: #fff;
   padding-left: 3px;
   text-decoration: none;
 }
@@ -8116,23 +8116,23 @@ a.btn-black, a.btn-highlight {
 .search-container.gray .search-input {
   background-color: rgba(255, 255, 255, 0.5);
 }
-/* line 4, ../scss/mixins.scss */
+/* line 5, ../scss/mixins.scss */
 .search-container.gray .search-input.placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 5, ../scss/mixins.scss */
+/* line 6, ../scss/mixins.scss */
 .search-container.gray .search-input:-moz-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 6, ../scss/mixins.scss */
+/* line 7, ../scss/mixins.scss */
 .search-container.gray .search-input::-moz-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 7, ../scss/mixins.scss */
+/* line 8, ../scss/mixins.scss */
 .search-container.gray .search-input:-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 8, ../scss/mixins.scss */
+/* line 9, ../scss/mixins.scss */
 .search-container.gray .search-input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -8272,7 +8272,7 @@ a.btn-black, a.btn-highlight {
   /** styles for the toolbar-items **/
   /**  dropdown styles **/
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-toolbar:after {
   clear: both;
   content: ' ';
@@ -9249,7 +9249,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   font-size: 12px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-select-container .dropdown-label:after {
   clear: both;
   content: ' ';
@@ -10073,7 +10073,7 @@ a.btn-black, a.btn-highlight {
   padding-right: 20px;
   font-size: 12px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .white-box .header:after {
   clear: both;
   content: ' ';
@@ -10268,7 +10268,7 @@ a.btn-black, a.btn-highlight {
   position: relative;
   z-index: 10;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-dropzone .upload-items:after {
   clear: both;
   content: ' ';
@@ -10328,10 +10328,10 @@ a.btn-black, a.btn-highlight {
   font-size: 25px;
   text-align: center;
   display: block;
-  animation: ROTATE-ANIMATION 1s linear 0 infinite;
-  -webkit-animation: ROTATE-ANIMATION 1s linear 0 infinite;
-  -moz-animation: ROTATE-ANIMATION 1s linear 0 infinite;
-  -o-animation: ROTATE-ANIMATION 1s linear 0 infinite;
+  animation: ROTATE-ANIMATION 1s linear infinite;
+  -webkit-animation: ROTATE-ANIMATION 1s linear infinite;
+  -moz-animation: ROTATE-ANIMATION 1s linear infinite;
+  -o-animation: ROTATE-ANIMATION 1s linear infinite;
 }
 /* line 109, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image {
@@ -10418,6 +10418,133 @@ a.btn-black, a.btn-highlight {
 .husky-dropzone.small.dropped {
   height: 130px;
 }
+/* line 184, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+}
+/* line 190, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container {
+  width: 200px;
+  height: 200px;
+  background-color: #fff;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  -moz-transition: -moz-transform 200ms, opacity 200ms;
+  -o-transition: -o-transform 200ms, opacity 200ms;
+  -webkit-transition: -webkit-transform 200ms, opacity 200ms;
+  transition: transform 200ms, opacity 200ms;
+  -moz-transform: translate(-50%, -50%) scale(0.8);
+  -ms-transform: translate(-50%, -50%) scale(0.8);
+  -webkit-transform: translate(-50%, -50%) scale(0.8);
+  transform: translate(-50%, -50%) scale(0.8);
+}
+/* line 203, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .description {
+  width: initial;
+  height: initial;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  -moz-transition: opacity 100ms;
+  -o-transition: opacity 100ms;
+  -webkit-transition: opacity 100ms;
+  transition: opacity 100ms;
+}
+/* line 211, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .description .title {
+  display: none;
+}
+/* line 215, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .description .addition {
+  color: #666;
+}
+/* line 220, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items {
+  width: initial;
+  height: initial;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 226, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item {
+  width: initial;
+  height: initial;
+  margin: 0;
+  border: none;
+}
+/* line 232, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content {
+  padding: 0;
+}
+/* line 235, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .icon {
+  display: none;
+}
+/* line 239, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .file-size {
+  padding-top: 0;
+  padding-bottom: 6px;
+  font-size: 14px;
+  line-height: 14px;
+}
+/* line 246, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .progress {
+  width: 80px;
+  height: 8px;
+  border-radius: 4px;
+}
+/* line 254, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .success-content .image {
+  display: none;
+}
+/* line 257, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .success-content .tick {
+  font-size: 72px;
+  line-height: 72px;
+}
+/* line 267, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay:hover .dropzone-container, .husky-dropzone.overlay.dz-drag-hover .dropzone-container, .husky-dropzone.overlay.dropped .dropzone-container {
+  -moz-transform: translate(-50%, -50%) scale(1);
+  -ms-transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.8;
+}
+/* line 273, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay.dz-drag-hover {
+  opacity: 1;
+}
+/* line 275, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay.dz-drag-hover .dropzone-container {
+  border: 1px dashed #666;
+}
+/* line 281, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay.dropped .description {
+  margin: 0;
+  opacity: 0;
+}
 
 /* line 64, ../scss/modules/input.scss */
 .husky-input {
@@ -10426,7 +10553,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-input:after {
   clear: both;
   content: ' ';
@@ -10517,7 +10644,7 @@ a.btn-black, a.btn-highlight {
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-thumbnails:after {
   clear: both;
   content: ' ';
@@ -10544,7 +10671,7 @@ a.btn-black, a.btn-highlight {
   position: relative;
   cursor: pointer;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-thumbnails .item:after {
   clear: both;
   content: ' ';
@@ -10683,7 +10810,7 @@ a.btn-black, a.btn-highlight {
   display: block;
 }
 
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-groups:after {
   clear: both;
   content: ' ';

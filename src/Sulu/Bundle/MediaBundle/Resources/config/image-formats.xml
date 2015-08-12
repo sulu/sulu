@@ -3,6 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.0.xsd">
     <format>
+        <name>400x400</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">400</parameter>
+                    <parameter name="y">400</parameter>
+                </parameters>
+            </command>
+        </commands>
+    </format>
+    <format>
         <name>200x200</name>
         <commands>
             <command>
