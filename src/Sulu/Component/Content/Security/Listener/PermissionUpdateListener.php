@@ -45,7 +45,7 @@ class PermissionUpdateListener
         $document = $this->documentManager->find($event->getIdentifier());
         $document->setPermissions($allowedPermissions);
 
-        $this->documentManager->persist($document, 'en'); // TODO remove language as soon as possible
+        $this->documentManager->persist($document);
         $this->documentManager->flush();
     }
 

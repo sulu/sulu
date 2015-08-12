@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class NavigationContextSubscriber extends AbstractMappingSubscriber
@@ -26,9 +25,9 @@ class NavigationContextSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    protected function doHydrate(AbstractMappingEvent $event)
     {
         $node = $event->getNode();
         $value = $node->getPropertyValueWithDefault(
@@ -41,11 +40,17 @@ class NavigationContextSubscriber extends AbstractMappingSubscriber
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    protected function doPersist(PersistEvent $event)
     {
+        $locale = $event->getLocale();
+
+        if (!$locale) {
+            return;
+        }
+
         $node = $event->getNode();
         $node->setProperty(
-            $this->encoder->localizedSystemName(self::FIELD, $event->getLocale()),
+            $this->encoder->localizedSystemName(self::FIELD, $locale),
             $event->getDocument()->getNavigationContexts() ?: null
         );
     }

@@ -89,7 +89,7 @@ class MaintainNodeSecurityCommand extends ContainerAwareCommand
         );
 
         $document->setPermissions($permissions);
-        $this->documentManager->persist($document, 'en'); // TODO remove language as soon as possible
+        $this->documentManager->persist($document);
 
         foreach ($document->getChildren() as $childDocument) {
             $this->updateDocument($output, $childDocument, $depth + 1);

@@ -80,12 +80,17 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
      */
     public function doPersist(PersistEvent $event)
     {
+        $locale = $event->getLocale();
+
+        if (!$locale) {
+            return;
+        }
+
         $document = $event->getDocument();
         $structureType = $document->getStructureType();
         $node = $event->getNode();
         $extensionsData = $document->getExtensionsData();
 
-        $locale = $event->getLocale();
         $webspaceName = $this->inspector->getWebspace($document);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
 
