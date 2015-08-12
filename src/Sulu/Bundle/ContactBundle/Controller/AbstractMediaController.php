@@ -11,10 +11,18 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
 /**
  * Makes accounts available through a REST API.
@@ -22,6 +30,7 @@ use Sulu\Component\Rest\RestController;
 abstract class AbstractMediaController extends RestController
 {
     protected static $mediaEntityName = 'SuluMediaBundle:Media';
+    protected static $mediaEntityKey = 'media';
 
     /**
      * Adds a relation between a media and the entity.
@@ -119,5 +128,118 @@ abstract class AbstractMediaController extends RestController
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns a view containing all media of an entity
+     *
+     * @param String $entityName
+     * @param String $routeName
+     * @param AbstractContactManager $entityManager
+     * @param String $id
+     * @param Boolean $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function getMultipleView($entityName, $routeName, AbstractContactManager $entityManager, $id, $request)
+    {
+        $locale = $this->getUser()->getLocale();
+
+        if ($request->get('flat') === 'true') {
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create($entityName);
+            $fieldDescriptors = $this->getFieldDescriptors($entityName);
+            $listBuilder->where($fieldDescriptors['entity'], $id);
+            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+            $listResponse = $listBuilder->execute();
+            $listResponse = $this->setThumbnails($listResponse, $locale);
+
+            $list = new ListRepresentation(
+                $listResponse,
+                self::$mediaEntityKey,
+                $routeName,
+                array_merge(['id' => $id], $request->query->all()),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
+        } else {
+            $media = $entityManager->getMediaById($id, $locale);
+            $list = new CollectionRepresentation($media, self::$mediaEntityKey);
+        }
+        $view = $this->view($list, 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns the the media fields for the current entity
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getFieldsView()
+    {
+        return $this->handleView($this->view($this->getMediaManager()->getFieldDescriptors(), 200));
+    }
+
+    /**
+     * Takes an array of media and adds the corresponding thumbnail-links.
+     *
+     * @param array $medias
+     * @param String $locale
+     *
+     * @return array of media with added thumbnail-links
+     */
+    private function setThumbnails($medias, $locale)
+    {
+        foreach ($medias as $key => $media) {
+            $medias[$key]['thumbnails'] = $this->getMediaManager()->getById($media['id'], $locale)->getFormats();
+        }
+        return $medias;
+    }
+
+    /**
+     * Returns the field descriptors of the medias and adds a descriptor to connect
+     * the media with the current entity
+     *
+     * @param $entityName
+     *
+     * @return array
+     */
+    private function getFieldDescriptors($entityName)
+    {
+        $mediaDescriptors = $this->getMediaManager()->getFieldDescriptors();
+        $additionalDescriptors = [
+            'entity' => new DoctrineFieldDescriptor(
+                'id',
+                'entity',
+                $entityName,
+                null,
+                [
+                    self::$mediaEntityName => new DoctrineJoinDescriptor(
+                        self::$mediaEntityName,
+                        $entityName . '.medias',
+                        null,
+                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                    )
+                ]
+            )
+        ];
+
+        return array_merge($additionalDescriptors, $mediaDescriptors);
+    }
+
+    /**
+     * @return MediaManagerInterface
+     */
+    private function getMediaManager()
+    {
+        return $this->get('sulu_media.media_manager');
     }
 }

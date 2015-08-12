@@ -23,7 +23,7 @@ interface ContactManagerInterface
      *
      * @param $entity The entity to add the address to
      * @param Address $address The address to be added
-     * @param Bool    $isMain  Defines if the address is the main Address of the contact
+     * @param Bool $isMain Defines if the address is the main Address of the contact
      *
      * @return $relation
      */
@@ -109,4 +109,14 @@ interface ContactManagerInterface
      * @return mixed
      */
     public function getById($id, $locale);
+
+    /**
+     * Returns all media for a entity with a given id
+     *
+     * @param $id
+     * @param $locale
+     *
+     * @return Media[]
+     */
+    public function getMediaById($id, $locale);
 }

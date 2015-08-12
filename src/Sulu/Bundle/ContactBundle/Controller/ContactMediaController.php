@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @RouteResource("Medias")
  */
-class ContactMediaController extends AbstractMediaController
+class ContactMediaController extends AbstractMediaController implements ClassResourceInterface
 {
     /**
      * Removes a media from the relation to the account.
@@ -53,5 +54,40 @@ class ContactMediaController extends AbstractMediaController
             $id,
             $request->get('mediaId', '')
         );
+    }
+
+    /**
+     * lists all media of an account
+     * optional parameter 'flat' calls listAction.
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction($id, Request $request)
+    {
+        return $this->getMultipleView(
+            $this->getContactEntityName(),
+            'get_contact_medias',
+            $this->get('sulu_contact.contact_manager'),
+            $id,
+            $request
+        );
+    }
+
+    /**
+     * returns all fields that can be used by list.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function fieldsAction()
+    {
+        return $this->getFieldsView();
+    }
+
+    private function getContactEntityName()
+    {
+        return $this->container->getParameter('sulu_contact.contact.entity');
     }
 }
