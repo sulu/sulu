@@ -104,7 +104,8 @@ define([], function() {
                 '       <span class="navigator ' + constants.websiteSwitchClass + '"><%= backWebsiteMessage %></span>',
                 '   </div>',
                 '   <div class="' + constants.successOverlayClass + '">',
-                '       <span class="fa-check success-icon"></span>', //testing
+                '       <span class="fa-check success-icon"></span>',
+                '       <span class="fa-check success-icon inner"></span>',
                 '   </div>',
                 '</div>'].join(''),
 
@@ -577,7 +578,7 @@ define([], function() {
             this.sandbox.dom.addClass(this.$el, constants.successClass);
 
             // css animations are finished after 800ms
-            this.sandbox.util.delay(this.redirectTo.bind(this, redirectUrl), 800);
+            //this.sandbox.util.delay(this.redirectTo.bind(this, redirectUrl), 800);
         },
 
         /**
