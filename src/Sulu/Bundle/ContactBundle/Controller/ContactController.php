@@ -15,14 +15,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\ContactBundle\Api\Contact as ApiContact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -503,16 +496,11 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
-            // add fake avatar to all entries
-            // todo: implement real avatar field
-            $entrySet = $listBuilder->execute();
-            foreach ($entrySet as $key => $value) {
-                $entrySet[$key]['thumbnails']['100x100'] =
-                    'https://connectere.files.wordpress.com/2013/07/lacombe_001_sq-a4d9e855a2531a163e115237039bbeadf5cf76f2-s6-c30.jpg';
-            }
+            $listResponse = $listBuilder->execute();
+            $listResponse = $this->addAvatars($listResponse, $locale);
 
             $list = new ListRepresentation(
-                $entrySet,
+                $listResponse,
                 self::$entityKey,
                 'get_contacts',
                 $request->query->all(),
@@ -536,7 +524,7 @@ class ContactController extends RestController implements ClassResourceInterface
             // convert to api-contacts
             $apiContacts = [];
             foreach ($contacts as $contact) {
-                $apiContacts[] = new ApiContact($contact, $locale);
+                $apiContacts[] = $this->getContactManager()->getContact($contact, $locale);
             }
 
             $exclusion = null;
@@ -712,6 +700,25 @@ class ContactController extends RestController implements ClassResourceInterface
     public function getSecurityContext()
     {
         return 'sulu.contact.people';
+    }
+
+    /**
+     * Takes an array with contact-data and adds the corresponding avatar-data.
+     *
+     * @param array $contacts
+     * @param String $locale
+     *
+     * @return array of contacts-data with added avatar-data
+     */
+    private function addAvatars($contacts, $locale)
+    {
+        foreach ($contacts as $key => $contact) {
+            $contacts[$key]['avatar'] = $this->getContactManager()
+                ->getById($contact['id'], $locale)
+                ->getAvatar()['thumbnails'];
+        }
+
+        return $contacts;
     }
 
     // TODO: Use schema validation see:
