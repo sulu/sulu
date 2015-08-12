@@ -578,7 +578,7 @@ define([], function() {
             this.sandbox.dom.addClass(this.$el, constants.successClass);
 
             // css animations are finished after 800ms
-            //this.sandbox.util.delay(this.redirectTo.bind(this, redirectUrl), 800);
+            this.sandbox.util.delay(this.redirectTo.bind(this, redirectUrl), 800);
         },
 
         /**
