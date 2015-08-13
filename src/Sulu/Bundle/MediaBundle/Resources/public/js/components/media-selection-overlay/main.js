@@ -21,7 +21,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             eventNamespace: 'sulu.media-selection-overlay',
             preselectedIds: [],
             instanceName: null
-
         },
 
         listViews = {
@@ -269,7 +268,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 function() {
                     this.sandbox.emit(
                         'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.view.change',
-                        'thumbnail', {large: false}
+                        'thumbnail',
+                        {large: false}
                     );
                     this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
                 }.bind(this)
@@ -281,7 +281,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 function() {
                     this.sandbox.emit(
                         'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.view.change',
-                        'thumbnail', {large: true}
+                        'thumbnail',
+                        {large: true}
                     );
                     this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
                 }.bind(this)
@@ -339,8 +340,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         changeUploadCollection = function(collectionId) {
             this.uploadCollection = collectionId;
             this.sandbox.emit(
-                    'husky.dropzone.media-selection-overlay.' + this.options.instanceName + '.change-url',
-                    '/admin/api/media?collection=' + collectionId);
+                'husky.dropzone.media-selection-overlay.' + this.options.instanceName + '.change-url',
+                '/admin/api/media?collection=' + collectionId);
         },
 
         /**

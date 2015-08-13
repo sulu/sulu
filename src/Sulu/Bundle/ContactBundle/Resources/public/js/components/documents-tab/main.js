@@ -76,7 +76,6 @@ define([
             var data = this.data;
             this.html(this.renderTemplate(this.templates[0]));
             this.initForm(data);
-            //this.initList();
             this.bindCustomEvents();
         },
 
@@ -85,10 +84,6 @@ define([
             formObject.initialized.then(function() {
                 this.setForm(data);
             }.bind(this));
-        },
-
-        initList: function() {
-
         },
 
         setForm: function(data) {
