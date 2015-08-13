@@ -145,8 +145,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         $downloadPath,
         $maxFileSize
-    )
-    {
+    ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -390,7 +389,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaIds = array_filter(array_column($data, $thumbnailKey));
         $mediaArray = $this->getByIds($mediaIds, $locale);
-        for ($i = 0, $x = 0; $i < count($data); $i++) {
+        for ($i = 0, $x = 0; $i < count($data); ++$i) {
             if (array_key_exists($thumbnailKey, $data[$i]) && $data[$i][$thumbnailKey]) {
                 $data[$i][$thumbnailKey] = $mediaArray[$x++]->getFormats();
             }
