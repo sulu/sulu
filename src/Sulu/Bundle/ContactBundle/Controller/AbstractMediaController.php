@@ -158,7 +158,7 @@ abstract class AbstractMediaController extends RestController
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $listResponse = $listBuilder->execute();
-            $listResponse = $this->setThumbnails($listResponse, $locale);
+            $listResponse = $this->getMediaManager()->addThumbnails($listResponse, 'thumbnails', $locale);
 
             $list = new ListRepresentation(
                 $listResponse,
@@ -186,22 +186,6 @@ abstract class AbstractMediaController extends RestController
     public function getFieldsView()
     {
         return $this->handleView($this->view($this->getMediaManager()->getFieldDescriptors(), 200));
-    }
-
-    /**
-     * Takes an array of media and adds the corresponding thumbnail-links.
-     *
-     * @param array $medias
-     * @param String $locale
-     *
-     * @return array of media with added thumbnail-links
-     */
-    private function setThumbnails($medias, $locale)
-    {
-        foreach ($medias as $key => $media) {
-            $medias[$key]['thumbnails'] = $this->getMediaManager()->getById($media['id'], $locale)->getFormats();
-        }
-        return $medias;
     }
 
     /**

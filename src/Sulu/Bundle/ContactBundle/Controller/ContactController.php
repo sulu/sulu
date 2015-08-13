@@ -84,6 +84,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected function getFieldDescriptors()
     {
         if ($this->fieldDescriptors === null) {
+            $this->initFieldDescriptors();
         }
 
         return $this->fieldDescriptors;
