@@ -30,7 +30,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
 
     /**
      * @param SecurityCheckerInterface $securityChecker
-     * @param bool                     $enabledSecurity
+     * @param bool $enabledSecurity
      */
     public function __construct(SecurityCheckerInterface $securityChecker, $enabledSecurity = false)
     {
