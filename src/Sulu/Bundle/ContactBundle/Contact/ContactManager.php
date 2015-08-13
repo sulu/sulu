@@ -499,6 +499,20 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
+     * Takes an array of contacts-data (with at least an id property) and
+     * adds the corresponding avatar-data to the array.
+     *
+     * @param $contacts
+     * @param $locale
+     *
+     * @return array
+     */
+    public function addAvatars($contacts, $locale)
+    {
+        return $this->mediaManager->addThumbnails($contacts, 'avatar', $locale);
+    }
+
+    /**
      * Sets a media with a given id as the avatar of a given contact.
      *
      * @param Contact $contact
@@ -508,7 +522,7 @@ class ContactManager extends AbstractContactManager
     {
         $mediaEntity = null;
         if (is_array($avatar) && $this->getProperty($avatar, 'id')) {
-            $mediaEntity = $this->getMediaManager()->getEntityById($this->getProperty($avatar, 'id'));
+            $mediaEntity = $this->mediaManager->getEntityById($this->getProperty($avatar, 'id'));
         }
         $contact->setAvatar($mediaEntity);
     }
@@ -525,7 +539,7 @@ class ContactManager extends AbstractContactManager
     {
         $apiObject = new ContactApi($contact, $locale);
         if ($contact->getAvatar()) {
-            $apiAvatar = $this->getMediaManager()->getById($contact->getAvatar()->getId(), $locale);
+            $apiAvatar = $this->mediaManager->getById($contact->getAvatar()->getId(), $locale);
             $apiObject->setAvatar($apiAvatar);
         }
 
@@ -574,15 +588,5 @@ class ContactManager extends AbstractContactManager
     public function getContactEntityName()
     {
         return $this->contactRepository->getClassName();
-    }
-
-    /**
-     * Returns the media manager.
-     *
-     * @return MediaManagerInterface
-     */
-    protected function getMediaManager()
-    {
-        return $this->mediaManager;
     }
 }
