@@ -40,6 +40,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected static $entityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
@@ -121,7 +122,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             'string',
             '',
-            '100px',
+            '',
             false
         );
 
@@ -134,8 +135,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '100px'
+            ''
         );
 
         $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
@@ -147,8 +147,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '100px'
+            ''
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
@@ -160,8 +159,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '140px'
+            ''
         );
 
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
@@ -227,8 +225,23 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             true,
             false,
-            'integer',
-            '50px'
+            'integer'
+        );
+
+        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
+            'id',
+            'avatar',
+            self::$mediaEntityName,
+            'public.avatar',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
+                ),
+            ],
+            false,
+            true,
+            'integer'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
@@ -381,7 +394,7 @@ class ContactController extends RestController implements ClassResourceInterface
             true,
             'string',
             '',
-            '100px',
+            '',
             false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -470,7 +483,7 @@ class ContactController extends RestController implements ClassResourceInterface
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
             $listResponse = $listBuilder->execute();
-            $listResponse = $this->addAvatars($listResponse, $locale);
+            $listResponse = $this->getContactManager()->addAvatars($listResponse, $locale);
 
             $list = new ListRepresentation(
                 $listResponse,
@@ -673,25 +686,6 @@ class ContactController extends RestController implements ClassResourceInterface
     public function getSecurityContext()
     {
         return 'sulu.contact.people';
-    }
-
-    /**
-     * Takes an array with contact-data and adds the corresponding avatar-data.
-     *
-     * @param array $contacts
-     * @param String $locale
-     *
-     * @return array of contacts-data with added avatar-data
-     */
-    private function addAvatars($contacts, $locale)
-    {
-        foreach ($contacts as $key => $contact) {
-            $contacts[$key]['avatar'] = $this->getContactManager()
-                ->getById($contact['id'], $locale)
-                ->getAvatar()['thumbnails'];
-        }
-
-        return $contacts;
     }
 
     // TODO: Use schema validation see:

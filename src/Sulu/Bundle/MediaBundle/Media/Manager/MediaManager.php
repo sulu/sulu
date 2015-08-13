@@ -145,7 +145,8 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         $downloadPath,
         $maxFileSize
-    ) {
+    )
+    {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -380,6 +381,22 @@ class MediaManager implements MediaManagerInterface
         ksort($media);
 
         return array_values($media);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addThumbnails($data, $thumbnailKey, $locale)
+    {
+        $mediaIds = array_filter(array_column($data, $thumbnailKey));
+        $mediaArray = $this->getByIds($mediaIds, $locale);
+        for ($i = 0, $x = 0; $i < count($data); $i++) {
+            if (array_key_exists($thumbnailKey, $data[$i]) && $data[$i][$thumbnailKey]) {
+                $data[$i][$thumbnailKey] = $mediaArray[$x++]->getFormats();
+            }
+        }
+
+        return $data;
     }
 
     /**
