@@ -401,7 +401,6 @@ class ContactManager extends AbstractContactManager
         return $this->getApiObject($contact, $locale);
     }
 
-
     /**
      * Returns all media for a contact with a given id.
      *

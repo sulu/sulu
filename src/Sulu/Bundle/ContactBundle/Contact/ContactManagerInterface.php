@@ -111,7 +111,7 @@ interface ContactManagerInterface
     public function getById($id, $locale);
 
     /**
-     * Returns all media for a entity with a given id
+     * Returns all media for a entity with a given id.
      *
      * @param $id
      * @param $locale
