@@ -75,7 +75,7 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
      */
     public function fieldsAction()
     {
-        return $this->getFieldsView();
+        return $this->getFieldsView($this->getAccountEntityName());
     }
 
     private function getAccountEntityName()

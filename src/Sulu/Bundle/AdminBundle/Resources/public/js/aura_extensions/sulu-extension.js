@@ -452,7 +452,7 @@
                         ]);
 
                         if(!!gridOptions.instanceName) {
-                            datagridEventNamespace += gridOptions.instanceName + '.'
+                            datagridEventNamespace += gridOptions.instanceName + '.';
                         }
 
                         // save page size when changed

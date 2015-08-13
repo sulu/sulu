@@ -125,10 +125,9 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * Scrolls the whole form the the bottom
          */
-        scrollToBottom = function() {
-            this.sandbox.dom.scrollAnimate(
-                this.sandbox.dom.height('.media-selection-overlay-datagrid-container'),
-                '.media-selection-overlay-content'
+        scrollToBottom = function() {this.sandbox.dom.scrollAnimate(
+                this.sandbox.dom.height('.media-selection-overlay-content-area'),
+                '.media-selection-overlay-content-area'
             );
         },
 

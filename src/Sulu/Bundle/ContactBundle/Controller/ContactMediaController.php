@@ -83,7 +83,7 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
      */
     public function fieldsAction()
     {
-        return $this->getFieldsView();
+        return $this->getFieldsView($this->getContactEntityName());
     }
 
     private function getContactEntityName()

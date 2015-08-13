@@ -10,8 +10,9 @@
 define([
     'widget-groups',
     'services/sulucontact/account-manager',
-    'services/sulucontact/contact-manager'
-], function(WidgetGroups, AccountManager, ContactManager) {
+    'services/sulucontact/contact-manager',
+    'services/sulucontact/contact-delete-dialog'
+], function(WidgetGroups, AccountManager, ContactManager, DeleteDialog) {
 
     'use strict';
 
@@ -35,37 +36,21 @@ define([
 
         initialize: function() {
             this.manager = (this.options.type === 'contact') ? ContactManager : AccountManager;
-            this.form = '#documents-form';
-            this.newSelections = [];
-            this.removedSelections = [];
 
             this.manager.loadOrNew(this.options.id).then(function(data) {
                 this.data = data;
-                this.currentSelection = this.getPropertyFromArrayOfObject(this.data.medias, 'id');
+                this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id') || [];
+                this.bindCustomEvents();
                 this.render();
 
-                if (!!this.data && !!this.data.id) {
+                if (!!this.options && !!this.options.id) {
                     if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
-                        this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.data.id);
+                        this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.id);
                     } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
-                        this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
+                        this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.id);
                     }
                 }
             }.bind(this));
-        },
-
-        getPropertyFromArrayOfObject: function(data, propertyName) {
-            if (this.sandbox.util.typeOf(data) === 'array' &&
-                data.length > 0 &&
-                this.sandbox.util.typeOf(data[0]) === 'object') {
-                var values = [];
-                this.sandbox.util.foreach(data, function(el) {
-                    values.push(el[propertyName]);
-                }.bind(this));
-                return values;
-            } else {
-                return data;
-            }
         },
 
         initSidebar: function(url, id) {
@@ -73,108 +58,127 @@ define([
         },
 
         render: function() {
-            var data = this.data;
             this.html(this.renderTemplate(this.templates[0]));
-            this.initForm(data);
-            //this.initList();
-            this.bindCustomEvents();
-        },
-
-        initForm: function(data) {
-            var formObject = this.sandbox.form.create(this.form);
-            formObject.initialized.then(function() {
-                this.setForm(data);
-            }.bind(this));
-        },
-
-        initList: function() {
-
-        },
-
-        setForm: function(data) {
-            this.sandbox.form.setData(this.form, data).fail(function(error) {
-                this.sandbox.logger.error("An error occured when setting data!", error);
-            }.bind(this));
+            this.startSelectionOverlay();
+            this.initList();
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.tab.save', this.save.bind(this));
-
-            this.sandbox.on('sulu.media-selection.document-selection.data-changed', function() {
-                this.sandbox.emit('sulu.tab.dirty');
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.documents.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('husky.toolbar.documents.item.' + postfix, 'deleteSelected', false);
             }, this);
 
-            this.sandbox.on('sulu.contacts.account.documents.removed', this.resetAndRemoveFromCurrent.bind(this));
-            this.sandbox.on('sulu.contacts.contact.documents.removed', this.resetAndRemoveFromCurrent.bind(this));
-
-            this.sandbox.on('sulu.contacts.account.documents.added', this.resetAndAddToCurrent.bind(this));
-            this.sandbox.on('sulu.contacts.contact.documents.added', this.resetAndAddToCurrent.bind(this));
-
-            this.sandbox.on('sulu.media-selection-overlay.document-selection.record-selected', this.selectItem.bind(this));
-            this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
-            this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
-        },
-
-        resetAndRemoveFromCurrent: function(parentId, mediaIds) {
-            this.newSelections = [];
-            this.removedSelections = [];
-            this.sandbox.util.foreach(mediaIds, function(id) {
-                if (this.currentSelection.indexOf(id) > -1) {
-                    this.currentSelection.splice(this.currentSelection.indexOf(id), 1);
-                }
+            this.sandbox.on('sulu.contacts.document.removed', function(id, mediaId) {
+                this.sandbox.emit('husky.datagrid.documents.record.remove', mediaId);
             }.bind(this));
 
-            this.setForm(this.currentSelection);
+            this.sandbox.on('sulu.media-selection-overlay.documents.record-selected', this.addItem.bind(this));
+            this.sandbox.on('sulu.media-selection-overlay.documents.record-deselected', this.removeItem.bind(this));
         },
 
-        resetAndAddToCurrent: function(parentId, mediaIds) {
-            this.newSelections = [];
-            this.removedSelections = [];
-            this.currentSelection = this.currentSelection.concat(mediaIds);
-            this.setForm(this.currentSelection);
+        addItem: function(id, item) {
+            this.sandbox.emit('husky.datagrid.documents.record.add', item);
+            this.manager.addDocument(this.options.id, id).then(function() {
+                // todo label
+            }.bind(this));
         },
 
-        deselectItem: function(id) {
-            // when an element is in current selection and was deselected
-            if (this.currentSelection.indexOf(id) > -1 && this.removedSelections.indexOf(id) === -1) {
-                this.removedSelections.push(id);
-            }
+        removeItem: function(itemId) {
+            this.manager.removeDocument(this.options.id, itemId).then(function() {
+                // todo label
+            }.bind(this));
+        },
 
-            if (this.newSelections.indexOf(id) > -1) {
-                this.newSelections.splice(this.newSelections.indexOf(id), 1);
-            }
+        showAddOverlay: function() {
+            this.sandbox.emit('sulu.media-selection-overlay.documents.open');
         },
 
         /**
-         * Processes an array of items
-         * @param items - array of items
+         * Removes all selected items and displays a label at the end
          */
-        addedItems: function(items) {
-            this.sandbox.util.foreach(items, function(item) {
-                if (!!item && !!item.id) {
-                    this.selectItem(item.id);
-                }
+        removeSelected: function() {
+            this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(ids) {
+                DeleteDialog.showDialog(ids, function() {
+                    this.manager.removeDocuments(this.options.id, ids).then(function() {
+                        //todo label
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
         },
 
-        selectItem: function(id) {
-            // add element when it is really new and not already selected
-            if (this.currentSelection.indexOf(id) < 0 && this.newSelections.indexOf(id) < 0) {
-                this.newSelections.push(id);
-            }
-
-            if (this.removedSelections.indexOf(id) > -1) {
-                this.removedSelections.splice(this.removedSelections.indexOf(id), 1);
-            }
+        /**
+         * Route to the edit of a given media
+         * @param media
+         */
+        routeToMedia: function(media) {
+            // todo root to media-edit with media.id
         },
 
-        save: function() {
-             if (this.sandbox.form.validate(this.form)) {
-                 this.sandbox.emit('sulu.tab.saving');
-                 this.manager.saveDocuments(this.data.id, this.newSelections, this.removedSelections).then(function(data) {
-                     this.sandbox.emit('sulu.tab.saved', data);
-                 }.bind(this));
-            }
+        /**
+         * Initializes the datagrid-list
+         */
+        initList: function() {
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsDocumentsFields', '/admin/api/contacts/medias/fields',
+                {
+                    el: this.$find('#list-toolbar-container'),
+                    instanceName: 'documents',
+                    template: this.getListTemplate(),
+                    hasSearch: true
+                },
+                {
+                    el: this.$find('#documents-list'),
+                    url: '/admin/api/contacts/' + this.options.id + '/medias?flat=true',
+                    searchInstanceName: 'documents',
+                    instanceName: 'documents',
+                    resultKey: 'media',
+                    actionCallback: this.routeToMedia.bind(this),
+                    searchFields: ['name', 'title', 'description'],
+                    viewOptions: {
+                        table: {
+                            selectItem: {
+                                type: 'checkbox'
+                            }
+                        }
+                    }
+                }
+            );
+        },
+
+        /**
+         * @returns {Array} buttons used by the list-toolbar
+         */
+        getListTemplate: function() {
+            return this.sandbox.sulu.buttons.get({
+                add: {
+                    options: {
+                        callback: this.showAddOverlay.bind(this)
+                    }
+                },
+                deleteSelected: {
+                    options: {
+                        callback: this.removeSelected.bind(this)
+                    }
+                }
+            });
+        },
+
+        /**
+         * Starts the overlay-component responsible for selecting the documents
+         */
+        startSelectionOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $container);
+
+            this.sandbox.start([{
+                name: 'media-selection-overlay@sulumedia',
+                options: {
+                    el: $container,
+                    instanceName: 'documents',
+                    preselectedIds: this.currentSelection
+                }
+            }]);
         }
     };
 });

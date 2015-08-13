@@ -27211,6 +27211,20 @@ define('services/husky/util',[],function() {
         return $.extend(true, parent, object);
     };
 
+    Util.prototype.arrayGetColumn = function(data, propertyName) {
+        if (Util.prototype.typeOf(data) === 'array' &&
+            data.length > 0 &&
+            Util.prototype.typeOf(data[0]) === 'object') {
+            var values = [];
+            Util.prototype.foreach(data, function(el) {
+                values.push(el[propertyName]);
+            }.bind(this));
+            return values;
+        } else {
+            return data;
+        }
+    };
+
     /**
      * Returns a parameter value from a given url
      * Found at http://stackoverflow.com/a/901144
@@ -32233,6 +32247,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
+             * used to remove multiple data-record
+             * @event husky.datagrid.record.remove
+             * @param {Array} array of ids of the record to remove
+             */
+            RECORDS_REMOVE = function() {
+                return this.createEventName('records.remove');
+            },
+
+            /**
              * listens on and merges one or more data-records with a given ones
              * @event husky.datagrid.records.change
              * @param {Object|Array} the new data-record. Must at least contain an id-property. Can also be an array of data-records
@@ -33126,6 +33149,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 // remove a data record
                 this.sandbox.on(RECORD_REMOVE.call(this), this.removeRecordHandler.bind(this));
 
+                // remove a data record
+                this.sandbox.on(RECORDS_REMOVE.call(this), this.removeRecordsHandler.bind(this));
+
                 // change an exsiting data-record
                 this.sandbox.on(RECORDS_CHANGE.call(this), this.changeRecordsHandler.bind(this));
 
@@ -33266,6 +33292,21 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 if (!!this.gridViews[this.viewId].removeRecord && !!recordId) {
                     this.gridViews[this.viewId].removeRecord(recordId);
                     this.removeRecordFromSelected(recordId);
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
+                }
+            },
+
+            /**
+             * Handles the row remove records event
+             */
+            removeRecordsHandler: function(recordIds) {
+                if (!!this.gridViews[this.viewId].removeRecord) {
+                    this.sandbox.util.foreach(recordIds, function(recordId) {
+                        if (!!recordId) {
+                            this.gridViews[this.viewId].removeRecord(recordId);
+                            this.removeRecordFromSelected(recordId);
+                        }
+                    }.bind(this));
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
@@ -50506,6 +50547,8 @@ define('husky_extensions/util',['services/husky/util'], function(Util) {
 			app.core.util.template = Util.template;
 
             app.core.util.escapeHtml = Util.escapeHtml;
+
+            app.core.util.arrayGetColumn = Util.arrayGetColumn;
         }
     };
 });

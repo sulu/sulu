@@ -139,7 +139,7 @@
 /* line 99, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
-  height: calc(100% - 40px);
+  height: calc(100% - 55px);
 }
 
 /* line 104, ../scss/modules/media-selection.scss */
@@ -219,14 +219,15 @@
 /* line 174, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+  padding-bottom: 20px;
 }
 
-/* line 178, ../scss/modules/media-selection.scss */
+/* line 179, ../scss/modules/media-selection.scss */
 .media-selection-overlay-header {
   white-space: nowrap;
 }
 
-/* line 182, ../scss/modules/media-selection.scss */
+/* line 183, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;
