@@ -11,18 +11,18 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
-use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 
 /**
  * Makes accounts available through a REST API.
@@ -131,7 +131,7 @@ abstract class AbstractMediaController extends RestController
     }
 
     /**
-     * Returns a view containing all media of an entity
+     * Returns a view containing all media of an entity.
      *
      * @param String $entityName
      * @param String $routeName
@@ -179,7 +179,7 @@ abstract class AbstractMediaController extends RestController
     }
 
     /**
-     * Returns the the media fields for the current entity
+     * Returns the the media fields for the current entity.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -190,7 +190,7 @@ abstract class AbstractMediaController extends RestController
 
     /**
      * Returns the field descriptors of the medias and adds a descriptor to connect
-     * the media with the current entity
+     * the media with the current entity.
      *
      * @param $entityName
      *
@@ -211,9 +211,9 @@ abstract class AbstractMediaController extends RestController
                         $entityName . '.medias',
                         null,
                         DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                    )
+                    ),
                 ]
-            )
+            ),
         ];
 
         return array_merge($additionalDescriptors, $mediaDescriptors);
