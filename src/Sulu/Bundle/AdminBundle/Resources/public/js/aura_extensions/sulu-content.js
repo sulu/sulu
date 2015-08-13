@@ -299,6 +299,20 @@ define(function() {
         },
 
         /**
+         * Displays the title of a component below the header
+         *
+         * @param {Object} title The title of the component
+         */
+        handleTitleMarker = function(title) {
+            if (typeof title === 'function') {
+                title = title.call(this);
+            }
+
+            var $title = this.sandbox.dom.createElement('<h2 class="component-title">' + title + '</h2>');
+            this.sandbox.dom.prepend(this.$el, $title);
+        },
+
+        /**
          * Loades and prepares the tabs-data for a header object
          * @param header {Object} the header object
          * @returns {Deffered} a deferred-object with a then method
@@ -325,6 +339,10 @@ define(function() {
         app.components.before('initialize', function() {
             if (!!this.header) {
                 handleHeaderMarker.call(this, this.header);
+            }
+
+            if (!!this.title) {
+                handleTitleMarker.call(this, this.title);
             }
 
             if (!!this.view) {

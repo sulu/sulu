@@ -99,6 +99,8 @@ define([
             }
         },
 
+        title: 'Contact List',
+
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
@@ -107,7 +109,7 @@ define([
         },
 
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
+            this.sandbox.dom.append(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'contacts', '/admin/api/contacts/fields',

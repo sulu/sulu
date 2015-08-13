@@ -904,25 +904,31 @@ h6 {
   margin: 0;
 }
 
-/* line 68, ../scss/typo.scss */
+/* line 66, ../scss/typo.scss */
+.component-title {
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 30px;
+}
+
+/* line 72, ../scss/typo.scss */
 .compoundedHeadlines :first-child {
   color: #52B6CA;
   font-size: 14px;
   margin: 0;
   line-height: 20px;
 }
-/* line 74, ../scss/typo.scss */
+/* line 78, ../scss/typo.scss */
 .compoundedHeadlines :nth-child(2) {
   margin-top: 0;
 }
 
-/* line 81, ../scss/typo.scss */
+/* line 85, ../scss/typo.scss */
 h1, h2, h3, h4, h5 {
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
-/* line 85, ../scss/typo.scss */
+/* line 89, ../scss/typo.scss */
 h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
   position: absolute;
   top: 50%;
@@ -934,22 +940,22 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   background-color: #ccc;
 }
 
-/* line 100, ../scss/typo.scss */
+/* line 104, ../scss/typo.scss */
 .bold {
   font-family: Helvetica, Arial, sans-serif !important;
 }
 
-/* line 109, ../scss/typo.scss */
+/* line 113, ../scss/typo.scss */
 .small-font {
   font-size: 12px;
 }
 
-/* line 113, ../scss/typo.scss */
+/* line 117, ../scss/typo.scss */
 .smaller-font {
   font-size: 10px;
 }
 
-/* line 117, ../scss/typo.scss */
+/* line 121, ../scss/typo.scss */
 .grey-font {
   color: #999;
 }
@@ -8098,7 +8104,7 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   vertical-align: middle;
   margin: auto;
-  background-color: transparent;
+  background-color: #fff;
   padding-left: 3px;
   text-decoration: none;
 }
