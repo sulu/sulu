@@ -89,7 +89,7 @@ define([
             };
         },
 
-        title: 'Account list',
+        title: 'Account list', // todo: use translation key
 
         templates: ['/admin/contact/template/account/list'],
 

@@ -99,7 +99,7 @@ define([
             }
         },
 
-        title: 'Contact List',
+        title: 'Contact List', // todo: use translation key
 
         templates: ['/admin/contact/template/contact/list'],
 

@@ -301,15 +301,23 @@ define(function() {
         /**
          * Displays the title of a component below the header
          *
-         * @param {Object} title The title of the component
+         * @param {Object} titleText The title of the component
          */
-        handleTitleMarker = function(title) {
-            if (typeof title === 'function') {
-                title = title.call(this);
-            }
-
-            var $title = this.sandbox.dom.createElement('<h2 class="component-title">' + title + '</h2>');
+        handleTitleMarker = function(titleText) {
+            var $title = this.sandbox.dom.createElement('<h2 class="content-title"></h2>');
             this.sandbox.dom.prepend(this.$el, $title);
+            setTitle.call(this, $title, titleText);
+
+            this.sandbox.on('sulu.content.title.hide', this.sandbox.dom.hide.bind(this, $title));
+            this.sandbox.on('sulu.content.title.show', this.sandbox.dom.show.bind(this, $title));
+            this.sandbox.on('sulu.content.title.changed', setTitle.bind(this, $title, titleText));
+        },
+
+        setTitle = function($title, value){
+            if (typeof value === 'function') {
+                value = value.call(this);
+            }
+            this.sandbox.dom.html($title, value);
         },
 
         /**
@@ -328,15 +336,13 @@ define(function() {
                 loaded.resolve(tabsData);
             }.bind(this));
             return loaded;
-        };
+        },
 
-    return function(app) {
         /**
-         * Gets executed every time BEFORE a component gets initialized.
          * Checks various properties (header, view, layout) of an component
          * and executes the related handler.
          */
-        app.components.before('initialize', function() {
+        executeHandlers = function() {
             if (!!this.header) {
                 handleHeaderMarker.call(this, this.header);
             }
@@ -357,6 +363,29 @@ define(function() {
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);
             }
+        };
+
+    return function(app) {
+        /**
+         * Gets executed every time BEFORE a component gets initialized.
+         * Loads data if needed and start executing component handlers
+         */
+        app.components.before('initialize', function() {
+            //load view data before rendering tabs
+            var dataLoaded = this.sandbox.data.deferred();
+            if (!!this.loadComponentData && typeof this.loadComponentData === 'function') {
+                dataLoaded = this.loadComponentData.call(this);
+            } else {
+                dataLoaded.resolve();
+            }
+
+            dataLoaded.then(function(data){
+                if (!!data){
+                    this.data = data;
+                }
+
+                executeHandlers.call(this);
+            }.bind(this));
         });
     };
 });

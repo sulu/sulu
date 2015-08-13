@@ -69,26 +69,24 @@ define([
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            
+
             this.form = '#contact-form';
             this.formContactFields = '#contact-fields';
             this.autoCompleteInstanceName = 'contacts-';
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
 
-            AccountManager.loadOrNew(this.options.id).then(function(data) {
-                this.data = data;
-                this.render();
-                this.listenForChange();
+            this.render();
+            this.listenForChange();
 
-                if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
-                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
-                }
-            }.bind(this));
+            if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('account-detail')) {
+                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+            }
         },
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
+            this.sandbox.emit('sulu.content.title.show');
             this.cleanUp();
         },
 
@@ -99,9 +97,9 @@ define([
         render: function() {
             var data, excludeItem, options;
 
-            this.sandbox.emit(this.options.disablerToggler + '.change', !!this.data.disabled);
+            this.sandbox.emit(this.options.disablerToggler + '.change', !!this.options.data.disabled);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
-
+            this.sandbox.emit('sulu.content.title.hide');
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
@@ -112,8 +110,8 @@ define([
             data = this.initContactData();
 
             excludeItem = [];
-            if (!!this.data.id) {
-                excludeItem.push({id: this.data.id});
+            if (!!this.options.data.id) {
+                excludeItem.push({id: this.options.data.id});
             }
 
             options = Config.get('sulucontact.components.autocomplete.default.account');
@@ -147,8 +145,8 @@ define([
          */
         setTags: function() {
             var uid = this.sandbox.util.uniqueId();
-            if (this.data.id) {
-                uid += '-' + this.data.id;
+            if (this.options.data.id) {
+                uid += '-' + this.options.data.id;
             }
             this.autoCompleteInstanceName += uid;
 
@@ -239,7 +237,7 @@ define([
         },
 
         initContactData: function() {
-            var contactJson = this.data;
+            var contactJson = this.options.data;
 
             this.sandbox.util.foreach(fields, function(field) {
                 if (!contactJson.hasOwnProperty(field)) {
@@ -367,7 +365,7 @@ define([
          * @param disable {Boolean} true to disable, false to enable
          */
         toggleDisableAccount: function(disable) {
-            this.data.disabled = !!disable;
+            this.options.data.disabled = !!disable;
             this.sandbox.emit('sulu.tab.dirty');
         },
 
@@ -395,7 +393,7 @@ define([
 
         save: function() {
             if (this.sandbox.form.validate(this.form)) {
-                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(this.form));
+                var data = this.sandbox.util.extend(false, {}, this.options.data, this.sandbox.form.getData(this.form));
                 if (!data.id) {
                     delete data.id;
                 }
@@ -406,9 +404,9 @@ define([
                 };
                 this.sandbox.emit('sulu.tab.saving');
                 AccountManager.save(data).then(function(savedData) {
-                    this.data = savedData;
+                    this.options.data = savedData;
                     this.initContactData();
-                    this.setFormData(this.data);
+                    this.setFormData(this.options.data);
                     this.sandbox.emit('sulu.tab.saved', savedData);
                 }.bind(this));
             }

@@ -27,7 +27,11 @@ define([
                 tabs: {
                     url: '/admin/content-navigations?alias=contact',
                     options: {
-                        disablerToggler: 'husky.toggler.sulu-toolbar'
+                        disablerToggler: 'husky.toggler.sulu-toolbar',
+                        data: function() {
+                            // this.data is set by sulu-content.js with data from loadComponentData()
+                            return this.sandbox.util.extend(false, {}, this.data);
+                        }.bind(this)
                     }
                 },
                 toolbar: {
@@ -51,6 +55,24 @@ define([
             return config;
         },
 
+        title: function() {
+            return this.data.firstName + ' ' + this.data.lastName;
+        },
+
+        /**
+         * Load contact data to given options.id
+         * Method is called from sulu-content when initializing tabs
+         * Loaded contact is stored to this.data
+         * @returns {*}
+         */
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            ContactManager.loadOrNew(this.options.id).then(function(data) {
+                promise.resolve(data);
+            });
+            return promise;
+        },
+
         initialize: function() {
             this.bindCustomEvents();
         },
@@ -62,8 +84,12 @@ define([
             this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
+            this.sandbox.on('sulu.tab.data.changed', this.dataChanged.bind(this));
         },
 
+        /**
+         * Show delete-confirm dialog and if confirmed, delete current contact
+         */
         deleteContact: function() {
             DeleteDialog.showDialog([this.options.id], function(){
                 ContactManager.delete(this.options.id).then(function() {
@@ -93,6 +119,15 @@ define([
             this.saveTab().then(function(savedData) {
                 this.afterSave(action, savedData);
             }.bind(this));
+        },
+
+        /**
+         * Update contact data which was changed in a tab
+         * @param newData new contact data
+         */
+        dataChanged: function(newData) {
+            this.data = newData;
+            this.sandbox.emit('sulu.content.title.changed');
         },
 
         /**

@@ -27,7 +27,8 @@ define([
                 tabs: {
                     url: '/admin/content-navigations?alias=account',
                     options: {
-                        disablerToggler: 'husky.toggler.sulu-toolbar'
+                        disablerToggler: 'husky.toggler.sulu-toolbar',
+                        data: this.data // this.data is set by sulu-content.js with data from loadComponentData()
                     }
                 },
                 toolbar: {
@@ -49,6 +50,18 @@ define([
                 };
             }
             return config;
+        },
+
+        title: function() {
+            return this.data.name;
+        },
+
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            AccountManager.loadOrNew(this.options.id).then(function(data) {
+                promise.resolve(data);
+            });
+            return promise;
         },
 
         initialize: function() {
