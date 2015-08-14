@@ -11,12 +11,10 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
+use Prophecy\Argument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Prophecy\Argument;
 
 class OrderSubscriberTest extends SubscriberTestCase
 {
@@ -51,12 +49,12 @@ class OrderSubscriberTest extends SubscriberTestCase
         $childDocument4 = new TestOrderDocument(10);
 
         $this->inspector->getParent($document->reveal())->willReturn($parentDocument->reveal());
-        $this->inspector->getChildren($parentDocument->reveal())->willReturn(array(
+        $this->inspector->getChildren($parentDocument->reveal())->willReturn([
             $childDocument1,
             $childDocument2,
             $childDocument3,
-            $childDocument4
-        ));
+            $childDocument4,
+        ]);
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document);
@@ -69,11 +67,11 @@ class OrderSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should return early on REORDER if the document is not an instance of OrderBehavior
+     * It should return early on REORDER if the document is not an instance of OrderBehavior.
      */
     public function testReorderNotImplementing()
     {
-        $document = new \stdClass;
+        $document = new \stdClass();
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document);
