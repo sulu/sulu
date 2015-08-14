@@ -70,19 +70,6 @@ interface MediaManagerInterface
     public function getByIds(array $ids, $locale);
 
     /**
-     * Takes an array of data with an array-column named by $thumbnailKey
-     * which contains media-ids. This method then replaces the ids with
-     * the url to the thumbnails.
-     *
-     * @param $data
-     * @param $thumbnailKey
-     * @param $locale
-     *
-     * @return array
-     */
-    public function addThumbnails($data, $thumbnailKey, $locale);
-
-    /**
      * Creates a new media or overrides an existing one.
      *
      * @param UploadedFile $uploadedFile
@@ -138,6 +125,15 @@ interface MediaManagerInterface
      * @return mixed
      */
     public function increaseDownloadCounter($fileVersionId);
+
+    /**
+     * Takes an array of media ids and returns an array of formats and urls.
+     *
+     * @param array $ids
+     *
+     * @return array
+     */
+    public function getFormatUrls($ids, $locale);
 
     /**
      * Adds thumbnails and image urls.
