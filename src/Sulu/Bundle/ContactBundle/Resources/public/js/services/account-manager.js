@@ -59,6 +59,28 @@ define([
         },
 
         /**
+         * Removes media from an account
+         * @param mediaId media to delete
+         * @param accountId The account to delete the medias from
+         * @private
+         */
+        removeDocument = function(accountId, mediaId) {
+            var promise = $.Deferred();
+
+            util.ajax({
+                url: '/admin/api/accounts/' + accountId + '/medias/' + mediaId,
+                type: 'DELETE',
+
+                success: function() {
+                    mediator.emit('sulu.contacts.account.document.removed', accountId, mediaId);
+                    promise.resolve();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
          * Removes account contact relation
          * @param accountId The id of the account to delete the contacts from
          * @param contactId The id of the account-contact to delete
@@ -311,7 +333,6 @@ define([
          * Removes medias from an account
          * @param mediaIds Array of medias to delete
          * @param accountId The account to delete the medias from
-         * @private
          */
         removeDocuments: function(accountId, mediaIds) {
             if (!$.isArray(mediaIds)) {
@@ -322,7 +343,7 @@ define([
                 promise = $.Deferred();
 
             util.each(mediaIds, function(index, id) {
-                requests.push(AccountManager.prototype.removeDocument(accountId, id, true));
+                requests.push(removeDocument(accountId, id));
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
@@ -335,36 +356,9 @@ define([
         },
 
         /**
-         * Removes media from an account
-         * @param mediaId media to delete
-         * @param accountId The account to delete the medias from
-         * @param noLabel Iff true no label is displayed
-         * @private
-         */
-        removeDocument: function(accountId, mediaId, noLabel) {
-            var promise = $.Deferred();
-
-            util.ajax({
-                url: '/admin/api/accounts/' + accountId + '/medias/' + mediaId,
-                type: 'DELETE',
-
-                success: function() {
-                    mediator.emit('sulu.contacts.document.removed', accountId, mediaId);
-                    if (!noLabel) {
-                        mediator.emit('sulu.labels.success.show', 'contact.accounts.document-removed');
-                    }
-                    promise.resolve();
-                }.bind(this)
-            });
-
-            return promise;
-        },
-
-        /**
          * Adds media to an account
          * @param mediaId media to add
          * @param accountId The account to add the medias to
-         * @private
          */
         addDocument: function(accountId, mediaId) {
             var promise = $.Deferred();
@@ -375,7 +369,7 @@ define([
                 type: 'POST',
 
                 success: function() {
-                    mediator.emit('sulu.contacts.document.added', accountId, mediaId);
+                    mediator.emit('sulu.contacts.account.document.added', accountId, mediaId);
                     mediator.emit('sulu.labels.success.show', 'contact.accounts.document-added');
                     promise.resolve();
                 }.bind(this)

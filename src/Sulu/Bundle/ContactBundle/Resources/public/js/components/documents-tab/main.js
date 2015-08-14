@@ -70,7 +70,7 @@ define([
                 this.sandbox.emit('husky.toolbar.documents.item.' + postfix, 'deleteSelected', false);
             }, this);
 
-            this.sandbox.on('sulu.contacts.document.removed', function(id, mediaId) {
+            this.sandbox.on('sulu.contacts.' + this.options.type + '.document.removed', function(id, mediaId) {
                 this.sandbox.emit('husky.datagrid.documents.record.remove', mediaId);
             }.bind(this));
 
@@ -80,15 +80,15 @@ define([
 
         addItem: function(id, item) {
             if (this.currentSelection.indexOf(id) === -1) {
-                this.sandbox.emit('husky.datagrid.documents.record.add', item);
                 this.manager.addDocument(this.options.id, id).then(function() {
+                    this.sandbox.emit('husky.datagrid.documents.record.add', item);
                     this.currentSelection.push(id);
                 }.bind(this));
             }
         },
 
         removeItem: function(itemId) {
-            this.manager.removeDocument(this.options.id, itemId).then(function() {
+            this.manager.removeDocuments(this.options.id, itemId).then(function() {
                 this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, [itemId]);
             }.bind(this));
         },

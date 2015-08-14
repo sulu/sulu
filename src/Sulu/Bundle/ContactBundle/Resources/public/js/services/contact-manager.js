@@ -46,6 +46,28 @@ define([
                 });
 
                 return promise;
+            },
+
+            /**
+             * Removes a media from an contact
+             * @param mediaId media to delete
+             * @param contactId The contact to delete the media from
+             * @private
+             */
+            removeDocument = function(contactId, mediaId) {
+                var promise = $.Deferred();
+
+                util.ajax({
+                    url: '/admin/api/contacts/' + contactId + '/medias/' + mediaId,
+                    type: 'DELETE',
+
+                    success: function() {
+                        mediator.emit('sulu.contacts.contact.document.removed', contactId, mediaId);
+                        promise.resolve();
+                    }.bind(this)
+                });
+
+                return promise;
             };
 
 
@@ -203,7 +225,6 @@ define([
              * Remove medias from an contact
              * @param mediaIds (Array) of medias to delete
              * @param contactId The contact to delete the medias from
-             * @private
              */
             removeDocuments: function(contactId, mediaIds) {
                 if (!$.isArray(mediaIds)) {
@@ -214,7 +235,7 @@ define([
                     promise = $.Deferred();
 
                 util.each(mediaIds, function(index, id) {
-                    requests.push(ContactManager.prototype.removeDocument(contactId, id, true));
+                    requests.push(removeDocument(contactId, id));
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
@@ -227,36 +248,9 @@ define([
             },
 
             /**
-             * Removes a media from an contact
-             * @param mediaId media to delete
-             * @param contactId The contact to delete the media from
-             * @param noLabel Iff true doesn't display a label
-             * @private
-             */
-            removeDocument: function(contactId, mediaId, noLabel) {
-                var promise = $.Deferred();
-
-                util.ajax({
-                    url: '/admin/api/contacts/' + contactId + '/medias/' + mediaId,
-                    type: 'DELETE',
-
-                    success: function() {
-                        mediator.emit('sulu.contacts.document.removed', contactId, mediaId);
-                        if (!noLabel) {
-                            mediator.emit('sulu.labels.success.show', 'contact.contacts.document-removed');
-                        }
-                        promise.resolve();
-                    }.bind(this)
-                });
-
-                return promise;
-            },
-
-            /**
              * Adds a media to an contact
              * @param mediaId media to add
              * @param contactId The contact to add the media to
-             * @private
              */
             addDocument: function(contactId, mediaId) {
                 var promise = $.Deferred();
@@ -267,7 +261,7 @@ define([
                     type: 'POST',
 
                     success: function() {
-                        mediator.emit('sulu.contacts.document.added', contactId, mediaId);
+                        mediator.emit('sulu.contacts.contact.document.added', contactId, mediaId);
                         mediator.emit('sulu.labels.success.show', 'contact.contacts.document-added');
                         promise.resolve();
                     }.bind(this)
