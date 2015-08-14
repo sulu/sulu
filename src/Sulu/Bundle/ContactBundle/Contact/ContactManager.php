@@ -402,24 +402,6 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Returns all media for a contact with a given id.
-     *
-     * @param $id
-     * @param $locale
-     *
-     * @return Media[]
-     */
-    public function getMediaById($id, $locale)
-    {
-        $contact = $this->contactRepository->find($id);
-        if (!$contact) {
-            return [];
-        }
-
-        return $this->getApiObject($contact, $locale)->getMedias();
-    }
-
-    /**
      * Returns an api entity for an doctrine entity.
      *
      * @param $contact

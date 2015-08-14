@@ -169,26 +169,6 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
-     * Returns all media for an account with a given id.
-     *
-     * @param $id
-     * @param $locale
-     *
-     * @return Media[]
-     *
-     * @throws EntityNotFoundException
-     */
-    public function getMediaById($id, $locale)
-    {
-        $account = $this->accountRepository->findAccountById($id);
-        if (!$account) {
-            throw new EntityNotFoundException($this->accountRepository->getClassName(), $id);
-        }
-
-        return $this->accountFactory->createApiEntity($account, $locale)->getMedias();
-    }
-
-    /**
      * Gets account by id - can include relations.
      *
      * @param $id

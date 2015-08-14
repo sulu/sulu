@@ -140,13 +140,13 @@ abstract class AbstractMediaController extends RestController
      *
      * @param String $entityName
      * @param String $routeName
-     * @param AbstractContactManager $entityManager
+     * @param AbstractContactManager $contactManager
      * @param String $id
      * @param Boolean $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function getMultipleView($entityName, $routeName, AbstractContactManager $entityManager, $id, $request)
+    protected function getMultipleView($entityName, $routeName, AbstractContactManager $contactManager, $id, $request)
     {
         $locale = $this->getUser()->getLocale();
 
@@ -175,7 +175,7 @@ abstract class AbstractMediaController extends RestController
                 $listBuilder->count()
             );
         } else {
-            $media = $entityManager->getMediaById($id, $locale);
+            $media = $contactManager->getById($id, $locale)->getMedias();
             $list = new CollectionRepresentation($media, self::$mediaEntityKey);
         }
         $view = $this->view($list, 200);
@@ -190,9 +190,9 @@ abstract class AbstractMediaController extends RestController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFieldsView($entityname)
+    protected function getFieldsView($entityName)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($entityname)), 200));
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors($entityName)), 200));
     }
 
     /**
