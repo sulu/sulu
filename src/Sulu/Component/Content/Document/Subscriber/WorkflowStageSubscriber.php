@@ -20,6 +20,8 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class WorkflowStageSubscriber implements EventSubscriberInterface
 {

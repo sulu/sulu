@@ -19,6 +19,7 @@ use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Create a property with a value corresponding to the position of the node
