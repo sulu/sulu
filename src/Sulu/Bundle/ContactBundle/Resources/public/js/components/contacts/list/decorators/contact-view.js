@@ -28,6 +28,9 @@ define(function() {
 
             itemHeadClass: 'item-head',
             itemInfoClass: 'item-info',
+
+            avatarThumbnailFormat: '100x100',
+            defaultAvatarUrl: '/bundles/sulucontact/img/avatar_sample.png'
         },
 
         templates = {
@@ -35,7 +38,7 @@ define(function() {
                 '<div class="contact-item">',
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
-                '           <div class="head-image ' + constants.actionNavigatorClass + '" style="background-image: url(\'<%= picture %>\')"></div>',
+                '           <div class="head-image ' + constants.actionNavigatorClass + '" style="background-image: url(\'<%= avatar %>\')"></div>',
                 '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
@@ -133,10 +136,10 @@ define(function() {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
-                var id, picture, name, isSuluUser, location, mail;
+                var id, avatar, name, isSuluUser, location, mail;
 
                 id = record['id'];
-                picture = this.getContactThumbnailUrl(record);
+                avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : constants.defaultAvatarUrl;
                 isSuluUser = Math.random() < .5; //TODO: use api information
                 mail = record['mainEmail'];
 
@@ -145,24 +148,8 @@ define(function() {
                 location = concatFields([record['city'], record['countryCode']], ', ');
 
                 // pass the found data to a render method
-                this.renderItem(id, picture, name, isSuluUser, location, mail);
+                this.renderItem(id, avatar, name, isSuluUser, location, mail);
             }.bind(this));
-        },
-
-        /**
-         * Returns the url to the downsized contact-picture of the given contact-record
-         * @param record
-         * @returns url
-         */
-        getContactThumbnailUrl: function(record) {
-            var result = this.datagrid.processContentFilter.call(
-                this.datagrid,
-                'thumbnails',
-                record['thumbnails'],
-                this.datagrid.types.THUMBNAILS,
-                '100x100'
-            );
-            return result.url;
         },
 
         /**
@@ -174,12 +161,12 @@ define(function() {
          * @param description {String} the thumbnail description to render
          * @param record {Object} the original data record
          */
-        renderItem: function(id, picture, name, isSuluUser, location, mail) {
+        renderItem: function(id, avatarUrl, name, isSuluUser, location, mail) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
-                    picture: picture,
                     name: this.sandbox.util.cropTail(String(name), 32),
                     isSuluUser: isSuluUser,
+                    avatar: avatarUrl
                 })
             );
 

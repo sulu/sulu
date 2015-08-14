@@ -24,7 +24,10 @@ define([
             bankAccountAddId: '#bank-account-add',
             addAddressWrapper: '.grid-row',
             addBankAccountsWrapper: '.grid-row',
-            editFormSelector: '#contact-edit-form'
+            editFormSelector: '#contact-edit-form',
+            avatarImageId: '#avatar',
+            avatarDropzoneSelector: '#avatar-dropzone',
+            avatarThumbnailFormat: '400x400'
         },
 
         customTemplates = {
@@ -114,6 +117,7 @@ define([
             var formData = this.initContactData();
             this.companyInstanceName = 'companyContact' + formData.id;
             this.initForm(formData);
+            this.initAvatarContainer(formData);
             this.setTags(formData);
             this.bindCustomEvents();
             this.bindTagEvents(formData);
@@ -143,6 +147,35 @@ define([
                     }
                 ]);
             }.bind(this));
+        },
+
+        initAvatarContainer: function(data) {
+            this.sandbox.start([
+                {
+                    name: 'dropzone@husky',
+                    options: {
+                        el: constants.avatarDropzoneSelector,
+                        instanceName: 'contact-avatar',
+                        titleKey: '',
+                        descriptionKey: 'Drop or click to change avatar', // todo: use translation key
+                        url: '/admin/api/media?collection=1', // todo: use system collection
+                        skin: 'overlay',
+                        method: 'POST',
+                        paramName: 'fileVersion',
+                        showOverlay: false,
+                        maxFiles: 1
+                    }
+                }
+            ]);
+
+            if (!!data.avatar) {
+                this.updateContactAvater(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+            }
+        },
+
+        updateContactAvater: function(mediaId, url) {
+            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
+            this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
         },
 
         bindTagEvents: function(data) {
@@ -190,7 +223,7 @@ define([
                 this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();
             }.bind(this)).fail(function(error) {
-                this.sandbox.logger.error("An error occured when setting data!", error);
+                this.sandbox.logger.error('An error occured when setting data!', error);
             }.bind(this));
         },
 
@@ -291,6 +324,11 @@ define([
                 'api/contact/positions');
 
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
+
+            this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
+                this.updateContactAvater(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.sandbox.emit('sulu.tab.dirty');
+            }, this);
         },
 
         /**
@@ -395,6 +433,9 @@ define([
                     delete data.id;
                 }
                 data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
+                data.avatar = {
+                    id: this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
+                };
 
                 // FIXME auto complete in mapper
                 // only get id, if auto-complete is not empty:
@@ -491,7 +532,7 @@ define([
                     }
                 }.bind(this));
 
-                // enabel position dropdown only if something got selected
+                // enable position dropdown only if something got selected
                 this.companySelected = 'husky.auto-complete.' + this.companyInstanceName + '.select';
                 this.sandbox.on(this.companySelected, function() {
                     this.enablePositionDropdown(true);
