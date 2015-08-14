@@ -86,7 +86,7 @@
 
     &.no-transitions {
         @include transition(none);
-        #content {
+        #content, .page {
             @include transition(none);
         }
     }

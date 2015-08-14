@@ -879,7 +879,7 @@ h2 {
   margin: 0 0 20px 0;
 }
 /* line 44, ../scss/typo.scss */
-h2 .content-title {
+h2.content-title {
   border-bottom: 2px solid #ddd;
   margin-bottom: 30px;
 }

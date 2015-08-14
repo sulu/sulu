@@ -66,8 +66,7 @@ define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], f
                 limit: 25,
                 fields: [
                     {
-                        id: 'id',
-                        width: '40px'
+                        id: 'id'
                     },
                     {
                         id: 'fullName'

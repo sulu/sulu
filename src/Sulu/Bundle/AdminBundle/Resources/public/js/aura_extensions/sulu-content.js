@@ -360,9 +360,10 @@ define(function() {
                 if (!!data) {
                     this.data = data;
                 }
-
                 executeHandlers.call(this);
             }.bind(this));
+
+            return dataLoaded;
         });
     };
 });
