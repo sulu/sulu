@@ -584,10 +584,6 @@
                 <source>contact.accounts.main-account-set</source>
                 <target>Hauptkontakt festgelegt</target>
             </trans-unit>
-            <trans-unit id="435a1473d78660a3essds2e7134a8d5a" resname="contact.accounts.document-removed">
-                <source>contact.accounts.document-removed</source>
-                <target>Dokument entfernt</target>
-            </trans-unit>
             <trans-unit id="425a1473d78660a3essds2e7134a8d5a" resname="contact.contacts.deleted">
                 <source>contact.contacts.deleted</source>
                 <target>Person gelöscht</target>
@@ -599,10 +595,6 @@
             <trans-unit id="425a1473d78660c3essds2e6134a8d5a" resname="contact.contacts.documents-removed">
                 <source>contact.contacts.documents-removed</source>
                 <target>Dokumente entfernt</target>
-            </trans-unit>
-            <trans-unit id="425a1479d78660c3essds2e6134a8d5a" resname="contact.contacts.document-removed">
-                <source>contact.contacts.document-removed</source>
-                <target>Dokument entfernt</target>
             </trans-unit>
             <trans-unit id="435b1472d76660a3essds2e9335a8d5d" resname="contact.contacts.document-added">
                 <source>contact.contacts.document-added</source>
