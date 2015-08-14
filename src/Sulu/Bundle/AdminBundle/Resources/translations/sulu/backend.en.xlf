@@ -900,6 +900,10 @@
                 <source>public.add-new</source>
                 <target>Add new</target>
             </trans-unit>
+            <trans-unit id="b500b52dde1354cc4132c0b4820e28ada" resname="public.avatar">
+                <source>public.avatar</source>
+                <target>Avatar</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
