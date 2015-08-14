@@ -91,7 +91,8 @@ define([
 
         header: {
             noBack: true,
-            title: 'Contact List', // todo: use translation key
+            title: 'contact.contacts.title',
+
             toolbar: {
                 buttons: {
                     add: {},

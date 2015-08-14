@@ -79,7 +79,7 @@ define([
         header: function() {
             return {
                 noBack: true,
-                title: 'Account list', // todo: use translation key
+                title: 'contact.accounts.title',
 
                 toolbar: {
                     buttons: {

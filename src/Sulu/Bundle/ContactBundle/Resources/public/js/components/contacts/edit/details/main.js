@@ -492,9 +492,7 @@ define([
                 }.bind(this));
 
                 // enabel position dropdown only if something got selected
-                this.companySelected = 'husky.auto-complete.' +
-                    this.companyInstanceName +
-                    '.select';
+                this.companySelected = 'husky.auto-complete.' + this.companyInstanceName + '.select';
                 this.sandbox.on(this.companySelected, function() {
                     this.enablePositionDropdown(true);
                 }.bind(this));

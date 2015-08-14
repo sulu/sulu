@@ -25,7 +25,7 @@ define([
         header: function() {
             var config = {
                 title: function() {
-                    return this.data.firstName + ' ' + this.data.lastName;
+                    return this.data.fullName;
                 }.bind(this),
                 tabs: {
                     url: '/admin/content-navigations?alias=contact',
