@@ -190,7 +190,7 @@ abstract class AbstractMediaController extends RestController
     /**
      * Returns the the media fields for the current entity.
      *
-     * @param $entityname
+     * @param $entityName
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -63,7 +63,7 @@ define([
 
         deleteCallback = function(ids){
             DeleteDialog.showDialog(ids, function() {
-                    ContactManager.delete(ids);
+                ContactManager.delete(ids);
             }.bind(this));
         },
 
