@@ -103,6 +103,22 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $this->fieldDescriptors = [];
 
+        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
+            'id',
+            'avatar',
+            self::$mediaEntityName,
+            'public.avatar',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
+                ),
+            ],
+            false,
+            false,
+            'thumbnails'
+        );
+
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             [
                 new DoctrineFieldDescriptor(
@@ -253,22 +269,6 @@ class ContactController extends RestController implements ClassResourceInterface
             true,
             false,
             'integer'
-        );
-
-        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
-            'id',
-            'avatar',
-            self::$mediaEntityName,
-            'public.avatar',
-            [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
-                ),
-            ],
-            false,
-            false,
-            'thumbnails'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
