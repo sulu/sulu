@@ -267,8 +267,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 ),
             ],
             false,
-            true,
-            'integer'
+            false,
+            'thumbnails'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
