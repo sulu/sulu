@@ -155,6 +155,8 @@ class BasePageDocument implements
      */
     protected $locale;
 
+    protected $originalLocale;
+
     /**
      * @var ChildrenCollection
      */
@@ -305,6 +307,9 @@ class BasePageDocument implements
      */
     public function setRedirectType($redirectType)
     {
+        if ($redirectType === null) {
+            die('asd');
+        }
         $this->redirectType = $redirectType;
     }
 

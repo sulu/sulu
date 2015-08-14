@@ -15,14 +15,10 @@
         </service>
 
         <service id="sulu_navigationContext.document.subscriber.navigation_context" class="Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_redirect_type.document.subscriber.redirect_type" class="Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
-            <argument type="service" id="sulu_document_manager.proxy_factory" />
-            <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -77,7 +73,6 @@
         </service>
 
         <service id="sulu_document_manager.document.subscriber.order" class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -89,9 +84,6 @@
         </service>
 
         <service id="sulu_document_manager.document.subscriber.route" class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
-            <argument type="service" id="sulu_document_manager.proxy_factory" />
-            <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 

@@ -126,11 +126,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('sulu_io', $result->getPropertyValue('article'));
         $this->assertEmpty($result->getNavContexts());
 
-        $root = $this->session->getRootNode();
         $route = $this->documentManager->find('/cmf/sulu_io/routes/de/news/test', 'de');
-
         $page = $route->getTargetDocument();
 
+        $this->assertNotNull($page);
         $this->assertEquals('Testname', $page->getTitle());
         $this->assertEquals('sulu_io', $page->getStructure()->getProperty('article')->getValue());
         $this->assertEquals(['tag1', 'tag2'], $page->getStructure()->getProperty('tags')->getValue());
@@ -2563,7 +2562,7 @@ class ContentMapperTest extends SuluTestCase
         $structure1 = $this->mapper->save($data1, 'default', 'sulu_io', 'en', 1);
 
         $data2 = [
-            'title' => 'Test',
+            'title' => 'Test 1',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'internal_link' => $structure1->getUuid(),
         ];
