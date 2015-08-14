@@ -479,20 +479,6 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Takes an array of contacts-data (with at least an id property) and
-     * adds the corresponding avatar-data to the array.
-     *
-     * @param $contacts
-     * @param $locale
-     *
-     * @return array
-     */
-    public function addAvatars($contacts, $locale)
-    {
-        return $this->mediaManager->addThumbnails($contacts, 'avatar', $locale);
-    }
-
-    /**
      * Sets a media with a given id as the avatar of a given contact.
      *
      * @param Contact $contact

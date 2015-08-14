@@ -483,7 +483,7 @@ class ContactController extends RestController implements ClassResourceInterface
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
             $listResponse = $listBuilder->execute();
-            $listResponse = $this->getContactManager()->addAvatars($listResponse, $locale);
+            $listResponse = $this->addAvatars($listResponse, $locale);
 
             $list = new ListRepresentation(
                 $listResponse,
@@ -686,6 +686,30 @@ class ContactController extends RestController implements ClassResourceInterface
     public function getSecurityContext()
     {
         return 'sulu.contact.people';
+    }
+
+    /**
+     * Takes an array of contacts and resets the avatar containing the media id with
+     * the actual urls to the avatars thumbnail.
+     *
+     * @param array $contacts
+     * @param String $locale
+     *
+     * @return array
+     */
+    private function addAvatars($contacts, $locale)
+    {
+        $ids = array_filter(array_column($contacts, 'avatar'));
+        $avatars = $this->get('sulu_media.media_manager')->getFormatsAndUrls($ids, $locale);
+        $i = 0;
+        foreach ($contacts as $key => $contact) {
+            if (array_key_exists('avatar', $contact) && $contact['avatar']) {
+                $contacts[$key]['avatar'] = $avatars[$i];
+                $i += 1;
+            }
+        }
+
+        return $contacts;
     }
 
     // TODO: Use schema validation see:
