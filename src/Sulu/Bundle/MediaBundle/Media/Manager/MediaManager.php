@@ -121,17 +121,17 @@ class MediaManager implements MediaManagerInterface
     public $count;
 
     /**
-     * @param MediaRepositoryInterface      $mediaRepository
+     * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepositoryInterface $collectionRepository
-     * @param UserRepositoryInterface       $userRepository
-     * @param EntityManager                 $em
-     * @param StorageInterface              $storage
-     * @param FileValidatorInterface        $validator
-     * @param FormatManagerInterface        $formatManager
-     * @param TagManagerInterface           $tagManager
-     * @param TypeManagerInterface          $typeManager
-     * @param string                        $downloadPath
-     * @param string                        $maxFileSize
+     * @param UserRepositoryInterface $userRepository
+     * @param EntityManager $em
+     * @param StorageInterface $storage
+     * @param FileValidatorInterface $validator
+     * @param FormatManagerInterface $formatManager
+     * @param TagManagerInterface $tagManager
+     * @param TypeManagerInterface $typeManager
+     * @param string $downloadPath
+     * @param string $maxFileSize
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
@@ -345,12 +345,22 @@ class MediaManager implements MediaManagerInterface
      */
     public function getById($id, $locale)
     {
+        $mediaEntity = $this->getEntityById($id);
+
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEntityById($id)
+    {
         $mediaEntity = $this->mediaRepository->findMediaById($id);
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
 
-        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        return $mediaEntity;
     }
 
     /**
@@ -425,11 +435,7 @@ class MediaManager implements MediaManagerInterface
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
-        $mediaEntity = $this->mediaRepository->findMediaById($data['id']);
-        if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
-        }
-
+        $mediaEntity = $this->getEntityById($data['id']);
         $mediaEntity->setChanger($user);
         $mediaEntity->setChanged(new \DateTime());
 
@@ -528,8 +534,8 @@ class MediaManager implements MediaManagerInterface
     /**
      * Prepares data.
      *
-     * @param UploadedFile  $uploadedFile
-     * @param array         $data
+     * @param UploadedFile $uploadedFile
+     * @param array $data
      * @param UserInterface $user
      *
      * @return Media
@@ -718,11 +724,7 @@ class MediaManager implements MediaManagerInterface
      */
     public function delete($id)
     {
-        $mediaEntity = $this->mediaRepository->findMediaById($id);
-
-        if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $id . ' not found.');
-        }
+        $mediaEntity = $this->getEntityById($id);
 
         /** @var File $file */
         foreach ($mediaEntity->getFiles() as $file) {
@@ -774,6 +776,26 @@ class MediaManager implements MediaManagerInterface
             ->getQuery();
 
         $query->execute();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatUrls($ids, $locale)
+    {
+        $mediaArray = $this->getByIds($ids, $locale);
+        $formatUrls = [];
+        foreach ($mediaArray as $media) {
+            array_push($formatUrls, $this->formatManager->getFormats(
+                $media->getId(),
+                $media->getName(),
+                $media->getStorageOptions(),
+                $media->getVersion(),
+                $media->getMimeType()
+            ));
+        }
+
+        return $formatUrls;
     }
 
     /**

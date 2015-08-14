@@ -15,14 +15,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\ContactBundle\Api\Contact as ApiContact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -47,6 +40,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected static $entityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $countryEntityName = 'SuluContactBundle:Country';
@@ -129,7 +123,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             'string',
             '',
-            '100px',
+            '',
             false
         );
 
@@ -142,8 +136,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '100px'
+            ''
         );
 
         $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
@@ -155,8 +148,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '100px'
+            ''
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
@@ -168,8 +160,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '140px'
+            ''
         );
 
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
@@ -261,8 +252,23 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             true,
             false,
-            'integer',
-            '50px'
+            'integer'
+        );
+
+        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
+            'id',
+            'avatar',
+            self::$mediaEntityName,
+            'public.avatar',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
+                ),
+            ],
+            false,
+            true,
+            'integer'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
@@ -415,7 +421,7 @@ class ContactController extends RestController implements ClassResourceInterface
             true,
             'string',
             '',
-            '100px',
+            '',
             false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -503,16 +509,11 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
-            // add fake avatar to all entries
-            // todo: implement real avatar field
-            $entrySet = $listBuilder->execute();
-            foreach ($entrySet as $key => $value) {
-                $entrySet[$key]['thumbnails']['100x100'] =
-                    'https://connectere.files.wordpress.com/2013/07/lacombe_001_sq-a4d9e855a2531a163e115237039bbeadf5cf76f2-s6-c30.jpg';
-            }
+            $listResponse = $listBuilder->execute();
+            $listResponse = $this->addAvatars($listResponse, $locale);
 
             $list = new ListRepresentation(
-                $entrySet,
+                $listResponse,
                 self::$entityKey,
                 'get_contacts',
                 $request->query->all(),
@@ -536,7 +537,7 @@ class ContactController extends RestController implements ClassResourceInterface
             // convert to api-contacts
             $apiContacts = [];
             foreach ($contacts as $contact) {
-                $apiContacts[] = new ApiContact($contact, $locale);
+                $apiContacts[] = $this->getContactManager()->getContact($contact, $locale);
             }
 
             $exclusion = null;
@@ -712,6 +713,30 @@ class ContactController extends RestController implements ClassResourceInterface
     public function getSecurityContext()
     {
         return 'sulu.contact.people';
+    }
+
+    /**
+     * Takes an array of contacts and resets the avatar containing the media id with
+     * the actual urls to the avatars thumbnail.
+     *
+     * @param array $contacts
+     * @param String $locale
+     *
+     * @return array
+     */
+    private function addAvatars($contacts, $locale)
+    {
+        $ids = array_filter(array_column($contacts, 'avatar'));
+        $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $i = 0;
+        foreach ($contacts as $key => $contact) {
+            if (array_key_exists('avatar', $contact) && $contact['avatar']) {
+                $contacts[$key]['avatar'] = $avatars[$i];
+                $i += 1;
+            }
+        }
+
+        return $contacts;
     }
 
     // TODO: Use schema validation see:

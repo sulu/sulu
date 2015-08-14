@@ -217,6 +217,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $bankAccounts;
 
     /**
+     * @var Media
+     */
+    protected $avatar;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -285,6 +290,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->lastName = $lastName;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
     }
 
     /**
@@ -944,6 +957,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getMedias()
     {
         return $this->medias;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 
     /**

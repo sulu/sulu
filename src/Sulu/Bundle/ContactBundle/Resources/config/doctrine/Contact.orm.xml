@@ -34,6 +34,12 @@
 
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact"/>
 
+        <many-to-one field="avatar" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+            <join-columns>
+                <join-column name="avatar" referenced-column-name="id" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
         <many-to-one field="title" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactTitle">
             <join-columns>
                 <join-column name="idTitles" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
