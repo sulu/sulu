@@ -13,13 +13,13 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Is should assign a structure name to a document alias
-     * It should get the document alias to structure name map
+     * It should get the document alias to structure name map.
      */
     public function testStructure()
     {
         $this->queryBuilder->useStructure('p', 'overview');
-        $this->assertEquals(array(
+        $this->assertEquals([
             'p' => 'overview',
-        ), $this->queryBuilder->getStructureMap());
+        ], $this->queryBuilder->getStructureMap());
     }
 }

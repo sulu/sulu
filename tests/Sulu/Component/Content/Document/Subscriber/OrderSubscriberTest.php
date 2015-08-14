@@ -83,9 +83,9 @@ class OrderSubscriberTest extends SubscriberTestCase
     public function testPersistOrder()
     {
         $this->node->getParent()->willReturn($this->parentNode->reveal());
-        $this->parentNode->getNodes()->willReturn(array(
-            $this->node->reveal()
-        ));
+        $this->parentNode->getNodes()->willReturn([
+            $this->node->reveal(),
+        ]);
         $this->persistEvent->getAccessor()->willReturn($this->accessor->reveal());
         $this->accessor->set('suluOrder', 20)->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());

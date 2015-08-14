@@ -11,16 +11,10 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\ProxyFactory;
-use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RedirectTypeSubscriber implements EventSubscriberInterface
@@ -44,19 +38,19 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $metadata->addFieldMapping('redirectType', array(
+        $metadata->addFieldMapping('redirectType', [
             'encoding' => 'system_localized',
             'property' => self::REDIRECT_TYPE_FIELD,
             'default' => RedirectType::NONE,
-        ));
-        $metadata->addFieldMapping('redirectExternal', array(
+        ]);
+        $metadata->addFieldMapping('redirectExternal', [
             'encoding' => 'system_localized',
             'property' => self::EXTERNAL_FIELD,
-        ));
-        $metadata->addFieldMapping('redirectTarget', array(
+        ]);
+        $metadata->addFieldMapping('redirectTarget', [
             'encoding' => 'system_localized',
             'property' => self::INTERNAL_FIELD,
             'type' => 'reference',
-        ));
+        ]);
     }
 }

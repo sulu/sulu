@@ -2,20 +2,19 @@
 
 namespace Sulu\Component\Content\Document\Query;
 
-use Sulu\Component\DocumentManager\Query\QueryBuilderConverter;
 use Doctrine\ODM\PHPCR\Query\Builder\QueryBuilder as BaseQueryBuilder;
-use Sulu\Component\Content\Document\Query\QueryBuilder;
 use PHPCR\SessionInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\DocumentManager\DocumentStrategyInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\DocumentManager\DocumentStrategyInterface;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Query\QueryBuilderConverter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class StructureQueryBuilderConverter extends QueryBuilderConverter
 {
     private $structureMetaFactory;
-    private $structureMap = array();
+    private $structureMap = [];
 
     /**
      * @param SessionInterface $session
@@ -45,11 +44,12 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
         }
 
         $this->structureMap = $queryBuilder->getStructureMap();
+
         return parent::getQuery($queryBuilder);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getPhpcrProperty($alias, $field)
     {
@@ -79,7 +79,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
             $propertyMetadata = $structure->getProperty($propertyName);
             $phpcrName = $this->encoder->fromProperty($propertyMetadata, $this->locale);
 
-            return array($alias, $phpcrName);
+            return [$alias, $phpcrName];
         }
 
         return parent::getPhpcrProperty($alias, $field);

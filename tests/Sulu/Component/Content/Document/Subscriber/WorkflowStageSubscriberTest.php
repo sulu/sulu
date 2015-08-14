@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\PropertyType;
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;

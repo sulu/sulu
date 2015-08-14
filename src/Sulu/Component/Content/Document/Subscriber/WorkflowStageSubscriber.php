@@ -12,16 +12,13 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkflowStageSubscriber implements EventSubscriberInterface
 {
@@ -44,10 +41,10 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::METADATA_LOAD => 'handleMetadataLoad',
             Events::PERSIST => 'handlePersist',
-        );
+        ];
     }
 
     public function handleMetadataLoad(MetadataLoadEvent $event)
@@ -58,16 +55,16 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $metadata->addFieldMapping('workflowStage', array(
+        $metadata->addFieldMapping('workflowStage', [
             'encoding' => 'system_localized',
             'property' => self::WORKFLOW_STAGE_FIELD,
             'type' => 'long',
-        ));
-        $metadata->addFieldMapping('published', array(
+        ]);
+        $metadata->addFieldMapping('published', [
             'encoding' => 'system_localized',
             'property' => self::PUBLISHED_FIELD,
             'type' => 'date',
-        ));
+        ]);
     }
 
     /**

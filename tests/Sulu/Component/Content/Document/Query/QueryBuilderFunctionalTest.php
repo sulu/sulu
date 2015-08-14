@@ -59,7 +59,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
     }
 
     /**
-     * The standard query builder should work as normal
+     * The standard query builder should work as normal.
      */
     public function testNormalQueryBuilder()
     {

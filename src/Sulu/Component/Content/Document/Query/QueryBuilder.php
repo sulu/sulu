@@ -24,7 +24,9 @@ class QueryBuilder extends BaseQueryBuilder
      *
      * @param mixed $documentAlias Document alias to register structure to
      * @param mixed $structureName Name of the structure to register.
+     *
      * @throws InvalidArgumentException If a document with the given alias is already registered.
+     *
      * @return $this
      */
     public function useStructure($documentAlias, $structureName)

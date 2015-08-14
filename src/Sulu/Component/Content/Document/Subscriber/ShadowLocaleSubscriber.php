@@ -77,17 +77,17 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $metadata->addFieldMapping('shadowLocaleEnabled', array(
+        $metadata->addFieldMapping('shadowLocaleEnabled', [
             'property' => self::SHADOW_ENABLED_FIELD,
             'encoding' => 'system_localized',
             'mapped' => false,
-        ));
+        ]);
 
-        $metadata->addFieldMapping('shadowLocale', array(
+        $metadata->addFieldMapping('shadowLocale', [
             'property' => self::SHADOW_LOCALE_FIELD,
             'encoding' => 'system_localized',
             'mapped' => false,
-        ));
+        ]);
     }
 
     /**

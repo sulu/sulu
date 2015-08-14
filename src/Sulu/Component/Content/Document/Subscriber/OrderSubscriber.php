@@ -13,12 +13,10 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -48,10 +46,10 @@ class OrderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $metadata->addFieldMapping('suluOrder', array(
+        $metadata->addFieldMapping('suluOrder', [
             'encoding' => 'system',
             'property' => self::FIELD,
-        ));
+        ]);
     }
 
     /**

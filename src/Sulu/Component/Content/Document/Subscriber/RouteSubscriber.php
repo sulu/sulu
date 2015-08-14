@@ -11,14 +11,13 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Behavior for route (sulu:path) documents
+ * Behavior for route (sulu:path) documents.
  */
 class RouteSubscriber implements EventSubscriberInterface
 {
@@ -26,9 +25,9 @@ class RouteSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::METADATA_LOAD => 'handleMetadataLoad',
-        );
+        ];
     }
 
     public function handleMetadataLoad(MetadataLoadEvent $event)
@@ -39,10 +38,10 @@ class RouteSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $metadata->addFieldMapping('targetDocument', array(
+        $metadata->addFieldMapping('targetDocument', [
             'encoding' => 'system',
             'property' => self::DOCUMENT_TARGET_FIELD,
             'type' => 'reference',
-        ));
+        ]);
     }
 }
