@@ -24,10 +24,17 @@ define([
          */
         header: function() {
             var config = {
+                title: function() {
+                    return this.data.name;
+                }.bind(this),
                 tabs: {
                     url: '/admin/content-navigations?alias=account',
                     options: {
-                        disablerToggler: 'husky.toggler.sulu-toolbar'
+                        disablerToggler: 'husky.toggler.sulu-toolbar',
+                        data: function() {
+                            // this.data is set by sulu-content.js with data from loadComponentData()
+                            return this.sandbox.util.extend(false, {}, this.data);
+                        }.bind(this)
                     }
                 },
                 toolbar: {
@@ -51,6 +58,18 @@ define([
             return config;
         },
 
+        title: function() {
+            return this.data.name;
+        },
+
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            AccountManager.loadOrNew(this.options.id).then(function(data) {
+                promise.resolve(data);
+            });
+            return promise;
+        },
+
         initialize: function() {
             this.bindCustomEvents();
         },
@@ -65,7 +84,7 @@ define([
         },
 
         deleteAccount: function() {
-            DeleteDialog.showDialog([this.options.id], function(deleteContacts){
+            DeleteDialog.showDialog([this.options.id], function(deleteContacts) {
                 AccountManager.delete(this.options.id, deleteContacts).then(function() {
                     AccountRouter.toList();
                 }.bind(this));
@@ -82,13 +101,17 @@ define([
             }.bind(this));
         },
 
+
         /**
          * Saves the tab and returns a after the tab has saved itselve
          * @returns promise with the saved data
          */
         saveTab: function() {
             var promise = $.Deferred();
-            this.sandbox.once('sulu.tab.saved', function(savedData) {
+            this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
+                if (!!updateData){
+                    this.data = savedData;
+                }
                 promise.resolve(savedData);
             }.bind(this));
             this.sandbox.emit('sulu.tab.save');

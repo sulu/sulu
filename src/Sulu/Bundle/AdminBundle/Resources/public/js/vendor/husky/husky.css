@@ -878,51 +878,56 @@ h2 {
   line-height: 30px;
   margin: 0 0 20px 0;
 }
+/* line 44, ../scss/typo.scss */
+h2 .content-title {
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 30px;
+}
 
-/* line 45, ../scss/typo.scss */
+/* line 50, ../scss/typo.scss */
 h3 {
   font-size: 20px;
   line-height: 25px;
 }
 
-/* line 50, ../scss/typo.scss */
+/* line 55, ../scss/typo.scss */
 h4 {
   font-size: 18px;
   line-height: 20px;
 }
 
-/* line 55, ../scss/typo.scss */
+/* line 60, ../scss/typo.scss */
 h5 {
   font-size: 14px;
   line-height: 15px;
 }
 
-/* line 60, ../scss/typo.scss */
+/* line 65, ../scss/typo.scss */
 h6 {
   font-size: 12px;
   line-height: 15px;
   margin: 0;
 }
 
-/* line 68, ../scss/typo.scss */
+/* line 72, ../scss/typo.scss */
 .compoundedHeadlines :first-child {
   color: #52B6CA;
   font-size: 14px;
   margin: 0;
   line-height: 20px;
 }
-/* line 74, ../scss/typo.scss */
+/* line 78, ../scss/typo.scss */
 .compoundedHeadlines :nth-child(2) {
   margin-top: 0;
 }
 
-/* line 81, ../scss/typo.scss */
+/* line 85, ../scss/typo.scss */
 h1, h2, h3, h4, h5 {
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
-/* line 85, ../scss/typo.scss */
+/* line 89, ../scss/typo.scss */
 h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
   position: absolute;
   top: 50%;
@@ -934,22 +939,22 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   background-color: #ccc;
 }
 
-/* line 100, ../scss/typo.scss */
+/* line 104, ../scss/typo.scss */
 .bold {
   font-family: Helvetica, Arial, sans-serif !important;
 }
 
-/* line 109, ../scss/typo.scss */
+/* line 113, ../scss/typo.scss */
 .small-font {
   font-size: 12px;
 }
 
-/* line 113, ../scss/typo.scss */
+/* line 117, ../scss/typo.scss */
 .smaller-font {
   font-size: 10px;
 }
 
-/* line 117, ../scss/typo.scss */
+/* line 121, ../scss/typo.scss */
 .grey-font {
   color: #999;
 }
@@ -961,7 +966,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   padding: 0;
   height: 20px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .breadcrumb:after {
   clear: both;
   content: ' ';
@@ -5672,7 +5677,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   text-align: center;
   border-radius: 0 0 3px 3px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .overlay-footer:after {
   clear: both;
   content: ' ';
@@ -7603,7 +7608,7 @@ a.btn-black, a.btn-highlight {
   margin-top: 20px;
   font-size: 12px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .pagination-wrapper:after {
   clear: both;
   content: ' ';
@@ -7732,7 +7737,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-input:after {
   clear: both;
   content: ' ';
@@ -8057,23 +8062,23 @@ a.btn-black, a.btn-highlight {
   background-color: #999;
   color: #3e3e3e;
 }
-/* line 4, ../scss/mixins.scss */
+/* line 5, ../scss/mixins.scss */
 .search-container .search-input.placeholder {
   color: #3e3e3e;
 }
-/* line 5, ../scss/mixins.scss */
+/* line 6, ../scss/mixins.scss */
 .search-container .search-input:-moz-placeholder {
   color: #3e3e3e;
 }
-/* line 6, ../scss/mixins.scss */
+/* line 7, ../scss/mixins.scss */
 .search-container .search-input::-moz-placeholder {
   color: #3e3e3e;
 }
-/* line 7, ../scss/mixins.scss */
+/* line 8, ../scss/mixins.scss */
 .search-container .search-input:-ms-input-placeholder {
   color: #3e3e3e;
 }
-/* line 8, ../scss/mixins.scss */
+/* line 9, ../scss/mixins.scss */
 .search-container .search-input::-webkit-input-placeholder {
   color: #3e3e3e;
 }
@@ -8116,23 +8121,23 @@ a.btn-black, a.btn-highlight {
 .search-container.gray .search-input {
   background-color: rgba(255, 255, 255, 0.5);
 }
-/* line 4, ../scss/mixins.scss */
+/* line 5, ../scss/mixins.scss */
 .search-container.gray .search-input.placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 5, ../scss/mixins.scss */
+/* line 6, ../scss/mixins.scss */
 .search-container.gray .search-input:-moz-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 6, ../scss/mixins.scss */
+/* line 7, ../scss/mixins.scss */
 .search-container.gray .search-input::-moz-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 7, ../scss/mixins.scss */
+/* line 8, ../scss/mixins.scss */
 .search-container.gray .search-input:-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 8, ../scss/mixins.scss */
+/* line 9, ../scss/mixins.scss */
 .search-container.gray .search-input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -8272,7 +8277,7 @@ a.btn-black, a.btn-highlight {
   /** styles for the toolbar-items **/
   /**  dropdown styles **/
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-toolbar:after {
   clear: both;
   content: ' ';
@@ -9249,7 +9254,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   font-size: 12px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-select-container .dropdown-label:after {
   clear: both;
   content: ' ';
@@ -10079,7 +10084,7 @@ a.btn-black, a.btn-highlight {
   padding-right: 20px;
   font-size: 12px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .white-box .header:after {
   clear: both;
   content: ' ';
@@ -10274,7 +10279,7 @@ a.btn-black, a.btn-highlight {
   position: relative;
   z-index: 10;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-dropzone .upload-items:after {
   clear: both;
   content: ' ';
@@ -10334,10 +10339,10 @@ a.btn-black, a.btn-highlight {
   font-size: 25px;
   text-align: center;
   display: block;
-  animation: ROTATE-ANIMATION 1s linear 0 infinite;
-  -webkit-animation: ROTATE-ANIMATION 1s linear 0 infinite;
-  -moz-animation: ROTATE-ANIMATION 1s linear 0 infinite;
-  -o-animation: ROTATE-ANIMATION 1s linear 0 infinite;
+  animation: ROTATE-ANIMATION 1s linear infinite;
+  -webkit-animation: ROTATE-ANIMATION 1s linear infinite;
+  -moz-animation: ROTATE-ANIMATION 1s linear infinite;
+  -o-animation: ROTATE-ANIMATION 1s linear infinite;
 }
 /* line 109, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image {
@@ -10424,6 +10429,133 @@ a.btn-black, a.btn-highlight {
 .husky-dropzone.small.dropped {
   height: 130px;
 }
+/* line 184, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+}
+/* line 190, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container {
+  width: 200px;
+  height: 200px;
+  background-color: #fff;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  -moz-transition: -moz-transform 200ms, opacity 200ms;
+  -o-transition: -o-transform 200ms, opacity 200ms;
+  -webkit-transition: -webkit-transform 200ms, opacity 200ms;
+  transition: transform 200ms, opacity 200ms;
+  -moz-transform: translate(-50%, -50%) scale(0.8);
+  -ms-transform: translate(-50%, -50%) scale(0.8);
+  -webkit-transform: translate(-50%, -50%) scale(0.8);
+  transform: translate(-50%, -50%) scale(0.8);
+}
+/* line 203, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .description {
+  width: initial;
+  height: initial;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  -moz-transition: opacity 100ms;
+  -o-transition: opacity 100ms;
+  -webkit-transition: opacity 100ms;
+  transition: opacity 100ms;
+}
+/* line 211, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .description .title {
+  display: none;
+}
+/* line 215, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .description .addition {
+  color: #666;
+}
+/* line 220, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items {
+  width: initial;
+  height: initial;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 226, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item {
+  width: initial;
+  height: initial;
+  margin: 0;
+  border: none;
+}
+/* line 232, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content {
+  padding: 0;
+}
+/* line 235, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .icon {
+  display: none;
+}
+/* line 239, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .file-size {
+  padding-top: 0;
+  padding-bottom: 6px;
+  font-size: 14px;
+  line-height: 14px;
+}
+/* line 246, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .progress {
+  width: 80px;
+  height: 8px;
+  border-radius: 4px;
+}
+/* line 254, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .success-content .image {
+  display: none;
+}
+/* line 257, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay .dropzone-container .upload-items .item .success-content .tick {
+  font-size: 72px;
+  line-height: 72px;
+}
+/* line 267, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay:hover .dropzone-container, .husky-dropzone.overlay.dz-drag-hover .dropzone-container, .husky-dropzone.overlay.dropped .dropzone-container {
+  -moz-transform: translate(-50%, -50%) scale(1);
+  -ms-transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.8;
+}
+/* line 273, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay.dz-drag-hover {
+  opacity: 1;
+}
+/* line 275, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay.dz-drag-hover .dropzone-container {
+  border: 1px dashed #666;
+}
+/* line 281, ../scss/modules/dropzone.scss */
+.husky-dropzone.overlay.dropped .description {
+  margin: 0;
+  opacity: 0;
+}
 
 /* line 64, ../scss/modules/input.scss */
 .husky-input {
@@ -10432,7 +10564,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-input:after {
   clear: both;
   content: ' ';
@@ -10523,7 +10655,7 @@ a.btn-black, a.btn-highlight {
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-thumbnails:after {
   clear: both;
   content: ' ';
@@ -10550,7 +10682,7 @@ a.btn-black, a.btn-highlight {
   position: relative;
   cursor: pointer;
 }
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-thumbnails .item:after {
   clear: both;
   content: ' ';
@@ -10689,7 +10821,7 @@ a.btn-black, a.btn-highlight {
   display: block;
 }
 
-/* line 32, ../scss/mixins.scss */
+/* line 33, ../scss/mixins.scss */
 .husky-groups:after {
   clear: both;
   content: ' ';

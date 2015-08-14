@@ -42548,7 +42548,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.afterDropCallback] callback which gets called after a file got dropped. Has to return a promise. If the promise gets resolved the file gets uploaded
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
- * @params {String} [options.skin] skin class for the dropzone. currently available: 'small' or '' (default)
+ * @params {String} [options.skin] skin class for the dropzone. currently available: 'overlay', 'small' or '' (default)
  * @params {Boolean} [options.keepFilesAfterSuccess] True to not slide the files away after uploading them successfully
  * @params {Boolean} [options.dropzoneEnabled] Should the dropzone be enabled initially
  * @params {Boolean} [options.cancelUploadOnOverlayClick] Cancel the upload process when the user clicks on the overlay background
@@ -42597,12 +42597,14 @@ define('__component__$dropzone@husky',[], function() {
         /** templates for component */
         templates = {
             basic: [
-                '<div class="' + constants.descriptionClass + '">',
-                    '<div class="fa-<%= icon %> icon"></div>',
-                    '<span class="title"><%= title %></span>',
-                    '<span class="addition"><%= description %></span>',
-                '</div>',
-                '<div class="' + constants.uploadedItemContainerClass + '"></div>'
+                '<div class="dropzone-container">',
+                '   <div class="' + constants.descriptionClass + '">',
+                        '<div class="fa-<%= icon %> icon"></div>',
+                        '<span class="title"><%= title %></span>',
+                        '<span class="addition"><%= description %></span>',
+                '   </div>',
+                '   <div class="' + constants.uploadedItemContainerClass + '"></div>',
+                '</div>'
             ].join(''),
             uploadItem: [
                 '<div class="' + constants.uploadItemClass + '">' +

@@ -270,7 +270,9 @@ define(function() {
          * @param {Object} header The header config object.
          */
         handleHeader = function(header) {
-            if (!header) return false;
+            if (!header) {
+                return false;
+            }
 
             getTabsData.call(this, header).then(function(tabsData) {
                 var $container = this.sandbox.dom.createElement('<div class="sulu-header"/>');
@@ -281,6 +283,7 @@ define(function() {
                     options: {
                         el: $container,
                         noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
+                        title: (!!header.title) ? header.title : false,
 
                         toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
                         toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ?
@@ -314,15 +317,13 @@ define(function() {
                 loaded.resolve(tabsData);
             }.bind(this));
             return loaded;
-        };
+        },
 
-    return function(app) {
         /**
-         * Gets executed every time BEFORE a component gets initialized.
          * Checks various properties (header, view, layout) of an component
          * and executes the related handler.
          */
-        app.components.before('initialize', function() {
+        executeHandlers = function() {
             if (!!this.header) {
                 handleHeaderMarker.call(this, this.header);
             }
@@ -339,6 +340,29 @@ define(function() {
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);
             }
+        };
+
+    return function(app) {
+        /**
+         * Gets executed every time BEFORE a component gets initialized.
+         * Loads data if needed and start executing component handlers
+         */
+        app.components.before('initialize', function() {
+            //load view data before rendering tabs
+            var dataLoaded = this.sandbox.data.deferred();
+            if (!!this.loadComponentData && typeof this.loadComponentData === 'function') {
+                dataLoaded = this.loadComponentData.call(this);
+            } else {
+                dataLoaded.resolve();
+            }
+
+            dataLoaded.then(function(data) {
+                if (!!data) {
+                    this.data = data;
+                }
+
+                executeHandlers.call(this);
+            }.bind(this));
         });
     };
 });
