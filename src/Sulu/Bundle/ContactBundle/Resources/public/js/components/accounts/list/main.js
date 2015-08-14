@@ -98,7 +98,7 @@ define([
         },
 
         render: function() {
-            this.sandbox.dom.append(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accounts', '/admin/api/accounts/fields',
