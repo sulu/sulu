@@ -101,6 +101,7 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
+                    mediator.emit('sulu.labels.success.show', 'contact.contacts.deleted');
                     promise.resolve();
                 }.bind(this));
 
@@ -128,9 +129,11 @@ define([
                 contact.save(null, {
                     success: function(response) {
                         mediator.emit('sulu.contacts.contact.saved', response.toJSON.id);
+                        mediator.emit('sulu.labels.success.show', 'contact.contacts.saved');
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
+                        mediator.emit('sulu.labels.error.show');
                         promise.fail();
                     }.bind(this)
                 });
@@ -211,11 +214,12 @@ define([
                     promise = $.Deferred();
 
                 util.each(mediaIds, function(index, id) {
-                    requests.push(ContactManager.prototype.removeDocument(contactId, id));
+                    requests.push(ContactManager.prototype.removeDocument(contactId, id, true));
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
                     mediator.emit('sulu.contacts.documents.removed', contactId, mediaIds);
+                    mediator.emit('sulu.labels.success.show', 'contact.contacts.documents-removed');
                     promise.resolve();
                 }.bind(this));
 
@@ -226,9 +230,10 @@ define([
              * Removes a media from an contact
              * @param mediaId media to delete
              * @param contactId The contact to delete the media from
+             * @param noLabel Iff true doesn't display a label
              * @private
              */
-            removeDocument: function(contactId, mediaId) {
+            removeDocument: function(contactId, mediaId, noLabel) {
                 var promise = $.Deferred();
 
                 util.ajax({
@@ -237,6 +242,9 @@ define([
 
                     success: function() {
                         mediator.emit('sulu.contacts.document.removed', contactId, mediaId);
+                        if (!noLabel) {
+                            mediator.emit('sulu.labels.success.show', 'contact.contacts.document-removed');
+                        }
                         promise.resolve();
                     }.bind(this)
                 });
@@ -260,6 +268,7 @@ define([
 
                     success: function() {
                         mediator.emit('sulu.contacts.document.added', contactId, mediaId);
+                        mediator.emit('sulu.labels.success.show', 'contact.contacts.document-added');
                         promise.resolve();
                     }.bind(this)
                 });

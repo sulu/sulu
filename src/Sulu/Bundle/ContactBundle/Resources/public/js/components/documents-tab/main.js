@@ -83,7 +83,6 @@ define([
                 this.sandbox.emit('husky.datagrid.documents.record.add', item);
                 this.manager.addDocument(this.options.id, id).then(function() {
                     this.currentSelection.push(id);
-                    // todo label
                 }.bind(this));
             }
         },
@@ -91,7 +90,6 @@ define([
         removeItem: function(itemId) {
             this.manager.removeDocument(this.options.id, itemId).then(function() {
                 this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, [itemId]);
-                // todo label
             }.bind(this));
         },
 
@@ -104,15 +102,13 @@ define([
         },
 
         /**
-         * Removes all selected items and displays a label at the end
+         * Removes all selected items
          */
         removeSelected: function() {
             this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(ids) {
                 DeleteDialog.showDialog(ids, function() {
                     this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, ids);
-                    this.manager.removeDocuments(this.options.id, ids).then(function() {
-                        //todo label
-                    }.bind(this));
+                    this.manager.removeDocuments(this.options.id, ids);
                 }.bind(this));
             }.bind(this));
         },

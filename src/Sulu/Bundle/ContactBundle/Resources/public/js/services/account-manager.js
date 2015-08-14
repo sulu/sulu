@@ -136,6 +136,7 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
+                mediator.emit('sulu.labels.success.show', 'contact.accounts.deleted');
                 promise.resolve();
             }.bind(this));
 
@@ -163,9 +164,11 @@ define([
             account.save(null, {
                 success: function(response) {
                     mediator.emit('sulu.contacts.account.saved', response.toJSON.id);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.saved');
                     promise.resolve(response.toJSON());
                 }.bind(this),
                 error: function() {
+                    mediator.emit('sulu.labels.error.show');
                     promise.fail();
                 }.bind(this)
             });
@@ -191,6 +194,7 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
+                mediator.emit('sulu.labels.success.show', 'contact.accounts.contacts-removed');
                 promise.resolve();
             }.bind(this));
 
@@ -219,6 +223,7 @@ define([
             accountContact.save(null, {
                 success: function(response) {
                     mediator.emit('sulu.contacts.account.contact.saved', accountId, contactId);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.contact-saved');
                     promise.resolve(response.toJSON());
                 }.bind(this),
                 error: function() {
@@ -243,27 +248,10 @@ define([
                 patch: true,
                 success: function() {
                     mediator.emit('sulu.contacts.account.maincontact.set', accountId, contactId);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.main-account-set');
                     promise.resolve();
                 }.bind(this)
             });
-
-            return promise;
-        },
-
-        /**
-         * Adds/Removes documents to or from an account
-         * @param accountId Id of the account to save the media for
-         * @param newMediaIds Array of media ids to add
-         * @param removedMediaIds Array of media ids to remove
-         */
-        saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
-            var promise = $.Deferred(),
-                addPromise = addDocuments.call(this, accountId, newMediaIds),
-                removePromise = removeDocuments.call(this, accountId, removedMediaIds);
-
-            $.when(addPromise, removePromise).then(function() {
-                promise.resolve();
-            }.bind(this));
 
             return promise;
         },
@@ -334,11 +322,12 @@ define([
                 promise = $.Deferred();
 
             util.each(mediaIds, function(index, id) {
-                requests.push(AccountManager.prototype.removeDocument(accountId, id));
+                requests.push(AccountManager.prototype.removeDocument(accountId, id, true));
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
                 mediator.emit('sulu.contacts.documents.removed', accountId, mediaIds);
+                mediator.emit('sulu.labels.success.show', 'contact.accounts.documents-removed');
                 promise.resolve();
             }.bind(this));
 
@@ -349,9 +338,10 @@ define([
          * Removes media from an account
          * @param mediaId media to delete
          * @param accountId The account to delete the medias from
+         * @param noLabel Iff true no label is displayed
          * @private
          */
-        removeDocument: function(accountId, mediaId) {
+        removeDocument: function(accountId, mediaId, noLabel) {
             var promise = $.Deferred();
 
             util.ajax({
@@ -360,6 +350,9 @@ define([
 
                 success: function() {
                     mediator.emit('sulu.contacts.document.removed', accountId, mediaId);
+                    if (!noLabel) {
+                        mediator.emit('sulu.labels.success.show', 'contact.accounts.documents-removed');
+                    }
                     promise.resolve();
                 }.bind(this)
             });
@@ -383,6 +376,7 @@ define([
 
                 success: function() {
                     mediator.emit('sulu.contacts.document.added', accountId, mediaId);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.document-added');
                     promise.resolve();
                 }.bind(this)
             });
