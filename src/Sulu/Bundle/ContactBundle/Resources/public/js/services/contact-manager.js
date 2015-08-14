@@ -49,32 +49,6 @@ define([
             },
 
             /**
-             * Remove medias from an contact
-             * @param mediaIds (Array) of medias to delete
-             * @param contactId The contact to delete the medias from
-             * @private
-             */
-            removeDocuments = function(contactId, mediaIds) {
-                if (!$.isArray(mediaIds)) {
-                    mediaIds = [mediaIds];
-                }
-
-                var requests = [],
-                    promise = $.Deferred();
-
-                util.each(mediaIds, function(index, id) {
-                    requests.push(removeDocument(contactId, id));
-                }.bind(this));
-
-                $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.contacts.contact.documents.removed', contactId, mediaIds);
-                    promise.resolve();
-                }.bind(this));
-
-                return promise;
-            },
-
-            /**
              * Removes a media from an contact
              * @param mediaId media to delete
              * @param contactId The contact to delete the media from
@@ -89,55 +63,6 @@ define([
 
                     success: function() {
                         mediator.emit('sulu.contacts.contact.document.removed', contactId, mediaId);
-                        promise.resolve();
-                    }.bind(this)
-                });
-
-                return promise;
-            },
-
-            /**
-             * Adds medias to an contact
-             * @param mediaIds (Array) of medias to add
-             * @param contactId The contact to add the medias to
-             * @private
-             */
-            addDocuments = function(contactId, mediaIds) {
-                if (!$.isArray(mediaIds)) {
-                    mediaIds = [mediaIds];
-                }
-
-                var requests = [],
-                    promise = $.Deferred();
-
-                util.each(mediaIds, function(index, id) {
-                    requests.push(addDocument(contactId, id));
-                }.bind(this));
-
-                $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.contacts.contact.documents.added', contactId, mediaIds);
-                    promise.resolve();
-                }.bind(this));
-
-                return promise;
-            },
-
-            /**
-             * Adds a media to an contact
-             * @param mediaId media to add
-             * @param contactId The contact to add the media to
-             * @private
-             */
-            addDocument = function(contactId, mediaId) {
-                var promise = $.Deferred();
-
-                util.ajax({
-                    url: '/admin/api/contacts/' + contactId + '/medias',
-                    data: {mediaId: mediaId},
-                    type: 'POST',
-
-                    success: function() {
-                        mediator.emit('sulu.contacts.contact.document.added', contactId, mediaId);
                         promise.resolve();
                     }.bind(this)
                 });
@@ -198,6 +123,7 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
+                    mediator.emit('sulu.labels.success.show', 'contact.contacts.deleted');
                     promise.resolve();
                 }.bind(this));
 
@@ -225,30 +151,14 @@ define([
                 contact.save(null, {
                     success: function(response) {
                         mediator.emit('sulu.contacts.contact.saved', response.toJSON.id);
+                        mediator.emit('sulu.labels.success.show', 'contact.contacts.saved');
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
+                        mediator.emit('sulu.labels.error.show');
                         promise.fail();
                     }.bind(this)
                 });
-
-                return promise;
-            },
-
-            /**
-             * Adds/Removes documents to or from contact
-             * @param contactId Id of the contact to save the media for
-             * @param newMediaIds Array of media ids to add
-             * @param removedMediaIds Array of media ids to remove
-             */
-            saveDocuments: function(contactId, newMediaIds, removedMediaIds) {
-                var promise = $.Deferred(),
-                    addPromise = addDocuments.call(this, contactId, newMediaIds),
-                    removePromise = removeDocuments.call(this, contactId, removedMediaIds);
-
-                $.when(removePromise, addPromise).then(function() {
-                    promise.resolve();
-                }.bind(this));
 
                 return promise;
             },
@@ -309,6 +219,68 @@ define([
                     savePromise.resolve(response);
                 });
                 return savePromise;
+            },
+
+            /**
+             * Remove medias from an contact
+             * @param mediaIds (Array) of medias to delete
+             * @param contactId The contact to delete the medias from
+             */
+            removeDocuments: function(contactId, mediaIds) {
+                if (!$.isArray(mediaIds)) {
+                    mediaIds = [mediaIds];
+                }
+
+                var requests = [],
+                    promise = $.Deferred();
+
+                util.each(mediaIds, function(index, id) {
+                    requests.push(removeDocument(contactId, id));
+                }.bind(this));
+
+                $.when.apply(null, requests).then(function() {
+                    mediator.emit('sulu.contacts.documents.removed', contactId, mediaIds);
+                    mediator.emit('sulu.labels.success.show', 'contact.contacts.documents-removed');
+                    promise.resolve();
+                }.bind(this));
+
+                return promise;
+            },
+
+            /**
+             * Adds a media to an contact
+             * @param mediaId media to add
+             * @param contactId The contact to add the media to
+             */
+            addDocument: function(contactId, mediaId) {
+                var promise = $.Deferred();
+
+                util.ajax({
+                    url: '/admin/api/contacts/' + contactId + '/medias',
+                    data: {mediaId: mediaId},
+                    type: 'POST',
+
+                    success: function() {
+                        mediator.emit('sulu.contacts.contact.document.added', contactId, mediaId);
+                        mediator.emit('sulu.labels.success.show', 'contact.contacts.document-added');
+                        promise.resolve();
+                    }.bind(this)
+                });
+
+                return promise;
+            },
+
+            /**
+             * Returns documents specific data
+             * @param contactId The contact
+             * @returns {Object}
+             */
+            getDocumentsData: function(contactId) {
+                return {
+                    listUrl: '/admin/api/contacts/' + contactId + '/medias?flat=true',
+                    fieldsKey: 'contactsDocumentsFields',
+                    fieldsUrl: '/admin/api/contacts/medias/fields'
+                };
             }
         };
 
@@ -317,7 +289,7 @@ define([
                 instance = new ContactManager();
             }
             return instance;
-        }
+        };
 
         return ContactManager.getInstance();
     }

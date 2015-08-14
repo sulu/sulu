@@ -98,7 +98,7 @@
 
 .media-selection-overlay-content-area {
   overflow: auto;
-  height: calc(100% - 40px);
+  height: calc(100% - 55px);
 }
 
 .media-selection-overlay-close {
@@ -173,6 +173,7 @@
 
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+  padding-bottom: 20px;
 }
 
 .media-selection-overlay-header {
