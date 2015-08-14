@@ -73,6 +73,7 @@
         </service>
 
         <service id="sulu_document_manager.document.subscriber.order" class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 

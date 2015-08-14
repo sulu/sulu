@@ -15,6 +15,8 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Prophecy\Argument;
 
 class OrderSubscriberTest extends SubscriberTestCase
 {
@@ -23,58 +25,76 @@ class OrderSubscriberTest extends SubscriberTestCase
      */
     private $subscriber;
 
+    private $inspector;
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->subscriber = new OrderSubscriber($this->encoder->reveal());
+        $this->inspector = $this->prophesize(DocumentInspector::class);
+        $this->subscriber = new OrderSubscriber($this->inspector->reveal());
         $this->persistEvent->getDocument()->willReturn(new TestOrderDocument(null));
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
     }
 
-    public function testPersist()
-    {
-        $document = $this->prophesize(OrderBehavior::class);
-        $this->persistEvent->getDocument()->willReturn($document);
-        $this->encoder->systemName('order')->willReturn('sys:order');
-
-        $node1 = $this->prophesize(NodeInterface::class);
-        $node2 = $this->prophesize(NodeInterface::class);
-        $node3 = $this->prophesize(NodeInterface::class);
-
-        $parentNode = $this->prophesize(NodeInterface::class);
-        $parentNode->getNodes()->willReturn([$node1, $node2, $node3]);
-        $this->node->hasProperty('sys:order')->willReturn(false);
-        $this->node->getParent()->willReturn($parentNode);
-        $this->node->setProperty('sys:order', 40, PropertyType::LONG)->shouldBeCalled();
-        $this->node->getPropertyValueWithDefault('sys:order', null)->willReturn(40);
-        $this->accessor->set('suluOrder', 40)->shouldBeCalled();
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
+    /**
+     * It should set the sulu order on sibling documents of the persisted documents according to their natural order upon REORDER.
+     * It should not take non-implementing documents into account when recalculating the orders.
+     */
     public function testReorder()
     {
         $document = $this->prophesize(OrderBehavior::class);
+        $parentDocument = $this->prophesize(OrderBehavior::class);
+        $childDocument1 = new TestOrderDocument(0);
+        $childDocument2 = new \stdClass();
+        $childDocument3 = new TestOrderDocument(20);
+        $childDocument4 = new TestOrderDocument(10);
+
+        $this->inspector->getParent($document->reveal())->willReturn($parentDocument->reveal());
+        $this->inspector->getChildren($parentDocument->reveal())->willReturn(array(
+            $childDocument1,
+            $childDocument2,
+            $childDocument3,
+            $childDocument4
+        ));
+
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document);
-        $reorderEvent->getNode()->willReturn($this->node);
-        $reorderEvent->getAccessor()->willReturn($this->accessor);
-        $this->encoder->systemName('order')->willReturn('sys:order');
-
-        $node2 = $this->prophesize(NodeInterface::class);
-        $node3 = $this->prophesize(NodeInterface::class);
-
-        $parentNode = $this->prophesize(NodeInterface::class);
-        $parentNode->getNodes()->willReturn([$this->node, $node2, $node3]);
-        $this->node->getParent()->willReturn($parentNode);
-        $this->node->setProperty('sys:order', 10, PropertyType::LONG)->shouldBeCalled();
-        $node2->setProperty('sys:order', 20, PropertyType::LONG)->shouldBeCalled();
-        $node3->setProperty('sys:order', 30, PropertyType::LONG)->shouldBeCalled();
-        $this->node->getPropertyValueWithDefault('sys:order', null)->willReturn(40);
-        $this->accessor->set('suluOrder', 40)->shouldBeCalled();
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
+
+        $this->assertEquals(10, $childDocument1->getSuluOrder());
+        $this->assertEquals(20, $childDocument3->getSuluOrder());
+        $this->assertEquals(30, $childDocument4->getSuluOrder());
+    }
+
+    /**
+     * It should return early on REORDER if the document is not an instance of OrderBehavior
+     */
+    public function testReorderNotImplementing()
+    {
+        $document = new \stdClass;
+
+        $reorderEvent = $this->prophesize(ReorderEvent::class);
+        $reorderEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handleReorder($reorderEvent->reveal());
+        $this->inspector->getParent(Argument::any())->shouldNotHaveBeenCalled();
+    }
+
+    /**
+     * It should return early on REORDER if the document has no parent (i.e. if the document is the root document and this shoouldn't really happen).
+     */
+    public function testReorderNoParent()
+    {
+        $document = $this->prophesize(OrderBehavior::class);
+
+        $reorderEvent = $this->prophesize(ReorderEvent::class);
+        $reorderEvent->getDocument()->willReturn($document->reveal());
+        $this->inspector->getParent($document->reveal())->willReturn(null);
+
+        $this->subscriber->handleReorder($reorderEvent->reveal());
+        $this->inspector->getChildren(Argument::any())->shouldNotHaveBeenCalled();
     }
 
     /**

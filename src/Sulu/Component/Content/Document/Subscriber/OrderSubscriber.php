@@ -18,6 +18,8 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\DocumentManager\DocumentAccessor;
 
 /**
  * Create a property with a value corresponding to the position of the node
@@ -26,6 +28,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
+
+    private $inspector;
+
+    public function __construct(DocumentInspector $inspector)
+    {
+        $this->inspector = $inspector;
+    }
 
     /**
      * {@inheritdoc}
@@ -85,22 +94,28 @@ class OrderSubscriber implements EventSubscriberInterface
      */
     public function handleReorder(ReorderEvent $event)
     {
-        $node = $event->getNode();
         $document = $event->getDocument();
 
-        if (false == $this->supports($document)) {
+        if (!$document instanceof OrderBehavior) {
             return;
         }
 
-        $propertyName = $this->encoder->systemName(self::FIELD);
+        $parentDocument = $this->inspector->getParent($document);
 
-        $parent = $node->getParent();
-        $count = 0;
-        foreach ($parent->getNodes() as $childNode) {
-            $childNode->setProperty($propertyName, ($count + 1) * 10, PropertyType::LONG);
-            ++$count;
+        if (null === $parentDocument) {
+            return;
         }
 
-        $this->handleHydrate($event);
+        $count = 0;
+        foreach ($this->inspector->getChildren($parentDocument) as $childDocument) {
+            if (!$childDocument instanceof OrderBehavior) {
+                continue;
+            }
+
+            $accessor = new DocumentAccessor($childDocument);
+            $order = ($count + 1) * 10;
+            $accessor->set('suluOrder', $order);
+            ++$count;
+        }
     }
 }
