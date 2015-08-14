@@ -25,6 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
+use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -394,7 +395,7 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
         }
 
         return $this->getApiObject($contact, $locale);
@@ -488,7 +489,7 @@ class ContactManager extends AbstractContactManager
     {
         $mediaEntity = null;
         if (is_array($avatar) && $this->getProperty($avatar, 'id')) {
-            $mediaEntity = $this->getMediaManager()->getEntityById($this->getProperty($avatar, 'id'));
+            $mediaEntity = $this->mediaManager->getEntityById($this->getProperty($avatar, 'id'));
         }
         $contact->setAvatar($mediaEntity);
     }
@@ -505,7 +506,7 @@ class ContactManager extends AbstractContactManager
     {
         $apiObject = new ContactApi($contact, $locale);
         if ($contact->getAvatar()) {
-            $apiAvatar = $this->getMediaManager()->getById($contact->getAvatar()->getId(), $locale);
+            $apiAvatar = $this->mediaManager->getById($contact->getAvatar()->getId(), $locale);
             $apiObject->setAvatar($apiAvatar);
         }
 
@@ -554,15 +555,5 @@ class ContactManager extends AbstractContactManager
     public function getContactEntityName()
     {
         return $this->contactRepository->getClassName();
-    }
-
-    /**
-     * Returns the media manager.
-     *
-     * @return MediaManagerInterface
-     */
-    protected function getMediaManager()
-    {
-        return $this->mediaManager;
     }
 }

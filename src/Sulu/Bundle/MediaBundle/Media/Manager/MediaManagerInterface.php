@@ -127,6 +127,15 @@ interface MediaManagerInterface
     public function increaseDownloadCounter($fileVersionId);
 
     /**
+     * Takes an array of media ids and returns an array of formats and urls.
+     *
+     * @param array $ids
+     *
+     * @return array
+     */
+    public function getFormatUrls($ids, $locale);
+
+    /**
      * Adds thumbnails and image urls.
      *
      * @param Media $media

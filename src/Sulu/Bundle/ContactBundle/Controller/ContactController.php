@@ -40,6 +40,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected static $entityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $countryEntityName = 'SuluContactBundle:Country';
@@ -122,7 +123,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             'string',
             '',
-            '100px',
+            '',
             false
         );
 
@@ -135,8 +136,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '100px'
+            ''
         );
 
         $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
@@ -148,8 +148,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '100px'
+            ''
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
@@ -161,8 +160,7 @@ class ContactController extends RestController implements ClassResourceInterface
             false,
             true,
             'string',
-            '',
-            '140px'
+            ''
         );
 
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
@@ -254,8 +252,23 @@ class ContactController extends RestController implements ClassResourceInterface
             [],
             true,
             false,
-            'integer',
-            '50px'
+            'integer'
+        );
+
+        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
+            'id',
+            'avatar',
+            self::$mediaEntityName,
+            'public.avatar',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
+                ),
+            ],
+            false,
+            true,
+            'integer'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
@@ -408,7 +421,7 @@ class ContactController extends RestController implements ClassResourceInterface
             true,
             'string',
             '',
-            '100px',
+            '',
             false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -703,19 +716,24 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Takes an array with contact-data and adds the corresponding avatar-data.
+     * Takes an array of contacts and resets the avatar containing the media id with
+     * the actual urls to the avatars thumbnail.
      *
      * @param array $contacts
      * @param String $locale
      *
-     * @return array of contacts-data with added avatar-data
+     * @return array
      */
     private function addAvatars($contacts, $locale)
     {
+        $ids = array_filter(array_column($contacts, 'avatar'));
+        $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $i = 0;
         foreach ($contacts as $key => $contact) {
-            $contacts[$key]['avatar'] = $this->getContactManager()
-                ->getById($contact['id'], $locale)
-                ->getAvatar()['thumbnails'];
+            if (array_key_exists('avatar', $contact) && $contact['avatar']) {
+                $contacts[$key]['avatar'] = $avatars[$i];
+                $i += 1;
+            }
         }
 
         return $contacts;

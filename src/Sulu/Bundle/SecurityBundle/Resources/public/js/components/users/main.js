@@ -55,8 +55,8 @@ define([
                 if (this.user.get('userRoles').length > 0) {
 
                     userRole = this.user.get('userRoles').findWhere({
-                            role: this.roles.get(value)
-                        });
+                        role: this.roles.get(value)
+                    });
                     if (!!userRole) {
                         this.user.get('userRoles').remove(userRole);
                     }
@@ -70,8 +70,8 @@ define([
 
                 if (this.user.get('userRoles').length > 0) {
                     tmp = this.user.get('userRoles').findWhere({
-                            role: this.roles.get(value.roleId)
-                        });
+                        role: this.roles.get(value.roleId)
+                    });
                     if (!!tmp) {
                         userRole = tmp;
                     }
@@ -192,7 +192,8 @@ define([
                     options: {
                         el: $form,
                         data: data
-                    }}
+                    }
+                }
             ]);
         },
 

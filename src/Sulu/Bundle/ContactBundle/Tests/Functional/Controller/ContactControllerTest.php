@@ -277,15 +277,13 @@ class ContactControllerTest extends SuluTestCase
         $file->addFileVersion($fileVersion);
         $this->em->persist($fileVersion);
 
-        $avatar = new Media();
-        $avatar->setType($imageType);
-        $avatar->setCollection($collection);
-        $avatar->addFile($file);
-        $file->setMedia($avatar);
-        $this->em->persist($avatar);
+        $this->avatar = new Media();
+        $this->avatar->setType($imageType);
+        $this->avatar->setCollection($collection);
+        $this->avatar->addFile($file);
+        $file->setMedia($this->avatar);
+        $this->em->persist($this->avatar);
         $this->em->persist($file);
-
-        $this->avatar = $avatar;
     }
 
     public function testGetById()

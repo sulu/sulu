@@ -18,7 +18,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
@@ -175,10 +174,7 @@ class MediaManager implements MediaManagerInterface
             'public.id',
             [],
             true,
-            false,
-            '',
-            '50px',
-            ''
+            false
         );
 
         $fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
@@ -200,11 +196,11 @@ class MediaManager implements MediaManagerInterface
             [
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
+                    self::ENTITY_NAME_MEDIA . '.files'
                 ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILE . '.fileVersions',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                 ),
             ]
@@ -217,11 +213,11 @@ class MediaManager implements MediaManagerInterface
             [
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
+                    self::ENTITY_NAME_MEDIA . '.files'
                 ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILE . '.fileVersions',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                 ),
             ],
@@ -238,11 +234,11 @@ class MediaManager implements MediaManagerInterface
             [
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
+                    self::ENTITY_NAME_MEDIA . '.files'
                 ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILE . '.fileVersions',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                 ),
             ],
@@ -259,11 +255,11 @@ class MediaManager implements MediaManagerInterface
             [
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
+                    self::ENTITY_NAME_MEDIA . '.files'
                 ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILE . '.fileVersions',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                 ),
             ],
@@ -280,11 +276,11 @@ class MediaManager implements MediaManagerInterface
             [
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
+                    self::ENTITY_NAME_MEDIA . '.files'
                 ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILE . '.fileVersions',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                 ),
                 self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
@@ -305,11 +301,11 @@ class MediaManager implements MediaManagerInterface
             [
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
+                    self::ENTITY_NAME_MEDIA . '.files'
                 ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
                     self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILE . '.fileVersions',
                     self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                 ),
                 self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
@@ -776,6 +772,26 @@ class MediaManager implements MediaManagerInterface
             ->getQuery();
 
         $query->execute();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatUrls($ids, $locale)
+    {
+        $mediaArray = $this->getByIds($ids, $locale);
+        $formatUrls = [];
+        foreach ($mediaArray as $media) {
+            array_push($formatUrls, $this->formatManager->getFormats(
+                $media->getId(),
+                $media->getName(),
+                $media->getStorageOptions(),
+                $media->getVersion(),
+                $media->getMimeType()
+            ));
+        }
+
+        return $formatUrls;
     }
 
     /**
