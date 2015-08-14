@@ -69,9 +69,9 @@ define([
         templates: ['/admin/contact/template/contact/form'],
 
         initialize: function() {
-            this.autoCompleteInstanceName = 'accounts-';
-            this.data = (typeof this.options.data === 'function') ? this.options.data() : this.options.data;
+            this.data = this.options.data();
 
+            this.autoCompleteInstanceName = 'accounts-';
             this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();

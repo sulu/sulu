@@ -266,7 +266,7 @@ define([
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
-            this.data = (typeof this.options.data === 'function') ? this.options.data() : this.options.data;
+            this.data = this.options.data();
             this.formOfAddress = null;
             this.companyPosition = null;
             bindCustomEvents.call(this);

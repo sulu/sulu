@@ -70,7 +70,7 @@ define([
         templates: ['/admin/contact/template/account/form'],
 
         initialize: function() {
-            this.data = (typeof this.options.data === 'function') ? this.options.data() : this.options.data;
+            this.data = this.options.data();
 
             this.autoCompleteInstanceName = 'contacts-';
             this.dfdListenForChange = this.sandbox.data.deferred();
