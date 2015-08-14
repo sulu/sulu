@@ -236,7 +236,7 @@ define([
             });
         },
 
-        // adds a new contact relation
+    // adds a new contact relation
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
@@ -266,17 +266,15 @@ define([
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
-            AccountManager.loadOrNew(this.options.id).then(function(data) {
-                this.data = data;
-                this.formOfAddress = null;
-                this.companyPosition = null;
-                bindCustomEvents.call(this);
-                this.render();
+            this.data = (typeof this.options.data === 'function') ? this.options.data() : this.options.data;
+            this.formOfAddress = null;
+            this.companyPosition = null;
+            bindCustomEvents.call(this);
+            this.render();
 
-                if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
-                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
-                }
-            }.bind(this));
+            if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
+                this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
+            }
         },
 
         initSidebar: function(url, id) {

@@ -8,10 +8,10 @@
  */
 
 define([
-        'services/sulucontact/contact-manager',
-        'services/sulucontact/contact-router',
-        'services/sulucontact/contact-delete-dialog'
-    ],function(ContactManager, ContactRouter, DeleteDialog) {
+    'services/sulucontact/contact-manager',
+    'services/sulucontact/contact-router',
+    'services/sulucontact/contact-delete-dialog'
+], function(ContactManager, ContactRouter, DeleteDialog) {
 
     'use strict';
 
@@ -90,7 +90,7 @@ define([
          * Show delete-confirm dialog and if confirmed, delete current contact
          */
         deleteContact: function() {
-            DeleteDialog.showDialog([this.options.id], function(){
+            DeleteDialog.showDialog([this.options.id], function() {
                 ContactManager.delete(this.options.id).then(function() {
                     ContactRouter.toList();
                 }.bind(this));

@@ -85,7 +85,7 @@ define([
         },
 
         deleteAccount: function() {
-            DeleteDialog.showDialog([this.options.id], function(deleteContacts){
+            DeleteDialog.showDialog([this.options.id], function(deleteContacts) {
                 AccountManager.delete(this.options.id, deleteContacts).then(function() {
                     AccountRouter.toList();
                 }.bind(this));
