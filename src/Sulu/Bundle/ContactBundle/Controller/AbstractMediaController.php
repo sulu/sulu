@@ -158,7 +158,7 @@ abstract class AbstractMediaController extends RestController
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $listResponse = $listBuilder->execute();
-            $listResponse = $this->getMediaManager()->addThumbnails($listResponse, 'thumbnails', $locale);
+            $listResponse = $this->addThumbnails($listResponse, $locale);
 
             $list = new ListRepresentation(
                 $listResponse,
@@ -217,6 +217,30 @@ abstract class AbstractMediaController extends RestController
         ];
 
         return array_merge($additionalDescriptors, $mediaDescriptors);
+    }
+
+    /**
+     * Takes an array of entities and resets the thumbnails-property containing the media id with
+     * the actual urls to the thumbnails.
+     *
+     * @param array $entities
+     * @param String $locale
+     *
+     * @return array
+     */
+    private function addThumbnails($entities, $locale)
+    {
+        $ids = array_filter(array_column($entities, 'thumbnails'));
+        $thumbnails = $this->getMediaManager()->getFormatUrls($ids, $locale);
+        $i = 0;
+        foreach ($entities as $key => $entity) {
+            if (array_key_exists('thumbnails', $entity) && $entity['thumbnails']) {
+                $entities[$key]['thumbnails'] = $thumbnails[$i];
+                $i += 1;
+            }
+        }
+
+        return $entities;
     }
 
     /**
