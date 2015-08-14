@@ -76,7 +76,6 @@ define([
             var data = this.data;
             this.html(this.renderTemplate(this.templates[0]));
             this.initForm(data);
-
             this.bindCustomEvents();
         },
 
@@ -106,7 +105,7 @@ define([
             this.sandbox.on('sulu.contacts.account.documents.added', this.resetAndAddToCurrent.bind(this));
             this.sandbox.on('sulu.contacts.contact.documents.added', this.resetAndAddToCurrent.bind(this));
 
-            this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
+            this.sandbox.on('sulu.media-selection-overlay.document-selection.record-selected', this.selectItem.bind(this));
             this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
             this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
         },
