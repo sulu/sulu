@@ -780,9 +780,9 @@ class MediaManager implements MediaManagerInterface
     public function getFormatUrls($ids, $locale)
     {
         $mediaArray = $this->getByIds($ids, $locale);
-        $formatsAndUrls = [];
+        $formatUrls = [];
         foreach ($mediaArray as $media) {
-            array_push($formatsAndUrls, $this->formatManager->getFormats(
+            array_push($formatUrls, $this->formatManager->getFormats(
                 $media->getId(),
                 $media->getName(),
                 $media->getStorageOptions(),
@@ -791,7 +791,7 @@ class MediaManager implements MediaManagerInterface
             ));
         }
 
-        return $formatsAndUrls;
+        return $formatUrls;
     }
 
     /**

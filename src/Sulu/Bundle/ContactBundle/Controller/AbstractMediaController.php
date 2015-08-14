@@ -241,7 +241,7 @@ abstract class AbstractMediaController extends RestController
                     $entityName . '.medias',
                     null,
                     DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                )
+                ),
             ],
             true,
             false
