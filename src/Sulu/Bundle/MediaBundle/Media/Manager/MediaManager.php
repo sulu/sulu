@@ -381,22 +381,6 @@ class MediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addThumbnails($data, $thumbnailKey, $locale)
-    {
-        $mediaIds = array_filter(array_column($data, $thumbnailKey));
-        $mediaArray = $this->getByIds($mediaIds, $locale);
-        for ($i = 0, $x = 0; $i < count($data); ++$i) {
-            if (array_key_exists($thumbnailKey, $data[$i]) && $data[$i][$thumbnailKey]) {
-                $data[$i][$thumbnailKey] = $mediaArray[$x++]->getFormats();
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function get($locale, $filter = [], $limit = null, $offset = null)
     {
         $media = [];
@@ -788,6 +772,26 @@ class MediaManager implements MediaManagerInterface
             ->getQuery();
 
         $query->execute();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatUrls($ids, $locale)
+    {
+        $mediaArray = $this->getByIds($ids, $locale);
+        $formatsAndUrls = [];
+        foreach ($mediaArray as $media) {
+            array_push($formatsAndUrls, $this->formatManager->getFormats(
+                $media->getId(),
+                $media->getName(),
+                $media->getStorageOptions(),
+                $media->getVersion(),
+                $media->getMimeType()
+            ));
+        }
+
+        return $formatsAndUrls;
     }
 
     /**
