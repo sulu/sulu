@@ -86,7 +86,6 @@ define([
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
-            this.sandbox.emit('sulu.content.title.show');
             this.cleanUp();
         },
 
@@ -99,7 +98,6 @@ define([
 
             this.sandbox.emit(this.options.disablerToggler + '.change', !!this.data.disabled);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
-            this.sandbox.emit('sulu.content.title.hide');
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
