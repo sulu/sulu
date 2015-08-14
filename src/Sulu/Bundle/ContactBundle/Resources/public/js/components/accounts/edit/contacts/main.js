@@ -241,7 +241,7 @@ define([
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
-                AccountManager.addAccountContact(this.options.id, id, this.companyPosition);
+                AccountManager.addAccountContact(this.data.id, id, this.companyPosition);
                 ContactManager.loadOrNew(id).then(function(contact) {
                     this.sandbox.emit('husky.datagrid.record.add', toFlat(contact));
                 }.bind(this));
