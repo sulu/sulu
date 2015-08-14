@@ -39,7 +39,7 @@ define([
 
             this.manager.loadOrNew(this.options.id).then(function(data) {
                 this.data = data;
-                this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id') || [];
+                this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id');
                 this.bindCustomEvents();
                 this.render();
 
@@ -81,17 +81,20 @@ define([
         addItem: function(id, item) {
             this.sandbox.emit('husky.datagrid.documents.record.add', item);
             this.manager.addDocument(this.options.id, id).then(function() {
+                this.currentSelection.push(id);
                 // todo label
             }.bind(this));
         },
 
         removeItem: function(itemId) {
             this.manager.removeDocument(this.options.id, itemId).then(function() {
+
                 // todo label
             }.bind(this));
         },
 
         showAddOverlay: function() {
+            this.sandbox.emit('sulu.media-selection-overlay.documents.set-selected', this.currentSelection);
             this.sandbox.emit('sulu.media-selection-overlay.documents.open');
         },
 
