@@ -133,7 +133,7 @@ interface MediaManagerInterface
      *
      * @return array
      */
-    public function getFormatsAndUrls($ids, $locale);
+    public function getFormatUrls($ids, $locale);
 
     /**
      * Adds thumbnails and image urls.

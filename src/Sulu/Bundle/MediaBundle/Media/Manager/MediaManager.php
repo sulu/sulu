@@ -781,7 +781,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormatsAndUrls($ids, $locale)
+    public function getFormatUrls($ids, $locale)
     {
         $mediaArray = $this->getByIds($ids, $locale);
         $formatsAndUrls = [];

@@ -700,7 +700,7 @@ class ContactController extends RestController implements ClassResourceInterface
     private function addAvatars($contacts, $locale)
     {
         $ids = array_filter(array_column($contacts, 'avatar'));
-        $avatars = $this->get('sulu_media.media_manager')->getFormatsAndUrls($ids, $locale);
+        $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
         $i = 0;
         foreach ($contacts as $key => $contact) {
             if (array_key_exists('avatar', $contact) && $contact['avatar']) {
