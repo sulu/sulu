@@ -24,11 +24,17 @@ define([
          */
         header: function() {
             var config = {
+                title: function() {
+                    return this.data.name;
+                }.bind(this),
                 tabs: {
                     url: '/admin/content-navigations?alias=account',
                     options: {
                         disablerToggler: 'husky.toggler.sulu-toolbar',
-                        data: this.data // this.data is set by sulu-content.js with data from loadComponentData()
+                        data: function() {
+                            // this.data is set by sulu-content.js with data from loadComponentData()
+                            return this.sandbox.util.extend(false, {}, this.data);
+                        }.bind(this)
                     }
                 },
                 toolbar: {
@@ -75,6 +81,7 @@ define([
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
+            this.sandbox.on('sulu.tab.data.changed', this.dataChanged.bind(this));
         },
 
         deleteAccount: function() {
@@ -93,6 +100,14 @@ define([
             this.saveTab().then(function(savedData) {
                 this.afterSave(action, savedData);
             }.bind(this));
+        },
+
+        /**
+         * Update account data which was changed in a tab
+         * @param newData new contact data
+         */
+        dataChanged: function(newData) {
+            this.data = newData;
         },
 
         /**

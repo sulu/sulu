@@ -70,7 +70,7 @@ define([
 
         initialize: function() {
             this.autoCompleteInstanceName = 'accounts-';
-            this.data = this.options.data();
+            this.data = (typeof this.options.data === 'function') ? this.options.data() : this.options.data;
 
             this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
             this.dfdListenForChange = this.sandbox.data.deferred();

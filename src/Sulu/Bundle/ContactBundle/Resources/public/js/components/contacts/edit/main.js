@@ -126,7 +126,6 @@ define([
          */
         dataChanged: function(newData) {
             this.data = newData;
-            this.sandbox.emit('sulu.content.title.changed');
         },
 
         /**

@@ -79,6 +79,7 @@ define([
         header: function() {
             return {
                 noBack: true,
+                title: 'Account list', // todo: use translation key
 
                 toolbar: {
                     buttons: {
@@ -88,8 +89,6 @@ define([
                 }
             };
         },
-
-        title: 'Account list', // todo: use translation key
 
         templates: ['/admin/contact/template/account/list'],
 
