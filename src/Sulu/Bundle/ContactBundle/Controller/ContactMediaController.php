@@ -57,7 +57,7 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
     }
 
     /**
-     * Lists all media of an account
+     * lists all media of an account
      * optional parameter 'flat' calls listAction.
      *
      * @param $id
@@ -77,13 +77,13 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
     }
 
     /**
-     * Returns all fields that can be used by list.
+     * returns all fields that can be used by list.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function fieldsAction()
     {
-        return $this->getFieldsView();
+        return $this->getFieldsView($this->getContactEntityName());
     }
 
     private function getContactEntityName()
