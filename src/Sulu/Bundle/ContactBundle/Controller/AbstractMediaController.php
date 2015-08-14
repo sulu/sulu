@@ -148,37 +148,41 @@ abstract class AbstractMediaController extends RestController
      */
     protected function getMultipleView($entityName, $routeName, AbstractContactManager $contactManager, $id, $request)
     {
-        $locale = $this->getUser()->getLocale();
+        try {
+            $locale = $this->getUser()->getLocale();
 
-        if ($request->get('flat') === 'true') {
-            /** @var RestHelperInterface $restHelper */
-            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+            if ($request->get('flat') === 'true') {
+                /** @var RestHelperInterface $restHelper */
+                $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-            /** @var DoctrineListBuilderFactory $factory */
-            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+                /** @var DoctrineListBuilderFactory $factory */
+                $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create($entityName);
-            $fieldDescriptors = $this->getFieldDescriptors($entityName);
-            $listBuilder->where($fieldDescriptors['entity'], $id);
-            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+                $listBuilder = $factory->create($entityName);
+                $fieldDescriptors = $this->getFieldDescriptors($entityName);
+                $listBuilder->where($fieldDescriptors['entity'], $id);
+                $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-            $listResponse = $listBuilder->execute();
-            $listResponse = $this->addThumbnails($listResponse, $locale);
+                $listResponse = $listBuilder->execute();
+                $listResponse = $this->addThumbnails($listResponse, $locale);
 
-            $list = new ListRepresentation(
-                $listResponse,
-                self::$mediaEntityKey,
-                $routeName,
-                array_merge(['id' => $id], $request->query->all()),
-                $listBuilder->getCurrentPage(),
-                $listBuilder->getLimit(),
-                $listBuilder->count()
-            );
-        } else {
-            $media = $contactManager->getById($id, $locale)->getMedias();
-            $list = new CollectionRepresentation($media, self::$mediaEntityKey);
+                $list = new ListRepresentation(
+                    $listResponse,
+                    self::$mediaEntityKey,
+                    $routeName,
+                    array_merge(['id' => $id], $request->query->all()),
+                    $listBuilder->getCurrentPage(),
+                    $listBuilder->getLimit(),
+                    $listBuilder->count()
+                );
+            } else {
+                $media = $contactManager->getById($id, $locale)->getMedias();
+                $list = new CollectionRepresentation($media, self::$mediaEntityKey);
+            }
+            $view = $this->view($list, 200);
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
         }
-        $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }

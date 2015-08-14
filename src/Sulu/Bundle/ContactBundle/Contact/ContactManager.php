@@ -395,7 +395,7 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
         }
 
         return $this->getApiObject($contact, $locale);
