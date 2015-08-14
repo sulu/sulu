@@ -101,7 +101,10 @@ define([], function() {
                 '   <span class="title"><%= title %></span>',
                 '   <span class="dropdown-toggle"></span>',
                 '</div>'
-            ].join('')
+            ].join(''),
+            titleElement: [
+                '<h2 class="' + constants.contentTitleClass + '"><%= title %></h2>'
+            ].join(''),
         },
 
         createEventName = function(postfix) {
@@ -319,7 +322,9 @@ define([], function() {
 
         getTitleElement: function() {
             var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title;
-            return this.sandbox.dom.createElement('<h2 class="' + constants.contentTitleClass + '">' + title + '</h2>');
+            return this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement)({
+                title: this.sandbox.translate(title)
+            }));
         },
 
         /**
@@ -514,8 +519,8 @@ define([], function() {
                     name: tabItem.component,
                     options: options
                 }]).then(function(tabComponent) {
-                    // render title if view title is set and tab-option hideTitle title is false or not set
-                    if (!!this.options.title && (!tabComponent.tabOptions || !tabComponent.tabOptions.hideTitle)) {
+                    // render title if view title is set and tab-option noTitle title is false or not set
+                    if (!!this.options.title && (!tabComponent.tabOptions || !tabComponent.tabOptions.noTitle)) {
                         this.sandbox.dom.prepend(this.options.tabsContainer, this.getTitleElement());
                     }
                 }.bind(this));

@@ -48,7 +48,7 @@ define([
         view: true,
 
         tabOptions: {
-            hideTitle: true
+            noTitle: true
         },
 
         layout: function() {
