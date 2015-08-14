@@ -395,28 +395,10 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
         }
 
         return $this->getApiObject($contact, $locale);
-    }
-
-    /**
-     * Returns all media for a contact with a given id.
-     *
-     * @param $id
-     * @param $locale
-     *
-     * @return Media[]
-     */
-    public function getMediaById($id, $locale)
-    {
-        $contact = $this->contactRepository->find($id);
-        if (!$contact) {
-            return [];
-        }
-
-        return $this->getApiObject($contact, $locale)->getMedias();
     }
 
     /**

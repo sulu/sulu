@@ -19,7 +19,6 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
@@ -166,26 +165,6 @@ class AccountManager extends AbstractContactManager
         }
 
         return $this->accountFactory->createApiEntity($account, $locale);
-    }
-
-    /**
-     * Returns all media for an account with a given id.
-     *
-     * @param $id
-     * @param $locale
-     *
-     * @return Media[]
-     *
-     * @throws EntityNotFoundException
-     */
-    public function getMediaById($id, $locale)
-    {
-        $account = $this->accountRepository->findAccountById($id);
-        if (!$account) {
-            throw new EntityNotFoundException($this->accountRepository->getClassName(), $id);
-        }
-
-        return $this->accountFactory->createApiEntity($account, $locale)->getMedias();
     }
 
     /**

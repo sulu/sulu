@@ -109,14 +109,4 @@ interface ContactManagerInterface
      * @return mixed
      */
     public function getById($id, $locale);
-
-    /**
-     * Returns all media for a entity with a given id.
-     *
-     * @param $id
-     * @param $locale
-     *
-     * @return Media[]
-     */
-    public function getMediaById($id, $locale);
 }
