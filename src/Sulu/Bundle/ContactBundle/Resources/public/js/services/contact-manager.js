@@ -259,12 +259,25 @@ define([
                     type: 'POST',
 
                     success: function() {
-                        mediator.emit('sulu.contacts.contact.document.added', contactId, mediaId);
+                        mediator.emit('sulu.contacts.document.added', contactId, mediaId);
                         promise.resolve();
                     }.bind(this)
                 });
 
                 return promise;
+            },
+
+            /**
+             * Returns documents specific data
+             * @param contactId The contact
+             * @returns {Object}
+             */
+            getDocumentsData: function(contactId) {
+                return {
+                    listUrl: '/admin/api/contacts/' + contactId + '/medias?flat=true',
+                    fieldsKey: 'contactsDocumentsFields',
+                    fieldsUrl: '/admin/api/contacts/medias/fields'
+                };
             }
         };
 

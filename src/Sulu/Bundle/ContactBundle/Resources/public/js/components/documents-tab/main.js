@@ -79,20 +79,25 @@ define([
         },
 
         addItem: function(id, item) {
-            this.sandbox.emit('husky.datagrid.documents.record.add', item);
-            this.manager.addDocument(this.options.id, id).then(function() {
-                this.currentSelection.push(id);
-                // todo label
-            }.bind(this));
+            if (this.currentSelection.indexOf(id) === -1) {
+                this.sandbox.emit('husky.datagrid.documents.record.add', item);
+                this.manager.addDocument(this.options.id, id).then(function() {
+                    this.currentSelection.push(id);
+                    // todo label
+                }.bind(this));
+            }
         },
 
         removeItem: function(itemId) {
             this.manager.removeDocument(this.options.id, itemId).then(function() {
-
+                this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, [itemId]);
                 // todo label
             }.bind(this));
         },
 
+        /**
+         * Opens
+         */
         showAddOverlay: function() {
             this.sandbox.emit('sulu.media-selection-overlay.documents.set-selected', this.currentSelection);
             this.sandbox.emit('sulu.media-selection-overlay.documents.open');
@@ -104,6 +109,7 @@ define([
         removeSelected: function() {
             this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(ids) {
                 DeleteDialog.showDialog(ids, function() {
+                    this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, ids);
                     this.manager.removeDocuments(this.options.id, ids).then(function() {
                         //todo label
                     }.bind(this));
@@ -112,18 +118,11 @@ define([
         },
 
         /**
-         * Route to the edit of a given media
-         * @param media
-         */
-        routeToMedia: function(media) {
-            // todo root to media-edit with media.id
-        },
-
-        /**
          * Initializes the datagrid-list
          */
         initList: function() {
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsDocumentsFields', '/admin/api/contacts/medias/fields',
+            var managerData = this.manager.getDocumentsData(this.options.id);
+            this.sandbox.sulu.initListToolbarAndList.call(this, managerData.fieldsKey, managerData.fieldsUrl,
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'documents',
@@ -132,11 +131,10 @@ define([
                 },
                 {
                     el: this.$find('#documents-list'),
-                    url: '/admin/api/contacts/' + this.options.id + '/medias?flat=true',
+                    url: managerData.listUrl,
                     searchInstanceName: 'documents',
                     instanceName: 'documents',
                     resultKey: 'media',
-                    actionCallback: this.routeToMedia.bind(this),
                     searchFields: ['name', 'title', 'description'],
                     viewOptions: {
                         table: {

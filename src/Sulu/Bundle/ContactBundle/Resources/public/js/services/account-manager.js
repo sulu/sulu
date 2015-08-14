@@ -80,103 +80,6 @@ define([
             });
 
             return promise;
-        },
-
-        /**
-         * Removes medias from an account
-         * @param mediaIds Array of medias to delete
-         * @param accountId The account to delete the medias from
-         * @private
-         */
-        removeDocuments = function(accountId, mediaIds) {
-            if (!$.isArray(mediaIds)) {
-                mediaIds = [mediaIds];
-            }
-
-            var requests = [],
-                promise = $.Deferred();
-
-            util.each(mediaIds, function(index, id) {
-                requests.push(removeDocument(accountId, id));
-            }.bind(this));
-
-            $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.account.documents.removed', accountId, mediaIds);
-                promise.resolve();
-            }.bind(this));
-
-            return promise;
-        },
-
-        /**
-         * Removes media from an account
-         * @param mediaId media to delete
-         * @param accountId The account to delete the medias from
-         * @private
-         */
-        removeDocument = function(accountId, mediaId) {
-            var promise = $.Deferred();
-
-            util.ajax({
-                url: '/admin/api/accounts/' + accountId + '/medias/' + mediaId,
-                type: 'DELETE',
-
-                success: function() {
-                    mediator.emit('sulu.contacts.account.document.removed', accountId, mediaId);
-                    promise.resolve();
-                }.bind(this)
-            });
-
-            return promise;
-        },
-
-        /**
-         * Adds medias to an account
-         * @param mediaIds Array of medias to add
-         * @param accountId The account to add the medias to
-         * @private
-         */
-        addDocuments = function(accountId, mediaIds) {
-            if (!$.isArray(mediaIds)) {
-                mediaIds = [mediaIds];
-            }
-
-            var requests = [],
-                promise = $.Deferred();
-
-            util.each(mediaIds, function(index, id) {
-                requests.push(addDocument(accountId, id));
-            }.bind(this));
-
-            $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.account.documents.added', accountId, mediaIds);
-                promise.resolve();
-            }.bind(this));
-
-            return promise;
-        },
-
-        /**
-         * Adds media to an account
-         * @param mediaId media to add
-         * @param accountId The account to add the medias to
-         * @private
-         */
-        addDocument = function(accountId, mediaId) {
-            var promise = $.Deferred();
-
-            util.ajax({
-                url: '/admin/api/accounts/' + accountId + '/medias',
-                data: {mediaId: mediaId},
-                type: 'POST',
-
-                success: function() {
-                    mediator.emit('sulu.contacts.account.document.added', accountId, mediaId);
-                    promise.resolve();
-                }.bind(this)
-            });
-
-            return promise;
         };
 
     /** @constructor **/
@@ -415,6 +318,90 @@ define([
 
             return promise;
         },
+
+        /**
+         * Removes medias from an account
+         * @param mediaIds Array of medias to delete
+         * @param accountId The account to delete the medias from
+         * @private
+         */
+        removeDocuments: function(accountId, mediaIds) {
+            if (!$.isArray(mediaIds)) {
+                mediaIds = [mediaIds];
+            }
+
+            var requests = [],
+                promise = $.Deferred();
+
+            util.each(mediaIds, function(index, id) {
+                requests.push(AccountManager.prototype.removeDocument(accountId, id));
+            }.bind(this));
+
+            $.when.apply(null, requests).then(function() {
+                mediator.emit('sulu.contacts.documents.removed', accountId, mediaIds);
+                promise.resolve();
+            }.bind(this));
+
+            return promise;
+        },
+
+        /**
+         * Removes media from an account
+         * @param mediaId media to delete
+         * @param accountId The account to delete the medias from
+         * @private
+         */
+        removeDocument: function(accountId, mediaId) {
+            var promise = $.Deferred();
+
+            util.ajax({
+                url: '/admin/api/accounts/' + accountId + '/medias/' + mediaId,
+                type: 'DELETE',
+
+                success: function() {
+                    mediator.emit('sulu.contacts.document.removed', accountId, mediaId);
+                    promise.resolve();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
+         * Adds media to an account
+         * @param mediaId media to add
+         * @param accountId The account to add the medias to
+         * @private
+         */
+        addDocument: function(accountId, mediaId) {
+            var promise = $.Deferred();
+
+            util.ajax({
+                url: '/admin/api/accounts/' + accountId + '/medias',
+                data: {mediaId: mediaId},
+                type: 'POST',
+
+                success: function() {
+                    mediator.emit('sulu.contacts.document.added', accountId, mediaId);
+                    promise.resolve();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
+         * Returns documents specific data
+         * @param accountId The account
+         * @returns {Object}
+         */
+        getDocumentsData: function(accountId) {
+            return {
+                listUrl: '/admin/api/accounts/' + accountId + '/medias?flat=true',
+                fieldsKey: 'accountsDocumentsFields',
+                fieldsUrl: '/admin/api/accounts/medias/fields'
+            };
+        }
     };
 
     AccountManager.getInstance = function() {
