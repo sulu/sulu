@@ -28,19 +28,7 @@ define([], function() {
     return {
         name: 'Sulu Cache Settings',
 
-        header: {
-            title: 'sulu.website.cache.title',
-            noBack: true,
-            toolbar: {
-                options: false,
-                languageChanger: false,
-                template: 'empty'
-            },
-            breadcrumb: [
-                {title: 'navigation.settings'},
-                {title: 'sulu.website.cache.title'}
-            ]
-        },
+        view: true,
 
         initialize: function() {
             this.render();

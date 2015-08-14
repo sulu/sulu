@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -28,47 +28,22 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
         header: function() {
             return  {
-                toolbar: this.getToolbar()
-            };
-        },
-
-        getToolbar: function() {
-            var toolbar = {
-                template: [
-                    {
-                        id: 'save-button',
-                        icon: 'floppy-o',
-                        iconSize: 'large',
-                        class: 'highlight',
-                        position: 1,
-                        group: 'left',
-                        disabled: true,
-                        callback: function() {
-                            this.sandbox.emit('sulu.header.toolbar.save');
-                        }.bind(this)
+                toolbar: {
+                    buttons: {
+                        save: {},
+                        settings: {
+                            options: {
+                                dropdownItems: {
+                                    delete: {}
+                                }
+                            }
+                        }
+                    },
+                    languageChanger: {
+                        preSelected: this.options.locale
                     }
-                ],
-                languageChanger: {
-                    preSelected: this.options.locale
                 }
             };
-            this.appendToolbarDeleteButton(toolbar);
-            return toolbar;
-        },
-
-        appendToolbarDeleteButton: function(toolbar){
-            if (!!this.options.data && !!this.options.data.id) {
-                toolbar.template.push({
-                    icon: 'trash-o',
-                    iconSize: 'large',
-                    group: 'left',
-                    id: 'delete-button',
-                    position: 30,
-                    callback: function() {
-                        this.sandbox.emit('sulu.header.toolbar.delete');
-                    }.bind(this)
-                });
-            }
         },
 
         initialize: function() {
@@ -84,7 +59,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
 
         bindCustomEvents: function() {
             // filter save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
+            this.sandbox.on('sulu.toolbar.save', function() {
                 this.save();
             }.bind(this));
 
@@ -93,7 +68,7 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
             }.bind(this));
 
             // filter delete
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('sulu.resource.filters.delete', this.sandbox.dom.val('#id'), this.options.type);
             }.bind(this));
 
@@ -102,7 +77,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
                 this.options.data = model;
                 this.sandbox.form.setData(formSelector, model);
                 this.setHeaderBar(true);
-                this.setHeaderInformation();
             }, this);
 
             // back to list
@@ -139,7 +113,6 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/form'));
 
-            this.setHeaderInformation();
             this.startOperatorSelection();
 
             if (!this.options.data || !this.options.data.conjunction) {
@@ -205,24 +178,16 @@ define(['filtersutil/header', 'config'], function(HeaderUtil, Config) {
         },
 
         /**
-         * Sets header information like title and breadcrumb
-         */
-        setHeaderInformation: function() {
-            var name = this.options.data ? this.options.data.name : null,
-                id = this.options.data ? this.options.data.id : null;
-
-            HeaderUtil.setTitle(this.sandbox, name);
-            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, id);
-        },
-
-        /**
          * Defines if saved state should be shown
          * @param saved boolean
          */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                if (!!saved) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+                }
             }
             this.saved = saved;
         },

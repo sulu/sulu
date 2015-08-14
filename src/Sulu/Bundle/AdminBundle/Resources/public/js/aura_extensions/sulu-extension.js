@@ -399,7 +399,6 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false,
                                 context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),

@@ -27001,6 +27001,352 @@ define('type/husky-input',[
     };
 });
 
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('services/husky/util',[],function() {
+
+    'use strict';
+
+    var instance = null,
+
+        /**
+         * Replace rules for escape html function
+         * @type {{}}
+         */
+        entityMap = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': '&quot;',
+            "'": '&#39;',
+            "/": '&#x2F;'
+        };
+
+    function Util() {
+    }
+
+    // for comparing arrays
+    Util.prototype.compare = function(a, b) {
+        if (typeof a === 'object' && typeof b === 'object') {
+            return JSON.stringify(a) === JSON.stringify(b);
+        }
+    };
+
+    // Crockfords better typeof
+    Util.prototype.typeOf = function(value) {
+        var s = typeof value;
+        if (s === 'object') {
+            if (value) {
+                if (value instanceof Array) {
+                    s = 'array';
+                }
+            } else {
+                s = 'null';
+            }
+        }
+
+        return s;
+    };
+
+    Util.prototype.isEqual = _.isEqual;
+
+    Util.prototype.isEmpty = _.isEmpty;
+
+    /**
+     * cool guy loop implementation of foreach: http://jsperf.com/loops3/2
+     * returns -> callback(value, index)
+     */
+    Util.prototype.foreach = function(array, callbackValue) {
+        if (array.length && array.length > 0) {
+            for (var i = -1, length = array.length; ++i < length;) {
+                callbackValue(array[i], i);
+            }
+        }
+    };
+
+    Util.prototype.load = function(url, data, dataType) {
+        var deferred = new $.Deferred(),
+            settings = {
+                url: url,
+                data: data || null,
+                dataType: 'json',
+
+                success: function(data, textStatus) {
+                    deferred.resolve(data, textStatus);
+                }.bind(this),
+
+                error: function(jqXHR, textStatus, error) {
+                    deferred.reject(textStatus, error);
+                }
+            };
+
+        if (typeof(dataType) !== 'undefined') {
+            settings.dataType = dataType;
+        }
+        this.ajax(settings);
+
+        return deferred.promise();
+    };
+
+    Util.prototype.save = function(url, type, data) {
+        var deferred = $.Deferred();
+
+        this.ajax({
+
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            url: url,
+            type: type,
+            data: JSON.stringify(data),
+
+            success: function(data, textStatus) {
+                deferred.resolve(data, textStatus);
+            }.bind(this),
+
+            error: function(jqXHR, textStatus, error) {
+                deferred.reject(jqXHR, textStatus, error);
+            }
+        });
+
+        return deferred.promise();
+    };
+
+    Util.prototype.cropMiddle = function(text, maxLength, delimiter) {
+        var substrLength;
+
+        // return text if it doesn't need to be cropped
+        if (!text || text.length <= maxLength) {
+            return text;
+        }
+
+        // default delimiter
+        if (!delimiter) {
+            delimiter = '...';
+        }
+
+        substrLength = Math.floor((maxLength - delimiter.length) / 2);
+
+        return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
+    },
+
+        Util.prototype.cropFront = function(text, maxLength, delimiter) {
+            if (!text || text.length <= maxLength) {
+                return text;
+            }
+
+            delimiter = delimiter || '...';
+
+            return delimiter + text.slice(-(maxLength - delimiter.length));
+        },
+
+        Util.prototype.cropTail = function(text, maxLength, delimiter) {
+            if (!text || text.length <= maxLength) {
+                return text;
+            }
+
+            delimiter = delimiter || '...';
+
+            return text.slice(0, (maxLength - delimiter.length)) + delimiter;
+        },
+
+        Util.prototype.contains = function(list, value) {
+            return _.contains(list, value);
+        };
+
+    Util.prototype.isAlphaNumeric = function(str) {
+        var code, i, len;
+
+        for (i = 0, len = str.length; i < len; i++) {
+            code = str.charCodeAt(i);
+            if (!(code > 47 && code < 58) && // numeric (0-9)
+                !(code > 64 && code < 91) && // upper alpha (A-Z)
+                !(code > 96 && code < 123)) { // lower alpha (a-z)
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    Util.prototype.uniqueId = function(prefix) {
+        return _.uniqueId(prefix);
+    };
+
+    Util.prototype.delay = function(delay, callback) {
+        return _.delay(delay, callback);
+    };
+
+    Util.prototype.union = function() {
+        return _.union.apply(this, arguments);
+    };
+
+    Util.prototype.each = $.each;
+
+    Util.prototype.ajax = $.ajax;
+
+    Util.prototype.ajaxError = function(callback) {
+        $(document).ajaxError(callback);
+    };
+
+    Util.prototype.when = function() {
+        return $.when.apply(null, arguments);
+    };
+
+    Util.prototype.deepCopy = function(object) {
+        var parent = {};
+
+        if ($.isArray(object)) {
+            parent = [];
+        }
+
+        return $.extend(true, parent, object);
+    };
+
+    /**
+     * Takes a two dimensional array and returns a given column as a one-dimensional array
+     * @param data {Array}
+     * @param propertyName {String}
+     * @returns {Array}
+     */
+    Util.prototype.arrayGetColumn = function(data, propertyName) {
+        if (Util.prototype.typeOf(data) === 'array' &&
+            data.length > 0 &&
+            Util.prototype.typeOf(data[0]) === 'object') {
+            var values = [];
+            Util.prototype.foreach(data, function(el) {
+                values.push(el[propertyName]);
+            }.bind(this));
+            return values;
+        } else {
+            return data;
+        }
+    };
+
+    /**
+     * Removes elements from one array from another array and returns the result
+     * @param array {Array} The array to remove from
+     * @param remove {Array} containing the elements which sould be removed
+     * @returns {Array}
+     */
+    Util.prototype.removeFromArray = function(array, remove) {
+        return $.grep(array, function(value) {
+            return remove.indexOf(value) == -1;
+        });
+    };
+
+    /**
+     * Returns a parameter value from a given url
+     * Found at http://stackoverflow.com/a/901144
+     * Has limitations e.g. for parameters like a[asf]=value
+     * @param name {string} name of the parameter to search for
+     * @param url {string}
+     * @returns {string}
+     */
+    Util.prototype.getParameterByName = function(name, url) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(url);
+
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    };
+
+    Util.prototype.template = _.template;
+
+    /**
+     * Escapes special html character
+     * @param string
+     * @returns {string}
+     */
+    Util.prototype.escapeHtml = function(string) {
+        return String(string).replace(/[&<>"'\/]/g, function(s) {
+            return entityMap[s];
+        });
+    };
+
+    Util.getInstance = function() {
+        if (instance == null) {
+            instance = new Util();
+        }
+
+        return instance;
+    };
+
+    return Util.getInstance();
+});
+
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('services/husky/mediator',[],function() {
+
+    'use strict';
+
+    var instance = null;
+
+    function Mediator() {}
+
+    Mediator.getInstance = function() {
+        if (instance == null) {
+            instance = new Mediator();
+        }
+        return instance;
+    };
+
+    Mediator.prototype.on = window.Husky.on;
+
+    Mediator.prototype.once = window.Husky.once;
+
+    Mediator.prototype.off = window.Husky.off;
+
+    Mediator.prototype.emit = window.Husky.emit;
+
+    return Mediator.getInstance();
+});
+
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('services/husky/translator',[],function() {
+
+    'use strict';
+
+    var instance = null;
+
+    function Translator() {}
+
+    Translator.getInstance = function() {
+        if (instance == null) {
+            instance = new Translator();
+        }
+        return instance;
+    };
+
+    Translator.prototype.translate = window.Husky.translate;
+
+    return Translator.getInstance();
+});
+
 define('bower_components/aura/lib/platform',[],function() {
   // The bind method is used for callbacks.
   //
@@ -27853,6 +28199,10 @@ define('husky',[
         app.use('./husky_extensions/itembox');
         app.use('./husky_extensions/cache-factory');
         app.use('./husky_extensions/infinite-scroll');
+
+        app.use(function(app) {
+            window.Husky = app.sandboxes.create('husky-sandbox');
+        });
     }
 
     // subclass extends superclass
@@ -27969,10 +28319,6 @@ define('__component__$navigation@husky',[],function() {
         defaults = {
             footerTemplate: '',
             collapsed: false,
-            labels: {
-                hide: 'navigation.hide',
-                show: 'navigation.show'
-            },
             resizeWidth: 1300,
             forceCollapse: false,
             systemName: 'Sulu 2.0',
@@ -28032,7 +28378,7 @@ define('__component__$navigation@husky',[],function() {
         /**
          * raised when navigation was un-collapsed
          * @event husky.navigation.uncollapsed
-         * @param {Number} width The width of the un-collapsed navigation
+         * @param {Number} width The width of thewidth un-collapsed navigation
          */
         EVENT_UNCOLLAPSED = namespace + 'uncollapsed',
 
@@ -28098,8 +28444,7 @@ define('__component__$navigation@husky',[],function() {
          * hides the navigation completely
          * @event husky.navigation.hide
          */
-        EVENT_HIDE = namespace + 'hide'
-        ;
+        EVENT_HIDE = namespace + 'hide';
 
 
     return {
@@ -28188,7 +28533,7 @@ define('__component__$navigation@husky',[],function() {
                 $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
 
                 if (!!section.title) {
-                    this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
+                    this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span></div>');
                 }
 
                 this.sandbox.dom.append($sectionDiv, $sectionList);
@@ -28297,7 +28642,6 @@ define('__component__$navigation@husky',[],function() {
          */
         bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.toggleItems.bind(this), '.navigation-items-toggle, .navigation-subitems-toggle');
-            this.sandbox.dom.on(this.$el, 'click', this.toggleSections.bind(this), '.section-toggle');
             this.sandbox.dom.on(this.$el, 'click', this.settingsClicked.bind(this), '.js-navigation-settings');
             this.sandbox.dom.on(this.$el, 'click', this.selectSubItem.bind(this), '.js-navigation-sub-item, .js-navigation-item');
             this.sandbox.dom.on(this.$el, 'click', function() {
@@ -28636,36 +28980,6 @@ define('__component__$navigation@husky',[],function() {
             }
         },
 
-        /**
-         * toggles sections
-         * @param event
-         */
-        toggleSections: function(event) {
-
-            event.preventDefault();
-
-            var $section = this.sandbox.dom.closest(event.currentTarget, '.section'),
-                $list = this.sandbox.dom.find('.section-items', $section),
-                toggleLink = this.sandbox.dom.find('a', event.currentTarget);
-
-
-            if (this.sandbox.dom.hasClass($section, 'is-hidden')) {
-                // hide section
-                this.sandbox.dom.slideDown($list, 200, function() {
-                    this.sandbox.dom.html(toggleLink, this.sandbox.translate(this.options.labels.hide));
-                    this.sandbox.dom.removeClass($section, 'is-hidden');
-                }.bind(this));
-            } else {
-                // show section
-                this.sandbox.dom.html(toggleLink, this.sandbox.translate(this.options.labels.show));
-                this.sandbox.dom.slideUp($list, 200, function() {
-                    this.sandbox.dom.addClass($section, 'is-hidden');
-                }.bind(this));
-            }
-
-            this.sandbox.emit('husky.navigation.section.toggle');
-        },
-
         // returns if nav was collapsed
         showIfCollapsed: function() {
 
@@ -28862,6 +29176,7 @@ define('__component__$navigation@husky',[],function() {
             }
 
             this.sandbox.dom.addClass(this.$el, 'data-navigation-opened');
+            this.sandbox.dom.width(this.$el, '');
             this.sandbox.util.delay(function() {
                 $element.addClass('expanded');
             }, 0);
@@ -31322,10 +31637,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
             this.preparePagination();
             this.sandbox.dom.append(this.$el, this.$paginationContainer);
-
-            this.preparePaginationDropdown();
-            this.prepareShowElementsDropdown();
-
             this.bindDomEvents();
         },
 
@@ -31350,8 +31661,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          * Destroys the pagination
          */
         destroy: function() {
-            this.unbindDomEvents();
             this.sandbox.stop(this.sandbox.dom.find('*', this.$paginationContainer));
+            this.unbindDomEvents();
             this.sandbox.dom.remove(this.$paginationContainer);
         },
 
@@ -31460,6 +31771,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 }));
                 this.sandbox.dom.append(this.$paginationContainer, '<span></span>')
                 this.sandbox.dom.append(this.$paginationContainer, $showElements);
+
+                this.prepareShowElementsDropdown();
             }
 
             if (parseInt(this.data.pages, 10) > 1) {
@@ -31473,6 +31786,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.dom.append($pagination, this.sandbox.util.template(templates.pageChanger)({
                     label: paginationLabel
                 }));
+
+                this.preparePaginationDropdown();
             }
         },
 
@@ -31754,7 +32069,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     '</div>'
                 ].join(''),
                 selectedCounter: [
-                    '<span class="selected-elements smaller-font grey-font"><span class="number">0</span> <%= text %></span>'
+                    '<span class="selected-elements invisible smaller-font grey-font"><span class="number">0</span> <%= text %></span>'
                 ].join('')
             },
 
@@ -33578,7 +33893,6 @@ define('__component__$dropdown@husky',[], function() {
                 dropdownClasses.push('dropdown-shadow');
             }
 
-
             this.$dropDown = this.sandbox.dom.createElement('<div/>', {
                 'class': dropdownClasses.join(' ')
             });
@@ -34669,33 +34983,33 @@ define('__component__$tabs@husky',[],function() {
  * @param {Object} [options] Configuration object
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
- * @param {String} [options.itemsRequestKey] key with result-array for requested dropdown items
- * @param {String} [options.appearance]
+ * @param {String} [options.dropdownItemsKey] key with result-array for requested dropdown items
  * @param {Object} [options.searchOptions] options to pass to search component
- * @param {Object} [options.groups] array of groups with id and align to specify groups to put items in
  * @param {Object} [options.small] if true the toolbar is displayed smaller
  * @param {boolean} [options.hasSearch] if true a search item gets inserted in its own group at the end. A search item can also be added manually through the data
- * @param {String} [options.searchAlign] "right" or "left" to align the search if it's added automatically via the hasSearch option
  * @param {String} [options.skin] custom skin-class to add to the component
  * @param {Boolean} [options.showTitleAsTooltip] shows the title of the button only as tooltip
- * @param {Array} [options.data] if no url is provided
- * @param {String} [options.data.title]
- * @param {String} [options.data.id]
- * @param {Boolean} [options.data.disabled] is item disabled or enabled
- * @param {String} [options.data.disableIcon] icon in disable state
- * @param {String} [options.data.iconSize] large/medium/small
- * @param {String} [options.data.class] highlight/highlight-gray
- * @param {String} [options.data.group] id of the a group specified in the options
- * @param {Integer} [options.data.position] integer to sort the items - default 9000
- * @param {String} [options.data.type] if select, the selected item is displayed in main item (none/select)
- * @param {Function} [options.data.callback] callback function
- * @param {Boolean} [options.data.hidden] if true button gets hidden form the beginning on
- * @param {Boolean} [options.data.hideTitle] hide title from beginning
- * @param {Array} [options.data.items]
- * @param {String} [options.data.items.title]
- * @param {String} [options.data.items.icon] false will remove icon
- * @param {Function} [options.data.items.callback]
- * @param {Boolean} [options.data.items.divider] if true takes item as divider element
+ * @param {Boolean} [options.showTitle] if false doesn't display the title
+ *
+ * @param {Object} [options.groups] array of groups with id and align to specify groups to put items in
+ * @param {String|Number} [options.groups.id] the id of the group
+ * @param {String} [options.groups.id] the group of button will be aligned "left" or "right"
+ *
+ * @param {Array} [options.buttons] if no url is provided
+ * @param {String} [options.buttons.title]
+ * @param {String} [options.buttons.id]
+ * @param {Boolean} [options.buttons.disabled] is item disabled or enabled
+ * @param {String} [options.buttons.class] highlight/highlight-gray/highlight-white
+ * @param {String} [options.buttons.group] id of the a group specified in the options
+ * @param {Integer} [options.buttons.position] integer to sort the items - default 9000
+ * @param {Function} [options.buttons.callback] callback function
+ * @param {Boolean} [options.buttons.hidden] if true button gets hidden form the beginning on
+ *
+ * @param {Array} [options.buttons.dropdownItems]
+ * @param {String} [options.buttons.dropdownItems.title]
+ * @param {String} [options.buttons.dropdownItems.icon] false will remove icon
+ * @param {Function} [options.buttons.dropdownItems.callback]
+ * @param {Boolean} [options.buttons.dropdownItems.divider] if true takes item as divider element
  */
 define('__component__$toolbar@husky',[],function() {
 
@@ -34703,12 +35017,11 @@ define('__component__$toolbar@husky',[],function() {
 
     var defaults = {
             url: null,
-            data: [],
+            buttons: [],
             instanceName: '',
-            itemsRequestKey: '_embedded',
+            dropdownItemsKey: '_embedded',
             searchOptions: null,
             hasSearch: false,
-            searchAlign: 'right',
             groups: [
                 {
                     id: 1,
@@ -34717,7 +35030,12 @@ define('__component__$toolbar@husky',[],function() {
             ],
             skin: 'default',
             small: false,
-            showTitleAsTooltip: false
+            showTitleAsTooltip: false,
+            showTitle: true
+        },
+
+        itemDefaults = {
+            dropdownOptions: {}
         },
 
         constants = {
@@ -34740,10 +35058,38 @@ define('__component__$toolbar@husky',[],function() {
         /**
          * triggered when toolbar is initialized and ready to use
          *
-         * @event husky.toolbar.[INSTANCE_NAME.]initialized
+         * @event husky.toolbar.[INSTANCE_NAME].initialized
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
+        },
+
+
+        /**
+         * triggered when when a dropdown gets opened
+         *
+         * @event husky.toolbar.[INSTANCE_NAME].dropdown.opened
+         */
+        DROPDOWN_OPENED = function() {
+            return createEventName.call(this, 'dropdown.opened');
+        },
+
+        /**
+         * triggered when when a dropdown gets opened
+         *
+         * @event husky.toolbar.[INSTANCE_NAME].dropdown.closed
+         */
+        DROPDOWN_CLOSED = function() {
+            return createEventName.call(this, 'dropdown.closed');
+        },
+
+        /**
+         * triggered when the icon or the title of a button gets changed
+         *
+         * @event husky.toolbar.[INSTANCE_NAME].title.changed
+         */
+        BUTTON_CHANGED = function() {
+            return createEventName.call(this, 'button.changed');
         },
 
         /**
@@ -34865,6 +35211,7 @@ define('__component__$toolbar@husky',[],function() {
          * event to collapse the toolbar
          *
          * @event husky.toolbar.[INSTANCE_NAME.].collapse
+         *  @param {function} callback to execute after collapsing
          */
         COLLAPSE = function() {
             return createEventName.call(this, 'collapse');
@@ -34874,6 +35221,7 @@ define('__component__$toolbar@husky',[],function() {
          * event to expand the toolbar
          *
          * @event husky.toolbar.[INSTANCE_NAME.].expand
+         * @param {function} callback to execute after expanding
          */
         EXPAND = function() {
             return createEventName.call(this, 'expand');
@@ -34881,7 +35229,10 @@ define('__component__$toolbar@husky',[],function() {
 
         /** events bound to dom */
         bindDOMEvents = function() {
-            this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this), 'li .content');
+            this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
         },
 
@@ -34917,12 +35268,18 @@ define('__component__$toolbar@husky',[],function() {
                 }
             }.bind(this));
 
-            this.sandbox.on(COLLAPSE.call(this), function() {
+            this.sandbox.on(COLLAPSE.call(this), function(callback) {
                 collapseAll.call(this);
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }.bind(this));
 
-            this.sandbox.on(EXPAND.call(this), function() {
+            this.sandbox.on(EXPAND.call(this), function(callback) {
                 expandAll.call(this);
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_MARK.call(this), uniqueMarkItem.bind(this));
@@ -34933,11 +35290,11 @@ define('__component__$toolbar@husky',[],function() {
                 if (!!this.items[button]) {
                     this.items[button].initialized.then(function() {
                         var index = getItemIndexById.call(this, id, this.items[button]);
-                        changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
-                        this.sandbox.emit(ITEM_MARK.call(this), this.items[button].items[index].id);
-                        if (executeCallback === true || !!this.items[button].items[index].callback) {
-                            if (typeof this.items[button].items[index].callback === 'function') {
-                                this.items[button].items[index].callback();
+                        changeMainListItem.call(this, this.items[button].$el, this.items[button].dropdownItems[index]);
+                        this.sandbox.emit(ITEM_MARK.call(this), this.items[button].dropdownItems[index].id);
+                        if (executeCallback === true || !!this.items[button].dropdownItems[index].callback) {
+                            if (typeof this.items[button].dropdownItems[index].callback === 'function') {
+                                this.items[button].dropdownItems[index].callback();
                             }
                         }
                     }.bind(this));
@@ -34952,16 +35309,15 @@ define('__component__$toolbar@husky',[],function() {
                 if (!!this.items[button]) {
                     if (items.length > 0) {
                         deleteDropdown.call(this, this.items[button]);
-                        this.sandbox.dom.addClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
-                        this.items[button].items = items;
+                        this.sandbox.dom.removeAttr(this.sandbox.dom.find('.dropdown-toggle', this.items[button].$el), 'style');
+                        this.items[button].dropdownItems = items;
                         createDropdownMenu.call(this, this.items[button].$el, this.items[button]);
-                        setButtonWidth.call(this, this.items[button].$el, this.items[button]);
                         if (!!itemId) {
                             this.sandbox.emit(ITEM_CHANGE.call(this), this.items[button].id, itemId);
                         }
                     } else {
                         deleteDropdown.call(this, this.items[button]);
-                        this.sandbox.dom.removeClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
+                        this.sandbox.dom.hide(this.sandbox.dom.find('.dropdown-toggle', this.items[button].$el));
                     }
                 }
             }.bind(this));
@@ -34981,21 +35337,17 @@ define('__component__$toolbar@husky',[],function() {
             }
 
             var item = this.items[id],
-                $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
-                $iconItem = this.sandbox.dom.find('[data-id="' + id + '"] .icon', this.$el),
-                $itemLink,
-                enabledIconClass = createIconClass.call(this, item, true),
-                disabledIconClass = createIconClass.call(this, item, false);
+                $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el);
 
             this.items[id].disabled = !enabled;
 
             // in case of item has state loading, restore original state
             if (item.loading) {
                 item.loading = false;
-                $itemLink = this.sandbox.dom.find('a', $item);
                 this.sandbox.stop(this.sandbox.dom.find('.item-loader', $item));
                 this.sandbox.dom.remove(this.sandbox.dom.find('.item-loader', $item));
-                this.sandbox.dom.show($itemLink);
+                this.sandbox.dom.removeClass($item, 'is-loading');
+                this.sandbox.dom.width($item, '');
             }
 
             if (highlight !== false) {
@@ -35010,12 +35362,8 @@ define('__component__$toolbar@husky',[],function() {
 
             if (!!enabled) {
                 this.sandbox.dom.removeClass($item, 'disabled');
-                this.sandbox.dom.removeClass($iconItem, disabledIconClass);
-                this.sandbox.dom.prependClass($iconItem, enabledIconClass);
             } else {
                 this.sandbox.dom.addClass($item, 'disabled');
-                this.sandbox.dom.removeClass($iconItem, enabledIconClass);
-                this.sandbox.dom.prependClass($iconItem, disabledIconClass);
             }
         },
 
@@ -35042,22 +35390,17 @@ define('__component__$toolbar@husky',[],function() {
         itemLoading = function(id) {
             var item = this.items[id],
                 $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
-                $itemLink = this.sandbox.dom.find('a', $item),
-                $loader, size,
+                $loader,
                 color = constants.loaderWhiteColor;
 
             if (item.loading) {
                 return;
             }
 
-            if (this.options.small !== true) {
-                size = '20px';
-            } else {
-                size = '14px';
-            }
-
             item.loading = true;
-            this.sandbox.dom.hide($itemLink);
+            // fix width
+            this.sandbox.dom.width($item, this.sandbox.dom.width($item));
+            this.sandbox.dom.addClass($item, 'is-loading');
 
             $loader = this.sandbox.dom.createElement('<span class="item-loader"></span>');
             this.sandbox.dom.append($item, $loader);
@@ -35070,7 +35413,7 @@ define('__component__$toolbar@husky',[],function() {
                 name: 'loader@husky',
                 options: {
                     el: $loader,
-                    size: size,
+                    size: this.options.small ? '14px' : '20px',
                     color: color
                 }
             }]);
@@ -35087,12 +35430,17 @@ define('__component__$toolbar@husky',[],function() {
             event.preventDefault();
             event.stopPropagation();
 
-            var $list = this.sandbox.dom.parent(event.currentTarget),
+            var $list = this.sandbox.dom.$(event.currentTarget),
                 id = this.sandbox.dom.data($list, 'id'),
                 item = this.items[id],
                 visible;
+            if (!!this.sandbox.dom.find('.dropdown-toggle', $list).length) {
+                // abort if disabled or dropdown-arrow wasn't clicked and but the onlyOnClickOnArrow option was true
+                if (!item || item.disabled ||
+                    (item.dropdownOptions.onlyOnClickOnArrow === true && !this.sandbox.dom.hasClass(event.target, 'dropdown-toggle'))) {
+                    return false;
+                }
 
-            if (!item || !item.disabled) {
                 if (this.sandbox.dom.hasClass($list, 'is-expanded')) {
                     visible = true;
                 }
@@ -35100,11 +35448,13 @@ define('__component__$toolbar@husky',[],function() {
 
                 if (!visible) {
                     this.sandbox.dom.addClass($list, 'is-expanded');
-
+                    this.sandbox.dom.show(this.sandbox.dom.find('.toolbar-dropdown-menu', $list));
                     // TODO: check if dropdown overlaps screen: set ul to .right-aligned
 
                     // on every click remove sub-menu
                     this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
+
+                    this.sandbox.emit(DROPDOWN_OPENED.call(this));
                 }
             }
         },
@@ -35116,8 +35466,8 @@ define('__component__$toolbar@husky',[],function() {
          * @return {integer} the index of the item
          */
         getItemIndexById = function(id, button) {
-            for (var i = -1, length = button.items.length; ++i < length;) {
-                if (button.items[i].id === id) {
+            for (var i = -1, length = button.dropdownItems.length; ++i < length;) {
+                if (button.dropdownItems[i].id === id) {
                     return i;
                 }
             }
@@ -35129,6 +35479,8 @@ define('__component__$toolbar@husky',[],function() {
          */
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
+            this.sandbox.dom.hide(this.$find('.toolbar-dropdown-menu'));
+            this.sandbox.emit(DROPDOWN_CLOSED.call(this));
         },
 
         /**
@@ -35144,13 +35496,14 @@ define('__component__$toolbar@husky',[],function() {
             var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
                 $parent = (!!this.items[item.parentId]) ? this.items[item.parentId].$el : null;
 
-            // stop if item has subitems
-            if ((item.items && item.items.length > 0) || item.loading) {
-                return;
+            // stop if loading or the dropdown gets opened
+            if (item.loading || (!!item.dropdownItems && item.dropdownOptions.onlyOnClickOnArrow !== true) ||
+                this.sandbox.dom.hasClass(event.target, 'dropdown-toggle')) {
+                return false;
             }
             hideDropdowns.call(this);
-            if (!!item.parentId && !!this.items[item.parentId].itemsOption &&
-                this.items[item.parentId].itemsOption.markable === true) {
+            if (!!item.parentId && !!this.items[item.parentId].dropdownOptions &&
+                this.items[item.parentId].dropdownOptions.markSelected === true) {
                 uniqueMarkItem.call(this, item.id);
             }
             if (!item.disabled) {
@@ -35168,19 +35521,25 @@ define('__component__$toolbar@husky',[],function() {
         triggerSelectEvent = function(item, $parent) {
 
             var parentItem,
-                original = item._original || item;
+                original = item._original || item,
+                $content = this.sandbox.dom.find('.content', this.items[item.id].$el);
+
+            // forward click to content
+            if (!!$content.length) {
+                this.sandbox.dom.click(this.sandbox.dom.children($content));
+            }
 
             // check if has parent and type of parent
             if (item.parentId) {
                 parentItem = this.items[item.parentId];
-                if (!!parentItem.type && parentItem.type === "select") {
+                if (!!parentItem.dropdownOptions.changeButton) {
                     changeMainListItem.call(this, $parent, item);
                 }
 
-                //check if itemsOption is set and pass clicked item to the callback
-                if (!!parentItem.itemsOption) {
-                    if (typeof parentItem.itemsOption.callback === 'function') {
-                        parentItem.itemsOption.callback(original);
+                //check if dropdownOptions is set and pass clicked item to the callback
+                if (!!parentItem.dropdownOptions) {
+                    if (typeof parentItem.dropdownOptions.callback === 'function') {
+                        parentItem.dropdownOptions.callback(original);
                     }
                 }
             }
@@ -35199,38 +35558,36 @@ define('__component__$toolbar@husky',[],function() {
          * @param item
          */
         changeMainListItem = function(listElement, item) {
-            // first get title
-            var listItems = this.sandbox.dom.find('span', listElement);
+            var listItems = this.sandbox.dom.find('span', listElement),
+                itemId = this.sandbox.dom.data(listElement).id;
             if (!!item.icon) {
                 this.sandbox.dom.removeClass(listItems.eq(0), '');
-                if (item.icon !== false) {
-                    this.sandbox.dom.addClass(listItems.eq(0), createIconSupportClass.call(this, item, !item.disabled));
-                }
+                this.sandbox.dom.addClass(listItems.eq(0), createIconSupportClass.call(this, item));
+                this.items[itemId].icon = item.icon;
             }
             if (!!item.title) {
+                item.title = this.sandbox.translate(item.title);
                 this.sandbox.dom.html(listItems.eq(1), item.title);
+                this.items[itemId].icon = item.title;
             }
+            this.sandbox.emit(BUTTON_CHANGED.call(this));
         },
 
         /**
          * creates the class string of an icon
          * @param item
-         * @param enabled
          * @returns {string}
          */
-        createIconSupportClass = function(item, enabled) {
+        createIconSupportClass = function(item) {
             var classArray,
                 classString = '',
-                icon = createIconClass.call(this, item, enabled);
+                icon = createIconClass.call(this, item);
 
             // create icon class
             if (item.icon) {
                 classArray = [];
                 classArray.push(icon);
                 classArray.push('icon');
-                if (item.iconSize) {
-                    classArray.push(item.iconSize);
-                }
 
                 classString = classArray.join(' ');
             }
@@ -35243,12 +35600,8 @@ define('__component__$toolbar@husky',[],function() {
          * @param item
          * @param enabled
          */
-        createIconClass = function(item, enabled) {
-            if (enabled === undefined) {
-                enabled = true;
-            }
-            var icon = (!!enabled ? item.icon : !!item.disabledIcon ? item.disabledIcon : item.icon);
-            return 'fa-' + icon;
+        createIconClass = function(item) {
+            return 'fa-' + item.icon;
         },
 
         /**
@@ -35261,30 +35614,31 @@ define('__component__$toolbar@husky',[],function() {
                 $item;
 
             this.sandbox.dom.append(listItem, $list);
-            this.sandbox.util.foreach(parent.items, function(item) {
-                if (item.divider) {
+            this.sandbox.util.foreach(parent.dropdownItems, function(dropdownItem) {
+                dropdownItem.title = this.sandbox.translate(dropdownItem.title);
+                if (dropdownItem.divider) {
                     // prevent divider when not enough items
-                    if (this.items[parent.id].items.length <= 2) {
+                    if (this.items[parent.id].dropdownItems.length <= 2) {
                         return
                     }
                     this.sandbox.dom.append($list, '<li class="divider"></li>');
                     return;
                 }
 
-                item.parentId = parent.id;
+                dropdownItem.parentId = parent.id;
                 // check id for uniqueness
-                checkItemId.call(this, item);
+                checkItemId.call(this, dropdownItem);
                 $item = this.sandbox.dom.createElement(
-                    '<li data-id="' + item.id + '"><a href="#">' + item.title + '</a></li>'
+                    '<li data-id="' + dropdownItem.id + '"><a href="#">' + dropdownItem.title + '</a></li>'
                 );
-                item.$el = $item;
-                this.items[item.id] = item;
+                dropdownItem.$el = $item;
+                this.items[dropdownItem.id] = dropdownItem;
 
-                if (item.disabled === true) {
+                if (dropdownItem.disabled === true) {
                     this.sandbox.dom.addClass($item, 'disabled');
                 }
-                if (item.marked === true) {
-                    uniqueMarkItem.call(this, item.id);
+                if (dropdownItem.marked === true) {
+                    uniqueMarkItem.call(this, dropdownItem.id);
                 }
                 this.sandbox.dom.append($list, $item);
             }.bind(this));
@@ -35318,51 +35672,32 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
-         * set width for button with dropdown-items
-         * @param listItem
-         * @param parent
-         */
-        setButtonWidth = function(listItem, parent) {
-            var maxwidth = 0, i, length;
-            if (parent.type === 'select') {
-                for (i = -1, length = parent.items.length; ++i < length;) {
-                    changeMainListItem.call(this, listItem, parent.items[i]);
-                    if (this.sandbox.dom.width(listItem) > maxwidth) {
-                        maxwidth = this.sandbox.dom.width(listItem);
-                    }
-                }
-                //set button back to default
-                changeMainListItem.call(this, listItem, parent);
-            }
-        },
-
-        /**
          * Handles requested items
          * @param requestedItems
          * @param buttonId
          */
         handleRequestedItems = function(requestedItems, buttonId) {
             var id, title, icon, callback, divider, i, length;
-            this.items[buttonId].items = [];
+            this.items[buttonId].dropdownItems = [];
 
-            //for loop sets the the items[button].items - array together
+            //for loop sets the the items[button].dropdownItems - array together
             for (i = -1, length = requestedItems.length; ++i < length;) {
 
-                if (!!this.items[buttonId].itemsOption.idAttribute) {
-                    id = requestedItems[i][this.items[buttonId].itemsOption.idAttribute];
+                if (!!this.items[buttonId].dropdownOptions.idAttribute) {
+                    id = requestedItems[i][this.items[buttonId].dropdownOptions.idAttribute];
                 } else if (!!requestedItems[i].id) {
                     id = requestedItems[i].id;
                 }
 
-                if (!!this.items[buttonId].itemsOption.titleAttribute) {
-                    title = requestedItems[i][this.items[buttonId].itemsOption.titleAttribute];
+                if (!!this.items[buttonId].dropdownOptions.titleAttribute) {
+                    title = requestedItems[i][this.items[buttonId].dropdownOptions.titleAttribute];
                 } else if (!!requestedItems[i].title) {
                     title = requestedItems[i].title;
                 }
-
-                if (!!this.items[buttonId].itemsOption.translate) {
-                    title = this.sandbox.translate(this.items[buttonId].itemsOption.languageNamespace + title);
+                if (!!this.items[buttonId].dropdownOptions.languageNamespace) {
+                    title += this.items[buttonId].dropdownOptions.languageNamespace + title;
                 }
+                title = this.sandbox.translate(title);
 
                 if (!!requestedItems[i].icon) {
                     icon = requestedItems[i].icon;
@@ -35378,7 +35713,7 @@ define('__component__$toolbar@husky',[],function() {
                     divider = false;
                 }
 
-                this.items[buttonId].items[i] = {
+                this.items[buttonId].dropdownItems[i] = {
                     id: id,
                     title: title,
                     icon: icon,
@@ -35392,8 +35727,8 @@ define('__component__$toolbar@husky',[],function() {
             this.sandbox.emit(
                 ITEMS_SET.call(this),
                 buttonId,
-                this.items[buttonId].items,
-                this.items[buttonId].itemsOption.preSelected
+                this.items[buttonId].dropdownItems,
+                this.items[buttonId].dropdownOptions.preSelected
             );
         },
 
@@ -35403,7 +35738,7 @@ define('__component__$toolbar@husky',[],function() {
         collapseAll = function() {
             for (var key in this.items) {
                 if (this.items.hasOwnProperty(key)) {
-                    collapseButton.call(this, this.items[key]);
+                    toggleCollapseButton.call(this, this.items[key], true);
                 }
             }
             this.collapsed = true;
@@ -35415,53 +35750,26 @@ define('__component__$toolbar@husky',[],function() {
         expandAll = function() {
             for (var key in this.items) {
                 if (this.items.hasOwnProperty(key)) {
-                    if (this.items[key].hideTitle === true) {
-                        expandButton.call(this, this.items[key], true);
-                    } else {
-                        expandButton.call(this, this.items[key], false);
-                    }
+                    toggleCollapseButton.call(this, this.items[key], false);
                 }
             }
             this.collapsed = false;
         },
 
-        /**
-         * Collapses a given button
-         * @param button {Object}
-         */
-        collapseButton = function(button) {
-            // collapsing is senseless for dropdown-items
-            if (!button.parentId) {
-
-                // remove set button width
-                this.sandbox.dom.css(button.$el, {'min-width': ''});
-
-                //hide title
-                this.sandbox.dom.hide(this.sandbox.dom.find('.title', button.$el));
-
-                //set button width
-                if (!button.items) {
-                    this.sandbox.dom.css(button.$el, {'min-width': constants.collapsedWidth + 'px'});
-                }
-            }
-        },
-
 
         /**
-         * Expands a given button
+         * Expands or collapses a given button
          * @param button {Object}
-         * @param hideTitle {Boolean} if true title get hidden
+         * @param collapse {Boolean} if true button gets collapsed
          */
-        expandButton = function(button, hideTitle) {
-            if (!button.parentId) {
+        toggleCollapseButton = function(button, collapse) {
+            if (!button.parentId && !!button.icon) {
                 // show title
-                if (hideTitle === true) {
+                if (collapse === true) {
                     this.sandbox.dom.hide(this.sandbox.dom.find('.title', button.$el));
                 } else {
-                    this.sandbox.dom.show(this.sandbox.dom.find('.title', button.$el));
+                    this.sandbox.dom.removeAttr(this.sandbox.dom.find('.title', button.$el), 'style');
                 }
-
-                setButtonWidth.call(this, button.$el, button);
             }
         },
 
@@ -35506,16 +35814,16 @@ define('__component__$toolbar@husky',[],function() {
          * @param button
          */
         deleteDropdown = function(button) {
-            if (!!button.items) {
+            if (!!button.dropdownItems) {
                 // remove the related stuff
                 this.sandbox.dom.remove(this.sandbox.dom.find('.toolbar-dropdown-menu', button.$el));
-                this.sandbox.dom.removeClass(this.sandbox.dom.children(button.$el, 'a'), 'dropdown-toggle');
+                this.sandbox.dom.hide(this.sandbox.dom.find('.dropdown-toggle', button.$el));
 
                 // delete JS related stuff
-                for (var i = -1, length = button.items.length; ++i < length;) {
-                    delete this.items[button.items[i].id];
+                for (var i = -1, length = button.dropdownItems.length; ++i < length;) {
+                    delete this.items[button.dropdownItems[i].id];
                 }
-                button.items = [];
+                button.dropdownItems = [];
             }
         },
 
@@ -35565,15 +35873,10 @@ define('__component__$toolbar@husky',[],function() {
             // add own group for search item
             var searchGroup = {
                 id: 'search',
-                align: this.options.searchAlign
+                align: 'right'
             };
 
-            // this statement ensures that the the automatically added search always floats on the right of the rest
-            if (this.options.searchAlign === 'left') {
-                this.options.groups.push(searchGroup);
-            } else {
-                this.options.groups.unshift(searchGroup);
-            }
+            this.options.groups.unshift(searchGroup);
 
             // push search item
             data.push({
@@ -35611,8 +35914,8 @@ define('__component__$toolbar@husky',[],function() {
                     .fail(function(data) {
                         this.sandbox.logger.log('data could not be loaded:', data);
                     }.bind(this));
-            } else if (!!this.options.data) {
-                this.render((this.options.data));
+            } else if (!!this.options.buttons) {
+                this.render((this.options.buttons));
             } else {
                 this.sandbox.logger.log('no data provided for tabs!');
             }
@@ -35631,7 +35934,7 @@ define('__component__$toolbar@husky',[],function() {
         render: function(data) {
 
             var classArray, addTo,
-                $listItem, $listLink,
+                $listItem,
                 title;
 
             // if has search is set in options push a search item and it's own group
@@ -35646,6 +35949,8 @@ define('__component__$toolbar@husky',[],function() {
 
             // create all elements
             this.sandbox.util.foreach(data, function(item) {
+                item = this.sandbox.util.extend(true, {}, item, itemDefaults);
+                item.title = this.sandbox.translate(item.title);
 
                 // check id for uniqueness
                 checkItemId.call(this, item);
@@ -35670,10 +35975,6 @@ define('__component__$toolbar@husky',[],function() {
                     classArray.push('disabled');
                 }
 
-                if (typeof item.hideTitle === 'undefined') {
-                    item.hideTitle = false;
-                }
-
                 // if group is set to and exists add it to that group else take the first group
                 if (!!item.group && !!this.itemGroups[item.group]) {
                     addTo = this.itemGroups[item.group];
@@ -35688,20 +35989,26 @@ define('__component__$toolbar@husky',[],function() {
 
                     insertSearch.call(this, $listItem);
                 } else {
+                    if (!!item.icon) {
+                        // create icon span
+                        this.sandbox.dom.append($listItem, '<span class="' + createIconSupportClass.call(this, item) + '" />');
+                    }
 
-                    $listLink = this.sandbox.dom.createElement('<a href="#" />');
-                    this.sandbox.dom.append($listItem, $listLink);
-
-                    // create icon span
-                    this.sandbox.dom.append($listLink, '<span class="' + createIconSupportClass.call(this, item, !item.disabled) + '" />');
+                    // create content span
+                    if (!!item.content) {
+                        var $contentSpan = this.sandbox.dom.createElement('<span class="content"/>');
+                        this.sandbox.dom.append($contentSpan, item.content);
+                        this.sandbox.dom.append($listItem, $contentSpan);
+                        this.sandbox.start($contentSpan);
+                    }
 
                     // create title span
-                    title = item.title ? item.title : '';
-                    if (item.hideTitle === true || this.options.showTitleAsTooltip === true) {
-                        this.sandbox.dom.append($listLink, '<span style="display:none" class="title">' + title + '</span>');
-                    } else {
-                        this.sandbox.dom.append($listLink, '<span class="title">' + title + '</span>');
-                    }
+                    title = (!!item.title && this.options.showTitle === true) ? item.title : '';
+                    this.sandbox.dom.append($listItem, '<span class="title">' + title + '</span>');
+
+                    // add dropdown-toggle element (hidden at default)
+                    this.sandbox.dom.append($listItem, this.sandbox.dom.createElement('<span class="dropdown-toggle" />'));
+                    this.sandbox.dom.hide(this.sandbox.dom.find('.dropdown-toggle', $listItem));
 
                     //add tooltip to item
                     if (this.options.showTitleAsTooltip === true) {
@@ -35713,17 +36020,17 @@ define('__component__$toolbar@husky',[],function() {
                         hideItem.call(this, $listItem);
                     }
 
-                    if (!!item.itemsOption && !!item.itemsOption.url) {
-                        this.sandbox.util.load(item.itemsOption.url)
+                    if (!!item.dropdownOptions && !!item.dropdownOptions.url) {
+                        this.sandbox.util.load(item.dropdownOptions.url)
                             .then(function(result) {
-                                var data = result[this.options.itemsRequestKey];
-                                if (!!item.itemsOption.resultKey) {
-                                    data = data[item.itemsOption.resultKey];
+                                var data = result[this.options.dropdownItemsKey];
+                                if (!!item.dropdownOptions.resultKey) {
+                                    data = data[item.dropdownOptions.resultKey];
                                 }
 
                                 // add items if present
-                                if (!!item.items) {
-                                    data = data.concat(item.items);
+                                if (!!item.dropdownItems) {
+                                    data = data.concat(item.dropdownItems);
                                 }
 
                                 handleRequestedItems.call(this, data, item.id);
@@ -35734,8 +36041,8 @@ define('__component__$toolbar@husky',[],function() {
                             }.bind(this));
                     } else {
                         // now create subitems
-                        if (!!item.items) {
-                            this.sandbox.dom.addClass($listLink, 'dropdown-toggle');
+                        if (!!item.dropdownItems) {
+                            this.sandbox.dom.removeAttr(this.sandbox.dom.find('.dropdown-toggle', $listItem), 'style');
                             createDropdownMenu.call(this, $listItem, item);
                         }
                         dfd.resolve();
@@ -35746,9 +36053,6 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.append(addTo, $listItem);
 
                 //set width for buttons with dropdowns
-                if (!!item.items) {
-                    setButtonWidth.call(this, $listItem, item);
-                }
                 this.items[item.id].$el = $listItem;
 
             }.bind(this));
@@ -40466,12 +40770,14 @@ define('__component__$ckeditor@husky',[], function() {
         getConfig = function() {
             var config = this.sandbox.util.extend(false, {}, this.options);
 
-            config.toolbar = [
-                {name: 'semantics', items: ['Format']},
-                {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
-                {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-                {name: 'list', items: ['NumberedList', 'BulletedList']}
-            ];
+            if (!config.toolbar) {
+                config.toolbar = [
+                    {name: 'semantics', items: ['Format']},
+                    {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
+                    {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                    {name: 'list', items: ['NumberedList', 'BulletedList']}
+                ];
+            }
 
             // activate paste from Word
             if (this.options.pasteFromWord === true) {
@@ -41991,857 +42297,6 @@ define('__component__$label@husky',[],function() {
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
- * @module husky/components/matcher
- */
-
-/**
- * @class Matcher
- * @constructor
- *
- * @params {Object} [options] Configuration object
- * @params {String} [options.instanceName] name of the instance
- * @params {Array} [options.dbColumns] Array with objects containing DB-columns information
- * @params {Object} [options.data] columns to match
- * @params {Object} [options.translations] objects containing translation keys
- * @params {Boolean} [options.multiAssignDefault] default value for the multiAssign-property of DB-columns
- */
-define('__component__$matcher@husky',[], function() {
-
-    'use strict';
-
-    var defaults = {
-            instanceName: 'undefined',
-            dbColumns: [],
-            data: null,
-            translations: {},
-            multiAssignDefault: false
-        },
-
-        constants = {
-            componentClass: 'husky-matcher',
-            headerClass: 'match-header',
-            samplesClass: 'samples',
-            matchedClass: 'matched',
-            unmatchedClass: 'unmatched',
-            skippedClass: 'skipped',
-            editClass: 'edit',
-            buttonClass: 'button',
-            okButtonClass: 'ok-button',
-            dropdownClass: 'column-dropdown',
-            dropdownInstanceClass: 'dropdown-instance',
-            overflowClass: 'overflow',
-            wrapperClass: 'wrapper'
-        },
-
-        templates = {
-            column: [
-                '<div class="column">',
-                '<div class="match-header"></div>',
-                '<div class="column-title"><%= title %></div>',
-                '<div class="samples"></div>',
-                '</div>'
-            ].join(''),
-            header: [
-                '<div class="inner">',
-                '<span class="title"><%= title %></span>',
-                '<span class="matched-desc"><%= matchedStr %></span>',
-                '<div class="button"><%= editStr %></div>',
-                '</div>'
-            ].join(''),
-            editHeader: [
-                '<div class="inner">',
-                '<span class="headline"><%= columnStr %></span>',
-                '<div class="column-dropdown"></div>',
-                '<a class="fa-check save-button btn btn-highlight btn-large ok-button" href="#"></a>',
-                '<div class="button"><%= skipStr %></div>',
-                '</div>'
-            ].join(''),
-            sample: [
-                '<span><%= sampleStr %></span>'
-            ].join('')
-        },
-
-        /**
-         * namespace for events
-         * @type {string}
-         */
-            eventNamespace = 'husky.matcher.',
-
-        /**
-         * raised after initialization process
-         * @event husky.matcher.<instance-name>.initialize
-         */
-            INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /**
-         * raised after a column is matched
-         * @event husky.matcher.<instance-name>.matched
-         * @param {Object} Object with column and matched db-column
-         */
-            MATCHED = function() {
-            return createEventName.call(this, 'matched');
-        },
-
-        /**
-         * raised after a column is skipped
-         * @event husky.matcher.<instance-name>.skipped
-         * @param {Object} Object with column
-         */
-            SKIPPED = function() {
-            return createEventName.call(this, 'skipped');
-        },
-
-        /**
-         * raised after a column is edited (matched or skipped)
-         * @event husky.matcher.<instance-name>.edited
-         * @param {Number} Number of remaining unmatched columns
-         */
-            EDITED = function() {
-            return createEventName.call(this, 'edited');
-        },
-
-        /**
-         * listens on
-         * @event husky.matcher.<instance-name>.get-data
-         * @param {Function} Callback to pass the array with all columns
-         */
-            GET_DATA = function() {
-            return createEventName.call(this, 'get-data');
-        },
-
-        /** returns normalized event names */
-            createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        };
-
-    return {
-
-        /**
-         * Initialize component
-         */
-        initialize: function() {
-            this.sandbox.logger.log('initialize', this);
-
-            this.sandbox.dom.addClass(this.$el, constants.componentClass);
-
-            //merge options with defaults
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            this.$wrapper = null;
-
-            this.setProperties();
-            this.parseData();
-
-            this.render();
-            this.bindDomEvents();
-            this.bindCustomEvents();
-            this.overflowObserver();
-
-            this.sandbox.emit(INITIALIZED.call(this));
-        },
-
-        /**
-         * Set the properties default values
-         */
-        setProperties: function() {
-            this.columns = [];
-            this.dbColumns = [];
-
-            this.translations = {
-                matchedColumn: 'sulu.matcher.matched-column',
-                unmatchedColumn: 'sulu.matcher.unmatched-column',
-                edit: 'sulu.matcher.edit',
-                column: 'sulu.matcher.column',
-                skip: 'sulu.matcher.skip',
-                skipped: 'sulu.matcher.skipped',
-                pleaseChoose: 'sulu.matcher.please-choose'
-            };
-
-            //merge translations with translations passed with options
-            this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
-        },
-
-        /**
-         * Binds DOM related events
-         */
-        bindDomEvents: function() {
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.overflowObserver.bind(this));
-        },
-
-        /**
-         * Binds custom events
-         */
-        bindCustomEvents: function() {
-            this.sandbox.on(GET_DATA.call(this), function(callback) {
-                callback(this.getPublicColumnsArray());
-            }.bind(this));
-        },
-
-        /**
-         * Returns the db-column for a given id
-         * @param id
-         */
-        getDbColumnWithId: function(id) {
-            for (var i = -1, length = this.dbColumns.length; ++i < length;) {
-                if (this.dbColumns[i].id === id) {
-                    return this.dbColumns[i];
-                }
-            }
-            return null;
-        },
-
-        /**
-         * Brings the passed data into the right format
-         */
-        parseData: function() {
-            var id, samples, matched, suggestion;
-
-            this.sandbox.util.foreach(this.options.data, function(column, i) {
-                if (typeof column.id !== 'undefined') {
-                    id = column.id;
-                } else {
-                    id = Math.floor((Math.random() * 10000) + 1);
-                }
-
-                if (typeof column.samples !== 'undefined') {
-                    samples = column.samples;
-                    matched = column.matched;
-                } else {
-                    samples = [];
-                    matched = false;
-                }
-
-                if (typeof column.suggestion !== 'undefined') {
-                    suggestion = column.suggestion;
-                } else {
-                    suggestion = null;
-                }
-
-                this.columns[i] = {
-                    id: id,
-                    title: column.title,
-                    samples: samples,
-                    suggestion: suggestion,
-                    matched: matched,
-                    match: null,
-                    skipped: false,
-                    inEdit: false,
-                    $el: null,
-                    $header: null,
-                    origData: this.options.data[i]
-                };
-            }.bind(this));
-
-            // parse the passed database-columns
-            this.sandbox.util.foreach(this.options.dbColumns, function(dbColumn, i) {
-                this.dbColumns[i] = {
-                    id: dbColumn.table + '.' + dbColumn.col,
-                    table: dbColumn.table,
-                    col: dbColumn.col,
-                    name: dbColumn.name,
-                    disabled: false,
-                    multiAssign: (typeof dbColumn.multiAssign !== 'undefined') ? dbColumn.multiAssign : this.options.multiAssignDefault
-                };
-            }.bind(this));
-        },
-
-        /**
-         * Renders the columns
-         */
-        render: function() {
-            this.$wrapper = this.sandbox.dom.createElement('<div class="' + constants.wrapperClass + '"/>');
-            this.sandbox.dom.html(this.$el, this.$wrapper);
-
-            this.sandbox.util.foreach(this.columns, function(column, i) {
-
-                //render skeleton
-                column.$el = this.sandbox.dom.createElement(_.template(templates.column)({
-                    title: column.title
-                }));
-                column.$header = this.sandbox.dom.find('.' + constants.headerClass, column.$el);
-
-                //render samples
-                this.sandbox.dom.html(
-                    this.sandbox.dom.find('.' + constants.samplesClass, column.$el),
-                    this.getSampleHtml(column.samples)
-                );
-
-                if (column.matched === true) {
-                    this.sandbox.dom.addClass(column.$el, constants.matchedClass);
-                } else {
-                    this.sandbox.dom.addClass(column.$el, constants.unmatchedClass);
-                }
-
-                this.columns[i].$el = column.$el;
-                this.columns[i].$header = column.$header;
-
-                this.renderHeader(this.columns[i]);
-
-                this.sandbox.dom.append(this.$wrapper, this.columns[i].$el);
-            }.bind(this));
-        },
-
-        /**
-         * Returns the sample html for given samples
-         * @param samples {Array} Array of strings
-         * @returns {string} the samples html
-         */
-        getSampleHtml: function(samples) {
-            var string = '';
-
-            this.sandbox.util.foreach(samples, function(sample) {
-                string += _.template(templates.sample)({
-                    sampleStr: sample
-                });
-            }.bind(this));
-
-            return string;
-        },
-
-        /**
-         * Renders the header of a column
-         * @param column
-         */
-        renderHeader: function(column) {
-
-            if (column.inEdit === true) {
-                this.sandbox.dom.html(column.$header, _.template(templates.editHeader)({
-                    columnStr: this.sandbox.translate(this.translations.column),
-                    skipStr: this.sandbox.translate(this.translations.skip)
-                }));
-                this.startColumnDropdown(column);
-
-            } else if (column.matched === true) {
-                this.stopColumnDropDown(column);
-
-                this.sandbox.dom.html(column.$header, _.template(templates.header)({
-                    title: column.match.name,
-                    matchedStr: this.sandbox.translate(this.translations.matchedColumn),
-                    editStr: this.sandbox.translate(this.translations.edit)
-                }));
-            } else if (column.skipped === true) {
-                this.stopColumnDropDown(column);
-
-                this.sandbox.dom.html(column.$header, _.template(templates.header)({
-                    title: (column.suggestion !== null) ? column.suggestion.name : '',
-                    matchedStr: this.sandbox.translate(this.translations.skipped),
-                    editStr: this.sandbox.translate(this.translations.edit)
-                }));
-            } else if (column.matched === false) {
-                this.stopColumnDropDown(column);
-
-                this.sandbox.dom.html(column.$header, _.template(templates.header)({
-                    title: (column.suggestion !== null) ? column.suggestion.name : '',
-                    matchedStr: this.sandbox.translate(this.translations.unmatchedColumn),
-                    editStr: this.sandbox.translate(this.translations.edit)
-                }));
-            }
-
-            this.unbindHeaderDomEvents(column);
-            this.bindHeaderDomEvents(column);
-        },
-
-        /**
-         * Stops the dropdown-component for a given column
-         * @param column
-         */
-        stopColumnDropDown: function(column) {
-            this.sandbox.stop(this.sandbox.dom.find('.' + constants.dropdownInstanceClass, column.$header));
-        },
-
-        /**
-         * Starts the Dropdown component for a given column
-         * @param column
-         */
-        startColumnDropdown: function(column) {
-            var $element = this.sandbox.dom.$('<div class="' + constants.dropdownInstanceClass + '">'),
-                selected = [];
-
-            this.sandbox.dom.html(this.sandbox.dom.find('.' + constants.dropdownClass, column.$header), $element);
-
-            if (!!$element.length) {
-                if (column.matched === true) {
-                    selected = [column.match.id];
-                } else if (column.suggestion !== null) {
-                    selected = [column.suggestion.table + '.' + column.suggestion.col];
-                }
-
-                this.sandbox.start([
-                    {
-                        name: 'select@husky',
-                        options: {
-                            el: $element,
-                            instanceName: this.options.instanceName + column.id,
-                            defaultLabel: this.sandbox.translate(this.translations.pleaseChoose),
-                            data: this.dbColumns,
-                            preSelectedElements: selected
-                        }
-                    }
-                ]);
-            } else {
-                this.sandbox.logger.log('ERROR: No container found to load the dropdown');
-            }
-        },
-
-        /**
-         * Gets the value of the dropdown for a given column
-         * @param {Object} column
-         * @param {Function} callback
-         */
-        getDropdownValue: function(column, callback) {
-            this.sandbox.emit(
-                'husky.select.' + this.options.instanceName + column.id + '.get-checked',
-                callback
-            );
-        },
-
-        /**
-         * Binds the dom events for the header of a given column
-         * @param column
-         */
-        bindHeaderDomEvents: function(column) {
-            if (column.inEdit === false) {
-                this.sandbox.dom.on(column.$header, 'click',
-                    this.switchToEdit.bind(this, column), '.' + constants.buttonClass);
-            } else {
-                this.sandbox.dom.on(column.$header, 'click',
-                    this.switchToSkipState.bind(this, column), '.' + constants.buttonClass);
-
-                this.sandbox.dom.on(column.$header, 'click',
-                    this.switchToMatchedState.bind(this, column), '.' + constants.okButtonClass);
-            }
-        },
-
-        /**
-         * Unbinds the dom events for the header of a given column
-         * @param column
-         */
-        unbindHeaderDomEvents: function(column) {
-            this.sandbox.dom.off(column.$header);
-        },
-
-        /**
-         * Resets the state of a column
-         * @param column
-         */
-        resetColumn: function(column) {
-            column.matched = false;
-            column.skipped = false;
-            column.inEdit = false;
-            column.match = null;
-            this.removeStateClasses(column);
-        },
-
-        /**
-         * Removes state-specific css-classes of a given column
-         * @param column
-         */
-        removeStateClasses: function(column) {
-            this.sandbox.dom.removeClass(column.$el, constants.matchedClass);
-            this.sandbox.dom.removeClass(column.$el, constants.unmatchedClass);
-            this.sandbox.dom.removeClass(column.$el, constants.skippedClass);
-            this.sandbox.dom.removeClass(column.$el, constants.editClass);
-        },
-
-        /**
-         * Sets a column in edit-state
-         * @param column
-         */
-        switchToEdit: function(column) {
-            this.removeStateClasses(column);
-            column.inEdit = true;
-            this.sandbox.dom.addClass(column.$el, constants.editClass);
-            if (!!column.match) {
-                column.match.disabled = false;
-            }
-
-            this.renderHeader(column);
-        },
-
-        /**
-         * Sets a button in skipped-state
-         * @param column
-         */
-        switchToSkipState: function(column) {
-            this.resetColumn(column);
-            column.skipped = true;
-
-            this.sandbox.dom.addClass(column.$el, constants.skippedClass);
-
-            this.renderHeader(column);
-
-            this.sandbox.emit(SKIPPED.call(this), this.getPublicColumnObject(column));
-            this.sandbox.emit(EDITED.call(this), this.getUnmatchedNumber());
-            this.updateData();
-        },
-
-        /**
-         * Sets a button in matched-state
-         * @param column
-         */
-        switchToMatchedState: function(column, event) {
-            var selectedDbColumn;
-
-            this.sandbox.dom.preventDefault(event);
-
-            this.getDropdownValue(column, function(selected) {
-                // if something is selected
-                if (selected.length === 1) {
-                    selectedDbColumn = this.getDbColumnWithId(selected[0]);
-                    // if db-column is not in use
-                    if (!!selectedDbColumn && selectedDbColumn.disabled === false) {
-
-                        if (selectedDbColumn.multiAssign !== true) {
-                            selectedDbColumn.disabled = true;
-                        }
-
-                        this.resetColumn(column);
-                        column.matched = true;
-                        column.match = selectedDbColumn;
-                        column.suggestion = selectedDbColumn;
-                        this.sandbox.dom.addClass(column.$el, constants.matchedClass);
-
-                        this.renderHeader(column);
-
-                        this.sandbox.emit(MATCHED.call(this), this.getPublicColumnObject(column));
-                        this.sandbox.emit(EDITED.call(this), this.getUnmatchedNumber());
-                        this.updateData();
-                    }
-                }
-            }.bind(this));
-        },
-
-        /**
-         * Checks if el has a vertical-scrollbar and
-         * sets an overflow-css-class
-         */
-        overflowObserver: function() {
-            if (this.sandbox.dom.get(this.$wrapper, 0).scrollWidth > this.sandbox.dom.width(this.$wrapper)) {
-                this.sandbox.dom.addClass(this.$el, constants.overflowClass);
-            } else {
-                this.sandbox.dom.removeClass(this.$el, constants.overflowClass);
-            }
-        },
-
-        /**
-         * Creates the object which is passed with events or written in the data-attr
-         * @param column {Object} Column to create the object for
-         * @returns {Object}
-         */
-        getPublicColumnObject: function(column) {
-            return {
-                column: column.origData,
-                matched: column.matched,
-                skipped: column.skipped,
-                dbColumn: column.match
-            };
-        },
-
-        /**
-         * Creates the object which is passed with events or written in the data-attr
-         * @returns {Array}
-         */
-        getPublicColumnsArray: function() {
-            var arrReturn = [];
-            this.sandbox.util.foreach(this.columns, function(column) {
-                arrReturn.push(this.getPublicColumnObject(column));
-            }.bind(this));
-            return arrReturn;
-        },
-
-        /**
-         * Returns the number of unmatched columns
-         * @returns {Number}
-         */
-        getUnmatchedNumber: function() {
-            var x = 0;
-            this.sandbox.util.foreach(this.columns, function(column) {
-                if (column.matched === false && column.skipped === false) {
-                    x++;
-                }
-            });
-            return x;
-        },
-
-        /**
-         * Rewrites the data-attr
-         */
-        updateData: function() {
-            this.sandbox.dom.data(this.$el, 'husky-matcher', this.getPublicColumnsArray());
-        }
-    };
-
-});
-
-/**
- * This file is part of Husky frontend development framework.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * @module husky/components/process
- */
-
-/**
- * @class Process
- * @constructor
- *
- * @params {Object} [options] Configuration object
- * @params {Array} [options.data] Array of processes array items can be strings and/or objects with id and name
- * @params {Number} [options.activeProcess] process to activate at the beginning, can be either the id or the position-index of the process
- */
-define('__component__$process@husky',[], function() {
-
-    'use strict';
-
-    var defaults = {
-            instanceName: 'undefined',
-            data: null,
-            activeProcess: null
-        },
-
-        constants = {
-            componentClass: 'husky-process',
-            activeClass: 'active',
-            firstClass: 'first',
-            lastClass: 'last',
-            processClass: 'process',
-            processNameClass: 'name',
-            backClass: 'back',
-            frontClass: 'front'
-        },
-
-        templates = {
-            process: [
-                '<div class="process<%= classes %>" data-id="<%= id %>">',
-                '   <div class="back"></div>',
-                '   <div class="name"><p><%= name %></p></div>',
-                '   <div class="front"></div>',
-                '</div>'
-            ].join('')
-        },
-
-        /**
-         * namespace for events
-         * @type {string}
-         */
-            eventNamespace = 'husky.process.',
-
-        /**
-         * raised after initialization process
-         * @event husky.process.<instance-name>.initialize
-         */
-            INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /**
-         * listens on and changes the active process
-         * @event husky.process.<instance-name>.set-active
-         * @param {Number} id or position of the process
-         */
-            SET_ACTIVE = function() {
-            return createEventName.call(this, 'set-active');
-        },
-
-        /**
-         * listens on and passes the active process to it
-         * @event husky.process.<instance-name>.get-active
-         * @param {Function} callback to pass the active process to
-         */
-            GET_ACTIVE = function() {
-            return createEventName.call(this, 'get-active');
-        },
-
-        /** returns normalized event names */
-            createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        };
-
-    return {
-
-        /**
-         * Initialize component
-         */
-        initialize: function() {
-            //merge options with defaults
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            this.sandbox.dom.addClass(this.$el, constants.componentClass);
-
-            this.setProperties();
-            this.parseData();
-
-            this.render();
-            this.setProcessWidth();
-            this.setProcessActive(this.options.activeProcess);
-
-            this.bindDomEvents();
-            this.bindCustomEvents();
-
-            this.sandbox.emit(INITIALIZED.call(this));
-        },
-
-        /**
-         * Sets the default property values
-         */
-        setProperties: function() {
-            this.data = [];
-            this.processes = [];
-        },
-
-        /**
-         * Brings the passed data into the right format
-         */
-        parseData: function() {
-            var id, name;
-
-            this.sandbox.util.foreach(this.options.data, function(process, i) {
-                if (typeof process === 'string') {
-                    name = process;
-                    id = Math.floor((Math.random() * 10000) + 1);
-                } else {
-                    name = process.name;
-                    id = process.id;
-                }
-                this.data[i] = {
-                    id: id,
-                    name: name,
-                    origData: this.options.data[i]
-                };
-            }.bind(this));
-        },
-
-        bindDomEvents: function() {
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.setProcessWidth.bind(this));
-        },
-
-        bindCustomEvents: function() {
-            this.sandbox.on(SET_ACTIVE.call(this), function(id) {
-                this.setProcessActive(id);
-            }.bind(this));
-
-            this.sandbox.on(GET_ACTIVE.call(this), function(callback) {
-                var processId = this.sandbox.dom.attr(
-                    this.sandbox.dom.find('.' + constants.activeClass, this.$el),
-                    'data-id'
-                );
-                if (typeof processId !== 'undefined') {
-                    callback(this.getProcessWithId(parseInt(processId, 10)).origData);
-                } else {
-                    callback(null);
-                }
-            }.bind(this));
-        },
-
-        /**
-         * Renders the processes
-         */
-        render: function() {
-            var classes,
-                dataLength = this.data.length,
-                $element;
-
-            this.sandbox.util.foreach(this.data, function(process, i) {
-                classes = '';
-                if (i === 0) {
-                    classes = ' ' + constants.firstClass;
-                } else if (i + 1 === dataLength) {
-                    classes = ' ' + constants.lastClass;
-                }
-
-                $element = this.sandbox.dom.createElement(_.template(templates.process)({
-                    classes: classes,
-                    name: process.name,
-                    id: process.id
-                }));
-
-                this.processes[i] = {
-                    name: process.name,
-                    id: process.id,
-                    $el: $element,
-                    origData: process.origData
-                };
-
-                this.sandbox.dom.append(this.$el, this.processes[i].$el);
-            }.bind(this));
-        },
-
-        /**
-         * Sets the width of the processes
-         */
-        setProcessWidth: function() {
-            var processWidth = Math.floor(this.sandbox.dom.width(this.$el) / this.processes.length),
-                processNameWidth = processWidth - this.sandbox.dom.width(
-                    this.sandbox.dom.find('.' + constants.backClass, this.$el)
-                ) - this.sandbox.dom.width(
-                    this.sandbox.dom.find('.' + constants.frontClass, this.$el)
-                );
-
-            //set width of the process container
-            this.sandbox.dom.width(this.sandbox.dom.find('.' + constants.processClass, this.$el), processWidth);
-
-            //set the width of the process-name container
-            this.sandbox.dom.width(
-                this.sandbox.dom.find('.' + constants.processClass + ' .' + constants.processNameClass, this.$el),
-                processNameWidth
-            );
-        },
-
-        /**
-         * Returns the process for a given id
-         * @param {Number} id
-         */
-        getProcessWithId: function(id) {
-            for (var i = -1, length = this.processes.length; ++i < length;) {
-                if (id === this.processes[i].id) {
-                    return this.processes[i];
-                }
-            }
-            return null;
-        },
-
-        /**
-         * Sets a process active
-         * @param {Number} id The id of the process - if non existent it takes the param as the index
-         */
-        setProcessActive: function(id) {
-            var process = this.getProcessWithId(id);
-
-            if (process !== null) {
-                this.setAllProcessesInactive();
-                this.sandbox.dom.addClass(process.$el, constants.activeClass);
-            } else if (!!this.processes[(id - 1)]) {
-                this.setAllProcessesInactive();
-                this.sandbox.dom.addClass(this.processes[(id - 1)].$el, constants.activeClass);
-            }
-        },
-
-        /**
-         * Sets all processes inactive
-         */
-        setAllProcessesInactive: function() {
-            this.sandbox.dom.removeClass(
-                this.sandbox.dom.find('.' + constants.activeClass, this.$el),
-                constants.activeClass
-            );
-        }
-    };
-
-});
-
-/**
- * This file is part of Husky frontend development framework.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
  * @module husky/components/process
  */
 
@@ -43093,7 +42548,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.afterDropCallback] callback which gets called after a file got dropped. Has to return a promise. If the promise gets resolved the file gets uploaded
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
- * @params {String} [options.skin] skin class for the dropzone. currently available: 'small' or '' (default)
+ * @params {String} [options.skin] skin class for the dropzone. currently available: 'overlay', 'small' or '' (default)
  * @params {Boolean} [options.keepFilesAfterSuccess] True to not slide the files away after uploading them successfully
  * @params {Boolean} [options.dropzoneEnabled] Should the dropzone be enabled initially
  * @params {Boolean} [options.cancelUploadOnOverlayClick] Cancel the upload process when the user clicks on the overlay background
@@ -43142,12 +42597,14 @@ define('__component__$dropzone@husky',[], function() {
         /** templates for component */
         templates = {
             basic: [
-                '<div class="' + constants.descriptionClass + '">',
-                    '<div class="fa-<%= icon %> icon"></div>',
-                    '<span class="title"><%= title %></span>',
-                    '<span class="addition"><%= description %></span>',
-                '</div>',
-                '<div class="' + constants.uploadedItemContainerClass + '"></div>'
+                '<div class="dropzone-container">',
+                '   <div class="' + constants.descriptionClass + '">',
+                        '<div class="fa-<%= icon %> icon"></div>',
+                        '<span class="title"><%= title %></span>',
+                        '<span class="addition"><%= description %></span>',
+                '   </div>',
+                '   <div class="' + constants.uploadedItemContainerClass + '"></div>',
+                '</div>'
             ].join(''),
             uploadItem: [
                 '<div class="' + constants.uploadItemClass + '">' +
@@ -51034,7 +50491,11 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
  * with this source code in the file LICENSE.
  *
  */
-define('husky_extensions/util',[],function() {
+
+/**
+ * @deprecated use util-service instead
+ */
+define('husky_extensions/util',['services/husky/util'], function(Util) {
 
     'use strict';
 
@@ -51042,215 +50503,47 @@ define('husky_extensions/util',[],function() {
         name: 'Util',
 
         initialize: function(app) {
-            /**
-             * Replace rules for escape html function
-             * @type {{}}
-             */
-            var entityMap = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': '&quot;',
-                "'": '&#39;',
-                "/": '&#x2F;'
-            };
+            app.core.util.compare = Util.compare;
 
-            // for comparing arrays
-            app.core.util.compare = function(a, b) {
-                if (typeof a === 'object' && typeof b === 'object') {
-                    return JSON.stringify(a) === JSON.stringify(b);
-                }
-            };
+            app.core.util.typeOf = Util.typeOf;
 
-            // Crockfords better typeof
-            app.core.util.typeOf = function(value) {
-                var s = typeof value;
-                if (s === 'object') {
-                    if (value) {
-                        if (value instanceof Array) {
-                            s = 'array';
-                        }
-                    } else {
-                        s = 'null';
-                    }
-                }
-                return s;
-            };
+            app.core.util.isEqual = Util.isEqual;
 
-            app.core.util.isEqual = _.isEqual;
+            app.core.util.isEmpty = Util.isEmpty;
 
-            app.core.util.isEmpty = _.isEmpty;
+            app.core.util.foreach = Util.foreach;
 
-            /**
-             * cool guy loop implementation of foreach: http://jsperf.com/loops3/2
-             * returns -> callback(value, index)
-             */
-            app.core.util.foreach = function(array, callbackValue) {
-                if (array.length && array.length > 0) {
-                    for (var i = -1, length = array.length; ++i < length;) {
-                        callbackValue(array[i], i);
-                    }
-                }
-            };
+            app.core.util.load = Util.load;
 
-            app.core.util.load = function(url, data, dataType) {
-                var deferred = new app.sandbox.data.deferred(),
-                    settings = {
-                        url: url,
-                        data: data || null,
-                        dataType: 'json',
+            app.core.util.save = Util.save;
 
-                        success: function(data, textStatus) {
-                            deferred.resolve(data, textStatus);
-                        }.bind(this),
+            app.core.util.cropMiddle = Util.cropMiddle,
 
-                        error: function(jqXHR, textStatus, error) {
-                            deferred.reject(textStatus, error);
-                        }
-                    };
+            app.core.util.cropFront = Util.cropFront,
 
-                if (typeof(dataType) !== 'undefined') {
-                    settings.dataType = dataType;
-                }
+            app.core.util.cropTail = Util.cropTail,
 
-                app.sandbox.util.ajax(settings);
+            app.core.util.contains = Util.contains;
 
-                app.sandbox.emit('husky.util.load.data');
+            app.core.util.isAlphaNumeric = Util.isAlphaNumeric;
 
-                return deferred.promise();
-            };
+            app.core.util.uniqueId = Util.uniqueId;
 
-            app.core.util.save = function(url, type, data) {
-                var deferred = new app.sandbox.data.deferred();
+            app.core.util.delay = Util.delay;
 
-                app.sandbox.util.ajax({
+            app.core.util.union = Util.union;
 
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+            app.core.util.deepCopy = Util.deepCopy;
 
-                    url: url,
-                    type: type,
-                    data: JSON.stringify(data),
+            app.core.util.getParameterByName =  Util.getParameterByName;
 
-                    success: function(data, textStatus) {
-                        deferred.resolve(data, textStatus);
-                    }.bind(this),
+			app.core.util.template = Util.template;
 
-                    error: function(jqXHR, textStatus, error) {
-                        deferred.reject(jqXHR, textStatus, error);
-                    }
-                });
+            app.core.util.escapeHtml = Util.escapeHtml;
 
-                app.sandbox.emit('husky.util.save.data');
+            app.core.util.arrayGetColumn = Util.arrayGetColumn;
 
-                return deferred.promise();
-            };
-
-            app.core.util.cropMiddle = function(text, maxLength, delimiter) {
-                var substrLength;
-
-                // return text if it doesn't need to be cropped
-                if (!text || text.length <= maxLength) {
-                    return text;
-                }
-
-                // default delimiter
-                if (!delimiter) {
-                    delimiter = '...';
-                }
-
-                substrLength = Math.floor((maxLength - delimiter.length)/2);
-                return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
-            },
-
-                app.core.util.cropFront = function(text, maxLength, delimiter) {
-                    if (!text || text.length <= maxLength) {
-                        return text;
-                    }
-
-                    delimiter = delimiter || '...';
-
-                    return delimiter + text.slice(-(maxLength - delimiter.length));
-                },
-
-                app.core.util.cropTail = function(text, maxLength, delimiter) {
-                    if (!text || text.length <= maxLength) {
-                        return text;
-                    }
-
-                    delimiter = delimiter || '...';
-
-                    return text.slice(0, (maxLength - delimiter.length)) + delimiter;
-                },
-
-                app.core.util.contains = function(list, value) {
-                    return _.contains(list, value);
-                };
-
-            app.core.util.isAlphaNumeric = function(str) {
-                var code, i, len;
-
-                for (i = 0, len = str.length; i < len; i++) {
-                    code = str.charCodeAt(i);
-                    if (!(code > 47 && code < 58) && // numeric (0-9)
-                        !(code > 64 && code < 91) && // upper alpha (A-Z)
-                        !(code > 96 && code < 123)) { // lower alpha (a-z)
-                      return false;
-                    }
-                }
-                return true;
-            };
-
-            app.core.util.uniqueId = function(prefix) {
-                return _.uniqueId(prefix);
-            };
-
-            app.core.util.delay = function(delay, callback) {
-                return _.delay(delay, callback);
-            };
-
-            app.core.util.union = function() {
-                return _.union.apply(this, arguments);
-            };
-
-            app.core.util.deepCopy = function(object) {
-                var parent = {};
-
-                if ($.isArray(object)) {
-                    parent = [];
-                }
-                return $.extend(true, parent, object);
-            };
-
-            /**
-             * Returns a parameter value from a given url
-             * Found at http://stackoverflow.com/a/901144
-             * Has limitations e.g. for parameters like a[asf]=value
-             * @param name {string} name of the parameter to search for
-             * @param url {string}
-             * @returns {string}
-             */
-            app.core.util.getParameterByName =  function(name, url) {
-                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                    results = regex.exec(url);
-                    
-                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-            };
-
-			app.core.util.template = _.template;
-
-            /**
-             * Escapes special html character
-             * @param string
-             * @returns {string}
-             */
-            app.core.util.escapeHtml = function(string) {
-                return String(string).replace(/[&<>"'\/]/g, function(s) {
-                    return entityMap[s];
-                });
-            };
+            app.core.util.removeFromArray = Util.removeFromArray;
         }
     };
 });

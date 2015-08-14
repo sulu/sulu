@@ -35,7 +35,6 @@ class ContactsContentNavigationProvider implements ContentNavigationProviderInte
             $permissions = new ContentNavigationItem('content-navigation.security.permissions');
             $permissions->setAction('permissions');
             $permissions->setComponent('users@sulusecurity');
-            $permissions->setComponentOptions(['display' => 'form']);
             $permissions->setDisplay(['edit']);
 
             $navigation[] = $permissions;

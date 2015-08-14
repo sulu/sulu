@@ -23,9 +23,9 @@ define(function() {
      *
      * @param {Object|String} contentNavigation The content navigation JSON-String returned from the server.
      * @param {String} id ID of the current element (used for url generation).
-     * @param {Function} callback Receives parsed navigation items.
+     * @return {Object} the parsed tabs-navigation items.
      */
-    var parseContentTabs = function(contentNavigation, id, callback) {
+    var parseContentTabs = function(contentNavigation, id) {
             var navigation, hasNew, hasEdit,
                 url = this.sandbox.mvc.history.fragment;
 
@@ -55,14 +55,7 @@ define(function() {
                 }
             }.bind(this));
 
-            // if callback is set, call it
-            if (!!callback && typeof callback === 'function') {
-                callback(items);
-            } else { // else emit event "navigation.item.column.show"
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: items
-                });
-            }
+            return items;
         },
 
         /**
@@ -214,23 +207,17 @@ define(function() {
          *
          * @param {Object|Function} header The header property found in the started component.
          *        If it's function it must return an object.
-         * @param {Boolean} [header.hidden} If true header gets hidden. Default is false.
-         * @param {String} [header.title] Title in the header.
-         * @param {Array} [header.breadcrumb] Breadcrumb object which gets passed to the header-component.
          * @param {Boolean} [header.noBack] If true the back icon won't be displayed.
          * @param {Object} [header.tabs] Object that contains configurations for the tabs.
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
-         * @param {Boolean} [header.tabs.fullControl] If true the header just displays the tabs,
-         *        but doesn't start the content-component.
-         * @param {Object} [header.tabs.options] Options to pass to the tabs-component.
-         *        Often used together with the fullControl-option.
+         * @param {Object} [header.tabs.data] tabs-data to pass to the header if no tabs-url is specified
+         * @param {Object} [header.tabs.options] options that get passed to all tab-components
+         * @param {String|Object} [header.tabs.container] the container to render the tabs-content in.
+         *        If not set the content gets insertet directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
          *        If not set no toolbar will be displayed.
-         * @param {Array|String} [header.toolbar.template] Array of toolbar items to pass to the header component,
-         *        can also be a string representing a template (e.g. 'default')
-         * @param {Array|String} [header.toolbar.parentTemplate] Same as toolbar.template,
-         *        gets merged with toolbar template.
+         * @param {Array} [header.toolbar.buttons] array of arguments to pass to sulu.buttons.get to recieve the toolbar buttons
          * @param {Object} [header.toolbar.options] Object with options for the toolbar component.
          * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header.
          *        If true the default language changer will be rendered. Default is true.
@@ -238,18 +225,25 @@ define(function() {
          * @example
          *
          *      header: {
-         *          hidden: false,
          *          tabs: {
          *              url: 'url/to/tabsData',
+         *              container: '#my-container-selector',
+         *              options: {
+         *                  myOptions: 'toPassToAllTabs'
+         *              }
          *          },
-         *          title: 'My title',
-         *          breadcrumb: [
-         *              {title: 'Crumb 1', link: 'contacts/contact'},
-         *              {title: 'Crumb 2', event: 'sulu.navigation.clicked}
-         *          ],
          *          toolbar {
          *              languageChanger: true
-         *              template: 'default'
+         *              buttons: {
+         *                  save: {},
+         *                  settings: {
+         *                      options: {
+         *                          dropdownItems: {
+         *                              delete: {}
+         *                          }
+         *                      }
+         *                  }
+         *              }
          *          }
          *      }
          *
@@ -276,80 +270,60 @@ define(function() {
          * @param {Object} header The header config object.
          */
         handleHeader = function(header) {
-            var $content, changeHeader, options;
-
-            header.hidden = (typeof header.hidden !== 'undefined') ? header.hidden : false;
-
-            if (true === header.hidden) {
-                this.sandbox.emit('sulu.header.hide');
-                return;
+            if (!header) {
+                return false;
             }
 
-            // insert the content-container
-            $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
-            this.html($content);
+            getTabsData.call(this, header).then(function(tabsData) {
+                var $container = this.sandbox.dom.createElement('<div class="sulu-header"/>');
+                this.sandbox.dom.prepend('.content-column', $container);
 
-            /**
-             * Function for starting the header
-             * @param {Array} tabsData Array of data to pass on to the tabs component.
-             * @private
-             */
-            changeHeader = function(tabsData) {
-                // set the variables for the header-component-options properties
-                var toolbarLanguageChanger = true;
+                this.sandbox.start([{
+                    name: 'header@suluadmin',
+                    options: {
+                        el: $container,
+                        noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
+                        title: (!!header.title) ? header.title : false,
 
-                if (!!header.toolbar) {
-                    toolbarLanguageChanger = !!header.toolbar.languageChanger ?
-                        header.toolbar.languageChanger : false;
-                }
+                        toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
+                        toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ?
+                            header.toolbar.languageChanger : false,
+                        toolbarDisabled: !header.toolbar,
+                        toolbarButtons: (!!header.toolbar && !!header.toolbar.buttons) ? header.toolbar.buttons : [],
 
-                options = {
-                    tabsData: tabsData,
-                    heading: this.sandbox.translate(header.title),
-                    breadcrumb: (!!header.breadcrumb) ? header.breadcrumb : null,
-                    toolbarTemplate: (!!header.toolbar && !!header.toolbar.template) ?
-                        header.toolbar.template : 'default',
-                    toolbarParentTemplate: (!!header.toolbar && !!header.toolbar.parentTemplate) ?
-                        header.toolbar.parentTemplate : null,
-                    contentComponentOptions: this.options,
-                    contentEl: $content,
-                    toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
-                    tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
-                    tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ?
-                        header.tabs.fullControl : false,
-                    toolbarDisabled: (typeof header.toolbar === 'undefined'),
-                    toolbarLanguageChanger: toolbarLanguageChanger,
-                    noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
-                    titleColor: (!!header.titleColor) ? header.titleColor : null
-                };
+                        tabsData: tabsData,
+                        tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,
+                        tabsParentOption: this.options,
+                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
+                    }
+                }]);
 
-                if (header.tabs === false) {
-                    options.tabsOptions = false;
-                }
+            }.bind(this));
+        },
 
-                this.sandbox.emit('sulu.header.change', options);
-            }.bind(this);
-
-            // if a url for the tabs is set load the data first,
-            // else start the header with no tabs
-            if (!!header.tabs && !!header.tabs.url) {
-                this.sandbox.util.load(header.tabs.url).then(function(data) {
-                    // start header with tabs data passed
-                    parseContentTabs.call(this, data, this.options.id, changeHeader);
-                }.bind(this));
-            } else {
-                changeHeader(null);
-            }
-
-        };
-
-    return function(app) {
         /**
-         * Gets executed every time BEFORE a component gets initialized.
+         * Loades and prepares the tabs-data for a header object
+         * @param header {Object} the header object
+         * @returns {Deffered} a deferred-object with a then method
+         */
+        getTabsData = function(header) {
+            var loaded = this.sandbox.data.deferred();
+            if (!header.tabs || !header.tabs.url) {
+                loaded.resolve((!!header.tabs) ? header.tabs.data : null);
+                return loaded;
+            }
+            this.sandbox.util.load(header.tabs.url).then(function(data) {
+                var tabsData = parseContentTabs.call(this, data, this.options.id);
+                loaded.resolve(tabsData);
+            }.bind(this));
+            return loaded;
+        },
+
+        /**
          * Checks various properties (header, view, layout) of an component
          * and executes the related handler.
          */
-        app.components.before('initialize', function() {
+        executeHandlers = function() {
             if (!!this.header) {
                 handleHeaderMarker.call(this, this.header);
             }
@@ -366,6 +340,30 @@ define(function() {
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);
             }
+        };
+
+    return function(app) {
+        /**
+         * Gets executed every time BEFORE a component gets initialized.
+         * Loads data if needed and start executing component handlers
+         */
+        app.components.before('initialize', function() {
+            //load view data before rendering tabs
+            var dataLoaded = this.sandbox.data.deferred();
+            if (!!this.loadComponentData && typeof this.loadComponentData === 'function') {
+                dataLoaded = this.loadComponentData.call(this);
+            } else {
+                dataLoaded.resolve();
+            }
+
+            dataLoaded.then(function(data) {
+                if (!!data) {
+                    this.data = data;
+                }
+                executeHandlers.call(this);
+            }.bind(this));
+
+            return dataLoaded;
         });
     };
 });

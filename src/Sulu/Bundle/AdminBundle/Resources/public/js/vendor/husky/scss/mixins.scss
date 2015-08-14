@@ -1,11 +1,12 @@
 @import "compass/css3/box-shadow";
+@import "compass/css3/transform";
 
 @mixin input-placeholder {
     &.placeholder { @content; }
     &:-moz-placeholder { @content; }
     &::-moz-placeholder { @content; }
     &:-ms-input-placeholder { @content; }
-    &::-webkit-input-placeholder { @content; } 
+    &::-webkit-input-placeholder { @content; }
 }
 
 @mixin standard-box-shadow($borderSize:3px, $color:rgba(0,0,0,0.08), $blur:0px){
@@ -46,4 +47,26 @@
   transform:rotate($angle);
   -ms-transform:rotate($angle); /* IE 9 */
   -webkit-transform:rotate($angle); /* Opera, Chrome, and Safari */
+}
+
+@mixin background-size($type) {
+  -webkit-background-size: $type;
+  -moz-background-size: $type;
+  -o-background-size: $type;
+  background-size: $type;
+}
+
+@mixin centerBlock() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  @include transform(translate(-50%, -50%));
+}
+
+@mixin centerFixedSizeBlock($width, $height) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -($width / 2);
+  margin-top: -($height / 2);
 }

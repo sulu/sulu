@@ -11,7 +11,7 @@ define([
     './models/user',
     'sulusecurity/models/role',
     'sulusecurity/models/permission',
-    'sulucontact/model/contact',
+    'sulucontact/models/contact',
     './collections/roles',
     './models/userRole'
 ], function(User, Role, Permission, Contact, Roles, UserRole) {
@@ -23,41 +23,15 @@ define([
         name: 'Sulu Contact Permissions',
 
         initialize: function() {
-
-            if (this.options.display === 'form') {
-                this.renderForm();
-            }
-
+            this.renderForm();
             this.bindCustomEvents();
         },
 
         bindCustomEvents: function() {
 
-            this.sandbox.on('sulu.user.permissions.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.user.permissions.save', function(data, action) {
+                this.save(data, action);
             }.bind(this));
-
-            // load list view
-            this.sandbox.on('sulu.contacts.contacts.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-            }, this);
-
-            // delete contact
-            this.sandbox.on('sulu.user.permissions.delete', function(id) {
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                        var contactModel = Contact.findOrCreate({id: id});
-
-                        this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                        contactModel.destroy({
-                            success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-                            }.bind(this)
-
-                        });
-                    }
-                }.bind(this));
-            }, this);
 
             this.sandbox.on('sulu.user.activate', function() {
                 this.enableUser();
@@ -65,8 +39,6 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
             this.user.set('locale', data.user.locale);
@@ -77,23 +49,18 @@ define([
             } else {
                 this.user.set('password', '');
             }
-
             // prepare deselected roles
             this.sandbox.util.each(data.deselectedRoles, function(index, value) {
                 var userRole;
-
                 if (this.user.get('userRoles').length > 0) {
 
-                    userRole = this.user.get('userRoles').findWhere(
-                        {
-                            role: this.roles.get(value)
-                        }
-                    );
+                    userRole = this.user.get('userRoles').findWhere({
+                        role: this.roles.get(value)
+                    });
                     if (!!userRole) {
                         this.user.get('userRoles').remove(userRole);
                     }
                 }
-
             }.bind(this));
 
             // prepare selected roles
@@ -102,12 +69,9 @@ define([
                     tmp;
 
                 if (this.user.get('userRoles').length > 0) {
-
-                    tmp = this.user.get('userRoles').findWhere(
-                        {
-                            role: this.roles.get(value.roleId)
-                        }
-                    );
+                    tmp = this.user.get('userRoles').findWhere({
+                        role: this.roles.get(value.roleId)
+                    });
                     if (!!tmp) {
                         userRole = tmp;
                     }
@@ -228,11 +192,10 @@ define([
                     options: {
                         el: $form,
                         data: data
-                    }}
+                    }
+                }
             ]);
         },
-
-        // dialog
 
         /**
          * @var ids - array of ids to delete

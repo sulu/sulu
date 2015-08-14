@@ -17,7 +17,18 @@ define(function() {
                 url: '/admin/content-navigations?alias=roles'
             },
             toolbar: {
-                template: 'default'
+                buttons: {
+                    save: {
+                        parent: 'saveWithOptions'
+                    },
+                    settings: {
+                        options: {
+                            dropdownItems: {
+                                delete: {}
+                            }
+                        }
+                    }
+                }
             }
         }
     };

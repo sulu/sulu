@@ -2,6 +2,44 @@
 
 ## dev-develop
 
+### Registering JS-Routes
+When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html('<div data-aura-component="componentToStart@mybundle"/>)' - make your callback returning the component.
+So for example the follwoing:
+```
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        this.html('<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>');
+    }
+});
+```
+becomes:
+```
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        return '<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>';
+    }
+});
+```
+
+### Header-toolbar and tabs
+The header got a complete redesign, the breadcrumb, title and bottom-content are not available anymore. Also the event `header.set-toolbar` got removed. A sulu-header can still be initialized via the header property when a view-component gets started.
+
+#### Tabs
+The tabs can be configured with the 'url', 'data' and 'container' option. The 'option' fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
+
+#### Toolbar
+The language-changer can be configured as it was. 'Template' and 'parentTemplate' in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
+Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/blob/f9b3abeb547553c9c031710f1f98d0288b08ca9c/UPGRADE.md
+
+#### Sulu-buttons
+Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` and `sandbox.sulu.buttons.dropdownItems`). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
+
+#### List-toolbar
+The 'inHeader' option got removed and is not supported anymore. `Sulu.buttons` are used internally and can be passed via the template which is recommended instead of using string templates.
+
+### Listbuilder
 ### Modified listbuilder to work with expressions
 
 The listbuilder uses now expressions to build the query. In course of these changes some default values have been

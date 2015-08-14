@@ -143,7 +143,7 @@ define([], function() {
         },
 
         /**
-         * Stops the grid-group loader
+         * Stops the loader
          */
         stopLoader = function() {
             this.sandbox.stop('#' + this.options.ids.loader);

@@ -37,13 +37,7 @@ define([], function() {
 
         header: function() {
             return {
-                title: 'translate.package.title',
-                noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'translate.package.title'}
-                ]
+                noBack: true
             };
         },
 
@@ -62,8 +56,7 @@ define([], function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'packages', '/admin/api/packages/fields',
                 {
                     el: '#list-toolbar-container',
-                    instanceName: 'package',
-                    inHeader: true
+                    instanceName: 'package'
                 },
                 {
                     el: this.$find('#package-list'),

@@ -10,24 +10,42 @@
     height: 100%;
     overflow: hidden;
     position: relative;
+
+    &.has-visible-sidebar.has-max-sidebar .content-column {
+        float: left;
+    }
 }
 
 .content-column {
     height: 100%;
     position: relative;
     overflow: hidden;
-    min-width: $contentMinWidth;
-    @include transition(width $shrinkAnimationDuration);
 
     .page {
         height: 100%;
+        overflow: auto;
+        padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
+        @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+
+        // vertical paddings defined this way because of scrolling
+        &::before, &::after {
+          content: "";
+          display: block;
+          width: 100%;
+        }
+        &::before {
+          height: 1px;
+          margin-bottom: $contentPaddingTop - 1px;
+        }
+        &::after {
+          height: 1px;
+          margin-top: $contentPaddingBottom - 1px;
+        }
     }
 
     #content {
-        height: 100%;
-        overflow: auto;
-        padding: $contentPaddingTop $contentPaddingRight $contentPaddingBottom $contentPaddingLeft;
-        @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+        @include transition(width $shrinkAnimationDuration);
+        min-width: $contentMinWidth;
 
         h2.mainheadline {
             margin-top: 35px;
@@ -40,23 +58,35 @@
         .content-tabs-content {
             padding-top: 80px;
         }
+    }
 
-        &.no-left-space {
+    .fixed-width {
+        min-width: $contentMinWidth;
+        width: $contentFixedWidth;
+    }
+
+    &.no-left-space {
+        .page {
             padding-left: 0;
         }
+    }
 
-        &.no-right-space {
-            padding-right: 0;
-        }
+    &.no-right-space {
+      .page {
+          padding-right: 0;
+      }
+    }
 
-        &.no-top-space {
-            padding-top: 0;
+    &.no-top-space {
+        .page::before {
+            height: 0;
+            margin-bottom: 0;
         }
     }
 
     &.no-transitions {
         @include transition(none);
-        #content {
+        #content, .page {
             @include transition(none);
         }
     }
@@ -65,22 +95,20 @@
         position: absolute;
         top: 0px;
         right: 0px;
-        z-index: 100;
+        z-index: 120;
         cursor: pointer;
-        width: 30px;
-        height: 30px;
+        width: 25px;
+        height: 25px;
         overflow: hidden;
         background: #21272E;
         color: $white;
         text-align: center;
-        border-radius: 0 0 0 2px;
-        font-size: 20px;
-        line-height: 32px;
+        line-height: 25px;
         .fa-chevron-right {
-            padding-left: 3px;
+            padding-left: 2px;
         }
         .fa-chevron-left {
-            padding-right: 3px;
+            padding-right: 2px;
         }
     }
 
@@ -90,14 +118,20 @@
     }
 
     &.fixed {
-        width: $contentFixedWidth;
-        float: left;
+        float: none;
+        width: auto;
+
+        #content {
+          width: $contentFixedWidth;
+        }
 
         &.small-fixed {
-            width: $contentFixedSmallWidth;
-            #content {
+            .page {
                 padding-left: $contentPaddingLeftSmall;
                 padding-right: $contentPaddingRightSmall;
+            }
+            #content {
+                width: $contentFixedSmallWidth;
             }
         }
     }
@@ -146,15 +180,29 @@
 
 // 1. collapses the content-column to medium width
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column.fixed {
-        width: $contentFixedMediumWidth;
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            #content {
+                width: $contentFixedMediumWidth;
+            }
+        }
+      .fixed-width {
+          width: $contentFixedMediumWidth;
+      }
     }
 }
 
 // 2. collapses the content-column to small width
 @media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column.fixed {
-        width: $contentFixedSmallWidth;
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            #content {
+                width: $contentFixedSmallWidth;
+            }
+        }
+        .fixed-width {
+            width: $contentFixedSmallWidth;
+        }
     }
 }
 
@@ -165,11 +213,18 @@
         height: 0;
     }
 
-    .has-visible-sidebar .content-column.fixed {
-        float: none;
-        width: auto;
-        max-width: $contentFixedWidth;
-
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            float: none;
+            #content {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
+            max-width: $contentFixedWidth;
+            width: auto;
+        }
     }
 
     .sulu-app-shrink {
@@ -184,12 +239,19 @@
 
 // 1. makes the content-column fit the screen
 @media only screen and (max-width: 50px + $contentFixedWidth) {
-    .has-no-visible-sidebar .content-column.fixed {
-        float: none;
-        width: auto;
-        max-width: $contentFixedWidth;
+    .has-no-visible-sidebar .content-column {
+        &.fixed {
+            float: none;
+            #content {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
+            max-width: $contentFixedWidth;
+            width: auto;
+        }
     }
-
 }
 
 //
@@ -199,9 +261,17 @@
 
 // 1. makes the content-column fit the rest of the screen
 @media only screen and (max-width: 250px + $contentFixedWidth + $sidebarFixedWidth) {
-    .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
-        float: none;
-        width: auto;
-        max-width: $contentFixedWidth;
+    .has-visible-sidebar .sidebar-column.fixed + .content-column {
+        &.fixed {
+            float: none;
+            #content {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
+            max-width: $contentFixedWidth;
+            width: auto;
+        }
     }
 }

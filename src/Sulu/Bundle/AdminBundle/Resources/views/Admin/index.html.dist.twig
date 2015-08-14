@@ -12,11 +12,11 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1438783759812.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1439560872015.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulumedia/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sululocation/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulusnippet/css/main.css"/>
@@ -25,12 +25,15 @@
         <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
     </head>
     <body>
-        <div class="sulu-header-background" id="sulu-header-background" style="display: none;"></div>
-        <div id="main">
+        <div class="spinner initial-loader">
+            <div class="double-bounce1 bouncer"></div>
+            <div class="double-bounce2 bouncer"></div>
+        </div>
+        <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is not defined %}
-                data-aura-footer="false"
-                {% endif %}
+                    {% if user.username is not defined %}
+                        data-aura-footer="false"
+                    {% endif %}
                  data-aura-user-name="{{ user.fullname }}"
                  data-aura-system-name="{{ name }}"
                  data-aura-system-version="{{ suluVersion }}"
@@ -41,15 +44,8 @@
             </div>
             <div class="content-container">
                 <div class="content-column fixed">
-                    <div class="sulu-header invisible"
-                         id="sulu-header-container"
-                         data-aura-component="header@suluadmin"></div>
                     <div class="page">
-                        <main class="grid"
-                              id="content"
-                              data-aura-component="app@suluadmin"
-                              data-aura-user="{{ user| json_encode }}">
-                        </main>
+                        <main class="grid" id="content"></main>
                     </div>
                     <div id="labels-container" data-aura-component="labels@suluadmin"></div>
                 </div>
@@ -58,8 +54,8 @@
                     <aside id="sidebar" data-aura-component="sidebar@suluadmin"></aside>
                 </div>
             </div>
+            <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
         </div>
-        <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
 
         <script type="text/javascript">
             {% autoescape false %}
@@ -85,7 +81,7 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1438783759812" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1439560872015" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 
     </body>
 </html>

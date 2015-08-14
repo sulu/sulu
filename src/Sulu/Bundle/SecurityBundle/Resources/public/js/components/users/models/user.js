@@ -8,7 +8,7 @@
  */
 
 define([
-    'mvc/relationalmodel', 'mvc/hasmany', './userRole', 'sulucontact/model/contact', 'mvc/hasone'
+    'mvc/relationalmodel', 'mvc/hasmany', './userRole', 'sulucontact/models/contact', 'mvc/hasone'
 ], function(RelationalModel, HasMany, UserRole, Contact, HasOne) {
 
     'use strict';
