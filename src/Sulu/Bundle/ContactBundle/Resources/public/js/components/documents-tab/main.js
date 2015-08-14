@@ -37,20 +37,18 @@ define([
         initialize: function() {
             this.manager = (this.options.type === 'contact') ? ContactManager : AccountManager;
 
-            this.manager.loadOrNew(this.options.id).then(function(data) {
-                this.data = data;
-                this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id');
-                this.bindCustomEvents();
-                this.render();
+            this.data = this.options.data();
+            this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id');
+            this.bindCustomEvents();
+            this.render();
 
-                if (!!this.options && !!this.options.id) {
-                    if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
-                        this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.id);
-                    } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
-                        this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.id);
-                    }
+            if (!!this.data.id) {
+                if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
+                    this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.data.id);
+                } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
+                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
                 }
-            }.bind(this));
+            }
         },
 
         initSidebar: function(url, id) {
@@ -80,7 +78,7 @@ define([
 
         addItem: function(id, item) {
             if (this.currentSelection.indexOf(id) === -1) {
-                this.manager.addDocument(this.options.id, id).then(function() {
+                this.manager.addDocument(this.data.id, id).then(function() {
                     this.sandbox.emit('husky.datagrid.documents.record.add', item);
                     this.currentSelection.push(id);
                 }.bind(this));
@@ -88,7 +86,7 @@ define([
         },
 
         removeItem: function(itemId) {
-            this.manager.removeDocuments(this.options.id, itemId).then(function() {
+            this.manager.removeDocuments(this.data.id, itemId).then(function() {
                 this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, [itemId]);
             }.bind(this));
         },
@@ -108,7 +106,7 @@ define([
             this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(ids) {
                 DeleteDialog.showDialog(ids, function() {
                     this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, ids);
-                    this.manager.removeDocuments(this.options.id, ids);
+                    this.manager.removeDocuments(this.data.id, ids);
                 }.bind(this));
             }.bind(this));
         },
@@ -117,7 +115,7 @@ define([
          * Initializes the datagrid-list
          */
         initList: function() {
-            var managerData = this.manager.getDocumentsData(this.options.id);
+            var managerData = this.manager.getDocumentsData(this.data.id);
             this.sandbox.sulu.initListToolbarAndList.call(this, managerData.fieldsKey, managerData.fieldsUrl,
                 {
                     el: this.$find('#list-toolbar-container'),
