@@ -15,7 +15,7 @@ define([
 
     'use strict';
 
-    var form = '#contact-form',
+    var formSelector = '#contact-form',
         fields = ['urls', 'emails', 'faxes', 'phones', 'notes'],
 
         constants = {
@@ -45,8 +45,11 @@ define([
         };
 
     return {
-
         view: true,
+
+        tabOptions: {
+            noTitle: true
+        },
 
         layout: function() {
             return {
@@ -66,10 +69,9 @@ define([
         templates: ['/admin/contact/template/contact/form'],
 
         initialize: function() {
-            this.saved = true;
-            this.formId = '#contact-form';
-            this.autoCompleteInstanceName = 'accounts-';
+            this.data = this.options.data();
 
+            this.autoCompleteInstanceName = 'accounts-';
             this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
@@ -80,18 +82,15 @@ define([
                 this.dfdAllFieldsInitialized.resolve();
             }.bind(this));
 
-            ContactManager.loadOrNew(this.options.id).then(function(data) {
-                this.data = data;
-                this.render();
-                this.listenForChange();
+            this.render();
+            this.listenForChange();
 
-                if (!!this.data && !!this.data.id && WidgetGroups.exists('contact-detail')) {
-                    this.initSidebar(
-                        '/admin/widget-groups/contact-detail?contact=',
-                        this.data.id
-                    );
-                }
-            }.bind(this));
+            if (!!this.data && !!this.data.id && WidgetGroups.exists('contact-detail')) {
+                this.initSidebar(
+                    '/admin/widget-groups/contact-detail?contact=',
+                    this.data.id
+                );
+            }
         },
 
         destroy: function() {
@@ -106,16 +105,18 @@ define([
         render: function() {
             this.sandbox.emit(this.options.disablerToggler + '.change', this.data.disabled);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
+
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
             this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
-            var data = this.initContactData();
-            this.companyInstanceName = 'companyContact' + data.id;
-            this.initForm(data);
-            this.setTags(data);
+
+            var formData = this.initContactData();
+            this.companyInstanceName = 'companyContact' + formData.id;
+            this.initForm(formData);
+            this.setTags(formData);
             this.bindCustomEvents();
-            this.bindTagEvents(data);
+            this.bindTagEvents(formData);
         },
 
         // show tags and activate keylistener
@@ -176,11 +177,11 @@ define([
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
             // add collection filters to form
-            this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
-            this.sandbox.form.setData(form, data).then(function() {
+            this.sandbox.emit('sulu.contact-form.add-collectionfilters', formSelector);
+            this.sandbox.form.setData(formSelector, data).then(function() {
 
                 if (!!startForm) {
-                    this.sandbox.start(form);
+                    this.sandbox.start(formSelector);
                 } else {
                     this.sandbox.start('#contact-fields');
                 }
@@ -212,7 +213,7 @@ define([
             // when  contact-form is initalized
             this.sandbox.on('sulu.contact-form.initialized', function() {
                 // set form data
-                var formObject = this.sandbox.form.create(form);
+                var formObject = this.sandbox.form.create(formSelector);
                 formObject.initialized.then(function() {
                     this.setFormData(data, true);
                 }.bind(this));
@@ -388,8 +389,8 @@ define([
         },
 
         save: function() {
-            if (this.sandbox.form.validate(form)) {
-                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(form));
+            if (this.sandbox.form.validate(formSelector)) {
+                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(formSelector));
                 if (data.id === '') {
                     delete data.id;
                 }
@@ -402,10 +403,10 @@ define([
                 };
                 this.sandbox.emit('sulu.tab.saving');
                 ContactManager.save(data).then(function(savedData) {
-                    this.data = data;
-                    this.initContactData();
-                    this.setFormData(this.data);
-                    this.sandbox.emit('sulu.tab.saved', savedData);
+                    this.data = savedData;
+                    var formData = this.initContactData();
+                    this.setFormData(formData);
+                    this.sandbox.emit('sulu.tab.saved', savedData, true);
                 }.bind(this));
             }
         },
@@ -475,7 +476,7 @@ define([
             // listen for change after TAGS and BIRTHDAY-field have been set
             this.sandbox.data.when(this.dfdAllFieldsInitialized).then(function() {
 
-                this.sandbox.dom.on('#contact-form', 'change keyup', function() {
+                this.sandbox.dom.on(formSelector, 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this), 'select, input, textarea');
 
@@ -491,9 +492,7 @@ define([
                 }.bind(this));
 
                 // enabel position dropdown only if something got selected
-                this.companySelected = 'husky.auto-complete.' +
-                this.companyInstanceName +
-                '.select';
+                this.companySelected = 'husky.auto-complete.' + this.companyInstanceName + '.select';
                 this.sandbox.on(this.companySelected, function() {
                     this.enablePositionDropdown(true);
                 }.bind(this));

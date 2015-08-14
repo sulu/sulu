@@ -8,10 +8,10 @@
  */
 
 define([
-        'services/sulucontact/contact-manager',
-        'services/sulucontact/contact-router',
-        'services/sulucontact/contact-delete-dialog'
-    ],function(ContactManager, ContactRouter, DeleteDialog) {
+    'services/sulucontact/contact-manager',
+    'services/sulucontact/contact-router',
+    'services/sulucontact/contact-delete-dialog'
+], function(ContactManager, ContactRouter, DeleteDialog) {
 
     'use strict';
 
@@ -24,10 +24,17 @@ define([
          */
         header: function() {
             var config = {
+                title: function() {
+                    return this.data.fullName;
+                }.bind(this),
                 tabs: {
                     url: '/admin/content-navigations?alias=contact',
                     options: {
-                        disablerToggler: 'husky.toggler.sulu-toolbar'
+                        disablerToggler: 'husky.toggler.sulu-toolbar',
+                        data: function() {
+                            // this.data is set by sulu-content.js with data from loadComponentData()
+                            return this.sandbox.util.extend(false, {}, this.data);
+                        }.bind(this)
                     }
                 },
                 toolbar: {
@@ -51,6 +58,20 @@ define([
             return config;
         },
 
+        /**
+         * Load contact data to given options.id
+         * Method is called from sulu-content when initializing tabs
+         * Loaded contact is stored to this.data
+         * @returns {*}
+         */
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            ContactManager.loadOrNew(this.options.id).then(function(data) {
+                promise.resolve(data);
+            });
+            return promise;
+        },
+
         initialize: function() {
             this.bindCustomEvents();
         },
@@ -64,8 +85,11 @@ define([
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
         },
 
+        /**
+         * Show delete-confirm dialog and if confirmed, delete current contact
+         */
         deleteContact: function() {
-            DeleteDialog.showDialog([this.options.id], function(){
+            DeleteDialog.showDialog([this.options.id], function() {
                 ContactManager.delete(this.options.id).then(function() {
                     ContactRouter.toList();
                 }.bind(this));
@@ -78,7 +102,10 @@ define([
          */
         saveTab: function() {
             var promise = $.Deferred();
-            this.sandbox.once('sulu.tab.saved', function(savedData) {
+            this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
+                if (!!updateData){
+                    this.data = savedData;
+                }
                 promise.resolve(savedData);
             }.bind(this));
             this.sandbox.emit('sulu.tab.save');

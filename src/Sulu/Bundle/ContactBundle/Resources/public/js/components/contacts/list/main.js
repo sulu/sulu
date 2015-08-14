@@ -91,6 +91,8 @@ define([
 
         header: {
             noBack: true,
+            title: 'contact.contacts.title',
+
             toolbar: {
                 buttons: {
                     add: {},

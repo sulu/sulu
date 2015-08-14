@@ -45,7 +45,7 @@ define([
         },
 
         deleteCallback = function(ids) {
-            DeleteDialog.showDialog(ids, function(deleteContacts){
+            DeleteDialog.showDialog(ids, function(deleteContacts) {
                 AccountManager.delete(ids, deleteContacts);
             }.bind(this));
         },
@@ -79,6 +79,7 @@ define([
         header: function() {
             return {
                 noBack: true,
+                title: 'contact.accounts.title',
 
                 toolbar: {
                     buttons: {
