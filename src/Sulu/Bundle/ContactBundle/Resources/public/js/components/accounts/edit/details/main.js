@@ -23,7 +23,9 @@ define([
             bankAccountAddId: '#bank-account-add',
             addAddressWrapper: '.grid-row',
             addBankAccountsWrapper: '.grid-row',
-            editFormSelector: '#contact-edit-form'
+            editFormSelector: '#contact-edit-form',
+            formSelector: '#contact-form',
+            formContactFields: '#contact-fields'
         },
 
         customTemplates = {
@@ -70,8 +72,6 @@ define([
         initialize: function() {
             this.data = (typeof this.options.data === 'function') ? this.options.data() : this.options.data;
 
-            this.form = '#contact-form';
-            this.formContactFields = '#contact-fields';
             this.autoCompleteInstanceName = 'contacts-';
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
@@ -94,8 +94,6 @@ define([
         },
 
         render: function() {
-            var formData, options;
-
             this.sandbox.emit(this.options.disablerToggler + '.change', !!this.data.disabled);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
@@ -103,7 +101,7 @@ define([
 
             this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
-            formData = this.initContactData();
+            var formData = this.initContactData();
             this.initForm(formData);
             this.setTags();
             this.bindCustomEvents();
@@ -269,7 +267,7 @@ define([
             // when  contact-form is initalized
             this.sandbox.on('sulu.contact-form.initialized', function() {
                 // set form data
-                var formObject = this.sandbox.form.create(this.form);
+                var formObject = this.sandbox.form.create(constants.formSelector);
                 formObject.initialized.then(function() {
                     this.formInitializedHandler(data);
                 }.bind(this));
@@ -294,13 +292,13 @@ define([
 
         setFormData: function(data) {
             // add collection filters to form
-            this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
+            this.sandbox.emit('sulu.contact-form.add-collectionfilters', constants.formSelector);
 
             this.numberOfBankAccounts = !!data.bankAccounts ? data.bankAccounts.length : 0;
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
-            this.sandbox.form.setData(this.form, data).then(function() {
-                this.sandbox.start(this.formContactFields);
+            this.sandbox.form.setData(constants.formSelector, data).then(function() {
+                this.sandbox.start(constants.formContactFields);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                 this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();
@@ -382,8 +380,8 @@ define([
         },
 
         save: function() {
-            if (this.sandbox.form.validate(this.form)) {
-                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(this.form));
+            if (this.sandbox.form.validate(constants.formSelector)) {
+                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(constants.formSelector));
                 if (!data.id) {
                     delete data.id;
                 }
