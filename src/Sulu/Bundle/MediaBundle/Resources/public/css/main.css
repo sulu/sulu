@@ -213,19 +213,20 @@
 /* line 169, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   color: #999;
+  padding-bottom: 10px;
 }
 
-/* line 173, ../scss/modules/media-selection.scss */
+/* line 174, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
 }
 
-/* line 177, ../scss/modules/media-selection.scss */
+/* line 178, ../scss/modules/media-selection.scss */
 .media-selection-overlay-header {
   white-space: nowrap;
 }
 
-/* line 181, ../scss/modules/media-selection.scss */
+/* line 182, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;

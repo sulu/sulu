@@ -25,6 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
+use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -394,7 +395,7 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
         }
 
         return $this->getApiObject($contact, $locale);
