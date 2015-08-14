@@ -351,7 +351,7 @@ define([
                 success: function() {
                     mediator.emit('sulu.contacts.document.removed', accountId, mediaId);
                     if (!noLabel) {
-                        mediator.emit('sulu.labels.success.show', 'contact.accounts.documents-removed');
+                        mediator.emit('sulu.labels.success.show', 'contact.accounts.document-removed');
                     }
                     promise.resolve();
                 }.bind(this)
