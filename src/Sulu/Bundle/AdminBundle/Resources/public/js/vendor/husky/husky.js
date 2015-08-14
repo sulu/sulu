@@ -27212,6 +27212,38 @@ define('services/husky/util',[],function() {
     };
 
     /**
+     * Takes a two dimensional array and returns a given column as a one-dimensional array
+     * @param data {Array}
+     * @param propertyName {String}
+     * @returns {Array}
+     */
+    Util.prototype.arrayGetColumn = function(data, propertyName) {
+        if (Util.prototype.typeOf(data) === 'array' &&
+            data.length > 0 &&
+            Util.prototype.typeOf(data[0]) === 'object') {
+            var values = [];
+            Util.prototype.foreach(data, function(el) {
+                values.push(el[propertyName]);
+            }.bind(this));
+            return values;
+        } else {
+            return data;
+        }
+    };
+
+    /**
+     * Removes elements from one array from another array and returns the result
+     * @param array {Array} The array to remove from
+     * @param remove {Array} containing the elements which sould be removed
+     * @returns {Array}
+     */
+    Util.prototype.removeFromArray = function(array, remove) {
+        return $.grep(array, function(value) {
+            return remove.indexOf(value) == -1;
+        });
+    };
+
+    /**
      * Returns a parameter value from a given url
      * Found at http://stackoverflow.com/a/901144
      * Has limitations e.g. for parameters like a[asf]=value
@@ -31605,10 +31637,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
             this.preparePagination();
             this.sandbox.dom.append(this.$el, this.$paginationContainer);
-
-            this.preparePaginationDropdown();
-            this.prepareShowElementsDropdown();
-
             this.bindDomEvents();
         },
 
@@ -31633,8 +31661,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          * Destroys the pagination
          */
         destroy: function() {
-            this.unbindDomEvents();
             this.sandbox.stop(this.sandbox.dom.find('*', this.$paginationContainer));
+            this.unbindDomEvents();
             this.sandbox.dom.remove(this.$paginationContainer);
         },
 
@@ -31743,6 +31771,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 }));
                 this.sandbox.dom.append(this.$paginationContainer, '<span></span>')
                 this.sandbox.dom.append(this.$paginationContainer, $showElements);
+
+                this.prepareShowElementsDropdown();
             }
 
             if (parseInt(this.data.pages, 10) > 1) {
@@ -31756,6 +31786,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.dom.append($pagination, this.sandbox.util.template(templates.pageChanger)({
                     label: paginationLabel
                 }));
+
+                this.preparePaginationDropdown();
             }
         },
 
@@ -50508,6 +50540,10 @@ define('husky_extensions/util',['services/husky/util'], function(Util) {
 			app.core.util.template = Util.template;
 
             app.core.util.escapeHtml = Util.escapeHtml;
+
+            app.core.util.arrayGetColumn = Util.arrayGetColumn;
+
+            app.core.util.removeFromArray = Util.removeFromArray;
         }
     };
 });
