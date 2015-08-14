@@ -395,8 +395,7 @@ define([
                     this.data = savedData;
                     var formData = this.initContactData();
                     this.setFormData(formData);
-                    this.sandbox.emit('sulu.tab.saved', savedData);
-                    this.sandbox.emit('sulu.tab.data.changed', savedData);
+                    this.sandbox.emit('sulu.tab.saved', savedData, true);
                 }.bind(this));
             }
         },

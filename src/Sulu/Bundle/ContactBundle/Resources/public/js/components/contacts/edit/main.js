@@ -83,7 +83,6 @@ define([
             this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
-            this.sandbox.on('sulu.tab.data.changed', this.dataChanged.bind(this));
         },
 
         /**
@@ -103,7 +102,10 @@ define([
          */
         saveTab: function() {
             var promise = $.Deferred();
-            this.sandbox.once('sulu.tab.saved', function(savedData) {
+            this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
+                if (!!updateData){
+                    this.data = savedData;
+                }
                 promise.resolve(savedData);
             }.bind(this));
             this.sandbox.emit('sulu.tab.save');
@@ -118,14 +120,6 @@ define([
             this.saveTab().then(function(savedData) {
                 this.afterSave(action, savedData);
             }.bind(this));
-        },
-
-        /**
-         * Update contact data which was changed in a tab
-         * @param newData new contact data
-         */
-        dataChanged: function(newData) {
-            this.data = newData;
         },
 
         /**
