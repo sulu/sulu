@@ -47,6 +47,10 @@ define([
     return {
         view: true,
 
+        tabOptions: {
+            hideTitle: true
+        },
+
         layout: function() {
             return {
                 content: {

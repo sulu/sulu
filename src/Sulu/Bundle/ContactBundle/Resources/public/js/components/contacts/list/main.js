@@ -91,6 +91,7 @@ define([
 
         header: {
             noBack: true,
+            title: 'Contact List', // todo: use translation key
             toolbar: {
                 buttons: {
                     add: {},
@@ -98,8 +99,6 @@ define([
                 }
             }
         },
-
-        title: 'Contact List', // todo: use translation key
 
         templates: ['/admin/contact/template/contact/list'],
 

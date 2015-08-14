@@ -62,6 +62,7 @@ define([], function() {
             overflownClass: 'overflown',
             hideTabsClass: 'tabs-hidden',
             tabsContentClass: 'tabs-content',
+            contentTitleClass: 'content-title',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'}
@@ -303,12 +304,22 @@ define([], function() {
             this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.toolbarRow)());
             this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.tabsRow)());
 
+            // render title if there are no tabs (else they are rendered in tabChangeHandler)
+            if (!!this.options.title && !this.options.tabsData) {
+                this.sandbox.dom.prepend(this.options.tabsParentOption.el.parentElement, this.getTitleElement());
+            }
+
             // hide back if configured
             if (this.options.noBack === true) {
                 this.sandbox.dom.hide(this.$find('.' + constants.backClass));
             } else {
                 this.sandbox.dom.show(this.$find('.' + constants.backClass));
             }
+        },
+
+        getTitleElement: function() {
+            var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title;
+            return this.sandbox.dom.createElement('<h2 class="' + constants.contentTitleClass + '">' + title + '</h2>');
         },
 
         /**
@@ -498,10 +509,16 @@ define([], function() {
                     this.options.tabsOption,
                     {el: $container},
                     tabItem.componentOptions);
+
                 this.sandbox.start([{
                     name: tabItem.component,
                     options: options
-                }]);
+                }]).then(function(tabComponent) {
+                    // render title if view title is set and tab-option hideTitle title is false or not set
+                    if (!!this.options.title && (!tabComponent.tabOptions || !tabComponent.tabOptions.hideTitle)) {
+                        this.sandbox.dom.prepend(this.options.tabsContainer, this.getTitleElement());
+                    }
+                }.bind(this));
             } else {
                 this.sandbox.emit(TAB_CHANGED.call(this), tabItem);
             }
@@ -513,6 +530,7 @@ define([], function() {
         stopTabContent: function() {
             App.stop('.' + constants.tabsContentClass + ' *');
             App.stop('.' + constants.tabsContentClass);
+            this.sandbox.dom.empty(this.options.tabsContainer);
         },
 
         /**
@@ -534,7 +552,7 @@ define([], function() {
             this.sandbox.dom.css($container, {overflow: 'visible'});
             this.sandbox.dom.css(this.sandbox.dom.children($container), {
                 'margin-left': ((-1) * scrollPos) + 'px'
-            })
+            });
         },
 
         /**

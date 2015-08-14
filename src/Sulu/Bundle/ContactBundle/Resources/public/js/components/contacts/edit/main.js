@@ -24,6 +24,9 @@ define([
          */
         header: function() {
             var config = {
+                title: function() {
+                    return this.data.firstName + ' ' + this.data.lastName;
+                }.bind(this),
                 tabs: {
                     url: '/admin/content-navigations?alias=contact',
                     options: {
@@ -53,10 +56,6 @@ define([
                 };
             }
             return config;
-        },
-
-        title: function() {
-            return this.data.firstName + ' ' + this.data.lastName;
         },
 
         /**
