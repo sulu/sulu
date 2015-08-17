@@ -67,7 +67,7 @@ class TagTwigExtension extends \Twig_Extension
 
         // extend comma separated list
         $tags = $request->get($tagsParameter, '');
-        $tagsArray = array_merge(explode(',', $tags), [$tag->getName()]);
+        $tagsArray = array_filter(array_merge(explode(',', $tags), [$tag->getName()]));
         $tags = implode(',', array_unique($tagsArray));
 
         // get all parameter and extend with new tags string
