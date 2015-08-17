@@ -582,12 +582,7 @@ input, select {
   font-weight: bold;
   color: #fff;
 }
-/* line 213, ../scss/modules/login.scss */
-.sulu-login .content-container .success-overlay .success-icon.inner {
-  font-weight: normal;
-  color: #5DC774;
-}
-/* line 220, ../scss/modules/login.scss */
+/* line 215, ../scss/modules/login.scss */
 .sulu-login .content-container .login-loader {
   display: block;
   position: absolute;
@@ -595,47 +590,47 @@ input, select {
   right: 0;
   z-index: -10;
 }
-/* line 230, ../scss/modules/login.scss */
+/* line 225, ../scss/modules/login.scss */
 .sulu-login.content-success .success-overlay {
   opacity: 1;
 }
-/* line 234, ../scss/modules/login.scss */
+/* line 229, ../scss/modules/login.scss */
 .sulu-login.content-success .media-container {
   left: -50%;
 }
-/* line 238, ../scss/modules/login.scss */
+/* line 233, ../scss/modules/login.scss */
 .sulu-login.content-success .content-container {
   left: 50%;
 }
 
-/* line 244, ../scss/modules/login.scss */
+/* line 239, ../scss/modules/login.scss */
 .login-label-container {
   left: 75% !important;
 }
 
 @media screen and (max-width: 800px), screen and (orientation: portrait) {
-  /* line 251, ../scss/modules/login.scss */
+  /* line 246, ../scss/modules/login.scss */
   .sulu-login .media-container {
     display: none;
   }
-  /* line 255, ../scss/modules/login.scss */
+  /* line 250, ../scss/modules/login.scss */
   .sulu-login .content-container {
     width: 100%;
   }
-  /* line 259, ../scss/modules/login.scss */
+  /* line 254, ../scss/modules/login.scss */
   .sulu-login .content-container .content-box .content-logo {
     display: block;
   }
-  /* line 264, ../scss/modules/login.scss */
+  /* line 259, ../scss/modules/login.scss */
   .sulu-login .content-container .login-content-footer {
     display: none;
   }
-  /* line 270, ../scss/modules/login.scss */
+  /* line 265, ../scss/modules/login.scss */
   .sulu-login.content-success .content-container {
     left: -100%;
   }
 
-  /* line 276, ../scss/modules/login.scss */
+  /* line 271, ../scss/modules/login.scss */
   .login-label-container {
     left: 50% !important;
   }

@@ -157,21 +157,21 @@ define(['sulumedia/model/media'], function(Media) {
                             dropdownItems: [
                                 {
                                     id: 'small-thumbnails',
-                                    title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
+                                    title: this.sandbox.translate('sulu.toolbar.small-thumbnails'),
                                     callback: function() {
                                         this.sandbox.emit('sulu.list-toolbar.change.thumbnail-small');
                                     }.bind(this)
                                 },
                                 {
                                     id: 'big-thumbnails',
-                                    title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
+                                    title: this.sandbox.translate('sulu.toolbar.big-thumbnails'),
                                     callback: function() {
                                         this.sandbox.emit('sulu.list-toolbar.change.thumbnail-large');
                                     }.bind(this)
                                 },
                                 {
                                     id: 'table',
-                                    title: this.sandbox.translate('sulu.list-toolbar.table'),
+                                    title: this.sandbox.translate('sulu.toolbar.table'),
                                     callback: function() {
                                         this.sandbox.emit('sulu.list-toolbar.change.table');
                                     }.bind(this)

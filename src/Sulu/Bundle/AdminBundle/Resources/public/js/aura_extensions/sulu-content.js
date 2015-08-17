@@ -320,14 +320,9 @@ define(function() {
         },
 
         /**
-         * Checks various properties (header, view, layout) of an component
-         * and executes the related handler.
+         * Executes handlers before the load-component-data-hook
          */
-        executeHandlers = function() {
-            if (!!this.header) {
-                handleHeaderMarker.call(this, this.header);
-            }
-
+        executeBeforeDataHandler = function() {
             if (!!this.view) {
                 handleViewMarker.call(this, this.view);
 
@@ -336,9 +331,17 @@ define(function() {
                     handleLayoutMarker.call(this, {});
                 }
             }
-
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);
+            }
+        },
+
+        /**
+         * Executes handlers after the load-component-data-hook
+         */
+        executeAfterDataHandler = function() {
+            if (!!this.header) {
+                handleHeaderMarker.call(this, this.header);
             }
         };
 
@@ -350,6 +353,9 @@ define(function() {
         app.components.before('initialize', function() {
             //load view data before rendering tabs
             var dataLoaded = this.sandbox.data.deferred();
+
+            executeBeforeDataHandler.call(this);
+
             if (!!this.loadComponentData && typeof this.loadComponentData === 'function') {
                 dataLoaded = this.loadComponentData.call(this);
             } else {
@@ -360,7 +366,7 @@ define(function() {
                 if (!!data) {
                     this.data = data;
                 }
-                executeHandlers.call(this);
+                executeAfterDataHandler.call(this);
             }.bind(this));
 
             return dataLoaded;

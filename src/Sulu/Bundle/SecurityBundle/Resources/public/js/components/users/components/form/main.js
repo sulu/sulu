@@ -22,21 +22,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
         name: 'Sulu Security Permissions Form',
 
-        layout: function() {
-            return {
-                content: {
-                    width: (WidgetGroups.exists('contact-detail') ? 'max' : 'fixed')
-                },
-                sidebar: {
-                    width: 'fixed',
-                    cssClasses: 'sidebar-padding-50'
-                }
-            };
-        },
-
         templates: ['/admin/security/template/permission/form'],
-
-        view: true,
 
         initialize: function() {
             this.formId = '#permissions-form';

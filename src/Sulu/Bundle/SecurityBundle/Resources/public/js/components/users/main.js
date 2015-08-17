@@ -13,14 +13,27 @@ define([
     'sulusecurity/models/permission',
     'sulucontact/models/contact',
     './collections/roles',
-    './models/userRole'
-], function(User, Role, Permission, Contact, Roles, UserRole) {
+    './models/userRole',
+    'widget-groups'
+], function(User, Role, Permission, Contact, Roles, UserRole, WidgetGroups) {
 
     'use strict';
 
     return {
 
         name: 'Sulu Contact Permissions',
+
+        layout: function() {
+            return {
+                content: {
+                    width: (WidgetGroups.exists('contact-detail') ? 'max' : 'fixed')
+                },
+                sidebar: {
+                    width: 'fixed',
+                    cssClasses: 'sidebar-padding-50'
+                }
+            };
+        },
 
         initialize: function() {
             this.renderForm();
