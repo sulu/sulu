@@ -23,6 +23,16 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class WorkflowStageSubscriberTest extends SubscriberTestCase
 {
+    /**
+     * @var PropertyInterface
+     */
+    private $property;
+
+    /**
+     * @var WorkflowStageSubscriber
+     */
+    private $subscriber;
+
     public function setUp()
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
@@ -34,6 +44,20 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
         $this->subscriber = new WorkflowStageSubscriber($this->encoder->reveal());
 
         $this->persistEvent->getNode()->willReturn($this->node);
+    }
+
+    /**
+     * It should return early if the locale is null.
+     */
+    public function testPersistLocaleIsNull()
+    {
+        $document = new TestWorkflowStageDocument(WorkflowStage::PUBLISHED);
+
+        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getLocale()->willReturn(null);
+        $this->node->setProperty()->shouldNotBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     /**
@@ -53,7 +77,7 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('stage', WorkflowStage::PUBLISHED, PropertyType::LONG)->shouldBeCalled();
         $this->persistEvent->getAccessor()->willReturn($this->accessor->reveal());
 
-        $this->subscriber->doPersist(
+        $this->subscriber->handlePersist(
             $this->persistEvent->reveal()
         );
     }
@@ -74,7 +98,7 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
 
         $this->node->setProperty('published', Argument::type('DateTime'), PropertyType::DATE)->shouldNotBeCalled();
 
-        $this->subscriber->doPersist(
+        $this->subscriber->handlePersist(
             $this->persistEvent->reveal()
         );
     }

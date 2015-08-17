@@ -17,7 +17,6 @@ use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class WorkflowStageSubscriber extends AbstractMappingSubscriber
@@ -31,9 +30,9 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    protected function doHydrate(AbstractMappingEvent $event)
     {
         $locale = $event->getLocale();
         $node = $event->getNode();
@@ -55,12 +54,17 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    protected function doPersist(PersistEvent $event)
     {
+        $locale = $event->getLocale();
+
+        if (!$locale) {
+            return;
+        }
+
         $document = $event->getDocument();
         $stage = $document->getWorkflowStage();
         $node = $event->getNode();
-        $locale = $event->getLocale();
         $persistedStage = $this->getWorkflowStage($node, $locale);
 
         if ($stage == WorkflowStage::PUBLISHED && $stage !== $persistedStage) {
