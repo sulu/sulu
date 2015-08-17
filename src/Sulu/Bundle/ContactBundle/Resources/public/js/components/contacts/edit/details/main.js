@@ -333,8 +333,14 @@ define([
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
+                if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
+                    // no request neede because new avatar was added as new version of the old avatar
+                    this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                } else {
+                    ContactManager.saveAvatar(this.data.id, response.id);
+                    // todo: change post url of dropzone
+                }
                 this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
-                this.sandbox.emit('sulu.tab.dirty');
             }, this);
         },
 
