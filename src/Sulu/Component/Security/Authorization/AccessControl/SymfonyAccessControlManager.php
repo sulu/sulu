@@ -24,6 +24,8 @@ use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 /**
  * An implementation of Sulu's AccessControlManagerInterface, which is using the ACL component of Symfony.
  * Responsible for setting the permissions on a specific object.
+ *
+ * @deprecated
  */
 class SymfonyAccessControlManager implements AccessControlManagerInterface
 {
