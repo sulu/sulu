@@ -26,13 +26,13 @@
             <div class="grid-col-6">
                 <div class="form-group">
                     <label for="password"><%=translate('security.permission.password')%></label>
-                    <input name="password" id="password" type="password" class="form-element" data-validation-equal="passwords" value="<%= (!!user) ? '*******' : '' %>"/>
+                    <input name="password" id="password" type="password" class="form-element" data-validation-equal="passwords"/>
                 </div>
             </div>
             <div class="grid-col-6">
                 <div class="form-group">
                     <label for="passwordRepeat"><%=translate('security.permission.passwordRepeat')%></label>
-                    <input name="passwordRepeat" id="passwordRepeat" type="password" class="form-element" data-validation-equal="passwords" value="<%= (!!user) ? '*******' : '' %>"/>
+                    <input name="passwordRepeat" id="passwordRepeat" type="password" class="form-element" data-validation-equal="passwords"/>
                 </div>
             </div>
         </div>
