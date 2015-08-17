@@ -157,7 +157,7 @@ class ContentType extends ComplexContentType
 
         $defaults = [
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-            'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+            'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
             'has' => [
@@ -214,6 +214,10 @@ class ContentType extends ComplexContentType
         // prepare filters
         $filters = $property->getValue();
         $filters['excluded'] = [$property->getStructure()->getUuid()];
+
+        // extends selected filter with requested tags
+        $filters = array_merge(['tags' => []], $filters);
+        $filters['tags'] = array_merge($this->getTags($params['tags_parameter']->getValue()), $filters['tags']);
 
         // resolve tags to id
         if (!empty($filters['tags'])) {
@@ -341,5 +345,23 @@ class ContentType extends ComplexContentType
         }
 
         return intval($page);
+    }
+
+    /**
+     * determine tags from current request.
+     *
+     * @param string $tagsParameter
+     *
+     * @return string[]
+     */
+    private function getTags($tagsParameter)
+    {
+        if ($this->requestStack->getCurrentRequest() !== null) {
+            $tags = $this->requestStack->getCurrentRequest()->get($tagsParameter, '');
+        } else {
+            $tags = '';
+        }
+
+        return array_filter(explode(',', $tags));
     }
 }
