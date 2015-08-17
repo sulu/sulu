@@ -169,13 +169,16 @@ define([
             ]);
 
             if (!!data.avatar) {
-                this.updateContactAvater(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+            } else {
+                this.sandbox.dom.attr(constants.avatarImageId, 'src',
+                    Config.get('sulucontact.contacts.default.avatar').url);
             }
         },
 
-        updateContactAvater: function(mediaId, url) {
-            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
+        updateContactAvatar: function(mediaId, url) {
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
+            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
         },
 
         bindTagEvents: function(data) {
