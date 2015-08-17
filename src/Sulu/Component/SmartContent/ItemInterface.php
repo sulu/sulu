@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\SmartContent;
 
+use Sulu\Component\SmartContent\Exception\NoSuchPropertyException;
+
 /**
  * Item to display in smart-content UI.
  */
@@ -27,7 +29,7 @@ interface ItemInterface
      *
      * @return string
      *
-     * @throws \Sulu\Component\SmartContent\Exception\NoSuchPropertyException
+     * @throws NoSuchPropertyException
      */
     public function getId();
 

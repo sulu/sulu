@@ -21,6 +21,7 @@ use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
+use Sulu\Component\SmartContent\DataProviderResult;
 
 /**
  * DataProvider for content.
@@ -46,11 +47,6 @@ class ContentDataProvider implements DataProviderInterface
      * @var ProviderConfigurationInterface
      */
     private $configuration;
-
-    /**
-     * @var bool
-     */
-    private $hasNextPage;
 
     /**
      * @var LazyLoadingValueHolderFactory
@@ -104,12 +100,14 @@ class ContentDataProvider implements DataProviderInterface
                 ]
             )
         );
-        $this->configuration->setSorting([
-            new PropertyParameter('title', 'smart-content.title'),
-            new PropertyParameter('published', 'public.published'),
-            new PropertyParameter('created', 'public.created'),
-            new PropertyParameter('changed', 'public.changed'),
-        ]);
+        $this->configuration->setSorting(
+            [
+                new PropertyParameter('title', 'smart-content.title'),
+                new PropertyParameter('published', 'public.published'),
+                new PropertyParameter('created', 'public.created'),
+                new PropertyParameter('changed', 'public.changed'),
+            ]
+        );
 
         return $this->configuration;
     }
@@ -179,14 +177,25 @@ class ContentDataProvider implements DataProviderInterface
             ]
         );
 
+        $hasNextPage = false;
         if ($pageSize !== null) {
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
-            $this->hasNextPage = (count($result) > $pageSize);
-
-            return $this->decorate(array_splice($result, 0, $pageSize), $options['locale']);
+            $hasNextPage = (count($result) > $pageSize);
+            $items = $this->decorate(array_splice($result, 0, $pageSize), $options['locale']);
         } else {
-            return $this->decorate($this->load($options, $limit), $options['locale']);
+            $items = $this->decorate($this->load($options, $limit), $options['locale']);
         }
+
+        return new DataProviderResult(
+            $items,
+            $hasNextPage,
+            array_map(
+                function ($item) {
+                    return $item->getId();
+                },
+                $items
+            )
+        );
     }
 
     /**
@@ -275,16 +284,5 @@ class ContentDataProvider implements DataProviderInterface
             },
             $data
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHasNextPage()
-    {
-        $result = $this->hasNextPage;
-        $this->hasNextPage = null;
-
-        return $result;
     }
 }

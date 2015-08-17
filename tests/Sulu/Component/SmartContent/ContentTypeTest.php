@@ -26,7 +26,7 @@ interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
 /**
  * @group unit
  */
-class SmartContentTest extends \PHPUnit_Framework_TestCase
+class ContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SmartContent
@@ -326,8 +326,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             null,
             1,
             5
-        )->willReturn([1, 2, 3, 4, 5, 6]);
-        $this->contentDataProvider->getHasNextPage()->willReturn(true);
+        )->willReturn(new DataProviderResult([1, 2, 3, 4, 5, 6], true, [1, 2, 3, 4, 5, 6]));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
@@ -358,7 +357,9 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetReferencedUuids()
     {
-        $property = $this->getContentDataProperty();
+        $property = $this->getContentDataProperty(
+            ['dataSource' => '123-123-123', 'referencedUuids' => [1, 2, 3, 4, 5, 6]]
+        );
         $uuids = $this->smartContent->getReferencedUuids($property);
 
         $this->assertEquals([1, 2, 3, 4, 5, 6], $uuids);
@@ -411,8 +412,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             null,
             1,
             5
-        )->willReturn([1, 2, 3, 4, 5]);
-        $this->contentDataProvider->getHasNextPage()->willReturn(true);
+        )->willReturn(new DataProviderResult([1, 2, 3, 4, 5], true, [1, 2, 3, 4, 5]));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
@@ -489,8 +489,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             $limitResult,
             $page,
             $pageSize
-        )->willReturn($expectedData);
-        $this->contentDataProvider->getHasNextPage()->willReturn($hasNextPage);
+        )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
 
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($config));
@@ -561,8 +560,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             $limitResult,
             $page,
             $pageSize
-        )->willReturn($expectedData);
-        $this->contentDataProvider->getHasNextPage()->willReturn($hasNextPage);
+        )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
 
         $property->expects($this->at(1))->method('getValue')
             ->willReturn($config);
@@ -590,7 +588,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
                     'limitResult' => null,
                     'page' => null,
                     'hasNextPage' => null,
-                    'paginated' => false
+                    'paginated' => false,
+                    'referencedUuids' => [],
                 ],
                 $config,
                 ['page' => $page, 'hasNextPage' => $hasNextPage]
@@ -599,7 +598,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function getContentDataProperty()
+    private function getContentDataProperty($value = ['dataSource' => '123-123-123'])
     {
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
@@ -615,12 +614,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue(['dataSource' => '123-123-123']));
+            ->will($this->returnValue($value));
 
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue([]));
 
-        $property->expects($this->exactly(3))->method('getStructure')
+        $property->expects($this->any())->method('getStructure')
             ->will($this->returnValue($structure));
 
         $this->contentDataProvider->resolveFilters(
@@ -646,6 +645,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             ["webspaceKey" => null, "locale" => null],
             null
         )->willReturn(
+            new DataProviderResult(
                 [
                     ['uuid' => 1],
                     ['uuid' => 2],
@@ -653,9 +653,11 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
                     ['uuid' => 4],
                     ['uuid' => 5],
                     ['uuid' => 6],
-                ]
-            );
-        $this->contentDataProvider->getHasNextPage()->willReturn(false);
+                ],
+                true,
+                [1, 2, 3, 4, 5, 6]
+            )
+        );
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 

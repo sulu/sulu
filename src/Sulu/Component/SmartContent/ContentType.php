@@ -253,14 +253,13 @@ class ContentType extends ComplexContentType
 
         // append view data
         $filters['page'] = $page;
-        $filters['hasNextPage'] = $provider->getHasNextPage();
+        $filters['hasNextPage'] = $data->getHasNextPage();
+        $filters['referencedUuids'] = $data->getReferencedUuids();
         $filters['paginated'] = $configuration->getPaginated();
         $property->setValue($filters);
 
         // save result in cache
-        $this->cache[$hash] = $data;
-
-        return $data;
+        return $this->cache[$hash] = $data->getItems();
     }
 
     /**
@@ -284,11 +283,26 @@ class ContentType extends ComplexContentType
                 'page' => null,
                 'hasNextPage' => null,
                 'paginated' => false,
+                'referencedUuids' => [],
             ],
             $config
         );
 
         return $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $value = $property->getValue();
+
+        if (!array_key_exists('referencedUuids', $value)) {
+            return [];
+        }
+
+        return $value['referencedUuids'];
     }
 
     /**

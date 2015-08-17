@@ -54,12 +54,13 @@ class SmartContentItemController extends RestController
         $provider = $dataProviderPool->get($providerAlias);
 
         // resolve datasource and items
-        $items = $provider->resolveFilters(
+        $data = $provider->resolveFilters(
             $filters,
             [],
             $options,
             (isset($filters['limitResult']) ? $filters['limitResult'] : null)
         );
+        $items = $data->getItems();
         $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
 
         return $this->handleView($this->view(new ItemCollectionRepresentation($items, $datasource)));

@@ -42,7 +42,7 @@ interface DataProviderInterface
      * @param int|null $pageSize Indicates page-size of result set.
      * @param array $options Options like webspace or locale.
      *
-     * @return ItemInterface[]
+     * @return DataProviderResult
      */
     public function resolveFilters(
         array $filters,
@@ -63,11 +63,4 @@ interface DataProviderInterface
      * @return ItemInterface
      */
     public function resolveDatasource($datasource, array $propertyParameter, array $options);
-
-    /**
-     * Returns TRUE if next page exists for last resolveFilters call.
-     *
-     * @return bool
-     */
-    public function getHasNextPage();
 }
