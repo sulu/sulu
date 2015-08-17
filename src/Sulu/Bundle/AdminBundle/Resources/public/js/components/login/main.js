@@ -105,7 +105,6 @@ define([], function() {
                 '   </div>',
                 '   <div class="' + constants.successOverlayClass + '">',
                 '       <span class="fa-check success-icon"></span>',
-                '       <span class="fa-check success-icon inner"></span>',
                 '   </div>',
                 '</div>'].join(''),
 

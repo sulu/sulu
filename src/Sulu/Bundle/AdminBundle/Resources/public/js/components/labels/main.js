@@ -85,6 +85,11 @@ define([], function() {
          */
         initialize: function() {
             this.labelId = 0;
+            this.labels = {};
+            this.labels.SUCCESS = {};
+            this.labels.WARNING = {};
+            this.labels.ERROR = {};
+            this.labelsById = {};
             this.bindCustomEvents();
         },
 
@@ -110,10 +115,6 @@ define([], function() {
             }.bind(this));
 
             this.sandbox.on(LABELS_REMOVE.call(this), function() {
-                this.removeLabels();
-            }.bind(this));
-
-            this.sandbox.on('sulu.router.navigate', function() {
                 this.removeLabels();
             }.bind(this));
 
@@ -158,7 +159,12 @@ define([], function() {
          * @param id {String} The id of the label to delete
          */
         removeLabelWithId: function(id) {
-            this.sandbox.dom.remove(this.sandbox.dom.find("[data-id='"+ id +"']", this.$el));
+            var label = this.labelsById[id];
+            if (!!label) {
+                delete this.labels[label.type][label.description];
+                delete this.labelsById[id];
+                this.sandbox.dom.remove(this.sandbox.dom.find("[data-id='"+ id +"']", this.$el));
+            }
         },
 
         /**
@@ -169,12 +175,26 @@ define([], function() {
          * @oaram id
          */
         showLabel: function(type, description, title, id) {
-            this.startLabelComponent({
-                type: type,
-                description: this.sandbox.translate(description),
-                title: this.sandbox.translate(title),
-                el: this.createLabelContainer(id)
-            });
+            id = id || ++this.labelId;
+            if (!!this.labels[type][description]) {
+                this.sandbox.emit('husky.label.' + this.labels[type][description] + '.refresh');
+            } else {
+                this.startLabelComponent({
+                    type: type,
+                    description: this.sandbox.translate(description),
+                    title: this.sandbox.translate(title),
+                    el: this.createLabelContainer(id),
+                    instanceName: id
+                });
+                this.labels[type][description] = id;
+                this.labelsById[id] = {
+                    type: type,
+                    description: description
+                };
+                this.sandbox.once('husky.label.' + id + '.destroyed', function() {
+                    this.removeLabelWithId(id);
+                }.bind(this));
+            }
         },
 
         /**

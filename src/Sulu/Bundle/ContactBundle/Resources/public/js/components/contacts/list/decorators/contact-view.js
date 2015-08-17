@@ -220,7 +220,7 @@ define(function() {
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindItemDomEvents: function(id) {
-            this.sandbox.dom.on(this.$items[id], 'click', function() {
+            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
             }.bind(this), "." + constants.actionNavigatorClass);
