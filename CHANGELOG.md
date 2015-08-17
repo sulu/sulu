@@ -43,6 +43,8 @@ CHANGELOG for Sulu
     * FEATURE     #1529 [ContentBundle]   Added reset smart content button
     * FEATURE     #1517 [ContactBundle]   Added account DataProvider
     * FEATURE     #1513 [ContactBundle]   Added contact DataProvider
+    * FEATURE     #1369 [SmartContent]    Extended SmartContent to be able to add tags from website URL
+    * FEATURE     #1369 [TagBundle]       Added TwigExtension to handle tags in twig templates
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
     * FEATURE     #1415 [ContentBundle]   Refactored SmartContent to use DataProvider to load content
     * FEATURE     #1477 [MediaBundle]     Added object security in the media section
