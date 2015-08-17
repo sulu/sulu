@@ -9,6 +9,10 @@
  */
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+/**
+ * An implementation of the AccessControlManagerInterface, which supports registering AccessControlProvider. All method
+ * calls are delegated to the AccessControlProvider supporting the given type.
+ */
 class AccessControlManager implements AccessControlManagerInterface
 {
     /**
@@ -21,7 +25,13 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     public function setPermissions($type, $identifier, $securityIdentity, $permissions)
     {
-        // TODO: Implement setPermissions() method.
+        $accessControlProvider = $this->getAccessControlProvider($type);
+
+        if (!$accessControlProvider) {
+            return;
+        }
+
+        $accessControlProvider->setPermissions($type, $identifier, $securityIdentity, $permissions);
     }
 
     /**
@@ -29,11 +39,38 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     public function getPermissions($type, $identifier)
     {
-        // TODO: Implement getPermissions() method.
+        $accessControlProvider = $this->getAccessControlProvider($type);
+
+        if (!$accessControlProvider) {
+            return;
+        }
+
+        return $accessControlProvider->getPermissions($type, $identifier);
     }
 
+    /**
+     * Adds a new AccessControlProvider.
+     *
+     * @param AccessControlProviderInterface $accessControlProvider The AccessControlProvider to add
+     */
     public function addAccessControlProvider(AccessControlProviderInterface $accessControlProvider)
     {
         $this->accessControlProviders[] = $accessControlProvider;
+    }
+
+    /**
+     * Returns the AccessControlProvider, which supports the given type.
+     *
+     * @param string $type The type the AccessControlProvider should support
+     *
+     * @return AccessControlProviderInterface
+     */
+    private function getAccessControlProvider($type)
+    {
+        foreach ($this->accessControlProviders as $accessControlProvider) {
+            if ($accessControlProvider->supports($type)) {
+                return $accessControlProvider;
+            }
+        }
     }
 }
