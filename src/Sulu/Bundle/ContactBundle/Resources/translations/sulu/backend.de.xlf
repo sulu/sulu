@@ -604,6 +604,10 @@
                 <source>contact.address.countryCode</source>
                 <target>Land</target>
             </trans-unit>
+            <trans-unit id="235b1473d78922a3essds2e9335a8d5d" resname="contact.contacts.avatar.saved">
+                <source>contact.contacts.avatar.saved</source>
+                <target>Avatar gespeichert</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
