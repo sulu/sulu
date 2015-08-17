@@ -150,6 +150,17 @@ define([
         },
 
         initAvatarContainer: function(data) {
+            var postUrl;
+
+            if (!!data.avatar) {
+                postUrl = '/admin/api/media/' + data.avatar.id + '?action=new-version';
+                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+            } else {
+                postUrl = '/admin/api/media?collection=1'; // todo: use system collection
+                this.sandbox.dom.attr(constants.avatarImageId, 'src',
+                    Config.get('sulucontact.contacts.default.avatar').url);
+            }
+
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
@@ -158,7 +169,7 @@ define([
                         instanceName: 'contact-avatar',
                         titleKey: '',
                         descriptionKey: 'contact.contacts.avatar-dropzone-text',
-                        url: '/admin/api/media?collection=1', // todo: use system collection
+                        url: postUrl,
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
@@ -167,13 +178,6 @@ define([
                     }
                 }
             ]);
-
-            if (!!data.avatar) {
-                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
-            } else {
-                this.sandbox.dom.attr(constants.avatarImageId, 'src',
-                    Config.get('sulucontact.contacts.default.avatar').url);
-            }
         },
 
         updateContactAvatar: function(mediaId, url) {
@@ -329,7 +333,7 @@ define([
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
-                this.updateContactAvater(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
                 this.sandbox.emit('sulu.tab.dirty');
             }, this);
         },
