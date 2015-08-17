@@ -66,7 +66,7 @@ class ComponentConfiguration implements ComponentConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return [
             'name' => $this->getName(),

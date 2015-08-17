@@ -69,7 +69,7 @@ class AccountDataItem implements ItemInterface
      */
     public function getImage()
     {
-        return null;
+        return;
     }
 
     /**

@@ -271,11 +271,11 @@ class ContentDataProvider implements DataProviderInterface
                 $resource = $this->proxyFactory->createProxy(
                     PageDocument::class,
                     function (
-                        & $wrappedObject,
+                        &$wrappedObject,
                         LazyLoadingInterface $proxy,
                         $method,
                         array $parameters,
-                        & $initializer
+                        &$initializer
                     ) use ($item, $locale) {
                         $initializer = null;
                         $wrappedObject = $this->documentManager->find($item['uuid'], $locale);

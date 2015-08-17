@@ -38,7 +38,7 @@ class DataProviderResult
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasNextPage()
     {

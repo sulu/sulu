@@ -305,24 +305,24 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($structure));
 
         $this->contentDataProvider->resolveFilters(
-            ["dataSource" => "some-uuid", "page" => 1, "hasNextPage" => true, "excluded" => ["123-123-123"]],
+            ['dataSource' => 'some-uuid', 'page' => 1, 'hasNextPage' => true, 'excluded' => ['123-123-123']],
             [
-                "page_parameter" => new PropertyParameter('page_parameter', 'p'),
-                "tag_parameter" => new PropertyParameter('tag_parameter', 'tag'),
-                "sorting" => new PropertyParameter('sorting', [], 'collection'),
-                "present_as" => new PropertyParameter('present_as', [], 'collection'),
-                "has" => [
-                    "datasource" => false,
-                    "tags" => true,
-                    "categories" => false,
-                    "sorting" => false,
-                    "limit" => true,
-                    "presentAs" => true
+                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'sorting' => new PropertyParameter('sorting', [], 'collection'),
+                'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'has' => [
+                    'datasource' => false,
+                    'tags' => true,
+                    'categories' => false,
+                    'sorting' => false,
+                    'limit' => true,
+                    'presentAs' => true,
                 ],
-                "datasource" => null,
-                "max_per_page" => new PropertyParameter('max_per_page', '5')
+                'datasource' => null,
+                'max_per_page' => new PropertyParameter('max_per_page', '5'),
             ],
-            ["webspaceKey" => null, "locale" => null],
+            ['webspaceKey' => null, 'locale' => null],
             null,
             1,
             5
@@ -391,24 +391,24 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($structure));
 
         $this->contentDataProvider->resolveFilters(
-            ["dataSource" => "123-123-123", "excluded" => ["123-123-123"]],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             [
-                "page_parameter" => new PropertyParameter('page_parameter', 'p'),
-                "tag_parameter" => new PropertyParameter('tag_parameter', 'tag'),
-                "sorting" => new PropertyParameter('sorting', [], 'collection'),
-                "present_as" => new PropertyParameter('present_as', [], 'collection'),
-                "has" => [
-                    "datasource" => false,
-                    "tags" => true,
-                    "categories" => false,
-                    "sorting" => false,
-                    "limit" => true,
-                    "presentAs" => true
+                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'sorting' => new PropertyParameter('sorting', [], 'collection'),
+                'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'has' => [
+                    'datasource' => false,
+                    'tags' => true,
+                    'categories' => false,
+                    'sorting' => false,
+                    'limit' => true,
+                    'presentAs' => true,
                 ],
-                "datasource" => null,
-                "max_per_page" => new PropertyParameter('max_per_page', '5')
+                'datasource' => null,
+                'max_per_page' => new PropertyParameter('max_per_page', '5'),
             ],
-            ["webspaceKey" => null, "locale" => null],
+            ['webspaceKey' => null, 'locale' => null],
             null,
             1,
             5
@@ -465,27 +465,27 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentDataProvider->resolveFilters(
             [
-                "limitResult" => $limitResult,
-                "dataSource" => $uuid,
-                "excluded" => [$uuid]
+                'limitResult' => $limitResult,
+                'dataSource' => $uuid,
+                'excluded' => [$uuid],
             ],
             [
-                "page_parameter" => new PropertyParameter('page_parameter', 'p'),
-                "tag_parameter" => new PropertyParameter('tag_parameter', 'tag'),
-                "sorting" => new PropertyParameter('sorting', [], 'collection'),
-                "present_as" => new PropertyParameter('present_as', [], 'collection'),
-                "has" => [
-                    "datasource" => false,
-                    "tags" => true,
-                    "categories" => false,
-                    "sorting" => false,
-                    "limit" => true,
-                    "presentAs" => true
+                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'sorting' => new PropertyParameter('sorting', [], 'collection'),
+                'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'has' => [
+                    'datasource' => false,
+                    'tags' => true,
+                    'categories' => false,
+                    'sorting' => false,
+                    'limit' => true,
+                    'presentAs' => true,
                 ],
-                "datasource" => null,
-                "max_per_page" => new PropertyParameter('max_per_page', $pageSize)
+                'datasource' => null,
+                'max_per_page' => new PropertyParameter('max_per_page', $pageSize),
             ],
-            ["webspaceKey" => null, "locale" => null],
+            ['webspaceKey' => null, 'locale' => null],
             $limitResult,
             $page,
             $pageSize
@@ -534,29 +534,29 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentDataProvider->resolveFilters(
             [
-                "limitResult" => $limitResult,
-                "dataSource" => $uuid,
-                "page" => $page,
-                "hasNextPage" => $hasNextPage,
-                "excluded" => [$uuid]
+                'limitResult' => $limitResult,
+                'dataSource' => $uuid,
+                'page' => $page,
+                'hasNextPage' => $hasNextPage,
+                'excluded' => [$uuid],
             ],
             [
-                "page_parameter" => new PropertyParameter('page_parameter', 'p'),
-                "tag_parameter" => new PropertyParameter('tag_parameter', 'tag'),
-                "sorting" => new PropertyParameter('sorting', [], 'collection'),
-                "present_as" => new PropertyParameter('present_as', [], 'collection'),
-                "has" => [
-                    "datasource" => false,
-                    "tags" => true,
-                    "categories" => false,
-                    "sorting" => false,
-                    "limit" => true,
-                    "presentAs" => true
+                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'sorting' => new PropertyParameter('sorting', [], 'collection'),
+                'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'has' => [
+                    'datasource' => false,
+                    'tags' => true,
+                    'categories' => false,
+                    'sorting' => false,
+                    'limit' => true,
+                    'presentAs' => true,
                 ],
-                "datasource" => null,
-                "max_per_page" => new PropertyParameter('max_per_page', $pageSize)
+                'datasource' => null,
+                'max_per_page' => new PropertyParameter('max_per_page', $pageSize),
             ],
-            ["webspaceKey" => null, "locale" => null],
+            ['webspaceKey' => null, 'locale' => null],
             $limitResult,
             $page,
             $pageSize
@@ -624,25 +624,25 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentDataProvider->resolveFilters(
             [
-                "dataSource" => '123-123-123',
-                "excluded" => ["123-123-123"]
+                'dataSource' => '123-123-123',
+                'excluded' => ['123-123-123'],
             ],
             [
-                "page_parameter" => new PropertyParameter('page_parameter', 'p'),
-                "tag_parameter" => new PropertyParameter('tag_parameter', 'tag'),
-                "sorting" => new PropertyParameter('sorting', [], 'collection'),
-                "present_as" => new PropertyParameter('present_as', [], 'collection'),
-                "has" => [
-                    "datasource" => false,
-                    "tags" => true,
-                    "categories" => false,
-                    "sorting" => false,
-                    "limit" => true,
-                    "presentAs" => true
+                'page_parameter' => new PropertyParameter('page_parameter', 'p'),
+                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'sorting' => new PropertyParameter('sorting', [], 'collection'),
+                'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'has' => [
+                    'datasource' => false,
+                    'tags' => true,
+                    'categories' => false,
+                    'sorting' => false,
+                    'limit' => true,
+                    'presentAs' => true,
                 ],
-                "datasource" => null
+                'datasource' => null,
             ],
-            ["webspaceKey" => null, "locale" => null],
+            ['webspaceKey' => null, 'locale' => null],
             null
         )->willReturn(
             new DataProviderResult(

@@ -69,7 +69,7 @@ class ContactDataItem implements ItemInterface
      */
     public function getImage()
     {
-        return null;
+        return;
     }
 
     /**
