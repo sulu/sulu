@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\UserManagerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -31,6 +32,7 @@ class SuluSecurityBundle extends Bundle
         );
 
         $container->addCompilerPass(new UserManagerCompilerPass());
+        $container->addCompilerPass(new AccessControlProviderPass());
 
         parent::build($container);
     }
