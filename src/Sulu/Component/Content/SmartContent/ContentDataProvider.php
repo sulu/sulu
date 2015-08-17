@@ -15,7 +15,7 @@ use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
@@ -34,7 +34,7 @@ class ContentDataProvider implements DataProviderInterface
     private $contentQueryBuilder;
 
     /**
-     * @var ContentQueryExecutor
+     * @var ContentQueryExecutorInterface
      */
     private $contentQueryExecutor;
 
@@ -55,7 +55,7 @@ class ContentDataProvider implements DataProviderInterface
 
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
-        ContentQueryExecutor $contentQueryExecutor,
+        ContentQueryExecutorInterface $contentQueryExecutor,
         DocumentManagerInterface $documentManager,
         LazyLoadingValueHolderFactory $proxyFactory
     ) {
@@ -140,7 +140,11 @@ class ContentDataProvider implements DataProviderInterface
         $result = $this->contentQueryExecutor->execute(
             $options['webspaceKey'],
             [$options['locale']],
-            $this->contentQueryBuilder
+            $this->contentQueryBuilder,
+            true,
+            -1,
+            1,
+            0
         );
 
         $items = $this->decorate($result, $options['locale']);
@@ -163,7 +167,7 @@ class ContentDataProvider implements DataProviderInterface
             $filters['dataSource'] === '' ||
             ($limit !== null && $limit < 1)
         ) {
-            return [];
+            return new DataProviderResult([], false, []);
         }
 
         $properties = array_key_exists('properties', $propertyParameter) ?
