@@ -157,7 +157,7 @@ define([
                         el: constants.avatarDropzoneSelector,
                         instanceName: 'contact-avatar',
                         titleKey: '',
-                        descriptionKey: 'Drop or click to change avatar', // todo: use translation key
+                        descriptionKey: 'contact.contacts.avatar-dropzone-text',
                         url: '/admin/api/media?collection=1', // todo: use system collection
                         skin: 'overlay',
                         method: 'POST',
@@ -169,13 +169,16 @@ define([
             ]);
 
             if (!!data.avatar) {
-                this.updateContactAvater(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+            } else {
+                this.sandbox.dom.attr(constants.avatarImageId, 'src',
+                    Config.get('sulucontact.contacts.default.avatar').url);
             }
         },
 
-        updateContactAvater: function(mediaId, url) {
-            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
+        updateContactAvatar: function(mediaId, url) {
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
+            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
         },
 
         bindTagEvents: function(data) {

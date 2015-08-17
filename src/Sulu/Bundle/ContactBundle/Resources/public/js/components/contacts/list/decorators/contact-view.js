@@ -12,7 +12,7 @@
  * @param {Function} [removeRecord] function to remove an existing record from the grid
  * @param {Function} [destroy] function to destroy the view and unbind events
  */
-define(function() {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -30,7 +30,6 @@ define(function() {
             itemInfoClass: 'item-info',
 
             avatarThumbnailFormat: '100x100',
-            defaultAvatarUrl: '/bundles/sulucontact/img/avatar_sample.png'
         },
 
         templates = {
@@ -139,7 +138,8 @@ define(function() {
                 var id, avatar, name, isSuluUser, location, mail;
 
                 id = record['id'];
-                avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : constants.defaultAvatarUrl;
+                avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : 
+                    Config.get('sulucontact.contacts.default.avatar').url;
                 isSuluUser = Math.random() < .5; //TODO: use api information
                 mail = record['mainEmail'];
 
@@ -201,7 +201,7 @@ define(function() {
                 this.sandbox.dom.createElement(
                     this.sandbox.util.template(templates.infoRow)({
                         icon: icon,
-                        text: this.sandbox.util.cropMiddle(String(text), 26)
+                        text: this.sandbox.util.cropMiddle(String(text), 18)
                     })
                 )
             );

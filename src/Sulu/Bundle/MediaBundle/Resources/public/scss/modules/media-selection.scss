@@ -31,7 +31,7 @@
     height: 800px;
     min-height: 400px;
     margin: 0;
-    background-color: #f1f1f1;
+    background-color: $baseBackgroundColor;
   }
 
   .overlay-footer {
@@ -167,7 +167,7 @@
 }
 
 .media-selection-overlay-content-title {
-  color: #999;
+  color: $grayLight;
   padding-bottom: 10px;
 }
 

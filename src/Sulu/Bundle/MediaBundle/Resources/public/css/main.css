@@ -1,3 +1,4 @@
+/*----------------------------------------*/
 /* line 6, ../scss/modules/collection-list.scss */
 #collections-list-container .toggle-all {
   display: inline-block;
@@ -7,7 +8,7 @@
 /* line 10, ../scss/modules/collection-list.scss */
 #collections-list-container .toggle-all .icon {
   font-size: 14px;
-  color: #3E3E3E;
+  color: #3e3e3e;
   margin-right: 5px;
 }
 
@@ -281,7 +282,7 @@
 /* line 25, ../scss/modules/media-edit.scss */
 .media-edit-versions-created {
   float: right;
-  color: #999999;
+  color: #999;
 }
 
 /* line 30, ../scss/modules/media-edit.scss */
