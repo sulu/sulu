@@ -157,7 +157,7 @@ define([
                         el: constants.avatarDropzoneSelector,
                         instanceName: 'contact-avatar',
                         titleKey: '',
-                        descriptionKey: 'Drop or click to change avatar', // todo: use translation key
+                        descriptionKey: 'contact.contacts.avatar-dropzone-text',
                         url: '/admin/api/media?collection=1', // todo: use system collection
                         skin: 'overlay',
                         method: 'POST',

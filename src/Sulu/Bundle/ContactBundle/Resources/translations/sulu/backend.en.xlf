@@ -560,7 +560,11 @@
             </trans-unit>
             <trans-unit id="425b1473d76660a3essds2e9335a8d5d" resname="contact.accounts.document-added">
                 <source>contact.accounts.document-added</source>
-                <target>documents added</target>
+                <target>document added</target>
+            </trans-unit>
+            <trans-unit id="425b1432d76660a3e434s2e9335a8d5d" resname="contact.accounts.documents-removed">
+                <source>contact.accounts.documents-removed</source>
+                <target>documents removed</target>
             </trans-unit>
             <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
                 <source>contact.accounts.deleted</source>
@@ -600,7 +604,11 @@
             </trans-unit>
             <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
                 <source>contact.address.countryCode</source>
-                <target>country</target>
+                <target>Country</target>
+            </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
+                <source>contact.contacts.avatar-dropzone-text</source>
+                <target>drop image or click to change avatar</target>
             </trans-unit>
         </body>
     </file>
