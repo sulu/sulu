@@ -15,6 +15,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This event is dispatched when any object permission have been updated.
+ *
+ * @deprecated
  */
 class PermissionUpdateEvent extends Event
 {

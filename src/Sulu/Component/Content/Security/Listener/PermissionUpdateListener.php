@@ -17,6 +17,8 @@ use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
 /**
  * This class listens on permission updates, and set the permission on the document described in the event.
+ *
+ * @deprecated
  */
 class PermissionUpdateListener
 {

@@ -30,17 +30,17 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $accessControlProvider1->setPermissions(Argument::cetera())->shouldNotBeCalled();
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2->supports(Argument::any())->willReturn(true);
-        $accessControlProvider2->setPermissions(\stdClass::class, '1', 'securityIdentity', [])->shouldBeCalled();
+        $accessControlProvider2->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
 
         $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
         $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
 
-        $this->accessControlManager->setPermissions(\stdClass::class, '1', 'securityIdentity', []);
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
     }
 
     public function testSetPermissionsWithoutProvider()
     {
-        $this->accessControlManager->setPermissions(\stdClass::class, '1', 'securityIdentity', []);
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
     }
 
     public function testGetPermissions()

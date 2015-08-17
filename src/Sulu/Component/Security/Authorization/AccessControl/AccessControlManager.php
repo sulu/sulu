@@ -23,7 +23,7 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setPermissions($type, $identifier, $securityIdentity, $permissions)
+    public function setPermissions($type, $identifier, $permissions)
     {
         $accessControlProvider = $this->getAccessControlProvider($type);
 
@@ -31,7 +31,7 @@ class AccessControlManager implements AccessControlManagerInterface
             return;
         }
 
-        $accessControlProvider->setPermissions($type, $identifier, $securityIdentity, $permissions);
+        $accessControlProvider->setPermissions($type, $identifier, $permissions);
     }
 
     /**

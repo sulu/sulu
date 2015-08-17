@@ -19,7 +19,7 @@ interface AccessControlProviderInterface
      * @param string $securityIdentity
      * @param $permissions
      */
-    public function setPermissions($type, $identifier, $securityIdentity, $permissions);
+    public function setPermissions($type, $identifier, $permissions);
 
     /**
      * Returns the permissions for all security identities.
