@@ -392,4 +392,50 @@ class ContactRepository extends EntityRepository
             return;
         }
     }
+
+    public function findByFilters($filters, $page, $pageSize, $limit)
+    {
+        $parameter = array();
+
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->select('c');
+
+        if (isset($filters['tags']) && sizeof($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'or') {
+            $queryBuilder->join('c.tags', 'tags')
+                ->where('tags.id IN (:tags)');
+
+            $parameter['tags'] = $filters['tags'];
+        }
+
+        if (isset($filters['tags']) && sizeof($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'and') {
+            $expr = $queryBuilder->expr()->andX();
+
+            $len = sizeof($filters['tags']);
+            for ($i = 0; $i < $len; $i++) {
+                $queryBuilder->join('c.tags', 'tags' . $i);
+
+                $expr->add($queryBuilder->expr()->eq('tags' . $i . '.id', ':tag' . $i));
+
+                $parameter['tag' . $i] = $filters['tags'][$i];
+            }
+            $queryBuilder->andWhere($expr);
+        }
+
+        $query = $queryBuilder->getQuery();
+        foreach ($parameter as $name => $value) {
+            $query->setParameter($name, $value);
+        }
+
+        if ($page !== null && $pageSize > 0) {
+            $offset = ($page - 1) * $pageSize;
+            $restLimit = $limit - $offset;
+
+            $query->setMaxResults($pageSize + 1);
+            $query->setFirstResult($offset < $restLimit ? $offset : $restLimit);
+        } else {
+            $query->setMaxResults($limit);
+        }
+
+        return $query->getResult();
+    }
 }
