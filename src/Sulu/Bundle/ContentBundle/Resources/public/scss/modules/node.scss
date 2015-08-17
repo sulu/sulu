@@ -10,17 +10,17 @@
 
     label {
         display: inline;
-        color: #000;
+        color: $black;
     }
 
     label.disabled {
-        color: #999;
+        color: $grayLight;
         cursor: default;
     }
 
     .info {
         font-size: 14px;
-        color: #999;
+        color: $grayLight;
     }
 }
 

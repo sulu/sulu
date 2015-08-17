@@ -4,15 +4,15 @@
 
 .media-edit-versions-links {
     margin: 20px 0 0;
-    border-top: 2px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 2px solid $grayLighter;
+    border-bottom: 1px solid $grayLighter;
 }
 
 .media-edit-versions-link {
     color: black;
     display: block;
     padding: 15px 3px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $grayLighter;
     text-decoration: none;
 }
 
@@ -24,7 +24,7 @@
 
 .media-edit-versions-created {
     float: right;
-    color: #999999;
+    color: $grayLight;
 }
 
 .media-edit-preview-image {

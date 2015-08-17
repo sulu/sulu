@@ -40,7 +40,7 @@
 }
 /* line 39, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop {
-  background: #999999;
+  background: #999;
 }
 /* line 41, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop .wrapper {
@@ -54,7 +54,7 @@
 }
 /* line 50, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone {
-  background: #999999;
+  background: #999;
 }
 /* line 52, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .wrapper {
@@ -74,7 +74,7 @@
 }
 /* line 67, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet {
-  background: #999999;
+  background: #999;
 }
 /* line 69, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .wrapper {
@@ -219,7 +219,7 @@
   margin-right: 90px;
   overflow: hidden;
   text-align: center;
-  color: #000000;
+  color: #000;
 }
 
 /* line 1, ../scss/modules/general.scss */
