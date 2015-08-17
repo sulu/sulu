@@ -610,6 +610,10 @@
                 <source>contact.contacts.avatar-dropzone-text</source>
                 <target>drop image or click to change avatar</target>
             </trans-unit>
+            <trans-unit id="235b1473d78922a3essds2e9335a8d5d" resname="contact.contacts.avatar.saved">
+                <source>contact.contacts.avatar.saved</source>
+                <target>avatar saved</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

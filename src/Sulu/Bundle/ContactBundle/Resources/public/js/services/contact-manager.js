@@ -164,6 +164,34 @@ define([
             },
 
             /**
+             * Saves an avatar for a contact
+             * @param contactId The contact to save the avatar vor
+             * @param mediaId The media to use as avatar
+             * @returns promise
+             */
+            saveAvatar: function(contactId, mediaId) {
+                var promise = $.Deferred();
+                var contact = Contact.findOrCreate({id: contactId});
+                contact.set({
+                    avatar: {id: mediaId}
+                });
+
+                contact.save(null, {
+                    success: function(response) {
+                        mediator.emit('sulu.contacts.contact.avatar.saved', response.toJSON.id);
+                        mediator.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                        promise.resolve(response.toJSON());
+                    }.bind(this),
+                    error: function() {
+                        mediator.emit('sulu.labels.error.show');
+                        promise.fail();
+                    }.bind(this)
+                });
+
+                return promise;
+            },
+
+            /**
              * Deletes a contact-title with a given id
              * @param titleId The id of the contact-title to delete
              */
