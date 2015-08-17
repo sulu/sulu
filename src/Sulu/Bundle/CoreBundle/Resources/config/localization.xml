@@ -6,9 +6,15 @@
 
     <parameters>
         <parameter key="sulu.core.localization_manager.class">Sulu\Component\Localization\Manager\LocalizationManager</parameter>
+        <parameter key="sulu.core.localization_manager.core_provider.class">Sulu\Component\Localization\Provider\LocalizationProvider</parameter>
     </parameters>
 
     <services>
         <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%"/>
+        <service id="sulu.core.localization_manager.core_provider" class="%sulu.core.localization_manager.core_provider.class%">
+            <argument>%sulu_core.locales%</argument>
+
+            <tag name="sulu.localization_provider"/>
+        </service>
     </services>
 </container>

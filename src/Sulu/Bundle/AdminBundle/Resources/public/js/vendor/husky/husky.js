@@ -30589,7 +30589,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         cellActionCallback: function(event) {
             var recordId = this.sandbox.dom.data(this.sandbox.dom.parent(event.currentTarget), 'id');
-            this.datagrid.itemAction.call(this.datagrid, recordId);
+            if (!!this.table.rows[recordId] && !this.table.rows[recordId].hasChildren) {
+                this.datagrid.itemAction.call(this.datagrid, recordId);
+            }
         },
 
         /**
@@ -31041,8 +31043,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.sandbox.util.template(templates.item)({
                     imgSrc: imgSrc,
                     imgAlt: imgAlt,
-                    title: this.sandbox.util.cropMiddle(title, 24),
-                    description: this.sandbox.util.cropMiddle(description, 32),
+                    title: this.sandbox.util.cropMiddle(String(title), 24),
+                    description: this.sandbox.util.cropMiddle(String(description), 32),
                     styleClass: (this.options.large === true) ? constants.largeClass : constants.smallClass,
                     checked: !!this.datagrid.itemIsSelected.call(this.datagrid, record.id),
                     selectable: this.options.selectable
@@ -31553,14 +31555,17 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
  * @param {Object} [options] Configuration object
  * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
  * @param {String} [options.resultKey] the name of the data-array in the embedded in the response
- * @param {String} [options.defaultMeasureUnit=px] the unit that should be taken
- * @param {String} [options.view='table'] name of the view to use
- * @param {Boolean|String} [options.pagination=dropdown] name of the pagination to use. If false no pagination will be initialized
- * @param {Object} [options.paginationOptions] Configuration Object for the pagination
+ * @param {String} [options.defaultMeasureUnit] the unit that should be taken
+ * @param {String} [options.view] name of the view to use.
+ *                  external views can be used by configuring the path to decorator-js with require.config.paths
  * @param {Object} [options.viewOptions] Configuration Object for the view
+ * @param {Boolean|String} [options.pagination] name the the pagination to use. If false no pagination will be initialized
+ *                  external paginations can be used by configuring path to decorator-js with require.config.paths
+ * @param {Object} [options.paginationOptions] Configuration Object for the pagination
+ *
  * @param {Boolean} [options.sortable] Defines if records are sortable
- * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search events
- * @param {String} [options.columnOptionsInstanceName=null] if set, a listener will be set for listening for column changes
+ * @param {String} [options.searchInstanceName] if set, a listener will be set for the corresponding search events
+ * @param {String} [options.columnOptionsInstanceName] if set, a listener will be set for listening for column changes
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.instanceName] name of the datagrid instance
  * @param {Array} [options.preselected] preselected ids
@@ -31592,10 +31597,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
         'husky_components/datagrid/decorators/dropdown-pagination'
     ], function(decoratorTableView, thumbnailView, decoratorDropdownPagination) {
 
-        /**
-         *    Default values for options
-         */
-        var defaults = {
+            /* Default values for options */
+
+            var defaults = {
                 view: 'table',
                 viewOptions: {
                     table: {},
@@ -31605,6 +31609,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 paginationOptions: {
                     dropdown: {}
                 },
+
                 contentFilters: null,
                 sortable: true,
                 matchings: [],
@@ -31755,7 +31760,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             namespace = 'husky.datagrid.',
 
-        /* TRIGGERS EVENTS */
+
+            /* TRIGGERS EVENTS */
 
             /**
              * raised after initialization has finished
@@ -32128,12 +32134,20 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     direction: null
                 };
 
-                // Should only be be called once
-                this.bindCustomEvents();
+                this.bindCustomEvents(); // Should only be be called once
+                this.bindDOMEvents();
+                this.renderMediumLoader();
+                if (this.options.selectedCounter === true) {
+                    this.renderSelectedCounter();
+                }
 
-                this.initRender();
+                this.loadAndInitializeDecorators().then(function() {
+                    this.loadAndEvaluateMatchings().then(function() {
+                        this.loadAndRenderData();
+                        this.sandbox.emit(INITIALIZED.call(this));
+                    }.bind(this));
+                }.bind(this));
 
-                this.sandbox.emit(INITIALIZED.call(this));
             },
 
             remove: function() {
@@ -32144,7 +32158,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             /**
              * Gets the data either via the url or the array
              */
-            getData: function() {
+            loadAndRenderData: function() {
                 var url;
                 if (!!this.options.url) {
                     url = this.options.url;
@@ -32181,10 +32195,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             /**
              * Checks if matchings/fields are given as url or array.
              * If a url is given the appropriate fields are fetched.
-             *
-             * @param {Array} matchings array with matchings
              */
-            evaluateMatchings: function() {
+            loadAndEvaluateMatchings: function() {
+                var def = this.sandbox.data.deferred();
+
                 var matchings = this.options.matchings;
                 if (typeof(matchings) === 'string') {
                     // Load matchings/fields from url
@@ -32193,13 +32207,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         url: matchings,
                         success: function(response) {
                             this.filterMatchings(response);
-                            this.getData();
+                            def.resolve();
                         }.bind(this)
                     });
                 } else {
                     this.filterMatchings(matchings);
-                    this.getData();
+                    def.resolve();
                 }
+                return def;
             },
 
             /**
@@ -32454,15 +32469,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             /**
              * Gets the view and a load to get data and render it
              */
-            initRender: function() {
-                this.bindDOMEvents();
-                this.renderMediumLoader();
-                if (this.options.selectedCounter === true) {
-                    this.renderSelectedCounter();
-                }
-                this.getPaginationDecorator(this.paginationId);
-                this.getViewDecorator(this.viewId);
-                this.evaluateMatchings();
+            loadAndInitializeDecorators: function() {
+                var def = this.sandbox.data.deferred();
+                this.loadAndInitializePagination(this.paginationId).then(function() {
+                    this.loadAndInitializeView(this.viewId).then(function() {
+                        def.resolve();
+                    }.bind(this));
+                }.bind(this));
+                return def;
             },
 
             /**
@@ -32529,24 +32543,46 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
-             * Gets the view and starts the rendering of the data
+             * Load view decorator to given viewId and initialize it
              * @param viewId {String} the identifier of the decorator
              */
-            getViewDecorator: function(viewId) {
-                // TODO: dynamically load a decorator from external source if local decorator doesn't exist
+            loadAndInitializeView: function(viewId) {
                 this.viewId = viewId;
+                var def = this.sandbox.data.deferred();
 
-                // if view is not already loaded, load it
-                if (!this.gridViews[this.viewId]) {
+                // view allready loaded
+                if (!!this.gridViews[this.viewId]) {
+                    def.resolve();
+                }
+
+                // load husky decorator
+                else if (!!this.decorators.views[this.viewId]) {
                     this.gridViews[this.viewId] = this.decorators.views[this.viewId];
-                    var isViewValid = this.isViewValid(this.gridViews[this.viewId]);
+                    this.initializeViewDecorator();
+                    def.resolve();
+                }
 
-                    if (isViewValid === true) {
-                        // merge view options with passed ones
-                        this.gridViews[this.viewId].initialize(this, this.options.viewOptions[this.viewId]);
-                    } else {
-                        this.sandbox.logger.log('Error: View does not meet the configured requirements. See the documentation');
-                    }
+                // not an husky decorator, try to load external decorator
+                else {
+                    require([viewId], function(view) {
+                        this.gridViews[this.viewId] = view;
+                        this.initializeViewDecorator();
+                        def.resolve();
+                    }.bind(this));
+                }
+
+                return def;
+            },
+
+            /**
+             * Initialize the current set view decorator. Log an error message to console if the view is not valid
+             */
+            initializeViewDecorator: function(){
+                if (this.isViewValid(this.gridViews[this.viewId])) {
+                    // merge view options with passed ones
+                    this.gridViews[this.viewId].initialize(this, this.options.viewOptions[this.viewId]);
+                } else {
+                    this.sandbox.logger.log('Error: View does not meet the configured requirements. See the documentation');
                 }
             },
 
@@ -32556,34 +32592,57 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {boolean} returns true if the view is usable
              */
             isViewValid: function(view) {
-                var bool = true;
-                if (typeof view.initialize === 'undefined' ||
+                if (!view ||
+                    typeof view.initialize === 'undefined' ||
                     typeof view.render === 'undefined' ||
                     typeof view.destroy === 'undefined') {
-                    bool = false;
+                    return false;
                 }
-                return bool;
+                return true;
             },
 
             /**
-             * Gets the Pagination and initializes it
+             * Load pagination decorator to given paginationId and initialize it
              * @param {String} paginationId the identifier of the pagination
              */
-            getPaginationDecorator: function(paginationId) {
-                // todo: dynamically load a decorator if local decorator doesn't exist
-                if (!!paginationId) {
-                    this.paginationId = paginationId;
+            loadAndInitializePagination: function(paginationId) {
+                this.paginationId = paginationId;
+                var def = this.sandbox.data.deferred();
 
-                    // load the pagination if not already loaded
-                    if (!this.paginations[this.paginationId]) {
-                        this.paginations[this.paginationId] = this.decorators.paginations[this.paginationId];
-                        var paginationIsValid = this.isPaginationValid(this.paginations[this.paginationId]);
-                        if (paginationIsValid === true) {
-                            this.paginations[this.paginationId].initialize(this, this.options.paginationOptions[this.paginationId]);
-                        } else {
-                            this.sandbox.logger.log('Error: Pagination does not meet the configured requirements. See the documentation');
-                        }
-                    }
+                // no pagination set or pagination allready loaded
+                if (!paginationId || !!this.paginations[this.paginationId]) {
+                    def.resolve();
+                }
+
+                // load husky decorator
+                else if (!!this.decorators.paginations[this.paginationId]) {
+                    this.paginations[this.paginationId] = this.decorators.paginations[this.paginationId];
+                    this.initializePaginationDecorator();
+                    def.resolve();
+                }
+
+                // not an husky decorator, try to load external decorator
+                else {
+                    require([paginationId], function(pagination) {
+                        this.decorators.paginations[this.paginationId] = pagination;
+                        this.initializePaginationDecorator();
+                        def.resolve();
+                    }.bind(this));
+                }
+
+                return def;
+            },
+
+            /**
+             * Initialize the current set pagination decorator. Log an error message to console if the view is not valid
+             */
+            initializePaginationDecorator: function() {
+                if (this.isPaginationValid(this.paginations[this.paginationId])) {
+                    this.paginations[this.paginationId]
+                        .initialize(this, this.options.paginationOptions[this.paginationId]);
+                } else {
+                    this.sandbox.logger
+                        .log('Error: Pagination does not meet the configured requirements. See the documentation');
                 }
             },
 
@@ -32596,9 +32655,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 // only change if view or if options are passed (could be passed to the same view)
                 if (view !== this.viewId || !!options) {
                     this.destroy();
-                    this.getViewDecorator(view);
-                    this.extendViewOptions(options);
-                    this.render();
+                    this.loadAndInitializeView(view).then(function() {
+                        this.extendViewOptions(options);
+                        this.render();
+                    }.bind(this));
                 }
             },
 
@@ -32609,8 +32669,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             changePagination: function(pagination) {
                 if (pagination !== this.paginationId) {
                     this.destroy();
-                    this.getPaginationDecorator(pagination);
-                    this.render();
+                    this.loadAndInitializePagination(pagination).then(function(){
+                        this.render();
+                    });
                 }
             },
 
@@ -32631,14 +32692,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {boolean} returns true if the pagination is usable
              */
             isPaginationValid: function(pagination) {
-                var bool = true;
-                if (typeof pagination.initialize === 'undefined' ||
+                if (!pagination ||
+                    typeof pagination.initialize === 'undefined' ||
                     typeof pagination.render === 'undefined' ||
                     typeof pagination.getLimit === 'undefined' ||
                     typeof pagination.destroy === 'undefined') {
-                    bool = false;
+                    return false;
                 }
-                return bool;
+                return true;
             },
 
             /**
@@ -35328,7 +35389,12 @@ define('__component__$toolbar@husky',[],function() {
             }
 
             //now generate the dropdown
-            this.sandbox.emit(ITEMS_SET.call(this), buttonId, this.items[buttonId].items);
+            this.sandbox.emit(
+                ITEMS_SET.call(this),
+                buttonId,
+                this.items[buttonId].items,
+                this.items[buttonId].itemsOption.preSelected
+            );
         },
 
         /**
@@ -40507,6 +40573,11 @@ define('__component__$ckeditor@husky',[], function() {
          * Binds Events to emit a custom changed event
          */
         bindChangeEvents: function() {
+            this.editor.on('dialogShow', function() {
+                this.sandbox.dom.addClass(this.sandbox.dom.parent('.cke_dialog_ui_button_ok'), 'sulu_ok_button');
+                this.sandbox.dom.addClass(this.sandbox.dom.parent('.cke_dialog_ui_button_cancel'), 'sulu_cancel_button');
+            }.bind(this));
+
             this.editor.on('change', function() {
                 this.emitChangedEvent();
             }.bind(this));

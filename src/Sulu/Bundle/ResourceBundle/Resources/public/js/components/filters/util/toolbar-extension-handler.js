@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config', 'config'], function(AppConfig, Config) {
 
     'use strict';
 
@@ -15,7 +15,8 @@ define(['app-config'], function(AppConfig) {
             filterListUrl: 'resource/filters/',
             manageFilters: 'manage',
             filtersUrl: 'api/filters?flat=true&context=',
-            filterUrl: 'resource/filters/'
+            filterUrl: 'resource/filters/',
+            toolbarSelectButtonId: 'filters'
         },
 
         /**
@@ -28,7 +29,7 @@ define(['app-config'], function(AppConfig) {
          * @param filterResultSelector {String}
          */
         extendToolbar = function(context, toolbarItems, toolbarInstanceName, dataGridInstanceName, filterResultSelector) {
-            if (!!context && !!toolbarItems && !!dataGridInstanceName) {
+            if (!!context && !!toolbarItems && !!dataGridInstanceName && !!this.config.contexts[context]) {
                 var url = constants.filtersUrl + context,
                     updateEventName = 'husky.datagrid.' + dataGridInstanceName + '.updated',
                     filterDropDown = getFilterDropdown.call(this, context, dataGridInstanceName, url);
@@ -101,7 +102,7 @@ define(['app-config'], function(AppConfig) {
          */
         getFilterDropdown = function(context, dataGridInstanceName, url) {
             return {
-                id: 'filters',
+                id: constants.toolbarSelectButtonId,
                 icon: 'filter',
                 title: this.sandbox.translate('resource.filter'),
                 group: 2,
@@ -113,6 +114,7 @@ define(['app-config'], function(AppConfig) {
                     resultKey: 'filters',
                     titleAttribute: 'name',
                     idAttribute: 'id',
+                    preSelected: !!this.filter ? parseInt(this.filter.id) : null,
                     translate: false,
                     languageNamespace: 'toolbar.',
                     markable: true,
@@ -157,7 +159,7 @@ define(['app-config'], function(AppConfig) {
          * @param datagridInstance
          * @returns {string}
          */
-        getFilterSettingKey = function(datagridInstance){
+        getFilterSettingKey = function(datagridInstance) {
             return datagridInstance + 'Filter'
         },
 
@@ -192,10 +194,7 @@ define(['app-config'], function(AppConfig) {
                 this.filter = filter;
                 gridOptions.url = url + 'filter=' + filter.id;
 
-                this.sandbox.once('husky.datagrid.'+gridOptions.instanceName+'.loaded', updateFilterResult.bind(this));
-
-                // TODO show result component for initial load
-                // TODO check unset of filter and also setting
+                this.sandbox.once('husky.datagrid.' + gridOptions.instanceName + '.loaded', updateFilterResult.bind(this));
             }
         },
 
@@ -227,9 +226,14 @@ define(['app-config'], function(AppConfig) {
                     return;
                 }
 
-                this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
-                this.sandbox.on('sulu.router.navigate', resetOnNavigate.bind(this));
-                this.sandbox.on('sulu.list.preload', appendFilterToUrl.bind(this));
+                this.config = Config.get('sulu.resource.contexts');
+
+                // only if a contexts are defined at all bind events
+                if (!!this.config.contexts && this.sandbox.util.typeOf(this.config.contexts) === 'object') {
+                    this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
+                    this.sandbox.on('sulu.router.navigate', resetOnNavigate.bind(this));
+                    this.sandbox.on('sulu.list.preload', appendFilterToUrl.bind(this));
+                }
             });
         }
     };
