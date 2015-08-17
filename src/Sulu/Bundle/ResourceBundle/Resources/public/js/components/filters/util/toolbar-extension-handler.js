@@ -106,23 +106,18 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 icon: 'filter',
                 title: this.sandbox.translate('resource.filter'),
                 group: 2,
-                position: 1,
-                class: 'highlight-white',
-                type: 'select',
-                itemsOption: {
+                dropdownOptions: {
                     url: url,
                     resultKey: 'filters',
                     titleAttribute: 'name',
                     idAttribute: 'id',
+                    markSelected: true,
                     preSelected: !!this.filter ? parseInt(this.filter.id) : null,
-                    translate: false,
-                    languageNamespace: 'toolbar.',
-                    markable: true,
                     callback: function(item) {
                         applyFilterToList.call(this, item, dataGridInstanceName, context);
                     }.bind(this)
                 },
-                items: [
+                dropdownItems: [
                     {
                         divider: true
                     },
@@ -225,9 +220,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 if (this.name !== 'Sulu App') {
                     return;
                 }
-
                 this.config = Config.get('sulu.resource.contexts');
-
                 // only if a contexts are defined at all bind events
                 if (!!this.config.contexts && this.sandbox.util.typeOf(this.config.contexts) === 'object') {
                     this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));

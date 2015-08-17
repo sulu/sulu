@@ -177,7 +177,7 @@ EOT;
      */
     public function iClickDelete()
     {
-        $script = "$(\"li[data-id='delete-button']\")";
+        $script = "$(\"li[data-id='delete']\")";
 
         $this->waitForAuraEvents(
             [

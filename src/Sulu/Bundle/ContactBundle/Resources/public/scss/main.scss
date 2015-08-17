@@ -1,1 +1,5 @@
-@import 'modules/utility.scss';
+@import 'mixins.scss',
+        '../../../../AdminBundle/Resources/public/scss/variables.scss',
+        'modules/utility.scss',
+        'modules/contact-list.scss',
+        'modules/contact-detail.scss';

@@ -207,6 +207,7 @@
             .success-icon {
                 @include centerBlock;
                 font-size: 200px;
+                font-weight: bold;
                 color: $white;
             }
         }

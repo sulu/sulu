@@ -16,13 +16,9 @@ define([
 
     'use strict';
 
-    var collectionEditTabs = {
-            FILES: 'files',
-            SETTINGS: 'settings'
-        },
-
-        constants = {
-            lastVisitedCollectionKey: 'last-visited-collection'
+        var constants = {
+            lastVisitedCollectionKey: 'last-visited-collection',
+            mediaLanguageStorageKey: 'mediaLanguage'
         },
 
         namespace = 'sulu.media.collections.',
@@ -179,19 +175,12 @@ define([
         },
 
         /**
-         * navigate to a collection when breadcrumb where clicked
-         * @event sulu.media.collections.breadcrumb-navigate
+         * sets the locale
+         * @event sulu.media.collections.set-locale
+         * @param {String} the new locale
          */
-        BREADCRUMB_NAVIGATE = function() {
-            return createEventName.call(this, 'breadcrumb-navigate');
-        },
-
-         /**
-         * navigate to a collection when breadcrumb where clicked on root item
-         * @event sulu.media.collections.breadcrumb-navigate.root
-         */
-        BREADCRUMB_NAVIGATE_ROOT = function() {
-            return createEventName.call(this, 'breadcrumb-navigate.root');
+        SET_LOCALE = function() {
+            return createEventName.call(this, 'set-locale');
         },
 
         /** returns normalized event names */
@@ -205,44 +194,35 @@ define([
             // store backbone-models in global backbone-collections
             this.collections = new Collections();
             this.medias = new Medias();
-
             this.instanceName = 'collection';
+            this.locale = this.sandbox.sulu.getUserSetting(constants.mediaLanguageStorageKey) || this.sandbox.sulu.user.locale;
 
-            this.getLocale().then(function(locale) {
-                this.locale = locale;
-                this.bindCustomEvents();
+            this.bindCustomEvents();
 
-                if (this.options.display === 'list') {
-                    this.renderList();
-                } else if (this.options.display === 'files') {
-                    this.renderCollectionEdit({
-                        instanceName: this.instanceName,
-                        activeTab: 'files'
-                    });
-                } else if (this.options.display === 'settings') {
-                    this.renderCollectionEdit({
-                        instanceName: this.instanceName,
-                        activeTab: 'settings'
-                    });
-                } else {
-                    throw 'display type wrong';
-                }
+            if (this.options.display === 'root') {
+                this.renderRoot();
+            } else if (this.options.display === 'edit') {
+                this.renderCollectionEdit({
+                    instanceName: this.instanceName,
+                    id: this.options.id,
+                    locale: this.locale
+                });
                 this.startMediaEdit();
+                this.renderMoveOverlay();
+            } else {
+                throw 'display type wrong';
+            }
 
-                if (!!this.options.mediaId) {
-                    this.sandbox.once('sulu.media-edit.initialized', function() {
-                        this.editMedia(this.options.mediaId);
+            if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
+                this.sandbox.once('sulu.media-edit.initialized', function() {
+                    this.editMedia(this.sandbox.sulu.viewStates['media-file-edit-id']);
+                    delete this.sandbox.sulu.viewStates['media-file-edit-id'];
+                }.bind(this));
 
-                        this.sandbox.emit('husky.tabs.header.option.unset', 'mediaId');
-                    }.bind(this));
-
-                    this.sandbox.once('husky.dropzone.'+this.instanceName+'.initialized', function(){
-                        this.sandbox.emit('husky.dropzone.' + this.instanceName + '.lock-popup');
-                    }.bind(this));
-                }
-            }.bind(this));
-
-            this.renderMoveOverlay();
+                this.sandbox.once('husky.dropzone.'+this.instanceName+'.initialized', function(){
+                    this.sandbox.emit('husky.dropzone.' + this.instanceName + '.lock-popup');
+                }.bind(this));
+            }
         },
 
         renderMoveOverlay: function() {
@@ -251,7 +231,7 @@ define([
             this.sandbox.dom.append(this.$el, $element);
 
             this.sandbox.start([{
-                name: 'collections/components/collection-select@sulumedia',
+                name: 'collections/select-overlay@sulumedia',
                 options: {
                     el: $element,
                     instanceName: 'move-collection',
@@ -261,24 +241,6 @@ define([
                     disabledChildren: true
                 }
             }]);
-        },
-
-        /**
-         * Gets the current locale for editing
-         * @returns {*}
-         */
-        getLocale: function() {
-            var dfd = this.sandbox.data.deferred();
-
-            this.sandbox.emit('sulu.media.collections-edit.get-locale', function(locale) {
-                dfd.resolve(locale);
-            }.bind(this));
-
-            if (this.options.display === 'list') {
-                dfd.resolve(this.sandbox.sulu.user.locale);
-            }
-
-            return dfd.promise();
         },
 
         /**
@@ -354,25 +316,14 @@ define([
             // reload multiple media
             this.sandbox.on(DOWNLOAD_MEDIA.call(this), this.downloadMedia.bind(this));
 
+            // set new locale
+            this.sandbox.on(SET_LOCALE.call(this), this.setLocale.bind(this));
+
             // navigate to collection edit
             this.sandbox.on(NAVIGATE_COLLECTION_EDIT.call(this), function(collectionId, tab) {
                 // default tab is files
                 tab = (!!tab) ? tab : 'files';
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/' + tab, true, true);
-            }.bind(this));
-
-            this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
-                var url = '/admin/api/collections/' + item.id + '?depth=1&sortBy=title';
-                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
-            }.bind(this));
-
-            this.sandbox.on(BREADCRUMB_NAVIGATE_ROOT.call(this), function() {
-                var url = '/admin/api/collections?sortBy=title';
-                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
             }.bind(this));
         },
 
@@ -618,25 +569,23 @@ define([
          * @param record {Number|String} id of the media to edit
          */
         editSingleMedia: function(record) {
-            this.getLocale().then(function(locale) {
-                var media = this.medias.get(record);
-                if (!media || media.get('locale') !== locale) {
-                    this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
-                    media = this.getMediaModel(record);
-                    media.fetch({
-                        data: {locale: locale},
-                        success: function(media) {
-                            // forward media to media-edit component
-                            this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
-                        }.bind(this),
-                        error: function() {
-                            this.sandbox.logger.log('Error while fetching a single media');
-                        }.bind(this)
-                    });
-                } else {
-                    this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
-                }
-            }.bind(this));
+            var media = this.medias.get(record);
+            if (!media || media.get('locale') !== locale) {
+                this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
+                media = this.getMediaModel(record);
+                media.fetch({
+                    data: {locale: this.locale},
+                    success: function(media) {
+                        // forward media to media-edit component
+                        this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log('Error while fetching a single media');
+                    }.bind(this)
+                });
+            } else {
+                this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
+            }
         },
 
         /**
@@ -651,28 +600,26 @@ define([
                     }
                 }.bind(this);
 
-            this.getLocale().then(function(locale) {
-                    // loop through ids - if model is already loaded take it else load it
-                this.sandbox.util.foreach(records, function(mediaId) {
-                    var media = this.medias.get(mediaId);
-                    if (!media || media.get('locale') !== locale) {
-                        this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
-                        media = this.getMediaModel(mediaId);
-                        media.fetch({
-                            data: {locale: locale},
-                            success: function(media) {
-                                mediaList.push(media.toJSON());
-                                action();
-                            }.bind(this),
-                            error: function() {
-                                this.sandbox.logger.log('Error while fetching a single media');
-                            }.bind(this)
-                        });
-                    } else {
-                        mediaList.push(this.getMediaModel(mediaId).toJSON());
-                        action();
-                    }
-                }.bind(this));
+            // loop through ids - if model is already loaded take it else load it
+            this.sandbox.util.foreach(records, function(mediaId) {
+                var media = this.medias.get(mediaId);
+                if (!media || media.get('locale') !== locale) {
+                    this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
+                    media = this.getMediaModel(mediaId);
+                    media.fetch({
+                        data: {locale: this.locale},
+                        success: function(media) {
+                            mediaList.push(media.toJSON());
+                            action();
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log('Error while fetching a single media');
+                        }.bind(this)
+                    });
+                } else {
+                    mediaList.push(this.getMediaModel(mediaId).toJSON());
+                    action();
+                }
             }.bind(this));
         },
 
@@ -711,21 +658,22 @@ define([
         },
 
         /**
-         * Inserts a container and starts the collections list in it
+         * Inserts a container and starts the collections root in it
          */
-        renderList: function() {
-            var $list = this.sandbox.dom.createElement('<div id="collections-list-container"/>');
-            this.sandbox.dom.append(this.$el, $list);
+        renderRoot: function() {
+            var $root = this.sandbox.dom.createElement('<div id="collections-root-container"/>');
+            this.sandbox.dom.append(this.$el, $root);
 
             this.collections.fetch({
                 success: function(collections) {
                     this.options.data = collections.toJSON();
                     this.sandbox.start([
                         {
-                            name: 'collections/components/list@sulumedia',
+                            name: 'collections/root@sulumedia',
                             options: {
-                                el: $list,
-                                data: collections.toJSON()
+                                el: $root,
+                                data: collections.toJSON(),
+                                locale: this.locale
                             }
                         }
                     ]);
@@ -752,32 +700,16 @@ define([
                 data: {locale: this.locale, breadcrumb: 'true'},
                 success: function(collection) {
                     this.options.data = collection.toJSON();
-
-                    if (options.activeTab === collectionEditTabs.FILES) {
-                        this.sandbox.start([
-                            {
-                                name: 'collections/components/files@sulumedia',
-                                options: this.sandbox.util.extend(true, {}, {
-                                    el: $edit,
-                                    data: collection.toJSON(),
-                                    locale: this.locale
-                                }, options)
-                            }
-                        ]);
-                    } else if (options.activeTab === collectionEditTabs.SETTINGS) {
-                        this.sandbox.start([
-                            {
-                                name: 'collections/components/settings@sulumedia',
-                                options: this.sandbox.util.extend(true, {}, {
-                                    el: $edit,
-                                    data: collection.toJSON(),
-                                    locale: this.locale
-                                }, options)
-                            }
-                        ]);
-                    } else {
-                        this.sandbox.logger.log('Error. No valid tab ' + this.options.content);
-                    }
+                    this.sandbox.start([
+                        {
+                            name: 'collections/edit@sulumedia',
+                            options: this.sandbox.util.extend(true, {}, {
+                                el: $edit,
+                                data: collection.toJSON(),
+                                locale: this.locale
+                            }, options)
+                        }
+                    ]);
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log('Error while fetching a single collection');
@@ -793,12 +725,21 @@ define([
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.start([
                 {
-                    name: 'collections/components/media-edit@sulumedia',
+                    name: 'collections/media-edit-overlay@sulumedia',
                     options: {
                         el: $container
                     }
                 }
             ]);
+        },
+
+        /**
+         * Sets a new locale
+         * @param locale
+         */
+        setLocale: function(locale) {
+            this.sandbox.sulu.saveUserSetting(constants.mediaLanguageStorageKey, locale);
+            this.locale = locale;
         }
     };
 });

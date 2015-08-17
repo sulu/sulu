@@ -10,16 +10,24 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'accountsutil/header': '../../sulucontact/js/components/accounts/util/header',
-        'type/bic-input': '../../sulucontact/js/input-type/bic-input',
-        'type/vat-input': '../../sulucontact/js/input-type/vat-input',
-        'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
-        'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
 
-        'aura_extensions/iban': '../../sulucontact/js/aura_extensions/iban',
+        'type/bic-input': '../../sulucontact/js/validation/types/bic-input',
+        'type/vat-input': '../../sulucontact/js/validation/types/vat-input',
+        'type/iban-input': '../../sulucontact/js/validation/types/iban-input',
+
+        'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
-        'type/iban-input': '../../sulucontact/js/input-type/iban-input',
+
+        'services/sulucontact/contact-manager': '../../sulucontact/js/services/contact-manager',
+        'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
+        'services/sulucontact/account-router': '../../sulucontact/js/services/account-router',
+        'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router',
+        'services/sulucontact/account-delete-dialog': '../../sulucontact/js/services/account-delete-dialog',
+        'services/sulucontact/contact-delete-dialog': '../../sulucontact/js/services/contact-delete-dialog',
+
+        'extensions/sulu-buttons-contactbundle': '../../sulucontact/js/extensions/sulu-buttons'
     },
+
     shim: {
         'vendor/iban-converter': {
             exports: 'IBAN'
@@ -27,7 +35,7 @@ require.config({
     }
 });
 
-define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
+define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], function(Config, ContactButtons, IbanExtension) {
 
     'use strict';
 
@@ -44,6 +52,9 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.urlManager.setUrl('contact', 'contacts/contacts/edit:<%= id %>/details');
             sandbox.urlManager.setUrl('account', 'contacts/accounts/edit:<%= id %>/details');
 
+            sandbox.sulu.buttons.push(ContactButtons.getButtons());
+            sandbox.sulu.buttons.dropdownItems.push(ContactButtons.getDropdownItems());
+
             Config.set('sulucontact.components.autocomplete.default.contact', {
                 remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName&limit=25',
                 getParameter: 'search',
@@ -55,8 +66,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
                 limit: 25,
                 fields: [
                     {
-                        id: 'id',
-                        width: '40px'
+                        id: 'id'
                     },
                     {
                         id: 'fullName'
@@ -91,18 +101,10 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
 
             // filter integration
             Config.set('suluresource.filters.type.contacts', {
-                breadCrumb: [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', link: 'contacts/contacts'}
-                ],
                 routeToList: 'contacts/contacts'
             });
 
             Config.set('suluresource.filters.type.accounts', {
-                breadCrumb: [
-                    {title: 'navigation.accounts'},
-                    {title: 'contact.accounts.title', link: 'contacts/accounts'}
-                ],
                 routeToList: 'contacts/accounts'
             });
 
@@ -112,27 +114,23 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts',
                 callback: function() {
-                    this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
+                    return '<div data-aura-component="contacts/list@sulucontact"/>';
                 }
             });
 
             // show form for new contacts
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/add',
-                callback: function(content) {
-                    this.html(
-                        '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form" />'
-                    );
+                callback: function() {
+                    return '<div data-aura-component="contacts/edit@sulucontact"/>';
                 }
             });
 
             // show form for editing a contact
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/edit::id/:content',
-                callback: function(id, content) {
-                    this.html(
-                            '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
-                    );
+                callback: function(id) {
+                    return '<div data-aura-component="contacts/edit@sulucontact" data-aura-id="' + id + '"/>';
                 }
             });
 
@@ -140,7 +138,7 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts',
                 callback: function() {
-                    this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>');
+                    return '<div data-aura-component="accounts/list@sulucontact"/>';
                 }
             });
 
@@ -148,19 +146,15 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/add',
                 callback: function() {
-                    this.html(
-                        '<div data-aura-component="accounts/components/content@sulucontact"/>'
-                    );
+                    return '<div data-aura-component="accounts/edit@sulucontact"/>';
                 }
             });
 
             //show for for editing an account
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/edit::id/:content',
-                callback: function(id, content) {
-                    this.html(
-                            '<div data-aura-component="accounts/components/content@sulucontact" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
-                    );
+                callback: function(id) {
+                    return '<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>';
                 }
             });
         }

@@ -2,6 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1478 [ContactBundle]   Rest-Api for media lists for contacts and accounts
+    * FEATURE     #1421 [AdminBundle]     New button-api for header and tabs
+    * FEATURE     #1417 [AdminBundle]     Style upgrade for header and tabs
+    * FEATURE     #1472 [ContactBundle]   Rest-Api support for contact-avatars
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
@@ -31,12 +35,6 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
-
-* 1.0.6 (2015-08-05)
-    * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
-
-* 1.0.5 (2015-08-03)
-    * HOTFIX      #--   [AdminBundle]    Fixed ckeditor overlay buttons for windows
 
 * 1.0.4 (2015-07-28)
     * HOTFIX      #1427 [ContentBundle]  Added external link migration

@@ -554,6 +554,54 @@
                 <source>navigation.search</source>
                 <target>Search</target>
             </trans-unit>
+            <trans-unit id="435b1473d76660a3essds2e9335a8d5f" resname="sulu.toolbar.contact-cards">
+                <source>sulu.toolbar.contact-cards</source>
+                <target>Images</target>
+            </trans-unit>
+            <trans-unit id="425b1473d76660a3essds2e9335a8d5d" resname="contact.accounts.document-added">
+                <source>contact.accounts.document-added</source>
+                <target>documents added</target>
+            </trans-unit>
+            <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
+                <source>contact.accounts.deleted</source>
+                <target>organization deleted</target>
+            </trans-unit>
+            <trans-unit id="435b1473d76660a3essds2e4335a8d5d" resname="contact.accounts.saved">
+                <source>contact.accounts.saved</source>
+                <target>organization saved</target>
+            </trans-unit>
+            <trans-unit id="435a1473d78660a3essds2e9135a8d5d" resname="contact.accounts.contacts-removed">
+                <source>contact.accounts.contacts-removed</source>
+                <target>removed person from organization</target>
+            </trans-unit>
+            <trans-unit id="435a1473d78660a3essds2e9135a8d5a" resname="contact.accounts.contact-saved">
+                <source>contact.accounts.contact-saved</source>
+                <target>added person to organization</target>
+            </trans-unit>
+            <trans-unit id="435a1473d78660a3essds2e7135a8d5a" resname="contact.accounts.main-account-set">
+                <source>contact.accounts.main-account-set</source>
+                <target>main contact set</target>
+            </trans-unit>
+            <trans-unit id="425a1473d78660a3essds2e7134a8d5a" resname="contact.contacts.deleted">
+                <source>contact.contacts.deleted</source>
+                <target>person deleted</target>
+            </trans-unit>
+            <trans-unit id="425a1473d78660c3essds2e7134a8d5a" resname="contact.contacts.saved">
+                <source>contact.contacts.saved</source>
+                <target>person saved</target>
+            </trans-unit>
+            <trans-unit id="425a1473d78660c3essds2e6134a8d5a" resname="contact.contacts.documents-removed">
+                <source>contact.contacts.documents-removed</source>
+                <target>documents removed</target>
+            </trans-unit>
+            <trans-unit id="435b1472d76660a3essds2e9335a8d5d" resname="contact.contacts.document-added">
+                <source>contact.contacts.document-added</source>
+                <target>document added</target>
+            </trans-unit>
+            <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
+                <source>contact.address.countryCode</source>
+                <target>country</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

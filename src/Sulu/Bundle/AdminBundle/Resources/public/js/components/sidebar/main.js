@@ -34,6 +34,7 @@ define([], function() {
             maxWidthClass: 'max',
             loaderClass: 'sidebar-loader',
             visibleSidebarClass: 'has-visible-sidebar',
+            maxSidebarClass: 'has-max-sidebar',
             noVisibleSidebarClass: 'has-no-visible-sidebar',
             hiddenClass: 'hidden'
         },
@@ -221,6 +222,8 @@ define([], function() {
                 // other containers to take the max width
                 this.sandbox.dom.detach($column);
                 this.sandbox.dom.prepend($parent, $column);
+
+                this.sandbox.dom.removeClass($parent, constants.maxSidebarClass);
             }
         },
 
@@ -241,6 +244,8 @@ define([], function() {
                 // it isn't possible to take the max width
                 this.sandbox.dom.detach($column);
                 this.sandbox.dom.append($parent, $column);
+
+                this.sandbox.dom.addClass($parent, constants.maxSidebarClass);
             }
         },
 

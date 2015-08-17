@@ -111,8 +111,8 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
 
         bindCustomEvents: function() {
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
 
             // set header bar unsaved
@@ -338,7 +338,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
         },
 
-        submit: function() {
+        submit: function(action) {
             this.sandbox.logger.log('save Model');
 
             var data = {},
@@ -365,7 +365,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
             // nav contexts not extend
             this.data.navContexts = data.navContexts;
 
-            this.sandbox.emit('sulu.content.contents.save', this.data);
+            this.sandbox.emit('sulu.content.contents.save', this.data, action);
         }
     };
 });

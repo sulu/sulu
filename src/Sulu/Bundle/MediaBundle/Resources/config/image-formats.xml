@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.0.xsd">
     <format>
-        <name>170x170</name>
+        <name>400x400</name>
         <commands>
             <command>
                 <action>scale</action>
                 <parameters>
-                    <parameter name="x">170</parameter>
-                    <parameter name="y">170</parameter>
+                    <parameter name="x">400</parameter>
+                    <parameter name="y">400</parameter>
                 </parameters>
             </command>
         </commands>
@@ -27,13 +27,13 @@
         </commands>
     </format>
     <format>
-        <name>50x50</name>
+        <name>170x170</name>
         <commands>
             <command>
                 <action>scale</action>
                 <parameters>
-                    <parameter name="x">50</parameter>
-                    <parameter name="y">50</parameter>
+                    <parameter name="x">170</parameter>
+                    <parameter name="y">170</parameter>
                 </parameters>
             </command>
         </commands>
@@ -46,6 +46,30 @@
                 <parameters>
                     <parameter name="x">150</parameter>
                     <parameter name="y">100</parameter>
+                </parameters>
+            </command>
+        </commands>
+    </format>
+    <format>
+        <name>100x100</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">100</parameter>
+                    <parameter name="y">100</parameter>
+                </parameters>
+            </command>
+        </commands>
+    </format>
+    <format>
+        <name>50x50</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">50</parameter>
+                    <parameter name="y">50</parameter>
                 </parameters>
             </command>
         </commands>

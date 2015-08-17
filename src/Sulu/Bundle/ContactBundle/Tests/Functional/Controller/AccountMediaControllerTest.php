@@ -284,6 +284,19 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($collectionMeta2);
     }
 
+    public function testGetList()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals($this->media2->getId(), $response->_embedded->media[0]->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->_embedded->media[0]);
+        $this->assertObjectHasAttribute('100x100', $response->_embedded->media[0]->thumbnails);
+        $this->assertTrue(is_string($response->_embedded->media[0]->thumbnails->{'100x100'}));
+    }
+
     public function testAccountMediaPost()
     {
         $client = $this->createAuthenticatedClient();

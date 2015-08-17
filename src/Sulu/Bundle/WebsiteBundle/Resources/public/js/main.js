@@ -29,7 +29,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'settings/cache',
             callback: function() {
-                this.html('<div data-aura-component="cache@suluwebsite"/>');
+                return '<div data-aura-component="cache@suluwebsite"/>';
             }
         });
     }

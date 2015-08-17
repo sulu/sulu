@@ -18,7 +18,7 @@ define(function() {
 
         bindCustomEvents = function() {
             // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.add', {
                     id: '',
                     name: '',
@@ -29,7 +29,7 @@ define(function() {
             }.bind(this));
 
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
                     this.sandbox.emit('sulu.tags.delete', ids);
                 }.bind(this));
@@ -38,7 +38,7 @@ define(function() {
             // checkbox clicked
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
-                this.sandbox.emit('husky.toolbar.' + constants.instanceNameToolbar + '.item.' + postfix, 'delete', false);
+                this.sandbox.emit('husky.toolbar.' + constants.instanceNameToolbar + '.item.' + postfix, 'deleteSelected', false);
             }.bind(this));
 
             // error - non unique tag name
@@ -47,6 +47,12 @@ define(function() {
                     showErrorLabel.call(this, resp.responseJSON.code);
                 }
             }, this);
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+            }.bind(this));
         },
 
         showErrorLabel = function(code) {
@@ -75,16 +81,14 @@ define(function() {
             }
         },
 
-        header: function() {
-            return {
-                title: 'tag.tags.title',
-                noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'tag.tags.title'}
-                ]
-            };
+        header: {
+            noBack: true,
+            toolbar: {
+                buttons: {
+                    add: {},
+                    deleteSelected: {}
+                }
+            }
         },
 
         templates: ['/admin/tag/template/tag/list'],
@@ -103,18 +107,7 @@ define(function() {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
-                    instanceName: constants.instanceNameToolbar,
-                    inHeader: true,
-                    groups: [
-                        {
-                            id: 1,
-                            align: 'left'
-                        },
-                        {
-                            id: 2,
-                            align: 'right'
-                        }
-                    ]
+                    instanceName: constants.instanceNameToolbar
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),

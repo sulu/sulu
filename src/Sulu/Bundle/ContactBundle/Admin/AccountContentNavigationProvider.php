@@ -20,22 +20,18 @@ class AccountContentNavigationProvider implements ContentNavigationProviderInter
     {
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
-        $details->setId('details');
-        $details->setComponent('accounts@sulucontact');
-        $details->setComponentOptions(['display' => 'form']);
+        $details->setComponent('accounts/edit/details@sulucontact');
 
         $contacts = new ContentNavigationItem('content-navigation.contact.accounts.contacts');
         $contacts->setAction('contacts');
-        $contacts->setId('contacts');
-        $contacts->setComponent('accounts@sulucontact');
-        $contacts->setComponentOptions(['display' => 'contacts']);
+        $contacts->setComponent('accounts/edit/contacts@sulucontact');
         $contacts->setDisplay(['edit']);
 
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');
-        $documents->setComponent('accounts@sulucontact');
-        $documents->setComponentOptions(['display' => 'documents']);
+        $documents->setComponent('documents-tab@sulucontact');
         $documents->setDisplay(['edit']);
+        $documents->setComponentOptions(['type' => 'account']);
 
         return [$details, $contacts, $documents];
     }

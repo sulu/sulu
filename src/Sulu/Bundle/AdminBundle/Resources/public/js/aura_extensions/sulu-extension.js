@@ -399,7 +399,6 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false,
                                 context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
@@ -453,7 +452,7 @@
                         ]);
 
                         if(!!gridOptions.instanceName) {
-                            datagridEventNamespace += gridOptions.instanceName + '.'
+                            datagridEventNamespace += gridOptions.instanceName + '.';
                         }
 
                         // save page size when changed

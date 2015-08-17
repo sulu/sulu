@@ -36,19 +36,15 @@ define({
         sandbox.mvc.routes.push({
             route: 'media/collections/root',
             callback: function() {
-                this.html(
-                    '<div data-aura-component="collections/components/root@sulumedia" />'
-                );
+                return '<div data-aura-component="collections@sulumedia"  data-aura-display="root"/>';
             }
         });
 
         // show a single collection with files and upload
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content',
-            callback: function(id, content) {
-                this.html(
-                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
-                );
+            callback: function(id) {
+                return '<div data-aura-component="collections@sulumedia" data-aura-display="edit" data-aura-id="' + id + '"/>';
             }
         });
 
@@ -56,9 +52,8 @@ define({
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content/edit::mediaId',
             callback: function(id, content, mediaId) {
-                this.html(
-                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-media-id="' + mediaId + '"/>'
-                );
+                sandbox.sulu.viewStates['media-file-edit-id'] = parseInt(mediaId);
+                sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + id + '/' + content);
             }
         });
 
@@ -80,7 +75,7 @@ define({
                 this.sandbox.dom.append('body', $element);
 
                 this.sandbox.start([{
-                    name: 'collections/components/collection-create@sulumedia',
+                    name: 'collections/create-overlay@sulumedia',
                     options: {
                         el: $element,
                         parent: parentId,

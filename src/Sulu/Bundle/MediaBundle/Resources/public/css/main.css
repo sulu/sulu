@@ -12,21 +12,16 @@
 }
 
 /* line 1, ../scss/modules/collection.scss */
-.datagrid-container {
-  margin-top: 20px;
-}
-
-/* line 5, ../scss/modules/collection.scss */
 .list-toolbar-container {
   margin-top: 20px;
 }
 
-/* line 9, ../scss/modules/collection.scss */
+/* line 5, ../scss/modules/collection.scss */
 #collections-root.no-content {
   text-align: center;
   height: 210px;
 }
-/* line 13, ../scss/modules/collection.scss */
+/* line 9, ../scss/modules/collection.scss */
 #collections-root.no-content .icon {
   display: block;
   left: 50%;
@@ -34,7 +29,7 @@
   font-size: 125px;
   color: #e4e4e4;
 }
-/* line 20, ../scss/modules/collection.scss */
+/* line 16, ../scss/modules/collection.scss */
 #collections-root.no-content .text {
   font-weight: bold;
   color: #e4e4e4;
@@ -144,7 +139,7 @@
 /* line 99, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
-  height: calc(100% - 40px);
+  height: calc(100% - 55px);
 }
 
 /* line 104, ../scss/modules/media-selection.scss */
@@ -218,19 +213,21 @@
 /* line 169, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   color: #999;
+  padding-bottom: 10px;
 }
 
-/* line 173, ../scss/modules/media-selection.scss */
+/* line 174, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+  padding-bottom: 20px;
 }
 
-/* line 177, ../scss/modules/media-selection.scss */
+/* line 179, ../scss/modules/media-selection.scss */
 .media-selection-overlay-header {
   white-space: nowrap;
 }
 
-/* line 181, ../scss/modules/media-selection.scss */
+/* line 183, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;
