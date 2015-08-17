@@ -48,7 +48,7 @@
 
     [class*="fa-"] {
         font-size: 20px;
-        color: #999999;
+        color: $grayLight;
         position: relative;
         top: 5px;
     }
@@ -65,19 +65,19 @@
 .search-results-section-header {
     margin-bottom: 5px;
     font-size: 16px;
-    color: #999;
+    color: $grayLight;
 }
 
 .search-results-title .info {
     font-size: 12px;
-    color: #999999;
+    color: $grayLight;
 }
 
 .search-results-details {
     width: 250px;
     white-space: nowrap;
     font-size: 12px;
-    color: #999999;
+    color: $grayLight;
 
     p {
         margin: 0;
@@ -93,7 +93,7 @@
 .search-results-info-subline {
     margin: 20px 0;
     text-align: center;
-    color: #999;
+    color: $grayLight;
     font-size: 12px;
 }
 
@@ -101,7 +101,7 @@
     font-weight: 400;
     font-size: 24px;
     line-height: 32px;
-    color: #999;
+    color: $grayLight;
     text-align: center;
     margin: 60px;
 }

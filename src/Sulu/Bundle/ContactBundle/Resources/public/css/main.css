@@ -70,7 +70,7 @@
   margin: 0 0 20px 0;
   border: 0;
   outline: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #666;
 }
 
 /* line 68, ../scss/modules/utility.scss */
@@ -117,7 +117,7 @@
   height: 260px;
   margin: 0 20px 30px 0;
   position: relative;
-  background-color: white;
+  background-color: #fff;
   display: inline-block;
   vertical-align: top;
   border-radius: 3px;

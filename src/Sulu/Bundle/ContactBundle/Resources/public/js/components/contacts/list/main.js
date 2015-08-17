@@ -117,6 +117,7 @@ define([
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     template: this.sandbox.sulu.buttons.get({
+                        layoutContact: {},
                         settings: {
                             options: {
                                 dropdownItems: [
@@ -125,8 +126,7 @@ define([
                                     }
                                 ]
                             }
-                        },
-                        layoutContact: {}
+                        }
                     })
                 },
                 {

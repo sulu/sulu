@@ -870,7 +870,7 @@ input, select {
   height: 20px;
   cursor: pointer;
   color: #fff;
-  background: #52b6ca;
+  background: #52B6CA;
   text-align: center;
   border-radius: 2px;
   margin-left: 10px;
@@ -938,7 +938,7 @@ input, select {
   z-index: 200;
   width: 100%;
   height: 100%;
-  background-color: #E9E9E9;
+  background-color: #e9e9e9;
   padding-top: 40px;
 }
 
