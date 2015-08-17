@@ -172,23 +172,11 @@ class Tag extends ApiEntity implements AuditableInterface
         return $this->creator;
     }
 
-//    /**
-//     * @VirtualProperty
-//     * @SerializedName("creatorFullName")
-//     * @return string
-//     */
-//    public function getCreatorFullName()
-//    {
-//        return $this->getCreator()->getFullName();
-//    }
-//
-//    /**
-//     * @VirtualProperty
-//     * @SerializedName("changerFullName")
-//     * @return string
-//     */
-//    public function getChangerFullName()
-//    {
-//        return $this->getChanger()->getFullName();
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    function __toString()
+    {
+        return $this->getName();
+    }
 }
