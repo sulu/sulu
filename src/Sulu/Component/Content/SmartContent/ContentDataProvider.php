@@ -237,7 +237,7 @@ class ContentDataProvider implements DataProviderInterface
             $filters['dataSource'] === '' ||
             ($limit !== null && $limit < 1)
         ) {
-            return new DataProviderResult([], false, []);
+            return [[], false];
         }
 
         $properties = array_key_exists('properties', $propertyParameter) ?
