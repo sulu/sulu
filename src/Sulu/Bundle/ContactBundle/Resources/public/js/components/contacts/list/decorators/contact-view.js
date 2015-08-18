@@ -41,14 +41,16 @@ define(['config'], function(Config) {
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
                 '   </div>',
-                '   <div class="' + [constants.itemInfoClass, constants.actionNavigatorClass].join(" ") + '"></div>',
                 '</div>'
             ].join(''),
+            infoContainer: [
+                '<div class="' + [constants.itemInfoClass, constants.actionNavigatorClass].join(" ") + '"></div>'
+            ].join(''),
             infoRow: [
-                '       <div class="info-row">',
-                '           <span class="<%= icon %> info-icon"></span>',
-                '           <span class="info-text"><%= text %></span>',
-                '       </div>'
+                '<div class="info-row">',
+                '   <span class="<%= icon %> info-icon"></span>',
+                '   <span class="info-text"><%= text %></span>',
+                '</div>'
             ].join('')
         },
 
@@ -189,13 +191,16 @@ define(['config'], function(Config) {
          * @param text text of the info row
          */
         addInfoRowToItem: function($item, icon, text) {
-            this.sandbox.dom.append(this.sandbox.dom.find('.' + constants.itemInfoClass, $item),
-                this.sandbox.dom.createElement(
-                    this.sandbox.util.template(templates.infoRow)({
-                        icon: icon,
-                        text: this.sandbox.util.cropMiddle(String(text), 18)
-                    })
-                )
+            var $container = this.sandbox.dom.find('.' + constants.itemInfoClass, $item);
+            if (!$container.length) {
+                $container = this.sandbox.dom.createElement(this.sandbox.util.template(templates.infoContainer)());
+                this.sandbox.dom.append($item, $container);
+            }
+            this.sandbox.dom.append($container, this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.infoRow)({
+                    icon: icon,
+                    text: this.sandbox.util.cropMiddle(String(text), 18)
+                }))
             );
         },
 
