@@ -21,7 +21,7 @@ class DataProviderResult
     private $hasNextPage;
 
     /**
-     * @var ItemInterface[]
+     * @var ResourceItemInterface[]
      */
     private $items;
 
@@ -46,7 +46,7 @@ class DataProviderResult
     }
 
     /**
-     * @return ItemInterface[]
+     * @return ResourceItemInterface[]
      */
     public function getItems()
     {

@@ -17,11 +17,13 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\DatasourceItem;
 
 /**
  * DataProvider for content.
@@ -147,15 +149,64 @@ class ContentDataProvider implements DataProviderInterface
             0
         );
 
-        $items = $this->decorate($result, $options['locale']);
+        if (count($result) === 0) {
+            return;
+        }
 
-        return $items[0];
+        return new DatasourceItem($result[0]['uuid'], $result[0]['title'], '/' . ltrim($result[0]['path'], '/'));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolveFilters(
+    public function resolveDataItems(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    ) {
+        list($items, $hasNextPage) = $this->resolveFilters(
+            $filters,
+            $propertyParameter,
+            $options,
+            $limit,
+            $page,
+            $pageSize
+        );
+        $items = $this->decorateDataItems($items, $options['locale']);
+
+        return new DataProviderResult(
+            $items,
+            $hasNextPage,
+            array_map(
+                function (ContentDataItem $item) {
+                    return $item->getId();
+                },
+                $items
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveResourceItems(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    ) {
+        // TODO: Implement resolveResourceItems() method.
+    }
+
+    /**
+     * Resolves filters.
+     */
+    private function resolveFilters(
         array $filters,
         array $propertyParameter,
         array $options = [],
@@ -185,21 +236,12 @@ class ContentDataProvider implements DataProviderInterface
         if ($pageSize !== null) {
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
             $hasNextPage = (count($result) > $pageSize);
-            $items = $this->decorate(array_splice($result, 0, $pageSize), $options['locale']);
+            $items = array_splice($result, 0, $pageSize);
         } else {
-            $items = $this->decorate($this->load($options, $limit), $options['locale']);
+            $items = $this->load($options, $limit);
         }
 
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(
-                function ($item) {
-                    return $item->getId();
-                },
-                $items
-            )
-        );
+        return [$items, $hasNextPage];
     }
 
     /**
@@ -262,31 +304,60 @@ class ContentDataProvider implements DataProviderInterface
      * @param array $data
      * @param string $locale
      *
-     * @return array
+     * @return ContentDataItem[]
      */
-    private function decorate(array $data, $locale)
+    private function decorateDataItems(array $data, $locale)
     {
         return array_map(
             function ($item) use ($locale) {
-                $resource = $this->proxyFactory->createProxy(
-                    PageDocument::class,
-                    function (
-                        &$wrappedObject,
-                        LazyLoadingInterface $proxy,
-                        $method,
-                        array $parameters,
-                        &$initializer
-                    ) use ($item, $locale) {
-                        $initializer = null;
-                        $wrappedObject = $this->documentManager->find($item['uuid'], $locale);
-
-                        return true;
-                    }
-                );
-
-                return new ContentDataItem($item, $resource);
+                return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
             },
             $data
+        );
+    }
+
+    /**
+     * Decorates result with item class.
+     *
+     * @param array $data
+     * @param string $locale
+     *
+     * @return ArrayAccessItem[]
+     */
+    private function decorateResourceItems(array $data, $locale)
+    {
+        return array_map(
+            function ($item) use ($locale) {
+                return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
+            },
+            $data
+        );
+    }
+
+    /**
+     * Returns Proxy Document for uuid.
+     *
+     * @param string $uuid
+     * @param string $locale
+     *
+     * @return object
+     */
+    private function getResource($uuid, $locale)
+    {
+        return $this->proxyFactory->createProxy(
+            PageDocument::class,
+            function (
+                &$wrappedObject,
+                LazyLoadingInterface $proxy,
+                $method,
+                array $parameters,
+                &$initializer
+            ) use ($uuid, $locale) {
+                $initializer = null;
+                $wrappedObject = $this->documentManager->find($uuid, $locale);
+
+                return true;
+            }
         );
     }
 }

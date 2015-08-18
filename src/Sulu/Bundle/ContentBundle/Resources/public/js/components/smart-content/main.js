@@ -41,7 +41,7 @@
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
- * @params {String} [options.fullQualifiedTitleKey] key for the full-qualified-title in the returning JSON-result
+ * @params {String} [options.pathKey] key for the full-qualified-title in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
@@ -115,7 +115,7 @@ define([], function() {
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             titleKey: 'title',
-            fullQualifiedTitleKey: 'fullQualifiedTitle',
+            pathKey: 'path',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
@@ -1002,7 +1002,7 @@ define([], function() {
                     success: function(data) {
                         if (!!this.options.has.datasource) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
-                            this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.fullQualifiedTitleKey];
+                            this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
                         }
                         this.items = data._embedded[this.options.resultKey];
                         this.sandbox.emit(DATA_RETRIEVED.call(this));

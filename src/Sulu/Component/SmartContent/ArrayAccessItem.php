@@ -11,6 +11,7 @@
 namespace Sulu\Component\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\SmartContent\Exception\NoSuchPropertyException;
 use Sulu\Component\SmartContent\Exception\NotSupportedException;
 
@@ -19,16 +20,46 @@ use Sulu\Component\SmartContent\Exception\NotSupportedException;
  *
  * @ExclusionPolicy("all")
  */
-abstract class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
+class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
 {
+    /**
+     * @var string
+     */
+    private $id;
+
     /**
      * @var array
      */
     private $data = [];
 
-    public function __construct(array $data)
+    /**
+     * @var object
+     */
+    private $resource;
+
+    public function __construct($id, array $data, $resource)
     {
+        $this->id = $id;
         $this->data = $data;
+        $this->resource = $resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @VirtualProperty()
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -86,7 +117,6 @@ abstract class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {

@@ -69,7 +69,7 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContactRepository($filters, $page, $pageSize, $limit, $repositoryResult)
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             $filters,
             [],
             ['webspace' => 'sulu_io', 'locale' => 'en'],

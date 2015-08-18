@@ -141,7 +141,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['excluded' => '123-123-123'],
             ['properties' => ['my-properties' => true]],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
@@ -169,7 +169,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
@@ -205,7 +205,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
@@ -246,7 +246,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en']

@@ -57,16 +57,6 @@ class AccountDataItem implements ItemInterface
      *
      * @VirtualProperty()
      */
-    public function getFullQualifiedTitle()
-    {
-        return $this->entity->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
-     */
     public function getImage()
     {
         return;

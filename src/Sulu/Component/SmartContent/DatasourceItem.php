@@ -10,8 +10,13 @@
 
 namespace Sulu\Component\SmartContent;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\VirtualProperty;
+
 /**
- * Concrete Datasource item
+ * Concrete Datasource item.
+ *
+ * @ExclusionPolicy("all")
  */
 class DatasourceItem implements DatasourceItemInterface
 {
@@ -45,6 +50,8 @@ class DatasourceItem implements DatasourceItemInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @VirtualProperty()
      */
     public function getId()
     {
@@ -53,6 +60,8 @@ class DatasourceItem implements DatasourceItemInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @VirtualProperty()
      */
     public function getTitle()
     {
@@ -61,6 +70,8 @@ class DatasourceItem implements DatasourceItemInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @VirtualProperty()
      */
     public function getPath()
     {
@@ -69,6 +80,8 @@ class DatasourceItem implements DatasourceItemInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @VirtualProperty()
      */
     public function getImage()
     {

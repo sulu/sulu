@@ -21,4 +21,11 @@ interface ResourceItemInterface
      * @return mixed
      */
     public function getResource();
+
+    /**
+     * Returns id of item.
+     *
+     * @return string
+     */
+    public function getId();
 }

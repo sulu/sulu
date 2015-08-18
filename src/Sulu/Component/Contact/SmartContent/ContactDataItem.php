@@ -57,16 +57,6 @@ class ContactDataItem implements ItemInterface
      *
      * @VirtualProperty()
      */
-    public function getFullQualifiedTitle()
-    {
-        return $this->entity->getFullName();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
-     */
     public function getImage()
     {
         return;

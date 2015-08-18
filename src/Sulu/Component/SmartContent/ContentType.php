@@ -239,7 +239,7 @@ class ContentType extends ComplexContentType
             $pageSize = intval($params['max_per_page']->getValue());
 
             // resolve paginated filters
-            $data = $provider->resolveFilters(
+            $data = $provider->resolveDataItems(
                 $filters,
                 $params,
                 $options,
@@ -248,7 +248,7 @@ class ContentType extends ComplexContentType
                 $pageSize
             );
         } else {
-            $data = $provider->resolveFilters($filters, $params, $options, (!empty($limit) ? intval($limit) : null));
+            $data = $provider->resolveDataItems($filters, $params, $options, (!empty($limit) ? intval($limit) : null));
         }
 
         // append view data

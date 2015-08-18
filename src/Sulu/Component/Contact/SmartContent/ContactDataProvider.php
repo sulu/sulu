@@ -11,6 +11,7 @@
 namespace Sulu\Component\Contact\SmartContent;
 
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
@@ -76,7 +77,7 @@ class ContactDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveFilters(
+    public function resolveDataItems(
         array $filters,
         array $propertyParameter,
         array $options = [],
@@ -93,6 +94,20 @@ class ContactDataProvider implements DataProviderInterface
         }
 
         return new DataProviderResult($this->decorate($result), $hasNextPage);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveResourceItems(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    ) {
+        // TODO: Implement resolveResourceItems() method.
     }
 
     /**

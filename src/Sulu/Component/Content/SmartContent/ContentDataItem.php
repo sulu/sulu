@@ -22,34 +22,9 @@ use Sulu\Component\SmartContent\ItemInterface;
  */
 class ContentDataItem extends ArrayAccessItem implements ItemInterface
 {
-    /**
-     * @var mixed
-     */
-    private $resource;
-
     public function __construct(array $data, $resource)
     {
-        parent::__construct($data);
-
-        $this->resource = $resource;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResource()
-    {
-        return $this->resource;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
-     */
-    public function getId()
-    {
-        return $this->get('uuid');
+        parent::__construct($data['uuid'], $data, $resource);
     }
 
     /**
@@ -60,16 +35,6 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface
     public function getTitle()
     {
         return $this->get('title');
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
-     */
-    public function getFullQualifiedTitle()
-    {
-        return '/' . ltrim($this->get('path'), '/');
     }
 
     /**
