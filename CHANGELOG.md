@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * FEATURE     #1481 [AdminBundle]     extension-hook for loading data in JS-files
     * FEATURE     #1476 [ContactBundle]   Avatar upload via dropzone
     * FEATURE     #1478 [ContactBundle]   Rest-Api for media lists for contacts and accounts
+    * FEATURE     #1467 [ContactBundle]   New view for contacts- and accounts-edit
     * FEATURE     #1431 [ContactBundle]   New view for contacts-list
     * FEATURE     #1421 [AdminBundle]     New button-api for header and tabs
     * FEATURE     #1417 [AdminBundle]     Style upgrade for header and tabs
