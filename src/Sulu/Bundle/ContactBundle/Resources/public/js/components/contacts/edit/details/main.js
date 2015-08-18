@@ -150,13 +150,16 @@ define([
         },
 
         initAvatarContainer: function(data) {
-            var postUrl;
+            var postUrl = function() {
+                var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
+                return (!!curMediaId) ?
+                    '/admin/api/media/' + curMediaId + '?action=new-version' :
+                    '/admin/api/media?collection=1'; //todo: use system collection
+            }.bind(this);
 
             if (!!data.avatar) {
-                postUrl = '/admin/api/media/' + data.avatar.id + '?action=new-version';
                 this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
             } else {
-                postUrl = '/admin/api/media?collection=1'; // todo: use system collection
                 this.sandbox.dom.attr(constants.avatarImageId, 'src',
                     Config.get('sulucontact.contacts.default.avatar').url);
             }
@@ -181,7 +184,6 @@ define([
         },
 
         updateContactAvatar: function(mediaId, url) {
-            this.sandbox.emit('husky.dropzone.contact-avatar.change-url', '/admin/api/media/' + mediaId + '?action=new-version');
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
             this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
         },
