@@ -202,7 +202,7 @@ define(function() {
         },
 
         /**
-         * Handles the the components which are marked with a header property.
+         * Handles the components which are marked with a header property.
          * Generates defaults, handles tabs data if tabs are configured, starts the header-component.
          *
          * @param {Object|Function} header The header property found in the started component.
@@ -221,6 +221,7 @@ define(function() {
          * @param {Object} [header.toolbar.options] Object with options for the toolbar component.
          * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header.
          *        If true the default language changer will be rendered. Default is true.
+         * @param {String} [header.title] Title to inject inject into the tabs or (if tabs not exist) into the current component
          *
          * @example
          *
@@ -294,7 +295,7 @@ define(function() {
                         tabsData: tabsData,
                         tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,
                         tabsParentOption: this.options,
-                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
+                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {}
                     }
                 }]);
 
