@@ -259,7 +259,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 new ArrayAccessItem($data[0]['uuid'], $data[0], $data[0]),
-                new ArrayAccessItem($data[1]['uuid'], $data[1], $data[1])
+                new ArrayAccessItem($data[1]['uuid'], $data[1], $data[1]),
             ],
             $result->getItems()
         );

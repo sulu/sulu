@@ -11,7 +11,7 @@
 namespace Sulu\Component\SmartContent;
 
 /**
- * Interface for ResourceItem
+ * Interface for ResourceItem.
  */
 interface ResourceItemInterface
 {

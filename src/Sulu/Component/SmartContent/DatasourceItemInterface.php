@@ -11,7 +11,7 @@
 namespace Sulu\Component\SmartContent;
 
 /**
- * Interface of DatasourceItem
+ * Interface of DatasourceItem.
  */
 interface DatasourceItemInterface
 {

@@ -100,7 +100,7 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    function __get($name)
+    public function __get($name)
     {
         return $this->get($name);
     }

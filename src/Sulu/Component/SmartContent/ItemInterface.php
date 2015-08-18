@@ -15,7 +15,6 @@ namespace Sulu\Component\SmartContent;
  */
 interface ItemInterface extends ResourceItemInterface
 {
-
     /**
      * Returns title of the item.
      *
