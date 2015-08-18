@@ -25,8 +25,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * Voter deciding on object based security.
+ *
+ * @deprecated
  */
-class AccessControlVoter extends AclVoter
+class SymfonyAccessControlVoter extends AclVoter
 {
     /**
      * @var AclProviderInterface

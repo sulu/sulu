@@ -7,13 +7,17 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use ReflectionClass;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class NodeAccessControlProvider implements AccessControlProviderInterface
+/**
+ * This class handles the permission information for PHPCR nodes.
+ */
+class PhpcrAccessControlProvider implements AccessControlProviderInterface
 {
     /**
      * @var DocumentManagerInterface
@@ -59,7 +63,7 @@ class NodeAccessControlProvider implements AccessControlProviderInterface
         $permissions = [];
         foreach ($allowedPermissions as $roleName => $rolePermissions) {
             $permissions[$roleName] = [];
-            foreach($this->permissions as $permission => $value) {
+            foreach ($this->permissions as $permission => $value) {
                 $permissions[$roleName][$permission] = in_array($permission, $rolePermissions);
             }
         }

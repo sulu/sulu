@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
@@ -14,19 +15,19 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class NodeAccessControlProviderTest extends \PHPUnit_Framework_TestCase
+class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var NodeAccessControlProvider
+     * @var PhpcrAccessControlProvider
      */
-    private $nodeAccessControlProvider;
+    private $phpcrAccessControlProvider;
 
     private $documentManager;
 
     public function setUp()
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
-        $this->nodeAccessControlProvider = new NodeAccessControlProvider(
+        $this->phpcrAccessControlProvider = new PhpcrAccessControlProvider(
             $this->documentManager->reveal(),
             ['view' => 64, 'edit' => 32, 'delete' => 16]
         );
@@ -42,7 +43,7 @@ class NodeAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->persist($document)->shouldBeCalled();
         $this->documentManager->flush()->shouldBeCalled();
 
-        $this->nodeAccessControlProvider->setPermissions(
+        $this->phpcrAccessControlProvider->setPermissions(
             get_class($document),
             '1',
             ['role' => ['view' => true, 'edit' => false]]
@@ -59,7 +60,7 @@ class NodeAccessControlProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['ROLE_USER' => ['view' => true, 'edit' => true, 'delete' => false]],
-            $this->nodeAccessControlProvider->getPermissions(get_class($document), '1')
+            $this->phpcrAccessControlProvider->getPermissions(get_class($document), '1')
         );
     }
 
@@ -68,7 +69,7 @@ class NodeAccessControlProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupport($type, $supported)
     {
-        $this->assertEquals($this->nodeAccessControlProvider->supports($type), $supported);
+        $this->assertEquals($this->phpcrAccessControlProvider->supports($type), $supported);
     }
 
     public function provideSupport()
