@@ -181,6 +181,7 @@ define([
         },
 
         updateContactAvatar: function(mediaId, url) {
+            this.sandbox.emit('husky.dropzone.contact-avatar.change-url', '/admin/api/media/' + mediaId + '?action=new-version');
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
             this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
         },
@@ -334,11 +335,11 @@ define([
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
                 if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
-                    // no request neede because new avatar was added as new version of the old avatar
+                    // avatar was uploaded as new version of existing avatar
                     this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
-                } else {
+                } else if (!!this.data.id) {
+                    // avatar was added to existing contact
                     ContactManager.saveAvatar(this.data.id, response.id);
-                    // todo: change post url of dropzone
                 }
                 this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
             }, this);
