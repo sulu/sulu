@@ -393,6 +393,17 @@ class ContactRepository extends EntityRepository
         }
     }
 
+    /**
+     * Returned filtered contacts.
+     * when pagination is active the result count is pageSize + 1 to determine has next page.
+     *
+     * @param array $filters array of filters: tags, tagOperator
+     * @param int $page
+     * @param int $pageSize
+     * @param int $limit
+     *
+     * @return Contact[]
+     */
     public function findByFilters($filters, $page, $pageSize, $limit)
     {
         $parameter = array();
@@ -427,12 +438,20 @@ class ContactRepository extends EntityRepository
         }
 
         if ($page !== null && $pageSize > 0) {
-            $offset = ($page - 1) * $pageSize;
-            $restLimit = $limit - $offset;
+            $pageOffset = ($page - 1) * $pageSize;
+            $restLimit = $limit - $pageOffset;
 
-            $query->setMaxResults($pageSize + 1);
-            $query->setFirstResult($offset < $restLimit ? $offset : $restLimit);
-        } else {
+            // if limitation is smaller than the page size then use the rest limit else use page size plus 1 to
+            // determine has next page
+            $maxResults = ($limit !== null && $pageSize > $restLimit ? $restLimit : ($pageSize + 1));
+
+            if ($maxResults <= 0) {
+                return [];
+            }
+
+            $query->setMaxResults($maxResults);
+            $query->setFirstResult($pageOffset);
+        } elseif ($limit !== null) {
             $query->setMaxResults($limit);
         }
 
