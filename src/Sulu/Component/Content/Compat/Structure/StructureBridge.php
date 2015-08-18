@@ -19,6 +19,7 @@ use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -474,6 +475,10 @@ class StructureBridge implements StructureInterface
 
             if ($document instanceof ExtensionBehavior) {
                 $result['ext'] = $document->getExtensionsData();
+            }
+
+            if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
+                $result['permissions'] = $document->getPermissions();
             }
 
             $result = array_merge($this->getDocument()->getStructure()->toArray(), $result);

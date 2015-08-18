@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\NoResultException;
-use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -34,11 +33,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 class UserManager implements UserManagerInterface
 {
     use RelationTrait;
-
-    /**
-     * @var CurrentUserDataInterface
-     */
-    private $currentUserData;
 
     /**
      * @var UserRepositoryInterface
@@ -82,7 +76,6 @@ class UserManager implements UserManagerInterface
         GroupRepository $groupRepository = null,
         ContactManager $contactManager = null,
         SaltGenerator $saltGenerator = null,
-        CurrentUserDataInterface $currentUserData = null,
         UserRepositoryInterface $userRepository = null
     ) {
         $this->em = $em;
@@ -91,7 +84,6 @@ class UserManager implements UserManagerInterface
         $this->groupRepository = $groupRepository;
         $this->contactManager = $contactManager;
         $this->saltGenerator = $saltGenerator;
-        $this->currentUserData = $currentUserData;
         $this->userRepository = $userRepository;
     }
 
@@ -267,16 +259,6 @@ class UserManager implements UserManagerInterface
     public function getFullNameByUserId($id)
     {
         return $this->getUserById($id)->getFullName();
-    }
-
-    /**
-     * returns user data of current user.
-     *
-     * @return CurrentUserDataInterface
-     */
-    public function getCurrentUserData()
-    {
-        return $this->currentUserData;
     }
 
     /**

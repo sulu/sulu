@@ -16,7 +16,6 @@ use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
@@ -31,9 +30,9 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     private $documentRegistry;
 
     /**
-     * @param PropertyEncoder  $encoder
-     * @param DocumentAccessor $accessor
-     * @param ProxyFactory     $proxyFactory
+     * @param PropertyEncoder $encoder
+     * @param ProxyFactory $proxyFactory
+     * @param DocumentRegistry $documentRegistry
      */
     public function __construct(
         PropertyEncoder $encoder,
@@ -51,7 +50,7 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
     public function doHydrate(AbstractMappingEvent $event)
     {
@@ -89,17 +88,23 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
      */
     public function doPersist(PersistEvent $event)
     {
+        $locale = $event->getLocale();
+
+        if (!$locale) {
+            return;
+        }
+
         $node = $event->getNode();
         $document = $event->getDocument();
 
         $node->setProperty(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
+            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $locale),
             $document->getRedirectType() ?: RedirectType::NONE,
             PropertyType::LONG
         );
 
         $node->setProperty(
-            $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
+            $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $locale),
             $document->getRedirectExternal()
         );
 
@@ -112,7 +117,7 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
 
         // TODO: This should not be a UUID
         $node->setProperty(
-            $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
+            $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $locale),
             $internalNode
         );
 

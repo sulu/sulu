@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class CurrentUserDataCompilerPass implements CompilerPassInterface
+class UserManagerCompilerPass implements CompilerPassInterface
 {
     /**
      * You can modify the container here before it is dumped to PHP code.
@@ -29,18 +29,6 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
     {
         if ($container->hasDefinition('security.context')) {
             $container->setDefinition(
-                'sulu_security.user_manager.current_user_data',
-                new Definition(
-                    'Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData',
-                    [
-                        new Reference('security.context'),
-                        new Reference('router'),
-                        new Reference('doctrine'),
-                    ]
-                )
-            );
-
-            $container->setDefinition(
                 'sulu_security.user_manager',
                 new Definition(
                     'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
@@ -51,7 +39,6 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                         new Reference('sulu_security.group_repository'),
                         new Reference('sulu_contact.contact_manager'),
                         new Reference('sulu_security.salt_generator'),
-                        new Reference('sulu_security.user_manager.current_user_data'),
                         new Reference('sulu.repository.user'),
                     ]
                 )
