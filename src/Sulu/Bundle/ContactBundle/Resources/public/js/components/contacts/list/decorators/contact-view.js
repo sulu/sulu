@@ -23,7 +23,6 @@ define(['config'], function(Config) {
         constants = {
             containerClass: 'contact-grid',
             selectedClass: 'selected',
-            suluUserClass: 'sulu-user',
             actionNavigatorClass: 'action-navigator',
 
             itemHeadClass: 'item-head',
@@ -41,7 +40,6 @@ define(['config'], function(Config) {
                 '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
-                '       <div class="head-sulubox"><div class="sulubox-signet"></div></div>',
                 '   </div>',
                 '   <div class="' + [constants.itemInfoClass, constants.actionNavigatorClass].join(" ") + '"></div>',
                 '</div>'
@@ -135,12 +133,11 @@ define(['config'], function(Config) {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
-                var id, avatar, name, isSuluUser, location, mail;
+                var id, avatar, name, location, mail;
 
                 id = record['id'];
                 avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : 
                     Config.get('sulucontact.contacts.default.avatar').url;
-                isSuluUser = Math.random() < .5; //TODO: use api information
                 mail = record['mainEmail'];
 
                 // concat firstName and lastName because fullName should not be default
@@ -148,7 +145,7 @@ define(['config'], function(Config) {
                 location = concatFields([record['city'], record['countryCode']], ', ');
 
                 // pass the found data to a render method
-                this.renderItem(id, avatar, name, isSuluUser, location, mail);
+                this.renderItem(id, avatar, name, location, mail);
             }.bind(this));
         },
 
@@ -161,25 +158,20 @@ define(['config'], function(Config) {
          * @param description {String} the thumbnail description to render
          * @param record {Object} the original data record
          */
-        renderItem: function(id, avatarUrl, name, isSuluUser, location, mail) {
+        renderItem: function(id, picture, title, infoRow1, infoRow2) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
-                    name: this.sandbox.util.cropTail(String(name), 32),
-                    isSuluUser: isSuluUser,
-                    avatar: avatarUrl
+                    name: this.sandbox.util.cropTail(String(title), 32),
+                    avatar: picture
                 })
             );
 
-            if (!!isSuluUser) {
-                this.sandbox.dom.addClass(this.$items[id], constants.suluUserClass);
+            if (!!infoRow1) {
+                this.addInfoRowToItem(this.$items[id], 'fa-map-marker', infoRow1);
             }
 
-            if (!!location) {
-                this.addInfoRowToItem(this.$items[id], 'fa-map-marker', location);
-            }
-
-            if (!!mail) {
-                this.addInfoRowToItem(this.$items[id], 'fa-envelope', mail);
+            if (!!infoRow2) {
+                this.addInfoRowToItem(this.$items[id], 'fa-envelope', infoRow2);
             }
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
