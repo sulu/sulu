@@ -152,9 +152,14 @@ define([
         initAvatarContainer: function(data) {
             var postUrl = function() {
                 var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
-                return (!!curMediaId) ?
+                var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=1'; //todo: use system collection
+                if (!!data.fullName) {
+                    url = url + '&title=' + encodeURIComponent(data.fullName);
+                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                }
+                return url;
             }.bind(this);
 
             if (!!data.avatar) {
@@ -177,7 +182,7 @@ define([
                         method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,
-                        maxFiles: 1
+                        maxFiles: 1,
                     }
                 }
             ]);
