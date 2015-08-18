@@ -2,16 +2,22 @@
   .image {
     position: relative;
 
-    #avatar {
-      width: 100%;
+    .avatar-default {
+      font-size: 250px;
+      color: $grayLight;
+      @include centerBlock;
     }
 
-    #avatar-dropzone {
+    #avatar, #avatar-dropzone {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
+    }
+
+    #avatar {
+      @include background-size(cover);
     }
   }
 }

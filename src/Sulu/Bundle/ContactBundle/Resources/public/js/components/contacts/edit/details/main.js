@@ -170,15 +170,12 @@ define([
 
             if (!!data.avatar) {
                 this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
-            } else {
-                this.sandbox.dom.attr(constants.avatarImageId, 'src',
-                    Config.get('sulucontact.contacts.default.avatar').url);
             }
         },
 
         updateContactAvatar: function(mediaId, url) {
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
-            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
+            this.sandbox.dom.css(constants.avatarImageId, 'background-image', 'url(' + url + ')');
         },
 
         bindTagEvents: function(data) {
@@ -329,7 +326,7 @@ define([
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
-                this.updateContactAvater(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
                 this.sandbox.emit('sulu.tab.dirty');
             }, this);
         },

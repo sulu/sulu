@@ -36,7 +36,10 @@ define(['config'], function(Config) {
                 '<div class="contact-item">',
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
-                '           <div class="head-image ' + constants.actionNavigatorClass + '" style="background-image: url(\'<%= avatar %>\')"></div>',
+                '           <div class="head-image ' + constants.actionNavigatorClass + '">',
+                '               <span class="fa-user avatar-default"></span>',
+                '               <div class="avatar" style="background-image: url(\'<%= avatar %>\')"></div>',
+                '           </div>',
                 '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
                 '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
@@ -138,8 +141,7 @@ define(['config'], function(Config) {
                 var id, avatar, name, location, mail;
 
                 id = record['id'];
-                avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : 
-                    Config.get('sulucontact.contacts.default.avatar').url;
+                avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : '';
                 mail = record['mainEmail'];
 
                 // concat firstName and lastName because fullName should not be default

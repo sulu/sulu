@@ -99,11 +99,6 @@ define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], f
                 ]
             });
 
-            // set default avatar for contacts
-            Config.set('sulucontact.contacts.default.avatar', {
-                url: '/bundles/sulucontact/img/avatar_sample.png'
-            });
-
             // filter integration
             Config.set('suluresource.filters.type.contacts', {
                 routeToList: 'contacts/contacts'
