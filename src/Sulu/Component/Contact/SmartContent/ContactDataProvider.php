@@ -107,7 +107,7 @@ class ContactDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        // TODO: Implement resolveResourceItems() method.
+        return null;
     }
 
     /**

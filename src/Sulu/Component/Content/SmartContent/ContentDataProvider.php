@@ -200,7 +200,26 @@ class ContentDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        // TODO: Implement resolveResourceItems() method.
+        list($items, $hasNextPage) = $this->resolveFilters(
+            $filters,
+            $propertyParameter,
+            $options,
+            $limit,
+            $page,
+            $pageSize
+        );
+        $items = $this->decorateResourceItems($items, $options['locale']);
+
+        return new DataProviderResult(
+            $items,
+            $hasNextPage,
+            array_map(
+                function (ArrayAccessItem $item) {
+                    return $item->getId();
+                },
+                $items
+            )
+        );
     }
 
     /**
@@ -328,7 +347,7 @@ class ContentDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
-                return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
+                return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
             },
             $data
         );

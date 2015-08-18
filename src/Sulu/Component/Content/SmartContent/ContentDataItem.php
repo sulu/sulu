@@ -22,6 +22,10 @@ use Sulu\Component\SmartContent\ItemInterface;
  */
 class ContentDataItem extends ArrayAccessItem implements ItemInterface
 {
+    /**
+     * @param array $data
+     * @param object $resource
+     */
     public function __construct(array $data, $resource)
     {
         parent::__construct($data['uuid'], $data, $resource);

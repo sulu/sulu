@@ -37,6 +37,11 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
      */
     private $resource;
 
+    /**
+     * @param mixed $id
+     * @param array $data
+     * @param object $resource
+     */
     public function __construct($id, array $data, $resource)
     {
         $this->id = $id;

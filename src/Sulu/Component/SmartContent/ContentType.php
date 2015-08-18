@@ -239,7 +239,7 @@ class ContentType extends ComplexContentType
             $pageSize = intval($params['max_per_page']->getValue());
 
             // resolve paginated filters
-            $data = $provider->resolveDataItems(
+            $data = $provider->resolveResourceItems(
                 $filters,
                 $params,
                 $options,
