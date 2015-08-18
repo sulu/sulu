@@ -233,7 +233,7 @@ define(function() {
          *                  myOptions: 'toPassToAllTabs'
          *              }
          *          },
-         *          toolbar {
+         *          toolbar: {
          *              languageChanger: true
          *              buttons: {
          *                  save: {},
