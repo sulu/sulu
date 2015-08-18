@@ -562,7 +562,7 @@
             </trans-unit>
             <trans-unit id="aa005e19189f861dc79bc978a5caa663" resname="sulu.toolbar.table">
                 <source>sulu.toolbar.table</source>
-                <target>Table</target>
+                <target>List</target>
             </trans-unit>
             <trans-unit id="b7c8c053e39fcd8e8a627e91dd6b650e" resname="public.disabled">
                 <source>public.disabled</source>
