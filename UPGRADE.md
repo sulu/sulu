@@ -3,7 +3,7 @@
 ## dev-develop
 
 ### Registering JS-Routes
-When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html(\'<div data-aura-component="componentToStart@mybundle"/>\')' - make your callback returning the component.
+When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html' - make your callback returning the component.
 So for example the follwoing:
 ```
 sandbox.mvc.routes.push({
