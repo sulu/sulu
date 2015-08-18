@@ -12,14 +12,15 @@ namespace Sulu\Component\Content\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Component\SmartContent\Item;
+use Sulu\Component\SmartContent\ArrayAccessItem;
+use Sulu\Component\SmartContent\ItemInterface;
 
 /**
  * Represents item in content data provider.
  *
  * @ExclusionPolicy("all")
  */
-class ContentDataItem extends Item
+class ContentDataItem extends ArrayAccessItem implements ItemInterface
 {
     /**
      * @var mixed
