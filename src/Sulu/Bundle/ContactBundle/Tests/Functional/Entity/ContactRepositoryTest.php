@@ -47,13 +47,13 @@ class ContactRepositoryTest extends SuluTestCase
      */
     private $contactData = [
         ['Max', 'Mustermann', [0, 1, 2]],
-        ['Markus', 'Mustermann', [0, 1, 3]],
-        ['Erika', 'Mustermann', [0, 1]],
-        ['Leon', 'Mustermann', [0, 1, 2]],
-        ['Annes', 'Mustermann', [0]],
+        ['Anne', 'Mustermann', [0, 1, 3]],
+        ['Georg', 'Mustermann', [0, 1]],
+        ['Marianne', 'Mustermann', [0, 1, 2]],
         ['Franz-Xaver', 'Gabler', [0]],
-        ['Marianne', 'Mustermann', [0]],
-        ['Georg', 'Mustermann', []],
+        ['Markus', 'Mustermann', [0]],
+        ['Erika', 'Mustermann', [0]],
+        ['Leon', 'Mustermann', []],
     ];
 
     public function setUp()
@@ -130,9 +130,9 @@ class ContactRepositoryTest extends SuluTestCase
             // no pagination, tag 0 or 1
             [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->contactData, 0, 7)],
             // no pagination, tag 0 and 1
-            [['tags' => [0, 1], 'tagOperator' => 'and'], null, 0, null, array_slice($this->contactData, 0, 4)],
+            [['tags' => [0, 1], 'tagOperator' => 'and'], null, 0, null, array_slice($this->contactData, 0, 4), [0, 1]],
             // no pagination, tag 0 and 3
-            [['tags' => [0, 3], 'tagOperator' => 'and'], null, 0, null, [$this->contactData[1]]],
+            [['tags' => [0, 3], 'tagOperator' => 'and'], null, 0, null, [$this->contactData[1]], [0, 3]],
             // page 1, no limit, tag 0
             [
                 ['tags' => [0], 'tagOperator' => 'or'],
@@ -193,8 +193,8 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertCount($length, $result);
 
         for ($i = 0; $i < $length; ++$i) {
-            $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
-            $this->assertEquals($expected[$i][1], $result[$i]->getLastName());
+            $this->assertEquals($expected[$i][0], $result[$i]->getFirstName(), $i);
+            $this->assertEquals($expected[$i][1], $result[$i]->getLastName(), $i);
 
             foreach ($tags as $tag) {
                 $this->assertTrue($result[$i]->getTags()->contains($this->tags[$tag]));

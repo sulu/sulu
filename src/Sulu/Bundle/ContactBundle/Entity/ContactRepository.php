@@ -406,10 +406,52 @@ class ContactRepository extends EntityRepository
      */
     public function findByFilters($filters, $page, $pageSize, $limit)
     {
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->addSelect('c')
+            ->addSelect('emails')
+            ->addSelect('phones')
+            ->addSelect('faxes')
+            ->addSelect('urls')
+            ->addSelect('tags')
+            ->addSelect('categories')
+            ->addSelect('translations')
+            ->leftJoin('c.emails', 'emails')
+            ->leftJoin('c.phones', 'phones')
+            ->leftJoin('c.faxes', 'faxes')
+            ->leftJoin('c.urls', 'urls')
+            ->leftJoin('c.tags', 'tags')
+            ->leftJoin('c.categories', 'categories')
+            ->leftJoin('categories.translations', 'translations')
+            ->where('c.id IN (:ids)')
+            ->orderBy('c.id', 'ASC');
+
+        $query = $queryBuilder->getQuery();
+        $ids = array_map(
+            function ($item) {
+                return $item['id'];
+            },
+            $this->findByFiltersIds($filters, $page, $pageSize, $limit)
+        );
+
+        $query->setParameter('ids', $ids);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param array $filters array of filters: tags, tagOperator
+     * @param int $page
+     * @param int $pageSize
+     * @param int $limit
+     *
+     * @return array
+     */
+    private function findByFiltersIds($filters, $page, $pageSize, $limit)
+    {
         $parameter = [];
 
         $queryBuilder = $this->createQueryBuilder('c')
-            ->select('c');
+            ->select('c.id');
 
         if (isset($filters['tags']) && count($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'or') {
             $queryBuilder->join('c.tags', 'tags')
@@ -455,6 +497,6 @@ class ContactRepository extends EntityRepository
             $query->setMaxResults($limit);
         }
 
-        return $query->getResult();
+        return $query->getScalarResult();
     }
 }

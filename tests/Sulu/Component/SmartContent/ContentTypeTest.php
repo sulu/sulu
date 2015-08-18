@@ -304,7 +304,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveDataItems(
+        $this->contentDataProvider->resolveResourceItems(
             ['dataSource' => 'some-uuid', 'page' => 1, 'hasNextPage' => true, 'excluded' => ['123-123-123']],
             [
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
@@ -390,7 +390,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveDataItems(
+        $this->contentDataProvider->resolveResourceItems(
             ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             [
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
@@ -463,7 +463,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
-        $this->contentDataProvider->resolveDataItems(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
@@ -532,7 +532,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
-        $this->contentDataProvider->resolveDataItems(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
@@ -622,7 +622,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveDataItems(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'dataSource' => '123-123-123',
                 'excluded' => ['123-123-123'],

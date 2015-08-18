@@ -100,6 +100,14 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function offsetExists($offset)
     {
         return $this->exists($offset);

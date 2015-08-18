@@ -248,7 +248,7 @@ class ContentType extends ComplexContentType
                 $pageSize
             );
         } else {
-            $data = $provider->resolveDataItems($filters, $params, $options, (!empty($limit) ? intval($limit) : null));
+            $data = $provider->resolveResourceItems($filters, $params, $options, (!empty($limit) ? intval($limit) : null));
         }
 
         // append view data
