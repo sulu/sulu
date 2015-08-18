@@ -17,7 +17,7 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 
 /**
- * Contact DataProvider for SmartContent
+ * Contact DataProvider for SmartContent.
  */
 class ContactDataProvider implements DataProviderInterface
 {
@@ -87,7 +87,7 @@ class ContactDataProvider implements DataProviderInterface
         $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit);
 
         $hasNextPage = false;
-        if ($pageSize !== null && sizeof($result) > $pageSize) {
+        if ($pageSize !== null && count($result) > $pageSize) {
             $hasNextPage = true;
             $result = array_splice($result, 0, $pageSize);
         }
@@ -100,8 +100,7 @@ class ContactDataProvider implements DataProviderInterface
      */
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
-        return null;
-
+        return;
     }
 
     /**

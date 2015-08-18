@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Entity;
 
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
@@ -175,7 +173,7 @@ class Tag extends ApiEntity implements AuditableInterface
     /**
      * {@inheritdoc}
      */
-    function __toString()
+    public function __toString()
     {
         return $this->getName();
     }

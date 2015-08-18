@@ -406,23 +406,23 @@ class ContactRepository extends EntityRepository
      */
     public function findByFilters($filters, $page, $pageSize, $limit)
     {
-        $parameter = array();
+        $parameter = [];
 
         $queryBuilder = $this->createQueryBuilder('c')
             ->select('c');
 
-        if (isset($filters['tags']) && sizeof($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'or') {
+        if (isset($filters['tags']) && count($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'or') {
             $queryBuilder->join('c.tags', 'tags')
                 ->where('tags.id IN (:tags)');
 
             $parameter['tags'] = $filters['tags'];
         }
 
-        if (isset($filters['tags']) && sizeof($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'and') {
+        if (isset($filters['tags']) && count($filters['tags']) > 0 && strtolower($filters['tagOperator']) === 'and') {
             $expr = $queryBuilder->expr()->andX();
 
-            $len = sizeof($filters['tags']);
-            for ($i = 0; $i < $len; $i++) {
+            $len = count($filters['tags']);
+            for ($i = 0; $i < $len; ++$i) {
                 $queryBuilder->join('c.tags', 'tags' . $i);
 
                 $expr->add($queryBuilder->expr()->eq('tags' . $i . '.id', ':tag' . $i));

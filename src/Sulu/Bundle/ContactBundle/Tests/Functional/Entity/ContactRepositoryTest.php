@@ -140,7 +140,7 @@ class ContactRepositoryTest extends SuluTestCase
                 3,
                 null,
                 array_slice($this->contactData, 0, 4),
-                [0]
+                [0],
             ],
             // page 2, no limit, tag 0
             [
@@ -149,7 +149,7 @@ class ContactRepositoryTest extends SuluTestCase
                 3,
                 null,
                 array_slice($this->contactData, 3, 4),
-                [0]
+                [0],
             ],
             // page 3, no limit, tag 0
             [
@@ -158,7 +158,7 @@ class ContactRepositoryTest extends SuluTestCase
                 3,
                 null,
                 array_slice($this->contactData, 6, 1),
-                [0]
+                [0],
             ],
         ];
     }
@@ -192,7 +192,7 @@ class ContactRepositoryTest extends SuluTestCase
         $length = count($expected);
         $this->assertCount($length, $result);
 
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
             $this->assertEquals($expected[$i][1], $result[$i]->getLastName());
 
