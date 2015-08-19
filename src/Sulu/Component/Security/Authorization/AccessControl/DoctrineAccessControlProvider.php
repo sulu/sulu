@@ -27,6 +27,11 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
     private $roleRepository;
 
     /**
+     * @var AccessControlRepositoryInterface
+     */
+    private $accessControlRepository;
+
+    /**
      * @var MaskConverterInterface
      */
     private $maskConverter;
@@ -34,15 +39,18 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
     /**
      * @param ObjectManager $objectManager
      * @param RoleRepositoryInterface $roleRepository
+     * @param AccessControlRepositoryInterface $accessControlRepository
      * @param MaskConverterInterface $maskConverter
      */
     public function __construct(
         ObjectManager $objectManager,
         RoleRepositoryInterface $roleRepository,
+        AccessControlRepositoryInterface $accessControlRepository,
         MaskConverterInterface $maskConverter
     ) {
         $this->objectManager = $objectManager;
         $this->roleRepository = $roleRepository;
+        $this->accessControlRepository = $accessControlRepository;
         $this->maskConverter = $maskConverter;
     }
 
@@ -56,14 +64,20 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
     public function setPermissions($type, $identifier, $permissions)
     {
         foreach ($permissions as $roleId => $rolePermissions) {
-            $role = $this->roleRepository->findRoleById($roleId);
+            $accessControl = $this->accessControlRepository->findByTypeAndIdAndRole($type, $identifier, $roleId);
 
-            $accessControl = new AccessControl();
-            $accessControl->setPermissions($this->maskConverter->convertPermissionsToNumber($rolePermissions));
-            $accessControl->setRole($role);
-            $accessControl->setEntityId($identifier);
-            $accessControl->setEntityClass($type);
-            $this->objectManager->persist($accessControl);
+            if ($accessControl) {
+                $accessControl->setPermissions($this->maskConverter->convertPermissionsToNumber($rolePermissions));
+            } else {
+                $role = $this->roleRepository->findRoleById($roleId);
+
+                $accessControl = new AccessControl();
+                $accessControl->setPermissions($this->maskConverter->convertPermissionsToNumber($rolePermissions));
+                $accessControl->setRole($role);
+                $accessControl->setEntityId($identifier);
+                $accessControl->setEntityClass($type);
+                $this->objectManager->persist($accessControl);
+            }
         }
 
         $this->objectManager->flush();

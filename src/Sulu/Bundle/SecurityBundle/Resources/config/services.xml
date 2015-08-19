@@ -101,6 +101,7 @@
         <service id="sulu_security.doctrine_access_control_provider" class="%sulu_security.doctrine_access_control_provider.class%">
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
             <argument type="service" id="sulu.repository.role"/>
+            <argument type="service" id="sulu.repository.access_control"/>
             <argument type="service" id="sulu_security.mask_converter"/>
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>

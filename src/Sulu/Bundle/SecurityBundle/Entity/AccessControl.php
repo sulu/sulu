@@ -10,11 +10,9 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface;
 
-/**
- * Model for storing access control information of objects.
- */
-class AccessControl
+class AccessControl implements AccessControlInterface
 {
     /**
      * @var int
@@ -50,7 +48,7 @@ class AccessControl
     private $entityClass;
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -58,7 +56,7 @@ class AccessControl
     }
 
     /**
-     * @return RoleInterface
+     * {@inheritdoc}
      */
     public function getRole()
     {
@@ -66,7 +64,7 @@ class AccessControl
     }
 
     /**
-     * @param RoleInterface $role
+     * {@inheritdoc}
      */
     public function setRole($role)
     {
@@ -74,7 +72,7 @@ class AccessControl
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getPermissions()
     {
@@ -82,7 +80,7 @@ class AccessControl
     }
 
     /**
-     * @param int $permissions
+     * {@inheritdoc}
      */
     public function setPermissions($permissions)
     {
@@ -90,7 +88,7 @@ class AccessControl
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getEntityId()
     {
@@ -98,7 +96,7 @@ class AccessControl
     }
 
     /**
-     * @param int $entityId
+     * {@inheritdoc}
      */
     public function setEntityId($entityId)
     {
@@ -106,7 +104,7 @@ class AccessControl
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
@@ -114,7 +112,7 @@ class AccessControl
     }
 
     /**
-     * @param mixed $entityClass
+     * {@inheritdoc}
      */
     public function setEntityClass($entityClass)
     {

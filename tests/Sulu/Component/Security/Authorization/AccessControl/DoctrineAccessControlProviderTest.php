@@ -34,6 +34,11 @@ class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
     private $roleRepository;
 
     /**
+     * @var AccessControlRepositoryInterface
+     */
+    private $accessControlRepository;
+
+    /**
      * @var MaskConverterInterface
      */
     private $maskConverter;
@@ -42,18 +47,15 @@ class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->objectManager = $this->prophesize(ObjectManager::class);
         $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
+        $this->accessControlRepository = $this->prophesize(AccessControlRepositoryInterface::class);
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
 
         $this->doctrineAccessControlProvider = new DoctrineAccessControlProvider(
             $this->objectManager->reveal(),
             $this->roleRepository->reveal(),
+            $this->accessControlRepository->reveal(),
             $this->maskConverter->reveal()
         );
-    }
-
-    public function testGetPermissions()
-    {
-        $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1);
     }
 
     public function testSetPermissions()
@@ -88,6 +90,30 @@ class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
             [
                 1 => ['view' => true, 'edit' => false],
                 2 => ['view' => true, 'edit' => true],
+            ]
+        );
+    }
+
+    public function testSetPermissionsWithExistingAccessControl()
+    {
+        $role = new Role();
+        $this->roleRepository->findRoleById(1)->willReturn($role);
+
+        $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => false])->willReturn(64);
+
+        $accessControl = $this->prophesize(AccessControl::class);
+        $accessControl->setPermissions(64)->shouldBeCalled();
+
+        $this->accessControlRepository->find('AcmeBundle\Example', 1, 1)->willReturn($accessControl);
+
+        $this->objectManager->persist(Argument::any())->shouldNotBeCalled();
+        $this->objectManager->flush()->shouldBeCalled();
+
+        $this->doctrineAccessControlProvider->setPermissions(
+            'AcmeBundle\Example',
+            1,
+            [
+                1 => ['view' => true, 'edit' => false]
             ]
         );
     }
