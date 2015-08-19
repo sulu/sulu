@@ -426,7 +426,7 @@ define([
 
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableAccount.bind(this));
 
-            this.sandbox.on('husky.dropzone.contact-logo.success', function(file, response) {
+            this.sandbox.on('husky.dropzone.account-logo.success', function(file, response) {
                 this.saveLogoData(response);
                 this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat]);
             }, this);

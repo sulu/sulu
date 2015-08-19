@@ -136,7 +136,7 @@ define([
                     viewOptions: {
                         'decorators/cards': {
                             fields: {
-                                picture: 'avatar',
+                                picture: 'logo',
                                 title: ['name'],
                                 firstInfoRow: ['city', 'countryCode'],
                                 secondInfoRow: ['mainEmail'],
