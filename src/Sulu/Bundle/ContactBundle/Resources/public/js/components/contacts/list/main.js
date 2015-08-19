@@ -55,7 +55,7 @@ define([
             }.bind(this));
         },
 
-        deleteCallback = function(ids){
+        deleteCallback = function(ids) {
             DeleteDialog.showDialog(ids, function() {
                 ContactManager.delete(ids);
             }.bind(this));
@@ -129,10 +129,28 @@ define([
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
                     resultKey: 'contacts',
-                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                     instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
-                    actionCallback: actionCallback.bind(this)
+                    actionCallback: actionCallback.bind(this),
+                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                    viewOptions: {
+                        'decorators/cards': {
+                            fields: {
+                                picture: 'avatar',
+                                title: ['firstName', 'lastName'],
+                                firstInfoRow: ['city', 'countryCode'],
+                                secondInfoRow: ['mainEmail'],
+                            },
+                            separators: {
+                                title: ' ',
+                                infoRow: ', '
+                            },
+                            icons: {
+                                firstInfoRow: 'fa-map-marker',
+                                secondInfoRow: 'fa-envelope'
+                            }
+                        }
+                    }
                 },
                 'contacts',
                 '#people-list-info'
