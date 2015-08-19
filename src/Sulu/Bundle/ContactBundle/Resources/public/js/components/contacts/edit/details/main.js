@@ -150,6 +150,13 @@ define([
         },
 
         initAvatarContainer: function(data) {
+            if (!!data.avatar) {
+                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+            } else {
+                this.sandbox.dom.attr(constants.avatarImageId, 'src',
+                    Config.get('sulucontact.contacts.default.avatar').url);
+            }
+
             /**
              * Function to generate suitable postUrl according to the current contact status
              * If contact already have an avatar, generate an url to upload new avatar as new version
@@ -167,13 +174,6 @@ define([
                 }
                 return url;
             }.bind(this);
-
-            if (!!data.avatar) {
-                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
-            } else {
-                this.sandbox.dom.attr(constants.avatarImageId, 'src',
-                    Config.get('sulucontact.contacts.default.avatar').url);
-            }
 
             this.sandbox.start([
                 {
