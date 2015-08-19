@@ -129,10 +129,29 @@ define([
                     searchInstanceName: 'accounts',
                     searchFields: ['name'],
                     resultKey: 'accounts',
-                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                     instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('account-info')) ? clickCallback.bind(this) : null,
-                    actionCallback: actionCallback.bind(this)
+                    actionCallback: actionCallback.bind(this),
+                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                    viewOptions: {
+                        'decorators/cards': {
+                            fields: {
+                                picture: 'avatar',
+                                title: ['name'],
+                                firstInfoRow: ['city', 'countryCode'],
+                                secondInfoRow: ['mainEmail'],
+                            },
+                            separators: {
+                                title: ' ',
+                                infoRow: ', '
+                            },
+                            icons: {
+                                picture: 'fa-home',
+                                firstInfoRow: 'fa-map-marker',
+                                secondInfoRow: 'fa-envelope'
+                            }
+                        }
+                    }
                 },
                 'accounts',
                 '#companies-list-info'

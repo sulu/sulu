@@ -28,12 +28,10 @@
             overflow: hidden;
             position: relative;
             border-radius: 50px;
-            border: 1px solid $grayLightMedium2;
             z-index: 0;
 
             .avatar-default {
               position: relative;
-              top: 15px;
               font-size: 100px;
               color: $grayLightMedium2;
             }
@@ -107,6 +105,26 @@
           display: block;
         }
       }
+    }
+  }
+}
+
+#people-list {
+  .head-image {
+    border: 1px solid $grayLightMedium2;
+
+    .avatar-default {
+      top: 15px;
+    }
+  }
+}
+
+#companies-list {
+  .head-image {
+    border: none;
+
+    .avatar-default {
+      top: 0;
     }
   }
 }

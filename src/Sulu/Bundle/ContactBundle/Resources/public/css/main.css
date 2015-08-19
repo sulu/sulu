@@ -140,17 +140,15 @@
   overflow: hidden;
   position: relative;
   border-radius: 50px;
-  border: 1px solid #e9e9e9;
   z-index: 0;
 }
-/* line 34, ../scss/modules/list.scss */
+/* line 33, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .avatar-default {
   position: relative;
-  top: 15px;
   font-size: 100px;
   color: #e9e9e9;
 }
-/* line 41, ../scss/modules/list.scss */
+/* line 39, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .avatar {
   width: 100%;
   height: 100%;
@@ -162,12 +160,12 @@
   -o-background-size: cover;
   background-size: cover;
 }
-/* line 51, ../scss/modules/list.scss */
+/* line 49, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-name, #companies-list .contact-grid .contact-item .item-head .head-container .head-name {
   margin-top: 14px;
   line-height: 18px;
 }
-/* line 57, ../scss/modules/list.scss */
+/* line 55, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-checkbox, #companies-list .contact-grid .contact-item .item-head .head-checkbox {
   display: none;
   position: absolute;
@@ -175,11 +173,11 @@
   left: 15px;
   margin: 0;
 }
-/* line 67, ../scss/modules/list.scss */
+/* line 65, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox, #companies-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 73, ../scss/modules/list.scss */
+/* line 71, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info, #companies-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
@@ -187,29 +185,47 @@
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 81, ../scss/modules/list.scss */
+/* line 79, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-icon, #companies-list .contact-grid .contact-item .item-info .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 89, ../scss/modules/list.scss */
+/* line 87, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-text, #companies-list .contact-grid .contact-item .item-info .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 95, ../scss/modules/list.scss */
+/* line 93, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .action-navigator, #companies-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 100, ../scss/modules/list.scss */
+/* line 98, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox, #companies-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 106, ../scss/modules/list.scss */
+/* line 104, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox, #companies-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
+}
+
+/* line 113, ../scss/modules/list.scss */
+#people-list .head-image {
+  border: 1px solid #e9e9e9;
+}
+/* line 116, ../scss/modules/list.scss */
+#people-list .head-image .avatar-default {
+  top: 15px;
+}
+
+/* line 123, ../scss/modules/list.scss */
+#companies-list .head-image {
+  border: none;
+}
+/* line 126, ../scss/modules/list.scss */
+#companies-list .head-image .avatar-default {
+  top: 0;
 }
 
 /* line 2, ../scss/modules/edit-detail.scss */
