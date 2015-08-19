@@ -62,7 +62,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
                         // set the captions and values for the matrix
                         verticalCaptions.push(role.name);
-                        verticalValues.push(role.identifier);
+                        verticalValues.push(role.id);
 
                         // initialize the data
                         this.sandbox.util.each(permissions, function(index, permission) {
@@ -70,10 +70,10 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                         }.bind(this));
 
                         // set the data from the permissions
-                        if (permissionResponseData.permissions.hasOwnProperty(role.identifier)) {
+                        if (permissionResponseData.permissions.hasOwnProperty(role.id)) {
                             // if object permissions already exists set from role data
                             this.sandbox.util.each(
-                                permissionResponseData.permissions[role.identifier],
+                                permissionResponseData.permissions[role.id],
                                 function(index, value) {
                                     data[index] = value;
                                     matrixRoleData.push(value);
@@ -93,7 +93,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                             });
                         }
 
-                        permissionData.permissions[role.identifier] = data;
+                        permissionData.permissions[role.id] = data;
                         matrixData[index] = matrixRoleData;
                     }.bind(this));
 

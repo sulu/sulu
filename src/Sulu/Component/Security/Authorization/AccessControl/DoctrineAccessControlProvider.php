@@ -9,8 +9,43 @@
  */
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Sulu\Component\Security\Authorization\MaskConverterInterface;
+
 class DoctrineAccessControlProvider implements AccessControlProviderInterface
 {
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
+     * @var MaskConverterInterface
+     */
+    private $maskConverter;
+
+    /**
+     * @param ObjectManager $objectManager
+     * @param RoleRepositoryInterface $roleRepository
+     * @param MaskConverterInterface $maskConverter
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        RoleRepositoryInterface $roleRepository,
+        MaskConverterInterface $maskConverter
+    ) {
+        $this->objectManager = $objectManager;
+        $this->roleRepository = $roleRepository;
+        $this->maskConverter = $maskConverter;
+    }
+
     /**
      * Sets the permissions for the object with the given class and id for the given security identity.
      *
@@ -20,7 +55,18 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      */
     public function setPermissions($type, $identifier, $permissions)
     {
-        // TODO: Implement setPermissions() method.
+        foreach ($permissions as $roleId => $rolePermissions) {
+            $role = $this->roleRepository->findRoleById($roleId);
+
+            $accessControl = new AccessControl();
+            $accessControl->setPermissions($this->maskConverter->convertPermissionsToNumber($rolePermissions));
+            $accessControl->setRole($role);
+            $accessControl->setEntityId($identifier);
+            $accessControl->setEntityClass($type);
+            $this->objectManager->persist($accessControl);
+        }
+
+        $this->objectManager->flush();
     }
 
     /**
@@ -33,7 +79,7 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      */
     public function getPermissions($type, $identifier)
     {
-        // TODO: Implement getPermissions() method.
+        return [];
     }
 
     /**

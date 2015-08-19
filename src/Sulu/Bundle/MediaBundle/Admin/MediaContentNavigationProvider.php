@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
-use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaContentNavigationProvider implements ContentNavigationProviderInterface

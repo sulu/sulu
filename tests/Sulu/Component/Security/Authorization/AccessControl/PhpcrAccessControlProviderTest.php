@@ -56,10 +56,10 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $document->willImplement(SecurityBehavior::class);
 
         $this->documentManager->find('1')->willReturn($document);
-        $document->getPermissions()->willReturn(['ROLE_USER' => ['view', 'edit']]);
+        $document->getPermissions()->willReturn(['sec:role-1' => ['view', 'edit']]);
 
         $this->assertEquals(
-            ['ROLE_USER' => ['view' => true, 'edit' => true, 'delete' => false]],
+            [1 => ['view' => true, 'edit' => true, 'delete' => false]],
             $this->phpcrAccessControlProvider->getPermissions(get_class($document), '1')
         );
     }

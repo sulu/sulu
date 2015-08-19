@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -355,7 +356,7 @@ class CollectionController extends RestController
      */
     public function getSecuredClass()
     {
-        return Collection::class;
+        return CollectionEntity::class;
     }
 
     /**

@@ -12,7 +12,7 @@
         <field name="entityClass" type="string" column="entityClass"/>
 
         <many-to-one field="role" target-entity="Sulu\Component\Security\Authentication\RoleInterface">
-            <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
+            <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
         </many-to-one>
     </entity>
 </doctrine-mapping>

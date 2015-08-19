@@ -90,7 +90,7 @@ class AccessControl
     }
 
     /**
-     * @return object
+     * @return int
      */
     public function getEntityId()
     {
@@ -98,7 +98,7 @@ class AccessControl
     }
 
     /**
-     * @param object $entityId
+     * @param int $entityId
      */
     public function setEntityId($entityId)
     {

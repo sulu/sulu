@@ -22,8 +22,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
-    const ROLE_PREFIX = 'ROLE_';
-
     /**
      * {@inheritdoc}
      */
@@ -63,10 +61,9 @@ class SecuritySubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
 
-        foreach ($document->getPermissions() as $roleName => $permission) {
+        foreach ($document->getPermissions() as $roleId => $permission) {
             // TODO extract this functionality
-            $roleName = str_replace('_', '-', strtolower(substr($roleName, strlen(static::ROLE_PREFIX))));
-            $node->setProperty('sec:' . $roleName, $permission); // TODO use PropertyEncoder, once it is refactored
+            $node->setProperty('sec:role-' . $roleId, $permission); // TODO use PropertyEncoder, once it is refactored
         }
     }
 
@@ -87,8 +84,8 @@ class SecuritySubscriber implements EventSubscriberInterface
         $permissions = [];
         foreach ($node->getProperties('sec:*') as $property) {
             /** @var PropertyInterface $property */
-            $roleName = static::ROLE_PREFIX . strtoupper(str_replace('-', '_', substr($property->getName(), 4)));
-            $permissions[$roleName] = $property->getValue();
+            $roleId = substr($property->getName(), 9); // remove the "sec:role-" prefix
+            $permissions[$roleId] = $property->getValue();
         }
 
         $document->setPermissions($permissions);

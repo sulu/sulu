@@ -41,8 +41,8 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
     public function setPermissions($type, $identifier, $permissions)
     {
         $allowedPermissions = [];
-        foreach ($permissions as $roleName => $rolePermissions) {
-            $allowedPermissions[$roleName] = $this->getAllowedPermissions($rolePermissions);
+        foreach ($permissions as $roleId => $rolePermissions) {
+            $allowedPermissions[$roleId] = $this->getAllowedPermissions($rolePermissions);
         }
 
         $document = $this->documentManager->find($identifier);
@@ -61,10 +61,11 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         $allowedPermissions = $document->getPermissions();
 
         $permissions = [];
-        foreach ($allowedPermissions as $roleName => $rolePermissions) {
-            $permissions[$roleName] = [];
+        foreach ($allowedPermissions as $rolePropertyName => $rolePermissions) {
+            $roleId = substr($rolePropertyName, 9);
+            $permissions[$roleId] = [];
             foreach ($this->permissions as $permission => $value) {
-                $permissions[$roleName][$permission] = in_array($permission, $rolePermissions);
+                $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
             }
         }
 

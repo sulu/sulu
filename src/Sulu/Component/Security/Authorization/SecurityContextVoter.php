@@ -112,14 +112,16 @@ class SecurityContextVoter implements VoterInterface
             return;
         }
 
-        $roles = $user->getRoles();
+        $roles = $user->getUserRoles();
 
-        foreach ($roles as $role) {
-            if (!isset($permissions[$role])) {
+        foreach ($roles as $userRole) {
+            /** @var UserRole $userRole */
+            $roleId = $userRole->getRole()->getId();
+            if (!isset($permissions[$roleId])) {
                 continue;
             }
 
-            if ($permissions[$role][$attribute]) {
+            if ($permissions[$roleId][$attribute]) {
                 return true;
             }
         }

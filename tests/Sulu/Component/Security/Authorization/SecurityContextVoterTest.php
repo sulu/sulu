@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Security\Authorization;
 
+use Sulu\Bundle\SecurityBundle\Entity\BaseRole;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -85,9 +86,13 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $roleIdReflection = new \ReflectionProperty(BaseRole::class, 'id');
+        $roleIdReflection->setAccessible(true);
+
         $this->user = new User();
         $this->userRole = new UserRole();
         $this->role = new Role();
+        $roleIdReflection->setValue($this->role, 1);
         $this->role->setName('role1');
         $this->permission = new Permission();
         $this->permission->setPermissions(122);
@@ -99,6 +104,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $this->userGroup = new UserGroup();
         $this->group = new Group();
         $this->role = new Role();
+        $roleIdReflection->setValue($this->role, 2);
         $this->role->setName('role2');
         $this->permission = new Permission();
         $this->permission->setPermissions(122);
@@ -109,6 +115,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 
         $this->nestedGroup = new Group();
         $this->role = new Role();
+        $roleIdReflection->setValue($this->role, 3);
         $this->permission = new Permission();
         $this->permission->setPermissions(122);
         $this->permission->setContext('sulu.security.groups.nested');
@@ -273,7 +280,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     {
         $this->accessControlManager->getPermissions('Sulu\Bundle\SecurityBundle\Group', '1')->willReturn(
             [
-                'ROLE_SULU_ROLE1' => [
+                1 => [
                     'view' => true,
                 ],
             ]
@@ -292,7 +299,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     {
         $this->accessControlManager->getPermissions('Sulu\Bundle\SecurityBundle\Group', '1')->willReturn(
             [
-                'ROLE_SULU_ROLE1' => [
+                1 => [
                     'security' => true,
                 ],
             ]
@@ -322,7 +329,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     {
         $this->accessControlManager->getPermissions('Sulu\Bundle\SecurityBundle\Group', '1')->willReturn(
             [
-                'ROLE_SULU_ROLE1' => [
+                1 => [
                     'view' => false,
                 ],
             ]
