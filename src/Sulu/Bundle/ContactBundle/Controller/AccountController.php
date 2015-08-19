@@ -99,7 +99,7 @@ class AccountController extends RestController implements ClassResourceInterface
     public function getAction($id, Request $request)
     {
         $includes = explode(',', $request->get('include'));
-        $accountManager = $this->getContactManager();
+        $accountManager = $this->getAccountManager();
         $locale = $this->getUser()->getLocale();
 
         try {
@@ -175,7 +175,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $listBuilder->count()
             );
         } else {
-            $contactManager = $this->getContactManager();
+            $contactManager = $this->getAccountManager();
             $locale = $this->getUser()->getLocale();
             $contacts = $contactManager->findContactsByAccountId($id, $locale, false);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
@@ -275,7 +275,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountContact->setContact($contact);
 
             // Set position on contact
-            $position = $this->getContactManager()->getPosition($request->get('position', null));
+            $position = $this->getAccountManager()->getPosition($request->get('position', null));
             $accountContact->setPosition($position);
             $contact->setCurrentPosition($position);
 
@@ -399,7 +399,7 @@ class AccountController extends RestController implements ClassResourceInterface
             );
             $view = $this->view($list, 200);
         } else {
-            $accountManager = $this->getContactManager();
+            $accountManager = $this->getAccountManager();
             $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
             $view = $this->view($list, 200);
@@ -494,7 +494,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $em->flush();
 
             // get api entity
-            $accountManager = $this->getContactManager();
+            $accountManager = $this->getAccountManager();
             $locale = $this->getUser()->getLocale();
             $acc = $accountManager->getAccount($account, $locale);
             $view = $this->view($acc, 200);
@@ -521,7 +521,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function doPost(Request $request)
     {
-        $accountManager = $this->getContactManager();
+        $accountManager = $this->getAccountManager();
         $account = $this->get('sulu_contact.account_factory')->createEntity();
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
@@ -584,7 +584,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $em->flush();
 
                 // get api entity
-                $accountManager = $this->getContactManager();
+                $accountManager = $this->getAccountManager();
                 $locale = $this->getUser()->getLocale();
                 $acc = $accountManager->getAccount($account, $locale);
 
@@ -616,7 +616,7 @@ class AccountController extends RestController implements ClassResourceInterface
         // set name
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
-        $accountManager = $this->getContactManager();
+        $accountManager = $this->getAccountManager();
 
         // set disabled
         $disabled = $request->get('disabled');
@@ -702,7 +702,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $em->flush();
 
                 // get api entity
-                $accountManager = $this->getContactManager();
+                $accountManager = $this->getAccountManager();
                 $locale = $this->getUser()->getLocale();
                 $acc = $accountManager->getAccount($account, $locale);
 
@@ -729,7 +729,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
-        $accountManager = $this->getContactManager();
+        $accountManager = $this->getAccountManager();
         if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
         }
@@ -952,7 +952,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * @return AbstractContactManager
      */
-    protected function getContactManager()
+    protected function getAccountManager()
     {
         return $this->get('sulu_contact.account_manager');
     }

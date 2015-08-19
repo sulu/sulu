@@ -981,7 +981,7 @@ class Account extends ApiWrapper
      * @return mixed
      * @VirtualProperty
      * @SerializedName("mainAddress")
-     * @Groups({"fullAccount", "partialAccount"})
+     * @Groups({"fullAccount"})
      */
     public function getMainAddress()
     {
