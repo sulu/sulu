@@ -2,11 +2,13 @@
   .image {
     position: relative;
     background-color: $white;
+    text-align: center;
 
     .avatar-default {
       font-size: 250px;
       color: $grayLighterer;
-      @include centerBlock;
+      position: relative;
+      top: 15px;
     }
 
     #avatar, #avatar-dropzone {
