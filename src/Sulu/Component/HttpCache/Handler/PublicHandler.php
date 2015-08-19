@@ -60,7 +60,7 @@ class PublicHandler implements
         }
 
         // when structure cache-lifetime disabled - return
-        if ((int)$structure->getCacheLifeTime() === 0) {
+        if ((int) $structure->getCacheLifeTime() === 0) {
             return;
         }
 
