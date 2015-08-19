@@ -221,7 +221,7 @@ class ContentType extends ComplexContentType
         $filters['tags'] = array_merge($this->getTags($params['tags_parameter']->getValue()), $filters['tags']);
 
         // resolve tags to id
-        if (!empty($filters['tags'])) {
+        if (!empty($filters['tags']) && count($filters['tags']) > 0) {
             $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
         }
 

@@ -304,12 +304,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveResourceItems(
-            ['dataSource' => 'some-uuid', 'page' => 1, 'hasNextPage' => true, 'excluded' => ['123-123-123']],
+        $this->contentDataProvider->resolveFilters(
+            [
+                'tags' => [],
+                'dataSource' => 'some-uuid',
+                'page' => 1,
+                'hasNextPage' => true,
+                'excluded' => ['123-123-123']
+            ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -331,7 +337,12 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
-        $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
+        $this->request->expects($this->at(1))->method('get')
+            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->willReturn(1);
+        $this->request->expects($this->at(0))->method('get')
+            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
+            ->willReturn('');
 
         $viewData = $this->smartContent->getViewData($property);
 
@@ -359,7 +370,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     public function testGetReferencedUuids()
     {
         $property = $this->getContentDataProperty(
-            ['dataSource' => '123-123-123', 'referencedUuids' => [1, 2, 3, 4, 5, 6]]
+            ['tags' => [], 'dataSource' => '123-123-123', 'referencedUuids' => [1, 2, 3, 4, 5, 6]]
         );
         $uuids = $this->smartContent->getReferencedUuids($property);
 
@@ -381,7 +392,12 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\Compat\StructureInterface'
         );
 
-        $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
+        $this->request->expects($this->at(1))->method('get')
+            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->willReturn(1);
+        $this->request->expects($this->at(0))->method('get')
+            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
+            ->willReturn('');
 
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue(['dataSource' => '123-123-123']));
@@ -391,12 +407,17 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
+<<<<<<< 68ca70a4207d578d392e52db51049870b1ca6aa0
         $this->contentDataProvider->resolveResourceItems(
             ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+=======
+        $this->contentDataProvider->resolveFilters(
+            ['tags' => [], 'dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+>>>>>>> fixed testcases
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -461,12 +482,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\Compat\StructureInterface'
         );
 
-        $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
+        $this->request->expects($this->at(1))->method('get')
+            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->willReturn($page);
+        $this->request->expects($this->at(0))->method('get')
+            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
+            ->willReturn('');
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
         $this->contentDataProvider->resolveResourceItems(
             [
+                'tags' => [],
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
                 'excluded' => [$uuid],
@@ -474,7 +501,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -531,12 +558,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\Compat\StructureInterface'
         );
 
-        $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
+        $this->request->expects($this->at(1))->method('get')
+            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->willReturn($page);
+        $this->request->expects($this->at(0))->method('get')
+            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
+            ->willReturn('');
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
         $this->contentDataProvider->resolveResourceItems(
             [
+                'tags' => [],
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
                 'page' => $page,
@@ -546,7 +579,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -628,13 +661,14 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentDataProvider->resolveResourceItems(
             [
+                'tags' => [],
                 'dataSource' => '123-123-123',
                 'excluded' => ['123-123-123'],
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-                'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+                'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
