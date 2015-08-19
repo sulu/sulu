@@ -235,14 +235,14 @@
   text-align: center;
 }
 /* line 7, ../scss/modules/edit-detail.scss */
-#contact-form .image .avatar-default {
+#contact-form .image .image-default {
   font-size: 250px;
   color: #ddd;
   position: relative;
   top: 15px;
 }
 /* line 14, ../scss/modules/edit-detail.scss */
-#contact-form .image #avatar, #contact-form .image #avatar-dropzone {
+#contact-form .image #image-content, #contact-form .image #image-dropzone {
   position: absolute;
   top: 0;
   left: 0;
@@ -250,7 +250,7 @@
   height: 100%;
 }
 /* line 22, ../scss/modules/edit-detail.scss */
-#contact-form .image #avatar {
+#contact-form .image #image {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

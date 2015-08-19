@@ -4,14 +4,14 @@
     background-color: $white;
     text-align: center;
 
-    .avatar-default {
+    .image-default {
       font-size: 250px;
       color: $grayLighterer;
       position: relative;
       top: 15px;
     }
 
-    #avatar, #avatar-dropzone {
+    #image-content, #image-dropzone {
       position: absolute;
       top: 0;
       left: 0;
@@ -19,7 +19,7 @@
       height: 100%;
     }
 
-    #avatar {
+    #image {
       @include background-size(cover);
     }
   }

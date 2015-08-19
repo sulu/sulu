@@ -25,8 +25,8 @@ define([
             addAddressWrapper: '.grid-row',
             addBankAccountsWrapper: '.grid-row',
             editFormSelector: '#contact-edit-form',
-            avatarImageId: '#avatar',
-            avatarDropzoneSelector: '#avatar-dropzone',
+            avatarImageId: '#image-content',
+            avatarDropzoneSelector: '#image-dropzone',
             avatarThumbnailFormat: '400x400'
         },
 
@@ -118,7 +118,7 @@ define([
             this.companyInstanceName = 'companyContact' + formData.id;
             this.initForm(formData);
             this.initAvatarContainer(formData);
-            this.setTags(formData);
+            this.setTags();
             this.bindCustomEvents();
             this.bindTagEvents(formData);
         },
