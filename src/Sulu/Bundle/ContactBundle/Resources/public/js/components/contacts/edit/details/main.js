@@ -149,6 +149,10 @@ define([
             }.bind(this));
         },
 
+        /**
+         * Initialize avatar container: display avatar image if provided and start avatar-upload dropzone
+         * @param data
+         */
         initAvatarContainer: function(data) {
             if (!!data.avatar) {
                 this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
@@ -190,11 +194,20 @@ define([
             ]);
         },
 
+        /**
+         * Display given picture in avatar container. Set avatar-div data to media id which is read on saving.
+         * @param mediaId
+         * @param url
+         */
         updateAvatarContainer: function(mediaId, url) {
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
             this.sandbox.dom.css(constants.avatarImageId, 'background-image', 'url(' + url + ')');
         },
 
+        /**
+         * Assign uploaded avatar to contact by saving contact with given media id
+         * @param mediaResponse media upload response
+         */
         saveAvatarData: function(mediaResponse){
             if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
                 // avatar was uploaded as new version of existing avatar
@@ -204,6 +217,7 @@ define([
                 this.sandbox.util.extend(true, this.data, {
                     avatar: {id: mediaResponse.id}
                 });
+
                 ContactManager.saveAvatar(this.data).then(function(savedData) {
                     this.sandbox.emit('sulu.tab.data-changed', savedData);
                 }.bind(this));
