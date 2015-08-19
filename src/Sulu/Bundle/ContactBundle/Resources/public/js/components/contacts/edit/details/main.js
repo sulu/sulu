@@ -151,7 +151,7 @@ define([
 
         initAvatarContainer: function(data) {
             if (!!data.avatar) {
-                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
             }
 
             /**
@@ -190,9 +190,24 @@ define([
             ]);
         },
 
-        updateContactAvatar: function(mediaId, url) {
+        updateAvatarContainer: function(mediaId, url) {
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
             this.sandbox.dom.css(constants.avatarImageId, 'background-image', 'url(' + url + ')');
+        },
+
+        saveAvatarData: function(mediaResponse){
+            if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
+                // avatar was uploaded as new version of existing avatar
+                this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+            } else if (!!this.data.id) {
+                // avatar was added to existing contact
+                this.sandbox.util.extend(true, this.data, {
+                    avatar: {id: mediaResponse.id}
+                });
+                ContactManager.saveAvatar(this.data).then(function(savedData) {
+                    this.sandbox.emit('sulu.tab.data-changed', savedData);
+                }.bind(this));
+            }
         },
 
         bindTagEvents: function(data) {
@@ -343,19 +358,8 @@ define([
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
-                if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
-                    // avatar was uploaded as new version of existing avatar
-                    this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
-                } else if (!!this.data.id) {
-                    // avatar was added to existing contact
-                    this.sandbox.util.extend(true, this.data, {
-                        avatar: {id: response.id}
-                    });
-                    ContactManager.saveAvatar(this.data).then(function() {
-                        this.sandbox.emit('sulu.tab.data-changed', this.data);
-                    }.bind(this));
-                }
-                this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.saveAvatarData(response);
+                this.updateAvatarContainer(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
             }, this);
         },
 
