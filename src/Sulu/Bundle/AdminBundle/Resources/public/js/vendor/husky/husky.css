@@ -5673,7 +5673,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 /* line 161, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 10px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #ddd;
   text-align: center;
   border-radius: 0 0 3px 3px;
 }
@@ -6186,38 +6186,37 @@ hr.divider.small {
 .form-element, .husky-input {
   width: 100%;
   height: 30px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   padding: 0 5px;
   font-size: 14px;
   border-radius: 3px;
-  border: 1px solid #ccc;
 }
-/* line 14, ../scss/modules/form.scss */
+/* line 13, ../scss/modules/form.scss */
 .form-element:focus, .husky-input:focus {
   outline: 0;
-  border-color: #ccc;
+  border-color: #ddd;
 }
-/* line 19, ../scss/modules/form.scss */
+/* line 18, ../scss/modules/form.scss */
 .form-element.input-large, .form-element.input-bold, .input-bold.husky-input, .input-large.husky-input {
   height: 40px;
   padding: 0 10px;
 }
-/* line 24, ../scss/modules/form.scss */
+/* line 23, ../scss/modules/form.scss */
 .form-element.input-bold, .input-bold.husky-input {
   font-size: 24px;
 }
-/* line 29, ../scss/modules/form.scss */
+/* line 28, ../scss/modules/form.scss */
 .form-element[readonly], [readonly].husky-input {
   background: none;
   color: #999;
 }
 
-/* line 36, ../scss/modules/form.scss */
+/* line 35, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 41, ../scss/modules/form.scss */
+/* line 40, ../scss/modules/form.scss */
 input
 .input-description {
   margin-top: -5px;
@@ -6225,31 +6224,31 @@ input
   color: #999;
 }
 
-/* line 48, ../scss/modules/form.scss */
+/* line 47, ../scss/modules/form.scss */
 .input-placeholder-style, input::-webkit-input-placeholder, input:-moz-placeholder, input ::-moz-placeholder, input :-ms-input-placeholder {
   color: #999;
   font-weight: normal;
 }
 
-/* line 60, ../scss/modules/form.scss */
+/* line 59, ../scss/modules/form.scss */
 input ::-moz-placeholder {
   /* Firefox 19+ */
 }
 
-/* line 75, ../scss/modules/form.scss */
+/* line 74, ../scss/modules/form.scss */
 .form-group,
 .form-group-vertical,
 .form-vertical .form-group {
   min-height: 30px;
 }
-/* line 80, ../scss/modules/form.scss */
+/* line 79, ../scss/modules/form.scss */
 .form-group > :first-child,
 .form-group-vertical > :first-child,
 .form-vertical .form-group > :first-child {
   height: 20px;
   margin-bottom: 10px;
 }
-/* line 85, ../scss/modules/form.scss */
+/* line 84, ../scss/modules/form.scss */
 .form-group > :nth-child(2),
 .form-group-vertical > :nth-child(2),
 .form-vertical .form-group > :nth-child(2) {
@@ -6257,68 +6256,70 @@ input ::-moz-placeholder {
   vertical-align: middle;
 }
 
-/* line 93, ../scss/modules/form.scss */
+/* line 92, ../scss/modules/form.scss */
 .form-horizontal .form-group {
   display: table;
   table-layout: fixed;
   width: 100%;
 }
-/* line 99, ../scss/modules/form.scss */
+/* line 98, ../scss/modules/form.scss */
 .form-horizontal .form-group > * {
   display: table-cell;
 }
-/* line 103, ../scss/modules/form.scss */
+/* line 102, ../scss/modules/form.scss */
 .form-horizontal .form-group > :first-child {
   text-align: right;
   vertical-align: middle;
   padding-right: 20px;
   width: 140px;
 }
-/* line 110, ../scss/modules/form.scss */
+/* line 109, ../scss/modules/form.scss */
 .form-horizontal .form-group label.top {
   vertical-align: top;
   padding-top: 5px;
 }
-/* line 115, ../scss/modules/form.scss */
+/* line 114, ../scss/modules/form.scss */
 .form-horizontal .form-group > :nth-child(2) {
   width: 100%;
 }
 
-/* line 123, ../scss/modules/form.scss */
+/* line 122, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
   color: #999999;
   cursor: pointer;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-/* line 130, ../scss/modules/form.scss */
+/* line 131, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 135, ../scss/modules/form.scss */
+/* line 136, ../scss/modules/form.scss */
 label .form-element, label .husky-input {
   margin-top: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
 }
-/* line 140, ../scss/modules/form.scss */
+/* line 141, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
   vertical-align: middle;
 }
-/* line 146, ../scss/modules/form.scss */
+/* line 147, ../scss/modules/form.scss */
 label.spacing-right {
   margin-right: 10px;
 }
-/* line 149, ../scss/modules/form.scss */
+/* line 150, ../scss/modules/form.scss */
 label.spacing-left {
   margin-left: 10px;
 }
 
-/* line 156, ../scss/modules/form.scss */
+/* line 157, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 15px;
   height: 15px;
@@ -6328,12 +6329,12 @@ label.spacing-left {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 168, ../scss/modules/form.scss */
+/* line 169, ../scss/modules/form.scss */
 .custom-checkbox.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 173, ../scss/modules/form.scss */
+/* line 174, ../scss/modules/form.scss */
 .custom-checkbox input {
   opacity: 0;
   width: 15px;
@@ -6346,20 +6347,20 @@ label.spacing-left {
   padding: 0;
   cursor: pointer;
 }
-/* line 187, ../scss/modules/form.scss */
+/* line 188, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon, .custom-checkbox input.is-checked + .icon {
   border-color: #5DC774;
   background-color: #5DC774;
   color: #fff;
 }
-/* line 191, ../scss/modules/form.scss */
+/* line 192, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after {
   display: inline-block;
   margin-top: -1px;
   margin-left: -1px;
   content: "";
 }
-/* line 201, ../scss/modules/form.scss */
+/* line 202, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
   position: absolute;
   top: 0px;
@@ -6376,27 +6377,27 @@ label.spacing-left {
   border-radius: 2px;
 }
 
-/* line 225, ../scss/modules/form.scss */
+/* line 226, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 229, ../scss/modules/form.scss */
+/* line 230, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 233, ../scss/modules/form.scss */
+/* line 234, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 237, ../scss/modules/form.scss */
+/* line 238, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 241, ../scss/modules/form.scss */
+/* line 242, ../scss/modules/form.scss */
 textarea.form-element, textarea.husky-input {
   width: 100%;
   height: 40px;
@@ -6405,14 +6406,14 @@ textarea.form-element, textarea.husky-input {
   font-size: 14px;
   font-family: inherit;
 }
-/* line 248, ../scss/modules/form.scss */
+/* line 249, ../scss/modules/form.scss */
 textarea.form-element.small, textarea.small.husky-input {
   height: 70px;
   min-height: 70px;
   padding: 5px;
 }
 
-/* line 257, ../scss/modules/form.scss */
+/* line 258, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -6422,12 +6423,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 267, ../scss/modules/form.scss */
+/* line 268, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 272, ../scss/modules/form.scss */
+/* line 273, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -6440,11 +6441,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 286, ../scss/modules/form.scss */
+/* line 287, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: #fff;
 }
-/* line 289, ../scss/modules/form.scss */
+/* line 290, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -6453,7 +6454,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5DC774;
 }
-/* line 300, ../scss/modules/form.scss */
+/* line 301, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -6463,34 +6464,34 @@ textarea.form-element.small, textarea.small.husky-input {
   height: 15px;
   padding: 2px;
   border-radius: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   background-color: #fff;
   text-align: center;
   margin: 0;
 }
 
-/* line 321, ../scss/modules/form.scss */
+/* line 322, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 326, ../scss/modules/form.scss */
+/* line 327, ../scss/modules/form.scss */
 .cke .cke_inner {
-  border: 1px solid #ccc !important;
+  border: 1px solid #ddd !important;
 }
-/* line 329, ../scss/modules/form.scss */
+/* line 330, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 336, ../scss/modules/form.scss */
+/* line 337, ../scss/modules/form.scss */
 .cke_hidpi .cke_dialog_close_button {
   background-image: none !important;
 }
 
-/* line 342, ../scss/modules/form.scss */
+/* line 343, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #EA524E;
@@ -6737,7 +6738,7 @@ li.is-active > div > a.navigation-settings-icon {
   padding-left: 54px;
   padding-right: 20px;
   padding-bottom: 20px;
-  padding-top: 10px;
+  padding-top: 0;
   z-index: 100;
   -moz-transition: opacity 100ms;
   -o-transition: opacity 100ms;
@@ -7251,7 +7252,7 @@ li a.navigation-settings-icon {
   margin-left: 5px;
   margin-bottom: 40px;
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   z-index: 90;
   border-radius: 3px;
 }
@@ -7712,7 +7713,7 @@ a.btn-black, a.btn-highlight {
 .avatar > img {
   float: left;
   margin-right: 15px;
-  border: solid 2px #ccc;
+  border: solid 2px #ddd;
 }
 
 /* line 23, ../scss/modules/avatar.scss */
@@ -7739,7 +7740,7 @@ a.btn-black, a.btn-highlight {
   line-height: 20px;
   margin: 5px 0 0 0;
   padding-right: 5px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
   color: #999;
   font-size: 16px;
 }
@@ -7844,7 +7845,7 @@ a.btn-black, a.btn-highlight {
   display: table;
   width: 100%;
   font-size: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 3px 3px 0 0;
   background: #fff;
 }
@@ -7854,7 +7855,7 @@ a.btn-black, a.btn-highlight {
   line-height: 20px;
   margin: 5px 0 0 0;
   padding-right: 5px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
   color: #999;
   font-size: 16px;
 }
@@ -7942,7 +7943,7 @@ a.btn-black, a.btn-highlight {
 /* line 72, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
   min-width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   margin-top: -1px;
   border-radius: 3px;
 }
@@ -8434,7 +8435,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 166, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight.disabled:hover, .husky-toolbar .toolbar-item.highlight.disabled {
-  background-color: #ccc;
+  background-color: #ddd;
   border-color: transparent;
   color: #1e1e1e;
 }
@@ -8460,20 +8461,20 @@ a.btn-black, a.btn-highlight {
 }
 /* line 193, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray {
-  background-color: #ccc;
+  background-color: #ddd;
   border-color: transparent;
 }
 /* line 197, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray:hover {
-  background-color: #ccc;
+  background-color: #ddd;
 }
 /* line 200, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray:active {
-  background-color: #ccc;
+  background-color: #ddd;
 }
 /* line 206, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-expanded {
-  background-color: #ccc;
+  background-color: #ddd;
 }
 /* line 209, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-expanded ul.toolbar-dropdown-menu {
@@ -8485,11 +8486,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 220, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item:hover {
-  background-color: #ccc;
+  background-color: #ddd;
 }
 /* line 223, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item:active {
-  background-color: #c4c4c4;
+  background-color: #d5d5d5;
 }
 /* line 229, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .icon + .title:not(:empty) {
@@ -8498,7 +8499,7 @@ a.btn-black, a.btn-highlight {
 /* line 234, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu {
   background-color: white;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 2px;
   display: none;
   position: absolute;
@@ -8808,7 +8809,7 @@ a.btn-black, a.btn-highlight {
   width: 100%;
   background-color: #fff;
   border-style: solid;
-  border-color: #ccc;
+  border-color: #ddd;
   border-width: 0 1px 1px 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -8830,7 +8831,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 51, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column {
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
   overflow-y: auto;
   overflow-x: hidden;
   display: inline-block;
@@ -9131,7 +9132,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   background-color: #fff;
   margin: 0;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
 }
 /* line 43, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete {
@@ -9284,8 +9285,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 57, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list {
-  width: 100%;
-  /*display: inline-block;*/
+  min-width: 100%;
   position: absolute;
   top: 20px;
   left: 0px;
@@ -9295,107 +9295,107 @@ a.btn-black, a.btn-highlight {
   z-index: 2000;
   border-radius: 3px;
 }
-/* line 69, ../scss/modules/select.scss */
+/* line 68, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .divider {
   max-width: 100%;
   height: 1px;
   background-color: #ccc;
   margin: 5px 0 10px;
 }
-/* line 76, ../scss/modules/select.scss */
+/* line 75, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list.top {
   top: inherit;
   bottom: 5px;
 }
-/* line 81, ../scss/modules/select.scss */
+/* line 80, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
   cursor: default;
 }
-/* line 85, ../scss/modules/select.scss */
+/* line 84, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
   color: #999;
 }
-/* line 89, ../scss/modules/select.scss */
+/* line 88, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
   display: inline;
   width: 20px;
   margin-right: 10px;
   padding-top: 7px;
 }
-/* line 95, ../scss/modules/select.scss */
+/* line 94, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .item-value {
   display: inline;
   line-height: 30px;
 }
-/* line 100, ../scss/modules/select.scss */
+/* line 99, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 105, ../scss/modules/select.scss */
+/* line 104, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul input {
   margin: 0;
 }
-/* line 109, ../scss/modules/select.scss */
+/* line 108, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li {
-  padding: 0px 10px 0px 20px;
+  padding: 0px 20px 0px 20px;
   clear: both;
   height: 30px;
 }
-/* line 114, ../scss/modules/select.scss */
+/* line 113, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li > div {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-/* line 120, ../scss/modules/select.scss */
+/* line 119, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52B6CA;
   cursor: pointer;
 }
-/* line 125, ../scss/modules/select.scss */
+/* line 124, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value {
   color: #fff;
 }
-/* line 129, ../scss/modules/select.scss */
+/* line 128, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover > div {
   color: #fff;
 }
-/* line 137, ../scss/modules/select.scss */
+/* line 136, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
   font-size: 10px;
   line-height: 20px;
 }
-/* line 141, ../scss/modules/select.scss */
+/* line 140, ../scss/modules/select.scss */
 .husky-select-container.small .toggle-icon {
   line-height: 20px;
 }
-/* line 144, ../scss/modules/select.scss */
+/* line 143, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
   border-radius: 2px;
 }
-/* line 150, ../scss/modules/select.scss */
+/* line 149, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list.top {
   top: auto;
   bottom: -3px;
 }
-/* line 158, ../scss/modules/select.scss */
+/* line 157, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
   background: #fff;
 }
-/* line 164, ../scss/modules/select.scss */
+/* line 163, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
   background: #52B6CA;
   color: #fff;
 }
-/* line 170, ../scss/modules/select.scss */
+/* line 169, ../scss/modules/select.scss */
 .husky-select-container select {
   opacity: 0;
   position: absolute;
@@ -10022,7 +10022,7 @@ a.btn-black, a.btn-highlight {
 .text-block .container {
   padding: 10px 20px 20px 20px;
   background: #ddd;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
@@ -10081,7 +10081,7 @@ a.btn-black, a.btn-highlight {
   height: 100%;
   background: #fff;
   border-radius: 0 0 3px 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
 }
 /* line 161, ../scss/modules/content-types.scss */
 .white-box .text {
@@ -10126,7 +10126,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 194, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
@@ -10194,7 +10194,7 @@ a.btn-black, a.btn-highlight {
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
   position: relative;
 }
 /* line 259, ../scss/modules/content-types.scss */
@@ -10249,7 +10249,7 @@ a.btn-black, a.btn-highlight {
   padding-bottom: 20px;
   width: 100%;
   height: auto;
-  border: 1px dashed #ccc;
+  border: 1px dashed #ddd;
   border-radius: 3px;
   cursor: pointer;
   -moz-transition: opacity 300ms;
@@ -10383,7 +10383,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 128, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success {
-  border-color: #ccc;
+  border-color: #ddd;
   background: transparent;
 }
 /* line 131, ../scss/modules/dropzone.scss */
@@ -10592,7 +10592,7 @@ a.btn-black, a.btn-highlight {
   line-height: 20px;
   margin: 5px 0 0 0;
   padding-right: 5px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
   color: #999;
   font-size: 16px;
 }
