@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
@@ -65,13 +66,20 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected $tagManager;
 
     /**
+     * @var MediaManagerInterface
+     */
+    protected $mediaManager;
+
+    /**
      * @param ObjectManager       $em
      * @param TagManagerInterface $tagManager
+     * @param MediaManagerInterface $mediaManager
      */
-    public function __construct(ObjectManager $em, TagManagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagManagerInterface $tagManager, MediaManagerInterface $mediaManager)
     {
         $this->em = $em;
         $this->tagManager = $tagManager;
+        $this->mediaManager = $mediaManager;
     }
 
     /**
