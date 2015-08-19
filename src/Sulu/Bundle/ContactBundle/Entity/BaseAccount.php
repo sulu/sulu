@@ -13,8 +13,8 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 abstract class BaseAccount extends ApiEntity implements AuditableInterface, AccountInterface
 {

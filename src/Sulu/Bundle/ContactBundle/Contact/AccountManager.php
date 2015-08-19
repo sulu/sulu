@@ -20,9 +20,9 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 /**
  * This Manager handles Account functionality.
@@ -230,7 +230,8 @@ class AccountManager extends AbstractContactManager
      * @param Account $account
      * @param Integer $mediaId
      */
-    public function setLogo($account, $mediaId) {
+    public function setLogo($account, $mediaId)
+    {
         $media = $this->mediaManager->getEntityById($mediaId);
         $account->setLogo($media);
     }
