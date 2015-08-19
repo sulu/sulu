@@ -27,7 +27,7 @@
             height: 100px;
             overflow: hidden;
             position: relative;
-            border-radius: 50px;
+            border: 1px solid $grayLightMedium2;
             z-index: 0;
 
             .avatar-default {
@@ -111,7 +111,7 @@
 
 #people-list {
   .head-image {
-    border: 1px solid $grayLightMedium2;
+    border-radius: 50px;
 
     .avatar-default {
       top: 15px;
