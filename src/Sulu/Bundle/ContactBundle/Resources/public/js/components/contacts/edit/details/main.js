@@ -150,11 +150,17 @@ define([
         },
 
         initAvatarContainer: function(data) {
-            var postUrl = function() {
+            /**
+             * Function to generate suitable postUrl according to the current contact status
+             * If contact already have an avatar, generate an url to upload new avatar as new version
+             * Else upload avatar as new media
+             */
+            var getPostUrl = function() {
                 var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=1'; //todo: use system collection
+                // if possible, change the title of the avatar to the name of the contact
                 if (!!data.fullName) {
                     url = url + '&title=' + encodeURIComponent(data.fullName);
                     url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
@@ -177,7 +183,7 @@ define([
                         instanceName: 'contact-avatar',
                         titleKey: '',
                         descriptionKey: 'contact.contacts.avatar-dropzone-text',
-                        url: postUrl,
+                        url: getPostUrl,
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
