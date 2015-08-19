@@ -28,7 +28,10 @@ define(function() {
     'use strict';
 
     var defaults = {
-            unselectOnBackgroundClick: true
+            unselectOnBackgroundClick: true,
+            fields: {},
+            separators: {},
+            icons: {}
         },
 
         constants = {
@@ -77,13 +80,15 @@ define(function() {
          * @returns {string}
          */
         concatRecordColumns = function(record, columns, separator) {
-            var strings = [];
-            columns.forEach(function(field) {
-                if (!!record[field]) {
-                    strings.push(record[field]);
-                }
-            });
-            return strings.join(separator);
+            if (!!record && !!columns) {
+                var strings = [];
+                columns.forEach(function(field) {
+                    if (!!record[field]) {
+                        strings.push(record[field]);
+                    }
+                });
+                return strings.join(separator);
+            }
         }
 
     return {
@@ -213,10 +218,10 @@ define(function() {
                 this.sandbox.dom.append($item, $container);
             }
             this.sandbox.dom.append($container, this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.infoRow)({
-                    icon: icon,
-                    text: this.sandbox.util.cropMiddle(String(text), 18)
-                }))
+                    this.sandbox.util.template(templates.infoRow)({
+                        icon: icon,
+                        text: this.sandbox.util.cropMiddle(String(text), 18)
+                    }))
             );
         },
 
