@@ -2,7 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1494 [ContactBundle]   Added contact DataProvider
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
+    * FEATURE     #1415 [ContentBundle]   Refactored SmartContent to use DataProvider to load content
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder

@@ -101,6 +101,18 @@ class PropertyParameter
     }
 
     /**
+     * Returns TRUE if parameter has a localized title the given language.
+     *
+     * @param string $languageCode
+     *
+     * @return bool
+     */
+    public function hasTitle($languageCode)
+    {
+        return ($this->metadata->get('title', $languageCode) !== null);
+    }
+
+    /**
      * Returns infoText of property param.
      *
      * @param string $languageCode
