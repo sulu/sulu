@@ -981,7 +981,7 @@ class Account extends ApiWrapper
      * @return mixed
      * @VirtualProperty
      * @SerializedName("mainAddress")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getMainAddress()
     {
@@ -1040,7 +1040,7 @@ class Account extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("logo")
-     * @Groups({"fullAccount", "partialAccount"})
+     * @Groups({"fullAccount"})
      */
     public function getLogo()
     {
