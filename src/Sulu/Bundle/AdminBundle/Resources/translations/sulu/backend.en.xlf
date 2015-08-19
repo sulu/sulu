@@ -904,6 +904,10 @@
                 <source>public.avatar</source>
                 <target>Avatar</target>
             </trans-unit>
+            <trans-unit id="a300b52dde1354cc4132c0b4820e28ada" resname="public.logo">
+                <source>public.logo</source>
+                <target>Logo</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

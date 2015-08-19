@@ -161,7 +161,7 @@ define([
             },
 
             /**
-             * Save given contact data
+             * Save given contact data and display labels
              * @param data {Object} the contact data to save
              * @returns promise
              */
@@ -181,7 +181,7 @@ define([
             },
 
             /**
-             * Save given contact data
+             * Save given contact and display labels that avatar got saved
              * @param data {Object} the contact data to save
              * @returns promise
              */
