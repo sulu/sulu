@@ -30017,6 +30017,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     icon: this.options.actionIcon,
                     column: this.options.actionIconColumn || this.datagrid.matchings[0].attribute,
                     align: 'left',
+                    callback: this.datagrid.options.actionCallback,
                     actionIcon: true
                 });
             }
@@ -33111,12 +33112,16 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             bindDOMEvents: function() {
                 if (this.options.resizeListeners === true) {
                     this.dataGridWindowResize = this.windowResizeListener.bind(this);
-                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
+                    this.sandbox.dom.on(
+                        this.sandbox.dom.$window,
+                        'resize.' + this.createEventName('dom'),
+                        this.dataGridWindowResize
+                    );
                 }
             },
 
             unbindWindowResize: function() {
-                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
+                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize.' + this.createEventName('dom'));
             },
 
             /**
@@ -39185,7 +39190,7 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Object} [options] Configuration object
  * @params {String} [options.url] url to load data
  * @params {String} [options.selected] id of selected element - needed to restore state
- * @params {String} [options.actionIcon] icon class of action button
+ * @params {String|Function} [options.actionIcon] icon class of action button
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
  * @params {String}  [options.data[].mode] if 'order' - column gets set in order mode if clicked
  * @params {Function}  [options.data[].enabler] Gets called each time the options change columns.
@@ -39840,11 +39845,26 @@ define('__component__$column-navigation@husky',[], function() {
         renderRightInfo: function($item, data, disabled) {
             var $container = this.sandbox.dom.find('.' + constants.iconsRightClass, $item);
             if (this.options.showActionIcon === true && !disabled) {
-                this.sandbox.dom.append($container, '<span class="' + this.options.actionIcon + ' action col-icon"></span>');
+                this.sandbox.dom.append($container, '<span class="' + this.getActionIcon(data) + ' action col-icon"></span>');
             }
             if (!!data[this.options.hasSubName] && (!disabled || !this.options.disabledChildren)) {
                 this.sandbox.dom.append($container, '<span class="fa-chevron-right arrow inactive col-icon"></span>');
             }
+        },
+
+        /**
+         * Returns the action items for the given item data
+         * @param {Object} data
+         * @returns {string}
+         */
+        getActionIcon: function(data) {
+            var actionItem = this.options.actionIcon;
+
+            if (typeof(this.options.actionIcon) === 'function') {
+                actionItem = this.options.actionIcon(data);
+            }
+
+            return actionItem;
         },
 
         /**
@@ -42068,6 +42088,7 @@ define('__component__$overlay@husky',[], function() {
  * @param {String} [options.type] type of the lable (WARNING, ERROR or SUCCESS)
  * @param {String|Object} [options.html] html-string or DOM-object to insert into the label
  * @param {String} [options.title] Title of the label (if html is null)
+ * @param {Number} [options.counter] Counter to display in the label
  * @param {String} [options.description] Description of the lable (if html is null)
  * @param {Boolean} [options.hasClose] if true close button gets appended to the label
  * @param {Boolean} [options.fadeOut] if true label fades out automatically
@@ -42085,6 +42106,7 @@ define('__component__$label@husky',[],function() {
         type: 'WARNING',
         html: null,
         title: null,
+        counter: 1,
         description: null,
         hasClose: true,
         fadeOut: true,
@@ -42102,6 +42124,7 @@ define('__component__$label@husky',[],function() {
     constants = {
         textClass: 'text',
         closeClass: 'close',
+        counterClass: 'counter',
         closeIconClass: 'fa-times-circle'
     },
 
@@ -42120,7 +42143,6 @@ define('__component__$label@husky',[],function() {
             labelClass: 'husky-label-warning'
         },
         SUCCESS: {
-            hasClose: false,
             fadeOutDelay: 2000,
             title: 'Success',
             labelClass: 'husky-label-success'
@@ -42130,32 +42152,42 @@ define('__component__$label@husky',[],function() {
     /**
      * generates template template
      */
-    template = {
-        basic: function(options) {
-            return [
-                '<div class="' + constants.textClass + '">',
-                '<strong>' + options.title + '</strong>',
-                '<span>' + options.description + '</span>',
-                '</div>'
-            ].join('');
-        },
-        closeButton: function() {
-            return [
-                '<div class="' + constants.closeClass + '">',
-                '<span class="' + constants.closeIconClass + '"></span>',
-                '</div>'
-            ].join('');
-        }
+    templates = {
+        basic: ['<div class="' + constants.textClass + '">',
+                '   <strong><%= title %></strong>',
+                '   <span><%= description %></span>',
+                '   <div class="' + constants.counterClass + '"><span><%= counter %></span></div>',
+                '</div>'].join(''),
+        closeButton: ['<div class="' + constants.closeClass + '">',
+                      '<span class="' + constants.closeIconClass + '"></span>',
+                      '</div>'].join('')
     },
 
     eventNamespace = 'husky.label.',
 
     /**
      * raised after initialization process
-     * @event husky.label.[INSTANCE_NAME.]initialized
+     * @event husky.label.[INSTANCE_NAME].initialized
      */
     INITIALIZED = function() {
         return createEventName.call(this, 'initialized');
+    },
+
+    /**
+     * raised before destroy process
+     * @event husky.label.[INSTANCE_NAME].destroyed
+     */
+    DESTROYED = function() {
+        return createEventName.call(this, 'destroyed');
+    },
+
+    /**
+     * listens on and refreshes the fade out delay
+     * @event husky.label.[INSTANCE_NAME].refresh
+     * @param {String|Number} counter The counter number to display
+     */
+    REFRESH = function() {
+        return createEventName.call(this, 'refresh');
     },
 
     /** returns normalized event names */
@@ -42172,24 +42204,32 @@ define('__component__$label@husky',[],function() {
 
             //merge defaults with defaults of type and options
             this.options = this.sandbox.util.extend(true, {}, defaults, typesDefaults[this.options.type], this.options);
-
+            this.fadeOutTimer = null;
             this.label = {
                 $el: null,
                 $content: null,
                 $close: null
             };
 
+            this.bindCustomEvents();
             this.render();
-            this.bindEvents();
+            this.bindDomEvents();
             this.startEffects();
 
             this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
+         * Destroy the component (aura hook)
+         */
+        destroy: function() {
+            this.sandbox.emit(DESTROYED.call(this));
+        },
+
+        /**
          * Binds the events for the component
          */
-        bindEvents: function() {
+        bindDomEvents: function() {
             this.sandbox.dom.on(this.label.$close, 'click', function() {
                 this.fadeOut();
                 if (typeof this.options.closeCallback === 'function') {
@@ -42199,14 +42239,41 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
+         * Bind custom aura events
+         */
+        bindCustomEvents: function() {
+            this.sandbox.on(REFRESH.call(this), this.refresh.bind(this));
+        },
+
+        /**
+         * Refreshes the fade out increases and rerenders the counter
+         */
+        refresh: function() {
+            this.options.counter += 1;
+            this.abortEffects();
+            this.label.$el.find('.' + constants.counterClass + ' span').html(this.options.counter);
+            this.updateCounterVisibility();
+            this.startEffects();
+        },
+
+        /**
          * Starts the fade-out effect
          */
         startEffects: function() {
             if (this.options.fadeOut === true) {
-                _.delay(function() {
+                this.fadeOutTimer = _.delay(function() {
                     this.fadeOut();
                 }.bind(this), this.options.fadeOutDelay);
             }
+        },
+
+        /**
+         * Cancles the fade-out effect
+         */
+        abortEffects: function() {
+            this.label.$el.stop();
+            this.label.$el.removeAttr('style');
+            clearTimeout(this.fadeOutTimer);
         },
 
         /**
@@ -42230,6 +42297,7 @@ define('__component__$label@husky',[],function() {
             this.renderContent();
             this.renderClose();
 
+            this.updateCounterVisibility();
             this.insertLabel();
         },
 
@@ -42247,7 +42315,11 @@ define('__component__$label@husky',[],function() {
             if (this.options.html !== null) {
                 this.label.$content = this.sandbox.dom.createElement(this.options.html);
             } else {
-                this.label.$content = this.sandbox.dom.createElement(template.basic(this.options));
+                this.label.$content = this.sandbox.dom.createElement(this.sandbox.util.template(templates.basic, {
+                    title: this.options.title,
+                    description: this.options.description,
+                    counter: this.options.counter
+                }));
             }
 
             //append content to main element
@@ -42255,11 +42327,22 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
+         * Hides or shows the counter-object
+         */
+        updateCounterVisibility: function() {
+            if (this.options.counter > 1) {
+                this.sandbox.dom.show(this.label.$el.find('.' + constants.counterClass));
+            } else {
+                this.sandbox.dom.hide(this.label.$el.find('.' + constants.counterClass));
+            }
+        },
+
+        /**
          * Renders the close button
          */
         renderClose: function() {
             if (this.options.hasClose === true) {
-                this.label.$close = this.sandbox.dom.createElement(template.closeButton());
+                this.label.$close = this.sandbox.dom.createElement(templates.closeButton);
 
                 //append close to main element
                 this.sandbox.dom.append(this.label.$el, this.label.$close);
