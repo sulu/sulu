@@ -554,8 +554,8 @@
                 <source>navigation.search</source>
                 <target>Search</target>
             </trans-unit>
-            <trans-unit id="435b1473d76660a3essds2e9335a8d5f" resname="sulu.toolbar.contact-cards">
-                <source>sulu.toolbar.contact-cards</source>
+            <trans-unit id="435b1473d76660a3essds2e9335a8d5f" resname="sulu.toolbar.cards">
+                <source>sulu.toolbar.cards</source>
                 <target>Cards</target>
             </trans-unit>
             <trans-unit id="425b1473d76660a3essds2e9335a8d5d" resname="contact.accounts.document-added">

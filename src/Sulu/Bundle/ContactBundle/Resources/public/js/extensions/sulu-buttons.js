@@ -23,9 +23,9 @@
                     {
                         name: 'contactCards',
                         template: {
-                            title: 'sulu.toolbar.contact-cards',
+                            title: 'sulu.toolbar.cards',
                             callback: function() {
-                                this.sandbox.emit('sulu.toolbar.change.contact-card');
+                                this.sandbox.emit('sulu.toolbar.change.cards');
                             }.bind(app)
                         }
                     }
