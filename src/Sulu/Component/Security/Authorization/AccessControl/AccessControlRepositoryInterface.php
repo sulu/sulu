@@ -25,4 +25,14 @@ interface AccessControlRepositoryInterface
      * @return AccessControlInterface
      */
     public function findByTypeAndIdAndRole($type, $id, $roleId);
+
+    /**
+     * Finds all AccessControls for the given entity type and id.
+     *
+     * @param string $type The type of the AccessControl
+     * @param int $id The id of the AccessControl
+     *
+     * @return AccessControlInterface[]
+     */
+    public function findByTypeAndId($type, $id);
 }

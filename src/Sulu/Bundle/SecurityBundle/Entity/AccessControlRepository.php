@@ -38,4 +38,21 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
             return;
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByTypeAndId($type, $id)
+    {
+        $queryBuilder = $this->createQueryBuilder('accessControl')
+            ->leftJoin('accessControl.role', 'role')
+            ->where('accessControl.entityId = :entityId')
+            ->andWhere('accessControl.entityClass = :entityClass');
+
+        $query = $queryBuilder->getQuery()
+            ->setParameter('entityId', $id)
+            ->setParameter('entityClass', $type);
+
+        return $query->getResult();
+    }
 }

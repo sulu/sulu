@@ -7,11 +7,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
+use Sulu\Bundle\SecurityBundle\Entity\BaseRole;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
@@ -104,7 +106,7 @@ class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $accessControl = $this->prophesize(AccessControl::class);
         $accessControl->setPermissions(64)->shouldBeCalled();
 
-        $this->accessControlRepository->find('AcmeBundle\Example', 1, 1)->willReturn($accessControl);
+        $this->accessControlRepository->findByTypeAndIdAndRole('AcmeBundle\Example', 1, 1)->willReturn($accessControl);
 
         $this->objectManager->persist(Argument::any())->shouldNotBeCalled();
         $this->objectManager->flush()->shouldBeCalled();
@@ -113,7 +115,44 @@ class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
             'AcmeBundle\Example',
             1,
             [
-                1 => ['view' => true, 'edit' => false]
+                1 => ['view' => true, 'edit' => false],
+            ]
+        );
+    }
+
+    public function testGetPermissions()
+    {
+        $roleIdReflection = new \ReflectionProperty(BaseRole::class, 'id');
+        $roleIdReflection->setAccessible(true);
+
+        $role1 = new Role();
+        $roleIdReflection->setValue($role1, 1);
+
+        $role2 = new Role();
+        $roleIdReflection->setValue($role2, 2);
+
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(96)->willReturn(['view' => true, 'edit' => true]);
+
+        $accessControl1 = new AccessControl();
+        $accessControl1->setPermissions(64);
+        $accessControl1->setRole($role1);
+
+        $accessControl2 = new AccessControl();
+        $accessControl2->setPermissions(96);
+        $accessControl2->setRole($role2);
+
+        $accessControls = [
+            $accessControl1,
+            $accessControl2,
+        ];
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)->willReturn($accessControls);
+
+        $this->assertEquals(
+            $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1),
+            [
+                1 => ['view' => true, 'edit' => false],
+                2 => ['view' => true, 'edit' => true],
             ]
         );
     }

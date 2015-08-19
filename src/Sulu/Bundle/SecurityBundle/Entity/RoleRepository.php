@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
-use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**

@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -93,7 +94,16 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      */
     public function getPermissions($type, $identifier)
     {
-        return [];
+        $accessControls = $this->accessControlRepository->findByTypeAndId($type, $identifier);
+
+        $permissions = [];
+        foreach ($accessControls as $accessControl) {
+            $permissions[$accessControl->getRole()->getId()] = $this->maskConverter->convertPermissionsToArray(
+                $accessControl->getPermissions()
+            );
+        }
+
+        return $permissions;
     }
 
     /**

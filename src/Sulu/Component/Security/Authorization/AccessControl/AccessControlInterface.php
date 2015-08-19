@@ -7,10 +7,10 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Sulu\Component\Security\Authentication\RoleInterface;
-
 
 /**
  * Interface for the model responsible for storing access control information of objects.
