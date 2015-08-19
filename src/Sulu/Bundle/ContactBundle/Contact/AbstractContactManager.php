@@ -28,6 +28,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 /**
  * TODO: https://github.com/sulu-io/sulu/pull/1171
@@ -65,13 +66,20 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected $tagManager;
 
     /**
+     * @var MediaManagerInterface
+     */
+    protected $mediaManager;
+
+    /**
      * @param ObjectManager       $em
      * @param TagManagerInterface $tagManager
+     * @param MediaManagerInterface $mediaManager
      */
-    public function __construct(ObjectManager $em, TagManagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagManagerInterface $tagManager, MediaManagerInterface $mediaManager)
     {
         $this->em = $em;
         $this->tagManager = $tagManager;
+        $this->mediaManager = $mediaManager;
     }
 
     /**

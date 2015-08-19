@@ -48,6 +48,7 @@
         <service id="sulu_contact.account_manager" class="%sulu_contact.account_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_contact.account_factory"/>
             <argument type="service" id="sulu_contact.account_repository"/>
             <argument type="service" id="sulu.repository.contact"/>

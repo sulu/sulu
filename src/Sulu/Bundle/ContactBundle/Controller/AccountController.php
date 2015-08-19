@@ -43,6 +43,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected static $entityKey = 'accounts';
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $contactEntityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $addressEntityName = 'SuluContactBundle:Address';
@@ -366,6 +367,7 @@ class AccountController extends RestController implements ClassResourceInterface
         // define filters
         $filter = [];
         $ids = $request->get('ids');
+        $locale = $this->getUser()->getLocale();
         if ($ids) {
             if (is_array($ids)) {
                 $filter['id'] = $ids;
@@ -383,8 +385,11 @@ class AccountController extends RestController implements ClassResourceInterface
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
             $this->applyRequestParameters($request, $filter, $listBuilder);
 
+            $listResponse = $listBuilder->execute();
+            $listResponse = $this->addLogos($listResponse, $locale);
+
             $list = new ListRepresentation(
-                $listBuilder->execute(),
+                $listResponse,
                 self::$entityKey,
                 'get_accounts',
                 $request->query->all(),
@@ -395,7 +400,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $view = $this->view($list, 200);
         } else {
             $accountManager = $this->getContactManager();
-            $locale = $this->getUser()->getLocale();
             $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
             $view = $this->view($list, 200);
@@ -517,12 +521,17 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function doPost(Request $request)
     {
+        $accountManager = $this->getContactManager();
         $account = $this->get('sulu_contact.account_factory')->createEntity();
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
 
         if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
+        }
+
+        if (array_key_exists('id', $request->get('logo', []))) {
+            $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
         $disabled = $request->get('disabled');
@@ -535,7 +544,6 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->setParent($request->get('parent'), $account);
 
         // process categories
-        $accountManager = $this->getContactManager();
         $accountManager->processCategories($account, $request->get('categories', []));
 
         // set creator / changer
@@ -608,6 +616,7 @@ class AccountController extends RestController implements ClassResourceInterface
         // set name
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
+        $accountManager = $this->getContactManager();
 
         // set disabled
         $disabled = $request->get('disabled');
@@ -619,14 +628,16 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setUid($request->get('uid'));
         }
 
+        if (array_key_exists('id', $request->get('logo', []))) {
+            $accountManager->setLogo($account, $request->get('logo')['id']);
+        }
+
         // set parent
         $this->setParent($request->get('parent'), $account);
 
         // set changed
         $user = $this->getUser();
         $account->setChanger($user);
-
-        $accountManager = $this->getContactManager();
 
         // process details
         if (!($accountManager->processUrls($account, $request->get('urls', []))
@@ -718,6 +729,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
+        $accountManager = $this->getContactManager();
         if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
         }
@@ -727,9 +739,11 @@ class AccountController extends RestController implements ClassResourceInterface
         if ($request->get('number') !== null) {
             $account->setNumber($request->get('number'));
         }
-
         if ($request->get('placeOfJurisdiction') !== null) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+        }
+        if (array_key_exists('id', $request->get('logo', []))) {
+            $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
         // check if mainContact is set
@@ -744,7 +758,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
         // process details
         if ($request->get('bankAccounts') !== null) {
-            $accountManager = $this->getContactManager();
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }
     }
@@ -910,6 +923,30 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Takes an array of accounts and resets the logo-property containing the media id with
+     * the actual urls to the logo thumbnails.
+     *
+     * @param array $accounts
+     * @param String $locale
+     *
+     * @return array
+     */
+    private function addLogos($accounts, $locale)
+    {
+        $ids = array_filter(array_column($accounts, 'logo'));
+        $logos = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $i = 0;
+        foreach ($accounts as $key => $account) {
+            if (array_key_exists('logo', $account) && $account['logo']) {
+                $accounts[$key]['logo'] = $logos[$i];
+                $i += 1;
+            }
+        }
+
+        return $accounts;
     }
 
     /**
@@ -1340,6 +1377,22 @@ class AccountController extends RestController implements ClassResourceInterface
             false,
             'integer',
             '50px'
+        );
+
+        $this->fieldDescriptors['logo'] = new DoctrineFieldDescriptor(
+            'id',
+            'logo',
+            self::$mediaEntityName,
+            'public.logo',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->getAccountEntityName() . '.logo'
+                ),
+            ],
+            false,
+            true,
+            'thumbnails'
         );
 
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(

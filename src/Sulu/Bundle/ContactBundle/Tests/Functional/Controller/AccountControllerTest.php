@@ -28,6 +28,12 @@ use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 
 class AccountControllerTest extends SuluTestCase
 {
@@ -40,6 +46,11 @@ class AccountControllerTest extends SuluTestCase
      * @var Account
      */
     private $childAccount;
+
+    /**
+     * @var Media
+     */
+    private $logo;
 
     /**
      * @var Account
@@ -169,6 +180,9 @@ class AccountControllerTest extends SuluTestCase
         $note->setValue('Note');
         $account->addNote($note);
 
+        $this->initLogo();
+        $account->setLogo($this->logo);
+
         $this->em->persist($account);
         $this->em->persist($childAccount);
         $this->em->persist($parentAccount);
@@ -189,6 +203,45 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($contact);
 
         $this->em->flush();
+    }
+
+    public function initLogo()
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setName('My collection type');
+        $this->em->persist($collectionType);
+
+        $collection = new Collection();
+        $collection->setType($collectionType);
+        $this->em->persist($collection);
+
+        $imageType = new MediaType();
+        $imageType->setName('image');
+        $imageType->setDescription('This is an image');
+        $this->em->persist($imageType);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('logo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->logo = new Media();
+        $this->logo->setType($imageType);
+        $this->logo->setCollection($collection);
+        $this->logo->addFile($file);
+        $file->setMedia($this->logo);
+        $this->em->persist($this->logo);
+        $this->em->persist($file);
     }
 
     public function testGetById()
@@ -231,6 +284,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
     }
 
     public function testGetByIdNotExisting()
@@ -276,6 +335,7 @@ class AccountControllerTest extends SuluTestCase
             [
                 'name' => 'ExampleCompany',
                 'parent' => ['id' => $this->account->getId()],
+                'logo' => ['id' => $this->logo->getId()],
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
@@ -392,6 +452,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -418,6 +484,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
     }
 
     public function testPostWithCategory()
@@ -898,6 +970,9 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(3, $response->total);
 
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
+        $this->assertObjectHasAttribute('logo', $response->_embedded->accounts[0]);
+        $this->assertObjectHasAttribute('100x100', $response->_embedded->accounts[0]->logo);
+        $this->assertTrue(is_string($response->_embedded->accounts[0]->logo->{'100x100'}));
     }
 
     public function testGetListSearch()
@@ -925,6 +1000,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId(),
             [
                 'name' => 'ExampleCompany',
+                'logo' => ['id' => $this->logo->getId()],
                 'urls' => [
                     [
                         'id' => $this->url->getId(),
@@ -1074,6 +1150,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
             $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
@@ -1168,6 +1250,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(2, count($response->notes));
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
+
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
 
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
             $this->assertEquals(2, count($response->addresses));

@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
@@ -21,6 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 /**
  * This Manager handles Account functionality.
@@ -45,20 +47,22 @@ class AccountManager extends AbstractContactManager
     private $contactRepository;
 
     /**
-     * @param ObjectManager       $em
-     * @param TagManagerInterface $tagManager
-     * @param AccountFactory      $accountFactory
-     * @param AccountRepository   $accountRepository
-     * @param ContactRepository   $contactRepository
+     * @param ObjectManager         $em
+     * @param TagManagerInterface   $tagManager
+     * @param MediaManagerInterface $mediaManager
+     * @param AccountFactory        $accountFactory
+     * @param AccountRepository     $accountRepository
+     * @param ContactRepository     $contactRepository
      */
     public function __construct(
         ObjectManager $em,
         TagmanagerInterface $tagManager,
+        MediaManagerInterface $mediaManager,
         AccountFactory $accountFactory,
         AccountRepository $accountRepository,
         ContactRepository $contactRepository
     ) {
-        parent::__construct($em, $tagManager);
+        parent::__construct($em, $tagManager, $mediaManager);
         $this->accountFactory = $accountFactory;
         $this->accountRepository = $accountRepository;
         $this->contactRepository = $contactRepository;
@@ -67,7 +71,7 @@ class AccountManager extends AbstractContactManager
     /**
      * adds an address to the entity.
      *
-     * @param Account       $account The entity to add the address to
+     * @param AccountApi    $account The entity to add the address to
      * @param AddressEntity $address The address to be added
      * @param Bool          $isMain  Defines if the address is the main Address of the contact
      *
@@ -164,7 +168,7 @@ class AccountManager extends AbstractContactManager
             throw new EntityNotFoundException($this->accountRepository->getClassName(), $id);
         }
 
-        return $this->accountFactory->createApiEntity($account, $locale);
+        return $this->getApiObject($account, $locale);
     }
 
     /**
@@ -174,7 +178,7 @@ class AccountManager extends AbstractContactManager
      * @param $locale
      * @param $includes
      *
-     * @return Account
+     * @return AccountApi
      *
      * @throws EntityNotFoundException
      */
@@ -186,7 +190,7 @@ class AccountManager extends AbstractContactManager
             throw new EntityNotFoundException($this->accountRepository->getClassName(), $id);
         }
 
-        return $this->accountFactory->createApiEntity($account, $locale);
+        return $this->getApiObject($account, $locale);
     }
 
     /**
@@ -220,6 +224,18 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
+     * Takes an account-entity and the id of a media and adds the media as the logo of the account.
+     * TODO: handle logo adding differently and remove this method (or make it private).
+     *
+     * @param Account $account
+     * @param Integer $mediaId
+     */
+    public function setLogo($account, $mediaId) {
+        $media = $this->mediaManager->getEntityById($mediaId);
+        $account->setLogo($media);
+    }
+
+    /**
      * Returns all accounts.
      *
      * @param $locale
@@ -250,18 +266,37 @@ class AccountManager extends AbstractContactManager
     /**
      * Returns an api entity for an doctrine entity.
      *
-     * @param $account
-     * @param $locale
+     * @param Account $account
+     * @param String $locale
      *
-     * @return null|Account
+     * @return null|AccountApi
      */
     public function getAccount($account, $locale)
     {
         if ($account) {
-            return $this->accountFactory->createApiEntity($account, $locale);
+            return $this->getApiObject($account, $locale);
         }
 
         return;
+    }
+
+    /**
+     * Takes a account entity and a locale and returns the api object.
+     *
+     * @param Account $account
+     * @param String $locale
+     *
+     * @return AccountApi
+     */
+    protected function getApiObject($account, $locale)
+    {
+        $apiObject = $this->accountFactory->createApiEntity($account, $locale);
+        if ($account->getLogo()) {
+            $apiLogo = $this->mediaManager->getById($account->getLogo()->getId(), $locale);
+            $apiObject->setLogo($apiLogo);
+        }
+
+        return $apiObject;
     }
 
     /**
