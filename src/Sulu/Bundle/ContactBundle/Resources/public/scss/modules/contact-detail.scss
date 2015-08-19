@@ -1,10 +1,11 @@
 #contact-form {
   .image {
     position: relative;
+    background-color: $white;
 
     .avatar-default {
       font-size: 250px;
-      color: $grayLight;
+      color: $grayLighterer;
       @include centerBlock;
     }
 

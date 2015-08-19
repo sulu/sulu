@@ -215,11 +215,12 @@
 /* line 2, ../scss/modules/contact-detail.scss */
 #contact-form .image {
   position: relative;
+  background-color: #fff;
 }
-/* line 5, ../scss/modules/contact-detail.scss */
+/* line 6, ../scss/modules/contact-detail.scss */
 #contact-form .image .avatar-default {
   font-size: 250px;
-  color: #999;
+  color: #ddd;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -228,7 +229,7 @@
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 11, ../scss/modules/contact-detail.scss */
+/* line 12, ../scss/modules/contact-detail.scss */
 #contact-form .image #avatar, #contact-form .image #avatar-dropzone {
   position: absolute;
   top: 0;
@@ -236,7 +237,7 @@
   width: 100%;
   height: 100%;
 }
-/* line 19, ../scss/modules/contact-detail.scss */
+/* line 20, ../scss/modules/contact-detail.scss */
 #contact-form .image #avatar {
   -webkit-background-size: cover;
   -moz-background-size: cover;
