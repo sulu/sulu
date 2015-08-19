@@ -69,5 +69,6 @@
         </service>
 
         <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>
+
     </services>
 </container>

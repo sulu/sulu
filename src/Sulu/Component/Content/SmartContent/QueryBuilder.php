@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
+namespace Sulu\Component\Content\SmartContent;
 
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -21,7 +21,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 /**
  * Query builder to load smart content.
  */
-class SmartContentQueryBuilder extends ContentQueryBuilder
+class QueryBuilder extends ContentQueryBuilder
 {
     /**
      * disable automatic excerpt loading.

@@ -3,12 +3,16 @@
 // --------------------------------------------------
 
 .smart-content-overlay {
-    .column-navigation-slide {
+    .data-source-slide {
         .overlay-header {
             margin-bottom: 1px;
         }
         .overlay-content {
             margin: 0px;
+
+            .data-source-content {
+                height: 100%;
+            }
         }
 
         .overlay-footer {
