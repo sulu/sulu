@@ -162,7 +162,7 @@
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle::after {
   top: -1px;
   margin-left: 5px;
-  margint-right: 0;
+  margin-right: 0;
   border-top: 6px solid #fff;
 }
 /* line 154, ../scss/modules/preview.scss */
