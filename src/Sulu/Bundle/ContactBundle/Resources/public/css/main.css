@@ -140,14 +140,17 @@
   overflow: hidden;
   position: relative;
   border-radius: 50px;
+  border: 1px solid #e9e9e9;
   z-index: 0;
 }
-/* line 33, ../scss/modules/contact-list.scss */
+/* line 34, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar-default {
-  font-size: 110px;
-  color: #999;
+  position: relative;
+  top: 15px;
+  font-size: 100px;
+  color: #e9e9e9;
 }
-/* line 38, ../scss/modules/contact-list.scss */
+/* line 41, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar {
   width: 100%;
   height: 100%;
@@ -159,12 +162,12 @@
   -o-background-size: cover;
   background-size: cover;
 }
-/* line 48, ../scss/modules/contact-list.scss */
+/* line 51, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-name {
   margin-top: 14px;
   line-height: 18px;
 }
-/* line 54, ../scss/modules/contact-list.scss */
+/* line 57, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-checkbox {
   display: none;
   position: absolute;
@@ -172,11 +175,11 @@
   left: 15px;
   margin: 0;
 }
-/* line 64, ../scss/modules/contact-list.scss */
+/* line 67, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 70, ../scss/modules/contact-list.scss */
+/* line 73, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
@@ -184,27 +187,27 @@
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 78, ../scss/modules/contact-list.scss */
+/* line 81, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-info .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 86, ../scss/modules/contact-list.scss */
+/* line 89, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-info .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 92, ../scss/modules/contact-list.scss */
+/* line 95, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 97, ../scss/modules/contact-list.scss */
+/* line 100, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 103, ../scss/modules/contact-list.scss */
+/* line 106, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }

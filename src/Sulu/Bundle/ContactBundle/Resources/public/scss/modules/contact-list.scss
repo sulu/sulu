@@ -28,11 +28,14 @@
             overflow: hidden;
             position: relative;
             border-radius: 50px;
+            border: 1px solid $grayLightMedium2;
             z-index: 0;
 
             .avatar-default {
-              font-size: 110px;
-              color: $grayLight;
+              position: relative;
+              top: 15px;
+              font-size: 100px;
+              color: $grayLightMedium2;
             }
 
             .avatar {
