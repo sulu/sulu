@@ -17,7 +17,8 @@ define([
     'use strict';
 
     var constants = {
-            datagridInstanceName: 'accounts'
+            datagridInstanceName: 'accounts',
+            listViewStorageKey: 'accountListView'
         },
 
         bindCustomEvents = function() {
@@ -42,6 +43,16 @@ define([
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
             }, this);
+
+            this.sandbox.on('sulu.toolbar.change.table', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'table');
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.change.cards', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'decorators/cards');
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'decorators/cards');
+            }.bind(this));
         },
 
         deleteCallback = function(ids) {
@@ -52,10 +63,7 @@ define([
 
         clickCallback = function(id) {
             // show sidebar for selected item
-            this.sandbox.emit(
-                'sulu.sidebar.set-widget',
-                '/admin/widget-groups/account-info?account=' + id
-            );
+            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/account-info?account=' + id);
         },
 
         actionCallback = function(id) {
@@ -63,7 +71,6 @@ define([
         };
 
     return {
-
         view: true,
 
         layout: {
@@ -76,18 +83,16 @@ define([
             }
         },
 
-        header: function() {
-            return {
-                noBack: true,
-                title: 'contact.accounts.title',
+        header: {
+            noBack: true,
+            title: 'contact.accounts.title',
 
-                toolbar: {
-                    buttons: {
-                        add: {},
-                        deleteSelected: {}
-                    }
+            toolbar: {
+                buttons: {
+                    add: {},
+                    deleteSelected: {}
                 }
-            };
+            }
         },
 
         templates: ['/admin/contact/template/account/list'],
@@ -105,15 +110,27 @@ define([
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'accounts',
-                    template: 'default'
+                    template: this.sandbox.sulu.buttons.get({
+                        accountDecoratorDropdown: {},
+                        settings: {
+                            options: {
+                                dropdownItems: [
+                                    {
+                                        type: 'columnOptions'
+                                    }
+                                ]
+                            }
+                        }
+                    })
                 },
                 {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true',
-                    resultKey: 'accounts',
                     searchInstanceName: 'accounts',
-                    instanceName: constants.datagridInstanceName,
                     searchFields: ['name'],
+                    resultKey: 'accounts',
+                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                    instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('account-info')) ? clickCallback.bind(this) : null,
                     actionCallback: actionCallback.bind(this)
                 },

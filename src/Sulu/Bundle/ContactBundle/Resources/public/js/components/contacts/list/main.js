@@ -111,7 +111,7 @@ define([
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     template: this.sandbox.sulu.buttons.get({
-                        layoutContact: {},
+                        contactDecoratorDropdown: {},
                         settings: {
                             options: {
                                 dropdownItems: [
@@ -128,8 +128,8 @@ define([
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
-                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                     resultKey: 'contacts',
+                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                     instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
                     actionCallback: actionCallback.bind(this)
