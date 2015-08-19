@@ -1246,6 +1246,23 @@ class AccountController extends RestController implements ClassResourceInterface
     protected function initFieldDescriptors()
     {
         $this->fieldDescriptors = [];
+
+        $this->fieldDescriptors['logo'] = new DoctrineFieldDescriptor(
+            'id',
+            'logo',
+            self::$mediaEntityName,
+            'public.logo',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->getAccountEntityName() . '.logo'
+                ),
+            ],
+            false,
+            true,
+            'thumbnails'
+        );
+
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
             'number',
             'number',
@@ -1377,22 +1394,6 @@ class AccountController extends RestController implements ClassResourceInterface
             false,
             'integer',
             '50px'
-        );
-
-        $this->fieldDescriptors['logo'] = new DoctrineFieldDescriptor(
-            'id',
-            'logo',
-            self::$mediaEntityName,
-            'public.logo',
-            [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $this->getAccountEntityName() . '.logo'
-                ),
-            ],
-            false,
-            true,
-            'thumbnails'
         );
 
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
