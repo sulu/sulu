@@ -150,6 +150,28 @@ define([
         },
 
         initAvatarContainer: function(data) {
+            if (!!data.avatar) {
+                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+            }
+
+            /**
+             * Function to generate suitable postUrl according to the current contact status
+             * If contact already have an avatar, generate an url to upload new avatar as new version
+             * Else upload avatar as new media
+             */
+            var getPostUrl = function() {
+                var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId');
+                var url = (!!curMediaId) ?
+                    '/admin/api/media/' + curMediaId + '?action=new-version' :
+                    '/admin/api/media?collection=1'; //todo: use system collection
+                // if possible, change the title of the avatar to the name of the contact
+                if (!!data.fullName) {
+                    url = url + '&title=' + encodeURIComponent(data.fullName);
+                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                }
+                return url;
+            }.bind(this);
+
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
@@ -158,19 +180,14 @@ define([
                         instanceName: 'contact-avatar',
                         titleKey: '',
                         descriptionKey: 'contact.contacts.avatar-dropzone-text',
-                        url: '/admin/api/media?collection=1', // todo: use system collection
+                        url: getPostUrl,
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false,
-                        maxFiles: 1
+                        showOverlay: false, maxFiles: 1,
                     }
                 }
             ]);
-
-            if (!!data.avatar) {
-                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
-            }
         },
 
         updateContactAvatar: function(mediaId, url) {
@@ -326,8 +343,19 @@ define([
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
+                if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
+                    // avatar was uploaded as new version of existing avatar
+                    this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                } else if (!!this.data.id) {
+                    // avatar was added to existing contact
+                    this.sandbox.util.extend(true, this.data, {
+                        avatar: {id: response.id}
+                    });
+                    ContactManager.saveAvatar(this.data).then(function() {
+                        this.sandbox.emit('sulu.tab.data-changed', this.data);
+                    }.bind(this));
+                }
                 this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
-                this.sandbox.emit('sulu.tab.dirty');
             }, this);
         },
 
@@ -502,7 +530,7 @@ define([
 
         /**
          * Enables or disables the position dropdown
-         * @param data - event
+         * @param enable
          */
         enablePositionDropdown: function(enable) {
             if (!!enable) {
