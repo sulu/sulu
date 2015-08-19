@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #1501 [Rest]            Fixed caching when ttl is 0
+    * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
