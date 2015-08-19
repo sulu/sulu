@@ -146,6 +146,7 @@ define([
                                 infoRow: ', '
                             },
                             icons: {
+                                picture: 'fa-user',
                                 firstInfoRow: 'fa-map-marker',
                                 secondInfoRow: 'fa-envelope'
                             }

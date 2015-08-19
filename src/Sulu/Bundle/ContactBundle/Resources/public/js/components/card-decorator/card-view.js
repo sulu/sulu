@@ -48,8 +48,8 @@ define(function() {
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="head-image ' + constants.actionNavigatorClass + '">',
-                '               <span class="fa-user avatar-default"></span>',
-                '               <div class="avatar" style="background-image: url(\'<%= avatar %>\')"></div>',
+                '               <span class="<%= pictureIcon %> avatar-default"></span>',
+                '               <div class="avatar" style="background-image: url(\'<%= picture %>\')"></div>',
                 '           </div>',
                 '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
@@ -179,7 +179,8 @@ define(function() {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
                     name: this.sandbox.util.cropTail(String(title), 32),
-                    avatar: picture
+                    picture: picture,
+                    pictureIcon: this.options.icons.picture
                 })
             );
 
