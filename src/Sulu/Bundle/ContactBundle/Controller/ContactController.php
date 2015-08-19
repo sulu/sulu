@@ -115,7 +115,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 ),
             ],
             false,
-            false,
+            true,
             'thumbnails'
         );
 

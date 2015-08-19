@@ -205,10 +205,12 @@
             @include transition(opacity 300ms);
 
             .success-icon {
-                @include centerBlock;
-                font-size: 200px;
-                font-weight: bold;
-                color: $white;
+                width: 200px;
+                height: 200px;
+                @include centerFixedSizeBlock(200px, 200px);
+
+                background: url('../img/login-success.svg') no-repeat center center;
+                @include background-size(contain);
             }
         }
 

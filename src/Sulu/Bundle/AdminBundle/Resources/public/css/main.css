@@ -571,18 +571,20 @@ input, select {
 }
 /* line 207, ../scss/modules/login.scss */
 .sulu-login .content-container .success-overlay .success-icon {
+  width: 200px;
+  height: 200px;
   position: absolute;
   top: 50%;
   left: 50%;
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  font-size: 200px;
-  font-weight: bold;
-  color: #fff;
+  margin-left: -100px;
+  margin-top: -100px;
+  background: url("../img/login-success.svg") no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
 }
-/* line 215, ../scss/modules/login.scss */
+/* line 217, ../scss/modules/login.scss */
 .sulu-login .content-container .login-loader {
   display: block;
   position: absolute;
@@ -590,47 +592,47 @@ input, select {
   right: 0;
   z-index: -10;
 }
-/* line 225, ../scss/modules/login.scss */
+/* line 227, ../scss/modules/login.scss */
 .sulu-login.content-success .success-overlay {
   opacity: 1;
 }
-/* line 229, ../scss/modules/login.scss */
+/* line 231, ../scss/modules/login.scss */
 .sulu-login.content-success .media-container {
   left: -50%;
 }
-/* line 233, ../scss/modules/login.scss */
+/* line 235, ../scss/modules/login.scss */
 .sulu-login.content-success .content-container {
   left: 50%;
 }
 
-/* line 239, ../scss/modules/login.scss */
+/* line 241, ../scss/modules/login.scss */
 .login-label-container {
   left: 75% !important;
 }
 
 @media screen and (max-width: 800px), screen and (orientation: portrait) {
-  /* line 246, ../scss/modules/login.scss */
+  /* line 248, ../scss/modules/login.scss */
   .sulu-login .media-container {
     display: none;
   }
-  /* line 250, ../scss/modules/login.scss */
+  /* line 252, ../scss/modules/login.scss */
   .sulu-login .content-container {
     width: 100%;
   }
-  /* line 254, ../scss/modules/login.scss */
+  /* line 256, ../scss/modules/login.scss */
   .sulu-login .content-container .content-box .content-logo {
     display: block;
   }
-  /* line 259, ../scss/modules/login.scss */
+  /* line 261, ../scss/modules/login.scss */
   .sulu-login .content-container .login-content-footer {
     display: none;
   }
-  /* line 265, ../scss/modules/login.scss */
+  /* line 267, ../scss/modules/login.scss */
   .sulu-login.content-success .content-container {
     left: -100%;
   }
 
-  /* line 271, ../scss/modules/login.scss */
+  /* line 273, ../scss/modules/login.scss */
   .login-label-container {
     left: 50% !important;
   }

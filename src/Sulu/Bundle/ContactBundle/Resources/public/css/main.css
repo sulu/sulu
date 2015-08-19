@@ -137,18 +137,37 @@
 /* line 26, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image {
   height: 100px;
+  overflow: hidden;
+  position: relative;
   border-radius: 50px;
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  background-size: contain;
+  border: 1px solid #e9e9e9;
+  z-index: 0;
 }
-/* line 32, ../scss/modules/contact-list.scss */
+/* line 34, ../scss/modules/contact-list.scss */
+#people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar-default {
+  position: relative;
+  top: 15px;
+  font-size: 100px;
+  color: #e9e9e9;
+}
+/* line 41, ../scss/modules/contact-list.scss */
+#people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+/* line 51, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-name {
   margin-top: 14px;
   line-height: 18px;
 }
-/* line 38, ../scss/modules/contact-list.scss */
+/* line 57, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head .head-checkbox {
   display: none;
   position: absolute;
@@ -156,37 +175,11 @@
   left: 15px;
   margin: 0;
 }
-/* line 47, ../scss/modules/contact-list.scss */
-#people-list .contact-grid .contact-item .item-head .head-sulubox {
-  display: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
-  position: absolute;
-  top: 30px;
-  left: 120px;
-  background-color: #52B6CA;
-}
-/* line 58, ../scss/modules/contact-list.scss */
-#people-list .contact-grid .contact-item .item-head .head-sulubox .sulubox-signet {
-  width: 16px;
-  height: 16px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -8px;
-  margin-top: -8px;
-  background: url("../img/sulu-signet.svg") no-repeat center center;
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  background-size: contain;
-}
-/* line 69, ../scss/modules/contact-list.scss */
+/* line 67, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 75, ../scss/modules/contact-list.scss */
+/* line 73, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
@@ -194,27 +187,27 @@
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 83, ../scss/modules/contact-list.scss */
+/* line 81, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-info .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 91, ../scss/modules/contact-list.scss */
+/* line 89, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .item-info .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 97, ../scss/modules/contact-list.scss */
+/* line 95, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 102, ../scss/modules/contact-list.scss */
+/* line 100, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 108, ../scss/modules/contact-list.scss */
+/* line 106, ../scss/modules/contact-list.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }
@@ -222,16 +215,28 @@
 /* line 2, ../scss/modules/contact-detail.scss */
 #contact-form .image {
   position: relative;
+  background-color: #fff;
+  text-align: center;
 }
-/* line 5, ../scss/modules/contact-detail.scss */
-#contact-form .image #avatar {
-  width: 100%;
+/* line 7, ../scss/modules/contact-detail.scss */
+#contact-form .image .avatar-default {
+  font-size: 250px;
+  color: #ddd;
+  position: relative;
+  top: 15px;
 }
-/* line 9, ../scss/modules/contact-detail.scss */
-#contact-form .image #avatar-dropzone {
+/* line 14, ../scss/modules/contact-detail.scss */
+#contact-form .image #avatar, #contact-form .image #avatar-dropzone {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+}
+/* line 22, ../scss/modules/contact-detail.scss */
+#contact-form .image #avatar {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }

@@ -149,12 +149,13 @@ define([
             }.bind(this));
         },
 
+        /**
+         * Initialize avatar container: display avatar image if provided and start avatar-upload dropzone
+         * @param data
+         */
         initAvatarContainer: function(data) {
             if (!!data.avatar) {
-                this.updateContactAvatar(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
-            } else {
-                this.sandbox.dom.attr(constants.avatarImageId, 'src',
-                    Config.get('sulucontact.contacts.default.avatar').url);
+                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
             }
 
             /**
@@ -163,7 +164,7 @@ define([
              * Else upload avatar as new media
              */
             var getPostUrl = function() {
-                var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
+                var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId');
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=1'; //todo: use system collection
@@ -187,16 +188,40 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false,
-                        maxFiles: 1,
+                        showOverlay: false, maxFiles: 1,
                     }
                 }
             ]);
         },
 
-        updateContactAvatar: function(mediaId, url) {
+        /**
+         * Display given picture in avatar container. Set avatar-div data to media id which is read on saving.
+         * @param mediaId
+         * @param url
+         */
+        updateAvatarContainer: function(mediaId, url) {
             this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
-            this.sandbox.dom.attr(constants.avatarImageId, 'src', url);
+            this.sandbox.dom.css(constants.avatarImageId, 'background-image', 'url(' + url + ')');
+        },
+
+        /**
+         * Assign uploaded avatar to contact by saving contact with given media id
+         * @param mediaResponse media upload response
+         */
+        saveAvatarData: function(mediaResponse){
+            if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
+                // avatar was uploaded as new version of existing avatar
+                this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+            } else if (!!this.data.id) {
+                // avatar was added to existing contact
+                this.sandbox.util.extend(true, this.data, {
+                    avatar: {id: mediaResponse.id}
+                });
+
+                ContactManager.saveAvatar(this.data).then(function(savedData) {
+                    this.sandbox.emit('sulu.tab.data-changed', savedData);
+                }.bind(this));
+            }
         },
 
         bindTagEvents: function(data) {
@@ -347,19 +372,8 @@ define([
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
-                if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
-                    // avatar was uploaded as new version of existing avatar
-                    this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
-                } else if (!!this.data.id) {
-                    // avatar was added to existing contact
-                    this.sandbox.util.extend(true, this.data, {
-                        avatar: {id: response.id}
-                    });
-                    ContactManager.saveAvatar(this.data).then(function() {
-                        this.sandbox.emit('sulu.tab.data-changed', this.data);
-                    }.bind(this));
-                }
-                this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.saveAvatarData(response);
+                this.updateAvatarContainer(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
             }, this);
         },
 
@@ -534,7 +548,7 @@ define([
 
         /**
          * Enables or disables the position dropdown
-         * @param data - event
+         * @param enable
          */
         enablePositionDropdown: function(enable) {
             if (!!enable) {
