@@ -43,6 +43,11 @@ use Sulu\Component\Rest\ApiWrapper;
 class Account extends ApiWrapper
 {
     /**
+     * @var Media
+     */
+    private $logo = null;
+
+    /**
      * @param AccountInterface $account
      * @param string           $locale  The locale of this product
      */
@@ -1016,6 +1021,37 @@ class Account extends ApiWrapper
         }
 
         return $contacts;
+    }
+
+    /**
+     * Sets the logo (media-api object).
+     *
+     * @param Media $logo
+     */
+    public function setLogo(Media $logo)
+    {
+        $this->logo = $logo;
+    }
+
+    /**
+     * Get the accounts logo and return the array of different formats.
+     *
+     * @return Media
+     *
+     * @VirtualProperty
+     * @SerializedName("logo")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
+    public function getLogo()
+    {
+        if ($this->logo) {
+            return [
+                'id' => $this->logo->getId(),
+                'thumbnails' => $this->logo->getFormats(),
+            ];
+        }
+
+        return;
     }
 
     /**

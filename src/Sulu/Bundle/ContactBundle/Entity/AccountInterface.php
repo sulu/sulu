@@ -190,6 +190,22 @@ interface AccountInterface
     public function setMainFax($mainFax);
 
     /**
+     * Set logo.
+     *
+     * @param Media $logo
+     *
+     * @return AccountInterface
+     */
+    public function setLogo($logo);
+
+    /**
+     * Get logo.
+     *
+     * @return Media
+     */
+    public function getLogo();
+
+    /**
      * Get mainFax.
      *
      * @return string

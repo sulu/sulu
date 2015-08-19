@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 
 abstract class BaseAccount extends ApiEntity implements AuditableInterface, AccountInterface
 {
@@ -111,6 +112,11 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
      * @var \Sulu\Component\Contact\Model\ContactInterface
      */
     private $mainContact;
+
+    /**
+     * @var Media
+     */
+    protected $logo;
 
     /**
      * setId.
@@ -388,6 +394,24 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
         $this->mainFax = $mainFax;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogo()
+    {
+        return $this->logo;
     }
 
     /**
