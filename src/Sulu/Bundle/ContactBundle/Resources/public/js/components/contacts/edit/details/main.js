@@ -346,7 +346,12 @@ define([
                     this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
                 } else if (!!this.data.id) {
                     // avatar was added to existing contact
-                    ContactManager.saveAvatar(this.data.id, response.id);
+                    this.sandbox.util.extend(true, this.data, {
+                        avatar: {id: response.id}
+                    });
+                    ContactManager.saveAvatar(this.data).then(function() {
+                        this.sandbox.emit('sulu.tab.data-changed', this.data);
+                    }.bind(this));
                 }
                 this.updateContactAvatar(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
             }, this);

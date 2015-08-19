@@ -49,6 +49,36 @@ define([
             },
 
             /**
+             * Save given contact data
+             * @param data {Object} the contact data to save
+             * @returns promise
+             */
+            saveContact = function(data) {
+                var promise = $.Deferred();
+                var contact = Contact.findOrCreate({id: data.id});
+                contact.set(data);
+
+                if (!!data.categories) {
+                    contact.get('categories').reset();
+                    util.foreach(data.categories, function(id) {
+                        var category = Category.findOrCreate({id: id});
+                        contact.get('categories').add(category);
+                    }.bind(this));
+                }
+
+                contact.save(null, {
+                    success: function(response) {
+                        promise.resolve(response.toJSON());
+                    }.bind(this),
+                    error: function() {
+                        promise.fail();
+                    }.bind(this)
+                });
+
+                return promise;
+            },
+
+            /**
              * Removes a media from an contact
              * @param mediaId media to delete
              * @param contactId The contact to delete the media from
@@ -137,56 +167,35 @@ define([
              */
             save: function(data) {
                 var promise = $.Deferred();
-                var contact = Contact.findOrCreate({id: data.id});
-                contact.set(data);
 
-                if (!!data.categories) {
-                    contact.get('categories').reset();
-                    util.foreach(data.categories, function(id) {
-                        var category = Category.findOrCreate({id: id});
-                        contact.get('categories').add(category);
-                    }.bind(this));
-                }
-
-                contact.save(null, {
-                    success: function(response) {
-                        mediator.emit('sulu.contacts.contact.saved', response.toJSON.id);
-                        mediator.emit('sulu.labels.success.show', 'contact.contacts.saved');
-                        promise.resolve(response.toJSON());
-                    }.bind(this),
-                    error: function() {
-                        mediator.emit('sulu.labels.error.show');
-                        promise.fail();
-                    }.bind(this)
-                });
+                saveContact(data).then(function(contact) {
+                    mediator.emit('sulu.contacts.contact.saved', contact.id);
+                    mediator.emit('sulu.labels.success.show', 'contact.contacts.saved');
+                    promise.resolve(contact);
+                }.bind(this)).fail(function() {
+                    mediator.emit('sulu.labels.error.show');
+                    promise.fail();
+                }.bind(this));
 
                 return promise;
             },
 
             /**
-             * Saves an avatar for a contact
-             * @param contactId The contact to save the avatar vor
-             * @param mediaId The media to use as avatar
+             * Save given contact data
+             * @param data {Object} the contact data to save
              * @returns promise
              */
-            saveAvatar: function(contactId, mediaId) {
+            saveAvatar: function(data) {
                 var promise = $.Deferred();
-                var contact = Contact.findOrCreate({id: contactId});
-                contact.set({
-                    avatar: {id: mediaId}
-                });
 
-                contact.save(null, {
-                    success: function(response) {
-                        mediator.emit('sulu.contacts.contact.avatar.saved', response.toJSON.id);
-                        mediator.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
-                        promise.resolve(response.toJSON());
-                    }.bind(this),
-                    error: function() {
-                        mediator.emit('sulu.labels.error.show');
-                        promise.fail();
-                    }.bind(this)
-                });
+                saveContact(data).then(function(contact) {
+                    mediator.emit('sulu.contacts.contact.avatar-saved', contact.id);
+                    mediator.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                    promise.resolve(contact);
+                }.bind(this)).fail(function() {
+                    mediator.emit('sulu.labels.error.show');
+                    promise.fail();
+                }.bind(this));
 
                 return promise;
             },

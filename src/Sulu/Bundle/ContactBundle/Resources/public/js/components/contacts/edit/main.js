@@ -83,6 +83,7 @@ define([
             this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
+            this.sandbox.on('sulu.tab.data-changed', this.changeData.bind(this));
         },
 
         /**
@@ -97,6 +98,14 @@ define([
         },
 
         /**
+         * Overrides the views-data
+         * @param newData
+         */
+        changeData: function(newData) {
+            this.data = newData;
+        },
+
+        /**
          * Saves the tab and returns a after the tab has saved itselve
          * @returns promise with the saved data
          */
@@ -104,7 +113,7 @@ define([
             var promise = $.Deferred();
             this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
                 if (!!updateData){
-                    this.data = savedData;
+                    this.changeData(savedData);
                 }
                 promise.resolve(savedData);
             }.bind(this));
