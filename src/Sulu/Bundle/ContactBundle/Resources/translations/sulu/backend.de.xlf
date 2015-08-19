@@ -616,6 +616,10 @@
                 <source>contact.contacts.avatar-dropzone-text</source>
                 <target>Bild ablegen oder Klicken um das Avatar zu ändern</target>
             </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
+                <source>contact.accounts.logo.saved</source>
+                <target>Logo gespeichert</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

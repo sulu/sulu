@@ -80,9 +80,13 @@ define([
             this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
+            this.sandbox.on('sulu.tab.data-changed', this.changeData.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
         },
 
+        /**
+         * Shows a delete dialog and deletes the current account
+         */
         deleteAccount: function() {
             DeleteDialog.showDialog([this.options.id], function(deleteContacts) {
                 AccountManager.delete(this.options.id, deleteContacts).then(function() {
@@ -101,6 +105,13 @@ define([
             }.bind(this));
         },
 
+        /**
+         * Override the current view-data
+         * @param newData {Object} the new data to use
+         */
+        changeData: function(newData) {
+            this.data = newData
+        },
 
         /**
          * Saves the tab and returns a after the tab has saved itselve
@@ -110,7 +121,7 @@ define([
             var promise = $.Deferred();
             this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
                 if (!!updateData){
-                    this.data = savedData;
+                    this.changeData(savedData)
                 }
                 promise.resolve(savedData);
             }.bind(this));

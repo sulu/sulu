@@ -59,6 +59,36 @@ define([
         },
 
         /**
+         * Save given account data
+         * @param data {Object} the account data to save
+         * @returns promise
+         */
+        saveAccount = function(data) {
+            var promise = $.Deferred(),
+                account = Account.findOrCreate({id: data.id});
+            account.set(data);
+
+            if (!!data.categories) {
+                account.get('categories').reset();
+                util.foreach(data.categories, function(categoryId) {
+                    var category = Category.findOrCreate({id: categoryId});
+                    account.get('categories').add(category);
+                }.bind(this));
+            }
+
+            account.save(null, {
+                success: function(response) {
+                    promise.resolve(response.toJSON());
+                }.bind(this),
+                error: function() {
+                    promise.fail();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
          * Removes media from an account
          * @param mediaId media to delete
          * @param accountId The account to delete the medias from
@@ -166,34 +196,41 @@ define([
         },
 
         /**
-         * Save given account data
+         * Save account and display labels
          * @param data {Object} the account data to save
          * @returns promise
          */
         save: function(data) {
-            var promise = $.Deferred(),
-                account = Account.findOrCreate({id: data.id});
-            account.set(data);
+            var promise = $.Deferred();
 
-            if (!!data.categories) {
-                account.get('categories').reset();
-                util.foreach(data.categories, function(categoryId) {
-                    var category = Category.findOrCreate({id: categoryId});
-                    account.get('categories').add(category);
-                }.bind(this));
-            }
+            saveAccount(data).then(function(account) {
+                mediator.emit('sulu.contacts.account.saved', account.id);
+                mediator.emit('sulu.labels.success.show', 'contact.accounts.saved');
+                promise.resolve(account);
+            }.bind(this)).fail(function() {
+                mediator.emit('sulu.labels.error.show');
+                promise.fail();
+            }.bind(this));
 
-            account.save(null, {
-                success: function(response) {
-                    mediator.emit('sulu.contacts.account.saved', response.toJSON.id);
-                    mediator.emit('sulu.labels.success.show', 'contact.accounts.saved');
-                    promise.resolve(response.toJSON());
-                }.bind(this),
-                error: function() {
-                    mediator.emit('sulu.labels.error.show');
-                    promise.fail();
-                }.bind(this)
-            });
+            return promise;
+        },
+
+        /**
+         * Save account and display labels that logo got saved
+         * @param data {Object} the account data to save
+         * @returns promise
+         */
+        saveLogo: function(data) {
+            var promise = $.Deferred();
+
+            saveAccount(data).then(function(account) {
+                mediator.emit('sulu.contacts.account.logo-saved', account.id);
+                mediator.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+                promise.resolve(account);
+            }.bind(this)).fail(function() {
+                mediator.emit('sulu.labels.error.show');
+                promise.fail();
+            }.bind(this));
 
             return promise;
         },
