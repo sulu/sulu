@@ -148,19 +148,18 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * main account.
      *
+     * @var string
      * @Accessor(getter="getMainAccount")
      * @Groups({"fullContact"})
-     * @var string
      */
     protected $account;
 
     /**
      * main account.
      *
+     * @var string
      * @Accessor(getter="getAddresses")
      * @Groups({"fullContact"})
-     *
-     * @var string
      */
     protected $addresses;
 

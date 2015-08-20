@@ -770,6 +770,35 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
+    public function testCGetProperties()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/users'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $users = $response->_embedded->users;
+        $user = $users[0];
+        $contact = $user->contact;
+
+        $this->assertFalse(property_exists($contact, 'account'));
+        $this->assertFalse(property_exists($contact, 'phones'));
+        $this->assertFalse(property_exists($contact, 'faxes'));
+        $this->assertFalse(property_exists($contact, 'emails'));
+        $this->assertFalse(property_exists($contact, 'position'));
+        $this->assertFalse(property_exists($contact, 'addresses'));
+        $this->assertFalse(property_exists($contact, 'notes'));
+        $this->assertFalse(property_exists($contact, 'tags'));
+        $this->assertFalse(property_exists($contact, 'medias'));
+        $this->assertFalse(property_exists($contact, 'categories'));
+        $this->assertFalse(property_exists($contact, 'urls'));
+        $this->assertFalse(property_exists($contact, 'bankaccounts'));
+    }
+
     public function testPutWithRemovedRoles()
     {
         $client = $this->createAuthenticatedClient();
