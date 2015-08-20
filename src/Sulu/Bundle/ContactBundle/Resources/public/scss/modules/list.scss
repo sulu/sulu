@@ -27,7 +27,6 @@
             height: 100px;
             overflow: hidden;
             position: relative;
-            border: 1px solid $grayLightMedium2;
             z-index: 0;
 
             .image-default {
@@ -45,7 +44,6 @@
 
               background-repeat: no-repeat;
               background-position: center;
-              @include background-size(cover);
             }
           }
 
@@ -119,10 +117,15 @@
 
 #people-list {
   .head-image {
+    border: 1px solid $grayLightMedium2;
     border-radius: 50px;
 
     .image-default {
       top: 15px;
+    }
+
+    .image-content {
+      @include background-size(cover);
     }
   }
 }
@@ -133,6 +136,10 @@
 
     .image-default {
       top: 0;
+    }
+
+    .image-content {
+      @include background-size(contain);
     }
   }
 }

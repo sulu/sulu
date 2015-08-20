@@ -22,7 +22,24 @@
     #image-content {
       background-repeat: no-repeat;
       background-position: center;
-      @include background-size(cover);
+    }
+  }
+}
+
+#contact-form {
+   .image {
+     #image-content {
+       @include background-size(cover);
+     }
+   }
+ }
+
+#account-form {
+  .image {
+    #image-content {
+      padding: 10px;
+      background-origin: content-box;
+      @include background-size(contain);
     }
   }
 }

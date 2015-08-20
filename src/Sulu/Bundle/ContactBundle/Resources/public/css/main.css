@@ -147,16 +147,15 @@
   height: 100px;
   overflow: hidden;
   position: relative;
-  border: 1px solid #e9e9e9;
   z-index: 0;
 }
-/* line 33, ../scss/modules/list.scss */
+/* line 32, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .image-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-default {
   position: relative;
   font-size: 100px;
   color: #e9e9e9;
 }
-/* line 39, ../scss/modules/list.scss */
+/* line 38, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .image-content, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-content {
   width: 100%;
   height: 100%;
@@ -165,17 +164,13 @@
   left: 0;
   background-repeat: no-repeat;
   background-position: center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
 }
-/* line 52, ../scss/modules/list.scss */
+/* line 50, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-name, #companies-list .contact-grid .contact-item .item-head .head-container .head-name {
   margin-top: 14px;
   line-height: 18px;
 }
-/* line 58, ../scss/modules/list.scss */
+/* line 56, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-checkbox, #companies-list .contact-grid .contact-item .item-head .head-checkbox {
   display: none;
   position: absolute;
@@ -183,11 +178,11 @@
   left: 15px;
   margin: 0;
 }
-/* line 68, ../scss/modules/list.scss */
+/* line 66, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox, #companies-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 74, ../scss/modules/list.scss */
+/* line 72, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info, #companies-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
@@ -195,52 +190,67 @@
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 82, ../scss/modules/list.scss */
+/* line 80, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-row, #companies-list .contact-grid .contact-item .item-info .info-row {
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 86, ../scss/modules/list.scss */
+/* line 84, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-row .info-icon, #companies-list .contact-grid .contact-item .item-info .info-row .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 94, ../scss/modules/list.scss */
+/* line 92, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-row .info-text, #companies-list .contact-grid .contact-item .item-info .info-row .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 101, ../scss/modules/list.scss */
+/* line 99, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .action-navigator, #companies-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 106, ../scss/modules/list.scss */
+/* line 104, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox, #companies-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 112, ../scss/modules/list.scss */
+/* line 110, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox, #companies-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }
 
-/* line 121, ../scss/modules/list.scss */
+/* line 119, ../scss/modules/list.scss */
 #people-list .head-image {
+  border: 1px solid #e9e9e9;
   border-radius: 50px;
 }
-/* line 124, ../scss/modules/list.scss */
+/* line 123, ../scss/modules/list.scss */
 #people-list .head-image .image-default {
   top: 15px;
 }
+/* line 127, ../scss/modules/list.scss */
+#people-list .head-image .image-content {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
-/* line 131, ../scss/modules/list.scss */
+/* line 134, ../scss/modules/list.scss */
 #companies-list .head-image {
   border: none;
 }
-/* line 134, ../scss/modules/list.scss */
+/* line 137, ../scss/modules/list.scss */
 #companies-list .head-image .image-default {
   top: 0;
+}
+/* line 141, ../scss/modules/list.scss */
+#companies-list .head-image .image-content {
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
 }
 
 /* line 2, ../scss/modules/edit-detail.scss */
@@ -268,8 +278,22 @@
 #contact-form .image #image-content, #account-form .image #image-content {
   background-repeat: no-repeat;
   background-position: center;
+}
+
+/* line 31, ../scss/modules/edit-detail.scss */
+#contact-form .image #image-content {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+/* line 39, ../scss/modules/edit-detail.scss */
+#account-form .image #image-content {
+  padding: 10px;
+  background-origin: content-box;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
 }

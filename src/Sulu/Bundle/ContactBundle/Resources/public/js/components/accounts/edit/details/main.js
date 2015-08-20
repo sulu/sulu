@@ -28,7 +28,7 @@ define([
             formContactFields: '#contact-fields',
             logoImageId: '#image-content',
             logoDropzoneSelector: '#image-dropzone',
-            logoThumbnailFormat: '400x400'
+            logoThumbnailFormat: '400x400-inset'
         },
 
         customTemplates = {
