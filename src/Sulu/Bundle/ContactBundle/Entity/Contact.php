@@ -61,6 +61,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @Accessor(getter="getPosition")
+     * @Groups({"fullContact"})
      *
      * @var string
      */
@@ -100,21 +101,25 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $notes;
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $emails;
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $phones;
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $faxes;
 
@@ -136,6 +141,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * @var Collection
      * @Accessor(getter="getTagNameArray")
+     * @Groups({"fullContact"})
      */
     protected $tags;
 
@@ -143,7 +149,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      * main account.
      *
      * @Accessor(getter="getMainAccount")
-     *
+     * @Groups({"fullContact"})
      * @var string
      */
     protected $account;
@@ -152,6 +158,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      * main account.
      *
      * @Accessor(getter="getAddresses")
+     * @Groups({"fullContact"})
      *
      * @var string
      */
@@ -201,21 +208,25 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $medias;
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $categories;
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $urls;
 
     /**
      * @var Collection
+     * @Groups({"fullContact"})
      */
     protected $bankAccounts;
 
