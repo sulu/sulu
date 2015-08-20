@@ -200,8 +200,10 @@ define([
          * @param url
          */
         updateAvatarContainer: function(mediaId, url) {
-            this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
-            this.sandbox.dom.css(constants.avatarImageId, 'background-image', 'url(' + url + ')');
+            var imageContent = this.sandbox.dom.find(constants.avatarImageId);
+            this.sandbox.dom.data(imageContent, 'mediaId', mediaId);
+            this.sandbox.dom.css(imageContent, 'background-image', 'url(' + url + ')');
+            this.sandbox.dom.addClass(imageContent.parent(), 'no-default');
         },
 
         /**
