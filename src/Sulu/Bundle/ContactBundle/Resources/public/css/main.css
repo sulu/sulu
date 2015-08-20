@@ -143,13 +143,13 @@
   z-index: 0;
 }
 /* line 33, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .avatar-default {
+#people-list .contact-grid .contact-item .item-head .head-container .head-image .image-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-default {
   position: relative;
   font-size: 100px;
   color: #e9e9e9;
 }
 /* line 39, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-image .avatar, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .avatar {
+#people-list .contact-grid .contact-item .item-head .head-container .head-image .image-content, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-content {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -186,45 +186,50 @@
   border-radius: 0 0 3px 3px;
 }
 /* line 79, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-info .info-icon, #companies-list .contact-grid .contact-item .item-info .info-icon {
+#people-list .contact-grid .contact-item .item-info .info-row, #companies-list .contact-grid .contact-item .item-info .info-row {
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* line 83, ../scss/modules/list.scss */
+#people-list .contact-grid .contact-item .item-info .info-row .info-icon, #companies-list .contact-grid .contact-item .item-info .info-row .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 87, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-info .info-text, #companies-list .contact-grid .contact-item .item-info .info-text {
+/* line 91, ../scss/modules/list.scss */
+#people-list .contact-grid .contact-item .item-info .info-row .info-text, #companies-list .contact-grid .contact-item .item-info .info-row .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 93, ../scss/modules/list.scss */
+/* line 98, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .action-navigator, #companies-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 98, ../scss/modules/list.scss */
+/* line 103, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox, #companies-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 104, ../scss/modules/list.scss */
+/* line 109, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox, #companies-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }
 
-/* line 113, ../scss/modules/list.scss */
+/* line 118, ../scss/modules/list.scss */
 #people-list .head-image {
   border-radius: 50px;
 }
-/* line 116, ../scss/modules/list.scss */
-#people-list .head-image .avatar-default {
+/* line 121, ../scss/modules/list.scss */
+#people-list .head-image .image-default {
   top: 15px;
 }
 
-/* line 123, ../scss/modules/list.scss */
+/* line 128, ../scss/modules/list.scss */
 #companies-list .head-image {
   border: none;
 }
-/* line 126, ../scss/modules/list.scss */
-#companies-list .head-image .avatar-default {
+/* line 131, ../scss/modules/list.scss */
+#companies-list .head-image .image-default {
   top: 0;
 }
 
@@ -250,7 +255,9 @@
   height: 100%;
 }
 /* line 22, ../scss/modules/edit-detail.scss */
-#contact-form .image #image {
+#contact-form .image #image-content {
+  background-repeat: no-repeat;
+  background-position: center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

@@ -30,18 +30,21 @@
             border: 1px solid $grayLightMedium2;
             z-index: 0;
 
-            .avatar-default {
+            .image-default {
               position: relative;
               font-size: 100px;
               color: $grayLightMedium2;
             }
 
-            .avatar {
+            .image-content {
               width: 100%;
               height: 100%;
               position: absolute;
               top: 0;
               left: 0;
+
+              background-repeat: no-repeat;
+              background-position: center;
               @include background-size(cover);
             }
           }
@@ -76,17 +79,22 @@
         background-color: $grayLighterer;
         border-radius: 0 0 3px 3px;
 
-        .info-icon {
-          width: 15px;
-          margin-right: 8px;
-          color: white;
-          text-align: center;
+        .info-row {
+          white-space: nowrap;
+          overflow: hidden;
 
-        }
+          .info-icon {
+            width: 15px;
+            margin-right: 8px;
+            color: white;
+            text-align: center;
 
-        .info-text {
-          color: $grayLight;
-          font-size: 12px;
+          }
+
+          .info-text {
+            color: $grayLight;
+            font-size: 12px;
+          }
         }
       }
 
@@ -113,7 +121,7 @@
   .head-image {
     border-radius: 50px;
 
-    .avatar-default {
+    .image-default {
       top: 15px;
     }
   }
@@ -123,7 +131,7 @@
   .head-image {
     border: none;
 
-    .avatar-default {
+    .image-default {
       top: 0;
     }
   }

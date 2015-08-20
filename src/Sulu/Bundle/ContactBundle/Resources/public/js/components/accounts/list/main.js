@@ -135,6 +135,7 @@ define([
                     view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                     viewOptions: {
                         'decorators/cards': {
+                            imageFormat: '100x100-inset',
                             fields: {
                                 picture: 'logo',
                                 title: ['name'],

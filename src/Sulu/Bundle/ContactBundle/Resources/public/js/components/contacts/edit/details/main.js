@@ -27,7 +27,7 @@ define([
             editFormSelector: '#contact-edit-form',
             avatarImageId: '#image-content',
             avatarDropzoneSelector: '#image-dropzone',
-            avatarThumbnailFormat: '400x400'
+            imageFormat: '400x400'
         },
 
         customTemplates = {
@@ -155,7 +155,7 @@ define([
          */
         initAvatarContainer: function(data) {
             if (!!data.avatar) {
-                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.imageFormat]);
             }
 
             /**
@@ -373,7 +373,7 @@ define([
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
                 this.saveAvatarData(response);
-                this.updateAvatarContainer(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateAvatarContainer(response.id, response.thumbnails[constants.imageFormat]);
             }, this);
         },
 

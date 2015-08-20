@@ -3,6 +3,7 @@
  * @constructor
  *
  * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
+ * @param {String} [imageFormat] api-format which is used for head-image
  * @param {Object} [viewOptions] Configuration object
  * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
  * @param {String} [viewOptions.fields.picture]
@@ -29,6 +30,7 @@ define(function() {
 
     var defaults = {
             unselectOnBackgroundClick: true,
+            imageFormat: '100x100',
             fields: {},
             separators: {},
             icons: {}
@@ -41,8 +43,6 @@ define(function() {
 
             itemHeadClass: 'item-head',
             itemInfoClass: 'item-info',
-
-            avatarThumbnailFormat: '100x100',
         },
 
         templates = {
@@ -51,8 +51,8 @@ define(function() {
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="head-image ' + constants.actionNavigatorClass + '">',
-                '               <span class="<%= pictureIcon %> avatar-default"></span>',
-                '               <div class="avatar" style="background-image: url(\'<%= picture %>\')"></div>',
+                '               <span class="<%= pictureIcon %> image-default"></span>',
+                '               <div class="image-content" style="background-image: url(\'<%= picture %>\')"></div>',
                 '           </div>',
                 '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
@@ -160,7 +160,7 @@ define(function() {
 
                 id = record['id'];
                 picture = (!!record[this.options.fields.picture]) ?
-                    record[this.options.fields.picture][constants.avatarThumbnailFormat] : '';
+                    record[this.options.fields.picture][this.options.imageFormat] : '';
 
                 title = concatRecordColumns(record, this.options.fields.title, this.options.separators.title);
                 firstInfoRow = concatRecordColumns(record, this.options.fields.firstInfoRow, this.options.separators.infoRow);
@@ -220,7 +220,7 @@ define(function() {
             this.sandbox.dom.append($container, this.sandbox.dom.createElement(
                     this.sandbox.util.template(templates.infoRow)({
                         icon: icon,
-                        text: this.sandbox.util.cropMiddle(String(text), 18)
+                        text: this.sandbox.util.cropMiddle(String(text), 22)
                     }))
             );
         },
