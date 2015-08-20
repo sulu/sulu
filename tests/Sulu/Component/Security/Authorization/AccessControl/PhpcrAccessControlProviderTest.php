@@ -14,6 +14,7 @@ use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,6 +63,13 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
             [1 => ['view' => true, 'edit' => true, 'delete' => false]],
             $this->phpcrAccessControlProvider->getPermissions(get_class($document), '1')
         );
+    }
+
+    public function testGetPermissionsForNotExistingDocument()
+    {
+        $this->documentManager->find('1')->willThrow(DocumentNotFoundException::class);
+
+        $this->assertEquals([], $this->phpcrAccessControlProvider->getPermissions('Acme\Document', '1'));
     }
 
     /**

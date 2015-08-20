@@ -157,6 +157,16 @@ class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetPermissionsForNotExistingAccessControl()
+    {
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)->willReturn([]);
+
+        $this->assertEquals(
+            $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1),
+            []
+        );
+    }
+
     /**
      * @dataProvider provideSupport
      */

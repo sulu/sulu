@@ -13,6 +13,7 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 use ReflectionClass;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 /**
  * This class handles the permission information for PHPCR nodes.
@@ -57,10 +58,16 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
      */
     public function getPermissions($type, $identifier)
     {
-        $document = $this->documentManager->find($identifier);
+        $permissions = [];
+
+        try {
+            $document = $this->documentManager->find($identifier);
+        } catch (DocumentNotFoundException $e) {
+            return $permissions;
+        }
+
         $allowedPermissions = $document->getPermissions();
 
-        $permissions = [];
         foreach ($allowedPermissions as $rolePropertyName => $rolePermissions) {
             $roleId = substr($rolePropertyName, 9);
             $permissions[$roleId] = [];
