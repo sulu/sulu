@@ -255,7 +255,7 @@ class AccountManager extends AbstractContactManager
         if (!empty($accountEntities)) {
             $accounts = [];
             foreach ($accountEntities as $account) {
-                $accounts[] = $this->accountFactory->createApiEntity($account, $locale);
+                $accounts[] = $this->getApiObject($account, $locale);
             }
 
             return $accounts;
