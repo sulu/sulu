@@ -33,9 +33,6 @@
         </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is not defined %}
-                    data-aura-footer="false"
-                {% endif %}
                  data-aura-user-name="{{ user.fullName }}"
                  data-aura-system-name="{{ name }}"
                  data-aura-system-version="{{ suluVersion }}"
