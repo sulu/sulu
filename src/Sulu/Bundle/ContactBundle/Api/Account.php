@@ -1040,7 +1040,7 @@ class Account extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("logo")
-     * @Groups({"fullAccount", "partialAccount"})
+     * @Groups({"fullAccount"})
      */
     public function getLogo()
     {
