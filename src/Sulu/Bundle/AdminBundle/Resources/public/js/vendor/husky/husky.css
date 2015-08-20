@@ -2960,7 +2960,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-style: normal;
 }
 /* line 4, ../scss/fontsawesome/_core.scss */
-.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before {
+.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3046,11 +3046,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before {
+.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before {
+.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before {
   margin-left: .3em;
 }
 
@@ -6360,7 +6360,19 @@ label.spacing-left {
   margin-left: -1px;
   content: "";
 }
-/* line 202, ../scss/modules/form.scss */
+/* line 204, ../scss/modules/form.scss */
+.custom-checkbox input:indeterminate + .icon, .custom-checkbox input.is-indeterminate + .icon {
+  background-color: #999;
+  color: #fff;
+}
+/* line 207, ../scss/modules/form.scss */
+.custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after {
+  display: inline-block;
+  margin-top: -1px;
+  margin-left: -1px;
+  content: "";
+}
+/* line 217, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
   position: absolute;
   top: 0px;
@@ -6377,27 +6389,27 @@ label.spacing-left {
   border-radius: 2px;
 }
 
-/* line 226, ../scss/modules/form.scss */
+/* line 241, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 230, ../scss/modules/form.scss */
+/* line 245, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 234, ../scss/modules/form.scss */
+/* line 249, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 238, ../scss/modules/form.scss */
+/* line 253, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 242, ../scss/modules/form.scss */
+/* line 257, ../scss/modules/form.scss */
 textarea.form-element, textarea.husky-input {
   width: 100%;
   height: 40px;
@@ -6406,14 +6418,14 @@ textarea.form-element, textarea.husky-input {
   font-size: 14px;
   font-family: inherit;
 }
-/* line 249, ../scss/modules/form.scss */
+/* line 264, ../scss/modules/form.scss */
 textarea.form-element.small, textarea.small.husky-input {
   height: 70px;
   min-height: 70px;
   padding: 5px;
 }
 
-/* line 258, ../scss/modules/form.scss */
+/* line 273, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -6423,12 +6435,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 268, ../scss/modules/form.scss */
+/* line 283, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 273, ../scss/modules/form.scss */
+/* line 288, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -6441,11 +6453,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 287, ../scss/modules/form.scss */
+/* line 302, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: #fff;
 }
-/* line 290, ../scss/modules/form.scss */
+/* line 305, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -6454,7 +6466,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5DC774;
 }
-/* line 301, ../scss/modules/form.scss */
+/* line 316, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -6470,28 +6482,28 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
 }
 
-/* line 322, ../scss/modules/form.scss */
+/* line 337, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 327, ../scss/modules/form.scss */
+/* line 342, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #ddd !important;
 }
-/* line 330, ../scss/modules/form.scss */
+/* line 345, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 337, ../scss/modules/form.scss */
+/* line 352, ../scss/modules/form.scss */
 .cke_hidpi .cke_dialog_close_button {
   background-image: none !important;
 }
 
-/* line 343, ../scss/modules/form.scss */
+/* line 358, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #EA524E;
