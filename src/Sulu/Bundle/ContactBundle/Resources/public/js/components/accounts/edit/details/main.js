@@ -24,7 +24,7 @@ define([
             addAddressWrapper: '.grid-row',
             addBankAccountsWrapper: '.grid-row',
             editFormSelector: '#contact-edit-form',
-            formSelector: '#contact-form',
+            formSelector: '#account-form',
             formContactFields: '#contact-fields',
             logoImageId: '#image-content',
             logoDropzoneSelector: '#image-dropzone',
@@ -490,7 +490,7 @@ define([
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on('#contact-form', 'change keyup', function() {
+                this.sandbox.dom.on(this.formSelector, 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this), 'select, input, textarea');
 
