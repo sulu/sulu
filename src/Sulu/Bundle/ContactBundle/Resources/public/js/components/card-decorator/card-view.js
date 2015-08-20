@@ -250,7 +250,7 @@ define(function() {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.toggleItemSelected(id);
-            }.bind(this), "." + constants.itemHeadClass);
+            }.bind(this));
         },
 
         /**

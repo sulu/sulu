@@ -13,6 +13,14 @@
       vertical-align: top; //fix inline-block alignment
       border-radius: 3px;
 
+      &:hover {
+        .item-head {
+          .head-checkbox {
+            display: block;
+          }
+        }
+      }
+
       .item-head {
         width: 100%;
         height: 190px;
@@ -66,12 +74,6 @@
           top: 15px;
           left: 15px;
           margin: 0;
-        }
-
-        &:hover {
-          .head-checkbox {
-            display: block;
-          }
         }
       }
 
