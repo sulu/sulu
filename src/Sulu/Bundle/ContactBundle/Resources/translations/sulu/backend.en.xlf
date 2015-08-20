@@ -614,6 +614,10 @@
                 <source>contact.contacts.avatar.saved</source>
                 <target>avatar saved</target>
             </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
+                <source>contact.accounts.logo.saved</source>
+                <target>logo saved</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
