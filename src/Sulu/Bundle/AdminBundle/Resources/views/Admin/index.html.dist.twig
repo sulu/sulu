@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1438783759812.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1440072970044.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
@@ -28,15 +28,12 @@
         <div class="sulu-header-background" id="sulu-header-background" style="display: none;"></div>
         <div id="main">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is not defined %}
-                data-aura-footer="false"
-                {% endif %}
-                 data-aura-user-name="{{ user.fullname }}"
+                 data-aura-user-name="{{ user.fullName }}"
                  data-aura-system-name="{{ name }}"
                  data-aura-system-version="{{ suluVersion }}"
                  data-aura-user-locales='{{ locales | json_encode }}'
                  data-aura-user-locale="{{ user.locale }}"
-                 data-aura-logout-route="{{ user.logout }}"
+                 data-aura-logout-route="{{ path('logout') }}"
                  class="navigation-column">
             </div>
             <div class="content-container">
@@ -47,8 +44,7 @@
                     <div class="page">
                         <main class="grid"
                               id="content"
-                              data-aura-component="app@suluadmin"
-                              data-aura-user="{{ user| json_encode }}">
+                              data-aura-component="app@suluadmin">
                         </main>
                     </div>
                     <div id="labels-container" data-aura-component="labels@suluadmin"></div>
@@ -65,18 +61,11 @@
             {% autoescape false %}
             var SULU = {
                 debug: false,
-                user: {
-                    id: '{{ user.id }}',
-                    locale: '{{ user.locale is defined ? user.locale : 'en' }}',
-                    settings: {{ user.settings }},
-                    contact: {
-                        id: '{{ user.contact.id }}'
-                    }
-                },
-                sections: {{ config | json_encode }},
-                locales: {{ locales | json_encode }},
-                translatedLocales: {{ translated_locales | json_encode }},
-                translations: {{ translations | json_encode }},
+                user: {{ user|json_encode }},
+                sections: {{ config|json_encode }},
+                locales: {{ locales|json_encode }},
+                translatedLocales: {{ translated_locales|json_encode }},
+                translations: {{ translations|json_encode }},
                 fallbackLocale: '{{ fallback_locale }}'
             };
             {% endautoescape %}
@@ -85,7 +74,7 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1438783759812" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1440072970044" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 
     </body>
 </html>
