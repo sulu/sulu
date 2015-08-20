@@ -25,7 +25,6 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -43,11 +42,6 @@ class ContactManager extends AbstractContactManager
     private $contactTitleRepository;
 
     /**
-     * @var MediaManagerInterface
-     */
-    protected $mediaManager;
-
-    /**
      * @var ContactRepository
      */
     private $contactRepository;
@@ -55,6 +49,7 @@ class ContactManager extends AbstractContactManager
     /**
      * @param ObjectManager $em
      * @param TagManagerInterface $tagManager
+     * @param MediaManagerInterface $mediaManager
      * @param AccountRepository $accountRepository
      * @param ContactTitleRepository $contactTitleRepository
      * @param ContactRepository $contactRepository
@@ -67,11 +62,10 @@ class ContactManager extends AbstractContactManager
         ContactTitleRepository $contactTitleRepository,
         ContactRepository $contactRepository
     ) {
-        parent::__construct($em, $tagManager);
+        parent::__construct($em, $tagManager, $mediaManager);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
-        $this->mediaManager = $mediaManager;
     }
 
     /**
