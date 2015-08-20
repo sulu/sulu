@@ -160,7 +160,7 @@ define([
 
             /**
              * Function to generate suitable postUrl according to the current contact status
-             * If contact already have an avatar, generate an url to upload new avatar as new version
+             * If contact already has an avatar, generate an url to upload new avatar as new version
              * Else upload avatar as new media
              */
             var getPostUrl = function() {
@@ -200,10 +200,10 @@ define([
          * @param url
          */
         updateAvatarContainer: function(mediaId, url) {
-            var imageContent = this.sandbox.dom.find(constants.avatarImageId);
-            this.sandbox.dom.data(imageContent, 'mediaId', mediaId);
-            this.sandbox.dom.css(imageContent, 'background-image', 'url(' + url + ')');
-            this.sandbox.dom.addClass(imageContent.parent(), 'no-default');
+            var $imageContent = this.sandbox.dom.find(constants.avatarImageId);
+            this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
+            this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
+            this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
         },
 
         /**

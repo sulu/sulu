@@ -166,7 +166,7 @@ define([
 
             /**
              * Function to generate suitable postUrl according to the current account status
-             * If account already have a logo, generate an url to upload new logo as new version
+             * If account already has a logo, generate an url to upload new logo as new version
              * Else upload logo as new media
              */
             var getPostUrl = function() {
@@ -206,10 +206,10 @@ define([
          * @param url
          */
         updateLogoContainer: function(mediaId, url) {
-            var imageContent = this.sandbox.dom.find(constants.logoImageId);
-            this.sandbox.dom.data(imageContent, 'mediaId', mediaId);
-            this.sandbox.dom.css(imageContent, 'background-image', 'url(' + url + ')');
-            this.sandbox.dom.addClass(imageContent.parent(), 'no-default');
+            var $imageContent = this.sandbox.dom.find(constants.logoImageId);
+            this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
+            this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
+            this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
         },
 
         /**
