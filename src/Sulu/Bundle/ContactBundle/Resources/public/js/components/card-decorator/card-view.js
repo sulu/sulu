@@ -189,6 +189,10 @@ define(function() {
                 })
             );
 
+            if (!!picture) {
+                this.sandbox.dom.addClass(this.sandbox.dom.find('.head-image', this.$items[id]), 'no-default');
+            }
+
             if (!!firstInfoRow) {
                 this.addInfoRowToItem(this.$items[id], this.options.icons.firstInfoRow, firstInfoRow);
             }
