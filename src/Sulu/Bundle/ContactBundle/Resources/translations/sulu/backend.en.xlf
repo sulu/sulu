@@ -606,10 +606,6 @@
                 <source>contact.address.countryCode</source>
                 <target>Country</target>
             </trans-unit>
-            <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
-                <source>contact.contacts.avatar-dropzone-text</source>
-                <target>drop image or click to change avatar</target>
-            </trans-unit>
             <trans-unit id="235b1473d78922a3essds2e9335a8d5d" resname="contact.contacts.avatar.saved">
                 <source>contact.contacts.avatar.saved</source>
                 <target>avatar saved</target>
@@ -617,6 +613,14 @@
             <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
                 <source>contact.accounts.logo.saved</source>
                 <target>logo saved</target>
+            </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
+                <source>contact.contacts.avatar-dropzone-text</source>
+                <target>drop image or click to change avatar</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g7593a3e44gs2e9335a8d5d" resname="contact.accounts.logo-dropzone-text">
+                <source>contact.accounts.logo-dropzone-text</source>
+                <target>drop image or click to change logo</target>
             </trans-unit>
         </body>
     </file>

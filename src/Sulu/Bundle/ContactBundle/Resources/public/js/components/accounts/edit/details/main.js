@@ -189,7 +189,7 @@ define([
                         el: constants.logoDropzoneSelector,
                         instanceName: 'account-logo',
                         titleKey: '',
-                        descriptionKey: 'account.accounts.logo-dropzone-text',
+                        descriptionKey: 'contact.accounts.logo-dropzone-text',
                         url: getPostUrl,
                         skin: 'overlay',
                         method: 'POST',
@@ -217,7 +217,7 @@ define([
         saveLogoData: function(mediaResponse){
             if (!!this.sandbox.dom.data(constants.logoImageId, 'mediaId')){
                 // logo was uploaded as new version of existing logo
-                this.sandbox.emit('sulu.labels.success.show', 'account.accounts.logo.saved');
+                this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
             } else if (!!this.data.id) {
                 // logo was added to existing account
                 this.sandbox.util.extend(true, this.data, {

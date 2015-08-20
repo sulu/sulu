@@ -19,7 +19,9 @@
       height: 100%;
     }
 
-    #image {
+    #image-content {
+      background-repeat: no-repeat;
+      background-position: center;
       @include background-size(cover);
     }
   }
