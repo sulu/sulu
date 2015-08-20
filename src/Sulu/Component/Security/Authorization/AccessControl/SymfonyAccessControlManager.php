@@ -60,7 +60,27 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setPermissions($type, $identifier, $securityIdentity, $permissions)
+    public function setPermissions($type, $identifier, $permissions)
+    {
+        foreach ($permissions as $securityIdentity => $permission) {
+            $this->setPermission($type, $identifier, $securityIdentity, $permission);
+        }
+
+        $this->eventDispatcher->dispatch(
+            SecurityEvents::PERMISSION_UPDATE,
+            new PermissionUpdateEvent($type, $identifier, $permissions)
+        );
+    }
+
+    /**
+     * Sets the permission for a single security identity.
+     *
+     * @param string $type The type of the object to protect
+     * @param string $identifier The identifier of the object to protect
+     * @param string $securityIdentity The security identity for which the permissions are set
+     * @param array $permissions The permissions to set
+     */
+    private function setPermission($type, $identifier, $securityIdentity, $permissions)
     {
         $oid = new ObjectIdentity($identifier, $type);
         $sid = new RoleSecurityIdentity($securityIdentity);
@@ -91,11 +111,6 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         $this->aclProvider->updateAcl($acl);
-
-        $this->eventDispatcher->dispatch(
-            SecurityEvents::PERMISSION_UPDATE,
-            new PermissionUpdateEvent($type, $identifier, $securityIdentity, $permissions)
-        );
     }
 
     /**

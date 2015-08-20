@@ -24,6 +24,36 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class ExtensionSubscriberTest extends SubscriberTestCase
 {
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var NamespaceRegistry
+     */
+    private $namespaceRegistry;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
+
+    /**
+     * @var ExtensionInterface
+     */
+    private $extension;
+
+    /**
+     * @var DocumentAccessor
+     */
+    private $documentAccessor;
+
+    /**
+     * @var ExtensionSubscriber
+     */
+    private $subscriber;
+
     public function setUp()
     {
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
@@ -81,6 +111,19 @@ class ExtensionSubscriberTest extends SubscriberTestCase
             $document->getExtensionsData()->offsetGet('ext_1'),
             $expectedData
         );
+    }
+
+    /**
+     * It should return early if the locale is null.
+     */
+    public function testPersistLocaleIsNull()
+    {
+        $document = new TestExtensionDocument();
+        $this->persistEvent->getLocale()->willReturn(null);
+        $this->persistEvent->getDocument()->willReturn($document);
+        $this->extensionManager->getExtensions()->shouldNotBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     /**

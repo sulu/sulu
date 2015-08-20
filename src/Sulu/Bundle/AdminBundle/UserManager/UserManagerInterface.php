@@ -14,13 +14,6 @@ namespace Sulu\Bundle\AdminBundle\UserManager;
 interface UserManagerInterface
 {
     /**
-     * returns user data of current user.
-     *
-     * @return CurrentUserDataInterface
-     */
-    public function getCurrentUserData();
-
-    /**
      * returns username for given id.
      *
      * @param int $id userId

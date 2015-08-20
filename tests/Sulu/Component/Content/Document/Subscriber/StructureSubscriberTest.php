@@ -27,6 +27,56 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    /**
+     * @var PropertyMetadata
+     */
+    private $structureProperty;
+
+    /**
+     * @var ContentTypeInterface
+     */
+    private $contentType;
+
+    /**
+     * @var PropertyValue
+     */
+    private $propertyValue;
+
+    /**
+     * @var TranslatedProperty
+     */
+    private $legacyProperty;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structureMetadata;
+
+    /**
+     * @var Structure
+     */
+    private $structure;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
+    private $propertyFactory;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var StructureSubscriber
+     */
+    private $subscriber;
+
     public function setUp()
     {
         parent::setUp();
@@ -68,6 +118,20 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the structure type
         $this->persistEvent->getDocument()->willReturn($document);
         $this->subscriber->handlePersist($this->persistEvent->reveal());
+    }
+
+    /**
+     * It should return early if the locale is null.
+     */
+    public function testPersistNoLocale()
+    {
+        $document = new TestContentDocument($this->structure->reveal());
+        $this->persistEvent->getLocale()->willReturn(null);
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+
+        $this->node->setProperty()->shouldNotBeCalled();
     }
 
     /**

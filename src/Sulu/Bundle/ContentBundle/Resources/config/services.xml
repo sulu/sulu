@@ -10,6 +10,7 @@
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
         <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
         <parameter key="sulu_content.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
+        <parameter key="sulu_content.permission_update_listener.class">Sulu\Component\Content\Security\Listener\PermissionUpdateListener</parameter>
     </parameters>
     <services>
         <!-- admin class -->
@@ -72,6 +73,11 @@
             </argument>
 
             <tag name="sulu.js_config"/>
+        </service>
+
+        <service id="sulu_content.permission_update_listener" class="%sulu_content.permission_update_listener.class%">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <tag name="kernel.event_listener" event="sulu.security.permission.update" method="onPermissionUpdate"/>
         </service>
     </services>
 </container>

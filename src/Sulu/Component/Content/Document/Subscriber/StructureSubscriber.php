@@ -22,7 +22,6 @@ use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -38,9 +37,10 @@ class StructureSubscriber extends AbstractMappingSubscriber
     private $legacyPropertyFactory;
 
     /**
-     * @param PropertyEncoder             $encoder
+     * @param PropertyEncoder $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureMetadataFactory    $structureFactory
+     * @param DocumentInspector $inspector
+     * @param LegacyPropertyFactory $legacyPropertyFactory
      */
     public function __construct(
         PropertyEncoder $encoder,
@@ -164,6 +164,10 @@ class StructureSubscriber extends AbstractMappingSubscriber
             return;
         }
 
+        if (!$event->getLocale()) {
+            return;
+        }
+
         $node = $event->getNode();
         $locale = $event->getLocale();
 
@@ -186,8 +190,9 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param mixed         $document
-     * @param NodeInterface $node
+     * @param mixed $document
+     *
+     * @return ManagedStructure
      */
     private function createStructure($document)
     {
@@ -202,8 +207,11 @@ class StructureSubscriber extends AbstractMappingSubscriber
     /**
      * Map to the content properties to the node using the content types.
      *
-     * @param mixed         $document
+     * @param mixed $document
      * @param NodeInterface $node
+     * @param string $locale
+     *
+     * @throws MandatoryPropertyException
      */
     private function mapContentToNode($document, NodeInterface $node, $locale)
     {

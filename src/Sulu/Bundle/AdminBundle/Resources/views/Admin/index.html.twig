@@ -33,15 +33,15 @@
         </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                    {% if user.username is not defined %}
-                        data-aura-footer="false"
-                    {% endif %}
-                 data-aura-user-name="{{ user.fullname }}"
+                {% if user.username is not defined %}
+                    data-aura-footer="false"
+                {% endif %}
+                 data-aura-user-name="{{ user.fullName }}"
                  data-aura-system-name="{{ name }}"
                  data-aura-system-version="{{ suluVersion }}"
                  data-aura-user-locales='{{ locales | json_encode }}'
                  data-aura-user-locale="{{ user.locale }}"
-                 data-aura-logout-route="{{ user.logout }}"
+                 data-aura-logout-route="{{ path('logout') }}"
                  class="navigation-column">
             </div>
             <div class="content-container">
@@ -63,18 +63,11 @@
             {% autoescape false %}
             var SULU = {
                 debug: true,
-                user: {
-                    id: '{{ user.id }}',
-                    locale: '{{ user.locale is defined ? user.locale : 'en' }}',
-                    settings: {{ user.settings }},
-                    contact: {
-                        id: '{{ user.contact.id }}'
-                    }
-                },
-                sections: {{ config | json_encode }},
-                locales: {{ locales | json_encode }},
-                translatedLocales: {{ translated_locales | json_encode }},
-                translations: {{ translations | json_encode }},
+                user: {{ user|json_encode }},
+                sections: {{ config|json_encode }},
+                locales: {{ locales|json_encode }},
+                translatedLocales: {{ translated_locales|json_encode }},
+                translations: {{ translations|json_encode }},
                 fallbackLocale: '{{ fallback_locale }}'
             };
             {% endautoescape %}
@@ -86,6 +79,5 @@
         <!-- build:js app.min.js -->
         <script data-main="/bundles/suluadmin/js/main" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
         <!-- endbuild -->
-
     </body>
 </html>

@@ -49,7 +49,7 @@ class StructureSubscriber implements EventSubscriberInterface
      * Deindex/index document in search implementation depending
      * on the publish state.
      *
-     * @param ContentNodeEvent $event
+     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {

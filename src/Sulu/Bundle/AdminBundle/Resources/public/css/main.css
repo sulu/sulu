@@ -538,7 +538,7 @@ input, select {
 }
 /* line 166, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame .form-element {
-  border: 1px solid #fff;
+  border-color: #fff;
 }
 /* line 172, ../scss/modules/login.scss */
 .sulu-login .content-container .content-box .frame-slider .box-frame.content-loading .box-frame-footer .btn {

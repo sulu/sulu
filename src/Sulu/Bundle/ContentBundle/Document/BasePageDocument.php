@@ -17,6 +17,7 @@ use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -53,7 +54,8 @@ class BasePageDocument implements
     PathBehavior,
     ExtensionBehavior,
     OrderBehavior,
-    WebspaceBehavior
+    WebspaceBehavior,
+    SecurityBehavior
 {
     /**
      * @var string
@@ -179,6 +181,11 @@ class BasePageDocument implements
      * @var int
      */
     protected $suluOrder;
+
+    /**
+     * @var array
+     */
+    protected $permissions;
 
     public function __construct()
     {
@@ -498,5 +505,21 @@ class BasePageDocument implements
     public function getSuluOrder()
     {
         return $this->suluOrder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPermissions(array $permissions)
+    {
+        $this->permissions = $permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }

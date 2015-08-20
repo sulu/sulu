@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+<<<<<<< HEAD
     * FEATURE     #1481 [ContactBundle]   titles in JS-views
     * FEATURE     #1481 [AdminBundle]     extension-hook for loading data in JS-files
     * FEATURE     #1476 [ContactBundle]   Avatar upload via dropzone
@@ -12,6 +13,11 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1421 [AdminBundle]     New button-api for header and tabs
     * ENHANCEMENT #1417 [AdminBundle]     Style upgrade for header and tabs
     * FEATURE     #1472 [ContactBundle]   Rest-Api support for contact-avatars
+=======
+    * FEAETURE    #1503 [All]             Updated to doctrine 2.5
+    * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
+    * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
+>>>>>>> 834a77babf68939c3e1cf209e2709ceeeb71a01c
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder

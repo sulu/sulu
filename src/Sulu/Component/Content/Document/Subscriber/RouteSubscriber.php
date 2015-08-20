@@ -14,7 +14,6 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
@@ -27,9 +26,9 @@ class RouteSubscriber extends AbstractMappingSubscriber
     private $documentRegistry;
 
     /**
-     * @param PropertyEncoder  $encoder
-     * @param DocumentAccessor $accessor
-     * @param ProxyFactory     $proxyFactory
+     * @param PropertyEncoder $encoder
+     * @param ProxyFactory $proxyFactory
+     * @param DocumentRegistry $documentRegistry
      */
     public function __construct(
         PropertyEncoder $encoder,
@@ -47,7 +46,7 @@ class RouteSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
     public function doHydrate(AbstractMappingEvent $event)
     {

@@ -1,7 +1,7 @@
 sulu_admin:
     path:  /
     defaults:
-        _controller: SuluAdminBundle:Admin:index
+        _controller: sulu_admin.admin_controller:indexAction
 
 sulu_admin.widget_group:
     path: /widget-groups/{groupAlias}
@@ -18,17 +18,17 @@ sulu_admin.content_navigation:
 sulu_admin.routes:
     path: /bundles
     defaults:
-        _controller: SuluAdminBundle:Admin:bundles
+        _controller: sulu_admin.admin_controller:bundlesAction
 
 sulu_admin.config:
     path: /config
     defaults:
-        _controller: SuluAdminBundle:Admin:config
+        _controller: sulu_admin.admin_controller:configAction
 
 sulu_admin.contexts:
     path: /contexts
     defaults:
-        _controller: SuluAdminBundle:Admin:contexts
+        _controller: sulu_admin.admin_controller:contextsAction
 
 sulu_admin.login:
     path: /login

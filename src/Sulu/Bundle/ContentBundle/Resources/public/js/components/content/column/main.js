@@ -37,6 +37,35 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
          */
         ORDER_BUTTON_ID = 5,
 
+        ACTION_ICON_EDIT = 'fa-pencil',
+
+        ACTION_ICON_VIEW = 'fa-eye',
+
+        getActionIcon = function(data) {
+            if (!data.hasOwnProperty('permissions')) {
+                return ACTION_ICON_EDIT;
+            }
+
+            var actionIcon = '';
+            $.each(data.permissions, function(role, permission) {
+                if ($.inArray(role, this.sandbox.sulu.user.roles) === -1) {
+                    return true;
+                }
+
+                if ($.inArray('edit', permission) !== -1) {
+                    actionIcon = ACTION_ICON_EDIT;
+
+                    return false;
+                } else if ($.inArray('view', permission) !== -1) {
+                    actionIcon = ACTION_ICON_VIEW;
+
+                    return false;
+                }
+            }.bind(this));
+
+            return actionIcon;
+        },
+
         templates = {
             columnNavigation: function() {
                 return [
@@ -89,6 +118,11 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.action', function(item) {
+                if (getActionIcon.call(this, item) === '') {
+                    // if no action icon is rendered the data should not be loaded
+                    return;
+                }
+
                 this.setLastSelected(item.id);
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
@@ -125,7 +159,7 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                 this.startColumnNavigation();
             }, this);
 
-            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem, columnItems) {
+            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem) {
                 if (dropdownItem.id === MOVE_BUTTON_ID) {
                     this.moveSelected(selectedItem);
                 } else if (dropdownItem.id === COPY_BUTTON_ID) {
@@ -416,6 +450,7 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                         selected: this.getLastSelected(),
                         resultKey: 'nodes',
                         url: this.getUrl(),
+                        actionIcon: getActionIcon.bind(this),
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
@@ -559,7 +594,7 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
             );
 
             this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
-                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true)
+                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true);
             }.bind(this));
         }
     };
