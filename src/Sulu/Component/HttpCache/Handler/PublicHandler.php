@@ -59,6 +59,11 @@ class PublicHandler implements
             return;
         }
 
+        // when structure cache-lifetime disabled - return
+        if ((int) $structure->getCacheLifeTime() === 0) {
+            return;
+        }
+
         // mark the response as either public or private
         $response->setPublic();
 
