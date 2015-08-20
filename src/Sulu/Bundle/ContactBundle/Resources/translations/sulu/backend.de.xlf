@@ -556,8 +556,8 @@
                 <source>navigation.search</source>
                 <target>Suche</target>
             </trans-unit>
-            <trans-unit id="435b1473d76660a3essds2e9335a8d5f" resname="sulu.toolbar.contact-cards">
-                <source>sulu.toolbar.contact-cards</source>
+            <trans-unit id="435b1473d76660a3essds2e9335a8d5f" resname="sulu.toolbar.cards">
+                <source>sulu.toolbar.cards</source>
                 <target>Karten</target>
             </trans-unit>
             <trans-unit id="425b1473d76660a3essds2e9335a8d5d" resname="contact.accounts.document-added">
@@ -612,13 +612,17 @@
                 <source>contact.contacts.avatar.saved</source>
                 <target>Avatar gespeichert</target>
             </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
+                <source>contact.accounts.logo.saved</source>
+                <target>Logo gespeichert</target>
+            </trans-unit>
             <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
                 <source>contact.contacts.avatar-dropzone-text</source>
                 <target>Bild ablegen oder Klicken um das Avatar zu ändern</target>
             </trans-unit>
-            <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
-                <source>contact.accounts.logo.saved</source>
-                <target>Logo gespeichert</target>
+            <trans-unit id="235b14f26g7593a3e44gs2e9335a8d5d" resname="contact.accounts.logo-dropzone-text">
+                <source>contact.accounts.logo-dropzone-text</source>
+                <target>Bild ablegen oder Klicken um das Logo zu ändern</target>
             </trans-unit>
         </body>
     </file>

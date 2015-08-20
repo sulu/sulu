@@ -163,6 +163,10 @@
                         }
                     }
 
+                    .form-element {
+                        border-color: $white;
+                    }
+
                     &.content-loading {
                         .box-frame-footer {
                             .btn {

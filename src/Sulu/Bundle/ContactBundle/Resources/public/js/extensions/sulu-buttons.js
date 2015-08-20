@@ -7,25 +7,28 @@
         return {
 
             getButtons: function() {
-                var layoutButton = app.sandbox.sulu.buttons.getApiButton('layout');
-                layoutButton.dropdownItems = {
+                var decoratorDropdown = app.sandbox.sulu.buttons.getApiButton('layout');
+                decoratorDropdown.dropdownItems = {
                     table: {},
-                    contactCards: {}
+                    cards: {}
                 };
                 return [{
-                    name: 'layoutContact',
-                    template: layoutButton
+                    name: 'contactDecoratorDropdown',
+                    template: decoratorDropdown
+                }, {
+                    name: 'accountDecoratorDropdown',
+                    template: decoratorDropdown
                 }];
             },
 
             getDropdownItems: function() {
                 return [
                     {
-                        name: 'contactCards',
+                        name: 'cards',
                         template: {
-                            title: 'sulu.toolbar.contact-cards',
+                            title: 'sulu.toolbar.cards',
                             callback: function() {
-                                this.sandbox.emit('sulu.toolbar.change.contact-card');
+                                this.sandbox.emit('sulu.toolbar.change.cards');
                             }.bind(app)
                         }
                     }

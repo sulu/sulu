@@ -3,7 +3,19 @@
  * @constructor
  *
  * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
+ * @param {String} [imageFormat] api-format which is used for head-image
  * @param {Object} [viewOptions] Configuration object
+ * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
+ * @param {String} [viewOptions.fields.picture]
+ * @param {Array} [viewOptions.fields.title]
+ * @param {Array} [viewOptions.fields.firstInfoRow]
+ * @param {Array} [viewOptions.fields.secondInfoRow]
+ * @param {Object} [viewOptions.separators] Defines separators between data-columns
+ * @param {String} [viewOptions.separators.title]
+ * @param {String} [viewOptions.separators.infoRow]
+ * @param {Object} [viewOptions.icons] Defines info-row icons
+ * @param {String} [viewOptions.icons.firstInfoRow]
+ * @param {String} [viewOptions.icons.secondInfoRow]
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -12,12 +24,16 @@
  * @param {Function} [removeRecord] function to remove an existing record from the grid
  * @param {Function} [destroy] function to destroy the view and unbind events
  */
-define(['config'], function(Config) {
+define(function() {
 
     'use strict';
 
     var defaults = {
-            unselectOnBackgroundClick: true
+            unselectOnBackgroundClick: true,
+            imageFormat: '100x100',
+            fields: {},
+            separators: {},
+            icons: {}
         },
 
         constants = {
@@ -27,8 +43,6 @@ define(['config'], function(Config) {
 
             itemHeadClass: 'item-head',
             itemInfoClass: 'item-info',
-
-            avatarThumbnailFormat: '100x100',
         },
 
         templates = {
@@ -37,8 +51,8 @@ define(['config'], function(Config) {
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="head-image ' + constants.actionNavigatorClass + '">',
-                '               <span class="fa-user avatar-default"></span>',
-                '               <div class="avatar" style="background-image: url(\'<%= avatar %>\')"></div>',
+                '               <span class="<%= pictureIcon %> image-default"></span>',
+                '               <div class="image-content" style="background-image: url(\'<%= picture %>\')"></div>',
                 '           </div>',
                 '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
                 '       </div>',
@@ -58,19 +72,23 @@ define(['config'], function(Config) {
         },
 
         /**
-         * Concat the entries of the given fields array to a single string. null-entries of the array are ignored
-         * @param fields (Array)
-         * @param separator String which separates two entries of the array
+         * Concats the entries of the given columns of the given record to a string.
+         * Record-columns are separated by the given separator. Empty record-columns are ignored.
+         * @param record
+         * @param columns
+         * @param separator
          * @returns {string}
          */
-        concatFields = function(fields, separator) {
-            var strings = [];
-            fields.forEach(function(field) {
-                if (!!field) {
-                    strings.push(field);
-                }
-            });
-            return strings.join(separator);
+        concatRecordColumns = function(record, columns, separator) {
+            if (!!record && !!columns) {
+                var strings = [];
+                columns.forEach(function(field) {
+                    if (!!record[field]) {
+                        strings.push(record[field]);
+                    }
+                });
+                return strings.join(separator);
+            }
         }
 
     return {
@@ -138,18 +156,18 @@ define(['config'], function(Config) {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
-                var id, avatar, name, location, mail;
+                var id, picture, title, firstInfoRow, secondInfoRow;
 
                 id = record['id'];
-                avatar = (!!record.avatar) ? record.avatar[constants.avatarThumbnailFormat] : '';
-                mail = record['mainEmail'];
+                picture = (!!record[this.options.fields.picture]) ?
+                    record[this.options.fields.picture][this.options.imageFormat] : '';
 
-                // concat firstName and lastName because fullName should not be default
-                name = concatFields([record['firstName'], record['lastName']], ' ');
-                location = concatFields([record['city'], record['countryCode']], ', ');
+                title = concatRecordColumns(record, this.options.fields.title, this.options.separators.title);
+                firstInfoRow = concatRecordColumns(record, this.options.fields.firstInfoRow, this.options.separators.infoRow);
+                secondInfoRow = concatRecordColumns(record, this.options.fields.secondInfoRow, this.options.separators.infoRow);
 
                 // pass the found data to a render method
-                this.renderItem(id, avatar, name, location, mail);
+                this.renderItem(id, picture, title, firstInfoRow, secondInfoRow);
             }.bind(this));
         },
 
@@ -162,20 +180,25 @@ define(['config'], function(Config) {
          * @param description {String} the thumbnail description to render
          * @param record {Object} the original data record
          */
-        renderItem: function(id, picture, title, infoRow1, infoRow2) {
+        renderItem: function(id, picture, title, firstInfoRow, secondInfoRow) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
                     name: this.sandbox.util.cropTail(String(title), 32),
-                    avatar: picture
+                    picture: picture,
+                    pictureIcon: this.options.icons.picture
                 })
             );
 
-            if (!!infoRow1) {
-                this.addInfoRowToItem(this.$items[id], 'fa-map-marker', infoRow1);
+            if (!!picture) {
+                this.sandbox.dom.addClass(this.sandbox.dom.find('.head-image', this.$items[id]), 'no-default');
             }
 
-            if (!!infoRow2) {
-                this.addInfoRowToItem(this.$items[id], 'fa-envelope', infoRow2);
+            if (!!firstInfoRow) {
+                this.addInfoRowToItem(this.$items[id], this.options.icons.firstInfoRow, firstInfoRow);
+            }
+
+            if (!!secondInfoRow) {
+                this.addInfoRowToItem(this.$items[id], this.options.icons.secondInfoRow, secondInfoRow);
             }
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
@@ -199,10 +222,10 @@ define(['config'], function(Config) {
                 this.sandbox.dom.append($item, $container);
             }
             this.sandbox.dom.append($container, this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.infoRow)({
-                    icon: icon,
-                    text: this.sandbox.util.cropMiddle(String(text), 18)
-                }))
+                    this.sandbox.util.template(templates.infoRow)({
+                        icon: icon,
+                        text: this.sandbox.util.cropMiddle(String(text), 22)
+                    }))
             );
         },
 
@@ -227,7 +250,7 @@ define(['config'], function(Config) {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.toggleItemSelected(id);
-            }.bind(this), "." + constants.itemHeadClass);
+            }.bind(this));
         },
 
         /**

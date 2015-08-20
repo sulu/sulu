@@ -7,12 +7,6 @@
  * with this source code in the file LICENSE.
  */
 
-require.config({
-    paths: {
-        'decorators/contact-card': '../../sulucontact/js/components/contacts/list/decorators/contact-view'
-    }
-});
-
 define([
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router',
@@ -55,13 +49,13 @@ define([
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
             }.bind(this));
 
-            this.sandbox.on('sulu.toolbar.change.contact-card', function() {
-                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'decorators/contact-card');
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'decorators/contact-card');
+            this.sandbox.on('sulu.toolbar.change.cards', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'decorators/cards');
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'decorators/cards');
             }.bind(this));
         },
 
-        deleteCallback = function(ids){
+        deleteCallback = function(ids) {
             DeleteDialog.showDialog(ids, function() {
                 ContactManager.delete(ids);
             }.bind(this));
@@ -117,7 +111,7 @@ define([
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     template: this.sandbox.sulu.buttons.get({
-                        layoutContact: {},
+                        contactDecoratorDropdown: {},
                         settings: {
                             options: {
                                 dropdownItems: [
@@ -134,11 +128,30 @@ define([
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
-                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/contact-card',
                     resultKey: 'contacts',
                     instanceName: constants.datagridInstanceName,
                     clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
-                    actionCallback: actionCallback.bind(this)
+                    actionCallback: actionCallback.bind(this),
+                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                    viewOptions: {
+                        'decorators/cards': {
+                            fields: {
+                                picture: 'avatar',
+                                title: ['firstName', 'lastName'],
+                                firstInfoRow: ['city', 'countryCode'],
+                                secondInfoRow: ['mainEmail'],
+                            },
+                            separators: {
+                                title: ' ',
+                                infoRow: ', '
+                            },
+                            icons: {
+                                picture: 'fa-user',
+                                firstInfoRow: 'fa-map-marker',
+                                secondInfoRow: 'fa-envelope'
+                            }
+                        }
+                    }
                 },
                 'contacts',
                 '#people-list-info'

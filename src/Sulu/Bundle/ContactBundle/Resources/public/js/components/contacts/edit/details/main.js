@@ -25,9 +25,9 @@ define([
             addAddressWrapper: '.grid-row',
             addBankAccountsWrapper: '.grid-row',
             editFormSelector: '#contact-edit-form',
-            avatarImageId: '#avatar',
-            avatarDropzoneSelector: '#avatar-dropzone',
-            avatarThumbnailFormat: '400x400'
+            avatarImageId: '#image-content',
+            avatarDropzoneSelector: '#image-dropzone',
+            imageFormat: '400x400'
         },
 
         customTemplates = {
@@ -118,7 +118,7 @@ define([
             this.companyInstanceName = 'companyContact' + formData.id;
             this.initForm(formData);
             this.initAvatarContainer(formData);
-            this.setTags(formData);
+            this.setTags();
             this.bindCustomEvents();
             this.bindTagEvents(formData);
         },
@@ -155,12 +155,12 @@ define([
          */
         initAvatarContainer: function(data) {
             if (!!data.avatar) {
-                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.imageFormat]);
             }
 
             /**
              * Function to generate suitable postUrl according to the current contact status
-             * If contact already have an avatar, generate an url to upload new avatar as new version
+             * If contact already has an avatar, generate an url to upload new avatar as new version
              * Else upload avatar as new media
              */
             var getPostUrl = function() {
@@ -200,8 +200,10 @@ define([
          * @param url
          */
         updateAvatarContainer: function(mediaId, url) {
-            this.sandbox.dom.data(constants.avatarImageId, 'mediaId', mediaId);
-            this.sandbox.dom.css(constants.avatarImageId, 'background-image', 'url(' + url + ')');
+            var $imageContent = this.sandbox.dom.find(constants.avatarImageId);
+            this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
+            this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
+            this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
         },
 
         /**
@@ -373,7 +375,7 @@ define([
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
                 this.saveAvatarData(response);
-                this.updateAvatarContainer(response.id, response.thumbnails[constants.avatarThumbnailFormat]);
+                this.updateAvatarContainer(response.id, response.thumbnails[constants.imageFormat]);
             }, this);
         },
 

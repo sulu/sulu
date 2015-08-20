@@ -24,8 +24,11 @@ define([
             addAddressWrapper: '.grid-row',
             addBankAccountsWrapper: '.grid-row',
             editFormSelector: '#contact-edit-form',
-            formSelector: '#contact-form',
-            formContactFields: '#contact-fields'
+            formSelector: '#account-form',
+            formContactFields: '#contact-fields',
+            logoImageId: '#image-content',
+            logoDropzoneSelector: '#image-dropzone',
+            logoThumbnailFormat: '400x400-inset'
         },
 
         customTemplates = {
@@ -101,8 +104,9 @@ define([
 
             this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
-            var formData = this.initContactData();
+            var formData = this.initAccountData();
             this.initForm(formData);
+            this.initLogoContainer(formData);
             this.setTags();
             this.bindCustomEvents();
             this.bindTagEvents(formData);
@@ -148,6 +152,83 @@ define([
                 }.bind(this));
             } else {
                 this.dfdListenForChange.resolve();
+            }
+        },
+
+        /**
+         * Initialize logo container: display logo image if provided and start logo-upload dropzone
+         * @param data
+         */
+        initLogoContainer: function(data) {
+            if (!!data.logo) {
+                this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat]);
+            }
+
+            /**
+             * Function to generate suitable postUrl according to the current account status
+             * If account already has a logo, generate an url to upload new logo as new version
+             * Else upload logo as new media
+             */
+            var getPostUrl = function() {
+                var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
+                var url = (!!curMediaId) ?
+                '/admin/api/media/' + curMediaId + '?action=new-version' :
+                    '/admin/api/media?collection=1'; //todo: use system collection
+                // if possible, change the title of the logo to the name of the account
+                if (!!data.name) {
+                    url = url + '&title=' + encodeURIComponent(data.name);
+                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                }
+                return url;
+            }.bind(this);
+
+            this.sandbox.start([
+                {
+                    name: 'dropzone@husky',
+                    options: {
+                        el: constants.logoDropzoneSelector,
+                        instanceName: 'account-logo',
+                        titleKey: '',
+                        descriptionKey: 'contact.accounts.logo-dropzone-text',
+                        url: getPostUrl,
+                        skin: 'overlay',
+                        method: 'POST',
+                        paramName: 'fileVersion',
+                        showOverlay: false, maxFiles: 1,
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Display given picture in logo container. Set logo-div data to media id which is read on saving.
+         * @param mediaId
+         * @param url
+         */
+        updateLogoContainer: function(mediaId, url) {
+            var $imageContent = this.sandbox.dom.find(constants.logoImageId);
+            this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
+            this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
+            this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
+        },
+
+        /**
+         * Assign uploaded logo to account by saving account with given media id
+         * @param mediaResponse media upload response
+         */
+        saveLogoData: function(mediaResponse){
+            if (!!this.sandbox.dom.data(constants.logoImageId, 'mediaId')){
+                // logo was uploaded as new version of existing logo
+                this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+            } else if (!!this.data.id) {
+                // logo was added to existing account
+                this.sandbox.util.extend(true, this.data, {
+                    logo: {id: mediaResponse.id}
+                });
+
+                AccountManager.saveLogo(this.data).then(function(savedData) {
+                    this.sandbox.emit('sulu.tab.data-changed', savedData);
+                }.bind(this));
             }
         },
 
@@ -204,40 +285,40 @@ define([
             return field;
         },
 
-        initContactData: function() {
-            var contactJson = this.data;
+        initAccountData: function() {
+            var accountJson = this.data;
 
             this.sandbox.util.foreach(fields, function(field) {
-                if (!contactJson.hasOwnProperty(field)) {
-                    contactJson[field] = [];
+                if (!accountJson.hasOwnProperty(field)) {
+                    accountJson[field] = [];
                 }
             });
 
-            this.fillFields(contactJson.urls, 1, {
+            this.fillFields(accountJson.urls, 1, {
                 id: null,
                 url: '',
                 urlType: this.defaultTypes.urlType
             });
-            this.fillFields(contactJson.emails, 1, {
+            this.fillFields(accountJson.emails, 1, {
                 id: null,
                 email: '',
                 emailType: this.defaultTypes.emailType
             });
-            this.fillFields(contactJson.phones, 1, {
+            this.fillFields(accountJson.phones, 1, {
                 id: null,
                 phone: '',
                 phoneType: this.defaultTypes.phoneType
             });
-            this.fillFields(contactJson.faxes, 1, {
+            this.fillFields(accountJson.faxes, 1, {
                 id: null,
                 fax: '',
                 faxType: this.defaultTypes.faxType
             });
-            this.fillFields(contactJson.notes, 1, {
+            this.fillFields(accountJson.notes, 1, {
                 id: null,
                 value: ''
             });
-            return contactJson;
+            return accountJson;
         },
 
         initForm: function(data) {
@@ -346,6 +427,11 @@ define([
             }, this);
 
             this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableAccount.bind(this));
+
+            this.sandbox.on('husky.dropzone.account-logo.success', function(file, response) {
+                this.saveLogoData(response);
+                this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat]);
+            }, this);
         },
 
         /**
@@ -385,6 +471,10 @@ define([
                 if (!data.id) {
                     delete data.id;
                 }
+                data.logo = {
+                    id: this.sandbox.dom.data(constants.logoImageId, 'mediaId')
+                };
+
                 data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
                 // FIXME auto complete in mapper
                 data.parent = {
@@ -393,7 +483,7 @@ define([
                 this.sandbox.emit('sulu.tab.saving');
                 AccountManager.save(data).then(function(savedData) {
                     this.data = savedData;
-                    var formData = this.initContactData();
+                    var formData = this.initAccountData();
                     this.setFormData(formData);
                     this.sandbox.emit('sulu.tab.saved', savedData, true);
                 }.bind(this));
@@ -402,7 +492,7 @@ define([
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on('#contact-form', 'change keyup', function() {
+                this.sandbox.dom.on(this.formSelector, 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this), 'select, input, textarea');
 
