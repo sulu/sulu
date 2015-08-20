@@ -206,8 +206,10 @@ define([
          * @param url
          */
         updateLogoContainer: function(mediaId, url) {
-            this.sandbox.dom.data(constants.logoImageId, 'mediaId', mediaId);
-            this.sandbox.dom.css(constants.logoImageId, 'background-image', 'url(' + url + ')');
+            var imageContent = this.sandbox.dom.find(constants.logoImageId);
+            this.sandbox.dom.data(imageContent, 'mediaId', mediaId);
+            this.sandbox.dom.css(imageContent, 'background-image', 'url(' + url + ')');
+            this.sandbox.dom.addClass(imageContent.parent(), 'no-default');
         },
 
         /**

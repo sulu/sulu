@@ -29,6 +29,12 @@
             position: relative;
             z-index: 0;
 
+            &.no-default {
+              .image-default {
+                display: none;
+              }
+            }
+
             .image-default {
               position: relative;
               font-size: 100px;

@@ -149,13 +149,17 @@
   position: relative;
   z-index: 0;
 }
-/* line 32, ../scss/modules/list.scss */
+/* line 33, ../scss/modules/list.scss */
+#people-list .contact-grid .contact-item .item-head .head-container .head-image.no-default .image-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image.no-default .image-default {
+  display: none;
+}
+/* line 38, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .image-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-default {
   position: relative;
   font-size: 100px;
   color: #e9e9e9;
 }
-/* line 38, ../scss/modules/list.scss */
+/* line 44, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-image .image-content, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-content {
   width: 100%;
   height: 100%;
@@ -165,12 +169,12 @@
   background-repeat: no-repeat;
   background-position: center;
 }
-/* line 50, ../scss/modules/list.scss */
+/* line 56, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-container .head-name, #companies-list .contact-grid .contact-item .item-head .head-container .head-name {
   margin-top: 14px;
   line-height: 18px;
 }
-/* line 56, ../scss/modules/list.scss */
+/* line 62, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head .head-checkbox, #companies-list .contact-grid .contact-item .item-head .head-checkbox {
   display: none;
   position: absolute;
@@ -178,11 +182,11 @@
   left: 15px;
   margin: 0;
 }
-/* line 66, ../scss/modules/list.scss */
+/* line 72, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-head:hover .head-checkbox, #companies-list .contact-grid .contact-item .item-head:hover .head-checkbox {
   display: block;
 }
-/* line 72, ../scss/modules/list.scss */
+/* line 78, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info, #companies-list .contact-grid .contact-item .item-info {
   width: 100%;
   height: 70px;
@@ -190,46 +194,46 @@
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 80, ../scss/modules/list.scss */
+/* line 86, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-row, #companies-list .contact-grid .contact-item .item-info .info-row {
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 84, ../scss/modules/list.scss */
+/* line 90, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-row .info-icon, #companies-list .contact-grid .contact-item .item-info .info-row .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 92, ../scss/modules/list.scss */
+/* line 98, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .item-info .info-row .info-text, #companies-list .contact-grid .contact-item .item-info .info-row .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 99, ../scss/modules/list.scss */
+/* line 105, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item .action-navigator, #companies-list .contact-grid .contact-item .action-navigator {
   cursor: pointer;
 }
-/* line 104, ../scss/modules/list.scss */
+/* line 110, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.selected .head-checkbox, #companies-list .contact-grid .contact-item.selected .head-checkbox {
   display: block;
 }
-/* line 110, ../scss/modules/list.scss */
+/* line 116, ../scss/modules/list.scss */
 #people-list .contact-grid .contact-item.sulu-user .head-sulubox, #companies-list .contact-grid .contact-item.sulu-user .head-sulubox {
   display: block;
 }
 
-/* line 119, ../scss/modules/list.scss */
+/* line 125, ../scss/modules/list.scss */
 #people-list .head-image {
   border: 1px solid #e9e9e9;
   border-radius: 50px;
 }
-/* line 123, ../scss/modules/list.scss */
+/* line 129, ../scss/modules/list.scss */
 #people-list .head-image .image-default {
   top: 15px;
 }
-/* line 127, ../scss/modules/list.scss */
+/* line 133, ../scss/modules/list.scss */
 #people-list .head-image .image-content {
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -237,15 +241,15 @@
   background-size: cover;
 }
 
-/* line 134, ../scss/modules/list.scss */
+/* line 140, ../scss/modules/list.scss */
 #companies-list .head-image {
   border: none;
 }
-/* line 137, ../scss/modules/list.scss */
+/* line 143, ../scss/modules/list.scss */
 #companies-list .head-image .image-default {
   top: 0;
 }
-/* line 141, ../scss/modules/list.scss */
+/* line 147, ../scss/modules/list.scss */
 #companies-list .head-image .image-content {
   -webkit-background-size: contain;
   -moz-background-size: contain;
@@ -259,14 +263,18 @@
   background-color: #fff;
   text-align: center;
 }
-/* line 7, ../scss/modules/edit-detail.scss */
+/* line 8, ../scss/modules/edit-detail.scss */
+#contact-form .image.no-default .image-default, #account-form .image.no-default .image-default {
+  display: none;
+}
+/* line 13, ../scss/modules/edit-detail.scss */
 #contact-form .image .image-default, #account-form .image .image-default {
   font-size: 250px;
   color: #ddd;
   position: relative;
   top: 15px;
 }
-/* line 14, ../scss/modules/edit-detail.scss */
+/* line 20, ../scss/modules/edit-detail.scss */
 #contact-form .image #image-content, #contact-form .image #image-dropzone, #account-form .image #image-content, #account-form .image #image-dropzone {
   position: absolute;
   top: 0;
@@ -274,13 +282,13 @@
   width: 100%;
   height: 100%;
 }
-/* line 22, ../scss/modules/edit-detail.scss */
+/* line 28, ../scss/modules/edit-detail.scss */
 #contact-form .image #image-content, #account-form .image #image-content {
   background-repeat: no-repeat;
   background-position: center;
 }
 
-/* line 31, ../scss/modules/edit-detail.scss */
+/* line 37, ../scss/modules/edit-detail.scss */
 #contact-form .image #image-content {
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -288,9 +296,9 @@
   background-size: cover;
 }
 
-/* line 39, ../scss/modules/edit-detail.scss */
+/* line 45, ../scss/modules/edit-detail.scss */
 #account-form .image #image-content {
-  padding: 10px;
+  padding: 25px;
   background-origin: content-box;
   -webkit-background-size: contain;
   -moz-background-size: contain;

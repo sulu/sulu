@@ -4,6 +4,12 @@
     background-color: $white;
     text-align: center;
 
+    &.no-default {
+      .image-default {
+        display: none;
+      }
+    }
+
     .image-default {
       font-size: 250px;
       color: $grayLighterer;
@@ -37,7 +43,7 @@
 #account-form {
   .image {
     #image-content {
-      padding: 10px;
+      padding: 25px;
       background-origin: content-box;
       @include background-size(contain);
     }
