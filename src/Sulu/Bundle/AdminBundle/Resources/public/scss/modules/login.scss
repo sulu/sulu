@@ -163,6 +163,10 @@
                         }
                     }
 
+                    .form-element {
+                        border: 1px solid $white;
+                    }
+
                     &.content-loading {
                         .box-frame-footer {
                             .btn {
