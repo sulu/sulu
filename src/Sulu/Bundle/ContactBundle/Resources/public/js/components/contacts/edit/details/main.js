@@ -188,7 +188,7 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false, maxFiles: 1,
+                        showOverlay: false, maxFiles: 1
                     }
                 }
             ]);

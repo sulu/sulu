@@ -61,7 +61,7 @@ define([
                     width: 'max',
                     leftSpace: false,
                     rightSpace: false,
-                    topSpace: false,
+                    topSpace: false
                 },
                 sidebar: {
                     width: 'max',
@@ -492,7 +492,7 @@ define([
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on(this.formSelector, 'change keyup', function() {
+                this.sandbox.dom.on(constants.formSelector, 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
                 }.bind(this), 'select, input, textarea');
 
