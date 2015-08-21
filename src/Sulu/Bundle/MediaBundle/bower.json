@@ -1,0 +1,15 @@
+{
+  "name": "sulu-media",
+  "authors": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "wookmark-jquery": "2.*"
+  }
+}
