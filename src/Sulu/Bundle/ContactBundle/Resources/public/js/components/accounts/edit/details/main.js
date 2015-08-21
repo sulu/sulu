@@ -9,9 +9,8 @@
 
 define([
     'config',
-    'widget-groups',
     'services/sulucontact/account-manager',
-], function(Config, WidgetGroups, AccountManager) {
+], function(Config, AccountManager) {
 
     'use strict';
 
@@ -62,10 +61,6 @@ define([
                     leftSpace: false,
                     rightSpace: false,
                     topSpace: false
-                },
-                sidebar: {
-                    width: 'max',
-                    cssClasses: 'sidebar-padding-50'
                 }
             };
         },
@@ -81,19 +76,11 @@ define([
 
             this.render();
             this.listenForChange();
-
-            if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
-                this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
-            }
         },
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
             this.cleanUp();
-        },
-
-        initSidebar: function(url, id) {
-            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {

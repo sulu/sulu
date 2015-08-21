@@ -11,8 +11,7 @@ define([
     'services/sulucontact/account-manager',
     'services/sulucontact/account-router',
     'services/sulucontact/account-delete-dialog',
-    'widget-groups'
-], function(AccountManager, AccountRouter, DeleteDialog, WidgetGroups) {
+], function(AccountManager, AccountRouter, DeleteDialog) {
 
     'use strict';
 
@@ -71,10 +70,6 @@ define([
         layout: {
             content: {
                 width: 'max'
-            },
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
             }
         },
 

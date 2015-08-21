@@ -8,11 +8,10 @@
  */
 
 define([
-    'widget-groups',
     'services/sulucontact/account-manager',
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-delete-dialog'
-], function(WidgetGroups, AccountManager, ContactManager, DeleteDialog) {
+], function(AccountManager, ContactManager, DeleteDialog) {
 
     'use strict';
 
@@ -24,10 +23,6 @@ define([
             return {
                 content: {
                     width: 'fixed'
-                },
-                sidebar: {
-                    width: 'max',
-                    cssClasses: 'sidebar-padding-50'
                 }
             };
         },
@@ -41,18 +36,6 @@ define([
             this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id');
             this.bindCustomEvents();
             this.render();
-
-            if (!!this.data.id) {
-                if (this.options.type === 'contact' && WidgetGroups.exists('contact-detail')) {
-                    this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.data.id);
-                } else if (this.options.type === 'account' && WidgetGroups.exists('account-detail')) {
-                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
-                }
-            }
-        },
-
-        initSidebar: function(url, id) {
-            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {
