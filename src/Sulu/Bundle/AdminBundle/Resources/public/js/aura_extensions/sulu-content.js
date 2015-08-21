@@ -212,9 +212,10 @@ define(function() {
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
          * @param {Object} [header.tabs.data] tabs-data to pass to the header if no tabs-url is specified
+         * @param {Object} [header.tabs.componentOptions] options to pass to the husky-tab-component
          * @param {Object} [header.tabs.options] options that get passed to all tab-components
          * @param {String|Object} [header.tabs.container] the container to render the tabs-content in.
-         *        If not set the content gets insertet directly into the current component
+         *        If not set the content gets inserted directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
          *        If not set no toolbar will be displayed.
          * @param {Array} [header.toolbar.buttons] array of arguments to pass to sulu.buttons.get to recieve the toolbar buttons
@@ -295,7 +296,8 @@ define(function() {
                         tabsData: tabsData,
                         tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,
                         tabsParentOption: this.options,
-                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {}
+                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
+                        tabsComponentOptions: (!!header.tabs && !!header.tabs.componentOptions) ? header.tabs.componentOptions : {}
                     }
                 }]);
 
