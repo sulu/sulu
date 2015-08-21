@@ -2,7 +2,6 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEAETURE    #1503 [All]             Updated to doctrine 2.5
     * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
@@ -16,8 +15,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1402 [AdminBundle]     Fixed sorting of datagrid
     * FEATURE     #1398 [SecurityBundle]  Integrated filters for roles
     * FEATURE     #1398 [TagBundle]       Integrated filters for tags
-    * FEATURE     #1370 [SnippetBundle]   Added copy-locale for snippet UI 
-    * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension 
+    * FEATURE     #1370 [SnippetBundle]   Added copy-locale for snippet UI
+    * FEATURE     #1362 [MediaBundle]     Added resolve media twig extension
     * ENHANCEMENT #1373 [CoreBundle]      Performance improvement of ListBuilder: first select ids by filter conditions
                                           then select data
     * ENHANCEMENT #1367 [AdminBundle]     Added new tabs design
@@ -25,7 +24,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1368 [ResourceBundle]  Changed handling of conjunctions for filters
     * BUGFIX      #1334 [GeneratorBundle] Fixed twig error due to missing templates
     * ENHANCEMENT #1363 [ContactBundle]   Removed old config from filter config
-    * ENHANCEMENT #1353 [ContactBundle]   Integrated custom filters for account-list 
+    * ENHANCEMENT #1353 [ContactBundle]   Integrated custom filters for account-list
     * ENHANCEMENT #1310 [ContactBundle]   Integrated custom filters for contact-list
     * ENHANCEMENT #1356 [ContactBundle]   Fixed getContactsByUserSystem function
     * ENHANCEMENT #1345 [ContactBundle]   Added VAT validation for switzerland
