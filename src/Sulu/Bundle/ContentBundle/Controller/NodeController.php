@@ -577,6 +577,14 @@ class NodeController extends RestController
      */
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('uuid') ?: $request->get('parent');
+        if ($uuid = $request->get('uuid')) {
+            return $uuid;
+        }
+
+        if (($parent = $request->get('parent')) && $request->getMethod() !== Request::METHOD_GET) {
+            // the user is always allowed to get the children of a node
+            // so the security check only applies for requests not being GETs
+            return $parent;
+        }
     }
 }

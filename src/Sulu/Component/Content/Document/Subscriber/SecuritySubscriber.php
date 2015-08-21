@@ -62,7 +62,6 @@ class SecuritySubscriber implements EventSubscriberInterface
         $node = $event->getNode();
 
         foreach ($document->getPermissions() as $roleId => $permission) {
-            // TODO extract this functionality
             $node->setProperty('sec:role-' . $roleId, $permission); // TODO use PropertyEncoder, once it is refactored
         }
     }

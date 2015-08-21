@@ -639,7 +639,7 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * Returns the current user from the token storage
+     * Returns the current user from the token storage.
      *
      * @return UserInterface|null
      */
