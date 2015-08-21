@@ -10,7 +10,8 @@
 require.config({
     paths: {
         sulumedia: '../../sulumedia/js',
-        "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection'
+        "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection',
+        'decorators/cards': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
     }
 });
 
