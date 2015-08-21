@@ -122,6 +122,7 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
         </service>
 

@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
  * Defines the method for the doctrine repository.
  */
@@ -19,13 +21,21 @@ interface CollectionRepositoryInterface
     /**
      * Finds a collection set starting by given ID and depth.
      *
-     * @param Collection $collection
-     * @param int        $depth
-     * @param array      $filter
+     * @param int $depth
+     * @param array $filter
+     * @param CollectionInterface $collection
+     * @param array $sortBy
+     * @param UserInterface $user
      *
      * @return Collection[]
      */
-    public function findCollectionSet($depth = 0, $filter = [], CollectionInterface $collection = null, $sortBy = []);
+    public function findCollectionSet(
+        $depth = 0,
+        $filter = [],
+        CollectionInterface $collection = null,
+        $sortBy = [],
+        UserInterface $user
+    );
 
     /**
      * Finds the collection with a given id.
@@ -40,8 +50,8 @@ interface CollectionRepositoryInterface
      * finds all collections, can be filtered with parent and depth.
      *
      * @param array $filter
-     * @param int   $limit
-     * @param int   $offset
+     * @param int $limit
+     * @param int $offset
      * @param array $sortBy sort by e.g. array('title' => 'ASC')
      *
      * @return Collection[]
