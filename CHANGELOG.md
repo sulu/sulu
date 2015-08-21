@@ -2,8 +2,6 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #1507 [All]             Temporarely downgraded to doctrine 2.4
-    * FEATURE     #1503 [All]             Updated to doctrine 2.5
     * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
