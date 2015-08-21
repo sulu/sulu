@@ -785,18 +785,18 @@ class UserControllerTest extends SuluTestCase
         $user = $users[0];
         $contact = $user->contact;
 
-        $this->assertFalse(property_exists($contact, 'account'));
-        $this->assertFalse(property_exists($contact, 'phones'));
-        $this->assertFalse(property_exists($contact, 'faxes'));
-        $this->assertFalse(property_exists($contact, 'emails'));
-        $this->assertFalse(property_exists($contact, 'position'));
-        $this->assertFalse(property_exists($contact, 'addresses'));
-        $this->assertFalse(property_exists($contact, 'notes'));
-        $this->assertFalse(property_exists($contact, 'tags'));
-        $this->assertFalse(property_exists($contact, 'medias'));
-        $this->assertFalse(property_exists($contact, 'categories'));
-        $this->assertFalse(property_exists($contact, 'urls'));
-        $this->assertFalse(property_exists($contact, 'bankaccounts'));
+        $this->assertObjectNotHasAttribute('account', $contact);
+        $this->assertObjectNotHasAttribute('phones', $contact);
+        $this->assertObjectNotHasAttribute('faxes', $contact);
+        $this->assertObjectNotHasAttribute('emails', $contact);
+        $this->assertObjectNotHasAttribute('position', $contact);
+        $this->assertObjectNotHasAttribute('addresses', $contact);
+        $this->assertObjectNotHasAttribute('notes', $contact);
+        $this->assertObjectNotHasAttribute('tags', $contact);
+        $this->assertObjectNotHasAttribute('medias', $contact);
+        $this->assertObjectNotHasAttribute('categories', $contact);
+        $this->assertObjectNotHasAttribute('urls', $contact);
+        $this->assertObjectNotHasAttribute('bankAccounts', $contact);
     }
 
     public function testPutWithRemovedRoles()
