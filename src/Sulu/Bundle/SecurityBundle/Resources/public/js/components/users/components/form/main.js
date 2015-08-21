@@ -199,16 +199,12 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         render: function() {
             var headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
-                user: (!!this.user.username) ? this.user : null,
+                user: !!this.user ? this.user : null,
                 headline: headline
             }));
             this.sandbox.start(this.$el);
             this.startLanguageDropdown();
             setHeaderToolbar.call(this);
-
-            if (!!this.user.username) {
-                this.initPasswordFields();
-            }
         },
 
         /**
@@ -240,35 +236,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     }
                 }
             ]);
-        },
-
-        initPasswordFields: function() {
-            var bindClearOnClick = function() {
-                this.sandbox.dom.one(this.$el, 'focus', function() {
-                    this.sandbox.dom.val('input[type="password"]', '');
-                }.bind(this), 'input[type="password"]');
-            }.bind(this);
-
-            var bindChangeFlagOnKeyUp = function() {
-                this.sandbox.dom.one(this.$el, 'keyup', function() {
-                    $('#password').data('changed', true);
-                }.bind(this), 'input[type="password"]');
-            }.bind(this);
-
-            var resetPasswordFields = function() {
-                $('#password').removeData('changed');
-                this.sandbox.dom.val('input[type="password"]', '*******');
-                bindClearOnClick();
-                bindChangeFlagOnKeyUp();
-            }.bind(this);
-
-            this.sandbox.dom.on(this.$el, 'blur', function() {
-                if (this.sandbox.dom.val('#password') === '' && this.sandbox.dom.val('#passwordRepeat') === ''){
-                    resetPasswordFields();
-                }
-            }.bind(this), 'input[type="password"]');
-
-            resetPasswordFields();
         },
 
         bindRoleTableEvents: function() {
@@ -407,13 +374,13 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     deselectedRoles: this.deselectedRoles
                 };
 
+                this.password = this.sandbox.dom.val('#password');
 
                 if (!!this.user && !!this.user.id) {
                     data.user.id = this.user.id;
                 }
 
-                this.password = this.sandbox.dom.val('#password');
-                if (!!this.sandbox.dom.data('#password', 'changed') && !!this.password && this.password !== '') {
+                if (!!this.password && this.password !== '') {
                     data.user.password = this.password;
                 }
 
