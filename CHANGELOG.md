@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #XXXX [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
     * FEATURE     #1503 [All]             Updated to doctrine 2.5
     * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
