@@ -9,14 +9,13 @@
             getButtons: function() {
                 var decoratorDropdown = app.sandbox.sulu.buttons.getApiButton('layout');
                 decoratorDropdown.dropdownItems = {
+                    smallThumbnails: {},
+                    bigThumbnails: {},
                     table: {},
-                    cards: {}
+                    masonry: {}
                 };
                 return [{
-                    name: 'contactDecoratorDropdown',
-                    template: decoratorDropdown
-                }, {
-                    name: 'accountDecoratorDropdown',
+                    name: 'mediaDecoratorDropdown',
                     template: decoratorDropdown
                 }];
             },
@@ -24,11 +23,11 @@
             getDropdownItems: function() {
                 return [
                     {
-                        name: 'cards',
+                        name: 'masonry',
                         template: {
-                            title: 'sulu.toolbar.cards',
+                            title: 'sulu.toolbar.masonry', // todo: add translation
                             callback: function() {
-                                this.sandbox.emit('sulu.toolbar.change.cards');
+                                this.sandbox.emit('sulu.toolbar.change.masonry');
                             }.bind(app)
                         }
                     }
