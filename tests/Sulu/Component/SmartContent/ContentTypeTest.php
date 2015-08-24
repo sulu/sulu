@@ -313,6 +313,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => ['123-123-123']
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -409,6 +410,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveFilters(
             ['tags' => [], 'dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -492,6 +494,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => [$uuid],
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -569,6 +572,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => [$uuid],
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -657,6 +661,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => ['123-123-123'],
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
