@@ -12,7 +12,6 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 trait SecuredEntityRepositoryTrait
@@ -29,13 +28,9 @@ trait SecuredEntityRepositoryTrait
         // TODO remove hard coded permission value
         $queryBuilder->andWhere('BIT_AND(accessControl.permissions, 64) = 64 OR accessControl.permissions IS NULL');
 
-        // TODO implement function to retrieve all roles directly in user, and use this one instead
-        /** @var UserRole[] $userRoles */
-        $userRoles = $user->getUserRoles();
-
         $roleIds = [];
-        foreach ($userRoles as $userRole) {
-            $roleIds[] = $userRole->getRole()->getId();
+        foreach ($user->getRoleObjects() as $role) {
+            $roleIds[] = $role->getId();
         }
 
         $queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');

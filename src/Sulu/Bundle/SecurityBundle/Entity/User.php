@@ -115,6 +115,19 @@ class User extends BaseUser
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getRoleObjects()
+    {
+        $roles = [];
+        foreach ($this->getUserRoles() as $userRole) {
+            $roles[] = $userRole->getRole();
+        }
+
+        return $roles;
+    }
+
+    /**
      * Add userGroups.
      *
      * @param UserGroup $userGroups
