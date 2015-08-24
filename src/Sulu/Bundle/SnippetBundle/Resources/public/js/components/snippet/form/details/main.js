@@ -12,7 +12,7 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     return {
-        view: true,
+        layout: {},
 
         initialize: function() {
             this.bindCustomEvents();

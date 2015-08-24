@@ -44,8 +44,6 @@ define(['sulumedia/model/media'], function(Media) {
 
     return {
 
-        view: true,
-
         header: function() {
             // init locale
             this.locale = this.options.locale;

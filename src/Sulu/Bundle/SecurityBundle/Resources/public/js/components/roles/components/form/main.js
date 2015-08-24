@@ -22,7 +22,7 @@ define(['config'], function(Config) {
 
         name: 'Sulu Security Role Form',
 
-        view: true,
+        layout: {},
 
         templates: ['/admin/security/template/role/form'],
 

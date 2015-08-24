@@ -248,7 +248,6 @@ define([
         };
 
     return {
-        view: true,
 
         layout: function() {
             return {

@@ -326,13 +326,10 @@ define(function() {
          * Executes handlers before the load-component-data-hook
          */
         executeBeforeDataHandler = function() {
-            if (!!this.view) {
-                handleViewMarker.call(this, this.view);
-
+            //TODO this.view is deprecated for resetting the layout. use 'layout: {}' instead
+            if (!!this.view && !this.layout) {
                 // if a view has no layout specified use the default one
-                if (!this.layout) {
-                    handleLayoutMarker.call(this, {});
-                }
+                handleLayoutMarker.call(this, {});
             }
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);

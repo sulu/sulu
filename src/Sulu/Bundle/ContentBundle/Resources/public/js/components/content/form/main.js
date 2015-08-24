@@ -13,12 +13,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
     return {
 
-        view: true,
-
-        layout: {
-            changeNothing: true
-        },
-
         template: '',
 
         // content change detection

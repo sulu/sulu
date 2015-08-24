@@ -38,8 +38,6 @@ define(function() {
     return {
         name: 'Sulu Security Role List',
 
-        view: true,
-
         layout: {
             content: {
                 width: 'max'

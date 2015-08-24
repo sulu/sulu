@@ -40,7 +40,6 @@ define(['config'], function(Config) {
     };
 
     return {
-        view: true,
 
         fullSize: {
             width: true

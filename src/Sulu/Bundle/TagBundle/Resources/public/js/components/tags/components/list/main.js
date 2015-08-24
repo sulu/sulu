@@ -73,7 +73,6 @@ define(function() {
         };
 
     return {
-        view: true,
 
         layout: {
             content: {
