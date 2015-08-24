@@ -5,6 +5,9 @@
     require.config({
         paths: {
             'vendor/wookmark':'../../sulumedia/js/vendor/wookmark/wookmark',
+        },
+        shim: {
+            'vendor/wookmark': ['jquery']
         }
     })
 
@@ -15,15 +18,20 @@
             name: 'masonry',
 
             initialize: function(app) {
-                // overwrite onRefresh prototype method of wookmark
+                // overwrite wookmark onRefresh function to addItems on function call
+                Wookmark.prototype.onRefresh = function () {
+                    this.initItems();
+                    this.itemHeightsDirty = true;
+                    this.layout();
+                };
 
                 app.sandbox.masonry = {
-                    initialize: function(selector, configs) {
-                        var v = new Wookmark(selector, configs);
+                    initialize: function(selector, options) {
+                        $(selector).wookmark(options);
                     },
 
-                    refresh: function(selector, newItems){
-                        // add new items and refresh layout
+                    refresh: function(selector){
+                        $(selector).trigger('refreshWookmark');
                     }
                 };
             }
