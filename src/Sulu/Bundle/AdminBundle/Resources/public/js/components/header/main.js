@@ -17,6 +17,7 @@
  * @param {Object} [options.tabsData] data to pass to the tabs component. For data-structure markup see husky
  * @param {Object} [options.tabsParentOptions] The options-object of the tabs-parent-component. this options get merged into each tabs-component-option
  * @param {Object} [options.tabsOption] an object of options which gets merged into each tabs-component option
+ * @param {Object} [options.tabsComponentOptions] an object of options to pass to the husky-tab-component
  * @param {String|Object} [options.tabsContainer] Selector or dom object to insert the the tabs-content into
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
  * @param {Array} [options.toolbarButtons] Array of arguments to pass to the sulu.buttons.get function to recieve the toolbar-buttons
@@ -38,6 +39,7 @@ define([], function() {
             tabsData: null,
             tabsParentOptions: {},
             tabsOption: {},
+            tabsComponentOptions: {},
             toolbarOptions: {},
             tabsContainer: null,
             toolbarLanguageChanger: false,
@@ -372,6 +374,7 @@ define([], function() {
 
                 this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
 
+                options = this.sandbox.util.extend(true, {}, options, this.options.tabsComponentOptions);
                 this.sandbox.start([
                     {
                         name: 'tabs@husky',

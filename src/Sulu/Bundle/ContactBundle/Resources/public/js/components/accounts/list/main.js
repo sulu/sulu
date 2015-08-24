@@ -11,8 +11,7 @@ define([
     'services/sulucontact/account-manager',
     'services/sulucontact/account-router',
     'services/sulucontact/account-delete-dialog',
-    'widget-groups'
-], function(AccountManager, AccountRouter, DeleteDialog, WidgetGroups) {
+], function(AccountManager, AccountRouter, DeleteDialog) {
 
     'use strict';
 
@@ -61,11 +60,6 @@ define([
             }.bind(this));
         },
 
-        clickCallback = function(id) {
-            // show sidebar for selected item
-            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/account-info?account=' + id);
-        },
-
         actionCallback = function(id) {
             AccountRouter.toEdit(id);
         };
@@ -76,10 +70,6 @@ define([
         layout: {
             content: {
                 width: 'max'
-            },
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -102,58 +92,71 @@ define([
             bindCustomEvents.call(this);
         },
 
+        /**
+         * @returns {Object} the config object for the list-toolbar
+         */
+        getListToolbarConfig: function() {
+            return {
+                el: this.$find('#list-toolbar-container'),
+                instanceName: 'accounts',
+                template: this.sandbox.sulu.buttons.get({
+                    accountDecoratorDropdown: {},
+                    settings: {
+                        options: {
+                            dropdownItems: [
+                                {
+                                    type: 'columnOptions'
+                                }
+                            ]
+                        }
+                    }
+                })
+            };
+        },
+
+        /**
+         * @returns {Object} the config object for the datagrid
+         */
+        getDatagridConfig: function() {
+            return {
+                el: this.sandbox.dom.find('#companies-list', this.$el),
+                url: '/admin/api/accounts?flat=true',
+                searchInstanceName: 'accounts',
+                searchFields: ['name'],
+                resultKey: 'accounts',
+                instanceName: constants.datagridInstanceName,
+                actionCallback: actionCallback.bind(this),
+                view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                viewOptions: {
+                    'decorators/cards': {
+                        imageFormat: '100x100-inset',
+                        fields: {
+                            picture: 'logo',
+                            title: ['name'],
+                            firstInfoRow: ['city', 'countryCode'],
+                            secondInfoRow: ['mainEmail'],
+                        },
+                        separators: {
+                            title: ' ',
+                            infoRow: ', '
+                        },
+                        icons: {
+                            picture: 'fa-home',
+                            firstInfoRow: 'fa-map-marker',
+                            secondInfoRow: 'fa-envelope'
+                        }
+                    }
+                }
+            };
+        },
+
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accounts', '/admin/api/accounts/fields',
-                {
-                    el: this.$find('#list-toolbar-container'),
-                    instanceName: 'accounts',
-                    template: this.sandbox.sulu.buttons.get({
-                        accountDecoratorDropdown: {},
-                        settings: {
-                            options: {
-                                dropdownItems: [
-                                    {
-                                        type: 'columnOptions'
-                                    }
-                                ]
-                            }
-                        }
-                    })
-                },
-                {
-                    el: this.sandbox.dom.find('#companies-list', this.$el),
-                    url: '/admin/api/accounts?flat=true',
-                    searchInstanceName: 'accounts',
-                    searchFields: ['name'],
-                    resultKey: 'accounts',
-                    instanceName: constants.datagridInstanceName,
-                    clickCallback: (WidgetGroups.exists('account-info')) ? clickCallback.bind(this) : null,
-                    actionCallback: actionCallback.bind(this),
-                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
-                    viewOptions: {
-                        'decorators/cards': {
-                            imageFormat: '100x100-inset',
-                            fields: {
-                                picture: 'logo',
-                                title: ['name'],
-                                firstInfoRow: ['city', 'countryCode'],
-                                secondInfoRow: ['mainEmail'],
-                            },
-                            separators: {
-                                title: ' ',
-                                infoRow: ', '
-                            },
-                            icons: {
-                                picture: 'fa-home',
-                                firstInfoRow: 'fa-map-marker',
-                                secondInfoRow: 'fa-envelope'
-                            }
-                        }
-                    }
-                },
+                this.getListToolbarConfig(),
+                this.getDatagridConfig(),
                 'accounts',
                 '#companies-list-info'
             );
