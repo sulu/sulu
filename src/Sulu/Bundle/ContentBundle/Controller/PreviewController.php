@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,13 +49,6 @@ class PreviewController extends Controller
 
         $webspaceKey = $this->getWebspaceKey($request);
         $locale = $this->getLanguageCode($request);
-
-        if ($contentUuid === 'index') {
-            /** @var ContentMapperInterface $contentMapper */
-            $contentMapper = $this->get('sulu.content.mapper');
-            $startPage = $contentMapper->loadStartPage($webspaceKey, $locale);
-            $contentUuid = $startPage->getUuid();
-        }
 
         if (!$preview->started($uid, $contentUuid, $webspaceKey, $locale)) {
             $preview->start($uid, $contentUuid, $webspaceKey, $locale);

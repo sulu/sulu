@@ -207,32 +207,6 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function saveIndexNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $isShadow = false,
-        $shadowBaseLanguage = null
-    ) {
-        $structure = $this->getMapper()->saveStartPage(
-            $data,
-            $templateKey,
-            $webspaceKey,
-            $languageCode,
-            $userId,
-            true,
-            $isShadow,
-            $shadowBaseLanguage
-        );
-
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function deleteNode($uuid, $webspaceKey)
     {
         // TODO remove third parameter, and ask in UI if referenced node should be deleted

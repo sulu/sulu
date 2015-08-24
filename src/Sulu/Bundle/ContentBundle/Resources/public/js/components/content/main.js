@@ -77,6 +77,10 @@ define([
             ].join(''),
 
             previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>'
+        },
+
+        isHomeDocument = function(data) {
+            return data.url === '/';
         };
 
     return {
@@ -209,11 +213,6 @@ define([
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
-
-                    // if there is a index id this should be after reload
-                    if (this.options.id === 'index') {
-                        data.id = this.options.id;
-                    }
 
                     if (!!data.id) {
                         this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
@@ -547,6 +546,7 @@ define([
                 this.options.language,
                 this.options.parent,
                 this.state,
+                (isHomeDocument(data) ? 'home' : null),
                 null, {
                     // on success save contents id
                     success: function(response) {
@@ -656,12 +656,10 @@ define([
                         (this.options.content !== 'settings' && this.data.shadowOn === true) ||
                         (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
                     ) {
-                        var id = (this.options.id === 'index' ? this.options.id : data.id);
-
                         this.sandbox.emit(
                             'sulu.router.navigate',
                             'content/contents/' + this.options.webspace +
-                            '/' + this.options.language + '/edit:' + id + '/settings'
+                            '/' + this.options.language + '/edit:' + data.id + '/settings'
                         );
                     }
                 }
@@ -1018,8 +1016,7 @@ define([
                 this.headerInitialized.resolve();
             }.bind(this));
 
-            var noBack = (this.options.id === 'index'),
-                length, concreteLanguages = [],
+            var length, concreteLanguages = [],
                 def = this.sandbox.data.deferred();
 
             this.loadDataDeferred.then(function() {
@@ -1078,7 +1075,7 @@ define([
                     }
 
                     header = {
-                        noBack: noBack,
+                        noBack: isHomeDocument(this.data),
 
                         tabs: {
                             url: navigationUrl
@@ -1133,7 +1130,7 @@ define([
                                     items: [
                                         {
                                             title: this.sandbox.translate('toolbar.delete'),
-                                            disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
+                                            disabled: isHomeDocument(this.data),
                                             callback: function() {
                                                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
                                             }.bind(this)
