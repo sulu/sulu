@@ -15,7 +15,6 @@ use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
-use Sulu\Component\SmartContent\ResourceItemInterface;
 
 class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
 {

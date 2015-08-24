@@ -34,7 +34,7 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getTitle()
     {

@@ -6,6 +6,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
+use Sulu\Component\SmartContent\ResourceItemInterface;
 
 class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,7 +55,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 $limit,
                 $presentAs,
                 $paginated,
-                $sorting
+                $sorting,
             ]
         );
 
@@ -66,7 +67,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($presentAs, $configuration->hasPresentAs());
         $this->assertEquals($sorting, $configuration->getSorting());
         $this->assertEquals($paginated, $configuration->getPaginated());
-        $this->assertEquals(sizeof($sorting) > 0, $configuration->hasSorting());
+        $this->assertEquals(count($sorting) > 0, $configuration->hasSorting());
     }
 
     public function testResolveDataSource()
@@ -98,7 +99,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
                 false,
-                [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]]
+                [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
             ],
             [
                 [],
@@ -224,7 +225,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
     ) {
         $mockedItems = array_map(
             function ($item) {
-                $mock = $this->prophesize(TestInterface::class);
+                $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
 
                 return $mock->reveal();
@@ -259,7 +260,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $result->getReferencedUuids());
         $this->assertCount(count($items), $result->getItems());
 
-        for ($i = 0, $len = count($items); $i < $len; $i++) {
+        for ($i = 0, $len = count($items); $i < $len; ++$i) {
             $expected = $items[$i];
             $item = $result->getItems()[$i];
 
@@ -267,9 +268,4 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($expected['id'], $item['id']);
         }
     }
-}
-
-interface TestInterface
-{
-    public function getId();
 }

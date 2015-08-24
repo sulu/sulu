@@ -11,13 +11,13 @@
 namespace Sulu\Component\SmartContent\Orm;
 
 /**
- * Provides interface for DataProvider repository
+ * Provides interface for DataProvider repository.
  */
 interface DataProviderRepositoryInterface
 {
     /**
-     * Returned filtered contacts.
-     * when pagination is active the result count is pageSize + 1 to determine has next page.
+     * Returns filtered entities.
+     * When pagination is active the result count is pageSize + 1 to determine has next page.
      *
      * @param array $filters array of filters: tags, tagOperator
      * @param int $page

@@ -157,7 +157,7 @@ abstract class BaseDataProvider implements DataProviderInterface
      *
      * @return array
      */
-    protected abstract function decorateDataItems(array $data);
+    abstract protected function decorateDataItems(array $data);
 
     /**
      * Converts entity to array.
@@ -167,5 +167,5 @@ abstract class BaseDataProvider implements DataProviderInterface
      *
      * @return array
      */
-    protected abstract function convertToArray($entity, $locale);
+    abstract protected function convertToArray($entity, $locale);
 }

@@ -128,7 +128,7 @@ trait DataProviderRepositoryTrait
         $queryBuilder->join('c.tags', 'tags')
             ->where('tags.id IN (:tags)');
 
-        return [$tags];
+        return ['tags' => $tags];
     }
 
     /**
@@ -144,8 +144,8 @@ trait DataProviderRepositoryTrait
         $parameter = [];
         $expr = $queryBuilder->expr()->andX();
 
-        $len = count($tags);
-        for ($i = 0; $i < $len; ++$i) {
+        $length = count($tags);
+        for ($i = 0; $i < $length; ++$i) {
             $queryBuilder->join('c.tags', 'tags' . $i);
 
             $expr->add($queryBuilder->expr()->eq('tags' . $i . '.id', ':tag' . $i));
@@ -164,12 +164,12 @@ trait DataProviderRepositoryTrait
      *
      * @return QueryBuilder
      */
-    public abstract function createQueryBuilder($alias);
+    abstract public function createQueryBuilder($alias);
 
     /**
      * Append joins to query builder for "findByFilters" function.
      *
      * @param QueryBuilder $queryBuilder
      */
-    protected abstract function appendJoins(QueryBuilder $queryBuilder);
+    abstract protected function appendJoins(QueryBuilder $queryBuilder);
 }

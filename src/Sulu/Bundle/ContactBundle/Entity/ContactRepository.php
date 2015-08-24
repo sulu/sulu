@@ -19,8 +19,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 /**
- * Repository for the Codes, implementing some additional functions
- * for querying objects.
+ * Repository for the contacts, implementing some additional functions for querying objects.
  */
 class ContactRepository extends EntityRepository implements DataProviderRepositoryInterface
 {
@@ -429,5 +428,4 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->leftJoin('entity.categories', 'categories')
             ->leftJoin('categories.translations', 'translations');
     }
-
 }
