@@ -82,15 +82,6 @@ define(function() {
         },
 
         /**
-         * Handles the components which are marked with a view property.
-         *
-         * @param {Object} view The view property of a component.
-         */
-        handleViewMarker = function(view) {
-            this.sandbox.emit('sulu.view.initialize', view);
-        },
-
-        /**
          * Handles layout marked components
          *
          * @param {Object|Boolean|Function} layout The layout object or true for default values.
