@@ -22,7 +22,7 @@ abstract class ComplexContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultParams()
+    public function getDefaultParams(PropertyInterface $property = null)
     {
         return [];
     }
