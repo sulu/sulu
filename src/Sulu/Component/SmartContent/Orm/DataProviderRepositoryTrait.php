@@ -25,8 +25,8 @@ trait DataProviderRepositoryTrait
     {
         $queryBuilder = $this->createQueryBuilder('entity')
             ->addSelect('entity')
-            ->where('c.id IN (:ids)')
-            ->orderBy('c.id', 'ASC');
+            ->where('entity.id IN (:ids)')
+            ->orderBy('entity.id', 'ASC');
 
         $this->appendJoins($queryBuilder);
 
