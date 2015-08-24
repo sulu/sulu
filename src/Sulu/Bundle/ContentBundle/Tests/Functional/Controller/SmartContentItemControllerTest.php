@@ -257,9 +257,9 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'path' => '/team/johannes'],
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'path' => '/team/daniel'],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'path' => '/team/thomas'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -284,8 +284,8 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'path' => '/team/daniel'],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'path' => '/team/thomas'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -310,8 +310,8 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'path' => '/team/johannes'],
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'path' => '/team/daniel'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
             ],
             $result['_embedded']['items']
         );
@@ -336,7 +336,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'path' => '/team/johannes'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes'],
             ],
             $result['_embedded']['items']
         );
