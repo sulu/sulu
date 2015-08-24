@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,144 +12,30 @@ namespace Sulu\Component\Contact\SmartContent;
 
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\SmartContent\ArrayAccessItem;
-use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
-use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
-use Sulu\Component\SmartContent\DataProviderInterface;
-use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\Orm\BaseDataProvider;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * Contact DataProvider for SmartContent.
  */
-class ContactDataProvider implements DataProviderInterface
+class ContactDataProvider extends BaseDataProvider
 {
-    /**
-     * @var ProviderConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var ContactRepository
-     */
-    private $repository;
-
-    public function __construct(ContactRepository $repository)
+    public function __construct(DataProviderRepositoryInterface $repository)
     {
-        $this->repository = $repository;
+        parent::__construct($repository);
+
+        $this->configuration = $this->initConfiguration(true, false, true, true, true, []);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
-    {
-        if (!$this->configuration) {
-            return $this->initConfiguration();
-        }
-
-        return $this->configuration;
-    }
-
-    /**
-     * Initiate configuration.
-     *
-     * @return ProviderConfigurationInterface
-     */
-    private function initConfiguration()
-    {
-        $this->configuration = new ProviderConfiguration();
-        $this->configuration->setTags(true);
-        $this->configuration->setCategories(false);
-        $this->configuration->setLimit(true);
-        $this->configuration->setPresentAs(true);
-        $this->configuration->setPaginated(true);
-
-        return $this->configuration;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultPropertyParameter()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function resolveDataItems(
-        array $filters,
-        array $propertyParameter,
-        array $options = [],
-        $limit = null,
-        $page = 1,
-        $pageSize = null
-    ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $limit, $page, $pageSize);
-
-        return new DataProviderResult($this->decorateDataItems($result), $hasNextPage);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function resolveResourceItems(
-        array $filters,
-        array $propertyParameter,
-        array $options = [],
-        $limit = null,
-        $page = 1,
-        $pageSize = null
-    ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $limit, $page, $pageSize);
-
-        return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
-    }
-
-    /**
-     * Resolves filters.
-     */
-    private function resolveFilters(
-        array $filters,
-        $limit = null,
-        $page = 1,
-        $pageSize = null
-    ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit);
-
-        $hasNextPage = false;
-        if ($pageSize !== null && count($result) > $pageSize) {
-            $hasNextPage = true;
-            $result = array_splice($result, 0, $pageSize);
-        }
-
-        return [$result, $hasNextPage];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function resolveDatasource($datasource, array $propertyParameter, array $options)
-    {
-        return;
-    }
-
-    /**
-     * Decorates result as data item.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function decorateDataItems(array $data)
+    protected function decorateDataItems(array $data)
     {
         return array_map(
             function ($item) {
@@ -160,62 +46,37 @@ class ContactDataProvider implements DataProviderInterface
     }
 
     /**
-     * Decorates result as resource item.
-     *
-     * @param array $data
-     * @param string $locale
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    private function decorateResourceItems(array $data, $locale)
-    {
-        return array_map(
-            function (Contact $item) use ($locale) {
-                $itemData = $this->contactToArray($item, $locale);
-
-                return new ArrayAccessItem($item->getId(), $itemData, $item);
-            },
-            $data
-        );
-    }
-
-    /**
-     * Converts contact entity to array.
-     *
-     * @param Contact $contact
-     * @param string $locale
-     *
-     * @return array
-     */
-    private function contactToArray(Contact $contact, $locale)
+    protected function convertToArray($entity, $locale)
     {
         $emails = [];
-        foreach ($contact->getEmails() as $email) {
+        foreach ($entity->getEmails() as $email) {
             /** @var Email $email */
             $emails[] = ['email' => $email->getEmail(), 'type' => $email->getEmailType()];
         }
         $phones = [];
-        foreach ($contact->getPhones() as $phone) {
+        foreach ($entity->getPhones() as $phone) {
             /** @var Phone $phone */
             $phones[] = ['phone' => $phone->getPhone(), 'type' => $phone->getPhoneType()];
         }
         $faxes = [];
-        foreach ($contact->getFaxes() as $fax) {
+        foreach ($entity->getFaxes() as $fax) {
             /** @var Fax $fax */
             $faxes[] = ['fax' => $fax->getFax(), 'type' => $fax->getFaxType()];
         }
         $urls = [];
-        foreach ($contact->getUrls() as $url) {
+        foreach ($entity->getUrls() as $url) {
             /** @var Url $url */
             $urls[] = ['url' => $url->getUrl(), 'type' => $url->getUrlType()];
         }
         $tags = [];
-        foreach ($contact->getTags() as $tag) {
+        foreach ($entity->getTags() as $tag) {
             /** @var Tag $tag */
             $tags[] = $tag->getName();
         }
         $categories = [];
-        foreach ($contact->getCategories() as $category) {
+        foreach ($entity->getCategories() as $category) {
             /** @var Category $category */
             $translation = $this->getCategoryTranslation($category, $locale);
 
@@ -223,19 +84,19 @@ class ContactDataProvider implements DataProviderInterface
         }
 
         return [
-            'formOfAddress' => $contact->getFormOfAddress(),
-            'title' => $contact->getTitle(),
-            'salutation' => $contact->getSalutation(),
-            'fullName' => $contact->getFullName(),
-            'firstName' => $contact->getFirstName(),
-            'lastName' => $contact->getLastName(),
-            'middleName' => $contact->getMiddleName(),
-            'birthday' => $contact->getBirthday(),
-            'created' => $contact->getCreated(),
-            'creator' => $contact->getCreator(),
-            'changed' => $contact->getChanged(),
-            'changer' => $contact->getChanger(),
-            'medias' => $contact->getMedias(),
+            'formOfAddress' => $entity->getFormOfAddress(),
+            'title' => $entity->getTitle(),
+            'salutation' => $entity->getSalutation(),
+            'fullName' => $entity->getFullName(),
+            'firstName' => $entity->getFirstName(),
+            'lastName' => $entity->getLastName(),
+            'middleName' => $entity->getMiddleName(),
+            'birthday' => $entity->getBirthday(),
+            'created' => $entity->getCreated(),
+            'creator' => $entity->getCreator(),
+            'changed' => $entity->getChanged(),
+            'changer' => $entity->getChanger(),
+            'medias' => $entity->getMedias(),
             'emails' => $emails,
             'phones' => $phones,
             'faxes' => $faxes,
@@ -253,7 +114,7 @@ class ContactDataProvider implements DataProviderInterface
      *
      * @return CategoryTranslation
      */
-    private function getCategoryTranslation(Category $category, $locale)
+    protected function getCategoryTranslation(Category $category, $locale)
     {
         foreach ($category->getTranslations() as $translation) {
             if ($translation->getLocale() == $locale) {
