@@ -156,6 +156,7 @@ class ContentType extends ComplexContentType
         $configuration = $provider->getConfiguration();
 
         $defaults = [
+            'provider' => new PropertyParameter('provider', 'content'),
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
