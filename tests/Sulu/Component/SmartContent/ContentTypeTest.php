@@ -307,6 +307,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             ['dataSource' => 'some-uuid', 'page' => 1, 'hasNextPage' => true, 'excluded' => ['123-123-123']],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -393,6 +394,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -470,6 +472,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => [$uuid],
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -541,6 +544,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => [$uuid],
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
@@ -628,6 +632,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'excluded' => ['123-123-123'],
             ],
             [
+                'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
