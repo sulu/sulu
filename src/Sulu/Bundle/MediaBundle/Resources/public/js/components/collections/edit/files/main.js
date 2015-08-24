@@ -18,22 +18,26 @@ define(function() {
 
         listViews = {
             table: {
-                itemId: 'table',
-                name: 'table'
+                name: 'table',
+                viewOptions: {}
             },
             thumbnailSmall: {
-                itemId: 'small-thumbnails',
                 name: 'thumbnail',
-                thViewOptions: {
-                    large: false
+                viewOptions: {
+                    large: false,
+                    selectable: false
                 }
             },
             thumbnailLarge: {
-                itemId: 'big-thumbnails',
                 name: 'thumbnail',
-                thViewOptions: {
-                    large: true
+                viewOptions: {
+                    large: true,
+                    selectable: false
                 }
+            },
+            masonry: {
+                name: 'decorators/masonry',
+                viewOptions: {}
             }
         },
 
@@ -90,22 +94,33 @@ define(function() {
          * Binds custom related events
          */
         bindCustomEvents: function() {
+            /**
+             * Change current view of the datagrid to given viewKey
+             * viewKey must be specified in listViews-Object
+             */
+            var changeDatagridView = function(viewKey) {
+                this.sandbox.emit('husky.datagrid.view.change', listViews[viewKey].name, listViews[viewKey]['viewOptions']);
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, viewKey);
+            }.bind(this);
+
             // change datagrid to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
+                changeDatagridView('table');
             }.bind(this));
 
             // change datagrid to thumbnail small
             this.sandbox.on('sulu.toolbar.change.thumbnail-small', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: false});
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
+                changeDatagridView('thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
             this.sandbox.on('sulu.toolbar.change.thumbnail-large', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: true});
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
+                changeDatagridView('thumbnailLarge');
+            }.bind(this));
+
+            // change datagrid to masonry
+            this.sandbox.on('sulu.toolbar.change.masonry', function() {
+                changeDatagridView('masonry');
             }.bind(this));
 
             // if files got uploaded to the server add them to the datagrid
@@ -330,7 +345,7 @@ define(function() {
                                 ]
                             }
                         },
-                        layout: {}
+                        mediaDecoratorDropdown: {}
                     })
                 },
                 {
@@ -341,7 +356,7 @@ define(function() {
                     sortable: false,
                     actionCallback: this.editMedia.bind(this),
                     viewOptions: {
-                        thumbnail: listViews[this.listView].thViewOptions || {},
+                        thumbnail: listViews[this.listView].viewOptions || {},
                         table: {
                             actionIconColumn: 'name'
                         }

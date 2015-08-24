@@ -21,24 +21,26 @@ define(['sulumedia/model/media'], function(Media) {
 
         listViews = {
             table: {
-                itemId: 'table',
-                name: 'table'
+                name: 'table',
+                viewOptions: {}
             },
             thumbnailSmall: {
-                itemId: 'small-thumbnails',
                 name: 'thumbnail',
-                thViewOptions: {
+                viewOptions: {
                     large: false,
                     selectable: false
                 }
             },
             thumbnailLarge: {
-                itemId: 'big-thumbnails',
                 name: 'thumbnail',
-                thViewOptions: {
+                viewOptions: {
                     large: true,
                     selectable: false
                 }
+            },
+            masonry: {
+                name: 'decorators/masonry',
+                viewOptions: {}
             }
         };
 
@@ -97,22 +99,33 @@ define(['sulumedia/model/media'], function(Media) {
         },
 
         bindCustomEvents: function() {
+            /**
+             * Change current view of the datagrid to given viewKey
+             * viewKey must be specified in listViews-Object
+             */
+            var changeDatagridView = function(viewKey) {
+                this.sandbox.emit('husky.datagrid.view.change', listViews[viewKey].name, listViews[viewKey]['viewOptions']);
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, viewKey);
+            }.bind(this);
+
             // change datagrid to table
-            this.sandbox.on('sulu.list-toolbar.change.table', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
+            this.sandbox.on('sulu.toolbar.change.table', function() {
+                changeDatagridView('table');
             }.bind(this));
 
             // change datagrid to thumbnail small
-            this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']['thViewOptions']);
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
+            this.sandbox.on('sulu.toolbar.change.thumbnail-small', function() {
+                changeDatagridView('thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
-            this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']['thViewOptions']);
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
+            this.sandbox.on('sulu.toolbar.change.thumbnail-large', function() {
+                changeDatagridView('thumbnailLarge');
+            }.bind(this));
+
+            // change datagrid to masonry
+            this.sandbox.on('sulu.toolbar.change.masonry', function() {
+                changeDatagridView('masonry');
             }.bind(this));
 
             // download media
@@ -147,38 +160,9 @@ define(['sulumedia/model/media'], function(Media) {
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
-                    template: [
-                        {
-                            id: 'change',
-                            icon: 'th-large',
-                            dropdownOptions: {
-                                markSelected: true
-                            },
-                            dropdownItems: [
-                                {
-                                    id: 'small-thumbnails',
-                                    title: this.sandbox.translate('sulu.toolbar.small-thumbnails'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.change.thumbnail-small');
-                                    }.bind(this)
-                                },
-                                {
-                                    id: 'big-thumbnails',
-                                    title: this.sandbox.translate('sulu.toolbar.big-thumbnails'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.change.thumbnail-large');
-                                    }.bind(this)
-                                },
-                                {
-                                    id: 'table',
-                                    title: this.sandbox.translate('sulu.toolbar.table'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.change.table');
-                                    }.bind(this)
-                                }
-                            ]
-                        }
-                    ]
+                    template: this.sandbox.sulu.buttons.get({
+                        mediaDecoratorDropdown: {}
+                    })
                 },
                 {
                     el: this.$find(constants.datagridSelector),
@@ -192,7 +176,7 @@ define(['sulumedia/model/media'], function(Media) {
                             selectItem: true,
                             actionIconColumn: 'name'
                         },
-                        thumbnail: listViews[this.listView].thViewOptions || {}
+                        thumbnail: listViews[this.listView].viewOptions || {}
                     }
                 });
         },

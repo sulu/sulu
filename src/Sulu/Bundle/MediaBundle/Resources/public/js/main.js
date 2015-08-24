@@ -14,7 +14,7 @@ require.config({
         'extensions/sulu-buttons-mediabundle': '../../sulumedia/js/extensions/sulu-buttons',
 
         "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection',
-        'decorators/cards': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
+        'decorators/masonry': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
     }
 });
 
