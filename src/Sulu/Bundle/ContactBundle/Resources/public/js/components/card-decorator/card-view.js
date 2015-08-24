@@ -1,21 +1,22 @@
 /**
- * @class ThumbnailView (Datagrid Decorator)
+ * @class CardView (Datagrid Decorator)
  * @constructor
  *
  * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
+ * @param {String} [emptyListTranslations] translation key for the empty-list indicator
  * @param {String} [imageFormat] api-format which is used for head-image
  * @param {Object} [viewOptions] Configuration object
- * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
- * @param {String} [viewOptions.fields.picture]
- * @param {Array} [viewOptions.fields.title]
- * @param {Array} [viewOptions.fields.firstInfoRow]
- * @param {Array} [viewOptions.fields.secondInfoRow]
- * @param {Object} [viewOptions.separators] Defines separators between data-columns
- * @param {String} [viewOptions.separators.title]
- * @param {String} [viewOptions.separators.infoRow]
- * @param {Object} [viewOptions.icons] Defines info-row icons
- * @param {String} [viewOptions.icons.firstInfoRow]
- * @param {String} [viewOptions.icons.secondInfoRow]
+ * @param {Object} [fields] Defines which data-columns are used to render cards
+ * @param {String} [fields.picture]
+ * @param {Array} [fields.title]
+ * @param {Array} [fields.firstInfoRow]
+ * @param {Array} [fields.secondInfoRow]
+ * @param {Object} [separators] Defines separators between data-columns
+ * @param {String} [separators.title]
+ * @param {String} [separators.infoRow]
+ * @param {Object} [icons] Defines info-row icons
+ * @param {String} [icons.firstInfoRow]
+ * @param {String} [icons.secondInfoRow]
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -31,6 +32,7 @@ define(function() {
     var defaults = {
             unselectOnBackgroundClick: true,
             imageFormat: '100x100',
+            emptyListTranslation: 'public.empty-list',
             fields: {},
             separators: {},
             icons: {}
@@ -38,11 +40,12 @@ define(function() {
 
         constants = {
             containerClass: 'contact-grid',
+            emptyListClass: 'empty-list',
             selectedClass: 'selected',
             actionNavigatorClass: 'action-navigator',
 
             itemHeadClass: 'item-head',
-            itemInfoClass: 'item-info',
+            itemInfoClass: 'item-info'
         },
 
         templates = {
@@ -68,6 +71,12 @@ define(function() {
                 '   <span class="<%= icon %> info-icon"></span>',
                 '   <span class="info-text"><%= text %></span>',
                 '</div>'
+            ].join(''),
+            emptyIndicator: [
+                '<div class="' + constants.emptyListClass + '">',
+                '   <div class="fa-coffee icon"></div>',
+                '   <span><%= text %></span>',
+                '</div>'
             ].join('')
         },
 
@@ -89,7 +98,7 @@ define(function() {
                 });
                 return strings.join(separator);
             }
-        }
+        };
 
     return {
 
@@ -134,7 +143,11 @@ define(function() {
             this.sandbox.dom.append($container, this.$el);
 
             this.bindGeneralDomEvents();
-            this.renderItems(this.data.embedded);
+            if (this.data.total > 0) {
+                this.renderItems(this.data.embedded);
+            } else {
+                this.renderEmptyIndicator();
+            }
             this.rendered = true;
         },
 
@@ -154,11 +167,11 @@ define(function() {
          * @param items {Array} array with items to render
          */
         renderItems: function(items) {
-            // loop through each data record
+            this.removeEmptyIndicator();
             this.sandbox.util.foreach(items, function(record) {
                 var id, picture, title, firstInfoRow, secondInfoRow;
 
-                id = record['id'];
+                id = record.id;
                 picture = (!!record[this.options.fields.picture]) ?
                     record[this.options.fields.picture][this.options.imageFormat] : '';
 
@@ -169,6 +182,22 @@ define(function() {
                 // pass the found data to a render method
                 this.renderItem(id, picture, title, firstInfoRow, secondInfoRow);
             }.bind(this));
+        },
+
+        /**
+         * Renders an item which indicates that the list is empty
+         */
+        renderEmptyIndicator: function() {
+            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.emptyIndicator, {
+                text: this.sandbox.translate(this.options.emptyListTranslation)
+            }));
+        },
+
+        /**
+         * Removes the empty-indicator from the list
+         */
+        removeEmptyIndicator: function() {
+            this.$el.find('.' + constants.emptyListClass).remove();
         },
 
         /**
