@@ -24,12 +24,6 @@ define([
          */
         TYPE_CONTENT = 1,
 
-        /**
-         * Helper var to determine complete loaded data
-         * @type {number}
-         */
-        remainingData = 2,
-
         constants = {
             resolutionDropdownData: [
                 {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
@@ -100,23 +94,36 @@ define([
             this.preview = new Preview();
             this.preview.initialize(this.sandbox, this.options, this.$el);
 
-            remainingData = 2;
-            this.loadLocalizations();
-
             if (this.options.display === 'column') {
-                remainingData = 1;
-                this.loadDataDeferred.then(function() {
-                    this.renderColumn();
-                }.bind(this));
+                this.renderColumn();
             } else {
-                this.loadData();
+                this.render();
             }
             this.bindCustomEvents();
         },
 
+        loadComponentData: function() {
+            var localization = $.Deferred();
+            var data = $.Deferred();
+
+            this.loadLocalizations().then(function() {
+                localization.resolve();
+            }.bind(this));
+
+            if (this.options.display !== 'column') {
+                this.loadData().then(function() {
+                    data.resolve();
+                }.bind(this));
+            } else {
+                data.resolve();
+            }
+
+            return $.when(localization, data);
+        },
+
         renderColumn: function() {
             var $column = this.sandbox.dom.createElement('<div id="content-column-container"/>');
-            this.html($column);
+            this.sandbox.dom.append(this.$el, $column);
             this.sandbox.start([
                 {
                     name: 'content/column@sulucontent',
@@ -130,7 +137,7 @@ define([
         },
 
         loadLocalizations: function() {
-            this.sandbox.util.load(constants.localizationUrl + '?webspace=' + this.options.webspace)
+            return this.sandbox.util.load(constants.localizationUrl + '?webspace=' + this.options.webspace)
                 .then(function(data) {
                     this.localizations = data._embedded.localizations.map(function(localization) {
                         return {
@@ -138,15 +145,11 @@ define([
                             title: localization.localization
                         };
                     });
-                    remainingData--;
-
-                    if (remainingData <= 0) {
-                        this.loadDataDeferred.resolve();
-                    }
                 }.bind(this));
         },
 
         loadData: function() {
+            var promise = $.Deferred();
             if (!this.content) {
                 this.content = new Content({id: this.options.id});
             }
@@ -158,23 +161,17 @@ define([
                     true,
                     {
                         success: function(content) {
-                            this.render(content.toJSON());
-                            remainingData--;
-
-                            if (remainingData <= 0) {
-                                this.loadDataDeferred.resolve();
-                            }
+                            this.data = content.toJSON();
+                            promise.resolve();
                         }.bind(this)
                     }
                 );
             } else {
-                this.render(this.content.toJSON());
-                remainingData--;
-
-                if (remainingData <= 0) {
-                    this.loadDataDeferred.resolve();
-                }
+                this.data = this.content.toJSON();
+                promise.resolve();
             }
+
+            return promise;
         },
 
         bindCustomEvents: function() {
@@ -194,10 +191,8 @@ define([
 
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback) {
-                this.loadDataDeferred.then(function() {
-                    // deep copy of object
-                    callback(JSON.parse(JSON.stringify(this.data)));
-                }.bind(this));
+                // deep copy of object
+                callback(JSON.parse(JSON.stringify(this.data)));
             }.bind(this));
 
             // setter for header bar buttons
@@ -248,8 +243,6 @@ define([
 
             // content saved
             this.sandbox.on('sulu.content.contents.saved', function(id, data) {
-                this.highlightSaveButton = true;
-
                 this.data = data;
                 this.setHeaderBar(true);
 
@@ -565,17 +558,17 @@ define([
                             this.sandbox.emit('sulu.content.contents.list');
                         } else if (action === 'new') {
                             parent = ((!!this.options.id && model.breadcrumb.length > 1)
-                                         ? model.breadcrumb[model.breadcrumb.length - 1].uuid : null)
-                                     || this.options.parent;
+                                ? model.breadcrumb[model.breadcrumb.length - 1].uuid : null)
+                            || this.options.parent;
                             this.sandbox.emit('sulu.router.navigate',
                                 'content/contents/' + this.options.webspace + '/' +
-                                this.options.language + '/add' +  ((!!parent) ? ':' + parent : '') + '/content',
+                                this.options.language + '/add' + ((!!parent) ? ':' + parent : '') + '/content',
                                 true, true
                             );
                         } else if (!this.options.id) {
                             this.sandbox.emit('sulu.router.navigate',
                                 'content/contents/' + this.options.webspace + '/' +
-                                 this.options.language + '/edit:' + model.id + '/content'
+                                this.options.language + '/edit:' + model.id + '/content'
                             );
                         }
                         def.resolve();
@@ -624,66 +617,63 @@ define([
             }
         },
 
-        render: function(data) {
-            this.data = data;
-            this.headerInitialized.then(function() {
-                this.setTemplate(data);
-                this.setState(data);
+        render: function() {
+            this.setTemplate(this.data);
+            this.setState(this.data);
 
-                if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
-                    this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
-                        this.sandbox.emit('husky.tabs.header.item.show', 'tab-' + tabName);
+            if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
+                this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
+                    this.sandbox.emit('husky.tabs.header.item.show', 'tab-' + tabName);
+                }.bind(this));
+
+                this.sandbox.on('sulu.preview.initiated', function() {
+                    this.renderPreview(this.data);
+                }.bind(this));
+
+                this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
+
+                this.sandbox.on('sulu.preview.initialize', function(data, restart) {
+                    if (this.previewMode === 'auto') {
+                        // if mode is auto init immediately
+                        this.sandbox.emit('sulu.preview.initialize.force', data, restart);
+                    } else if (this.previewMode === 'on_request') {
+                        // if mode is on_request render the "start preview" button
+                        this.renderPreviewOnRequest(restart);
+                    }
+                }.bind(this));
+
+                this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
+                    this.previewInitialize(data, restart);
+                }.bind(this));
+            } else {
+                this.sandbox.emit('sulu.sidebar.hide');
+                this.sandbox.emit('sulu.app.toggle-shrinker', false);
+            }
+
+            if (!!this.options.id) {
+                // disable content tab
+                if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
+                    this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
+                        this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
                     }.bind(this));
-
-                    this.sandbox.on('sulu.preview.initiated', function() {
-                        this.renderPreview(data);
-                    }.bind(this));
-
-                    this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
-
-                    this.sandbox.on('sulu.preview.initialize', function(data, restart) {
-                        if (this.previewMode === 'auto') {
-                            // if mode is auto init immediately
-                            this.sandbox.emit('sulu.preview.initialize.force', data, restart);
-                        } else if (this.previewMode === 'on_request') {
-                            // if mode is on_request render the "start preview" button
-                            this.renderPreviewOnRequest(restart);
-                        }
-                    }.bind(this));
-
-                    this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
-                        this.previewInitialize(data, restart);
-                    }.bind(this));
-                } else {
-                    this.sandbox.emit('sulu.sidebar.hide');
-                    this.sandbox.emit('sulu.app.toggle-shrinker', false);
                 }
 
-                if (!!this.options.id) {
-                    // disable content tab
-                    if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                        this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
-                            this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
-                        }.bind(this));
-                    }
+                // route to settings
+                if (
+                    (this.options.content !== 'settings' && this.data.shadowOn === true) ||
+                    (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
+                ) {
+                    var id = (this.options.id === 'index' ? this.options.id : this.data.id);
 
-                    // route to settings
-                    if (
-                        (this.options.content !== 'settings' && this.data.shadowOn === true) ||
-                        (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
-                    ) {
-                        var id = (this.options.id === 'index' ? this.options.id : data.id);
-
-                        this.sandbox.emit(
-                            'sulu.router.navigate',
-                            'content/contents/' + this.options.webspace +
-                            '/' + this.options.language + '/edit:' + id + '/settings'
-                        );
-                    }
+                    this.sandbox.emit(
+                        'sulu.router.navigate',
+                        'content/contents/' + this.options.webspace +
+                        '/' + this.options.language + '/edit:' + id + '/settings'
+                    );
                 }
+            }
 
-                this.setHeaderBar(true);
-            }.bind(this));
+            this.setHeaderBar(true);
         },
 
         previewInitialize: function(data, restart) {
@@ -918,7 +908,7 @@ define([
             var sequence = propertyName.split(','),
                 filter = '',
                 item, before = 0,
-                // regex for integer
+            // regex for integer
                 isInt = /^\d*$/;
 
             for (item in sequence) {
@@ -983,144 +973,130 @@ define([
         },
 
         header: function() {
-            // because it is called first
-            this.headerInitialized = this.sandbox.data.deferred();
-            this.loadDataDeferred = this.sandbox.data.deferred();
-
-            this.sandbox.once('sulu.header.initialized', function() {
-                this.headerInitialized.resolve();
-            }.bind(this));
-
             var noBack = (this.options.id === 'index'),
                 length, concreteLanguages = [],
-                def = this.sandbox.data.deferred();
+                header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
 
-            this.loadDataDeferred.then(function() {
-                var header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
+            if (this.options.display === 'column') {
+                header = {
+                    noBack: true,
+                    toolbar: {
+                        buttons: {
+                            toggler: {
+                                options: {
+                                    title: 'content.contents.show-ghost-pages',
+                                }
+                            }
+                        },
+                        languageChanger: {
+                            data: this.localizations,
+                            preSelected: this.options.language
+                        }
+                    }
+                };
+            } else {
+                // object to array
+                for (var i in this.data.concreteLanguages) {
+                    if (this.data.concreteLanguages.hasOwnProperty(i)) {
+                        concreteLanguages.push(this.data.concreteLanguages[i]);
+                    }
+                }
 
-                if (this.options.display === 'column') {
-                    header = {
-                        noBack: true,
-                        toolbar: {
-                            buttons: {
-                                toggler: {
-                                    options: {
-                                        title: 'content.contents.show-ghost-pages',
+                // add create new page flag for not existing pages
+                for (i = 0, length = this.localizations.length; i < length; i++) {
+                    dropdownLocalizations[i] = {
+                        id: this.localizations[i].id,
+                        title: this.localizations[i].title
+                    };
+
+                    if (concreteLanguages.indexOf(this.localizations[i].id) < 0) {
+                        dropdownLocalizations[i].title += [
+                            ' (', this.sandbox.translate('content.contents.new'), ')'
+                        ].join('');
+                    }
+                }
+
+                navigationUrl = '/admin/content-navigations';
+                navigationUrlParams.push('alias=content');
+
+                if (!!this.data.id) {
+                    navigationUrlParams.push('id=' + this.data.id);
+                }
+
+                if (!!this.options.webspace) {
+                    navigationUrlParams.push('webspace=' + this.options.webspace);
+                }
+
+                if (!!navigationUrlParams.length) {
+                    navigationUrl += '?' + navigationUrlParams.join('&');
+                }
+
+                header = {
+                    noBack: noBack,
+
+                    tabs: {
+                        url: navigationUrl
+                    },
+
+                    toolbar: {
+                        languageChanger: {
+                            data: dropdownLocalizations,
+                            preSelected: this.options.language
+                        },
+
+                        buttons: {
+                            save: {
+                                parent: 'saveWithOptions'
+                            },
+                            template: {
+                                options: {
+                                    dropdownOptions: {
+                                        url: '/admin/content/template?webspace=' + this.options.webspace,
+                                        callback: function(item) {
+                                            this.template = item.template;
+                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                        }.bind(this)
                                     }
                                 }
                             },
-                            languageChanger: {
-                                data: this.localizations,
-                                preSelected: this.options.language
-                            }
-                        }
-                    };
-                } else {
-                    // object to array
-                    for (var i in this.data.concreteLanguages) {
-                        if (this.data.concreteLanguages.hasOwnProperty(i)) {
-                            concreteLanguages.push(this.data.concreteLanguages[i]);
-                        }
-                    }
-
-                    // add create new page flag for not existing pages
-                    for (i = 0, length = this.localizations.length; i < length; i++) {
-                        dropdownLocalizations[i] = {
-                            id: this.localizations[i].id,
-                            title: this.localizations[i].title
-                        };
-
-                        if (concreteLanguages.indexOf(this.localizations[i].id) < 0) {
-                            dropdownLocalizations[i].title += [
-                                ' (', this.sandbox.translate('content.contents.new'), ')'
-                            ].join('');
-                        }
-                    }
-
-                    navigationUrl = '/admin/content-navigations';
-                    navigationUrlParams.push('alias=content');
-
-                    if (!!this.data.id) {
-                        navigationUrlParams.push('id=' + this.data.id);
-                    }
-
-                    if (!!this.options.webspace) {
-                        navigationUrlParams.push('webspace=' + this.options.webspace);
-                    }
-
-                    if (!!navigationUrlParams.length) {
-                        navigationUrl += '?' + navigationUrlParams.join('&');
-                    }
-
-                    header = {
-                        noBack: noBack,
-
-                        tabs: {
-                            url: navigationUrl
-                        },
-
-                        toolbar: {
-                            languageChanger: {
-                                data: dropdownLocalizations,
-                                preSelected: this.options.language
-                            },
-
-                            buttons: {
-                                save: {
-                                    parent: 'saveWithOptions'
-                                },
-                                template: {
-                                    options: {
-                                        dropdownOptions: {
-                                            url: '/admin/content/template?webspace=' + this.options.webspace,
-                                            callback: function(item) {
-                                                this.template = item.template;
-                                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                            }.bind(this)
-                                        }
-                                    }
-                                },
-                                settings: {
-                                    options: {
-                                        dropdownItems: {
-                                            delete: {
-                                                options: {
-                                                    disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
-                                                    callback: function() {
-                                                        this.sandbox.emit('sulu.content.content.delete', this.data.id);
-                                                    }.bind(this)
-                                                }
-                                            },
-                                            copyLocale: {
-                                                options: {
-                                                    title: this.sandbox.translate('toolbar.copy-locale'),
-                                                    callback: function() {
-                                                        CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
-                                                            this.load(this.data, this.options.webspace, this.options.language, true);
-                                                        }.bind(this));
-                                                    }.bind(this)
-                                                }
+                            settings: {
+                                options: {
+                                    dropdownItems: {
+                                        delete: {
+                                            options: {
+                                                disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
+                                                callback: function() {
+                                                    this.sandbox.emit('sulu.content.content.delete', this.data.id);
+                                                }.bind(this)
+                                            }
+                                        },
+                                        copyLocale: {
+                                            options: {
+                                                title: this.sandbox.translate('toolbar.copy-locale'),
+                                                callback: function() {
+                                                    CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                                        this.load(this.data, this.options.webspace, this.options.language, true);
+                                                    }.bind(this));
+                                                }.bind(this)
                                             }
                                         }
                                     }
-                                },
-                                state: {
-                                    options: {
-                                        dropdownItems: {
-                                            statePublish: {},
-                                            stateTest: {}
-                                        }
+                                }
+                            },
+                            state: {
+                                options: {
+                                    dropdownItems: {
+                                        statePublish: {},
+                                        stateTest: {}
                                     }
                                 }
                             }
                         }
-                    };
-                }
+                    }
+                };
+            }
 
-                def.resolveWith(this, [header]);
-            }.bind(this));
-
-            return def;
+            return header;
         },
 
         layout: function() {
