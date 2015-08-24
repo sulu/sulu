@@ -48,7 +48,6 @@ define([
         };
 
     return {
-        view: true,
 
         tabOptions: {
             noTitle: true

@@ -22,8 +22,6 @@ define(function() {
 
     return {
 
-        view: true,
-
         layout: {
             navigation: {
                 collapsed: true

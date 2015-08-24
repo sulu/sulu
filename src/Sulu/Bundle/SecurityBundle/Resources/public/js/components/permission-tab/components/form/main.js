@@ -167,7 +167,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
     return {
         name: 'Sulu Security Object Permission Tab',
 
-        view: true,
+        layout: {},
 
         templates: ['/admin/security/template/permission-tab/form'],
 

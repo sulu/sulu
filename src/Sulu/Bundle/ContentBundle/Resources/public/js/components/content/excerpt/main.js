@@ -12,11 +12,6 @@ define([], function() {
     'use strict';
 
     return {
-        view: true,
-
-        layout: {
-            changeNothing: true
-        },
 
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});

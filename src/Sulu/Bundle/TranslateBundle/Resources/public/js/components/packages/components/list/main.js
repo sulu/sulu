@@ -27,8 +27,6 @@ define([], function() {
 
     return {
 
-        view: true,
-
         layout: {
             content: {
                 width: 'max'

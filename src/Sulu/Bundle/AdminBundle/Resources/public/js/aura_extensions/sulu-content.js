@@ -82,15 +82,6 @@ define(function() {
         },
 
         /**
-         * Handles the components which are marked with a view property.
-         *
-         * @param {Object} view The view property of a component.
-         */
-        handleViewMarker = function(view) {
-            this.sandbox.emit('sulu.view.initialize', view);
-        },
-
-        /**
          * Handles layout marked components
          *
          * @param {Object|Boolean|Function} layout The layout object or true for default values.
@@ -326,13 +317,10 @@ define(function() {
          * Executes handlers before the load-component-data-hook
          */
         executeBeforeDataHandler = function() {
-            if (!!this.view) {
-                handleViewMarker.call(this, this.view);
-
+            //TODO this.view is deprecated for resetting the layout. use 'layout: {}' instead
+            if (!!this.view && !this.layout) {
                 // if a view has no layout specified use the default one
-                if (!this.layout) {
-                    handleLayoutMarker.call(this, {});
-                }
+                handleLayoutMarker.call(this, {});
             }
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);

@@ -28,7 +28,7 @@ define([], function() {
     return {
         name: 'Sulu Cache Settings',
 
-        view: true,
+        layout: {},
 
         initialize: function() {
             this.render();

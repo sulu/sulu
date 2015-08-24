@@ -24,7 +24,7 @@ define(function () {
 
     return {
 
-        view: true,
+        layout: {},
 
         templates: ['/admin/category/template/category/form/details'],
 

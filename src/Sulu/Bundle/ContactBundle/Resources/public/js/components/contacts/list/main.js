@@ -65,7 +65,6 @@ define([
         };
 
     return {
-        view: true,
 
         layout: {
             content: {

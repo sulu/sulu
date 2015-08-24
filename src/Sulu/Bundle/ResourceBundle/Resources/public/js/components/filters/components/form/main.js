@@ -22,7 +22,7 @@ define(['config'], function(Config) {
     return {
         name: 'Sulu Filter Form',
 
-        view: true,
+        layout: {},
 
         templates: ['/admin/resource/template/filter/form'],
 
