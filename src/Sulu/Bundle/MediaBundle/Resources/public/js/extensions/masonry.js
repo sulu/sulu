@@ -9,7 +9,16 @@
         shim: {
             'vendor/wookmark': ['jquery']
         }
-    })
+    });
+
+    // Define the window and document modules so they are available for the Wookmark plugin
+    define('window', function () {
+        return window;
+    });
+
+    define('document', function () {
+        return document;
+    });
 
     define(['vendor/wookmark'], function(Wookmark) {
 
@@ -18,11 +27,11 @@
             name: 'masonry',
 
             initialize: function(app) {
-                // overwrite wookmark onRefresh function to addItems on function call
+                // extend wookmark onRefresh function to automatically add new items
+                var baseMethod = Wookmark.prototype.onRefresh;
                 Wookmark.prototype.onRefresh = function () {
                     this.initItems();
-                    this.itemHeightsDirty = true;
-                    this.layout();
+                    baseMethod();
                 };
 
                 app.sandbox.masonry = {
