@@ -15,7 +15,7 @@
     ],
     "require": {
         "cboden/ratchet": "0.3.*",
-        "doctrine/orm": "2.4.*",
+        "doctrine/orm": "2.5.*",
         "doctrine/phpcr-bundle": "~1.2.0",
         "doctrine/phpcr-odm": "~1.2.0",
         "friendsofsymfony/http-cache": "1.3.*",
