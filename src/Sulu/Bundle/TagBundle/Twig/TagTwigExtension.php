@@ -12,7 +12,7 @@ namespace Sulu\Bundle\TagBundle\Twig;
 
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 
 class TagTwigExtension extends \Twig_Extension
 {
@@ -22,14 +22,14 @@ class TagTwigExtension extends \Twig_Extension
     private $tagManager;
 
     /**
-     * @var RequestStack
+     * @var TagRequestHandlerInterface
      */
-    private $requestStack;
+    private $tagRequestHandler;
 
-    public function __construct(TagManagerInterface $tagManager, RequestStack $requestStack)
+    public function __construct(TagManagerInterface $tagManager, TagRequestHandlerInterface $tagRequestHandler)
     {
         $this->tagManager = $tagManager;
-        $this->requestStack = $requestStack;
+        $this->tagRequestHandler = $tagRequestHandler;
     }
 
     /**
@@ -63,20 +63,7 @@ class TagTwigExtension extends \Twig_Extension
      */
     public function appendTagUrlFunction(Tag $tag, $tagsParameter = 'tags')
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        // extend comma separated list
-        $tags = $request->get($tagsParameter, '');
-        $tagsArray = array_filter(array_merge(explode(',', $tags), [$tag->getName()]));
-        $tags = implode(',', array_unique($tagsArray));
-
-        // get all parameter and extend with new tags string
-        $query = $request->query->all();
-        $query = array_merge($query, [$tagsParameter => $tags]);
-
-        $queryString = http_build_query($query);
-
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $this->tagRequestHandler->appendTagToUrl($tag, $tagsParameter);
     }
 
     /**
@@ -89,15 +76,7 @@ class TagTwigExtension extends \Twig_Extension
      */
     public function setTagUrlFunction(Tag $tag, $tagsParameter = 'tags')
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        // get all parameter and extend with new tags string
-        $query = $request->query->all();
-        $query = array_merge($query, [$tagsParameter => $tag->getName()]);
-
-        $queryString = http_build_query($query);
-
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $this->tagRequestHandler->setTagToUrl($tag, $tagsParameter);
     }
 
     /**
@@ -109,15 +88,7 @@ class TagTwigExtension extends \Twig_Extension
      */
     public function clearTagUrlFunction($tagsParameter = 'tags')
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        // get all parameter and extend with new tags string
-        $query = $request->query->all();
-        unset($query[$tagsParameter]);
-
-        $queryString = http_build_query($query);
-
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $this->tagRequestHandler->removeTagsFromUrl($tagsParameter);
     }
 
     /**

@@ -7,6 +7,7 @@
         <parameter key="sulu_tag.tag_manager.class">Sulu\Bundle\TagBundle\Tag\TagManager</parameter>
         <parameter key="sulu_tag.tag_repository.class">Sulu\Bundle\TagBundle\Entity\TagRepository</parameter>
         <parameter key="sulu_tag.content.type.tag_list.class">Sulu\Bundle\TagBundle\Content\Types\TagList</parameter>
+        <parameter key="sulu_tag.tag_request_handler.class">Sulu\Component\Tag\Request\TagRequestHandler</parameter>
         <parameter key="sulu_tag.twig_extension.class">Sulu\Bundle\TagBundle\Twig\TagTwigExtension</parameter>
         <parameter key="sulu_tag.entity.tag">SuluTagBundle:Tag</parameter>
     </parameters>
@@ -32,9 +33,13 @@
             <argument>%sulu_tag.content.type.tag_list.template%</argument>
         </service>
 
+        <service id="sulu_tag.tag_request_handler" class="%sulu_tag.tag_request_handler.class%">
+            <argument type="service" id="request_stack"/>
+        </service>
+
         <service id="sulu_tag.twig_extension" class="%sulu_tag.twig_extension.class%">
             <argument type="service" id="sulu_tag.tag_manager"/>
-            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_tag.tag_request_handler"/>
 
             <tag name="twig.extension"/>
         </service>
