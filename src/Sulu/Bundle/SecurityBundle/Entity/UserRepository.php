@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
-use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
@@ -28,7 +28,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
-
     use OrderByTrait;
 
     /**

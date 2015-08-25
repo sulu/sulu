@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 trait OrderByTrait
 {
     /**
-     * Function adds order-by to querybuilder based on $sortBy-data given
+     * Function adds order-by to querybuilder based on $sortBy-data given.
      *
      * @param QueryBuilder $queryBuilder
      * @param array $sortBy
