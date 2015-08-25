@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -27,6 +28,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
+
+    use OrderByTrait;
+
     /**
      * @var RequestAnalyzerInterface
      */
@@ -48,7 +52,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function findUsersByAccount($accountId)
+    public function findUsersByAccount($accountId, $sortBy = [])
     {
         try {
             $qb = $this->createQueryBuilder('user')
@@ -68,9 +72,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->addSelect('settings')
                 ->addSelect('contact')
                 ->addSelect('emails')
-                ->addOrderBy('contact.lastName', 'ASC')
-                ->addOrderBy('contact.firstName', 'ASC')
                 ->where('account.id=:accountId');
+
+            $this->addOrderBy($qb, 'user', $sortBy);
 
             $query = $qb->getQuery();
             $query->setParameter('accountId', $accountId);
