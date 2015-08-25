@@ -13,7 +13,6 @@ namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
-use Zend\Stdlib\Hydrator\Reflection;
 
 class OrderByTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +51,6 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
             ['user', ['firstName' => 'ASC', 'test.a' => 'DESC'], ['user.firstName' => 'ASC', 'test.a' => 'DESC']],
             ['u', ['test.a' => 'DESC'], ['test.a' => 'DESC']],
             ['u', [], []],
-            ['u', null, []],
         ];
     }
 
@@ -70,7 +68,7 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
             [
                 $this->queryBuilder->reveal(),
                 $alias,
-                $orderBy
+                $orderBy,
             ]
         );
     }

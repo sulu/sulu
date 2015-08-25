@@ -13,6 +13,9 @@ namespace Sulu\Component\Persistence\Repository\ORM;
 
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * Trait for handling order-by functionality of repositories.
+ */
 trait OrderByTrait
 {
     /**
