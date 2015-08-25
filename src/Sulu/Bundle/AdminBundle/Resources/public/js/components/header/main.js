@@ -46,7 +46,7 @@ define([], function() {
             toolbarButtons: [],
             toolbarDisabled: false,
             noBack: false,
-            scrollContainerSelector: '.content-column > .page',
+            scrollContainerSelector: '.content-column > .wrapper .page',
             scrollDelta: 50 //px
         },
 
