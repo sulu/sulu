@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1522 [SecurityBundle]  Added sorting by contact name to findUserByAccount in UserRepository 
     * BUGFIX      #1508 [AdminBundle]     Fixed bug with serializing user settings
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
     * FEATURE     #1503 [All]             Updated to doctrine 2.5

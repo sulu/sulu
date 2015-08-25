@@ -68,6 +68,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->addSelect('settings')
                 ->addSelect('contact')
                 ->addSelect('emails')
+                ->addOrderBy('contact.lastName', 'ASC')
+                ->addOrderBy('contact.firstName', 'ASC')
                 ->where('account.id=:accountId');
 
             $query = $qb->getQuery();
