@@ -25,14 +25,12 @@ define(function() {
                 name: 'thumbnail',
                 viewOptions: {
                     large: false,
-                    selectable: false
                 }
             },
             thumbnailLarge: {
                 name: 'thumbnail',
                 viewOptions: {
                     large: true,
-                    selectable: false
                 }
             },
             masonry: {
