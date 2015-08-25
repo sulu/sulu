@@ -655,9 +655,9 @@ class UserManager implements UserManagerInterface
      *
      * @return array
      */
-    public function findUsersByAccount($accountId)
+    public function findUsersByAccount($accountId, $sortBy = [])
     {
-        return $this->userRepository->findUsersByAccount($accountId);
+        return $this->userRepository->findUsersByAccount($accountId, $sortBy);
     }
 
     /**

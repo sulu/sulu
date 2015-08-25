@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
+                                          `[field.name => order]` 
+    * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository 
     * BUGFIX      #1508 [AdminBundle]     Fixed bug with serializing user settings
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
     * FEATURE     #1503 [All]             Updated to doctrine 2.5
