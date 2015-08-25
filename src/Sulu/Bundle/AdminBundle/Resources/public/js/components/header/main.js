@@ -106,7 +106,7 @@ define([], function() {
             ].join(''),
             titleElement: [
                 '<h2 class="' + constants.contentTitleClass + '"><%= title %></h2>'
-            ].join(''),
+            ].join('')
         },
 
         createEventName = function(postfix) {
@@ -149,6 +149,17 @@ define([], function() {
          */
         TAB_CHANGED = function() {
             return createEventName.call(this, 'tab-changed');
+        },
+
+        /**
+         * listens on and initializes a blank toolbar with given options
+         *
+         * @deprecated This event is deprecated. Try to set the toolbar when starting the header
+         * @event sulu.header.[INSTANCE_NAME].set-toolbar
+         * @param {object} the toolbar options
+         */
+        SET_TOOLBAR = function () {
+            return createEventName.call(this, 'set-toolbar');
         },
 
     /*********************************************
@@ -488,8 +499,27 @@ define([], function() {
             this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
             this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
 
+            this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
+        },
+
+        /**
+         * Stops the current toolbar and starts a new one
+         * @deprecated
+         * @param toolbar
+         */
+        setToolbar: function(toolbar) {
+            if (typeof toolbar.languageChanger !== 'undefined') {
+                this.options.toolbarLanguageChanger = toolbar.languageChanger;
+            }
+            this.options.toolbarDisabled = false;
+            this.options.toolbarOptions = toolbar.options || this.options.toolbarOptions;
+            this.options.toolbarButtons = toolbar.buttons || this.options.toolbarButtons;
+            this.sandbox.stop(this.$find('.' + constants.toolbarClass + ' *'));
+            this.sandbox.stop(this.$find(constants.rightSelector + ' *'));
+            this.startToolbar();
+            this.startLanguageChanger();
         },
 
         /**
