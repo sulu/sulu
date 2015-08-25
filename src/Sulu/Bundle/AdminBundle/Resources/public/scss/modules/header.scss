@@ -114,15 +114,13 @@
     }
 
     // add top space to the content-container beneath the header
-    & + .page {
-        margin-top: $headerHeight;
-        &::after {
-            padding-bottom: $headerHeight;
-        }
+    & + .wrapper {
+        padding-top: $headerHeight;
     }
-    &.has-tabs + .page {
-        &::before {
-            margin-bottom: $contentPaddingTop + $tabsHeight - 1px;
+    &.has-tabs + .wrapper {
+        padding-top: $headerHeight;
+        .page::before {
+            height: $contentPaddingTop + $tabsHeight;
         }
     }
 }
@@ -140,10 +138,5 @@
         * {
             display: none;
         }
-    }
-}
-.no-top-space .sulu-header.has-tabs + .page {
-    &::before {
-        margin-bottom: $tabsHeight - 1px;
     }
 }
