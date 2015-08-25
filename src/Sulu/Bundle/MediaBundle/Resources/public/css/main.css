@@ -12,6 +12,30 @@
   margin-right: 5px;
 }
 
+/* line 1, ../scss/modules/collection-edit.scss */
+#masonry-grid {
+  position: relative;
+  text-align: center;
+}
+/* line 5, ../scss/modules/collection-edit.scss */
+#masonry-grid .masonry-item {
+  width: 190px;
+  background-color: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+/* line 11, ../scss/modules/collection-edit.scss */
+#masonry-grid .masonry-item .masonry-head {
+  background-color: #ddd;
+  width: 100%;
+}
+/* line 16, ../scss/modules/collection-edit.scss */
+#masonry-grid .masonry-item .masonry-info {
+  position: relative;
+  width: 100%;
+  height: 80px;
+}
+
 /* line 1, ../scss/modules/collection.scss */
 .list-toolbar-container {
   margin-top: 20px;
