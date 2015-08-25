@@ -21,26 +21,37 @@
     });
 
     define(['vendor/wookmark'], function(Wookmark) {
+        var dataKey = 'wookmark-instance';
 
         return {
 
             name: 'masonry',
 
             initialize: function(app) {
-                // extend wookmark onRefresh function to automatically add new items
-                var baseMethod = Wookmark.prototype.onRefresh;
-                Wookmark.prototype.onRefresh = function () {
-                    this.initItems();
-                    baseMethod();
-                };
-
                 app.sandbox.masonry = {
                     initialize: function(selector, options) {
-                        $(selector).wookmark(options);
+                        var wookmark = new Wookmark(selector, options);
+                        $(selector).data(dataKey, wookmark);
                     },
 
-                    refresh: function(selector){
-                        $(selector).trigger('refreshWookmark');
+                    refresh: function(selector, scanItems) {
+                        var wookmark = $(selector).data(dataKey);
+
+                        if (!!wookmark) {
+                            if (!!scanItems) {
+                                wookmark.initItems();
+                            }
+                            wookmark.layout(true);
+                        }
+                    },
+
+                    destroy: function(selector) {
+                        var wookmark = $(selector).data(dataKey);
+
+                        if (!!wookmark) {
+                            $(selector).removeData(dataKey);
+                            wookmark.clear();
+                        }
                     }
                 };
             }
