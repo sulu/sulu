@@ -8,49 +8,44 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Tests\Unit\Twig;
+namespace Sulu\Component\Tag\Request;
 
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Bundle\TagBundle\Twig\TagTwigExtension;
-use Sulu\Component\Tag\Request\TagRequestHandler;
-use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class TagRequestHandlerTest extends \PHPUnit_Framework_TestCase
 {
     public function getProvider()
     {
         return [
-            [[]],
-            [['sulu']],
-            [['sulu', 'core']],
-            [['sulu', 'core', 'massive art']],
+            ['t', '', []],
+            ['t', 'Sulu', ['Sulu']],
+            ['t', 'Sulu,Core', ['Sulu', 'Core']],
+            ['t', 'Sulu,Core,Massive Art', ['Sulu', 'Core', 'Massive Art']],
+            ['t', 'Sulu, Core', ['Sulu', 'Core']],
+            ['t', ' Sulu, Core ', ['Sulu', 'Core']],
         ];
     }
 
     /**
      * @dataProvider getProvider
      */
-    public function testGetTags($tagNames)
+    public function testGetTagsProvider($tagsParameter, $tagsString, $expected)
     {
-        $tags = [];
-        foreach ($tagNames as $tagName) {
-            $tag = new Tag();
-            $tag->setName($tagName);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $request = $this->prophesize(Request::class);
 
-            $tags[] = $tag;
-        }
+        $requestReveal = $request->reveal();
+        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestStack->getCurrentRequest()->willReturn($requestReveal);
+        $request->get($tagsParameter, '')->willReturn($tagsString);
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
-        $tagManager->findAll()->shouldBeCalled()->willReturn($tags);
+        $handler = new TagRequestHandler($requestStack->reveal());
+        $tags = $handler->getTags($tagsParameter);
 
-        $tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
-
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler->reveal());
-        $this->assertEquals($tags, $tagExtension->getTagsFunction());
+        $this->assertEquals($expected, $tags);
     }
 
     public function appendProvider()
@@ -68,12 +63,11 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider appendProvider
      */
-    public function testAppendTagUrl($tagsParameter, $url, $tagsString, $expected)
+    public function testAppendTagToUrl($tagsParameter, $url, $tagsString, $expected)
     {
         $tag = new Tag();
         $tag->setName('Test');
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
@@ -83,10 +77,8 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
-        $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
-
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler);
-        $result = $tagExtension->appendTagUrlFunction($tag, $tagsParameter);
+        $handler = new TagRequestHandler($requestStack->reveal());
+        $result = $handler->appendTagToUrl($tag, $tagsParameter);
 
         $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
     }
@@ -106,12 +98,11 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSetTagUrl($tagsParameter, $url, $tagsString, $expected)
+    public function testSetTagToUrl($tagsParameter, $url, $tagsString, $expected)
     {
         $tag = new Tag();
         $tag->setName('Test');
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
@@ -121,15 +112,13 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
-        $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
-
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler);
-        $result = $tagExtension->setTagUrlFunction($tag, $tagsParameter);
+        $handler = new TagRequestHandler($requestStack->reveal());
+        $result = $handler->setTagToUrl($tag, $tagsParameter);
 
         $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
     }
 
-    public function clearProvider()
+    public function removeProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core'],
@@ -142,14 +131,13 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider clearProvider
+     * @dataProvider removeProvider
      */
-    public function testClearTagUrl($tagsParameter, $url, $tagsString)
+    public function testRemoveTagsFromUrl($tagsParameter, $url, $tagsString)
     {
         $tag = new Tag();
         $tag->setName('Test');
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
@@ -159,10 +147,8 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
-        $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
-
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler);
-        $result = $tagExtension->clearTagUrlFunction($tagsParameter);
+        $handler = new TagRequestHandler($requestStack->reveal());
+        $result = $handler->removeTagsFromUrl($tagsParameter);
 
         $this->assertEquals($url, $result);
     }

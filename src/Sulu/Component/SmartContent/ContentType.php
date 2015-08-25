@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -51,22 +52,30 @@ class ContentType extends ComplexContentType
     private $cache = [];
 
     /**
+     * @var TagRequestHandlerInterface
+     */
+    private $tagRequestHandler;
+
+    /**
      * SmartContentType constructor.
      *
-     * @param string $template
-     * @param TagManagerInterface $tagManager
      * @param DataProviderPoolInterface $dataProviderPool
+     * @param TagManagerInterface $tagManager
      * @param RequestStack $requestStack
+     * @param TagRequestHandlerInterface $tagRequestHandler
+     * @param string $template
      */
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
         TagManagerInterface $tagManager,
         RequestStack $requestStack,
+        TagRequestHandlerInterface $tagRequestHandler,
         $template
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
         $this->requestStack = $requestStack;
+        $this->tagRequestHandler = $tagRequestHandler;
         $this->template = $template;
     }
 
@@ -217,12 +226,15 @@ class ContentType extends ComplexContentType
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
         // default value of tags is an empty array
-        if (array_key_exists('tags', $filters)) {
+        if (!array_key_exists('tags', $filters)) {
             $filters['tags'] = [];
         }
 
         // extends selected filter with requested tags
-        $filters['tags'] = array_merge($this->getTags($params['tags_parameter']->getValue()), $filters['tags']);
+        $filters['tags'] = array_merge(
+            $this->tagRequestHandler->getTags($params['tags_parameter']->getValue()),
+            $filters['tags']
+        );
 
         // resolve tags to id
         if (!empty($filters['tags']) && count($filters['tags']) > 0) {
@@ -350,23 +362,5 @@ class ContentType extends ComplexContentType
         }
 
         return intval($page);
-    }
-
-    /**
-     * Determine tags from current request.
-     *
-     * @param string $tagsParameter
-     *
-     * @return string[]
-     */
-    private function getTags($tagsParameter)
-    {
-        if ($this->requestStack->getCurrentRequest() !== null) {
-            $tags = $this->requestStack->getCurrentRequest()->get($tagsParameter, '');
-        } else {
-            $tags = '';
-        }
-
-        return array_filter(explode(',', $tags));
     }
 }

@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\ContentType as SmartContent;
+use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -26,7 +27,8 @@ interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
 /**
  * @group unit
  */
-class ContentTypeTest extends \PHPUnit_Framework_TestCase
+class
+ContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SmartContent
@@ -49,6 +51,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     private $request;
 
     /**
+     * @var TagRequestHandlerInterface
+     */
+    private $tagRequestHandler;
+
+    /**
      * @var DataProviderPoolInterface
      */
     private $dataProviderPool;
@@ -68,7 +75,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->dataProviderPool->add('content', $this->contentDataProvider->reveal());
 
         $this->tagManager = $this->getMockForAbstractClass(
-            'Sulu\Bundle\TagBundle\Tag\TagManagerInterface',
+            TagManagerInterface::class,
             [],
             '',
             false,
@@ -77,17 +84,21 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ['resolveTagIds', 'resolveTagNames']
         );
 
-        $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
-        $this->request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $this->requestStack = $this->getMockBuilder(RequestStack::class)->getMock();
+        $this->request = $this->getMockBuilder(Request::class)->getMock();
 
         $this->requestStack->expects($this->any())->method('getCurrentRequest')->will(
             $this->returnValue($this->request)
         );
 
+        $this->tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
+        $this->tagRequestHandler->getTags('tags')->willReturn([]);
+
         $this->smartContent = new SmartContent(
             $this->dataProviderPool,
             $this->tagManager,
             $this->requestStack,
+            $this->tagRequestHandler->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -337,12 +348,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
-        $this->request->expects($this->at(1))->method('get')
+        $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
             ->willReturn(1);
-        $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
-            ->willReturn('');
 
         $viewData = $this->smartContent->getViewData($property);
 
@@ -392,12 +400,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\Compat\StructureInterface'
         );
 
-        $this->request->expects($this->at(1))->method('get')
+        $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
             ->willReturn(1);
-        $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
-            ->willReturn('');
 
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue(['dataSource' => '123-123-123']));
@@ -407,13 +412,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-<<<<<<< 68ca70a4207d578d392e52db51049870b1ca6aa0
-        $this->contentDataProvider->resolveResourceItems(
-            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
-=======
         $this->contentDataProvider->resolveFilters(
             ['tags' => [], 'dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
->>>>>>> fixed testcases
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
@@ -482,12 +482,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\Compat\StructureInterface'
         );
 
-        $this->request->expects($this->at(1))->method('get')
+        $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
             ->willReturn($page);
-        $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
-            ->willReturn('');
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
@@ -558,12 +555,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\Compat\StructureInterface'
         );
 
-        $this->request->expects($this->at(1))->method('get')
+        $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
             ->willReturn($page);
-        $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('tags'), $this->equalTo(''), $this->equalTo(false))
-            ->willReturn('');
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
