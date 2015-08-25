@@ -216,8 +216,12 @@ class ContentType extends ComplexContentType
         $filters = $property->getValue();
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
+        // default value of tags is an empty array
+        if (array_key_exists('tags', $filters)) {
+            $filters['tags'] = [];
+        }
+
         // extends selected filter with requested tags
-        $filters = array_merge(['tags' => []], $filters);
         $filters['tags'] = array_merge($this->getTags($params['tags_parameter']->getValue()), $filters['tags']);
 
         // resolve tags to id
@@ -331,7 +335,7 @@ class ContentType extends ComplexContentType
     }
 
     /**
-     * determine current page from current request.
+     * Determine current page from current request.
      *
      * @param string $pageParameter
      *
@@ -349,7 +353,7 @@ class ContentType extends ComplexContentType
     }
 
     /**
-     * determine tags from current request.
+     * Determine tags from current request.
      *
      * @param string $tagsParameter
      *
