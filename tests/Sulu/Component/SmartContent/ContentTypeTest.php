@@ -310,7 +310,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'dataSource' => 'some-uuid',
                 'page' => 1,
                 'hasNextPage' => true,
-                'excluded' => ['123-123-123']
+                'excluded' => ['123-123-123'],
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
