@@ -10,14 +10,6 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
@@ -50,39 +42,6 @@ class AccountDataProvider extends BaseDataProvider
      */
     protected function convertToArray($entity, $locale)
     {
-        $emails = [];
-        foreach ($entity->getEmails() as $email) {
-            /** @var Email $email */
-            $emails[] = ['email' => $email->getEmail(), 'type' => $email->getEmailType()];
-        }
-        $phones = [];
-        foreach ($entity->getPhones() as $phone) {
-            /** @var Phone $phone */
-            $phones[] = ['phone' => $phone->getPhone(), 'type' => $phone->getPhoneType()];
-        }
-        $faxes = [];
-        foreach ($entity->getFaxes() as $fax) {
-            /** @var Fax $fax */
-            $faxes[] = ['fax' => $fax->getFax(), 'type' => $fax->getFaxType()];
-        }
-        $urls = [];
-        foreach ($entity->getUrls() as $url) {
-            /** @var Url $url */
-            $urls[] = ['url' => $url->getUrl(), 'type' => $url->getUrlType()];
-        }
-        $tags = [];
-        foreach ($entity->getTags() as $tag) {
-            /** @var Tag $tag */
-            $tags[] = $tag->getName();
-        }
-        $categories = [];
-        foreach ($entity->getCategories() as $category) {
-            /** @var Category $category */
-            $translation = $this->getCategoryTranslation($category, $locale);
-
-            $categories[] = $translation->getTranslation();
-        }
-
         return [
             'number' => $entity->getNumber(),
             'name' => $entity->getName(),
@@ -95,31 +54,12 @@ class AccountDataProvider extends BaseDataProvider
             'changed' => $entity->getChanged(),
             'changer' => $entity->getChanger(),
             'medias' => $entity->getMedias(),
-            'emails' => $emails,
-            'phones' => $phones,
-            'faxes' => $faxes,
-            'urls' => $urls,
-            'tags' => $tags,
-            'categories' => $categories,
+            'emails' => $this->getEmails($entity),
+            'phones' => $this->getPhones($entity),
+            'faxes' => $this->getFaxes($entity),
+            'urls' => $this->getUrls($entity),
+            'tags' => $this->getTags($entity),
+            'categories' => $this->getCategories($entity, $locale),
         ];
-    }
-
-    /**
-     * Returns translation for given locale.
-     *
-     * @param Category $category
-     * @param string $locale
-     *
-     * @return CategoryTranslation
-     */
-    protected function getCategoryTranslation(Category $category, $locale)
-    {
-        foreach ($category->getTranslations() as $translation) {
-            if ($translation->getLocale() == $locale) {
-                return $translation;
-            }
-        }
-
-        return $category->getTranslations()->first();
     }
 }
