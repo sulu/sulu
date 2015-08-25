@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #1511 [ContentBundle]  Fixed single-internal-link overlay URL
+    * HOTFIX      #1521 [MediaBundle]    Fixed media-selection events for preview update
 
 * 1.0.7 (2015-08-11)
     * HOTFIX      #1469 [ContentBundle]  fixed displayOptions in media selection
