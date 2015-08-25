@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1529 [ContentBundle]   Added reset smart content button
     * FEATURE     #1517 [ContactBundle]   Added account DataProvider
     * FEATURE     #1513 [ContactBundle]   Added contact DataProvider
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
