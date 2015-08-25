@@ -14,7 +14,6 @@
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {Integer} [options.visibleItems] maximum of items visible at the start and in the view-less state
  * @params {String} [options.dataSource] default value for the data-source
  * @params {Boolean} [options.includeSubFolders] if true sub folders are included right from the beginning
  * @params {Array} [options.categories] array of categories with id and name property
@@ -91,7 +90,6 @@ define([], function() {
     'use strict';
 
     var defaults = {
-            visibleItems: 5,
             dataSource: '',
             subFoldersDisabled: false,
             categories: [],
@@ -153,8 +151,6 @@ define([], function() {
             headerSelector: '.header',
             contentSelector: '.content',
             sourceSelector: '.source',
-            footerClass: 'footer',
-            viewTogglerClass: 'view-toggler',
             buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
             categoryDDClass: 'category-dropdown',
@@ -394,9 +390,7 @@ define([], function() {
             this.$container = null;
             this.$header = null;
             this.$content = null;
-            this.$footer = null;
             this.$button = null;
-            this.itemsVisible = this.options.visibleItems;
             this.items = [];
             this.URI = {
                 str: '',
@@ -522,7 +516,7 @@ define([], function() {
         },
 
         /**
-         * Renders and appends the toggle-button
+         * Renders and appends the overlay open button
          */
         renderButton: function() {
             this.$button = this.sandbox.dom.createElement('<span class="icon right border"/>');
@@ -541,7 +535,7 @@ define([], function() {
         },
 
         /**
-         * Renders the content decides whether the footer is rendered or not
+         * Renders the content
          */
         renderContent: function() {
             this.initContentContainer();
@@ -551,23 +545,20 @@ define([], function() {
                 var ul, i = -1, length = this.items.length;
                 ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
 
-                //loop stops if no more items are left or if number of rendered items matches itemsVisible
-                for (; ++i < length && i < this.itemsVisible;) {
+                this.sandbox.util.foreach(this.items, function(item) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
-                        dataId: this.items[i][this.options.idKey],
-                        value: this.items[i][this.options.titleKey],
+                        dataId: item[this.options.idKey],
+                        value: item[this.options.titleKey],
                         num: (i + 1)
                     }));
-                }
+                }.bind(this));
 
                 this.sandbox.dom.html(this.$content, ul);
-                this.renderFooter();
             } else {
-                //render no-content-template and detach the footer
+                //render no-content-template
                 this.sandbox.dom.html(this.$content, _.template(templates.noContent)({
                     noContentStr: this.sandbox.translate(this.translations.noContentSelected)
                 }));
-                this.detachFooter();
             }
         },
 
@@ -581,55 +572,6 @@ define([], function() {
             this.sandbox.dom.html(this.$content, _.template(templates.noContent)({
                 noContentStr: this.sandbox.translate(this.translations.noContentSelected)
             }));
-        },
-
-        /**
-         * Renders the footer and calls a method to bind the events for itself
-         */
-        renderFooter: function() {
-            this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
-
-            if (this.$footer === null) {
-                this.$footer = this.sandbox.dom.createElement('<div/>');
-                this.sandbox.dom.addClass(this.$footer, constants.footerClass);
-            }
-
-            this.sandbox.dom.html(this.$footer, [
-                '<span>',
-                '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.translations.of), ' ',
-                '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.translations.visible),
-                '</span>'
-            ].join(''));
-
-            this.appendViewToggler();
-            this.sandbox.dom.append(this.$container, this.$footer);
-            this.bindFooterEvents();
-        },
-
-        /**
-         * Appends the view-toggler to the footer
-         */
-        appendViewToggler: function() {
-            if (this.itemsVisible < this.items.length) {
-                this.sandbox.dom.append(
-                    this.$footer,
-                    '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewAll) + ')</span>'
-                );
-            } else if (this.items.length > this.options.visibleItems) {
-                this.sandbox.dom.append(
-                    this.$footer,
-                    '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewLess) + ')</span>'
-                );
-            }
-        },
-
-        /**
-         * Removes the footer
-         */
-        detachFooter: function() {
-            if (this.$footer !== null) {
-                this.sandbox.dom.remove(this.$footer);
-            }
         },
 
         /**
@@ -667,24 +609,9 @@ define([], function() {
         },
 
         /**
-         * Binds footer events
-         */
-        bindFooterEvents: function() {
-            this.sandbox.dom.on(
-                this.sandbox.dom.find('.' + constants.viewTogglerClass, this.$footer),
-                'click',
-                function() {
-                    this.toggleView();
-                }.bind(this)
-            );
-        },
-
-        /**
          * Starts the loader component
          */
         startLoader: function() {
-            this.detachFooter();
-
             var loaderContainer = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
             this.sandbox.dom.html(this.$content, loaderContainer);
 
@@ -698,19 +625,6 @@ define([], function() {
                     }
                 }
             ]);
-        },
-
-        /**
-         * Changes the itemsVisible property and calls the render content method
-         * (more or less items are visible)
-         */
-        toggleView: function() {
-            if (this.itemsVisible < this.items.length) {
-                this.itemsVisible = this.items.length;
-            } else {
-                this.itemsVisible = this.options.visibleItems;
-            }
-            this.renderContent();
         },
 
         /**
@@ -737,7 +651,6 @@ define([], function() {
                                 title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
                                 data: this.$overlayContent,
                                 okCallback: function() {
-                                    this.itemsVisible = this.options.visibleItems;
                                     this.getOverlayData();
                                 }.bind(this)
                             },

@@ -49097,7 +49097,6 @@ define('husky_extensions/itembox',[],function() {
             idsParameter: 'ids',
             resultKey: null,
             idKey: 'id',
-            visibleItems: 6,
             dataAttribute: '',
             dataDefault: {},
             sortable: true,
@@ -49128,7 +49127,8 @@ define('husky_extensions/itembox',[],function() {
 
         constants = {
             displayOptionSelectedClass: 'selected',
-            itemInvisibleClass: 'invisible-item'
+            itemInvisibleClass: 'invisible-item',
+            noContentClass: 'no-content'
         },
 
         /**
@@ -49152,6 +49152,7 @@ define('husky_extensions/itembox',[],function() {
                     '<div class="white-box form-element" id="', this.ids.container, '">',
                     '    <div class="header">',
                     '        <span class="fa-plus-circle icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <span class="no-content">', this.sandbox.translate(this.options.translations.noContentSelected), '</span>',
                     '        <div class="position', !!this.options.hidePositionElement ? ' hidden' : '', '">',
                     '            <div class="husky-position" id="', this.ids.displayOption, '">',
                     '                <div class="top left ', (!this.options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
@@ -49168,27 +49169,14 @@ define('husky_extensions/itembox',[],function() {
                     '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
                     '    </div>',
                     '    <div class="content" id="', this.ids.content, '"></div>',
-                    '    <div class="footer" id="', this.ids.footer, '"></div>',
                     '</div>'
                 ].join('');
             },
 
             noContent: function() {
                 return [
-                    '<div class="no-content">',
-                    '    <span class="fa-coffee icon"></span>',
-                    '    <div class="text">', this.sandbox.translate(this.options.translations.noContentSelected), '</div>',
-                    '</div>'
+                    '<div class="no-content">', this.sandbox.translate(this.options.translations.noContentSelected), '</div>'
                 ].join('');
-            },
-
-            footer: function(length) {
-                return [
-                    '<span>',
-                    '    <strong id="', this.ids.footerCount, '">', (length < this.options.visibleItems) ? length : this.options.visibleItems, '</strong> ', this.sandbox.translate(this.options.translations.of), ' ',
-                    '    <strong id="', this.ids.footerMaxCount, '">', length, '</strong> ', this.sandbox.translate(this.options.translations.visible),
-                    '</span>'
-                ].join('')
             },
 
             item: function(id, content) {
@@ -49215,9 +49203,6 @@ define('husky_extensions/itembox',[],function() {
                 'click',
                 this.changeDisplayOption.bind(this)
             );
-
-            // toggle between view all and view less
-            this.sandbox.dom.on(this.$el, 'click', this.toggleInvisibleItems.bind(this), this.getId('footerView'));
 
             // click on the add button
             this.sandbox.dom.on(this.$addButton, 'click', function() {
@@ -49318,11 +49303,7 @@ define('husky_extensions/itembox',[],function() {
                     addButton: 'listbox-' + this.options.instanceName + '-add',
                     configButton: 'listbox-' + this.options.instanceName + '-config',
                     displayOption: 'listbox-' + this.options.instanceName + '-display-option',
-                    content: 'listbox-' + this.options.instanceName + '-content',
-                    footer: 'listbox-' + this.options.instanceName + '-footer',
-                    footerView: 'listbox-' + this.options.instanceName + '-footer-view',
-                    footerCount: 'listbox-' + this.options.instanceName + '-footer-count',
-                    footerMaxCount: 'listbox-' + this.options.instanceName + '-footer-max-count'
+                    content: 'listbox-' + this.options.instanceName + '-content'
                 };
 
                 this.sandbox.dom.html(this.$el, templates.skeleton.call(this));
@@ -49331,12 +49312,9 @@ define('husky_extensions/itembox',[],function() {
                 this.$addButton = this.sandbox.dom.find(this.getId('addButton'), this.$el);
                 this.$configButton = this.sandbox.dom.find(this.getId('configButton'), this.$el);
                 this.$content = this.sandbox.dom.find(this.getId('content'), this.$el);
-                this.$footer = this.sandbox.dom.find(this.getId('footer'), this.$el);
                 this.$list = null;
 
-                this.removeFooter();
-
-                this.renderNoContent();
+                this.addNoContentClass();
 
                 if (!this.isDataEmpty(data)) {
                     this.loadContent(data);
@@ -49351,45 +49329,18 @@ define('husky_extensions/itembox',[],function() {
             },
 
             /**
-             * render the empty presentation into the content area
+             * adds a class to the components element which makes a no-content text visible
              */
-            renderNoContent: function() {
+            addNoContentClass: function() {
                 this.$list = null;
-                this.sandbox.dom.html(this.$content, templates.noContent.call(this));
-                this.removeFooter();
+                this.sandbox.dom.addClass(this.$container, constants.noContentClass);
             },
 
             /**
-             * Render the footer for the given data
-             * @param data {object} the data for which the footer should be generated
+             * removes the no-content class from the components element
              */
-            renderFooter: function(data) {
-                var length = data.length,
-                    translation = (data.length <= length)
-                        ? this.sandbox.translate(this.options.translations.viewAll)
-                        : this.sandbox.translate(this.options.translations.viewLess);
-
-                this.sandbox.dom.html(this.$footer, templates.footer.call(this, length));
-
-                this.sandbox.dom.append(
-                    this.sandbox.dom.find('span', this.$footer),
-                    [
-                        '<strong class="pointer"> (<span id="', this.ids.footerView, '">',
-                        translation,
-                        '</span>)</strong>'
-                    ].join('')
-                );
-
-                this.sandbox.dom.append(this.$container, this.$footer);
-
-                this.$footerView = this.sandbox.dom.find(this.getId('footerView'), this.$el);
-            },
-
-            /**
-             * Removes the footer from the DOM
-             */
-            removeFooter: function() {
-                this.sandbox.dom.remove(this.$footer);
+            removeNoContentClass: function() {
+                this.sandbox.dom.removeClass(this.$container, constants.noContentClass);
             },
 
             /**
@@ -49426,6 +49377,17 @@ define('husky_extensions/itembox',[],function() {
 
                 if (!!reload) {
                     this.loadContent(data);
+                }
+            },
+
+            /**
+             * Updates the visibility of all items
+             */
+            updateVisibility: function() {
+                if (!this.$list || !this.$list.find('li').length) {
+                    this.addNoContentClass();
+                } else {
+                    this.removeNoContentClass();
                 }
             },
 
@@ -49469,11 +49431,10 @@ define('husky_extensions/itembox',[],function() {
                     this.sandbox.dom.html(this.$content, this.$list);
 
                     initSortable.call(this);
-                    this.renderFooter(data);
                     this.updateOrder();
                     this.updateVisibility();
                 } else {
-                    this.renderNoContent();
+                    this.addNoContentClass();
                 }
             },
 
@@ -49481,8 +49442,6 @@ define('husky_extensions/itembox',[],function() {
              * Starts the loader for the content
              */
             startLoader: function() {
-                this.removeFooter();
-
                 var $loader = this.sandbox.dom.createElement('<div class="loader"/>');
                 this.sandbox.dom.html(this.$content, $loader);
 
@@ -49561,17 +49520,15 @@ define('husky_extensions/itembox',[],function() {
                 if (!this.$list) {
                     this.$list = createItemList.call(this);
                     this.sandbox.dom.html(this.$content, this.$list);
-                    this.renderFooter([]);
                 }
 
-                this.sandbox.dom.append(
-                    this.$list,
-                    templates.item.call(
-                        this,
-                        item[this.options.idKey],
-                        this.getItemContent(item)
-                    )
+                var $item = this.sandbox.dom.createElement(templates.item.call(
+                    this,
+                    item[this.options.idKey],
+                    this.getItemContent(item))
                 );
+
+                this.sandbox.dom.append(this.$list, $item);
 
                 if (!!reinitialize) {
                     if (this.options.sortable) {
@@ -49581,6 +49538,8 @@ define('husky_extensions/itembox',[],function() {
                     this.updateOrder();
                     this.updateVisibility();
                 }
+
+                this.sandbox.dom.scrollAnimate(this.$content.get(0).scrollHeight, this.$content);
             },
 
             /**
@@ -49610,64 +49569,6 @@ define('husky_extensions/itembox',[],function() {
 
                 this.updateOrder();
                 this.updateVisibility();
-            },
-
-            /**
-             * Toggles between listing all and just a limited number of items
-             */
-            toggleInvisibleItems: function() {
-                this.viewAll = !this.viewAll;
-                this.sandbox.dom.html(this.$footerView,
-                    !!this.viewAll
-                        ? this.sandbox.translate(this.options.translations.viewLess)
-                        : this.sandbox.translate(this.options.translations.viewAll)
-                );
-
-                this.updateVisibility();
-            },
-
-            /**
-             * Updates the visibility of all items based on the current state
-             */
-            updateVisibility: function() {
-                var $items = this.sandbox.dom.find('li', this.$list),
-                    length = $items.size(),
-                    itemCount = 0;
-
-                if (!length) {
-                    this.renderNoContent();
-                } else {
-                    // mark the correct amount of items invisible
-                    this.sandbox.util.foreach($items, function($item) {
-                        if (itemCount < this.options.visibleItems) {
-                            this.sandbox.dom.removeClass($item, constants.itemInvisibleClass);
-                        } else {
-                            this.sandbox.dom.addClass($item, constants.itemInvisibleClass);
-                        }
-
-                        itemCount++;
-                    }.bind(this));
-                }
-
-                // correct the display property of every item and the footer values
-                if (!!this.viewAll) {
-                    this.sandbox.dom.show($items);
-                    this.sandbox.dom.html(this.getId('footerCount'), length);
-                } else {
-                    if (!!this.$list) {
-                        this.sandbox.dom.show(
-                            this.sandbox.dom.find(':not(.' + constants.itemInvisibleClass + ')', this.$list)
-                        );
-                        this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.itemInvisibleClass, this.$list));
-                    }
-
-                    this.sandbox.dom.html(
-                        this.getId('footerCount'),
-                        (this.options.visibleItems < length) ? this.options.visibleItems : length
-                    );
-                }
-
-                this.sandbox.dom.html(this.getId('footerMaxCount'), length);
             },
 
             /**
