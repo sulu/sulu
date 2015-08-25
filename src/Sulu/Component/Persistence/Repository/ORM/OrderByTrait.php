@@ -21,12 +21,11 @@ trait OrderByTrait
      * @param QueryBuilder $queryBuilder
      * @param array $sortBy
      */
-    private function addOrderBy(QueryBuilder $queryBuilder, $alias, $sortBy = [])
+    protected function addOrderBy(QueryBuilder $queryBuilder, $alias, array $sortBy = [])
     {
         foreach ($sortBy as $field => $order) {
-
             // if no relation is defined add alias by default
-            if (strpos('.', $field) !== false) {
+            if (strpos($field, '.') === false) {
                 $field = $alias . '.' . $field;
             }
 
