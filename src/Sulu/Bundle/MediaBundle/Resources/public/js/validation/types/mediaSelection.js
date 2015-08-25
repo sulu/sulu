@@ -15,8 +15,10 @@ define([
     'use strict';
 
     var dataChangedHandler = function(data, $el) {
-        App.emit('sulu.preview.update', $el, data);
-        App.emit('sulu.content.changed');
+        if (!!data && !!$el) {
+            App.emit('sulu.preview.update', $el, data);
+            App.emit('sulu.content.changed');
+        }
     };
 
     return function($el, options) {
