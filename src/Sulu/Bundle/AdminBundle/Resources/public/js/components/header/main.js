@@ -311,7 +311,7 @@ define([], function() {
 
             // render title if there are no tabs (else they are rendered in tabChangeHandler)
             if (!!this.options.title && !this.options.tabsData) {
-                this.sandbox.dom.prepend(this.options.tabsParentOption.el.parentElement, this.getTitleElement());
+                this.sandbox.dom.prepend($(this.options.tabsParentOption.el).parent(), this.getTitleElement());
             }
 
             // hide back if configured
