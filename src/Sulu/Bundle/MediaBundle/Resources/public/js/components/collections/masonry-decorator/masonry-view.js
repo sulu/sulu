@@ -6,16 +6,11 @@
  * @param {String} [imageFormat] api-format which is used for head-image
  * @param {Object} [viewOptions] Configuration object
  * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
- * @param {String} [viewOptions.fields.picture]
+ * @param {String} [viewOptions.fields.image]
  * @param {Array} [viewOptions.fields.title]
- * @param {Array} [viewOptions.fields.firstInfoRow]
- * @param {Array} [viewOptions.fields.secondInfoRow]
+ * @param {Array} [viewOptions.fields.description]
  * @param {Object} [viewOptions.separators] Defines separators between data-columns
- * @param {String} [viewOptions.separators.title]
- * @param {String} [viewOptions.separators.infoRow]
- * @param {Object} [viewOptions.icons] Defines info-row icons
- * @param {String} [viewOptions.icons.firstInfoRow]
- * @param {String} [viewOptions.icons.secondInfoRow]
+ * @param {String} [viewOptions.separators.description]
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -30,43 +25,43 @@ define(function() {
 
     var defaults = {
             unselectOnBackgroundClick: true,
-            imageFormat: '100x100',
-            fields: {},
-            separators: {},
-            icons: {}
+            imageFormat: '190x',
+            fields: {
+                image: 'thumbnails',
+                title: ['title'],
+                description: ['mimeType', 'size']
+            },
+            separators: {
+                title: ' ',
+                description: ', '
+            }
         },
 
         constants = {
-            containerClass: 'contact-grid',
-            selectedClass: 'selected',
+            containerId: 'masonry-grid',
             actionNavigatorClass: 'action-navigator',
+            downloadNavigatorClass: 'download-navigator',
+            selectedClass: 'selected',
+            loadingClass: 'loading',
 
             itemHeadClass: 'item-head',
-            itemInfoClass: 'item-info',
+            itemInfoClass: 'item-info'
         },
 
         templates = {
             item: [
-                '<div class="contact-item">',
-                '   <div class="' + constants.itemHeadClass + '">',
-                '       <div class="head-container">',
-                '           <div class="head-image ' + constants.actionNavigatorClass + '">',
-                '               <span class="<%= pictureIcon %> image-default"></span>',
-                '               <div class="image-content" style="background-image: url(\'<%= picture %>\')"></div>',
-                '           </div>',
-                '           <div class="head-name ' + constants.actionNavigatorClass + '"><%= name %></div>',
-                '       </div>',
-                '       <div class="head-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
+                '<div class="masonry-item ' + constants.loadingClass + '">',
+                '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
+                '       <img src="<%= image %>"/>',
                 '   </div>',
-                '</div>'
-            ].join(''),
-            infoContainer: [
-                '<div class="' + [constants.itemInfoClass, constants.actionNavigatorClass].join(" ") + '"></div>'
-            ].join(''),
-            infoRow: [
-                '<div class="info-row">',
-                '   <span class="<%= icon %> info-icon"></span>',
-                '   <span class="info-text"><%= text %></span>',
+                '   <div class="masonry-info">',
+                '       <span class="title ' + constants.actionNavigatorClass + '"><%= title %></span><br/>',
+                '       <span class="description ' + constants.actionNavigatorClass + '"><%= description %></span>',
+                '   </div>',
+                '   <div class="masonry-footer">',
+                '       <div class="footer-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
+                '       <span class="fa-cloud-download footer-download ' + constants.downloadNavigatorClass + '"></span>',
+                '   </div>',
                 '</div>'
             ].join('')
         },
@@ -89,7 +84,16 @@ define(function() {
                 });
                 return strings.join(separator);
             }
-        }
+        },
+
+        /**
+         * triggered when a when the download icon gets clicked
+         * @event husky.datagrid.download-clicked
+         * @param {Number|String} the id of the data-record
+         */
+        DOWNLOAD_CLICKED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'download-clicked');
+        };
 
     return {
 
@@ -130,10 +134,18 @@ define(function() {
          */
         render: function(data, $container) {
             this.data = data;
-            this.$el = this.sandbox.dom.createElement('<div class="' + constants.containerClass + '"/>');
+            this.$el = this.sandbox.dom.createElement('<div id="' + constants.containerId + '"/>');
             this.sandbox.dom.append($container, this.$el);
 
             this.bindGeneralDomEvents();
+            this.masonry = this.sandbox.masonry.initialize('#' + constants.containerId, {
+                align: 'left',
+                direction: 'left',
+                itemWidth: 190,
+                offset: 30,
+                verticalOffset: 20
+            });
+
             this.renderItems(this.data.embedded);
             this.rendered = true;
         },
@@ -156,18 +168,17 @@ define(function() {
         renderItems: function(items) {
             // loop through each data record
             this.sandbox.util.foreach(items, function(record) {
-                var id, picture, title, firstInfoRow, secondInfoRow;
+                var id, image, title, description;
 
                 id = record['id'];
-                picture = (!!record[this.options.fields.picture]) ?
-                    record[this.options.fields.picture][this.options.imageFormat] : '';
+                image = (!!record[this.options.fields.image]) ?
+                    record[this.options.fields.image][this.options.imageFormat] : '';
 
                 title = concatRecordColumns(record, this.options.fields.title, this.options.separators.title);
-                firstInfoRow = concatRecordColumns(record, this.options.fields.firstInfoRow, this.options.separators.infoRow);
-                secondInfoRow = concatRecordColumns(record, this.options.fields.secondInfoRow, this.options.separators.infoRow);
+                description = concatRecordColumns(record, this.options.fields.description, this.options.separators.description);
 
                 // pass the found data to a render method
-                this.renderItem(id, picture, title, firstInfoRow, secondInfoRow);
+                this.renderItem(id, image, title, description);
             }.bind(this));
         },
 
@@ -180,26 +191,14 @@ define(function() {
          * @param description {String} the thumbnail description to render
          * @param record {Object} the original data record
          */
-        renderItem: function(id, picture, title, firstInfoRow, secondInfoRow) {
+        renderItem: function(id, image, title, description) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
-                    name: this.sandbox.util.cropTail(String(title), 32),
-                    picture: picture,
-                    pictureIcon: this.options.icons.picture
+                    image: image,
+                    title: this.sandbox.util.cropMiddle(String(title), 24),
+                    description: this.sandbox.util.cropMiddle(String(description), 32)
                 })
             );
-
-            if (!!picture) {
-                this.sandbox.dom.addClass(this.sandbox.dom.find('.head-image', this.$items[id]), 'no-default');
-            }
-
-            if (!!firstInfoRow) {
-                this.addInfoRowToItem(this.$items[id], this.options.icons.firstInfoRow, firstInfoRow);
-            }
-
-            if (!!secondInfoRow) {
-                this.addInfoRowToItem(this.$items[id], this.options.icons.secondInfoRow, secondInfoRow);
-            }
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
                 this.selectItem(id);
@@ -210,30 +209,11 @@ define(function() {
         },
 
         /**
-         * Add an info-row to the given item
-         * @param $item
-         * @param icon icon-class of the info-row
-         * @param text text of the info row
-         */
-        addInfoRowToItem: function($item, icon, text) {
-            var $container = this.sandbox.dom.find('.' + constants.itemInfoClass, $item);
-            if (!$container.length) {
-                $container = this.sandbox.dom.createElement(this.sandbox.util.template(templates.infoContainer)());
-                this.sandbox.dom.append($item, $container);
-            }
-            this.sandbox.dom.append($container, this.sandbox.dom.createElement(
-                    this.sandbox.util.template(templates.infoRow)({
-                        icon: icon,
-                        text: this.sandbox.util.cropMiddle(String(text), 22)
-                    }))
-            );
-        },
-
-        /**
          * Destroys the view
          */
         destroy: function() {
             this.sandbox.dom.off('.body', 'click.contact.list');
+            this.sandbox.masonry.destroy('#' + constants.containerId);
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -249,7 +229,17 @@ define(function() {
 
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
+                this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
+            }.bind(this), "." + constants.downloadNavigatorClass);
+
+            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
                 this.toggleItemSelected(id);
+            }.bind(this));
+
+            this.sandbox.dom.one(this.sandbox.dom.find('img', this.$items[id]), 'load', function() {
+                this.sandbox.masonry.refresh('#' + constants.containerId, true);
+                this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
             }.bind(this));
         },
 
@@ -306,6 +296,7 @@ define(function() {
         removeRecord: function(recordId) {
             if (!!this.$items[recordId]) {
                 this.sandbox.dom.remove(this.$items[recordId]);
+                this.sandbox.masonry.refresh('#' + constants.containerId, true);
                 this.datagrid.removeRecord.call(this.datagrid, recordId);
                 return true;
             }
