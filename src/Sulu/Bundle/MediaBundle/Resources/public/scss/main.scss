@@ -1,4 +1,6 @@
 @import '../../../../AdminBundle/Resources/public/scss/variables',
+        '../../../../AdminBundle/Resources/public/scss/mixins',
+        'compass/css3/transition', //todo: move mixing into husky
         'modules/collection-list',
         'modules/collection-edit',
         'modules/collection',
