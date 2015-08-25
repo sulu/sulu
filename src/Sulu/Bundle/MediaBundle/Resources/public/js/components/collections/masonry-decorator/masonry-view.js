@@ -3,6 +3,7 @@
  * @constructor
  *
  * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
+ * @param {Boolean} [selectable] should items be selectable
  * @param {String} [imageFormat] api-format which is used for head-image
  * @param {Object} [viewOptions] Configuration object
  * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
@@ -25,6 +26,7 @@ define(function() {
 
     var defaults = {
             unselectOnBackgroundClick: true,
+            selectable: true,
             imageFormat: '190x',
             fields: {
                 image: 'thumbnails',
@@ -59,7 +61,9 @@ define(function() {
                 '       <span class="description ' + constants.actionNavigatorClass + '"><%= description %></span>',
                 '   </div>',
                 '   <div class="masonry-footer">',
+                '       <% if (!!selectable) { %>',
                 '       <div class="footer-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
+                '       <% } %>',
                 '       <span class="fa-cloud-download footer-download ' + constants.downloadNavigatorClass + '"></span>',
                 '   </div>',
                 '</div>'
@@ -156,7 +160,7 @@ define(function() {
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
                 this.sandbox.dom.on('.body', 'click.contact.list', function() {
-                    this.unselectAllItems();
+                    this.deselectAllRecords();
                 }.bind(this));
             }
         },
@@ -196,16 +200,25 @@ define(function() {
                 this.sandbox.util.template(templates.item)({
                     image: image,
                     title: this.sandbox.util.cropMiddle(String(title), 24),
-                    description: this.sandbox.util.cropMiddle(String(description), 32)
+                    description: this.sandbox.util.cropMiddle(String(description), 32),
+                    selectable: this.options.selectable
                 })
             );
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
-                this.selectItem(id);
+                this.selectRecord(id);
             }
 
             this.sandbox.dom.append(this.$el, this.$items[id]);
             this.bindItemDomEvents(id);
+        },
+
+        /**
+         * Takes an object with options and extends the current ones
+         * @param options {Object} new options to merge to the current ones
+         */
+        extendOptions: function(options) {
+            this.options = this.sandbox.util.extend(true, {}, this.options, options);
         },
 
         /**
@@ -232,15 +245,17 @@ define(function() {
                 this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
             }.bind(this), "." + constants.downloadNavigatorClass);
 
-            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                this.toggleItemSelected(id);
-            }.bind(this));
-
             this.sandbox.dom.one(this.sandbox.dom.find('img', this.$items[id]), 'load', function() {
                 this.sandbox.masonry.refresh('#' + constants.containerId, true);
                 this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
             }.bind(this));
+
+            if (!!this.options.selectable) {
+                this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                    this.toggleItemSelected(id);
+                }.bind(this));
+            }
         },
 
         /**
@@ -249,34 +264,10 @@ define(function() {
          */
         toggleItemSelected: function(id) {
             if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
-                this.unselectItem(id);
+                this.deselectRecord(id);
             } else {
-                this.selectItem(id);
+                this.selectRecord(id);
             }
-        },
-
-        /**
-         * Selects an item with a given id
-         * @param id {Number|String} the id of the item
-         */
-        selectItem: function(id) {
-            this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
-            if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
-                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
-            }
-            this.datagrid.setItemSelected.call(this.datagrid, id);
-        },
-
-        /**
-         * Unselects an item with a given id
-         * @param id {Number|String} the id of the item
-         */
-        unselectItem: function(id) {
-            this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
-            if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
-                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
-            }
-            this.datagrid.setItemUnselected.call(this.datagrid, id);
         },
 
         /**
@@ -304,12 +295,33 @@ define(function() {
         },
 
         /**
-         * Unselects all contact items
+         * Selects an item with a given id
+         * @param id {Number|String} the id of the item
          */
-        unselectAllItems: function() {
+        selectRecord: function(id) {
+            this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
+            if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
+                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
+            }
+            this.datagrid.setItemSelected.call(this.datagrid, id);
+        },
+
+        /**
+         * Unselects an item with a given id
+         * @param id {Number|String} the id of the item
+         */
+        deselectRecord: function(id) {
+            this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
+            if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
+                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
+            }
+            this.datagrid.setItemUnselected.call(this.datagrid, id);
+        },
+
+        deselectAllRecords: function() {
             this.sandbox.util.each(this.$items, function(id) {
-                this.unselectItem(Number(id));
+                this.deselectRecord(Number(id));
             }.bind(this));
-        }
+        },
     };
 });
