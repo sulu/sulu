@@ -22,7 +22,10 @@ define(['sulumedia/model/media'], function(Media) {
         listViews = {
             table: {
                 name: 'table',
-                viewOptions: {}
+                viewOptions: {
+                    selectItem: true,
+                    actionIconColumn: 'name'
+                }
             },
             thumbnailSmall: {
                 name: 'thumbnail',
@@ -40,7 +43,9 @@ define(['sulumedia/model/media'], function(Media) {
             },
             masonry: {
                 name: 'decorators/masonry',
-                viewOptions: {}
+                viewOptions: {
+                    selectable: false
+                }
             }
         };
 
@@ -172,11 +177,9 @@ define(['sulumedia/model/media'], function(Media) {
                     sortable: false,
                     actionCallback: this.actionCallback.bind(this),
                     viewOptions: {
-                        table: {
-                            selectItem: true,
-                            actionIconColumn: 'name'
-                        },
-                        thumbnail: listViews[this.listView].viewOptions || {}
+                        table: listViews.table.viewOptions || {},
+                        thumbnail: listViews[this.listView].viewOptions || {},
+                        'decorators/masonry': listViews.masonry.viewOptions || {},
                     }
                 });
         },

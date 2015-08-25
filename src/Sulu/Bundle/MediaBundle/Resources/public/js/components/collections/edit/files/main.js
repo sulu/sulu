@@ -19,7 +19,9 @@ define(function() {
         listViews = {
             table: {
                 name: 'table',
-                viewOptions: {}
+                viewOptions: {
+                    actionIconColumn: 'name'
+                }
             },
             thumbnailSmall: {
                 name: 'thumbnail',
@@ -354,10 +356,9 @@ define(function() {
                     sortable: false,
                     actionCallback: this.editMedia.bind(this),
                     viewOptions: {
+                        table: listViews.table.viewOptions || {},
                         thumbnail: listViews[this.listView].viewOptions || {},
-                        table: {
-                            actionIconColumn: 'name'
-                        }
+                        'decorators/masonry': listViews.masonry.viewOptions || {},
                     }
                 });
         },
