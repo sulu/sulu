@@ -189,11 +189,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
             throw new MissingParameterException('content');
         }
         $contentUuid = $msg['content'];
-        // filter index page
-        if ($contentUuid === 'index') {
-            $startPage = $this->contentMapper->loadStartPage($webspaceKey, $locale);
-            $contentUuid = $startPage->getUuid();
-        }
         $context->set('content', $contentUuid);
 
         // init message vars

@@ -148,29 +148,6 @@ interface NodeRepositoryInterface
     );
 
     /**
-     * save start page of given portal.
-     *
-     * @param array  $data
-     * @param string $templateKey
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int    $userId
-     * @param bool   $isShadow
-     * @param string $shadowBaseLanguage
-     *
-     * @return array
-     */
-    public function saveIndexNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $isShadow = false,
-        $shadowBaseLanguage = null
-    );
-
-    /**
      * removes given node.
      *
      * @param string $uuid
