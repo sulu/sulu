@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of Sulu.
+ * This file is part Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,16 +11,31 @@
 namespace Sulu\Component\SmartContent;
 
 /**
- * Item to display in smart-content UI.
+ * Interface of DatasourceItem.
  */
-interface ItemInterface extends ResourceItemInterface
+interface DatasourceItemInterface
 {
+    /**
+     * Returns id of item.
+     *
+     * @return string
+     */
+    public function getId();
+
     /**
      * Returns title of the item.
      *
      * @return string
      */
     public function getTitle();
+
+    /**
+     * Returns full qualified title of item.
+     * For example path or breadcrumb.
+     *
+     * @return string
+     */
+    public function getPath();
 
     /**
      * Returns URL to image.

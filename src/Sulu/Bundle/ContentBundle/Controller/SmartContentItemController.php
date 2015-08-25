@@ -54,7 +54,7 @@ class SmartContentItemController extends RestController
         $provider = $dataProviderPool->get($providerAlias);
 
         // resolve datasource and items
-        $data = $provider->resolveFilters(
+        $data = $provider->resolveDataItems(
             $filters,
             [],
             $options,

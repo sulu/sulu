@@ -35,7 +35,7 @@ class ContactDataItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getId()
     {
@@ -45,7 +45,7 @@ class ContactDataItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getTitle()
     {
@@ -55,17 +55,7 @@ class ContactDataItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
-     */
-    public function getFullQualifiedTitle()
-    {
-        return $this->entity->getFullName();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getImage()
     {

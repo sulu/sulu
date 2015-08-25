@@ -18,8 +18,10 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\DatasourceItem;
 
 class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -132,7 +134,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('properties', $parameter);
     }
 
-    public function testResolveFiltersNoDataSource()
+    public function testResolveDataItemsNoDataSource()
     {
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(),
@@ -141,7 +143,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['excluded' => '123-123-123'],
             ['properties' => ['my-properties' => true]],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
@@ -154,7 +156,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $result->getItems());
     }
 
-    public function testResolveFiltersNoResult()
+    public function testResolveDataItemsNoResult()
     {
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
@@ -169,7 +171,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
@@ -184,7 +186,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($result->getReferencedUuids());
     }
 
-    public function testResolveFiltersHasNextPage()
+    public function testResolveDataItemsHasNextPage()
     {
         $data = [
             ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -205,7 +207,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
@@ -223,7 +225,49 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['123-123-123', '123-123-456'], $result->getReferencedUuids());
     }
 
-    public function testResolveFiltersNoPagination()
+    public function testResolveResourceItems()
+    {
+        $data = [
+            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+        ];
+
+        $provider = new ContentDataProvider(
+            $this->getContentQueryBuilder(
+                [
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'properties' => ['my-properties' => true],
+                    'excluded' => '123-123-123',
+                ]
+            ),
+            $this->getContentQueryExecutor(2, 1, $data),
+            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getProxyFactory()
+        );
+
+        $result = $provider->resolveResourceItems(
+            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            5,
+            1,
+            2
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+        $this->assertEquals(
+            [
+                new ArrayAccessItem($data[0]['uuid'], $data[0], $data[0]),
+                new ArrayAccessItem($data[1]['uuid'], $data[1], $data[1]),
+            ],
+            $result->getItems()
+        );
+        $this->assertTrue($result->getHasNextPage());
+        $this->assertEquals(['123-123-123', '123-123-456'], $result->getReferencedUuids());
+    }
+
+    public function testResolveDataItemsNoPagination()
     {
         $data = [
             ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -246,7 +290,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $result = $provider->resolveFilters(
+        $result = $provider->resolveDataItems(
             ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en']
@@ -276,11 +320,17 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getProxyFactory()
         );
 
-        $provider->resolveDatasource(
+        $result = $provider->resolveDatasource(
             $data['uuid'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en']
         );
+
+        $this->assertInstanceOf(DatasourceItem::class, $result);
+        $this->assertEquals($data['uuid'], $result->getId());
+        $this->assertEquals($data['title'], $result->getTitle());
+        $this->assertEquals($data['path'], $result->getPath());
+        $this->assertNull($result->getImage());
     }
 
     public function testContentDataItem()
@@ -291,7 +341,6 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($data['uuid'], $item->getId());
         $this->assertEquals($data['title'], $item->getTitle());
-        $this->assertEquals($data['path'], $item->getFullQualifiedTitle());
         $this->assertEquals($resource, $item->getResource());
 
         $this->assertNull($item->getImage());

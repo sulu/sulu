@@ -21,7 +21,7 @@ class DataProviderResult
     private $hasNextPage;
 
     /**
-     * @var ItemInterface[]
+     * @var ResourceItemInterface[]
      */
     private $items;
 
@@ -30,7 +30,7 @@ class DataProviderResult
      */
     private $referencedUuids;
 
-    public function __construct(array $items, $hasNextPage, array $referencedUuids)
+    public function __construct(array $items, $hasNextPage, array $referencedUuids = [])
     {
         $this->hasNextPage = $hasNextPage;
         $this->items = $items;
@@ -46,7 +46,7 @@ class DataProviderResult
     }
 
     /**
-     * @return ItemInterface[]
+     * @return ResourceItemInterface[]
      */
     public function getItems()
     {

@@ -35,7 +35,7 @@ class AccountDataItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getId()
     {
@@ -45,7 +45,7 @@ class AccountDataItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getTitle()
     {
@@ -55,17 +55,7 @@ class AccountDataItem implements ItemInterface
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
-     */
-    public function getFullQualifiedTitle()
-    {
-        return $this->entity->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getImage()
     {

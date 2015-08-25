@@ -33,7 +33,7 @@ interface DataProviderInterface
     public function getDefaultPropertyParameter();
 
     /**
-     * Resolves given filters and returns filtered items.
+     * Resolves given filters and returns filtered data items.
      *
      * @param array $filters Contains the filter configuration.
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
@@ -44,7 +44,28 @@ interface DataProviderInterface
      *
      * @return DataProviderResult
      */
-    public function resolveFilters(
+    public function resolveDataItems(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    );
+
+    /**
+     * Resolves given filters and returns filtered resource items with ArrayAccess.
+     *
+     * @param array $filters Contains the filter configuration.
+     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
+     * @param int|null $limit Indicates maximum size of result set.
+     * @param int $page Indicates page of result set.
+     * @param int|null $pageSize Indicates page-size of result set.
+     * @param array $options Options like webspace or locale.
+     *
+     * @return DataProviderResult
+     */
+    public function resolveResourceItems(
         array $filters,
         array $propertyParameter,
         array $options = [],
@@ -60,7 +81,7 @@ interface DataProviderInterface
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
      * @param array $options Options like webspace or locale.
      *
-     * @return ItemInterface
+     * @return DatasourceItemInterface
      */
     public function resolveDatasource($datasource, array $propertyParameter, array $options);
 }

@@ -252,14 +252,14 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
-            ['id' => $this->team->getUuid(), 'title' => 'Team', 'fullQualifiedTitle' => '/team'],
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
             $result['datasource']
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'fullQualifiedTitle' => '/team/johannes'],
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'fullQualifiedTitle' => '/team/daniel'],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'fullQualifiedTitle' => '/team/thomas'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -279,13 +279,13 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
-            ['id' => $this->team->getUuid(), 'title' => 'Team', 'fullQualifiedTitle' => '/team'],
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
             $result['datasource']
         );
         $this->assertEquals(
             [
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'fullQualifiedTitle' => '/team/daniel'],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'fullQualifiedTitle' => '/team/thomas'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -305,13 +305,13 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
-            ['id' => $this->team->getUuid(), 'title' => 'Team', 'fullQualifiedTitle' => '/team'],
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
             $result['datasource']
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'fullQualifiedTitle' => '/team/johannes'],
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'fullQualifiedTitle' => '/team/daniel'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
             ],
             $result['_embedded']['items']
         );
@@ -331,12 +331,12 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
-            ['id' => $this->team->getUuid(), 'title' => 'Team', 'fullQualifiedTitle' => '/team'],
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
             $result['datasource']
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'fullQualifiedTitle' => '/team/johannes'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes'],
             ],
             $result['_embedded']['items']
         );

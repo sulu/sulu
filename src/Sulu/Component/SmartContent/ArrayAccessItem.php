@@ -11,6 +11,7 @@
 namespace Sulu\Component\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\SmartContent\Exception\NoSuchPropertyException;
 use Sulu\Component\SmartContent\Exception\NotSupportedException;
 
@@ -19,16 +20,51 @@ use Sulu\Component\SmartContent\Exception\NotSupportedException;
  *
  * @ExclusionPolicy("all")
  */
-abstract class Item implements ItemInterface, \ArrayAccess
+class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
 {
+    /**
+     * @var string
+     */
+    private $id;
+
     /**
      * @var array
      */
     private $data = [];
 
-    public function __construct(array $data)
+    /**
+     * @var object
+     */
+    private $resource;
+
+    /**
+     * @param mixed $id
+     * @param array $data
+     * @param object $resource
+     */
+    public function __construct($id, array $data, $resource)
     {
+        $this->id = $id;
         $this->data = $data;
+        $this->resource = $resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @VirtualProperty()
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -64,6 +100,14 @@ abstract class Item implements ItemInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -86,7 +130,6 @@ abstract class Item implements ItemInterface, \ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {

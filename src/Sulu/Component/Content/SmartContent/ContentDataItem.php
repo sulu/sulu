@@ -12,63 +12,33 @@ namespace Sulu\Component\Content\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Component\SmartContent\Item;
+use Sulu\Component\SmartContent\ArrayAccessItem;
+use Sulu\Component\SmartContent\ItemInterface;
 
 /**
  * Represents item in content data provider.
  *
  * @ExclusionPolicy("all")
  */
-class ContentDataItem extends Item
+class ContentDataItem extends ArrayAccessItem implements ItemInterface
 {
     /**
-     * @var mixed
+     * @param array $data
+     * @param object $resource
      */
-    private $resource;
-
     public function __construct(array $data, $resource)
     {
-        parent::__construct($data);
-
-        $this->resource = $resource;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResource()
-    {
-        return $this->resource;
+        parent::__construct($data['uuid'], $data, $resource);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @VirtualProperty()
-     */
-    public function getId()
-    {
-        return $this->get('uuid');
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
+     * @VirtualProperty
      */
     public function getTitle()
     {
         return $this->get('title');
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @VirtualProperty()
-     */
-    public function getFullQualifiedTitle()
-    {
-        return '/' . ltrim($this->get('path'), '/');
     }
 
     /**

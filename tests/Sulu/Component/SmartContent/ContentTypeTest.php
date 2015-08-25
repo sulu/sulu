@@ -314,7 +314,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveFilters(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'dataSource' => 'some-uuid',
@@ -411,7 +411,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveFilters(
+        $this->contentDataProvider->resolveResourceItems(
             ['tags' => [], 'dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
@@ -487,7 +487,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
-        $this->contentDataProvider->resolveFilters(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'limitResult' => $limitResult,
@@ -560,7 +560,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
-        $this->contentDataProvider->resolveFilters(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'limitResult' => $limitResult,
@@ -652,7 +652,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveFilters(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'dataSource' => '123-123-123',
