@@ -105,9 +105,9 @@ class ContentDataProvider implements DataProviderInterface
         $this->configuration->setSorting(
             [
                 new PropertyParameter('title', 'smart-content.title'),
-                new PropertyParameter('published', 'public.published'),
-                new PropertyParameter('created', 'public.created'),
-                new PropertyParameter('changed', 'public.changed'),
+                new PropertyParameter('published', 'smart-content.published'),
+                new PropertyParameter('created', 'smart-content.created'),
+                new PropertyParameter('changed', 'smart-content.changed'),
             ]
         );
 

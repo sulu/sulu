@@ -116,7 +116,7 @@
             </trans-unit>
             <trans-unit id="831eaac1fa8a279d10e452f59e716b35" resname="smart-content.no-sorting">
                 <source>smart-content.no-sorting</source>
-                <target>Default Sorting</target>
+                <target>Admin-Sorting</target>
             </trans-unit>
             <trans-unit id="fc27db8368ee8e93b0432c6f929eb22c" resname="smart-content.ascending">
                 <source>smart-content.ascending</source>
@@ -164,7 +164,27 @@
             </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8317" resname="smart-content.title">
                 <source>smart-content.title</source>
-                <target>Title</target>
+                <target>Title (alphabetic)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8327" resname="smart-content.published">
+                <source>smart-content.published</source>
+                <target>Published (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad18337" resname="smart-content.created">
+                <source>smart-content.created</source>
+                <target>Created (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad28337" resname="smart-content.changed">
+                <source>smart-content.changed</source>
+                <target>Changed (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.save">
+                <source>smart-content.save</source>
+                <target>Save</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
+                <source>smart-content.clear</source>
+                <target>Clear</target>
             </trans-unit>
             <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
                 <source>content.template.dialog.titile</source>

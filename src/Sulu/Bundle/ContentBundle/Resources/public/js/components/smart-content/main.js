@@ -419,7 +419,9 @@ define([], function() {
                 viewLess: 'smart-content.view-less',
                 chooseDataSource: 'smart-content.choose-data-source',
                 chooseDataSourceOk: 'smart-content.choose-data-source.ok',
-                chooseDataSourceCancel: 'smart-content.choose-data-source.cancel'
+                chooseDataSourceCancel: 'smart-content.choose-data-source.cancel',
+                clearButton: 'smart-content.clear',
+                saveButton: 'smart-content.save'
             };
 
             this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
@@ -709,8 +711,28 @@ define([], function() {
             var $element = this.sandbox.dom.createElement('<div/>'),
                 slides = [
                     {
-                        title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
+                        title: this.sandbox.translate(
+                            this.translations.configureSmartContent).replace('{title}',
+                            this.options.title
+                        ),
                         data: this.$overlayContent,
+                        buttons: [
+                            {
+                                text: this.sandbox.translate(this.translations.clearButton),
+                                inactive: false,
+                                align: 'left',
+                                classes: 'gray black-text',
+                                callback: function() {
+                                    this.clear();
+                                }.bind(this)
+                            },
+                            {
+                                type: 'ok',
+                                text: this.sandbox.translate(this.translations.saveButton),
+                                inactive: false,
+                                align: 'right'
+                            }
+                        ],
                         okCallback: function() {
                             this.itemsVisible = this.options.visibleItems;
                             this.getOverlayData();
@@ -816,58 +838,60 @@ define([], function() {
          * Loads the overlay content based on a template
          */
         initOverlayContent: function() {
-
             this.$overlayContent = this.sandbox.dom.createElement(_.template(templates.overlayContent.main)());
+            this.appendOverlayContent(this.$overlayContent, this.options);
+        },
 
+        appendOverlayContent: function($container, data) {
             if (!!this.options.has.datasource) {
-                this.$overlayContent.append(_.template(templates.overlayContent.dataSource)({
+                $container.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
                     dataSourceValStr: ''
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.subFolders)({
+                $container.append(_.template(templates.overlayContent.subFolders)({
                     includeSubStr: this.sandbox.translate(this.translations.includeSubFolders),
-                    includeSubCheckedStr: (this.options.includeSubFolders) ? ' checked' : '',
+                    includeSubCheckedStr: (data.includeSubFolders) ? ' checked' : '',
                     disabled: (this.overlayDisabled.subFolders) ? ' disabled' : ''
                 }));
-                this.$overlayContent.append('<div class="clear"></div>');
+                $container.append('<div class="clear"></div>');
             }
             if (!!this.options.has.categories) {
-                this.$overlayContent.append(_.template(templates.overlayContent.categories)({
+                $container.append(_.template(templates.overlayContent.categories)({
                     filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
                 }));
             }
             if (!!this.options.has.tags) {
-                this.$overlayContent.append(_.template(templates.overlayContent.tagList)({
+                $container.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.tagOperator)({
+                $container.append(_.template(templates.overlayContent.tagOperator)({
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
-                this.$overlayContent.append('<div class="clear"></div>');
+                $container.append('<div class="clear"></div>');
             }
             if (!!this.options.has.sorting) {
-                this.$overlayContent.append(_.template(templates.overlayContent.sortBy)({
+                $container.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.sortMethod)());
+                $container.append(_.template(templates.overlayContent.sortMethod)());
 
-                this.$overlayContent.append('<div class="clear"></div>');
+                $container.append('<div class="clear"></div>');
             }
             if (!!this.options.has.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
-                this.$overlayContent.append(_.template(templates.overlayContent.presentAs)({
+                $container.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
             if (!!this.options.has.limit) {
-                this.$overlayContent.append(_.template(templates.overlayContent.limitResult)({
+                $container.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
-                    limitResult: (this.options.limitResult > 0) ? this.options.limitResult : '',
+                    limitResult: (data.limitResult > 0) ? data.limitResult : '',
                     disabled: (this.overlayDisabled.limitResult) ? ' disabled' : ''
                 }));
             }
-            this.$overlayContent.append('<div class="clear"></div>');
+            $container.append('<div class="clear"></div>');
         },
 
         /**
@@ -975,9 +999,7 @@ define([], function() {
                 this.overlayData.limitResult : null;
 
             // min source must be selected
-            if ((!this.options.has.datasource || this.overlayData.dataSource.length > 0) &&
-                JSON.stringify(data) !== JSON.stringify(this.URI.data)
-            ) {
+            if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
                 this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
@@ -992,6 +1014,22 @@ define([], function() {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
+                // no datasource selected empty form
+                if (!!this.options.has.datasource &&
+                    (
+                        this.URI.data[this.options.dataSourceParameter] === null ||
+                        this.URI.data[this.options.dataSourceParameter].length === 0
+                    )
+                ) {
+                    this.overlayData.title = null;
+                    this.overlayData.fullQualifiedTitle = null;
+
+                    this.items = [];
+                    this.sandbox.emit(DATA_RETRIEVED.call(this));
+
+                    return;
+                }
+
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.startLoader();
                 this.sandbox.util.ajax({
@@ -1098,6 +1136,28 @@ define([], function() {
         setElementData: function(newData) {
             var data = this.sandbox.util.extend(true, {}, newData);
             this.sandbox.dom.data(this.$el, this.options.elementDataName, data);
+        }
+        ,
+
+        /**
+         * Resets content.
+         */
+        clear: function() {
+            this.overlayData = {
+                dataSource: '',
+                includeSubFolders: false,
+                limitResult: null,
+                presentAs: null,
+                sortBy: [],
+                sortMethod: 'asc',
+                category: [],
+                tags: [],
+                tagOperator: 'or'
+            };
+
+            this.$overlayContent.html('');
+            this.appendOverlayContent(this.$overlayContent, this.overlayData);
+            this.startOverlayComponents();
         }
     };
 });
