@@ -1,18 +1,18 @@
 /**
- * @class ThumbnailView (Datagrid Decorator)
+ * @class Masonryview (Datagrid Decorator)
  * @constructor
  *
+ * @param {Object} [viewOptions] Configuration object
  * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
  * @param {Boolean} [selectable] should items be selectable
  * @param {String} [imageFormat] api-format which is used for head-image
  * @param {String} [emptyListTranslations] translation key for the empty-list indicator
- * @param {Object} [viewOptions] Configuration object
- * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
- * @param {String} [viewOptions.fields.image]
- * @param {Array} [viewOptions.fields.title]
- * @param {Array} [viewOptions.fields.description]
- * @param {Object} [viewOptions.separators] Defines separators between data-columns
- * @param {String} [viewOptions.separators.description]
+ * @param {Object} [fields] Defines which data-columns are used to render cards
+ * @param {String} [fields.image]
+ * @param {Array} [fields.title]
+ * @param {Array} [fields.description]
+ * @param {Object} [separators] Defines separators between data-columns
+ * @param {String} [separators.description]
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -85,7 +85,7 @@ define(function() {
         },
 
         /**
-         * Concats the entries of the given columns of the given record to a string.
+         * Concat the entries of the given columns of the given record to a string.
          * Record-columns are separated by the given separator. Empty record-columns are ignored.
          * @param record
          * @param columns
@@ -104,7 +104,13 @@ define(function() {
             }
         },
 
-        processContentFilters = function(record){
+        /**
+         * Apply datagrid-content-filters on the given record column by column
+         * datagrid-content-filters are used to format the raw database-values (for example size)
+         * @param record
+         * @returns {*}
+         */
+        processContentFilters = function(record) {
             var item = this.sandbox.util.extend(false, {}, record);
             this.datagrid.matchings.forEach(function(matching) {
                 var argument = (matching.type === this.datagrid.types.THUMBNAILS) ? this.options.imageFormat : '';
@@ -122,7 +128,6 @@ define(function() {
         /**
          * triggered when a when the download icon gets clicked
          * @event husky.datagrid.download-clicked
-         * @param {Number|String} the id of the data-record
          */
         DOWNLOAD_CLICKED = function() {
             return this.datagrid.createEventName.call(this.datagrid, 'download-clicked');
@@ -175,6 +180,11 @@ define(function() {
             this.rendered = true;
         },
 
+        /**
+         * Render the masonry-container into the given dom element
+         * The masonry-container contains the empty-list-inidicator and the masonry-grid
+         * @param $container
+         */
         renderMasonryContainer: function($container) {
             this.$el = this.sandbox.dom.createElement('<div class="masonry-container"/>');
 
@@ -191,7 +201,10 @@ define(function() {
             this.sandbox.dom.append($container, this.$el);
         },
 
-        updateEmptyIndicator: function() {
+        /**
+         * Show the empty-list-indicator if datagrid contains no data, else hide it
+         */
+        updateEmptyIndicatorVisibility: function() {
             if (!!this.datagrid.data.embedded && this.datagrid.data.embedded.length > 0) {
                 this.sandbox.dom.hide('.' + constants.emptyIndicatorClass);
             } else {
@@ -199,6 +212,9 @@ define(function() {
             }
         },
 
+        /**
+         * Start the masonry-plugin on the masonry-grid element
+         */
         initializeMasonryGrid: function() {
             this.sandbox.masonry.initialize('#' + constants.masonryGridId, {
                 align: 'left',
@@ -225,7 +241,7 @@ define(function() {
          * @param records {Array} array with records to render
          */
         renderRecords: function(records) {
-            this.updateEmptyIndicator();
+            this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(records, function(record) {
                 var item = processContentFilters.call(this, record);
                 var id, image, title, description;
@@ -241,13 +257,11 @@ define(function() {
         },
 
         /**
-         * Renders the actual contact item
-         * @param id {String|Number} the identifier of the data record
-         * @param imgSrc {String} the thumbnail src of the data record
-         * @param imgAlt {String} the thumbnail alt tag of the data record
-         * @param title {String} the title of the data record
-         * @param description {String} the thumbnail description to render
-         * @param record {Object} the original data record
+         * Renders an masonry-grid item with the given properties
+         * @param id
+         * @param image
+         * @param title
+         * @param description
          */
         renderItem: function(id, image, title, description) {
             this.$items[id] = this.sandbox.dom.createElement(
@@ -269,25 +283,8 @@ define(function() {
         },
 
         /**
-         * Takes an object with options and extends the current ones
-         * @param options {Object} new options to merge to the current ones
-         */
-        extendOptions: function(options) {
-            this.options = this.sandbox.util.extend(true, {}, this.options, options);
-        },
-
-        /**
-         * Destroys the view
-         */
-        destroy: function() {
-            this.sandbox.dom.off('.body', 'click.contact.list');
-            this.sandbox.masonry.destroy('#' + constants.masonryGridId);
-            this.sandbox.dom.remove(this.$el);
-        },
-
-        /**
-         * Binds Dom-Events for a thumbnail
-         * @param id {Number|String} the identifier of the thumbnail to bind events on
+         * Binds dom-related events on a masonry-grid item
+         * @param id the identifier of the thumbnail to bind events on
          */
         bindItemDomEvents: function(id) {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
@@ -308,6 +305,10 @@ define(function() {
             }
         },
 
+        /**
+         * Bind image-loading events on a masonry-grid item
+         * @param id
+         */
         bindItemLoadingEvents: function(id) {
             this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'load', function() {
                 this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headIconClass, this.$items[id]));
@@ -335,6 +336,23 @@ define(function() {
         },
 
         /**
+         * Takes an object with options and extends the current ones
+         * @param options {Object} new options to merge to the current ones
+         */
+        extendOptions: function(options) {
+            this.options = this.sandbox.util.extend(true, {}, this.options, options);
+        },
+
+        /**
+         * Destroys the view
+         */
+        destroy: function() {
+            this.sandbox.dom.off('.body', 'click.contact.list');
+            this.sandbox.masonry.destroy('#' + constants.masonryGridId);
+            this.sandbox.dom.remove(this.$el);
+        },
+
+        /**
          * Adds a record to the view
          * @param record
          * @public
@@ -354,7 +372,7 @@ define(function() {
                 this.sandbox.masonry.refresh('#' + constants.masonryGridId, true);
                 this.datagrid.removeRecord.call(this.datagrid, recordId);
 
-                this.updateEmptyIndicator();
+                this.updateEmptyIndicatorVisibility();
                 return true;
             }
             return false;
@@ -373,7 +391,7 @@ define(function() {
         },
 
         /**
-         * Unselects an item with a given id
+         * Deselect an item with a given id
          * @param id {Number|String} the id of the item
          */
         deselectRecord: function(id) {
@@ -384,6 +402,9 @@ define(function() {
             this.datagrid.setItemUnselected.call(this.datagrid, id);
         },
 
+        /**
+         * Deselect all items
+         */
         deselectAllRecords: function() {
             this.sandbox.util.each(this.$items, function(id) {
                 this.deselectRecord(Number(id));
