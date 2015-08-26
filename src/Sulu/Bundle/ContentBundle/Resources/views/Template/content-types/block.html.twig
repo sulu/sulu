@@ -26,17 +26,13 @@
                         <div class="container grid pos-rel">
                             <div class="text-block-controls pull-right">
                                 <div data-mapper-remove="{{ property.name }}"
-                                     class="fa-trash-o options-remove hide-in-sortmode pull-right m-left-20 mapper-remove-{{ type.name }}"></div>
-
-                                <div class="options-change hide-in-sortmode pull-right" id="change<~=index~>">
-                                    <span data-mapper-change-type="{{ property.name }}"
-                                          class="fa-gear drop-down-trigger"></span>
-                                            <span class="dropdown-toggle drop-down-trigger"></span>
-                                </div>
-
+                                     class="fa-times options-remove hide-in-sortmode pull-right m-left-20 mapper-remove-{{ type.name }}"></div>
                                 <div class="clear"></div>
                             </div>
-                            <div class="block block-{{ property.name }} grid-row">
+                            <div class="block block-{{ property.name }} grid-row small">
+                                <div class="grid-col-3 m-top-10 floating form-group hidden">
+                                    <div class="type-select"></div>
+                                </div>
                                 {% for child in type.childProperties %}
 
                                     {# get Type for property #}

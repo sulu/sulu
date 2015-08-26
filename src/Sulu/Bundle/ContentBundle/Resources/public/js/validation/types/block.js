@@ -15,6 +15,25 @@ define([
 
     'use strict';
 
+    var initializeTypeSelect = function($parent, options, callback) {
+        $parent.find('.type-select').parent().removeClass('hidden');
+        Husky.start([
+            {
+                name: 'select@husky',
+                options: {
+                    el: $parent.find('.type-select'),
+                    instanceName: 'change' + options.index,
+                    valueName: 'title',
+                    selectCallback: callback,
+                    data: this.types,
+                    defaultLabel: $.grep(this.types, function(type) {
+                        return type.id === options.type;
+                    })[0].title
+                }
+            }
+        ]);
+    };
+
     return function($el, options, form) {
         var defaults = {},
 
@@ -158,31 +177,14 @@ define([
                         App.dom.insertAt(index, '> *', this.$el, $template);
 
                         if (this.types.length > 1) {
-                            App.start([
-                                {
-                                    name: 'dropdown@husky',
-                                    options: {
-                                        el: App.dom.find('#change' + options.index, $template),
-                                        trigger: App.dom.find('.drop-down-trigger', $template),
-                                        setParentDropDown: true,
-                                        instanceName: 'change' + options.index,
-                                        alignment: 'right',
-                                        valueName: 'title',
-                                        translateLabels: true,
-                                        clickCallback: function(item, $trigger) {
-                                            // TODO change type
-                                            var data = form.mapper.getData($template);
-                                            this.addChild(item.data, data, true, index);
-                                        }.bind(this),
-                                        data: this.types
-                                    }
-                                }
-                            ]);
-                        } else {
-                            App.dom.remove(App.dom.find('.drop-down-trigger', $template));
+                            initializeTypeSelect.call(this, $template, options, function(item) {
+                                var data = form.mapper.getData($template);
+                                Husky.stop($template.find('*'));
+                                this.addChild(item, data, true, index);
+                            }.bind(this));
                         }
 
-                        // remove delete button
+                            // remove delete button
                         if (this.getMinOccurs() === this.getMaxOccurs()) {
                             App.dom.remove(App.dom.find('.options-remove', $template));
                         }
@@ -310,7 +312,7 @@ define([
                             App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
                         }
 
-                        if (tags.length && _.where(tags, { name: section.showInSortModeTag }).length) {
+                        if (tags.length && _.where(tags, {name: section.showInSortModeTag}).length) {
                             this.showSortModeField($field, $block);
                         }
                     }.bind(this));
