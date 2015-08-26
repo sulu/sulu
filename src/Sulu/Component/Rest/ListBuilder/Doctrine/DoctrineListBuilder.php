@@ -183,7 +183,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function assignSortFields($queryBuilder)
     {
         foreach ($this->sortFields as $index => $sortField) {
-            $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
+            $queryBuilder->addOrderBy($sortField->getName(), $this->sortOrders[$index]);
         }
     }
 

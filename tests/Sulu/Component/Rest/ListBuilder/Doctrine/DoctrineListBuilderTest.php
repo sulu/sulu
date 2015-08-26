@@ -236,9 +236,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSort()
     {
-        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
+        $alias = 'desc';
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', $alias, self::$entityName));
 
-        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.desc', 'ASC');
+        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with($alias, 'ASC');
 
         $this->doctrineListBuilder->execute();
     }

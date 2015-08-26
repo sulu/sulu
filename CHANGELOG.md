@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #XXXX [Rest]            Fixed sorting of concatenated fields
     * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
                                           `[field.name => order]` 
     * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository 
