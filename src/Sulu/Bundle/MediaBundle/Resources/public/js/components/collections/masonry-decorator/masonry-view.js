@@ -90,6 +90,21 @@ define(function() {
             }
         },
 
+        processContentFilters = function(record){
+            var item = this.sandbox.util.extend(false, {}, record);
+            this.datagrid.matchings.forEach(function(matching) {
+                var argument = (matching.type === this.datagrid.types.THUMBNAILS) ? this.options.imageFormat : '';
+                item[matching.attribute] = this.datagrid.processContentFilter.call(
+                    this.datagrid,
+                    matching.attribute,
+                    item[matching.attribute],
+                    matching.type,
+                    argument
+                );
+            }.bind(this));
+            return item;
+        },
+
         /**
          * triggered when a when the download icon gets clicked
          * @event husky.datagrid.download-clicked
@@ -150,7 +165,7 @@ define(function() {
                 verticalOffset: 20
             });
 
-            this.renderItems(this.data.embedded);
+            this.renderRecords(this.data.embedded);
             this.rendered = true;
         },
 
@@ -167,19 +182,18 @@ define(function() {
 
         /**
          * Parses the data and passes it item by item to a render function
-         * @param items {Array} array with items to render
+         * @param records {Array} array with records to render
          */
-        renderItems: function(items) {
+        renderRecords: function(records) {
             // loop through each data record
-            this.sandbox.util.foreach(items, function(record) {
+            this.sandbox.util.foreach(records, function(record) {
+                var item = processContentFilters.call(this, record);
                 var id, image, title, description;
 
-                id = record['id'];
-                image = (!!record[this.options.fields.image]) ?
-                    record[this.options.fields.image][this.options.imageFormat] : '';
-
-                title = concatRecordColumns(record, this.options.fields.title, this.options.separators.title);
-                description = concatRecordColumns(record, this.options.fields.description, this.options.separators.description);
+                id = item.id;
+                image = item[this.options.fields.image].url || '';
+                title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title);
+                description = concatRecordColumns(item, this.options.fields.description, this.options.separators.description);
 
                 // pass the found data to a render method
                 this.renderItem(id, image, title, description);
@@ -276,7 +290,7 @@ define(function() {
          * @public
          */
         addRecord: function(record) {
-            this.renderItems([record]);
+            this.renderRecords([record]);
         },
 
         /**
