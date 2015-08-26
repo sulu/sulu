@@ -10123,7 +10123,7 @@ a.btn-black, a.btn-highlight {
   display: block;
 }
 /* line 180, ../scss/modules/content-types.scss */
-.white-box .header .no-content {
+.white-box .header .no-content-message {
   color: #999;
   display: none;
 }
@@ -10134,7 +10134,7 @@ a.btn-black, a.btn-highlight {
   display: block;
   position: absolute;
   top: 0px;
-  left: 65px;
+  left: 70px;
 }
 /* line 194, ../scss/modules/content-types.scss */
 .white-box .header .loader {
@@ -10255,7 +10255,7 @@ a.btn-black, a.btn-highlight {
   padding-bottom: 0;
 }
 /* line 303, ../scss/modules/content-types.scss */
-.white-box.no-content .header .no-content {
+.white-box.no-content .header .no-content-message {
   display: inline;
 }
 /* line 306, ../scss/modules/content-types.scss */
@@ -10271,7 +10271,7 @@ a.btn-black, a.btn-highlight {
   display: block;
 }
 /* line 320, ../scss/modules/content-types.scss */
-.white-box.is-loading .header .no-content {
+.white-box.is-loading .header .no-content-message {
   display: none;
 }
 /* line 323, ../scss/modules/content-types.scss */

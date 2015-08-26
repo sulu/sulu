@@ -176,7 +176,7 @@ define([], function() {
                 '       <span class="num">0</span>',
                 '       <span><%= selectedCounterStr %></span>',
                 '   </span>',
-                '   <span class="no-content"><%= noContentStr %></span>',
+                '   <span class="no-content-message"><%= noContentStr %></span>',
                 '</div>',
                 '<div class="content"></div>',
                 '</div>'
@@ -563,7 +563,7 @@ define([], function() {
 
                 this.sandbox.dom.append(this.$content, ul);
             } else {
-                this.$header.find('.no-content').html(this.sandbox.translate(this.translations.noContentFound));
+                this.$header.find('.no-content-message').html(this.sandbox.translate(this.translations.noContentFound));
                 this.$container.addClass(constants.noContentClass);
             }
         },
