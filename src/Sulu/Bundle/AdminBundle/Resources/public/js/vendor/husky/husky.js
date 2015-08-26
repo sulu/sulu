@@ -49160,7 +49160,7 @@ define('husky_extensions/itembox',[],function() {
                     '            <span class="num">0</span><span> ', this.sandbox.translate(this.options.translations.elementsSelected) ,'</span>',
                     '        </span>',
                     '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
-                    '        <span class="no-content">', this.sandbox.translate(this.options.translations.noContentSelected), '</span>',
+                    '        <span class="no-content-message">', this.sandbox.translate(this.options.translations.noContentSelected), '</span>',
                     '        <div class="position', !!this.options.hidePositionElement ? ' hidden' : '', '">',
                     '            <div class="husky-position" id="', this.ids.displayOption, '">',
                     '                <div class="top left ', (!this.options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
@@ -49177,12 +49177,6 @@ define('husky_extensions/itembox',[],function() {
                     '    </div>',
                     '    <div class="content" id="', this.ids.content, '"></div>',
                     '</div>'
-                ].join('');
-            },
-
-            noContent: function() {
-                return [
-                    '<div class="no-content">', this.sandbox.translate(this.options.translations.noContentSelected), '</div>'
                 ].join('');
             },
 
@@ -49516,6 +49510,9 @@ define('husky_extensions/itembox',[],function() {
                 return ids;
             },
 
+            /**
+             * Updates the selected-counter-element with the number of list-items
+             */
             updateSelectedCounter: function() {
                 var number = this.$content.find('li').length;
                 this.$find('.selected-counter .num').html(number);
