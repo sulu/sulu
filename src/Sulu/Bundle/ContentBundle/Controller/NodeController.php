@@ -294,6 +294,8 @@ class NodeController extends RestController
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated will be removed with version 1.2
      */
     public function filterAction(Request $request)
     {

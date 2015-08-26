@@ -126,6 +126,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
         $this->notes = new ArrayCollection();
         $this->faxes = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->categories = new ArrayCollection();
         $this->accountContacts = new ArrayCollection();
         $this->accountAddresses = new ArrayCollection();
     }

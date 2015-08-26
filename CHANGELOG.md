@@ -9,7 +9,11 @@ CHANGELOG for Sulu
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
     * FEATURE     #1503 [All]             Updated to doctrine 2.5
     * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
+    * FEATURE     #1529 [ContentBundle]   Added reset smart content button
+    * FEATURE     #1517 [ContactBundle]   Added account DataProvider
+    * FEATURE     #1513 [ContactBundle]   Added contact DataProvider
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
+    * FEATURE     #1415 [ContentBundle]   Refactored SmartContent to use DataProvider to load content
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
