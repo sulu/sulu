@@ -60,7 +60,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     public function supports($document)
     {
-        return ;
+        return;
     }
 
     /**

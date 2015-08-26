@@ -46,7 +46,7 @@ class ExtensionSubscriber implements EventSubscriberInterface
     private $encoder;
 
     /**
-     * TODO: Remove this: Use a dedicated namespace instead
+     * TODO: Remove this: Use a dedicated namespace instead.
      *
      * @var string
      */
