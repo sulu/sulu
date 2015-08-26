@@ -14,7 +14,6 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 use Prophecy\Argument;
 use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
-use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Domain\Entry;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -203,15 +202,6 @@ class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->acl->getObjectAces()->willReturn([]);
 
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
-
-        $this->eventDispatcher->dispatch(
-            'sulu.security.permission.update',
-            new PermissionUpdateEvent(
-                $objectType,
-                $objectIdentifier,
-                [$this->securityIdentity->getRole() => ['view']]
-            )
-        )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
             $objectType,

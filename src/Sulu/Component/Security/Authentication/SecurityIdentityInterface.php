@@ -14,7 +14,7 @@ namespace Sulu\Component\Security\Authentication;
 /**
  * Interface for SecurityIdentities, which will return a name. Required for making decoupled references.
  *
- * @deprecated
+ * @deprecated will be removed with 1.2
  */
 interface SecurityIdentityInterface
 {

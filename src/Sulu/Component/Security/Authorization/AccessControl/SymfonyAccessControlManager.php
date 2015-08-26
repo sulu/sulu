@@ -12,8 +12,6 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
-use Sulu\Component\Security\Event\PermissionUpdateEvent;
-use Sulu\Component\Security\Event\SecurityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
@@ -25,7 +23,7 @@ use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
  * An implementation of Sulu's AccessControlManagerInterface, which is using the ACL component of Symfony.
  * Responsible for setting the permissions on a specific object.
  *
- * @deprecated
+ * @deprecated will be removed with 1.2
  */
 class SymfonyAccessControlManager implements AccessControlManagerInterface
 {
@@ -67,11 +65,6 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         foreach ($permissions as $securityIdentity => $permission) {
             $this->setPermission($type, $identifier, $securityIdentity, $permission);
         }
-
-        $this->eventDispatcher->dispatch(
-            SecurityEvents::PERMISSION_UPDATE,
-            new PermissionUpdateEvent($type, $identifier, $permissions)
-        );
     }
 
     /**
