@@ -5,6 +5,7 @@
  * @param {Boolean} [unselectOnBackgroundClick] should items get deselected on document click
  * @param {Boolean} [selectable] should items be selectable
  * @param {String} [imageFormat] api-format which is used for head-image
+ * @param {String} [emptyListTranslations] translation key for the empty-list indicator
  * @param {Object} [viewOptions] Configuration object
  * @param {Object} [viewOptions.fields] Defines which data-columns are used to render cards
  * @param {String} [viewOptions.fields.image]
@@ -28,6 +29,7 @@ define(function() {
             unselectOnBackgroundClick: true,
             selectable: true,
             imageFormat: '190x',
+            emptyListTranslation: 'public.empty-list',
             fields: {
                 image: 'thumbnails',
                 title: ['title'],
@@ -40,19 +42,28 @@ define(function() {
         },
 
         constants = {
-            containerId: 'masonry-grid',
-            headIconClass: 'head-icon',
-            headImageClass: 'head-image',
-            actionNavigatorClass: 'action-navigator',
-            downloadNavigatorClass: 'download-navigator',
+            masonryGridId: 'masonry-grid',
+            emptyIndicatorClass: 'empty-list',
+
+            itemHeadClass: 'item-head',
+            itemInfoClass: 'item-info',
+
             selectedClass: 'selected',
             loadingClass: 'loading',
 
-            itemHeadClass: 'item-head',
-            itemInfoClass: 'item-info'
+            headIconClass: 'head-icon',
+            headImageClass: 'head-image',
+            actionNavigatorClass: 'action-navigator',
+            downloadNavigatorClass: 'download-navigator'
         },
 
         templates = {
+            emptyIndicator: [
+                '<div class="' + constants.emptyIndicatorClass + '" style="display: none">',
+                '   <div class="fa-coffee icon"></div>',
+                '   <span><%= text %></span>',
+                '</div>'
+            ].join(''),
             item: [
                 '<div class="masonry-item ' + constants.loadingClass + '">',
                 '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
@@ -156,20 +167,46 @@ define(function() {
          */
         render: function(data, $container) {
             this.data = data;
-            this.$el = this.sandbox.dom.createElement('<div id="' + constants.containerId + '"/>');
-            this.sandbox.dom.append($container, this.$el);
-
+            this.renderMasonryContainer($container);
+            this.initializeMasonryGrid();
             this.bindGeneralDomEvents();
-            this.masonry = this.sandbox.masonry.initialize('#' + constants.containerId, {
+
+            this.renderRecords(this.data.embedded);
+            this.rendered = true;
+        },
+
+        renderMasonryContainer: function($container) {
+            this.$el = this.sandbox.dom.createElement('<div class="masonry-container"/>');
+
+            // render empty indicator
+            var $empty = this.sandbox.util.template(templates.emptyIndicator, {
+                text: this.sandbox.translate(this.options.emptyListTranslation)
+            });
+            this.sandbox.dom.append(this.$el, $empty);
+
+            // render masonry-grid
+            var $grid = this.sandbox.dom.createElement('<div id="' + constants.masonryGridId + '"/>');
+            this.sandbox.dom.append(this.$el, $grid);
+
+            this.sandbox.dom.append($container, this.$el);
+        },
+
+        updateEmptyIndicator: function() {
+            if (!!this.datagrid.data.embedded && this.datagrid.data.embedded.length > 0) {
+                this.sandbox.dom.hide('.' + constants.emptyIndicatorClass);
+            } else {
+                this.sandbox.dom.show('.' + constants.emptyIndicatorClass);
+            }
+        },
+
+        initializeMasonryGrid: function() {
+            this.sandbox.masonry.initialize('#' + constants.masonryGridId, {
                 align: 'left',
                 direction: 'left',
                 itemWidth: 190,
                 offset: 30,
                 verticalOffset: 20
             });
-
-            this.renderRecords(this.data.embedded);
-            this.rendered = true;
         },
 
         /**
@@ -188,7 +225,7 @@ define(function() {
          * @param records {Array} array with records to render
          */
         renderRecords: function(records) {
-            // loop through each data record
+            this.updateEmptyIndicator();
             this.sandbox.util.foreach(records, function(record) {
                 var item = processContentFilters.call(this, record);
                 var id, image, title, description;
@@ -226,7 +263,7 @@ define(function() {
                 this.selectRecord(id);
             }
 
-            this.sandbox.dom.append(this.$el, this.$items[id]);
+            this.sandbox.dom.append(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
             this.bindItemLoadingEvents(id);
             this.bindItemDomEvents(id);
         },
@@ -244,7 +281,7 @@ define(function() {
          */
         destroy: function() {
             this.sandbox.dom.off('.body', 'click.contact.list');
-            this.sandbox.masonry.destroy('#' + constants.containerId);
+            this.sandbox.masonry.destroy('#' + constants.masonryGridId);
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -274,13 +311,13 @@ define(function() {
         bindItemLoadingEvents: function(id) {
             this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'load', function() {
                 this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headIconClass, this.$items[id]));
-                this.sandbox.masonry.refresh('#' + constants.containerId, true);
+                this.sandbox.masonry.refresh('#' + constants.masonryGridId, true);
                 this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
             }.bind(this));
 
             this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'error', function() {
                 this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]));
-                this.sandbox.masonry.refresh('#' + constants.containerId, true);
+                this.sandbox.masonry.refresh('#' + constants.masonryGridId, true);
                 this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
             }.bind(this));
         },
@@ -314,8 +351,10 @@ define(function() {
         removeRecord: function(recordId) {
             if (!!this.$items[recordId]) {
                 this.sandbox.dom.remove(this.$items[recordId]);
-                this.sandbox.masonry.refresh('#' + constants.containerId, true);
+                this.sandbox.masonry.refresh('#' + constants.masonryGridId, true);
                 this.datagrid.removeRecord.call(this.datagrid, recordId);
+
+                this.updateEmptyIndicator();
                 return true;
             }
             return false;
@@ -349,6 +388,6 @@ define(function() {
             this.sandbox.util.each(this.$items, function(id) {
                 this.deselectRecord(Number(id));
             }.bind(this));
-        },
+        }
     };
 });
