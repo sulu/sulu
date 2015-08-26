@@ -41,6 +41,8 @@ define(function() {
 
         constants = {
             containerId: 'masonry-grid',
+            headIconClass: 'head-icon',
+            headImageClass: 'head-image',
             actionNavigatorClass: 'action-navigator',
             downloadNavigatorClass: 'download-navigator',
             selectedClass: 'selected',
@@ -54,7 +56,8 @@ define(function() {
             item: [
                 '<div class="masonry-item ' + constants.loadingClass + '">',
                 '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
-                '       <img src="<%= image %>"/>',
+                '       <div class="fa-coffee ' + constants.headIconClass + '"></div>',
+                '       <img class="' + constants.headImageClass + '" src="<%= image %>"/>',
                 '   </div>',
                 '   <div class="masonry-info">',
                 '       <span class="title ' + constants.actionNavigatorClass + '"><%= title %></span><br/>',
@@ -224,6 +227,7 @@ define(function() {
             }
 
             this.sandbox.dom.append(this.$el, this.$items[id]);
+            this.bindItemLoadingEvents(id);
             this.bindItemDomEvents(id);
         },
 
@@ -259,17 +263,26 @@ define(function() {
                 this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
             }.bind(this), "." + constants.downloadNavigatorClass);
 
-            this.sandbox.dom.one(this.sandbox.dom.find('img', this.$items[id]), 'load', function() {
-                this.sandbox.masonry.refresh('#' + constants.containerId, true);
-                this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
-            }.bind(this));
-
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                     this.sandbox.dom.stopPropagation(event);
                     this.toggleItemSelected(id);
                 }.bind(this));
             }
+        },
+
+        bindItemLoadingEvents: function(id) {
+            this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'load', function() {
+                this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headIconClass, this.$items[id]));
+                this.sandbox.masonry.refresh('#' + constants.containerId, true);
+                this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
+            }.bind(this));
+
+            this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'error', function() {
+                this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]));
+                this.sandbox.masonry.refresh('#' + constants.containerId, true);
+                this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
+            }.bind(this));
         },
 
         /**

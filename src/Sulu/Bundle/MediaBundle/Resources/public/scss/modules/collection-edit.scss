@@ -8,7 +8,7 @@
         border-radius: 3px;
         overflow: hidden;
         opacity: 1;
-        @include transition(opacity 100ms);
+        @include transition(opacity 100ms, top 100ms, left 100ms);
 
         &.loading {
             opacity: 0;
@@ -18,7 +18,13 @@
             background-color: $grayLighterer;
             width: 100%;
 
-            img {
+            .head-icon {
+                color: white;
+                font-size: 70px;
+                margin: 30px;
+            }
+
+            .head-image {
                 vertical-align: middle;
             }
         }

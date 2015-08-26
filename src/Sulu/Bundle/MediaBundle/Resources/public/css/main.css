@@ -24,10 +24,10 @@
   border-radius: 3px;
   overflow: hidden;
   opacity: 1;
-  -moz-transition: opacity 100ms;
-  -o-transition: opacity 100ms;
-  -webkit-transition: opacity 100ms;
-  transition: opacity 100ms;
+  -moz-transition: opacity 100ms, top 100ms, left 100ms;
+  -o-transition: opacity 100ms, top 100ms, left 100ms;
+  -webkit-transition: opacity 100ms, top 100ms, left 100ms;
+  transition: opacity 100ms, top 100ms, left 100ms;
 }
 /* line 13, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item.loading {
@@ -39,39 +39,45 @@
   width: 100%;
 }
 /* line 21, ../scss/modules/collection-edit.scss */
-#masonry-grid .masonry-item .masonry-head img {
+#masonry-grid .masonry-item .masonry-head .head-icon {
+  color: white;
+  font-size: 70px;
+  margin: 30px;
+}
+/* line 27, ../scss/modules/collection-edit.scss */
+#masonry-grid .masonry-item .masonry-head .head-image {
   vertical-align: middle;
 }
-/* line 26, ../scss/modules/collection-edit.scss */
+/* line 32, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item .masonry-info {
   width: 100%;
   height: 45px;
   margin-top: 10px;
 }
-/* line 31, ../scss/modules/collection-edit.scss */
+/* line 37, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item .masonry-info span.description {
   font-size: 12px;
   color: #999;
 }
-/* line 37, ../scss/modules/collection-edit.scss */
+/* line 43, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item .masonry-footer {
   width: 100%;
   height: 15px;
   margin-bottom: 10px;
   padding: 0 10px;
 }
-/* line 43, ../scss/modules/collection-edit.scss */
+/* line 49, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item .masonry-footer .footer-checkbox {
   float: left;
 }
-/* line 47, ../scss/modules/collection-edit.scss */
+/* line 53, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item .masonry-footer .footer-download {
   position: relative;
   top: 2px;
   font-size: 17px;
   float: right;
 }
-/* line 55, ../scss/modules/collection-edit.scss */
+/* line 61, ../scss/modules/collection-edit.scss */
 #masonry-grid .masonry-item .action-navigator, #masonry-grid .masonry-item .download-navigator {
   cursor: pointer;
 }
