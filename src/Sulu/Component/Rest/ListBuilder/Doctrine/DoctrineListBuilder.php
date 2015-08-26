@@ -16,6 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
@@ -183,7 +184,11 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function assignSortFields($queryBuilder)
     {
         foreach ($this->sortFields as $index => $sortField) {
-            $queryBuilder->addOrderBy($sortField->getName(), $this->sortOrders[$index]);
+            $sort = ($sortField instanceof DoctrineConcatenationFieldDescriptor)
+                ? $sortField->getName()
+                : $sortField->getSelect();
+
+            $queryBuilder->addOrderBy($sort, $this->sortOrders[$index]);
         }
     }
 
