@@ -25,6 +25,7 @@ define([], function() {
             hideConfigButton: true,
             hidePositionElement: true,
             dataAttribute: 'internal-links',
+            actionIcon: 'fa-link',
             dataDefault: [],
             translations: {
                 noContentSelected: 'internal-links.nolinks-selected',
