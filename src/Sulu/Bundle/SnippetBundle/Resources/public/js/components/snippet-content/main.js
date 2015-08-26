@@ -22,6 +22,7 @@ define([], function() {
             snippetType: null,
             dataAttribute: 'snippets',
             dataDefault: [],
+            actionIcon: 'fa-file-text-o',
             hidePositionElement: true,
             hideConfigButton: true,
             translations: {

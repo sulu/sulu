@@ -10128,6 +10128,24 @@ a.btn-black, a.btn-highlight {
   display: none;
 }
 /* line 185, ../scss/modules/content-types.scss */
+.white-box .header .selected-counter {
+  color: #999;
+  font-size: 10px;
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 65px;
+}
+/* line 194, ../scss/modules/content-types.scss */
+.white-box .header .loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -10px;
+  margin-left: -10px;
+  display: none;
+}
+/* line 203, ../scss/modules/content-types.scss */
 .white-box .header .icon {
   display: block;
   font-size: 16px;
@@ -10140,29 +10158,29 @@ a.btn-black, a.btn-highlight {
   margin-top: 9px;
   padding-top: 1px;
 }
-/* line 197, ../scss/modules/content-types.scss */
+/* line 215, ../scss/modules/content-types.scss */
 .white-box .header .icon.action {
   background: #52B6CA;
   color: #fff;
 }
-/* line 201, ../scss/modules/content-types.scss */
+/* line 219, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
   border: 1px solid #ccc;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
 }
-/* line 207, ../scss/modules/content-types.scss */
+/* line 225, ../scss/modules/content-types.scss */
 .white-box .header .icon.left {
   float: left;
-  margin-right: 20px;
+  margin-right: -40px;
 }
-/* line 211, ../scss/modules/content-types.scss */
+/* line 229, ../scss/modules/content-types.scss */
 .white-box .header .icon.right {
   float: right;
-  margin-left: 20px;
+  margin-left: -40px;
 }
-/* line 217, ../scss/modules/content-types.scss */
+/* line 235, ../scss/modules/content-types.scss */
 .white-box .header .position {
   width: 32px;
   height: 32px;
@@ -10171,7 +10189,7 @@ a.btn-black, a.btn-highlight {
   left: 50%;
   margin: -16px 0 0 -16px;
 }
-/* line 227, ../scss/modules/content-types.scss */
+/* line 245, ../scss/modules/content-types.scss */
 .white-box .content {
   position: relative;
   top: 0px;
@@ -10179,48 +10197,44 @@ a.btn-black, a.btn-highlight {
   max-height: 255px;
   overflow: auto;
 }
-/* line 234, ../scss/modules/content-types.scss */
-.white-box .content .loader {
-  padding: 50px 0;
-}
-/* line 237, ../scss/modules/content-types.scss */
+/* line 252, ../scss/modules/content-types.scss */
 .white-box .content .items-list {
   list-style-type: none;
   margin: 0;
   padding: 0 20px;
   color: #999;
 }
-/* line 242, ../scss/modules/content-types.scss */
+/* line 257, ../scss/modules/content-types.scss */
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
   border-bottom: 1px solid #ddd;
   position: relative;
 }
-/* line 247, ../scss/modules/content-types.scss */
+/* line 262, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .icon {
   cursor: move;
   color: #000;
   font-size: 15px;
   padding-right: 10px;
 }
-/* line 253, ../scss/modules/content-types.scss */
+/* line 268, ../scss/modules/content-types.scss */
 .white-box .content .items-list li img {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
   vertical-align: middle;
 }
-/* line 259, ../scss/modules/content-types.scss */
+/* line 274, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .num {
   color: #999;
   padding-right: 15px;
 }
-/* line 263, ../scss/modules/content-types.scss */
+/* line 278, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
   color: #999;
 }
-/* line 266, ../scss/modules/content-types.scss */
+/* line 281, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
   position: absolute;
   top: 50%;
@@ -10229,23 +10243,43 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
   color: #000;
 }
-/* line 278, ../scss/modules/content-types.scss */
+/* line 293, ../scss/modules/content-types.scss */
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
   color: #999;
   font-size: 12px;
 }
-/* line 285, ../scss/modules/content-types.scss */
+/* line 300, ../scss/modules/content-types.scss */
 .white-box.no-content {
   padding-bottom: 0;
 }
-/* line 288, ../scss/modules/content-types.scss */
+/* line 303, ../scss/modules/content-types.scss */
 .white-box.no-content .header .no-content {
   display: inline;
 }
-/* line 291, ../scss/modules/content-types.scss */
+/* line 306, ../scss/modules/content-types.scss */
 .white-box.no-content .header .position {
+  display: none;
+}
+/* line 309, ../scss/modules/content-types.scss */
+.white-box.no-content .header .selected-counter {
+  display: none;
+}
+/* line 317, ../scss/modules/content-types.scss */
+.white-box.is-loading .header .loader {
+  display: block;
+}
+/* line 320, ../scss/modules/content-types.scss */
+.white-box.is-loading .header .no-content {
+  display: none;
+}
+/* line 323, ../scss/modules/content-types.scss */
+.white-box.is-loading .header .position {
+  display: none;
+}
+/* line 326, ../scss/modules/content-types.scss */
+.white-box.is-loading .header .selected-counter {
   display: none;
 }
 

@@ -162,14 +162,22 @@ define([], function() {
             limitToSelector: '.limit-to',
             dataSourceSelector: '.data-source',
             contentListClass: 'items-list',
-            loaderClass: 'loader'
+            loaderClass: 'loader',
+            noContentClass: 'no-content',
+            isLoadingClass: 'is-loading'
         },
 
         /** templates for component */
         templates = {
             skeleton: [
                 '<div class="white-box smart-content-container form-element">',
-                '<div class="header"></div>',
+                '<div class="header">',
+                '   <span class="selected-counter">',
+                '       <span class="num">0</span>',
+                '       <span><%= selectedCounterStr %></span>',
+                '   </span>',
+                '   <span class="no-content"><%= noContentStr %></span>',
+                '</div>',
                 '<div class="content"></div>',
                 '</div>'
             ].join(''),
@@ -180,12 +188,6 @@ define([], function() {
                 '<span class="val"><%= val %></span>',
                 '</span>',
                 '</span>'
-            ].join(''),
-            noContent: [
-                '<div class="no-content">',
-                '<span class="fa-coffee icon"></span>',
-                '<div class="text"><%= noContentStr %></div>',
-                '</div>'
             ].join(''),
             contentItem: [
                 '<li data-id="<%= dataId %>">',
@@ -238,7 +240,7 @@ define([], function() {
                 tagOperator: [
                     '<div class="item-half<%= disabled %>">',
                     '<span class="desc">&nbsp;</span>',
-                        '<div class="' + constants.tagOperatorClass + '"></div>',
+                    '<div class="' + constants.tagOperatorClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -252,7 +254,7 @@ define([], function() {
                 sortMethod: [
                     '<div class="item-half">',
                     '<span class="desc">&nbsp;</span>',
-                        '<div class="' + constants.sortMethodDDClass + '"></div>',
+                    '<div class="' + constants.sortMethodDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -373,6 +375,7 @@ define([], function() {
             this.setVariables();
             this.render();
             this.renderStartContent();
+            this.startLoader();
             this.startOverlay();
             this.bindEvents();
             this.setURI();
@@ -390,6 +393,7 @@ define([], function() {
             this.$container = null;
             this.$header = null;
             this.$content = null;
+            this.$loader = null;
             this.$button = null;
             this.items = [];
             this.URI = {
@@ -400,6 +404,7 @@ define([], function() {
             this.initOverlayData();
 
             this.translations = {
+                elementsSelected: 'public.elements-selected',
                 noContentFound: 'smart-content.nocontent-found',
                 noContentSelected: 'smart-content.nocontent-selected',
                 visible: 'smart-content.visible',
@@ -471,7 +476,10 @@ define([], function() {
          * Inserts the skeleton-template and finds the main-container
          */
         renderContainer: function() {
-            this.sandbox.dom.html(this.$el, templates.skeleton);
+            this.sandbox.dom.html(this.$el, this.sandbox.util.template(templates.skeleton, {
+                noContentStr: this.sandbox.translate(this.translations.noContentSelected),
+                selectedCounterStr: this.sandbox.translate(this.translations.elementsSelected)
+            }));
             this.$container = this.sandbox.dom.find(constants.containerSelector, this.$el);
         },
 
@@ -519,9 +527,9 @@ define([], function() {
          * Renders and appends the overlay open button
          */
         renderButton: function() {
-            this.$button = this.sandbox.dom.createElement('<span class="icon right border"/>');
+            this.$button = this.sandbox.dom.createElement('<span class="icon left action"/>');
             this.sandbox.dom.prependClass(this.$button, constants.buttonIcon);
-            this.sandbox.dom.append(this.$header, this.$button);
+            this.sandbox.dom.prepend(this.$header, this.$button);
         },
 
         /**
@@ -541,24 +549,22 @@ define([], function() {
             this.initContentContainer();
 
             if (this.items.length !== 0) {
+                this.$container.removeClass(constants.noContentClass);
 
-                var ul, i = -1, length = this.items.length;
-                ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
+                var ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
 
-                this.sandbox.util.foreach(this.items, function(item) {
+                this.sandbox.util.foreach(this.items, function(item, index) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
-                        num: (i + 1)
+                        num: (index + 1)
                     }));
                 }.bind(this));
 
-                this.sandbox.dom.html(this.$content, ul);
+                this.sandbox.dom.append(this.$content, ul);
             } else {
-                //render no-content-template
-                this.sandbox.dom.html(this.$content, _.template(templates.noContent)({
-                    noContentStr: this.sandbox.translate(this.translations.noContentSelected)
-                }));
+                this.$header.find('.no-content').html(this.sandbox.translate(this.translations.noContentFound));
+                this.$container.addClass(constants.noContentClass);
             }
         },
 
@@ -568,10 +574,7 @@ define([], function() {
          */
         renderStartContent: function() {
             this.initContentContainer();
-
-            this.sandbox.dom.html(this.$content, _.template(templates.noContent)({
-                noContentStr: this.sandbox.translate(this.translations.noContentSelected)
-            }));
+            this.$container.addClass(constants.noContentClass);
         },
 
         /**
@@ -612,16 +615,16 @@ define([], function() {
          * Starts the loader component
          */
         startLoader: function() {
-            var loaderContainer = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
-            this.sandbox.dom.html(this.$content, loaderContainer);
+            this.$loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
+            this.sandbox.dom.append(this.$header, this.$loader);
 
             this.sandbox.start([
                 {
                     name: 'loader@husky',
                     options: {
-                        el: loaderContainer,
-                        size: '100px',
-                        color: '#e4e4e4'
+                        el: this.$loader,
+                        size: '20px',
+                        color: '#999999'
                     }
                 }
             ]);
@@ -696,7 +699,7 @@ define([], function() {
             }.bind(this));
 
             // activate button OK when a page is selected
-            this.sandbox.on('husky.column-navigation.smart-content' + this.options.instanceName +'.action', function(item) {
+            this.sandbox.on('husky.column-navigation.smart-content' + this.options.instanceName + '.action', function(item) {
                 this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
 
                 var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
@@ -763,7 +766,7 @@ define([], function() {
             }
             if (!this.options.hideCategories) {
                 this.$overlayContent.append(_.template(templates.overlayContent.categories)({
-                    filterByCatStr: this.sandbox.translate(this.translations.filterByCasrc/Sulu/Bundle/ContentBundle/Tests/Functional/Content/SmartContentQueryBuilderTest.phptegory)
+                    filterByCatStr: this.sandbox.translate(this.translations.filterByCasrc / Sulu / Bundle / ContentBundle / Tests / Functional / Content / SmartContentQueryBuilderTest.phptegory)
                 }));
             }
             if (!this.options.hideTags) {
@@ -833,16 +836,16 @@ define([], function() {
                 },
                 {
                     name: 'select@husky',
-                        options: {
-                            el: this.sandbox.dom.find('.' + constants.tagOperatorClass, this.$overlayContent),
-                            instanceName: this.options.instanceName + constants.tagOperatorClass,
-                            value: 'name',
-                            data: [
-                                {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
-                                {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
-                            ],
-                            preSelectedElements: [operators[this.options.preSelectedTagOperator]],
-                            disabled: this.overlayDisabled.tags
+                    options: {
+                        el: this.sandbox.dom.find('.' + constants.tagOperatorClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.tagOperatorClass,
+                        value: 'name',
+                        data: [
+                            {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
+                            {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
+                        ],
+                        preSelectedElements: [operators[this.options.preSelectedTagOperator]],
+                        disabled: this.overlayDisabled.tags
                     }
                 },
                 {
@@ -921,14 +924,17 @@ define([], function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
                 this.sandbox.emit(DATA_REQUEST.call(this));
-                this.startLoader();
+                this.$find('.' + constants.contentListClass).empty();
+                this.$container.addClass(constants.isLoadingClass);
                 this.sandbox.util.ajax({
                     url: this.URI.str,
 
                     success: function(data) {
+                        this.$container.removeClass(constants.isLoadingClass);
                         this.overlayData.title = data[this.options.titleKey];
                         this.overlayData.path = data[this.options.pathKey] || '/';
                         this.items = data._embedded[this.options.resultKey];
+                        this.updateSelectedCounter(this.items.length);
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),
 
@@ -937,6 +943,14 @@ define([], function() {
                     }.bind(this)
                 });
             }
+        },
+
+        /**
+         * Writes a passed number into the select-counter dom element
+         * @param num
+         */
+        updateSelectedCounter: function(num) {
+            this.$header.find('.selected-counter .num').html(num);
         },
 
         /**

@@ -49104,7 +49104,9 @@ define('husky_extensions/itembox',[],function() {
             hideAddButton: false,
             hidePositionElement: false,
             hideConfigButton: false,
+            hideSelectedCounter: false,
             defaultDisplayOption: 'top',
+            actionIcon: 'fa-plus-circle',
             displayOptions: {
                 leftTop: true,
                 top: true,
@@ -49121,14 +49123,16 @@ define('husky_extensions/itembox',[],function() {
                 viewAll: 'public.view-all',
                 viewLess: 'public.view-less',
                 of: 'public.of',
-                visible: 'public.visible'
+                visible: 'public.visible',
+                elementsSelected: 'public.elements-selected'
             }
         },
 
         constants = {
             displayOptionSelectedClass: 'selected',
             itemInvisibleClass: 'invisible-item',
-            noContentClass: 'no-content'
+            noContentClass: 'no-content',
+            isLoadingClass: 'is-loading'
         },
 
         /**
@@ -49151,7 +49155,11 @@ define('husky_extensions/itembox',[],function() {
                 return [
                     '<div class="white-box form-element" id="', this.ids.container, '">',
                     '    <div class="header">',
-                    '        <span class="fa-plus-circle icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <span class="', this.options.actionIcon ,' icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <span class="selected-counter', !!this.options.hideSelectedCounter ? ' hidden' : '', '">',
+                    '            <span class="num">0</span><span> ', this.sandbox.translate(this.options.translations.elementsSelected) ,'</span>',
+                    '        </span>',
+                    '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
                     '        <span class="no-content">', this.sandbox.translate(this.options.translations.noContentSelected), '</span>',
                     '        <div class="position', !!this.options.hidePositionElement ? ' hidden' : '', '">',
                     '            <div class="husky-position" id="', this.ids.displayOption, '">',
@@ -49166,7 +49174,6 @@ define('husky_extensions/itembox',[],function() {
                     '                <div class="bottom right ', (!this.options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
                     '            </div>',
                     '        </div>',
-                    '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
                     '    </div>',
                     '    <div class="content" id="', this.ids.content, '"></div>',
                     '</div>'
@@ -49323,7 +49330,7 @@ define('husky_extensions/itembox',[],function() {
                 }
 
                 this.setDisplayOption(this.options.defaultDisplayOption);
-
+                this.startLoader();
                 bindCustomEvents.call(this);
                 bindDomEvents.call(this);
             },
@@ -49396,7 +49403,7 @@ define('husky_extensions/itembox',[],function() {
              * @param data {object}
              */
             loadContent: function(data) {
-                this.startLoader();
+                this.$container.addClass(constants.isLoadingClass);
 
                 // reset items visible when new content is loaded
                 this.viewAll = false;
@@ -49404,6 +49411,7 @@ define('husky_extensions/itembox',[],function() {
                 if (!!data) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
+                            this.$container.removeClass(constants.isLoadingClass);
                             this.sandbox.emit(this.DATA_RETRIEVED(), data._embedded[this.options.resultKey]);
                         }.bind(this))
                         .fail(function(error) {
@@ -49432,6 +49440,7 @@ define('husky_extensions/itembox',[],function() {
 
                     initSortable.call(this);
                     this.updateOrder();
+                    this.updateSelectedCounter();
                     this.updateVisibility();
                 } else {
                     this.addNoContentClass();
@@ -49443,15 +49452,15 @@ define('husky_extensions/itembox',[],function() {
              */
             startLoader: function() {
                 var $loader = this.sandbox.dom.createElement('<div class="loader"/>');
-                this.sandbox.dom.html(this.$content, $loader);
+                this.sandbox.dom.append(this.$container.find('.header'), $loader);
 
                 this.sandbox.start([
                     {
                         name: 'loader@husky',
                         options: {
                             el: $loader,
-                            size: '100px',
-                            color: '#e4e4e4'
+                            size: '20px',
+                            color: '#999999'
                         }
                     }
                 ]);
@@ -49507,6 +49516,11 @@ define('husky_extensions/itembox',[],function() {
                 return ids;
             },
 
+            updateSelectedCounter: function() {
+                var number = this.$content.find('li').length;
+                this.$find('.selected-counter .num').html(number);
+            },
+
             /**
              * Adds an item to the list
              * @param item {object} The item to display in the list
@@ -49537,6 +49551,7 @@ define('husky_extensions/itembox',[],function() {
 
                     this.updateOrder();
                     this.updateVisibility();
+                    this.updateSelectedCounter();
                 }
 
                 this.sandbox.dom.scrollAnimate(this.$content.get(0).scrollHeight, this.$content);
@@ -49554,6 +49569,7 @@ define('husky_extensions/itembox',[],function() {
 
                 this.updateOrder();
                 this.updateVisibility();
+                this.updateSelectedCounter();
             },
 
             /**
@@ -49569,6 +49585,7 @@ define('husky_extensions/itembox',[],function() {
 
                 this.updateOrder();
                 this.updateVisibility();
+                this.updateSelectedCounter();
             },
 
             /**
