@@ -13,9 +13,9 @@ namespace Sulu\Component\Contact\SmartContent;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
- * Contact DataProvider for SmartContent.
+ * Account DataProvider for SmartContent.
  */
-class ContactDataProvider extends BaseDataProvider
+class AccountDataProvider extends BaseDataProvider
 {
     public function __construct(DataProviderRepositoryInterface $repository)
     {
@@ -31,7 +31,7 @@ class ContactDataProvider extends BaseDataProvider
     {
         return array_map(
             function ($item) {
-                return new ContactDataItem($item);
+                return new AccountDataItem($item);
             },
             $data
         );
@@ -43,14 +43,12 @@ class ContactDataProvider extends BaseDataProvider
     protected function convertToArray($entity, $locale)
     {
         return [
-            'formOfAddress' => $entity->getFormOfAddress(),
-            'title' => $entity->getTitle(),
-            'salutation' => $entity->getSalutation(),
-            'fullName' => $entity->getFullName(),
-            'firstName' => $entity->getFirstName(),
-            'lastName' => $entity->getLastName(),
-            'middleName' => $entity->getMiddleName(),
-            'birthday' => $entity->getBirthday(),
+            'number' => $entity->getNumber(),
+            'name' => $entity->getName(),
+            'registerNumber' => $entity->getRegisterNumber(),
+            'placeOfJurisdiction' => $entity->getPlaceOfJurisdiction(),
+            'uid' => $entity->getUid(),
+            'corporation' => $entity->getCorporation(),
             'created' => $entity->getCreated(),
             'creator' => $entity->getCreator(),
             'changed' => $entity->getChanged(),

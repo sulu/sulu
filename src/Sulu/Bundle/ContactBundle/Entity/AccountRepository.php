@@ -12,14 +12,19 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 /**
  * Repository for the Codes, implementing some additional functions
  * for querying objects.
  */
-class AccountRepository extends NestedTreeRepository
+class AccountRepository extends NestedTreeRepository implements DataProviderRepositoryInterface
 {
+    use DataProviderRepositoryTrait;
+
     /**
      * Searches for accounts with a specific contact.
      *
@@ -312,5 +317,36 @@ class AccountRepository extends NestedTreeRepository
         } catch (NoResultException $ex) {
             return;
         }
+    }
+
+    /**
+     * Append joins to query builder for "findByFilters" function.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function appendJoins(QueryBuilder $queryBuilder)
+    {
+        $queryBuilder->addSelect('emails')
+            ->addSelect('emailType')
+            ->addSelect('phones')
+            ->addSelect('phoneType')
+            ->addSelect('faxes')
+            ->addSelect('faxType')
+            ->addSelect('urls')
+            ->addSelect('urlType')
+            ->addSelect('tags')
+            ->addSelect('categories')
+            ->addSelect('translations')
+            ->leftJoin('entity.emails', 'emails')
+            ->leftJoin('emails.emailType', 'emailType')
+            ->leftJoin('entity.phones', 'phones')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->leftJoin('entity.faxes', 'faxes')
+            ->leftJoin('faxes.faxType', 'faxType')
+            ->leftJoin('entity.urls', 'urls')
+            ->leftJoin('urls.urlType', 'urlType')
+            ->leftJoin('entity.tags', 'tags')
+            ->leftJoin('entity.categories', 'categories')
+            ->leftJoin('categories.translations', 'translations');
     }
 }
