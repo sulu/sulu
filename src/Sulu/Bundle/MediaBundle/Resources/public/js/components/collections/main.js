@@ -570,7 +570,7 @@ define([
          */
         editSingleMedia: function(record) {
             var media = this.medias.get(record);
-            if (!media || media.get('locale') !== locale) {
+            if (!media || media.get('locale') !== this.locale) {
                 this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
                 media = this.getMediaModel(record);
                 media.fetch({
@@ -603,7 +603,7 @@ define([
             // loop through ids - if model is already loaded take it else load it
             this.sandbox.util.foreach(records, function(mediaId) {
                 var media = this.medias.get(mediaId);
-                if (!media || media.get('locale') !== locale) {
+                if (!media || media.get('locale') !== this.locale) {
                     this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
                     media = this.getMediaModel(mediaId);
                     media.fetch({
