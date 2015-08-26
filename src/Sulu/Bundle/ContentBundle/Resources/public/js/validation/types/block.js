@@ -62,7 +62,7 @@ define([
                     }
 
                     this.bindDomEvents();
-
+                    this.checkSortable();
                     this.setValue([]);
                 },
 
@@ -118,7 +118,7 @@ define([
                 bindDomEvents: function() {
                     this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeBlockHandler.bind(this));
 
-                    $('#sort-text-blocks-' + this.id).on('click', this.showSortMode.bind(this));
+                    $('#sort-text-blocks-' + this.id).on('click', this.showSortMode.bind(this)); //TODO remove
                     $('#edit-text-blocks-' + this.id).on('click', this.showEditMode.bind(this));
                 },
 
@@ -138,7 +138,6 @@ define([
                 checkSortable: function() {
                     // check for dragable
                     if (this.getChildren().length <= 1) {
-                        App.dom.attr(App.dom.children(this.$el), 'draggable', false);
                         this.setSortable(false);
                     } else {
                         this.setSortable(true);
@@ -295,6 +294,7 @@ define([
                     }
                 },
 
+                // TODO: morph to collapse
                 showSortMode: function() {
                     var $blocks = this.getChildren(),
                         section = AppConfig.getSection('sulu-content');
@@ -320,6 +320,7 @@ define([
                     this.checkSortable();
                 },
 
+                // TODO remove method
                 showSortModeField: function($field, $block) {
                     var content = $field.data('element').getValue(),
                         fieldId = $field.attr('id'),
@@ -334,8 +335,6 @@ define([
 
                 showEditMode: function() {
                     var $blocks = this.getChildren();
-
-                    this.setSortable(false);
 
                     App.dom.removeClass('#sort-text-blocks-' + this.id, 'hidden');
                     App.dom.addClass('#edit-text-blocks-' + this.id, 'hidden');

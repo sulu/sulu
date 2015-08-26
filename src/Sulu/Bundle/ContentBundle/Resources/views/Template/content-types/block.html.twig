@@ -5,7 +5,7 @@
             <div id="edit-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right hidden"><%= translate('sulu.content.edit.blocks') %></div>
             <div class="clear"></div>
         </div>
-        <div class="grid-row"
+        <div class="grid-row small"
              id="{{ id|raw }}"
              data-form="true"
              data-type="block"
@@ -20,13 +20,14 @@
                 <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
                     <div class="text-block {{ type.name }}-element {{ property.name }}-element"
                          data-mapper-property-tpl="{{ type.name }}">
-                        <div class="show-in-sortmode move"></div>
+                        <div class="move"></div>
                         <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
                         <div class="container grid pos-rel">
                             <div class="text-block-controls pull-right">
+                                <div class="fa-eye-slash options-collapse"></div>
                                 <div data-mapper-remove="{{ property.name }}"
-                                     class="fa-times options-remove hide-in-sortmode pull-right m-left-20 mapper-remove-{{ type.name }}"></div>
+                                     class="fa-times options-remove mapper-remove-{{ type.name }}"></div>
                                 <div class="clear"></div>
                             </div>
                             <div class="block block-{{ property.name }} grid-row small">

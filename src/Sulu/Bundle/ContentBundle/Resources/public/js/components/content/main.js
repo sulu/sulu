@@ -1085,6 +1085,7 @@ define([
                             },
                             state: {
                                 options: {
+                                    disabled: (this.options.id === 'index'), // disable state button if startpage (index)
                                     dropdownItems: {
                                         statePublish: {},
                                         stateTest: {}
