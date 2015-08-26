@@ -15,6 +15,9 @@ use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 
+/**
+ * This class handles permission information for doctrine entities.
+ */
 class DoctrineAccessControlProvider implements AccessControlProviderInterface
 {
     /**

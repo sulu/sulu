@@ -11,7 +11,7 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use ReflectionClass;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
@@ -30,6 +30,10 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
      */
     private $permissions;
 
+    /**
+     * @param DocumentManagerInterface $documentManager
+     * @param array $permissions
+     */
     public function __construct(DocumentManagerInterface $documentManager, array $permissions)
     {
         $this->documentManager = $documentManager;
@@ -86,7 +90,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
     {
         $class = new ReflectionClass($type);
 
-        return $class->implementsInterface(WebspaceBehavior::class);
+        return $class->implementsInterface(SecurityBehavior::class);
     }
 
     /**

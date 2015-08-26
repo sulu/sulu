@@ -87,6 +87,11 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $collectionPreviewFormat;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -94,7 +99,8 @@ class CollectionManager implements CollectionManagerInterface
         UserRepositoryInterface $userRepository,
         EntityManager $em,
         TokenStorageInterface $tokenStorage,
-        $collectionPreviewFormat
+        $collectionPreviewFormat,
+        $permissions
     ) {
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
@@ -103,6 +109,7 @@ class CollectionManager implements CollectionManagerInterface
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -120,7 +127,8 @@ class CollectionManager implements CollectionManagerInterface
             $filter,
             $collectionEntity,
             $sortBy,
-            $this->getCurrentUser()
+            $this->getCurrentUser(),
+            $this->permissions['view']
         );
 
         $breadcrumbEntities = null;
@@ -159,7 +167,8 @@ class CollectionManager implements CollectionManagerInterface
             ['offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale],
             null,
             $sortBy,
-            $this->getCurrentUser()
+            $this->getCurrentUser(),
+            $this->permissions['view']
         );
 
         $collections = [];

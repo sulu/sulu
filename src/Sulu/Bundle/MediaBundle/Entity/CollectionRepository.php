@@ -66,7 +66,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $filter = [],
         CollectionInterface $collection = null,
         $sortBy = [],
-        UserInterface $user = null
+        UserInterface $user = null,
+        $permission = null
     ) {
         try {
             $queryBuilder = $this->createQueryBuilder('collection')
@@ -105,8 +106,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 }
             }
 
-            if ($user !== null) {
-                $this->addAccessControl($queryBuilder, $user, Collection::class, 'collection');
+            if ($user !== null && $permission != null) {
+                $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
             }
 
             $query = $queryBuilder->getQuery();

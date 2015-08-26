@@ -17,7 +17,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -569,7 +569,7 @@ class NodeController extends RestController
      */
     public function getSecuredClass()
     {
-        return WebspaceBehavior::class;
+        return SecurityBehavior::class;
     }
 
     /**
@@ -579,9 +579,9 @@ class NodeController extends RestController
     {
         $id = null;
 
-        if ($uuid = $request->get('uuid')) {
+        if (null !== ($uuid = $request->get('uuid'))) {
             $id = $uuid;
-        } elseif (($parent = $request->get('parent')) && $request->getMethod() !== Request::METHOD_GET) {
+        } elseif (null !== ($parent = $request->get('parent')) && $request->getMethod() !== Request::METHOD_GET) {
             // the user is always allowed to get the children of a node
             // so the security check only applies for requests not being GETs
             $id = $parent;

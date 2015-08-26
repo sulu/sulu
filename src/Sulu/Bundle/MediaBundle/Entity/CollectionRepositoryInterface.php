@@ -25,7 +25,8 @@ interface CollectionRepositoryInterface
      * @param array $filter
      * @param CollectionInterface $collection
      * @param array $sortBy
-     * @param UserInterface $user
+     * @param UserInterface $user The user for which the additional access control should be checked
+     * @param int $permission The permission mask the user requires, if it is passed for the access control check
      *
      * @return Collection[]
      */
@@ -34,7 +35,8 @@ interface CollectionRepositoryInterface
         $filter = [],
         CollectionInterface $collection = null,
         $sortBy = [],
-        UserInterface $user
+        UserInterface $user = null,
+        $permission = null
     );
 
     /**

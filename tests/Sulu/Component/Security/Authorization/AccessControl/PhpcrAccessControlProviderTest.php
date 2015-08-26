@@ -23,6 +23,9 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $phpcrAccessControlProvider;
 
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
 
     public function setUp()

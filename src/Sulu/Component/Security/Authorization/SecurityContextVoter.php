@@ -79,7 +79,7 @@ class SecurityContextVoter implements VoterInterface
                 continue;
             }
 
-            $accessControlVote = $this->voteAccessControl($object, $user, $attribute);
+            $accessControlVote = $this->voteObjectAccessControl($object, $user, $attribute);
 
             // only pass attribute to check with security context, if object access control hasn't decided yet
             $contextVote = $this->voteSecurityContext($object, $user, $accessControlVote ? null : $attribute);
@@ -100,7 +100,7 @@ class SecurityContextVoter implements VoterInterface
      *
      * @return bool
      */
-    private function voteAccessControl(SecurityCondition $object, UserInterface $user, $attribute)
+    private function voteObjectAccessControl(SecurityCondition $object, UserInterface $user, $attribute)
     {
         if (!$object->getObjectType() || !$object->getObjectId()) {
             return;

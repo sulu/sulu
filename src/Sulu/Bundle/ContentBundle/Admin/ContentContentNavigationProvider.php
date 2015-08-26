@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContentContentNavigationProvider implements ContentNavigationProviderInterface
@@ -78,7 +78,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
             $permissions->setComponentOptions(
                 [
                     'display' => 'form',
-                    'type' => WebspaceBehavior::class,
+                    'type' => SecurityBehavior::class,
                     'securityContext' => $securityContext,
                 ]
             );
