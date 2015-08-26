@@ -10,16 +10,12 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
 use Prophecy\Argument;
+use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Metadata;
-use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 
 class RedirectTypeSubscriberTest extends SubscriberTestCase
 {

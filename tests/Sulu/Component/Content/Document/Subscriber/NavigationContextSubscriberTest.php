@@ -10,10 +10,10 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
-use Sulu\Component\DocumentManager\Metadata;
 use Prophecy\Argument;
+use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Metadata;
 
 class NavigationContextSubscriberTest extends \PHPUnit_Framework_TestCase
 {
