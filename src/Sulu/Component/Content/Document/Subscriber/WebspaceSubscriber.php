@@ -18,20 +18,25 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class WebspaceSubscriber extends AbstractMappingSubscriber
+class WebspaceSubscriber implements EventSubscriberInterface
 {
     /**
      * @var DocumentInspector
      */
     private $inspector;
 
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
+
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
     ) {
-        parent::__construct($encoder);
-
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
     }
 
@@ -46,24 +51,20 @@ class WebspaceSubscriber extends AbstractMappingSubscriber
         ];
     }
 
-    public function supports($document)
-    {
-        return $document instanceof WebspaceBehavior;
-    }
-
     /**
      * @param AbstractMappingEvent|HydrateEvent $event
      *
      * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof WebspaceBehavior) {
+            return;
+        }
+
         $webspaceName = $this->inspector->getWebspace($document);
         $event->getAccessor()->set('webspaceName', $webspaceName);
-    }
-
-    public function doPersist(PersistEvent $event)
-    {
     }
 }

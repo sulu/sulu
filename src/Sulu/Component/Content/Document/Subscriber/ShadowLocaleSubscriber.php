@@ -20,14 +20,27 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ShadowLocaleSubscriber extends AbstractMappingSubscriber
+class ShadowLocaleSubscriber implements EventSubscriberInterface
 {
     const SHADOW_ENABLED_FIELD = 'shadow-on';
     const SHADOW_LOCALE_FIELD = 'shadow-base';
 
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var DocumentRegistry
+     */
     private $registry;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     /**
      * @param PropertyEncoder   $encoder
@@ -38,17 +51,9 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         DocumentInspector $inspector,
         DocumentRegistry $registry
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
         $this->registry = $registry;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($document)
-    {
-        return $document instanceof ShadowLocaleBehavior;
     }
 
     /**
@@ -97,12 +102,16 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
      *
      * @param HydrateEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
-        $node = $event->getNode();
-        $locale = $event->getLocale();
         $document = $event->getDocument();
 
+        if (!$document instanceof ShadowLocaleBehavior) {
+            return;
+        }
+
+        $node = $event->getNode();
+        $locale = $event->getLocale();
         $shadowLocaleEnabled = $this->getShadowLocaleEnabled($node, $locale);
         $document->setShadowLocaleEnabled($shadowLocaleEnabled);
 
@@ -119,9 +128,13 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritdoc}
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof ShadowLocaleBehavior) {
+            return;
+        }
 
         if ($document->isShadowLocaleEnabled()) {
             $this->validateShadow($document);
@@ -149,7 +162,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$document instanceof ShadowLocaleBehavior) {
             return;
         }
 

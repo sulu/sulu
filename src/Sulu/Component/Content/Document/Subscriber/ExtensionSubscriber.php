@@ -21,14 +21,35 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ExtensionSubscriber extends AbstractMappingSubscriber
+class ExtensionSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var ExtensionManagerInterface
+     */
     private $extensionManager;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var NamespaceRegistry
+     */
     private $namespaceRegistry;
 
-    // TODO: Remove this: Use a dedicated namespace instead
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
+
+    /**
+     * TODO: Remove this: Use a dedicated namespace instead
+     *
+     * @var string
+     */
     private $internalPrefix = '';
 
     public function __construct(
@@ -39,7 +60,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         // these two dependencies should absolutely not be necessary
         NamespaceRegistry $namespaceRegistry
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->extensionManager = $extensionManager;
         $this->inspector = $inspector;
         $this->namespaceRegistry = $namespaceRegistry;
@@ -62,23 +83,19 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritdoc}
      */
-    public function supports($document)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
-        return $document instanceof ExtensionBehavior;
-    }
+        if (!$event->getDocument() instanceof ExtensionBehavior) {
+            return;
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function doHydrate(AbstractMappingEvent $event)
-    {
         $this->hydrate($event);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $locale = $event->getLocale();
 
@@ -87,6 +104,11 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         }
 
         $document = $event->getDocument();
+
+        if (!$document instanceof ExtensionBehavior) {
+            return;
+        }
+
         $structureType = $document->getStructureType();
         $node = $event->getNode();
         $extensionsData = $document->getExtensionsData();
