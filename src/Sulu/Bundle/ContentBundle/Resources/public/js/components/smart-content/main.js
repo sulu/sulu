@@ -766,7 +766,7 @@ define([], function() {
             }
             if (!this.options.hideCategories) {
                 this.$overlayContent.append(_.template(templates.overlayContent.categories)({
-                    filterByCatStr: this.sandbox.translate(this.translations.filterByCasrc / Sulu / Bundle / ContentBundle / Tests / Functional / Content / SmartContentQueryBuilderTest.phptegory)
+                    filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
                 }));
             }
             if (!this.options.hideTags) {
