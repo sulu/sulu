@@ -11,8 +11,11 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
+use Sulu\Component\DocumentManager\Metadata;
+use Prophecy\Argument;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 
-class NavigationContextSubscriberTest extends SubscriberTestCase
+class NavigationContextSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var NavigationContextSubscriber
@@ -24,43 +27,30 @@ class NavigationContextSubscriberTest extends SubscriberTestCase
      */
     private $document;
 
+    /**
+     * @var Metadata
+     */
+    private $metadata;
+
+    /**
+     * @var MetadataLoadEvent
+     */
+    private $event;
+
     public function setUp()
     {
-        parent::setUp();
-
-        $this->subscriber = new NavigationContextSubscriber($this->encoder->reveal());
         $this->document = $this->prophesize(NavigationContextBehavior::class);
-        $this->encoder->localizedSystemName('navContexts', 'en')->willReturn('i18n:en-navContexts');
+        $this->metadata = $this->prophesize(Metadata::class);
+        $this->event = $this->prophesize(MetadataLoadEvent::class);
+        $this->subscriber = new NavigationContextSubscriber($this->encoder->reveal());
+
+        $this->event->getMetadata()->willReturn($this->metadata);
     }
 
-    public function testPersistLocaleIsNull()
+    public function testLoadMetadata()
     {
-        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
-        $this->persistEvent->getLocale()->willReturn(null);
-        $this->node->setProperty()->shouldNotBeCalled();
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    public function testPersist()
-    {
-        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
-        $this->persistEvent->getLocale()->willReturn('en');
-
-        $this->document->getNavigationContexts()->willReturn(['main']);
-        $this->node->setProperty('i18n:en-navContexts', ['main'])->shouldBeCalled();
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    public function testHydrate()
-    {
-        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
-        $this->hydrateEvent->getNode()->willReturn($this->node);
-        $this->hydrateEvent->getLocale()->willReturn('en');
-
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
-
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->metadata->getReflectionClass()->willReturn(new \ReflectionClass($this->document->reveal()));
+        $this->metadata->addFieldMapping('navigationContexts', Argument::any())->shouldBeCalled();
+        $this->subscriber->handleMetadataLoad($this->event->reveal());
     }
 }
