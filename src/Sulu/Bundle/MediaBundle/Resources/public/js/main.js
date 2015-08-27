@@ -13,12 +13,18 @@ require.config({
         'extensions/masonry':'../../sulumedia/js/extensions/masonry',
         'extensions/sulu-buttons-mediabundle': '../../sulumedia/js/extensions/sulu-buttons',
 
+        'services/sulumedia/media-router': '../../sulumedia/js/services/media-router',
+        'services/sulumedia/overlay-manager': '../../sulumedia/js/services/overlay-manager',
+
         "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection',
         'decorators/masonry': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
     }
 });
 
-define(['extensions/masonry', 'extensions/sulu-buttons-mediabundle'], function(MasonryExtension, MediaButtons){
+define(['services/sulumedia/media-router',
+    'services/sulumedia/overlay-manager',
+    'extensions/masonry',
+    'extensions/sulu-buttons-mediabundle'], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons){
 
     'use strict';
 
@@ -33,13 +39,6 @@ define(['extensions/masonry', 'extensions/sulu-buttons-mediabundle'], function(M
             MasonryExtension.initialize(app);
             sandbox.sulu.buttons.push(MediaButtons.getButtons());
             sandbox.sulu.buttons.dropdownItems.push(MediaButtons.getDropdownItems());
-
-            sandbox.urlManager.setUrl('media', 'media/collections/edit:<%= collectionId %>/files/edit:<%= mediaId %>', function(data) {
-                return {
-                    mediaId: data.properties.media_id,
-                    collectionId: data.properties.collection_id
-                };
-            });
 
             // list all collections
             sandbox.mvc.routes.push({
@@ -73,38 +72,12 @@ define(['extensions/masonry', 'extensions/sulu-buttons-mediabundle'], function(M
 
                 this.sandbox.on('husky.data-navigation.collections.select', function(item) {
                     if (item === null) {
-                        this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
+                        MediaRouter.toRoot();
                     }
                 }.bind(this));
 
                 this.sandbox.on('husky.data-navigation.collections.add', function(item) {
-                    var $element = this.sandbox.dom.createElement('<div id="collection-add"/>'),
-                        parentId = !!item && !!item.id ? item.id : null;
-
-                    this.sandbox.dom.append('body', $element);
-
-                    this.sandbox.start([{
-                        name: 'collections/create-overlay@sulumedia',
-                        options: {
-                            el: $element,
-                            parent: parentId,
-                            createdCallback: function(collection) {
-                                this.sandbox.emit(
-                                    'sulu.labels.success.show',
-                                    'labels.success.collection-save-desc',
-                                    'labels.success'
-                                );
-                                this.sandbox.emit(
-                                    'sulu.router.navigate',
-                                    'media/collections/edit:' + collection.get('id') + '/files'
-                                );
-                                this.sandbox.emit(
-                                    'husky.data-navigation.collections.set-url',
-                                    '/admin/api/collections/' + collection.get('id') + '?depth=1'
-                                );
-                            }.bind(this)
-                        }
-                    }]);
+                    OverlayManager.startCreateCollectionOverlay(this.sandbox, item);
                 }.bind(this));
             });
         }
