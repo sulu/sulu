@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use PHPUnit_Framework_Assert;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
@@ -239,6 +240,22 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
         $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.desc', 'ASC');
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSortConcat()
+    {
+        $alias = 'name_desc';
+        $this->doctrineListBuilder->sort(new DoctrineConcatenationFieldDescriptor(
+            [
+                new DoctrineFieldDescriptor('name', 'name', self::$entityName),
+                new DoctrineFieldDescriptor('desc', 'desc', self::$entityName),
+            ],
+            $alias
+        ));
+
+        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with($alias, 'ASC');
 
         $this->doctrineListBuilder->execute();
     }
