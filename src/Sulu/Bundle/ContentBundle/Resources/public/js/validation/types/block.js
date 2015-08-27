@@ -123,16 +123,23 @@ define([
                 },
 
                 removeBlockHandler: function(event) {
-                    var $removeButton = $(event.target),
-                        $element = $removeButton.closest('.' + this.propertyName + '-element');
+                    var action = function() {
+                        var $removeButton = $(event.target),
+                            $element = $removeButton.closest('.' + this.propertyName + '-element');
 
-                    if (this.canRemove()) {
-                        this.form.removeFields($element);
-                        $element.remove();
+                        if (this.canRemove()) {
+                            this.form.removeFields($element);
+                            $element.remove();
 
-                        $(form.$el).trigger('form-remove', [this.propertyName]);
-                        this.checkFullAndEmpty();
-                    }
+                            $(form.$el).trigger('form-remove', [this.propertyName]);
+                            this.checkFullAndEmpty();
+                        }
+                    }.bind(this);
+                    // show warning dialog
+                    Husky.emit(
+                        'sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc',
+                        null, action
+                    );
                 },
 
                 checkSortable: function() {
@@ -179,7 +186,7 @@ define([
                             initializeTypeSelect.call(this, $template, options, function(item) {
                                 var data = form.mapper.getData($template);
                                 Husky.stop($template.find('*'));
-                                this.addChild(item, data, true, index);
+                                this.addChild(item, data, true, $template.index());
                             }.bind(this));
                         }
 
