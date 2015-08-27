@@ -11,6 +11,7 @@
             {% set type = sulu_get_type(property.contentTypeName) %}
 
             {% if property.contentTypeName == 'block' %}
+                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
                 {% include type.template with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
             {% elseif property is multiple %}
                 {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
