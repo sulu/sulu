@@ -41140,6 +41140,7 @@ define('__component__$overlay@husky',[], function() {
             backdropClass: 'husky-overlay-backdrop',
             overlayOkSelector: '.overlay-ok',
             overlayCancelSelector: '.overlay-cancel',
+            overlayOtherButtonsSelector: '.overlay-button',
             tabsClass: 'tabs',
             languageChangerClass: 'language-changer',
             smallHeaderClass: 'small-header'
@@ -41227,6 +41228,14 @@ define('__component__$overlay@husky',[], function() {
             ].join(''),
             cancelButton: [
                 '<div class="btn gray black-text overlay-cancel<%= classes %>">',
+                '   <% if (!!icon) { %>',
+                '   <span class="fa-<%= icon %>"></span>',
+                '   <% } %>',
+                '   <span class="text"><%= text %></span>',
+                '</div>'
+            ].join(''),
+            button: [
+                '<div class="btn overlay-button <%= classes %>" data-button-number="<%=buttonNumber%>">',
                 '   <% if (!!icon) { %>',
                 '   <span class="fa-<%= icon %>"></span>',
                 '   <% } %>',
@@ -41768,6 +41777,8 @@ define('__component__$overlay@husky',[], function() {
                 } else if (button.type === buttonTypes.CANCEL) {
                     template = templates.cancelButton;
                     text = this.slides[slide].cancelDefaultText;
+                } else {
+                    template = templates.button;
                 }
 
                 classes = (!!button.classes) ? ' ' + button.classes : '';
@@ -41785,6 +41796,7 @@ define('__component__$overlay@husky',[], function() {
                 $button = this.sandbox.dom.createElement(this.sandbox.util.template(template, {
                     icon: button.icon,
                     text: text,
+                    buttonNumber: i,
                     classes: (inactive === true) ? classes + ' inactive gray' : classes
                 }));
 
@@ -41910,6 +41922,10 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.dom.on(this.overlay.$el, 'click',
                 this.okHandler.bind(this), constants.overlayOkSelector);
 
+            // binds the events for other buttons
+            this.sandbox.dom.on(this.overlay.$el, 'click',
+                this.buttonHandler.bind(this), constants.overlayOtherButtonsSelector);
+
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 if (this.dragged === false && this.overlay.opened === true) {
                     this.resizeHandler();
@@ -42011,6 +42027,27 @@ define('__component__$overlay@husky',[], function() {
                 ) !== false) {
                 this.closeOverlay();
             }
+        },
+
+        /**
+         * Handles the click on a button
+         * @param event
+         */
+        buttonHandler: function(event) {
+            if (!event || this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
+                return;
+            }
+
+            var buttonNumber = this.sandbox.dom.data(event.currentTarget, 'buttonNumber'),
+                button = this.slides[this.activeSlide].buttons[buttonNumber];
+
+            this.sandbox.dom.preventDefault(event);
+            this.sandbox.dom.stopPropagation(event);
+
+            this.executeCallback(
+                button.callback,
+                this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
+            );
         },
 
         /**

@@ -21,7 +21,6 @@ use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -295,6 +294,8 @@ class NodeController extends RestController
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated will be removed with version 1.2
      */
     public function filterAction(Request $request)
     {
@@ -371,10 +372,6 @@ class NodeController extends RestController
      */
     public function putAction(Request $request, $uuid)
     {
-        if ($uuid === 'index') {
-            return $this->putIndex($request);
-        }
-
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
@@ -406,48 +403,6 @@ class NodeController extends RestController
         return $this->handleView(
             $this->view($result)
         );
-    }
-
-    /**
-     * put index page.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function putIndex(Request $request)
-    {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-        $template = $this->getRequestParameter($request, 'template', true);
-        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
-        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-
-        $data = $request->request->all();
-
-        try {
-            if (isset($data['url']) && $data['url'] != '/') {
-                throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
-            }
-
-            $result = $this->getRepository()->saveIndexNode(
-                $data,
-                $template,
-                $webspace,
-                $language,
-                $this->getUser()->getId(),
-                $isShadow,
-                $shadowBaseLanguage
-            );
-            $view = $this->view($result);
-        } catch (RestException $ex) {
-            $view = $this->view(
-                $ex->toArray(),
-                400
-            );
-        }
-
-        return $this->handleView($view);
     }
 
     /**

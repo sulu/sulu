@@ -158,25 +158,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/asdf', $result['url']);
     }
 
-    public function testIndexNode()
-    {
-        $data = [
-            'title' => 'Testtitle',
-            'url' => '/',
-        ];
-        $this->nodeRepository->saveIndexNode(
-            $data,
-            'overview',
-            'sulu_io',
-            'en',
-            1
-        );
-
-        $index = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $this->assertEquals('Testtitle', $index['title']);
-    }
-
     public function testGetWebspaceNode()
     {
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');

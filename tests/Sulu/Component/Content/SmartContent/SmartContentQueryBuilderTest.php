@@ -9,9 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
+namespace Sulu\Component\Content\SmartContent;
 
-use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -21,6 +20,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\Content\SmartContent\QueryBuilder as SmartContentQueryBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 

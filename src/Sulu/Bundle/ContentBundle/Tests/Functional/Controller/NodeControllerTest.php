@@ -24,6 +24,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
@@ -938,8 +939,6 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
-        $mapper->saveStartPage(['title' => 'Start Page'], 'default', 'sulu_io', 'en', 1);
 
         $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
 
@@ -951,7 +950,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[4]['article'], $response['article']);
 
         $this->assertEquals(3, count($response['breadcrumb']));
-        $this->assertEquals('Start Page', $response['breadcrumb'][0]['title']);
+        $this->assertEquals('Homepage', $response['breadcrumb'][0]['title']);
         $this->assertEquals('test2', $response['breadcrumb'][1]['title']);
         $this->assertEquals('test4', $response['breadcrumb'][2]['title']);
     }
@@ -1456,7 +1455,20 @@ class NodeControllerTest extends SuluTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        $mapper->saveStartPage(['title' => 'Start Page'], 'default', 'sulu_io', 'de', 1);
+        $mapper->save(
+            ['title' => 'Start Page'],
+            'default',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $this->getContainer()->get('sulu.phpcr.session')->getContentNode('sulu_io')->getIdentifier(),
+            null,
+            WorkflowStage::PUBLISHED,
+            null,
+            null,
+            'home'
+        );
 
         $client = $this->createAuthenticatedClient();
 

@@ -311,9 +311,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     }.bind(this));
             }
 
-            if (this.options.id === 'index') {
-                this.sandbox.dom.remove('#show-in-navigation-container');
-            }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
 
             return initialize;
@@ -432,17 +429,12 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         submit: function(action) {
-            this.sandbox.logger.log('save Model');
             var data;
 
             if (this.sandbox.form.validate(this.formId)) {
                 data = this.sandbox.form.getData(this.formId);
 
-                if (this.options.id === 'index') {
-                    data.navigation = true;
-                } else if (!!this.sandbox.dom.find('#show-in-navigation', this.$el).length) {
-                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
-                }
+                data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
 
                 this.sandbox.logger.log('data', data);
 

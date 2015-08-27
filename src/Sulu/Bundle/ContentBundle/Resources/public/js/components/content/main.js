@@ -77,6 +77,10 @@ define([
             ].join(''),
 
             previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>'
+        },
+
+        isHomeDocument = function(data) {
+            return data.url === '/';
         };
 
     return {
@@ -210,11 +214,6 @@ define([
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
-
-                    // if there is a index id this should be after reload
-                    if (this.options.id === 'index') {
-                        data.id = this.options.id;
-                    }
 
                     if (!!data.id) {
                         this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
@@ -545,6 +544,7 @@ define([
                 this.options.language,
                 this.options.parent,
                 this.state,
+                (isHomeDocument(data) ? 'home' : null),
                 null, {
                     // on success save contents id
                     success: function(response) {
@@ -557,9 +557,8 @@ define([
                         if (action === 'back') {
                             this.sandbox.emit('sulu.content.contents.list');
                         } else if (action === 'new') {
-                            parent = ((!!this.options.id && model.breadcrumb.length > 1)
-                                ? model.breadcrumb[model.breadcrumb.length - 1].uuid : null)
-                            || this.options.parent;
+                            parent = ((!!this.options.id && model.breadcrumb.length > 1) ?
+                                model.breadcrumb[model.breadcrumb.length - 1].uuid : null) || this.options.parent;
                             this.sandbox.emit('sulu.router.navigate',
                                 'content/contents/' + this.options.webspace + '/' +
                                 this.options.language + '/add' + ((!!parent) ? ':' + parent : '') + '/content',
@@ -658,18 +657,25 @@ define([
                     }.bind(this));
                 }
 
-                // route to settings
-                if (
-                    (this.options.content !== 'settings' && this.data.shadowOn === true) ||
-                    (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
-                ) {
-                    var id = (this.options.id === 'index' ? this.options.id : this.data.id);
+                if (!!this.options.id) {
+                    // disable content tab
+                    if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
+                        this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
+                            this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
+                        }.bind(this));
+                    }
 
-                    this.sandbox.emit(
-                        'sulu.router.navigate',
-                        'content/contents/' + this.options.webspace +
-                        '/' + this.options.language + '/edit:' + id + '/settings'
-                    );
+                    // route to settings
+                    if (
+                        (this.options.content !== 'settings' && this.data.shadowOn === true) ||
+                        (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
+                    ) {
+                        this.sandbox.emit(
+                            'sulu.router.navigate',
+                            'content/contents/' + this.options.webspace +
+                            '/' + this.options.language + '/edit:' + this.data.id + '/settings'
+                        );
+                    }
                 }
             }
 
@@ -973,8 +979,7 @@ define([
         },
 
         header: function() {
-            var noBack = (this.options.id === 'index'),
-                length, concreteLanguages = [],
+            var length, concreteLanguages = [],
                 header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
 
             if (this.options.display === 'column') {
@@ -984,7 +989,7 @@ define([
                         buttons: {
                             toggler: {
                                 options: {
-                                    title: 'content.contents.show-ghost-pages',
+                                    title: 'content.contents.show-ghost-pages'
                                 }
                             }
                         },
@@ -1032,7 +1037,7 @@ define([
                 }
 
                 header = {
-                    noBack: noBack,
+                    noBack: isHomeDocument(this.data),
 
                     tabs: {
                         url: navigationUrl
@@ -1064,7 +1069,7 @@ define([
                                     dropdownItems: {
                                         delete: {
                                             options: {
-                                                disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
+                                                disabled: isHomeDocument(this.data),
                                                 callback: function() {
                                                     this.sandbox.emit('sulu.content.content.delete', this.data.id);
                                                 }.bind(this)
@@ -1085,6 +1090,7 @@ define([
                             },
                             state: {
                                 options: {
+                                    disabled: isHomeDocument(this.data),
                                     dropdownItems: {
                                         statePublish: {},
                                         stateTest: {}

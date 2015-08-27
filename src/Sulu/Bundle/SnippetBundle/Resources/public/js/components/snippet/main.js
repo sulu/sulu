@@ -64,11 +64,6 @@ define([
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 var data = this.model.toJSON();
 
-                // if there is a index id this should be after reload
-                if (this.options.id === 'index') {
-                    data.id = this.options.id;
-                }
-
                 if (this.type === 'edit') {
                     this.sandbox.emit('sulu.snippets.snippet.load', data.id, item.localization);
                 } else if (this.type === 'add') {

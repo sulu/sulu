@@ -33,8 +33,8 @@ class Metadata
     }
 
     /**
-     * @param string      $name         meta data name
-     * @param string      $languageCode
+     * @param string $name meta data name
+     * @param string $languageCode
      * @param string|null $default
      *
      * @return string|null
