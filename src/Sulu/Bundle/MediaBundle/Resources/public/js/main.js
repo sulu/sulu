@@ -55,7 +55,7 @@ define(['services/sulumedia/media-router',
             sandbox.mvc.routes.push({
                 route: 'media/collections/edit::id/:content',
                 callback: function(id) {
-                    return '<div data-aura-component="collections@sulumedia" data-aura-display="edit" data-aura-id="' + id + '"/>';
+                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '"/>';
                 }
             });
 

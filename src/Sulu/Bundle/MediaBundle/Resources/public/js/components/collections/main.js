@@ -283,9 +283,6 @@ define([
          * Bind custom events concerning collections
          */
         bindCustomEvents: function() {
-            // delete media
-            this.sandbox.on(DELETE_MEDIA.call(this), this.deleteMedia.bind(this));
-
             // move media
             this.sandbox.on(MOVE_MEDIA.call(this), this.moveMedia.bind(this));
 
@@ -429,51 +426,6 @@ define([
                     }
                 }.bind(this));
             }.bind(this));
-        },
-
-        /**
-         * Deletes an array of media
-         * @param mediaIds {Array} array of media ids
-         * @param afterConfirm {Function} callback to execute after modal has been confirmed
-         * @param callback {Function} callback to execute after deleting a media
-         * @param noDialog {Boolean} if true no dialog box will be shown
-         */
-        deleteMedia: function(mediaIds, afterConfirm, callback, noDialog) {
-            var media,
-                length = mediaIds.length,
-                counter = 0,
-                finished = false,
-                action = function() {
-                    this.sandbox.util.foreach(mediaIds, function(id) {
-                        media = this.getMediaModel(id);
-                        media.destroy({
-                            success: function() {
-                                finished = ++counter === length;
-                                if (typeof callback === 'function') {
-                                    callback(id, finished);
-                                } else {
-                                    this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id, finished);
-                                }
-                            }.bind(this),
-                            error: function() {
-                                this.sandbox.logger.log('Error while deleting a single media');
-                            }.bind(this)
-                        });
-                    }.bind(this));
-                }.bind(this);
-
-            if (noDialog === true) {
-                action();
-            } else {
-                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
-                    if (confirmed === true) {
-                        if (typeof afterConfirm === 'function') {
-                            afterConfirm();
-                        }
-                        action();
-                    }
-                }.bind(this));
-            }
         },
 
         /**
@@ -694,7 +646,6 @@ define([
                 collection = this.getCollectionModel(this.options.id);
             this.sandbox.dom.append(this.$el, $edit);
 
-            this.sandbox.sulu.saveUserSetting(constants.lastVisitedCollectionKey, this.options.id);
 
             collection.fetch({
                 data: {locale: this.locale, breadcrumb: 'true'},
