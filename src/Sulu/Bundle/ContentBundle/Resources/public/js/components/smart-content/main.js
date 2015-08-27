@@ -958,7 +958,7 @@ define([], function() {
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
-                        if (!!this.options.has.datasource) {
+                        if (!!this.options.has.datasource && !!data[this.options.datasourceKey]) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
                             this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
                         }
