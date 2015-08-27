@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulumedia/model/collection'], function(Collection) {
+define(['services/sulumedia/collection-manager'], function(CollectionManager) {
 
     'use strict';
 
@@ -44,23 +44,17 @@ define(['sulumedia/model/collection'], function(Collection) {
          */
         addCollection: function () {
             if (this.sandbox.form.validate(constants.newFormSelector)) {
-                var collection = this.sandbox.form.getData(constants.newFormSelector),
-                    model = new Collection();
-
+                var collection = this.sandbox.form.getData(constants.newFormSelector);
                 collection.parent = this.options.parent;
                 collection.locale = this.sandbox.sulu.user.locale;
 
-                model.set(collection);
-
-                model.save(null, {
-                    success: function(collection) {
+                CollectionManager.save(collection).then(function(collection) {
                         this.options.createdCallback(collection);
                         this.sandbox.stop();
-                    }.bind(this),
-                    error: function() {
+                    }.bind(this)).fail(function() {
                         this.sandbox.stop();
                     }.bind(this)
-                });
+                );
             } else {
                 return false;
             }

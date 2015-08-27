@@ -10,8 +10,10 @@
 define([
         'services/husky/util',
         'services/husky/mediator',
+        'services/sulumedia/media-router'
     ], function(util,
-                mediator) {
+                mediator,
+                MediaRouter) {
 
         'use strict';
 
@@ -22,21 +24,11 @@ define([
              * @param contactId contact to delete
              * @returns {*}
              */
-            deleteContact = function(contactId) {
-                var promise = $.Deferred(),
-                    contact = Contact.findOrCreate({id: contactId});
+            getOverlayContainer = function(containerId) {
+                var $element = $('<div id="' + containerId + '"/>');
+                $('body').append($element);
 
-                contact.destroy({
-                    success: function() {
-                        mediator.emit('sulu.contacts.contact.deleted', contactId);
-                        promise.resolve();
-                    }.bind(this),
-                    error: function() {
-                        promise.fail();
-                    }.bind(this)
-                });
-
-                return promise;
+                return $element;
             };
 
 
@@ -46,29 +38,19 @@ define([
 
         OverlayManager.prototype = {
             startCreateCollectionOverlay: function(sandbox, parentCollection) {
-                var $element = sandbox.dom.createElement('<div id="collection-add"/>'),
-                    parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null;
-
-                sandbox.dom.append('body', $element);
+                var parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null,
+                    $container = getOverlayContainer('create-collection-overlay');
 
                 sandbox.start([{
                     name: 'collections/create-overlay@sulumedia',
                     options: {
-                        el: $element,
+                        el: $container,
                         parent: parentId,
                         createdCallback: function(collection) {
-                            sandbox.emit(
-                                'sulu.labels.success.show',
-                                'labels.success.collection-save-desc',
-                                'labels.success'
-                            );
-                            sandbox.emit(
-                                'sulu.router.navigate',
-                                'media/collections/edit:' + collection.get('id') + '/files'
-                            );
+                            MediaRouter.toEdit(collection.id);
                             sandbox.emit(
                                 'husky.data-navigation.collections.set-url',
-                                '/admin/api/collections/' + collection.get('id') + '?depth=1'
+                                '/admin/api/collections/' + collection.id + '?depth=1'
                             );
                         }.bind(this)
                     }
