@@ -552,6 +552,7 @@ define([], function() {
 
                 this.sandbox.dom.append(this.$content, ul);
             } else {
+                this.$content.empty();
                 this.$header.find('.no-content-message').html(this.sandbox.translate(this.translations.noContentFound));
                 this.$container.addClass(constants.noContentClass);
             }
@@ -957,7 +958,7 @@ define([], function() {
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
-                        if (!!this.options.has.datasource) {
+                        if (!!this.options.has.datasource && !!data[this.options.datasourceKey]) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
                             this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
                         }
