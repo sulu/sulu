@@ -1,8 +1,8 @@
 <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
     <div class="grid">
         <div id="text-block-header-{{ id|raw }}" class="text-blocks-header">
-            <div id="sort-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.sort.blocks') %></div>
-            <div id="edit-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right hidden"><%= translate('sulu.content.edit.blocks') %></div>
+            <div id="collapse-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.collapse.blocks') %></div>
+            <div id="expand-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.expand.blocks') %></div>
             <div class="clear"></div>
         </div>
         <div class="grid-row small"
@@ -22,6 +22,19 @@
                          data-mapper-property-tpl="{{ type.name }}">
                         <div class="move"></div>
                         <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
+
+                        <div class="collapsed-container">
+                            {% if property.types|length > 1 %}
+                                <div class="type">{{ type.getTitle(userLocale) }}</div>
+                            {% endif %}
+                            <div class="title">This is the title</div>
+                            <div class="image">
+                                <img src="http://lorempixel.com/50/50/"/>
+                            </div>
+                            <div class="text">Des is a gmahde Wiesn und i moan scho aa, Bladl Radler. Trachtnhuat Wurscht Blosmusi
+                                Weißwiaschd nia Stubn a bissal measi, wolpern. Des is a gmahde Wiesn und i moan scho aa, Bladl Radler.
+                                Trachtnhuat Wurscht Blosmusi Weißwiaschd nia Stubn a bissal measi, wolpern.</div>
+                        </div>
 
                         <div class="container grid pos-rel">
                             <div class="text-block-controls pull-right">

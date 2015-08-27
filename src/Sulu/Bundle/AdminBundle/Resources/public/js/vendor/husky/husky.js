@@ -49464,7 +49464,7 @@ define('husky_extensions/itembox',[],function() {
                     this.$list = createItemList.call(this);
 
                     for (var i = -1; ++i < length;) {
-                        this.addItem(data[i], false);
+                        this.addItem(data[i], false, false);
                     }
 
                     this.sandbox.dom.html(this.$content, this.$list);
@@ -49559,10 +49559,14 @@ define('husky_extensions/itembox',[],function() {
              * Adds an item to the list
              * @param item {object} The item to display in the list
              * @param reinitialize {boolean} Defines if the sorting, order and visibility list should be reinitialized
+             * @param scroll {boolean} Defines if true scrolls to the added item
              */
-            addItem: function(item, reinitialize) {
+            addItem: function(item, reinitialize, scroll) {
                 if (typeof(reinitialize) === 'undefined') {
                     reinitialize = true;
+                }
+                if (typeof(scroll) === 'undefined') {
+                    scroll = true;
                 }
 
                 if (!this.$list) {
@@ -49588,7 +49592,9 @@ define('husky_extensions/itembox',[],function() {
                     this.updateSelectedCounter();
                 }
 
-                this.sandbox.dom.scrollAnimate(this.$content.get(0).scrollHeight, this.$content);
+                if (!!scroll) {
+                    this.sandbox.dom.scrollAnimate(this.$content.get(0).scrollHeight, this.$content);
+                }
             },
 
             /**

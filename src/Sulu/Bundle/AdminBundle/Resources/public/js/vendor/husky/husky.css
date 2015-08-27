@@ -9876,8 +9876,9 @@ a.btn-black, a.btn-highlight {
   left: 17px;
 }
 
-/* line 9, ../scss/modules/content-types.scss */
-.sortable .text-block .container {
+/* line 8, ../scss/modules/content-types.scss */
+.sortable .text-block .container,
+.sortable .text-block .collapsed-container {
   padding-left: 40px;
 }
 /* line 13, ../scss/modules/content-types.scss */
@@ -9911,8 +9912,8 @@ a.btn-black, a.btn-highlight {
 /* line 42, ../scss/modules/content-types.scss */
 .text-block-controls {
   position: absolute;
-  top: 5px;
-  right: 8px;
+  top: 0;
+  right: 0;
 }
 
 /* line 48, ../scss/modules/content-types.scss */
@@ -9940,67 +9941,134 @@ a.btn-black, a.btn-highlight {
 .text-block .options-remove {
   cursor: pointer;
   font-size: 16px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
 }
-/* line 75, ../scss/modules/content-types.scss */
+/* line 79, ../scss/modules/content-types.scss */
 .text-block .options-collapse {
   cursor: pointer;
-  margin-right: 10px;
-}
-/* line 80, ../scss/modules/content-types.scss */
-.text-block .container {
-  padding: 10px 20px 20px 20px;
-  position: relative;
-}
-/* line 84, ../scss/modules/content-types.scss */
-.text-block .container label {
-  margin-bottom: 10px;
+  font-size: 16px;
+  width: 20px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
 }
 /* line 88, ../scss/modules/content-types.scss */
-.text-block .container textarea {
+.text-block .container,
+.text-block .collapsed-container {
+  padding: 20px;
+  position: relative;
+}
+/* line 93, ../scss/modules/content-types.scss */
+.text-block .container label,
+.text-block .collapsed-container label {
+  margin-bottom: 10px;
+}
+/* line 97, ../scss/modules/content-types.scss */
+.text-block .container textarea,
+.text-block .collapsed-container textarea {
   max-width: 100%;
   min-width: 100%;
   width: 100%;
 }
+/* line 104, ../scss/modules/content-types.scss */
+.text-block .collapsed-container {
+  color: #999;
+  cursor: pointer;
+  padding-top: 10px;
+  display: none;
+}
+/* line 33, ../scss/mixins.scss */
+.text-block .collapsed-container:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 110, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .title {
+  font-weight: bold;
+  font-style: oblique;
+  margin-bottom: 10px;
+}
+/* line 115, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .image {
+  float: left;
+  margin-right: 10px;
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+}
+/* line 122, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .text {
+  display: block;
+  /* Fallback for non-webkit */
+  display: -webkit-box;
+  padding-top: 3px;
+  height: 45px;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 138, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .type {
+  font-size: 12px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+/* line 147, ../scss/modules/content-types.scss */
+.text-block.collapsed .container {
+  display: none;
+}
+/* line 150, ../scss/modules/content-types.scss */
+.text-block.collapsed .collapsed-container {
+  display: block;
+}
 
-/* line 96, ../scss/modules/content-types.scss */
+/* line 156, ../scss/modules/content-types.scss */
 .text-blocks-toggle-btn {
   padding: 5px 0;
   height: auto;
   font-size: 12px;
 }
 
-/* line 104, ../scss/modules/content-types.scss */
+/* line 164, ../scss/modules/content-types.scss */
 .empty .text-block .options-remove {
   display: none;
 }
 
-/* line 110, ../scss/modules/content-types.scss */
+/* line 170, ../scss/modules/content-types.scss */
 .text-block-footer {
   margin-bottom: 20px;
 }
-/* line 113, ../scss/modules/content-types.scss */
+/* line 173, ../scss/modules/content-types.scss */
 .text-block-footer .desc {
   font-size: 12px;
   color: #999;
   padding-left: 10px;
 }
-/* line 118, ../scss/modules/content-types.scss */
+/* line 178, ../scss/modules/content-types.scss */
 .text-block-footer .btn.full {
   background-color: #ccc;
   cursor: default;
 }
 
-/* line 124, ../scss/modules/content-types.scss */
+/* line 184, ../scss/modules/content-types.scss */
 .block-content {
   display: none;
   color: #999;
 }
-/* line 128, ../scss/modules/content-types.scss */
+/* line 188, ../scss/modules/content-types.scss */
 .block-content p {
   margin: 5px 0;
 }
 
-/* line 137, ../scss/modules/content-types.scss */
+/* line 197, ../scss/modules/content-types.scss */
 .white-box {
   width: 100%;
   height: 100%;
@@ -10009,12 +10077,12 @@ a.btn-black, a.btn-highlight {
   border: 1px solid #ddd;
   padding: 0 0 15px 0;
 }
-/* line 145, ../scss/modules/content-types.scss */
+/* line 205, ../scss/modules/content-types.scss */
 .white-box .text {
   font-size: 12px;
   color: #999;
 }
-/* line 150, ../scss/modules/content-types.scss */
+/* line 210, ../scss/modules/content-types.scss */
 .white-box .header {
   position: relative;
   top: 0px;
@@ -10034,12 +10102,12 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 164, ../scss/modules/content-types.scss */
+/* line 224, ../scss/modules/content-types.scss */
 .white-box .header .no-content-message {
   color: #999;
   display: none;
 }
-/* line 169, ../scss/modules/content-types.scss */
+/* line 229, ../scss/modules/content-types.scss */
 .white-box .header .selected-counter {
   color: #999;
   font-size: 10px;
@@ -10048,7 +10116,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 70px;
 }
-/* line 178, ../scss/modules/content-types.scss */
+/* line 238, ../scss/modules/content-types.scss */
 .white-box .header .loader {
   position: absolute;
   top: 50%;
@@ -10057,7 +10125,7 @@ a.btn-black, a.btn-highlight {
   margin-left: -10px;
   display: none;
 }
-/* line 187, ../scss/modules/content-types.scss */
+/* line 247, ../scss/modules/content-types.scss */
 .white-box .header .icon {
   display: block;
   font-size: 16px;
@@ -10070,29 +10138,29 @@ a.btn-black, a.btn-highlight {
   margin-top: 9px;
   padding-top: 1px;
 }
-/* line 199, ../scss/modules/content-types.scss */
+/* line 259, ../scss/modules/content-types.scss */
 .white-box .header .icon.action {
   background: #52B6CA;
   color: #fff;
 }
-/* line 203, ../scss/modules/content-types.scss */
+/* line 263, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
   border: 1px solid #ccc;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
 }
-/* line 209, ../scss/modules/content-types.scss */
+/* line 269, ../scss/modules/content-types.scss */
 .white-box .header .icon.left {
   float: left;
   margin-right: -40px;
 }
-/* line 213, ../scss/modules/content-types.scss */
+/* line 273, ../scss/modules/content-types.scss */
 .white-box .header .icon.right {
   float: right;
   margin-left: -40px;
 }
-/* line 219, ../scss/modules/content-types.scss */
+/* line 279, ../scss/modules/content-types.scss */
 .white-box .header .position {
   width: 32px;
   height: 32px;
@@ -10101,7 +10169,7 @@ a.btn-black, a.btn-highlight {
   left: 50%;
   margin: -16px 0 0 -16px;
 }
-/* line 229, ../scss/modules/content-types.scss */
+/* line 289, ../scss/modules/content-types.scss */
 .white-box .content {
   position: relative;
   top: 0px;
@@ -10109,44 +10177,44 @@ a.btn-black, a.btn-highlight {
   max-height: 255px;
   overflow: auto;
 }
-/* line 236, ../scss/modules/content-types.scss */
+/* line 296, ../scss/modules/content-types.scss */
 .white-box .content .items-list {
   list-style-type: none;
   margin: 0;
   padding: 0 20px;
   color: #999;
 }
-/* line 241, ../scss/modules/content-types.scss */
+/* line 301, ../scss/modules/content-types.scss */
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
   border-bottom: 1px solid #ddd;
   position: relative;
 }
-/* line 246, ../scss/modules/content-types.scss */
+/* line 306, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .icon {
   cursor: move;
   color: #000;
   font-size: 15px;
   padding-right: 10px;
 }
-/* line 252, ../scss/modules/content-types.scss */
+/* line 312, ../scss/modules/content-types.scss */
 .white-box .content .items-list li img {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
   vertical-align: middle;
 }
-/* line 258, ../scss/modules/content-types.scss */
+/* line 318, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .num {
   color: #999;
   padding-right: 15px;
 }
-/* line 262, ../scss/modules/content-types.scss */
+/* line 322, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
   color: #999;
 }
-/* line 265, ../scss/modules/content-types.scss */
+/* line 325, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
   position: absolute;
   top: 50%;
@@ -10155,42 +10223,42 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
   color: #000;
 }
-/* line 277, ../scss/modules/content-types.scss */
+/* line 337, ../scss/modules/content-types.scss */
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
   color: #999;
   font-size: 12px;
 }
-/* line 284, ../scss/modules/content-types.scss */
+/* line 344, ../scss/modules/content-types.scss */
 .white-box.no-content {
   padding-bottom: 0;
 }
-/* line 287, ../scss/modules/content-types.scss */
+/* line 347, ../scss/modules/content-types.scss */
 .white-box.no-content .header .no-content-message {
   display: inline;
 }
-/* line 290, ../scss/modules/content-types.scss */
+/* line 350, ../scss/modules/content-types.scss */
 .white-box.no-content .header .position {
   display: none;
 }
-/* line 293, ../scss/modules/content-types.scss */
+/* line 353, ../scss/modules/content-types.scss */
 .white-box.no-content .header .selected-counter {
   display: none;
 }
-/* line 301, ../scss/modules/content-types.scss */
+/* line 361, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .loader {
   display: block;
 }
-/* line 304, ../scss/modules/content-types.scss */
+/* line 364, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .no-content-message {
   display: none;
 }
-/* line 307, ../scss/modules/content-types.scss */
+/* line 367, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .position {
   display: none;
 }
-/* line 310, ../scss/modules/content-types.scss */
+/* line 370, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .selected-counter {
   display: none;
 }
