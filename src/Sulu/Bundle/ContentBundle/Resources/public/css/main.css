@@ -511,8 +511,13 @@
   margin: 7px 0 0 0;
 }
 
-/* line 95, ../scss/modules/smart-content.scss */
+/* line 99, ../scss/modules/smart-content.scss */
 .smart-content-container.no-content .header .text {
+  display: none;
+}
+
+/* line 107, ../scss/modules/smart-content.scss */
+.smart-content-container.is-loading .header .text {
   display: none;
 }
 
