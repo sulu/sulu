@@ -27,17 +27,34 @@ use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class StructureSubscriber extends AbstractMappingSubscriber
+class StructureSubscriber implements EventSubscriberInterface
 {
     const STRUCTURE_TYPE_FIELD = 'template';
 
+    /**
+     * @var ContentTypeManagerInterface
+     */
     private $contentTypeManager;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
     private $legacyPropertyFactory;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @var PropertyEncoder
+     */
+    private $encoder;
+
+    /**
+     * @param PropertyEncoder             $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param DocumentInspector $inspector
      * @param LegacyPropertyFactory $legacyPropertyFactory
@@ -48,7 +65,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
         DocumentInspector $inspector,
         LegacyPropertyFactory $legacyPropertyFactory
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->contentTypeManager = $contentTypeManager;
         $this->inspector = $inspector;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
@@ -91,14 +108,6 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function supports($document)
-    {
-        return $document instanceof StructureBehavior;
-    }
-
-    /**
      * Set the structure type early so that subsequent subscribers operate
      * upon the correct structure type.
      *
@@ -108,7 +117,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$document instanceof StructureBehavior) {
             return;
         }
 
@@ -123,12 +132,15 @@ class StructureSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritdoc}
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
-        // Set the structure type
-        $node = $event->getNode();
         $document = $event->getDocument();
 
+        if (!$document instanceof StructureBehavior) {
+            return;
+        }
+
+        $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $value = $node->getPropertyValueWithDefault($propertyName, null);
         $document->setStructureType($value);
@@ -155,10 +167,14 @@ class StructureSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritdoc}
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         // Set the structure type
         $document = $event->getDocument();
+
+        if (!$document instanceof StructureBehavior) {
+            return;
+        }
 
         if (!$document->getStructureType()) {
             return;
