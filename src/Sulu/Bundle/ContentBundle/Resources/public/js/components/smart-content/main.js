@@ -552,6 +552,7 @@ define([], function() {
 
                 this.sandbox.dom.append(this.$content, ul);
             } else {
+                this.$content.empty();
                 this.$header.find('.no-content-message').html(this.sandbox.translate(this.translations.noContentFound));
                 this.$container.addClass(constants.noContentClass);
             }
