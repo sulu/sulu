@@ -15,6 +15,9 @@ require.config({
 
         'services/sulumedia/media-router': '../../sulumedia/js/services/media-router',
         'services/sulumedia/overlay-manager': '../../sulumedia/js/services/overlay-manager',
+        'services/sulumedia/collection-manager': '../../sulumedia/js/services/collection-manager',
+        'services/sulumedia/media-manager': '../../sulumedia/js/services/media-manager',
+        'services/sulumedia/user-settings-manager': '../../sulumedia/js/services/user-settings-manager',
 
         "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection',
         'decorators/masonry': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
@@ -44,7 +47,7 @@ define(['services/sulumedia/media-router',
             sandbox.mvc.routes.push({
                 route: 'media/collections/root',
                 callback: function() {
-                    return '<div data-aura-component="collections@sulumedia"  data-aura-display="root"/>';
+                    return '<div data-aura-component="collections/root@sulumedia"/>';
                 }
             });
 

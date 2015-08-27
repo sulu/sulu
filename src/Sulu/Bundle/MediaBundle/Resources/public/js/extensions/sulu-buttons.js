@@ -9,10 +9,8 @@
             getButtons: function() {
                 var decoratorDropdown = app.sandbox.sulu.buttons.getApiButton('layout');
                 decoratorDropdown.dropdownItems = {
-                    smallThumbnails: {},
-                    bigThumbnails: {},
-                    table: {},
-                    masonry: {}
+                    masonry: {},
+                    table: {}
                 };
                 return [{
                     name: 'mediaDecoratorDropdown',

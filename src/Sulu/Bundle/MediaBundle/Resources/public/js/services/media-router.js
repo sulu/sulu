@@ -22,7 +22,7 @@ define(['services/husky/mediator'], function(mediator) {
          * Navigates to the edit of an account
          * @param collectionId The collectionId of the account to edit
          */
-        toEdit: function(collectionId) {
+        toCollection: function(collectionId) {
             mediator.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/files');
         },
 
