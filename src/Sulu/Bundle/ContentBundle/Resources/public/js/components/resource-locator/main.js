@@ -26,7 +26,14 @@ define([], function() {
         },
 
         skeleton = function(options) {
-            if (options.contentId !== 'index') {
+            if (options.hasOwnProperty('value') && options.value === '/') {
+                return [
+                    '<div class="resource-locator">',
+                    '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
+                    '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
+                    '</div>'
+                ].join('');
+            } else {
                 return [
                     '<div class="resource-locator">',
                     '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
@@ -37,13 +44,6 @@ define([], function() {
                     '       <span>', options.showHistoryText, '</span>',
                     '   </span>',
                     '   <div class="loader" id="', options.ids.loader, '"></div>',
-                    '</div>'
-                ].join('');
-            } else {
-                return [
-                    '<div class="resource-locator">',
-                    '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
-                    '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
                     '</div>'
                 ].join('');
             }

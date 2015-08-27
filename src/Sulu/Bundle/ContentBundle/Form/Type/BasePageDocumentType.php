@@ -68,7 +68,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
             'allow_add' => true,
             'allow_delete' => true,
         ]);
-        $builder->add('redirectType', 'text');
+        $builder->add('redirectType', 'integer');
         $builder->add('redirectTarget', 'document_object');
         $builder->add('redirectExternal', 'text');
         $builder->add('workflowStage', 'integer');

@@ -41,12 +41,7 @@ define(['config', 'extensions/sulu-buttons-contentbundle'], function(Config, Con
             
             sandbox.urlManager.setUrl('page', 
                 function(data) {
-                    if (data.url === '/') {
-                        // startpage
-                        return 'content/contents/<%= webspace %>/<%= locale %>/edit:index/details';
-                    } else {
-                        return 'content/contents/<%= webspace %>/<%= locale %>/edit:<%= id %>/content';
-                    }
+                    return 'content/contents/<%= webspace %>/<%= locale %>/edit:<%= id %>/content';
                 },
                 function(data) {
                     return {

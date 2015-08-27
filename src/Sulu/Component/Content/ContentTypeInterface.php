@@ -126,18 +126,20 @@ interface ContentTypeInterface
     );
 
     /**
-     * returns a template to render a form.
+     * Returns a template to render a form.
      *
      * @return string
      */
     public function getTemplate();
 
     /**
-     * returns default parameters.
+     * Returns default parameters.
+     *
+     * @param PropertyInterface|null $property
      *
      * @return array
      */
-    public function getDefaultParams();
+    public function getDefaultParams(PropertyInterface $property = null);
 
     /**
      * returns default value of content type.

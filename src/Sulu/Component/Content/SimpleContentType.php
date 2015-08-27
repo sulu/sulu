@@ -100,13 +100,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * remove property from given node.
-     *
-     * @param NodeInterface     $node
-     * @param PropertyInterface $property
-     * @param string            $webspaceKey
-     * @param string            $languageCode
-     * @param string            $segmentKey
+     * {@inheritdoc}
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
@@ -117,10 +111,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -142,11 +133,9 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * returns default parameters.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getDefaultParams()
+    public function getDefaultParams(PropertyInterface $property = null)
     {
         return [];
     }

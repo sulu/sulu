@@ -48,16 +48,18 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
+     * Returns parameters for given property merged wit default parameters.
+     *
      * @param PropertyInterface $property
      *
      * @return array
      */
-    public function getParamsFunction($property)
+    public function getParamsFunction(PropertyInterface $property)
     {
         $typeParams = [];
         if ($this->contentTypeManager->has($property->getContentTypeName())) {
             $type = $this->getTypeFunction($property->getContentTypeName());
-            $typeParams = $type->getDefaultParams();
+            $typeParams = $type->getDefaultParams($property);
         }
 
         return $this->mergeRecursive($typeParams, $property->getParams());
@@ -140,7 +142,7 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * @param PropertyParameter[] $parameters
-     * @param string              $locale
+     * @param string $locale
      *
      * @return array
      */
@@ -149,9 +151,10 @@ class ContentTwigExtension extends \Twig_Extension
         $result = [];
 
         foreach ($parameters as $parameter) {
+            $name = $parameter->hasTitle($locale) ? $parameter->getTitle($locale) : $parameter->getValue();
             $result[] = [
                 'id' => $parameter->getName(),
-                'name' => $parameter->getTitle($locale),
+                'name' => $name,
             ];
         }
 

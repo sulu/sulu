@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Entity;
 
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
@@ -172,23 +170,11 @@ class Tag extends ApiEntity implements AuditableInterface
         return $this->creator;
     }
 
-//    /**
-//     * @VirtualProperty
-//     * @SerializedName("creatorFullName")
-//     * @return string
-//     */
-//    public function getCreatorFullName()
-//    {
-//        return $this->getCreator()->getFullName();
-//    }
-//
-//    /**
-//     * @VirtualProperty
-//     * @SerializedName("changerFullName")
-//     * @return string
-//     */
-//    public function getChangerFullName()
-//    {
-//        return $this->getChanger()->getFullName();
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
 }

@@ -18,16 +18,29 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ResourceSegmentSubscriber extends AbstractMappingSubscriber
+/**
+ * TODO: This could be made into a pure metadata subscriber if we make
+ *       the resource locator a system property.
+ */
+class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
     }
 
@@ -47,15 +60,20 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 
     public function supports($document)
     {
-        return $document instanceof ResourceSegmentBehavior;
+        return;
     }
 
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof ResourceSegmentBehavior) {
+            return;
+        }
+
         $property = $this->getResourceSegmentProperty($document);
         $segment = $document->getStructure()->getProperty($property->getName())->getValue();
 
@@ -65,9 +83,14 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof ResourceSegmentBehavior) {
+            return;
+        }
+
         $property = $this->getResourceSegmentProperty($document);
 
         $document->getStructure()->getProperty(

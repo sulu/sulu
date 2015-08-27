@@ -1,12 +1,10 @@
-/**
- * This file is part of Husky frontend development framework.
+/*
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
- *
- * @module husky/components/smart-content
  */
 
 /**
@@ -27,7 +25,6 @@
  * @params {String} [options.preSelectedSortMethod] Sort-method to begin with (asc or desc)
  * @params {Array} [options.presentAs] array of presentation-possibilities with id and name property
  * @params {Integer} [options.preSelectedPresentAs] id of the default presentation-mode
- * @params {Integer} [options.limitResult] maximum number of items returned on the request
  * @params {String} [options.instanceName] name of the component instance
  * @params {String} [options.url] url for requesting the items
  * @params {String} [options.dataSourceParameter] parameter for the source id
@@ -42,19 +39,13 @@
  * @params {String} [options.idKey] key for the id in the returning JSON-result
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
- * @params {String} [options.columnNavigationResultKey] key for the data in the returning JSON-embedded-result for the column-navigation component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
- * @params {String} [options.pathKey] key for the path in the returning JSON-result
+ * @params {String} [options.pathKey] key for the full-qualified-title in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
- * @params {Boolean} [options.limitResultDisabled] if true limit-result overlay-item will be disabled
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
- * @params {String} [options.columnNavigationUrl] url for column navigation
- * @params {Boolean} [options.hideDataSource] if true data-source selection hidden
- * @params {Boolean} [options.hideCategories] if true categories hidden
- * @params {Boolean} [options.hideTags] if true tags hidden
- * @params {Boolean} [options.hideSortBy] if true sort by hidden
- * @params {Boolean} [options.hideLimit] if true limit hidden
+ * @params {Boolean} [options.has] activates or deactivates features (default all false)
+ * @params {Boolean} [options.datasource] name and options of datasource component
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
  * @params {String} [options.translations.noContentFound] translation key
@@ -104,7 +95,6 @@ define([], function() {
             preSelectedSortMethod: 'asc',
             presentAs: [],
             preSelectedPresentAs: null,
-            limitResult: null,
             instanceName: 'undefined',
             url: '',
             dataSourceParameter: 'dataSource',
@@ -120,20 +110,16 @@ define([], function() {
             limitResultDisabled: false,
             idKey: 'id',
             resultKey: 'items',
+            datasourceKey: 'datasource',
             tagsResultKey: 'tags',
-            columnNavigationResultKey: 'nodes',
             titleKey: 'title',
             pathKey: 'path',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
-            columnNavigationUrl: '',
-            hideDataSource: false,
-            hideCategories: false,
-            hideTags: false,
-            hideSortBy: false,
-            hideLimit: false,
-            title: 'Smart-Content'
+            has: {},
+            title: 'Smart-Content',
+            datasource: null
         },
 
         sortMethods = {
@@ -397,7 +383,8 @@ define([], function() {
             this.$button = null;
             this.items = [];
             this.URI = {
-                str: '',
+                data: {},
+                str: this.options.url,
                 hasChanged: false
             };
 
@@ -431,7 +418,9 @@ define([], function() {
                 viewLess: 'smart-content.view-less',
                 chooseDataSource: 'smart-content.choose-data-source',
                 chooseDataSourceOk: 'smart-content.choose-data-source.ok',
-                chooseDataSourceCancel: 'smart-content.choose-data-source.cancel'
+                chooseDataSourceCancel: 'smart-content.choose-data-source.cancel',
+                clearButton: 'smart-content.clear',
+                saveButton: 'smart-content.save'
             };
 
             this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
@@ -445,8 +434,8 @@ define([], function() {
             this.overlayData = {
                 dataSource: this.options.dataSource,
                 includeSubFolders: this.options.includeSubFolders,
-                category: this.options.preSelectedCategory,
-                tags: this.options.tags,
+                category: this.options.preSelectedCategory || [],
+                tags: this.options.tags || [],
                 tagOperator: this.options.preSelectedTagOperator,
                 sortBy: this.options.preSelectedSortBy,
                 sortMethod: this.options.preSelectedSortMethod,
@@ -500,9 +489,9 @@ define([], function() {
          */
         insertSource: function() {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
-            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.path, 30, '...'));
+            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
 
-            if (typeof(this.overlayData.dataSource) !== 'undefined') {
+            if (!!this.options.has.datasource && typeof(this.overlayData.dataSource) !== 'undefined') {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
@@ -636,9 +625,60 @@ define([], function() {
         startOverlay: function() {
             this.initOverlayContent();
 
-            var $element = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.$el, $element);
+            var $element = this.sandbox.dom.createElement('<div/>'),
+                slides = [
+                    {
+                        title: this.sandbox.translate(
+                            this.translations.configureSmartContent).replace('{title}',
+                            this.options.title
+                        ),
+                        data: this.$overlayContent,
+                        buttons: [
+                            {
+                                text: this.sandbox.translate(this.translations.clearButton),
+                                inactive: false,
+                                align: 'left',
+                                classes: 'gray black-text',
+                                callback: function() {
+                                    this.clear();
+                                }.bind(this)
+                            },
+                            {
+                                type: 'ok',
+                                text: this.sandbox.translate(this.translations.saveButton),
+                                inactive: false,
+                                align: 'right'
+                            }
+                        ],
+                        okCallback: function() {
+                            this.itemsVisible = this.options.visibleItems;
+                            this.getOverlayData();
+                        }.bind(this)
+                    }
+                ];
 
+            if (!!this.options.has.datasource) {
+                slides.push({
+                    title: this.sandbox.translate(this.translations.chooseDataSource),
+                    data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
+                    cssClass: 'data-source-slide',
+                    okInactive: true,
+                    cancelDefaultText: this.sandbox.translate(this.translations.chooseDataSourceCancel),
+                    buttons: [
+                        {
+                            type: 'cancel',
+                            inactive: false,
+                            align: 'center'
+                        }
+                    ],
+                    cancelCallback: function() {
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
+                        return false;
+                    }.bind(this)
+                });
+            }
+
+            this.sandbox.dom.append(this.$el, $element);
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -649,96 +689,63 @@ define([], function() {
                         container: this.$el,
                         instanceName: 'smart-content.' + this.options.instanceName,
                         skin: 'wide',
-                        slides: [
-                            {
-                                title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
-                                data: this.$overlayContent,
-                                okCallback: function() {
-                                    this.getOverlayData();
-                                }.bind(this)
-                            },
-                            {
-                                title: this.sandbox.translate(this.translations.chooseDataSource),
-                                data: '<div id="column-navigation-' + this.options.instanceName + '"/>',
-                                cssClass: 'column-navigation-slide',
-                                okInactive: true,
-                                okDefaultText: this.sandbox.translate(this.translations.chooseDataSourceOk),
-                                cancelDefaultText: this.sandbox.translate(this.translations.chooseDataSourceCancel),
-                                buttons: [
-                                    {
-                                        type: 'cancel',
-                                        inactive: false,
-                                        align: 'center'
-                                    }
-                                ],
-                                cancelCallback: function() {
-                                    this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
-                                    return false;
-                                }.bind(this)
-                            }
-                        ]
+                        slides: slides
                     }
                 }
             ]);
 
-            this.bindColumnNavigationEvents();
+            this.bindDatasourceEvents();
         },
 
         /**
-         * column navigation events
+         * datasource events
          */
-        bindColumnNavigationEvents: function() {
-            // init column navigation after initialize of overlay
-            this.sandbox.on('husky.overlay.smart-content.' + this.options.instanceName + '.initialized', this.initColumnNavigation.bind(this));
+        bindDatasourceEvents: function() {
+            // init datasource navigation after initialize of overlay
+            this.sandbox.on(
+                'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
+                this.initDatasource.bind(this)
+            );
 
-            // adopt height of column navigation once
+            // adopt height of datasource once
             this.sandbox.once('husky.overlay.smart-content.' + this.options.instanceName + '.opened', function() {
-                // set height of smart-content column navigation slide (missing margins)
+                // set height of smart-content datasource slide (missing margins)
                 var height = this.sandbox.dom.outerHeight('.smart-content-overlay .slide-0 .overlay-content') + 24;
                 this.sandbox.dom.css('.smart-content-overlay .slide-1 .overlay-content', 'height', height + 'px');
             }.bind(this));
 
-            // activate button OK when a page is selected
-            this.sandbox.on('husky.column-navigation.smart-content' + this.options.instanceName + '.action', function(item) {
-                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
-
-                var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
-                this.overlayData.dataSource = item.id;
-                this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(item.path, 30, '...'));
-                this.sandbox.dom.data($element, 'id', item.id);
-            }.bind(this));
-
-            // slide to column navigation by click on the action button
+            // slide to datasource by click on the action button
             this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-right');
             }.bind(this), '#select-data-source-action');
         },
 
         /**
-         * initialize column navigation
+         * initialize datasource navigation
          */
-        initColumnNavigation: function() {
-            var url = this.options.columnNavigationUrl.replace(
-                '{id=dataSource&}',
-                (!!this.overlayData.dataSource ? 'id=' + this.overlayData.dataSource + '&' : '')
-            );
+        initDatasource: function() {
+            var componentDefaults = {
+                    el: '#data-source-' + this.options.instanceName,
+                    selected: this.overlayData.dataSource,
+                    webspace: this.options.webspace,
+                    locale: this.options.locale,
+                    instanceName: this.options.instanceName,
+                    selectCallback: function(id, fullQualifiedTitle) {
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
+
+                        var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
+                        this.overlayData.dataSource = id;
+                        this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(fullQualifiedTitle, 30, '...'));
+                        this.sandbox.dom.data($element, 'id', id);
+                    }.bind(this)
+                },
+                componentOptions = this.sandbox.util.extend(true, {}, componentDefaults, this.options.datasource.options);
 
             this.sandbox.start(
                 [
                     {
-                        name: 'column-navigation@husky',
-                        options: {
-                            el: '#column-navigation-' + this.options.instanceName + '',
-                            url: url,
-                            selected: this.overlayData.dataSource,
-                            instanceName: 'smart-content' + this.options.instanceName,
-                            responsive: false,
-                            actionIcon: 'fa-check',
-                            showOptions: false,
-                            sortable: false,
-                            showStatus: false,
-                            resultKey: this.options.columnNavigationResultKey
-                        }
+                        name: this.options.datasource.name,
+                        options: componentOptions
                     }
                 ]
             );
@@ -748,59 +755,60 @@ define([], function() {
          * Loads the overlay content based on a template
          */
         initOverlayContent: function() {
-
             this.$overlayContent = this.sandbox.dom.createElement(_.template(templates.overlayContent.main)());
+            this.appendOverlayContent(this.$overlayContent, this.options);
+        },
 
-            if (!this.options.hideDataSource) {
-                this.$overlayContent.append(_.template(templates.overlayContent.dataSource)({
+        appendOverlayContent: function($container, data) {
+            if (!!this.options.has.datasource) {
+                $container.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
-                    dataSourceValStr: this.options.dataSource.path
+                    dataSourceValStr: ''
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.subFolders)({
+                $container.append(_.template(templates.overlayContent.subFolders)({
                     includeSubStr: this.sandbox.translate(this.translations.includeSubFolders),
-                    includeSubCheckedStr: (this.options.includeSubFolders) ? ' checked' : '',
+                    includeSubCheckedStr: (data.includeSubFolders) ? ' checked' : '',
                     disabled: (this.overlayDisabled.subFolders) ? ' disabled' : ''
                 }));
-                this.$overlayContent.append('<div class="clear"></div>');
+                $container.append('<div class="clear"></div>');
             }
-            if (!this.options.hideCategories) {
-                this.$overlayContent.append(_.template(templates.overlayContent.categories)({
+            if (!!this.options.has.categories) {
+                $container.append(_.template(templates.overlayContent.categories)({
                     filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
                 }));
             }
-            if (!this.options.hideTags) {
-                this.$overlayContent.append(_.template(templates.overlayContent.tagList)({
+            if (!!this.options.has.tags) {
+                $container.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.tagOperator)({
+                $container.append(_.template(templates.overlayContent.tagOperator)({
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
-                this.$overlayContent.append('<div class="clear"></div>');
+                $container.append('<div class="clear"></div>');
             }
-            if (!this.options.hideSortBy) {
-                this.$overlayContent.append(_.template(templates.overlayContent.sortBy)({
+            if (!!this.options.has.sorting) {
+                $container.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.sortMethod)());
-            }
-            this.$overlayContent.append('<div class="clear"></div>');
+                $container.append(_.template(templates.overlayContent.sortMethod)());
 
-            // only if data exists
-            if (!!this.options.presentAs && this.options.presentAs.length > 0) {
-                this.$overlayContent.append(_.template(templates.overlayContent.presentAs)({
+                $container.append('<div class="clear"></div>');
+            }
+            if (!!this.options.has.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
+                $container.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
-            if (!this.options.hideLimit) {
-                this.$overlayContent.append(_.template(templates.overlayContent.limitResult)({
+            if (!!this.options.has.limit) {
+                $container.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
-                    limitResult: (this.options.limitResult > 0) ? this.options.limitResult : '',
+                    limitResult: (data.limitResult > 0) ? data.limitResult : '',
                     disabled: (this.overlayDisabled.limitResult) ? ' disabled' : ''
                 }));
             }
-            this.$overlayContent.append('<div class="clear"></div>');
+            $container.append('<div class="clear"></div>');
         },
 
         /**
@@ -894,23 +902,23 @@ define([], function() {
          * Generates the URI for the request
          */
         setURI: function() {
-            var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&',
-                newURI = [
-                    this.options.url,
-                    delimiter, this.options.dataSourceParameter, '=', this.overlayData.dataSource,
-                    '&', this.options.includeSubFoldersParameter, '=', this.overlayData.includeSubFolders,
-                    '&', this.options.categoryParameter, '=', this.overlayData.category,
-                    '&', this.options.tagsParameter, '=', this.overlayData.tags,
-                    '&', this.options.tagOperatorParameter, '=', this.overlayData.tagOperator,
-                    '&', this.options.sortByParameter, '=', this.overlayData.sortBy,
-                    '&', this.options.sortMethodParameter, '=', this.overlayData.sortMethod,
-                    '&', this.options.presentAsParameter, '=', this.overlayData.presentAs,
-                    '&', this.options.limitResultParameter, '=', this.overlayData.limitResult
-                ].join('');
+            var data = {};
+
+            data[this.options.dataSourceParameter] = this.overlayData.dataSource;
+            data[this.options.includeSubFoldersParameter] = this.overlayData.includeSubFolders;
+            data[this.options.categoryParameter] = this.overlayData.category;
+            data[this.options.tagsParameter] = this.overlayData.tags;
+            data[this.options.tagOperatorParameter] = this.overlayData.tagOperator;
+            data[this.options.sortByParameter] = this.overlayData.sortBy;
+            data[this.options.sortMethodParameter] = this.overlayData.sortMethod;
+            data[this.options.presentAsParameter] = this.overlayData.presentAs;
+            data[this.options.limitResultParameter] = this.overlayData.limitResult !== '' ?
+                this.overlayData.limitResult : null;
+
             // min source must be selected
-            if (this.overlayData.dataSource.length > 0 && newURI !== this.URI.str) {
+            if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
                 this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
-                this.URI.str = newURI;
+                this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
             } else {
                 this.URI.hasChanged = false;
@@ -923,16 +931,36 @@ define([], function() {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
+                // no datasource selected empty form
+                if (!!this.options.has.datasource &&
+                    (
+                        this.URI.data[this.options.dataSourceParameter] === null ||
+                        this.URI.data[this.options.dataSourceParameter].length === 0
+                    )
+                ) {
+                    this.overlayData.title = null;
+                    this.overlayData.fullQualifiedTitle = null;
+
+                    this.items = [];
+                    this.sandbox.emit(DATA_RETRIEVED.call(this));
+
+                    return;
+                }
+
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
                 this.sandbox.util.ajax({
+                    method: 'GET',
                     url: this.URI.str,
+                    data: this.URI.data,
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
-                        this.overlayData.title = data[this.options.titleKey];
-                        this.overlayData.path = data[this.options.pathKey] || '/';
+                        if (!!this.options.has.datasource) {
+                            this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
+                            this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
+                        }
                         this.items = data._embedded[this.options.resultKey];
                         this.updateSelectedCounter(this.items.length);
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
@@ -955,7 +983,7 @@ define([], function() {
 
         /**
          * Gets the values of all user inputs of the overlay
-         * event is emited on which the associeted component responses
+         * event is emitted on which the associated component responses
          */
         getOverlayData: function() {
             var categoryDef, tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
@@ -1036,6 +1064,27 @@ define([], function() {
         setElementData: function(newData) {
             var data = this.sandbox.util.extend(true, {}, newData);
             this.sandbox.dom.data(this.$el, this.options.elementDataName, data);
+        },
+
+        /**
+         * Resets content.
+         */
+        clear: function() {
+            this.overlayData = {
+                dataSource: '',
+                includeSubFolders: false,
+                limitResult: null,
+                presentAs: null,
+                sortBy: [],
+                sortMethod: 'asc',
+                category: [],
+                tags: [],
+                tagOperator: 'or'
+            };
+
+            this.$overlayContent.html('');
+            this.appendOverlayContent(this.$overlayContent, this.overlayData);
+            this.startOverlayComponents();
         }
     };
 });

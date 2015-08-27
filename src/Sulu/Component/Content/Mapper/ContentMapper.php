@@ -302,37 +302,6 @@ class ContentMapper implements ContentMapperInterface
         return $structure;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function saveStartPage(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $locale,
-        $userId,
-        $partialUpdate = true,
-        $isShadow = null,
-        $shadowBaseLanguage = null
-    ) {
-        $uuid = $this->inspector->getUuid($this->getContentDocument($webspaceKey, $locale));
-
-        return $this->save(
-            $data,
-            $templateKey,
-            $webspaceKey,
-            $locale,
-            $userId,
-            $partialUpdate,
-            $uuid,
-            null,
-            WorkflowStage::PUBLISHED,
-            $isShadow,
-            $shadowBaseLanguage,
-            'home'
-        );
-    }
-
     public function loadByParent(
         $uuid,
         $webspaceKey,
@@ -1134,20 +1103,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $document;
-    }
-
-    private function filterDocuments($documents, $options)
-    {
-        $collection = [];
-        foreach ($documents as $document) {
-            if ($this->optionsShouldExcludeDocument($document, $options)) {
-                continue;
-            }
-
-            $collection[] = $document;
-        }
-
-        return $collection;
     }
 
     private function optionsShouldExcludeDocument($document, array $options = null)
