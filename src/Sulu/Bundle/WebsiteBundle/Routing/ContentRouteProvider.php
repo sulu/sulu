@@ -122,7 +122,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 ) {
                     $collection->add(
                         $content->getKey() . '_' . uniqid(),
-                        $this->getRedirectRoute($request, 'http://' . $content->getPropertyValueByTagName('sulu.rlp'))
+                        $this->getRedirectRoute($request, $content->getResourceLocator())
                     );
                 } elseif (
                     $content->getNodeState() === StructureInterface::STATE_TEST ||
