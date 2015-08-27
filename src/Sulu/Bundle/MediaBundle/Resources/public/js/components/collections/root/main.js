@@ -7,9 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
-define([ 'services/sulumedia/media-manager',
-        'services/sulumedia/user-settings-manager',
-        'services/sulumedia/media-router'], function(MediaManager, UserSettingsManager, MediaRouter) {
+define(['services/sulumedia/media-manager',
+    'services/sulumedia/user-settings-manager',
+    'services/sulumedia/media-router'], function(MediaManager, UserSettingsManager, MediaRouter) {
 
     'use strict';
 

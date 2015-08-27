@@ -7,7 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['services/sulumedia/media-manager',
+    'services/sulumedia/user-settings-manager',
+    'services/sulumedia/media-router'], function(MediaManager, UserSettingsManager, MediaRouter) {
 
     'use strict';
 
@@ -16,37 +18,11 @@ define(function() {
             instanceName: 'collection'
         },
 
-        listViews = {
-            table: {
-                name: 'table',
-                viewOptions: {
-                    actionIconColumn: 'name'
-                }
-            },
-            thumbnailSmall: {
-                name: 'thumbnail',
-                viewOptions: {
-                    large: false,
-                }
-            },
-            thumbnailLarge: {
-                name: 'thumbnail',
-                viewOptions: {
-                    large: true,
-                }
-            },
-            masonry: {
-                name: 'decorators/masonry',
-                viewOptions: {}
-            }
-        },
-
         constants = {
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
             moveSelector: '.move-container',
-            listViewStorageKey: 'collectionEditListView'
         };
 
     return {
@@ -73,11 +49,10 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+            // handle data-navigation
             var url = '/admin/api/collections/' + this.options.data.id + '?depth=1&sortBy=title';
             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
-
-            this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
 
             this.bindCustomEvents();
             this.render();
@@ -86,7 +61,7 @@ define(function() {
         /**
          * Deconstructor
          */
-        remove: function() {
+        destroy: function() {
             this.sandbox.stop(constants.dropzoneSelector);
         },
 
@@ -94,33 +69,23 @@ define(function() {
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            /**
-             * Change current view of the datagrid to given viewKey
-             * viewKey must be specified in listViews-Object
-             */
-            var changeDatagridView = function(viewKey) {
-                this.sandbox.emit('husky.datagrid.view.change', listViews[viewKey].name, listViews[viewKey]['viewOptions']);
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, viewKey);
-            }.bind(this);
-
             // change datagrid to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
-                changeDatagridView('table');
-            }.bind(this));
-
-            // change datagrid to thumbnail small
-            this.sandbox.on('sulu.toolbar.change.thumbnail-small', function() {
-                changeDatagridView('thumbnailSmall');
-            }.bind(this));
-
-            // change datagrid to thumbnail large
-            this.sandbox.on('sulu.toolbar.change.thumbnail-large', function() {
-                changeDatagridView('thumbnailLarge');
+                UserSettingsManager.setMediaListView('table');
+                this.sandbox.emit('husky.datagrid.view.change', 'table');
             }.bind(this));
 
             // change datagrid to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
-                changeDatagridView('masonry');
+                UserSettingsManager.setMediaListView('decorators/masonry');
+                this.sandbox.emit('husky.datagrid.view.change', 'decorators/masonry');
+            }.bind(this));
+
+            // download media
+            this.sandbox.on('husky.datagrid.download-clicked', function(id) {
+                MediaManager.loadOrNew(id).then(function(media) {
+                    this.sandbox.dom.window.location.href = media.versions[media.version].url;
+                }.bind(this));
             }.bind(this));
 
             // if files got uploaded to the server add them to the datagrid
@@ -133,9 +98,6 @@ define(function() {
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.open-data-source');
             }.bind(this));
-
-            // download media
-            this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
 
             // unlock the dropzone pop-up if the media-edit overlay was closed
             this.sandbox.on('sulu.media-edit.closed', function() {
@@ -160,6 +122,13 @@ define(function() {
 
             // update the data
             this.sandbox.on('sulu.media.collections.edit.updated', this.updateData.bind(this));
+
+            // -------
+            //delete media on event
+            this.sandbox.on('sulu.medias.media.deleted', function(id) {
+                this.sandbox.emit('husky.datagrid.record.remove', id);
+                this.sandbox.emit('husky.data-navigation.collections.reload');
+            }.bind(this));
         },
 
         /**
@@ -167,13 +136,9 @@ define(function() {
          * @param media {Object|Array} a media object or an array of media objects
          */
         updateGrid: function(media) {
-            var update = false;
             if (!!media.locale && media.locale === this.options.locale) {
-                update = true;
+                this.sandbox.emit('husky.datagrid.records.change', media);
             } else if (media.length > 0 && media[0].locale === this.options.locale) {
-                update = true;
-            }
-            if (update === true) {
                 this.sandbox.emit('husky.datagrid.records.change', media);
             }
         },
@@ -189,30 +154,16 @@ define(function() {
         },
 
         /**
-         * Downloads a media for a given id
-         * @param id
-         */
-        download: function(id) {
-            this.sandbox.emit('sulu.media.collections.download-media', id);
-        },
-
-        /**
          * Deletes all selected medias
          */
         deleteMedia: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.media.collections.delete-media', ids,
-                    function() {
-                        this.sandbox.emit('husky.datagrid.medium-loader.show');
-                    }.bind(this),
-                    function(mediaId, finished) {
-                        if (finished === true) {
-                            this.sandbox.emit('husky.datagrid.medium-loader.hide');
-                        }
-                        this.sandbox.emit('husky.datagrid.record.remove', mediaId);
-                        this.sandbox.emit('husky.data-navigation.collections.reload');
-                    }.bind(this)
-                );
+                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                    if (!!confirmed) {
+                        //this.sandbox.emit('husky.datagrid.medium-loader.show');
+                        MediaManager.delete(ids);
+                    }
+                }.bind(this));
             }.bind(this));
         },
 
@@ -351,14 +302,14 @@ define(function() {
                 {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + this.options.data.locale + '&collection=' + this.options.data.id,
-                    view: listViews[this.listView].name,
+                    view: UserSettingsManager.getMediaListView(),
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: this.editMedia.bind(this),
                     viewOptions: {
-                        table: listViews.table.viewOptions || {},
-                        thumbnail: listViews[this.listView].viewOptions || {},
-                        'decorators/masonry': listViews.masonry.viewOptions || {},
+                        table: {
+                            actionIconColumn: 'name'
+                        }
                     }
                 });
         },

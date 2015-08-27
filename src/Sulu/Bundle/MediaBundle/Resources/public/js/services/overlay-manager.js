@@ -48,10 +48,6 @@ define([
                         parent: parentId,
                         createdCallback: function(collection) {
                             MediaRouter.toCollection(collection.id);
-                            sandbox.emit(
-                                'husky.data-navigation.collections.set-url',
-                                '/admin/api/collections/' + collection.id + '?depth=1'
-                            );
                         }.bind(this)
                     }
                 }]);
