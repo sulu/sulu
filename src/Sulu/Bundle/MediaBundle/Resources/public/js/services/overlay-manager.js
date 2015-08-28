@@ -51,6 +51,9 @@ define([
             },
 
             startSelectCollectionOverlayMedia: function(sandbox, disableIds) {
+                if (!$.isArray(disableIds)) {
+                    disableIds = [disableIds];
+                }
                 var $container = getOverlayContainer('select-collection-overlay');
 
                 sandbox.start([{
@@ -65,6 +68,9 @@ define([
             },
 
             startSelectCollectionOverlayCollection: function(sandbox, disableIds) {
+                if (!$.isArray(disableIds)) {
+                    disableIds = [disableIds];
+                }
                 var $container = getOverlayContainer('select-collection-overlay');
 
                 sandbox.start([{
@@ -80,20 +86,22 @@ define([
                 }]);
             },
 
-            startEditMediaOverlay: function(sandbox, mediaIds) {
-                var $container = getOverlayContainer('select-collection-overlay');
+            startEditMediaOverlay: function(sandbox, mediaIds, locale) {
+                if (!$.isArray(mediaIds)) {
+                    mediaIds = [mediaIds];
+                }
+                var $container = getOverlayContainer('edit-media-overlay');
 
-                sandbox.start([{
-                    name: 'collections/select-overlay@sulumedia',
-                    options: {
-                        el: $container,
-                        instanceName: 'move-collection',
-                        title: sandbox.translate('sulu.collection.move.overlay-title'),
-                        rootCollection: true,
-                        disableIds: disableIds,
-                        disabledChildren: true
+                sandbox.start([
+                    {
+                        name: 'collections/media-edit-overlay@sulumedia',
+                        options: {
+                            el: $container,
+                            mediaIds: mediaIds,
+                            locale: locale
+                        }
                     }
-                }]);
+                ]);
             }
         };
 
