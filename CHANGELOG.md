@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #1537 [WebsiteBundle]  Fixed format of hreflang-tag locale
     * HOTFIX      #1532 [WebsiteBundle]  Fixed redirect to external pages
     * HOTFIX      #1511 [ContentBundle]  Fixed single-internal-link overlay URL
     * HOTFIX      #1521 [MediaBundle]    Fixed media-selection events for preview update
