@@ -16,6 +16,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * Provides helper function to generate meta tags.
+ *
+ * @deprecated will be removed in 1.2
  */
 class MetaTwigExtension extends \Twig_Extension
 {
