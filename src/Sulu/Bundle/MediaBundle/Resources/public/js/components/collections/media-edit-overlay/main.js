@@ -88,7 +88,7 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
 
             this.bindCustomEvents();
             this.startLoadingOverlay();
-            this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
+            this.loadMedias(this.options.mediaIds, this.locale).then(function(medias) {
                 this.editMedia(medias);
             }.bind(this));
 
@@ -224,7 +224,7 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
                         ],
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
-                            preSelected: this.options.locale
+                            preSelected: this.locale
                         },
                         skin: 'wide',
                         openOnStart: true,
@@ -257,7 +257,7 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
                         data: this.$multiple,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
-                            preSelected: this.options.locale
+                            preSelected: this.locale
                         },
                         openOnStart: true,
                         removeOnClose: true,
