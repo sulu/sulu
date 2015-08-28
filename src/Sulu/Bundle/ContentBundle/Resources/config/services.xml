@@ -69,7 +69,6 @@
         <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="showInSortModeTag" type="string">sulu.content.sortmode.show</argument>
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
             </argument>
 
