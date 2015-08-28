@@ -82,6 +82,10 @@ define(['services/sulumedia/media-router',
                 this.sandbox.on('husky.data-navigation.collections.add', function(item) {
                     OverlayManager.startCreateCollectionOverlay(this.sandbox, item);
                 }.bind(this));
+
+                this.sandbox.on('sulu.media.collection-create.created', function(collection) {
+                    MediaRouter.toCollection(collection.id);
+                }.bind(this));
             });
         }
     };

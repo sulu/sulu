@@ -46,9 +46,6 @@ define([
                     options: {
                         el: $container,
                         parent: parentId,
-                        createdCallback: function(collection) {
-                            MediaRouter.toCollection(collection.id);
-                        }.bind(this)
                     }
                 }]);
             },
@@ -68,6 +65,22 @@ define([
             },
 
             startSelectCollectionOverlayCollection: function(sandbox, disableIds) {
+                var $container = getOverlayContainer('select-collection-overlay');
+
+                sandbox.start([{
+                    name: 'collections/select-overlay@sulumedia',
+                    options: {
+                        el: $container,
+                        instanceName: 'move-collection',
+                        title: sandbox.translate('sulu.collection.move.overlay-title'),
+                        rootCollection: true,
+                        disableIds: disableIds,
+                        disabledChildren: true
+                    }
+                }]);
+            },
+
+            startEditMediaOverlay: function(sandbox, mediaIds) {
                 var $container = getOverlayContainer('select-collection-overlay');
 
                 sandbox.start([{

@@ -14,8 +14,6 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
     var defaults = {
             parent: null,
             instanceName: '',
-            createdCallback: function() {
-            }
         },
 
         constants = {
@@ -49,7 +47,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
                 collection.locale = this.sandbox.sulu.user.locale;
 
                 CollectionManager.save(collection).then(function(collection) {
-                        this.options.createdCallback(collection);
+                        this.sandbox.emit('sulu.media.collection-create.created', collection)
                         this.sandbox.stop();
                     }.bind(this)).fail(function() {
                         this.sandbox.stop();
