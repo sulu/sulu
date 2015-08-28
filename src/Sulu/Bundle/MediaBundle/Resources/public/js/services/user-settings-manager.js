@@ -13,7 +13,8 @@ define(function() {
 
         var instance = null,
             mediaLanguageKey = 'mediaLanguage',
-            mediaListViewKey = 'collectionEditListView';
+            mediaListViewKey = 'collectionEditListView',
+            lastVisitedCollectionKey = 'last-visited-collection';
 
         /** @constructor **/
         function UserSettingsManager() {
@@ -32,8 +33,16 @@ define(function() {
                 return app.sandbox.sulu.getUserSetting(mediaListViewKey) || 'decorators/masonry';
             },
 
-            setMediaListView: function(locale) {
-                app.sandbox.sulu.saveUserSetting(mediaListViewKey, locale);
+            setMediaListView: function(viewId) {
+                app.sandbox.sulu.saveUserSetting(mediaListViewKey, viewId);
+            },
+
+            getLastVisitedCollection: function() {
+                return app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey);
+            },
+
+            setLastVisitedCollection: function(collectionId) {
+                app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
             }
         };
 

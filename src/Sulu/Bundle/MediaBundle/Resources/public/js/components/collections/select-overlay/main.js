@@ -36,30 +36,6 @@ define(function() {
         namespace = 'sulu.media.collection-select.',
 
         /**
-         * Open overlay
-         * @event sulu.media.collection-select.open
-         */
-        OPEN = function() {
-            return createEventName.call(this, 'open');
-        },
-
-        /**
-         * Close overlay
-         * @event sulu.media.collection-select.close
-         */
-        CLOSE = function() {
-            return createEventName.call(this, 'close');
-        },
-
-        /**
-         * Restart overlay content
-         * @event sulu.media.collection-select.close
-         */
-        RESTART = function() {
-            return createEventName.call(this, 'restart');
-        },
-
-        /**
          * Selected
          * @event sulu.media.collection-select.selected
          */
@@ -95,31 +71,18 @@ define(function() {
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on(OPEN.call(this), function() {
-                this.sandbox.emit(createEventName.call(this, 'open', 'husky.overlay.'));
-            }.bind(this));
-
-            this.sandbox.on(CLOSE.call(this), function() {
-                this.sandbox.emit(createEventName.call(this, 'close', 'husky.overlay.'));
-            }.bind(this));
-
-            this.sandbox.on(RESTART.call(this), function() {
-                this.sandbox.stop(this.$columnNavigation);
-
-                this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
-            }.bind(this));
-
-            // wait for overlay initialized to initialize overlay
+            // wait for overlay initialized to initialize columnNavigation
             this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
-
-            // wait for column navigation edit click
-            this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
-                this.sandbox.emit(SELECTED.call(this), item);
-            }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on(createEventName.call(this, 'initialized', 'husky.column-navigation.'), function() {
                 this.sandbox.emit(createEventName.call(this, 'set-position', 'husky.overlay.'));
+            }.bind(this));
+
+            // wait for column navigation edit click
+            this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
+                this.sandbox.emit(SELECTED.call(this), item);
+                this.sandbox.stop();
             }.bind(this));
         },
 
@@ -146,7 +109,8 @@ define(function() {
                     options: {
                         cssClass: 'collection-select',
                         el: $element,
-                        removeOnClose: false,
+                        openOnStart: true,
+                        removeOnClose: true,
                         container: this.$el,
                         instanceName: this.options.instanceName,
                         skin: 'wide',
