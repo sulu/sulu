@@ -69,71 +69,131 @@ define([
          * @param $block {Object} the jquery-dom-object of the corresponding block
          */
         prepareCollapsedData = function($block) {
-            var title = '', image = '', text = '';
+            var titleFound, imageFound, textFound;
+            titleFound = imageFound = textFound = false;
+            $block.find('.collapsed-container .hidden').removeClass('hidden');
+            $block.find('.collapsed-container').removeClass('empty');
             this.iterateBlockFields([$block], function($field) {
-                if (!title) {
-                    title = getCollapsedTitle.call(this, $field);
+                if (!titleFound) {
+                    titleFound = setCollapsedTitle.call(this, $field, $block);
                 }
-                if (!image) {
-                    image = getCollapsedImage.call(this, $field);
+                if (!imageFound) {
+                    imageFound = setCollapsedImage.call(this, $field, $block);
                 }
-                if (!text) {
-                    text = getCollapsedText.call(this, $field);
+                if (!textFound) {
+                    textFound = setCollapsedText.call(this, $field, $block);
                 }
             }.bind(this));
-            if (!!title) {
-                $block.find('.collapsed-container .title').html(title);
+            if (!textFound) {
+                $block.find('.collapsed-container .text').addClass('hidden');
             }
-            if (!!image) {
-                $block.find('.collapsed-container .image').html('<img src="' + image + '"/>');
-            }
-            if (!!text) {
-                $block.find('.collapsed-container .text').html(text);
+            if (!titleFound && !imageFound && !textFound) {
+                $block.find('.collapsed-container').addClass('empty');
             }
         },
 
         /**
-         * Takes a field and returns the value-string, if the field is a standard input
+         * Takes a field and sets the value-string as the title in the collapsed element.
          * @param $field {Object} the dom-object of the field
-         * @returns {String}
+         * @param $block {Object} the dom-object of the block
+         * @returns {Boolean} true iff a title has been found
          */
-        getCollapsedTitle = function($field) {
+        setCollapsedTitle = function($field, $block) {
             if ($field.is(':visible') && $field.is('input') && !!$field.data('element')) {
-                return $field.data('element').getValue();
+                if (!!$field.data('element').getValue()) {
+                    $block.find('.collapsed-container .title').html($field.data('element').getValue());
+                    return true;
+                }
             }
+            $block.find('.collapsed-container .title').empty();
 
-            return '';
+            return false;
         },
 
         /**
-         * Takes a field and returns the first img-src if the field is a media-selection
+         * Takes a field. If it's a media-selection take the first found image, else wait
+         * for incoming data for the media-selection. The found image gets set as the image in the collapsed element.
          * @param $field {Object} the dom-object of the field
-         * @returns {String}
+         * @param $block {Object} the dom-object of the block
+         * @returns {Boolean} true iff a a image has been found immediatelly
          */
-        getCollapsedImage = function($field) {
+        setCollapsedImage = function($field, $block) {
             if (!!$field.data('type') && $field.data('type') === 'mediaSelection') {
-                return $field.find('img').attr('src');
+                if (!!$field.find('img').attr('src')) {
+                    $block.find('.collapsed-container .image').html(
+                        '<img src="' + $field.find('img').attr('src') + '"/>'
+                    );
+                    return true;
+                } else {
+                    // no media was found, now wait for the data-retrieved event
+                    Husky.once(
+                        'sulu.media-selection.' + $field.data('typeInstanceName') + '.data-retrieved',
+                        function(images) {
+                            if (images.length > 0) {
+                                $block.find('.collapsed-container').removeClass('empty');
+                                $block.find('.collapsed-container .image').html(
+                                    '<img src="' + images[0].thumbnails['50x50'] + '"/>'
+                                );
+                            }
+                        }.bind(this)
+                    );
+                }
             }
+            $block.find('.collapsed-container .image').empty();
 
-            return '';
+            return false;
         },
 
         /**
-         * Takes a field and returns the first img-src if the field is a media-selection
+         * Takes a field and sets the value of the first textEditor or textArea as the text in the collapsed element.
          * @param $field {Object} the dom-object of the field
-         * @returns {String}
+         * @param $block {Object} the dom-object of the block
+         * @returns {Boolean} true iff a title has been found
          */
-        getCollapsedText = function($field) {
+        setCollapsedText = function($field, $block) {
             if (!!$field.data('element')) {
                 if (!!$field.data('element').getType && $field.data('element').getType().name === 'textEditor') {
-                    return $($field.data('element').getValue()).text();
+                    if (!!$($field.data('element').getValue()).text()) {
+                        $block.find('.collapsed-container .text').html($($field.data('element').getValue()).text());
+                        return true;
+                    }
                 }
                 if ($field.is('textarea')) {
-                    return $field.data('element').getValue();
+                    if (!!$field.data('element').getValue()) {
+                        $block.find('.collapsed-container .text').html($field.data('element').getValue());
+                        return true;
+                    }
                 }
             }
+            $block.find('.collapsed-container .text').empty();
 
-            return '';
+            return false;
+        },
+
+        /**
+         * Destroys all text-editors in a given block
+         * @param $block {Object} the jquery-object of the block
+         */
+        destroyTextEditors = function($block) {
+            this.iterateBlockFields([$block], function($field) {
+                if ($field.data('type') === 'textEditor') {
+                    $field.closest('.form-group').height($field.closest('.form-group').outerHeight());
+                    Husky.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Start all text-editors in a given block
+         * @param $block {Object} the jquery-object of the block
+         */
+        startTextEditors = function($block) {
+            this.iterateBlockFields([$block], function($field) {
+                if ($field.data('type') === 'textEditor') {
+                    $field.closest('.form-group').height('');
+                    Husky.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.start');
+                }
+            }.bind(this));
         };
 
     return function($el, options, form) {
@@ -221,6 +281,12 @@ define([
                     this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeBlockHandler.bind(this));
                     this.$el.on('click', '.options-collapse', this.collapseBlockHandler.bind(this));
                     this.$el.on('click', '.collapsed-container', this.expandBlockHandler.bind(this));
+                    this.$el.on('sortstart', function(event, ui) {
+                        destroyTextEditors.call(this, $(ui.item));
+                    }.bind(this));
+                    this.$el.on('sortstop', function(event, ui) {
+                        startTextEditors.call(this, $(ui.item));
+                    }.bind(this));
 
                     $('#collapse-text-blocks-' + this.id).on('click', this.collapseAll.bind(this));
                     $('#expand-text-blocks-' + this.id).on('click', this.expandAll.bind(this));
@@ -297,6 +363,7 @@ define([
                     return true;
                 },
 
+                //TODO: make cleaner
                 addChild: function(type, data, fireEvent, index, keepExpanded) {
                     var options, template, $template,
                         dfd = Husky.data.deferred();

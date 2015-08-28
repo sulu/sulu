@@ -23,17 +23,13 @@
                         <div class="move"></div>
                         <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
-                        <div class="collapsed-container">
+                        <div class="collapsed-container empty">
                             {% if property.types|length > 1 %}
                                 <div class="type">{{ type.getTitle(userLocale) }}</div>
                             {% endif %}
-                            <div class="title">This is the title</div>
-                            <div class="image">
-                                <img src="http://lorempixel.com/50/50/"/>
-                            </div>
-                            <div class="text">Des is a gmahde Wiesn und i moan scho aa, Bladl Radler. Trachtnhuat Wurscht Blosmusi
-                                Weißwiaschd nia Stubn a bissal measi, wolpern. Des is a gmahde Wiesn und i moan scho aa, Bladl Radler.
-                                Trachtnhuat Wurscht Blosmusi Weißwiaschd nia Stubn a bissal measi, wolpern.</div>
+                            <div class="title"></div>
+                            <div class="image"></div>
+                            <div class="text hidden"></div>
                         </div>
 
                         <div class="container grid pos-rel">
