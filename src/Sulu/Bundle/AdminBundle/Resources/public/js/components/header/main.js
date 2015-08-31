@@ -61,7 +61,6 @@ define([], function() {
             toolbarSelector: '.toolbar-container',
             rightSelector: '.right-container',
             languageChangerTitleSelector: '.language-changer .title',
-            overflownClass: 'overflown',
             hideTabsClass: 'tabs-hidden',
             tabsContentClass: 'tabs-content',
             contentTitleClass: 'content-title',
@@ -85,9 +84,7 @@ define([], function() {
                 '       <span class="fa-' + constants.backIcon + '"></span>',
                 '   </div>',
                 '   <div class="toolbar-container">',
-                '       <div class="toolbar-wrapper">',
-                '           <div class="' + constants.toolbarClass + '"></div>',
-                '       </div>',
+                '       <div class="' + constants.toolbarClass + '"></div>',
                 '   </div>',
                 '   <div class="right-container">',
                 '   </div>',
@@ -463,7 +460,8 @@ define([], function() {
                 componentOptions = {
                     el: $container,
                     skin: 'big',
-                    instanceName: this.toolbarInstanceName
+                    instanceName: this.toolbarInstanceName,
+                    responsive: true
                 };
 
             // wait for initialized
@@ -490,10 +488,6 @@ define([], function() {
          * listens to tab events
          */
         bindCustomEvents: function() {
-            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.opened', this.lockToolbarScroll.bind(this));
-            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.dropdown.closed', this.unlockToolbarScroll.bind(this));
-            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.button.changed', this.updateToolbarOverflow.bind(this));
-
             this.sandbox.on('husky.dropdown.header-language.item.click', this.languageChanged.bind(this));
 
             this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
@@ -581,28 +575,6 @@ define([], function() {
         },
 
         /**
-         * Makes the toolbar unscrollable and makes the toolbar-overflow's overflow visible
-         * so the dropdown can be seen
-         */
-        lockToolbarScroll: function() {
-            var $container = this.$find(constants.toolbarSelector),
-                scrollPos = this.sandbox.dom.scrollLeft($container);
-            this.sandbox.dom.css($container, {overflow: 'visible'});
-            this.sandbox.dom.css(this.sandbox.dom.children($container), {
-                'margin-left': ((-1) * scrollPos) + 'px'
-            });
-        },
-
-        /**
-         * Makes the toolbar-container's overflow hidden and the wrapper itself scrollable
-         */
-        unlockToolbarScroll: function() {
-            var $container = this.$find(constants.toolbarSelector);
-            this.sandbox.dom.removeAttr($container, 'style');
-            this.sandbox.dom.removeAttr(this.sandbox.dom.children($container), 'style');
-        },
-
-        /**
          * Abstracts husky-toolbar events
          */
         bindAbstractToolbarEvents: function() {
@@ -664,8 +636,6 @@ define([], function() {
                 this.sandbox.emit(BACK.call(this));
             }.bind(this), '.' + constants.backClass);
 
-            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.updateToolbarOverflow.bind(this));
-            this.sandbox.dom.on(this.$el, 'click', this.updateToolbarOverflow.bind(this));
             if (!!this.options.tabsData) {
                 this.sandbox.dom.on(this.options.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
             }
@@ -682,49 +652,6 @@ define([], function() {
             } else if (scrollTop >= this.oldScrollPosition + this.options.scrollDelta) {
                 this.hideTabs();
                 this.oldScrollPosition = scrollTop;
-            }
-        },
-
-        /**
-         * Depending on if the toolbar overflows or not collapses or expands the toolbar
-         * collapsing - if the toolbar is expanded and overflown
-         * expanding - if the toolbar is underflown and collapsed and the expanded version has enough space
-         */
-        updateToolbarOverflow: function() {
-            var $container = this.$find(constants.toolbarSelector);
-            if (this.sandbox.dom.width($container) < $container[0].scrollWidth) {
-                if (this.toolbarCollapsed === false) {
-                    this.toolbarExpandedWidth = this.sandbox.dom.outerWidth(this.sandbox.dom.children($container));
-                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.collapse', function() {
-                        this.toolbarCollapsed = true;
-                        this.updatedToolbarOverflowClass();
-                    }.bind(this));
-                } else {
-                    this.updatedToolbarOverflowClass();
-                }
-            } else {
-                if (this.toolbarCollapsed === true && this.sandbox.dom.width($container) >= this.toolbarExpandedWidth) {
-                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.expand', function() {
-                        this.toolbarExpandedWidth = this.sandbox.dom.outerWidth(this.sandbox.dom.children($container));
-                        this.toolbarCollapsed = false;
-                        this.updatedToolbarOverflowClass();
-                    }.bind(this));
-                } else {
-                    this.updatedToolbarOverflowClass();
-                }
-            }
-        },
-
-        /**
-         * Sets an overflow-class on the toolbar, depending on whether or ot
-         * the toolbar overflows
-         */
-        updatedToolbarOverflowClass: function() {
-            var $container = this.$find(constants.toolbarSelector);
-            if (this.sandbox.dom.width($container) < $container[0].scrollWidth) {
-                this.sandbox.dom.addClass($container, constants.overflownClass);
-            } else {
-                this.sandbox.dom.removeClass($container, constants.overflownClass);
             }
         },
 

@@ -34,23 +34,10 @@
         }
         .toolbar-container {
             display: table-cell;
-            overflow: auto;
             vertical-align: top;
             width: 100%;
             position: relative;
             z-index: 100;
-
-            .toolbar-wrapper {
-                display: inline-block;
-                white-space: nowrap;
-            }
-
-            &.overflown {
-                @include box-shadow(inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08));
-                .husky-toolbar .toolbar-dropdown-menu {
-                    margin-top: 0;
-                }
-            }
         }
         .right-container {
             display: table-cell;

@@ -35318,6 +35318,7 @@ define('__component__$tabs@husky',[],function() {
  * @param {String} [options.skin] custom skin-class to add to the component
  * @param {Boolean} [options.showTitleAsTooltip] shows the title of the button only as tooltip
  * @param {Boolean} [options.showTitle] if false doesn't display the title
+ * @param {Boolean} [options.responsive] iff true to toolbar gets collapsed/expanded if it overflows it's element
  *
  * @param {Object} [options.groups] array of groups with id and align to specify groups to put items in
  * @param {String|Number} [options.groups.id] the id of the group
@@ -35359,7 +35360,8 @@ define('__component__$toolbar@husky',[],function() {
             skin: 'default',
             small: false,
             showTitleAsTooltip: false,
-            showTitle: true
+            showTitle: true,
+            responsive: false
         },
 
         itemDefaults = {
@@ -35562,6 +35564,9 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this), 'li .content');
             this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
+            if (this.options.responsive === true) {
+                $(window).on('resize.husky-toolbar-' + this.options.instanceName, updateOverflow.bind(this));
+            }
         },
 
         /** events bound to sandbox */
@@ -35652,6 +35657,63 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
+         * Depending on if the toolbar overflows or not collapses or expands the toolbar
+         * collapsing - if the toolbar is expanded and overflown
+         * expanding - if the toolbar is underflown and collapsed and the expanded version has enough space
+         */
+        updateOverflow = function() {
+            if (this.$el.width() < this.$el[0].scrollWidth) {
+                if (!this.collapsed) {
+                    this.expandedWidth = this.$find('.husky-toolbar').outerWidth();
+                    collapseAll.call(this);
+                    updatedOverflowClass.call(this);
+                } else {
+                    updatedOverflowClass.call(this);
+                }
+            } else {
+                if (this.collapsed && this.$find('.husky-toolbar').width() >= this.expandedWidth) {
+                    expandAll.call(this);
+                    this.expandedWidth = this.$find('.husky-toolbar').outerWidth();
+                    updatedOverflowClass.call(this);
+                } else {
+                    updatedOverflowClass.call(this);
+                }
+            }
+        },
+
+        /**
+         * Sets an overflow-class on the element, depending on whether or ot
+         * the toolbar overflows
+         */
+        updatedOverflowClass = function() {
+            if (this.$el.width() < this.$el[0].scrollWidth) {
+                this.$el.addClass('overflown');
+            } else {
+                this.$el.removeClass('overflown');
+            }
+        },
+
+        /**
+         * Makes the toolbar unscrollable and makes the toolbar-overflow's overflow visible
+         * so the dropdown can be seen
+         */
+        lockToolbarScroll = function() {
+            var scrollPos = this.$el.scrollLeft;
+            this.$el.css({overflow: 'visible'});
+            this.$find('.husky-toolbar').css({
+                'margin-left': ((-1) * scrollPos) + 'px'
+            });
+        },
+
+        /**
+         * Makes the toolbar-container's overflow hidden and the wrapper itself scrollable
+         */
+        unlockToolbarScroll = function() {
+            this.$el.removeAttr('style');
+            this.$find('.husky-toolbar').removeAttr('style');
+        },
+
+        /**
          * Sets an item enabled or disabled
          * @param enabled {boolean} If true button gets enabled if false button gets disabled
          * @param id {Number|String} id The id of the button
@@ -35692,6 +35754,10 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.removeClass($item, 'disabled');
             } else {
                 this.sandbox.dom.addClass($item, 'disabled');
+            }
+
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
             }
         },
 
@@ -35745,6 +35811,10 @@ define('__component__$toolbar@husky',[],function() {
                     color: color
                 }
             }]);
+
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
+            }
         },
 
 
@@ -35782,6 +35852,10 @@ define('__component__$toolbar@husky',[],function() {
                     // on every click remove sub-menu
                     this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
 
+                    if (this.options.responsive === true) {
+                        lockToolbarScroll.call(this);
+                    }
+
                     this.sandbox.emit(DROPDOWN_OPENED.call(this));
                 }
             }
@@ -35808,6 +35882,9 @@ define('__component__$toolbar@husky',[],function() {
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
             this.sandbox.dom.hide(this.$find('.toolbar-dropdown-menu'));
+            if (this.options.responsive === true) {
+                unlockToolbarScroll.call(this);
+            }
             this.sandbox.emit(DROPDOWN_CLOSED.call(this));
         },
 
@@ -35897,6 +35974,9 @@ define('__component__$toolbar@husky',[],function() {
                 item.title = this.sandbox.translate(item.title);
                 this.sandbox.dom.html(listItems.eq(1), item.title);
                 this.items[itemId].icon = item.title;
+            }
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
             }
             this.sandbox.emit(BUTTON_CHANGED.call(this));
         },
@@ -35993,7 +36073,7 @@ define('__component__$toolbar@husky',[],function() {
          * Unmark an item by removing the marked class from the item
          * @param itemId {Number|String} the id of the item
          */
-        unmarkItem = function(itemId){
+        unmarkItem = function(itemId) {
             if (!!this.items[itemId] && !!this.items[itemId].parentId) {
                 this.sandbox.dom.removeClass(this.items[itemId].$el, constants.markedClass);
             }
@@ -36233,7 +36313,7 @@ define('__component__$toolbar@husky',[],function() {
             this.collapsed = false;
             this.itemGroups = {};
             this.items = {};
-
+            this.expandedWidth = 0;
 
             // load data and call render
             if (!!this.options.url) {
@@ -36251,8 +36331,19 @@ define('__component__$toolbar@husky',[],function() {
             bindDOMEvents.call(this);
             bindCustomEvents.call(this);
 
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
+            }
+
             // initialization finished
             this.sandbox.emit(INITIALIZED.call(this));
+        },
+
+        /**
+         * Destroys the component
+         */
+        destroy: function() {
+            $(window).off('resize.husky-toolbar-' + this.options.instanceName);
         },
 
         /**
@@ -36424,6 +36515,11 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.last(this.sandbox.dom.find('.group.left', this.$el)),
                 'last'
             );
+
+            //add responsive class
+            if (this.options.responsive === true) {
+                this.$el.addClass('husky-toolbar-responsive');
+            }
         }
     };
 
