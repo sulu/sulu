@@ -39,6 +39,28 @@ define([
                 });
 
                 return promise;
+            },
+
+            /**
+             * Delete media by given id
+             * @param collectionId media to delete
+             * @returns {*}
+             */
+            deleteCollection = function(collectionId) {
+                var promise = $.Deferred(),
+                    collection = Collection.findOrCreate({id: collectionId});
+
+                collection.destroy({
+                    success: function() {
+                        mediator.emit('sulu.medias.collection.deleted', collectionId);
+                        promise.resolve();
+                    }.bind(this),
+                    error: function() {
+                        promise.fail();
+                    }.bind(this)
+                });
+
+                return promise;
             };
 
 
@@ -92,6 +114,56 @@ define([
                     mediator.emit('sulu.labels.error.show');
                     promise.fail();
                 }.bind(this));
+
+                return promise;
+            },
+
+            /**
+             * Delete collection by given id
+             * @param collectionIds (Array)
+             * @returns promise
+             */
+            delete: function(collectionIds) {
+                if (!$.isArray(collectionIds)) {
+                    collectionIds = [collectionIds];
+                }
+
+                var requests = [],
+                    promise = $.Deferred();
+
+                util.each(collectionIds, function(index, id) {
+                    requests.push(deleteCollection(id));
+                }.bind(this));
+
+                $.when.apply(null, requests).then(function() {
+                    mediator.emit('sulu.labels.success.show', 'labels.success.collection-deleted-desc');
+                    promise.resolve();
+                }.bind(this));
+
+                return promise;
+            },
+
+            /**
+             * Move collection into given parentCollection
+             * @param collectionId
+             * @param parentCollectionId
+             * @returns {*}
+             */
+            move: function(collectionId, parentCollectionId) {
+                var promise = $.Deferred();
+
+                var url = '/admin/api/collections/' + collectionId + '?action=move';
+                url = (!!parentCollectionId) ? url + '&destination=' + parentCollectionId : url;
+
+                util.save(url, 'POST')
+                    .then(function() {
+                        mediator.emit('sulu.medias.collection.moved', collectionId, parentCollectionId);
+                        mediator.emit('sulu.labels.success.show', 'labels.success.collection-move-desc');
+                        promise.resolve();
+                    }.bind(this))
+                    .fail(function() {
+                        promise.fail();
+                    }.bind(this));
 
                 return promise;
             }

@@ -57,14 +57,13 @@ define(['services/sulumedia/media-manager',
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            //var url = '/admin/api/collections?sortBy=title';
-            //this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+            // handle data-navigation
+            var url = '/admin/api/collections?sortBy=title';
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.bindCustomEvents();
             this.render();
-
-            // shows a delete success label. If a collection just got deleted
-            //this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.collection-deleted-desc');
         },
 
         bindCustomEvents: function() {
@@ -102,9 +101,6 @@ define(['services/sulumedia/media-manager',
         actionCallback: function(id, item) {
             this.sandbox.sulu.viewStates['media-file-edit-id'] = id;
             MediaRouter.toCollection(item.collection);
-
-            // var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
-            // this.sandbox.emit('husky.data-navigation.collections.set-url', url);
         },
 
         /**

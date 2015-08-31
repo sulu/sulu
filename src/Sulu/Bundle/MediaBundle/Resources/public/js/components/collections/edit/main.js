@@ -19,35 +19,18 @@ define(['services/sulumedia/collection-manager',
     return {
         view: true,
 
-        header: function () {
+        header: function() {
             return {
                 noBack: true,
+                title: this.data.title,
                 tabs: {
                     url: '/admin/content-navigations?alias=media',
                 },
                 toolbar: {
                     buttons: {
-                        settings: {
-                            options: {
-                                dropdownItems: [
-                                    {
-                                        id: 'collection-edit',
-                                        title: this.sandbox.translate('sulu.collection.edit'), //todo: add translations
-                                        //callback: this.startMoveCollectionOverlay.bind(this) // todo: implement edit collection
-                                    },
-                                    {
-                                        id: 'collection-move',
-                                        title: this.sandbox.translate('sulu.collection.move'),
-                                        callback: this.startMoveCollectionOverlay.bind(this)
-                                    },
-                                    {
-                                        id: 'delete',
-                                        title: this.sandbox.translate('sulu.collections.delete-collection'),
-                                        callback: this.deleteCollection.bind(this)
-                                    }
-                                ]
-                            }
-                        }
+                        editCollection: {},
+                        moveCollection: {},
+                        deleteCollection: {}
                     },
                     languageChanger: {
                         url: '/admin/api/localizations',
@@ -79,6 +62,7 @@ define(['services/sulumedia/collection-manager',
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.bindCustomEvents();
+            this.bindOverlayEvents();
         },
 
         bindCustomEvents: function() {
@@ -87,38 +71,51 @@ define(['services/sulumedia/collection-manager',
                 UserSettingsManager.setMediaLocale(locale.id);
                 MediaRouter.toCollection(this.data.id);
             }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.edit-collection', function(locale) {
+                alert('implement overlay!');
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.move-collection', function(locale) {
+                OverlayManager.startSelectCollectionOverlayCollection(this.sandbox, this.data.id);
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.delete-collection', function(locale) {
+                this.deleteCollection();
+            }.bind(this));
+        },
+
+        bindOverlayEvents: function() {
+            // chose collection to move collection in collection-select overlay
+            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
         },
 
         /**
          * Deletes the current collection
          */
         deleteCollection: function() {
-            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.id);
-        },
-
-        /**
-         * starts overlay for collection media
-         */
-        startMoveCollectionOverlay: function() {
-            this.sandbox.emit('sulu.media.collection-select.move-collection.open');
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    //this.sandbox.emit('husky.datagrid.medium-loader.show');
+                    CollectionManager.delete(this.data.id).then(function() {
+                        if (!!this.data._embedded.parent) {
+                            MediaRouter.toCollection(this.data._embedded.parent.id);
+                        } else {
+                            MediaRouter.toRoot();
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
         },
 
         /**
          * emit events to move collection
          * @param collection
          */
-        moveCollection: function(collection) {
-            this.sandbox.emit('sulu.media.collections.move', this.options.id, collection,
-                function() {
-                    var url = '/admin/api/collections/' + this.options.id + '?depth=1&sortBy=title';
-
-                    this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-move-desc', 'labels.success');
-                }.bind(this)
-            );
-
-            this.sandbox.emit('sulu.media.collection-select.move-collection.restart');
-            this.sandbox.emit('sulu.media.collection-select.move-collection.close');
+        moveCollection: function(parentCollection) {
+            CollectionManager.move(this.data.id, parentCollection.id).then(function() {
+                MediaRouter.toCollection(this.data.id);
+            }.bind(this));
         }
     };
 });
