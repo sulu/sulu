@@ -2,11 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make is reusable by other bundles
     * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
                                           `[field.name => order]` 
     * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository 
-    * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make is reusable by other bundles
-    * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make it reusable by other bundles
     * BUGFIX      #1508 [AdminBundle]     Fixed bug with serializing user settings
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
     * FEATURE     #1503 [All]             Updated to doctrine 2.5
