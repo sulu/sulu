@@ -51,6 +51,12 @@ purpose of overriding its previous sort field.
 app/console doctrine:schema:update --force
 ```
 
+## 1.0.8
+
+The `sulu_meta_seo` twig method does not render the canonical tag for shadow pages. Therefore this method is deprecated
+and will be removed with Sulu 1.2. Use the new `sulu_seo` method instead. This method will also render the title, so
+there is no need for the title block as it has been in the Sulu standard edition anymore.
+
 ## 1.0.6
 
 ### Configuration

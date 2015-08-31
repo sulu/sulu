@@ -16,6 +16,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * Provides helper function to generate meta tags.
+ *
+ * @deprecated will be removed in 1.2
  */
 class MetaTwigExtension extends \Twig_Extension
 {
@@ -145,7 +147,11 @@ class MetaTwigExtension extends \Twig_Extension
     {
         $url = $this->contentPath->getContentPath($url, $webspaceKey, $locale);
 
-        return sprintf('<link rel="alternate" href="%s" hreflang="%s" />', $url, !$default ? $locale : 'x-default');
+        return sprintf(
+            '<link rel="alternate" href="%s" hreflang="%s" />',
+            $url,
+            !$default ? str_replace('_', '-', $locale) : 'x-default'
+        );
     }
 
     /**

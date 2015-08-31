@@ -45,6 +45,18 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* 1.0.8 (2015-08-31)
+    * HOTFIX      #1539 [WebsiteBundle]  Fixed canonical tag for shadow pages
+    * HOTFIX      #1537 [WebsiteBundle]  Fixed format of hreflang-tag locale
+    * HOTFIX      #1532 [WebsiteBundle]  Fixed redirect to external pages
+    * HOTFIX      #1511 [ContentBundle]  Fixed single-internal-link overlay URL
+    * HOTFIX      #1521 [MediaBundle]    Fixed media-selection events for preview update
+
+* 1.0.7 (2015-08-11)
+    * HOTFIX      #1469 [ContentBundle]  fixed displayOptions in media selection
+    * HOTFIX      #1468 [SnippetBundle]  Fixed default language for snippets in administration
+>>>>>>> master
+
 * 1.0.6 (2015-08-05)
     * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
 
