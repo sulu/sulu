@@ -25,12 +25,6 @@ define([
         TYPE_CONTENT = 1,
 
         constants = {
-            resolutionDropdownData: [
-                {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
-                {id: 2, name: 'sulu.preview.desktop', cssClass: 'desktop'},
-                {id: 3, name: 'sulu.preview.tablet', cssClass: 'tablet'},
-                {id: 4, name: 'sulu.preview.smartphone', cssClass: 'smartphone'}
-            ],
             localizationUrl: '/admin/api/webspace/localizations'
         },
 
@@ -42,14 +36,16 @@ define([
 
         templates = {
             preview: [
-                '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
+                '<div class="sulu-content-preview auto">',
                 '   <div class="preview-toolbar">',
                 '       <div class="toolbar"></div>',
                 '       <div class="fa-external-link new-window"></div>',
                 '   </div>',
-                '   <div class="wrapper">',
-                '       <div class="viewport">',
-                '           <iframe src="<%= url %>"></iframe>',
+                '   <div class="container">',
+                '       <div class="wrapper">',
+                '           <div class="viewport">',
+                '               <iframe src="<%= url %>"></iframe>',
+                '           </div>',
                 '       </div>',
                 '   </div>',
                 '</div>'
@@ -280,9 +276,6 @@ define([
 
             // change url of preview
             this.sandbox.on('sulu.content.preview.change-url', this.changePreviewUrl.bind(this));
-
-            // change the preview style if the resolution dropdown gets changed
-            this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', this.changePreviewStyle.bind(this));
 
             // bind model data events
             this.bindModelEvents();
@@ -717,7 +710,6 @@ define([
                     uuid: data.id
                 });
                 this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
-                    resolution: this.sandbox.translate(constants.resolutionDropdownData[0].name),
                     url: this.previewUrl
                 }));
                 this.bindPreviewEvents();
@@ -785,7 +777,9 @@ define([
          */
         changePreviewStyle: function(newStyle) {
             if (this.$preview !== null) {
+                this.$preview.removeClass(this.$preview.data('sulu-preview-style'));
                 this.$preview.addClass(newStyle);
+                this.$preview.data('sulu-preview-style', newStyle);
             }
         },
 

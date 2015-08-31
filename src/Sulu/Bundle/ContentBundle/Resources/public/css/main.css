@@ -3,53 +3,68 @@
 .sulu-content-preview {
   width: 100%;
   height: 100%;
-  white-space: nowrap;
-  overflow: auto;
   padding-top: 50px;
 }
-/* line 8, ../scss/modules/preview.scss */
-.sulu-content-preview .wrapper {
-  display: inline-block;
-  vertical-align: middle;
-  white-space: normal;
-  overflow: hidden;
+/* line 6, ../scss/modules/preview.scss */
+.sulu-content-preview .container {
+  width: 100%;
+  height: 100%;
   border-left: 1px solid #ddd;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  overflow: auto;
 }
-/* line 16, ../scss/modules/preview.scss */
+/* line 15, ../scss/modules/preview.scss */
+.sulu-content-preview .container::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+/* line 23, ../scss/modules/preview.scss */
+.sulu-content-preview .container .wrapper {
+  display: inline-block;
+  white-space: normal;
+  vertical-align: middle;
+  overflow: hidden;
+}
+/* line 31, ../scss/modules/preview.scss */
 .sulu-content-preview iframe {
   border: 0;
   width: 100%;
   height: 100%;
 }
-/* line 23, ../scss/modules/preview.scss */
+/* line 38, ../scss/modules/preview.scss */
 .sulu-content-preview.auto .wrapper {
   width: 100%;
   height: 100%;
 }
-/* line 27, ../scss/modules/preview.scss */
+/* line 42, ../scss/modules/preview.scss */
 .sulu-content-preview.auto .viewport {
   width: 100%;
   height: 100%;
 }
-/* line 32, ../scss/modules/preview.scss */
+/* line 47, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop {
   background: #999;
 }
-/* line 34, ../scss/modules/preview.scss */
+/* line 49, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop .wrapper {
-  width: 100%;
-  height: 100%;
-}
-/* line 38, ../scss/modules/preview.scss */
-.sulu-content-preview.desktop .viewport {
   width: 1024px;
   height: 100%;
 }
-/* line 43, ../scss/modules/preview.scss */
+/* line 53, ../scss/modules/preview.scss */
+.sulu-content-preview.desktop .viewport {
+  width: 100%;
+  height: 100%;
+}
+/* line 58, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone {
   background: #999;
 }
-/* line 45, ../scss/modules/preview.scss */
+/* line 60, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .wrapper {
   width: 378px;
   height: 794px;
@@ -60,16 +75,16 @@
   padding-top: 115px;
   padding-left: 30px;
 }
-/* line 55, ../scss/modules/preview.scss */
+/* line 70, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .viewport {
   width: 320px;
   height: 568px;
 }
-/* line 60, ../scss/modules/preview.scss */
+/* line 75, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet {
   background: #999;
 }
-/* line 62, ../scss/modules/preview.scss */
+/* line 77, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .wrapper {
   width: 836px;
   height: 1282px;
@@ -80,12 +95,12 @@
   padding-top: 122px;
   padding-left: 30px;
 }
-/* line 72, ../scss/modules/preview.scss */
+/* line 87, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .viewport {
   width: 768px;
   height: 1024px;
 }
-/* line 78, ../scss/modules/preview.scss */
+/* line 93, ../scss/modules/preview.scss */
 .sulu-content-preview .preview-toolbar {
   height: 50px;
   margin-top: -50px;
@@ -93,7 +108,7 @@
   position: relative;
   padding-right: 50px;
 }
-/* line 85, ../scss/modules/preview.scss */
+/* line 100, ../scss/modules/preview.scss */
 .sulu-content-preview .preview-toolbar .new-window {
   width: 50px;
   height: 100%;
@@ -106,14 +121,14 @@
   top: 0px;
   right: 0px;
 }
-/* line 97, ../scss/modules/preview.scss */
+/* line 112, ../scss/modules/preview.scss */
 .sulu-content-preview .preview-toolbar .toolbar {
   width: 100%;
   height: 100%;
   margin-left: -1px;
 }
 
-/* line 105, ../scss/modules/preview.scss */
+/* line 120, ../scss/modules/preview.scss */
 .v-center {
   position: absolute;
   top: 50%;
@@ -122,7 +137,7 @@
   height: 40px;
   width: 180px;
 }
-/* line 113, ../scss/modules/preview.scss */
+/* line 128, ../scss/modules/preview.scss */
 .v-center .btn {
   margin-left: -90px;
   margin-right: 90px;
