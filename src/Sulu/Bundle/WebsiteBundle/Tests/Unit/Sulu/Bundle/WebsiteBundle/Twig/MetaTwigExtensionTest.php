@@ -54,6 +54,7 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->contentPath->getContentPath('/test', 'sulu_test', 'de')->willReturn('/de/test');
         $this->contentPath->getContentPath('/test-en', 'sulu_test', 'en')->willReturn('/en/test-en');
         $this->contentPath->getContentPath('/test-en-us', 'sulu_test', 'en-us')->willReturn('/en/test-en-us');
+        $this->contentPath->getContentPath('/test-en-us', 'sulu_test', 'en_us')->willReturn('/en/test-en-us');
         $this->contentPath->getContentPath('/test-fr', 'sulu_test', 'fr')->willReturn('/fr/test-fr');
     }
 
@@ -71,6 +72,35 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
             'de' => '/test',
             'en' => '/test-en',
             'en-us' => '/test-en-us',
+            'fr' => '/test-fr',
+        ]);
+
+        $this->assertEquals(
+            [
+                '<link rel="alternate" href="/de/test" hreflang="de" />',
+                '<link rel="alternate" href="/en/test-en" hreflang="x-default" />',
+                '<link rel="alternate" href="/en/test-en" hreflang="en" />',
+                '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
+                '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
+            ],
+            explode(PHP_EOL, $urls)
+        );
+    }
+
+    /**
+     * Test get alternate links.
+     */
+    public function testGetAlternateLinksUnderscore()
+    {
+        $extension = new MetaTwigExtension(
+            $this->requestAnalyzer->reveal(),
+            $this->contentPath->reveal()
+        );
+
+        $urls = $extension->getAlternateLinks([
+            'de' => '/test',
+            'en' => '/test-en',
+            'en_us' => '/test-en-us',
             'fr' => '/test-fr',
         ]);
 
