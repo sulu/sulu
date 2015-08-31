@@ -261,8 +261,6 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
          * @param locale
          */
         languageChangedSingle: function(locale) {
-            this.sandbox.emit('husky.overlay.media-edit.close');
-            this.startLoadingOverlay();
             this.saveSingleMedia().then(function() {
                 this.sandbox.stop();
                 OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, locale);
