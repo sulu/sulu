@@ -20,8 +20,8 @@ define([
         var instance = null,
 
             /**
-             * Delete contact by given id
-             * @param mediaId contact to delete
+             * Delete media by given id
+             * @param mediaId media to delete
              * @returns {*}
              */
             deleteMedia = function(mediaId) {
@@ -41,6 +41,12 @@ define([
                 return promise;
             },
 
+            /**
+             * Move media to collection
+             * @param mediaId media to move
+             * @param collectionId collection to move media to
+             * @returns {*}
+             */
             moveMedia = function(mediaId, collectionId) {
                 var promise = $.Deferred();
 
@@ -58,8 +64,8 @@ define([
             },
 
             /**
-             * Save given contact data
-             * @param data {Object} the contact data to save
+             * Save given media data
+             * @param data {Object} the media data to save
              * @returns promise
              */
             saveMedia = function(data) {
@@ -87,7 +93,7 @@ define([
         MediaManager.prototype = {
 
             /**
-             * Load contact by given id
+             * Load media by given id
              * @param mediaId
              * @returns promise
              */
@@ -116,7 +122,7 @@ define([
             },
 
             /**
-             * Delete contacts by given id
+             * Delete medias by given id
              * @param mediaIds (Array)
              * @returns promise
              */
@@ -141,15 +147,15 @@ define([
             },
 
             /**
-             * Save given contact data and display labels
-             * @param data {Object} the contact data to save
+             * Save given media data and display labels
+             * @param data {Object} the media data to save
              * @returns promise
              */
             save: function(data) {
                 var promise = $.Deferred();
 
                 saveMedia(data).then(function(media) {
-                    mediator.emit('sulu.medias.collection.saved', media.id);
+                    mediator.emit('sulu.medias.media.saved', media.id, media);
                     mediator.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
                     promise.resolve(media);
                 }.bind(this)).fail(function() {
@@ -161,9 +167,10 @@ define([
             },
 
             /**
-             * Save given contact data and display labels
-             * @param data {Object} the contact data to save
-             * @returns promise
+             * Move medias to a collection
+             * @param mediaIds
+             * @param collectionId
+             * @returns {*}
              */
             move: function(mediaIds, collectionId) {
                 if (!$.isArray(mediaIds)) {
