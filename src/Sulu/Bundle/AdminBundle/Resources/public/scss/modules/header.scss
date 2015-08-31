@@ -21,6 +21,7 @@
         height: $headerHeight;
         width: 100%;
         position: relative;
+        left: -1px;
         z-index: 1000;
 
         .left-container {
