@@ -89,21 +89,30 @@ define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
                 ]
             });
 
+            // breadcrumbs
+            Config.set('sulucontact.breadcrumb.account', [
+                {title: 'navigation.contacts'},
+                {title: 'contact.accounts.title', link: 'contacts/accounts'}
+            ]);
+
+            Config.set('sulucontact.breadcrumb.contact', [
+                {title: 'navigation.contacts'},
+                {title: 'contact.contacts.title', link: 'contacts/contacts'}
+            ]);
+
+            // route to list
+            Config.set('sulucontact.routeToList.contact','contacts/contacts');
+            Config.set('sulucontact.routeToList.account','contacts/accounts');
+
             // filter integration
             Config.set('suluresource.filters.type.contacts', {
-                breadCrumb: [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', link: 'contacts/contacts'}
-                ],
-                routeToList: 'contacts/contacts'
+                breadCrumb: Config.get('sulucontact.breadcrumb.contact'),
+                routeToList: Config.get('sulucontact.routeToList.contact')
             });
 
             Config.set('suluresource.filters.type.accounts', {
-                breadCrumb: [
-                    {title: 'navigation.accounts'},
-                    {title: 'contact.accounts.title', link: 'contacts/accounts'}
-                ],
-                routeToList: 'contacts/accounts'
+                breadCrumb: Config.get('sulucontact.breadcrumb.account'),
+                routeToList: Config.get('sulucontact.routeToList.account')
             });
 
             app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
