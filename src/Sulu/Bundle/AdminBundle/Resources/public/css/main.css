@@ -838,32 +838,27 @@ input, select {
   height: 100%;
   background: #fff;
   overflow: auto;
-  border-left: 1px solid #f1f1f1;
 }
-/* line 11, ../scss/modules/sidebar.scss */
-.sulu-sidebar.dark-border {
-  border-left: 1px solid #666;
-}
-/* line 15, ../scss/modules/sidebar.scss */
+/* line 10, ../scss/modules/sidebar.scss */
 .sulu-sidebar .sidebar-loader {
   position: relative;
   left: 0;
   top: 50%;
   margin-top: -50px;
 }
-/* line 22, ../scss/modules/sidebar.scss */
+/* line 17, ../scss/modules/sidebar.scss */
 .sulu-sidebar .action {
   color: #000;
   cursor: pointer;
   text-decoration: none;
 }
-/* line 28, ../scss/modules/sidebar.scss */
+/* line 23, ../scss/modules/sidebar.scss */
 .sulu-sidebar .label {
   font-weight: 600;
   margin: 0 0 5px 0;
   color: #999;
 }
-/* line 34, ../scss/modules/sidebar.scss */
+/* line 29, ../scss/modules/sidebar.scss */
 .sulu-sidebar .blue-icon {
   width: 30px;
   height: 20px;
@@ -882,23 +877,23 @@ input, select {
   -o-transition: opacity 100ms ease-in 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 53, ../scss/modules/sidebar.scss */
+/* line 48, ../scss/modules/sidebar.scss */
 .sulu-sidebar h2 .blue-icon > span {
   vertical-align: text-top;
   margin-top: -4px;
 }
-/* line 58, ../scss/modules/sidebar.scss */
+/* line 53, ../scss/modules/sidebar.scss */
 .sulu-sidebar .show-icon:hover .blue-icon {
   opacity: 1;
 }
-/* line 62, ../scss/modules/sidebar.scss */
+/* line 57, ../scss/modules/sidebar.scss */
 .sulu-sidebar hr {
   border: 0;
   height: 1px;
   background: #ddd;
 }
 
-/* line 70, ../scss/modules/sidebar.scss */
+/* line 65, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }

@@ -41068,7 +41068,7 @@ define('__component__$ckeditor@husky',[], function() {
             table: true,
             link: true,
             pasteFromWord: true,
-            height: 200
+            height: 65
         },
 
         /**
