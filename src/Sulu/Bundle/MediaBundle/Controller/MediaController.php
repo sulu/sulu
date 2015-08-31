@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -23,6 +24,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +33,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes media available through a REST API.
  */
-class MediaController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class MediaController extends RestController
+    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -78,10 +81,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
                     return $mediaManager->getById($id, $locale);
                 }
             );
-        } catch (MediaNotFoundException $me) {
-            $view = $this->view($me->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -118,13 +121,18 @@ class MediaController extends RestController implements ClassResourceInterface, 
                 $ids = explode(',', $ids);
                 $media = $mediaManager->getByIds($ids, $this->getLocale($request));
             } else {
-                $media = $mediaManager->get($this->getLocale($request), [
-                    'collection' => $collection,
-                    'types' => $types,
-                    'search' => $search,
-                    'orderBy' => $orderBy,
-                    'orderSort' => $orderSort,
-                ], $limit, $offset);
+                $media = $mediaManager->get(
+                    $this->getLocale($request),
+                    [
+                        'collection' => $collection,
+                        'types' => $types,
+                        'search' => $search,
+                        'orderBy' => $orderBy,
+                        'orderSort' => $orderSort,
+                    ],
+                    $limit,
+                    $offset
+                );
             }
 
             $all = $mediaManager->getCount();
@@ -140,10 +148,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
             );
 
             $view = $this->view($list, 200);
-        } catch (MediaNotFoundException $me) {
-            $view = $this->view($me->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -166,7 +174,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * Edits the existing media with the given id.
      *
-     * @param int     $id      The id of the media to update
+     * @param int $id The id of the media to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -189,11 +197,11 @@ class MediaController extends RestController implements ClassResourceInterface, 
     {
         $delete = function ($id) {
             try {
-                $this->getMediaManager()->delete($id);
-            } catch (MediaNotFoundException $cnf) {
+                $this->getMediaManager()->delete($id, true);
+            } catch (MediaNotFoundException $e) {
                 throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
-            } catch (MediaException $me) {
-                throw new RestException($me->getMessage(), $me->getCode()); // will throw 400 Bad Request
+            } catch (MediaException $e) {
+                throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
             }
         };
 
@@ -207,7 +215,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
      *
      * @Post("media/{id}")
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return Response
@@ -227,8 +235,8 @@ class MediaController extends RestController implements ClassResourceInterface, 
                 default:
                     throw new RestException(sprintf('Unrecognized action: "%s"', $action));
             }
-        } catch (RestException $ex) {
-            $view = $this->view($ex->toArray(), 400);
+        } catch (RestException $e) {
+            $view = $this->view($e->toArray(), 400);
 
             return $this->handleView($view);
         }
@@ -237,7 +245,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
     /**
      * Move an entity to another collection.
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return Response
@@ -256,10 +264,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
             );
 
             $view = $this->view($media, 200);
-        } catch (MediaNotFoundException $me) {
-            $view = $this->view($me->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -281,10 +289,10 @@ class MediaController extends RestController implements ClassResourceInterface, 
             $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $view = $this->view($media, 200);
-        } catch (MediaNotFoundException $me) {
-            $view = $this->view($me->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -303,7 +311,7 @@ class MediaController extends RestController implements ClassResourceInterface, 
 
     /**
      * @param Request $request
-     * @param bool    $fallback
+     * @param bool $fallback
      *
      * @return array
      */
@@ -363,6 +371,29 @@ class MediaController extends RestController implements ClassResourceInterface, 
      */
     public function getSecurityContext()
     {
-        return 'sulu.media.files';
+        return 'sulu.media.collections';
+    }
+
+    /**
+     * Returns the class name of the object to check.
+     *
+     * @return string
+     */
+    public function getSecuredClass()
+    {
+        // The media permissions are tied to the collection it is in
+        return Collection::class;
+    }
+
+    /**
+     * Returns the id of the object to check.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function getSecuredObjectId(Request $request)
+    {
+        return $request->get('collection');
     }
 }

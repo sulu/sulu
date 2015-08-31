@@ -78,7 +78,6 @@ class MediaAdmin extends Admin
             'Sulu' => [
                 'Media' => [
                     'sulu.media.collections',
-                    'sulu.media.files',
                 ],
             ],
         ];
