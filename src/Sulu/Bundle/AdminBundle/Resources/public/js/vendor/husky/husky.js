@@ -35671,7 +35671,7 @@ define('__component__$toolbar@husky',[],function() {
                     updatedOverflowClass.call(this);
                 }
             } else {
-                if (this.collapsed && this.$find('.husky-toolbar').width() >= this.expandedWidth) {
+                if (this.collapsed && this.$el.width() >= this.expandedWidth) {
                     expandAll.call(this);
                     this.expandedWidth = this.$find('.husky-toolbar').outerWidth();
                     updatedOverflowClass.call(this);
@@ -35698,7 +35698,7 @@ define('__component__$toolbar@husky',[],function() {
          * so the dropdown can be seen
          */
         lockToolbarScroll = function() {
-            var scrollPos = this.$el.scrollLeft;
+            var scrollPos = this.$el.scrollLeft();
             this.$el.css({overflow: 'visible'});
             this.$find('.husky-toolbar').css({
                 'margin-left': ((-1) * scrollPos) + 'px'

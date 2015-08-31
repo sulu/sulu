@@ -728,6 +728,7 @@ define([
                     el: this.$preview.find('.toolbar'),
                     instanceName: 'preview',
                     skin: 'big',
+                    responsive: true,
                     buttons: this.sandbox.sulu.buttons.get({
                         displayDevices: {},
                         refresh: {}
