@@ -301,6 +301,7 @@ define(['services/sulumedia/collection-manager',
             this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
                 if (!!clickedMedia && mediaIds.indexOf(clickedMedia) === -1) {
                     mediaIds.push(clickedMedia);
+                    //todo: select clickedmedia in datagrid
                 }
 
                 OverlayManager.startEditMediaOverlay(this.sandbox, mediaIds, UserSettingsManager.getMediaLocale());
