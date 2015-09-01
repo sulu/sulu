@@ -44,7 +44,7 @@ define(['services/sulumedia/collection-manager',
 
         loadComponentData: function() {
             var promise = this.sandbox.data.deferred();
-            CollectionManager.loadOrNew(this.options.id).then(function(data) {
+            CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
                 promise.resolve(data);
             });
             return promise;
@@ -57,7 +57,7 @@ define(['services/sulumedia/collection-manager',
             UserSettingsManager.setLastVisitedCollection(this.data.id);
 
             // handle data-navigation
-            var url = '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title';
+            var url = '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title&locale=' + UserSettingsManager.getMediaLocale();
             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
@@ -73,7 +73,7 @@ define(['services/sulumedia/collection-manager',
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.edit-collection', function(locale) {
-                alert('implement overlay!');
+                OverlayManager.startEditCollectionOverlay(this.sandbox, this.data.id, UserSettingsManager.getMediaLocale());
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.move-collection', function(locale) {

@@ -75,7 +75,7 @@ define([
              * @param collectionId
              * @returns promise
              */
-            loadOrNew: function(collectionId) {
+            loadOrNew: function(collectionId, locale) {
                 var promise = $.Deferred(),
                     collection;
                 if (!collectionId) {
@@ -85,6 +85,7 @@ define([
                 } else {
                     collection = Collection.findOrCreate({id: collectionId});
                     collection.fetch({
+                        data: (!!locale) ? {locale: locale} : null,
                         success: function(response) {
                             mediator.emit('sulu.medias.collection.loaded', collectionId);
                             promise.resolve(response.toJSON());

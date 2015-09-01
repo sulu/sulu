@@ -37,7 +37,7 @@ define([
         }
 
         OverlayManager.prototype = {
-            startCreateCollectionOverlay: function(sandbox, parentCollection) {
+            startCreateCollectionOverlay: function(sandbox, parentCollection, locale) {
                 var parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null,
                     $container = getOverlayContainer('create-collection-overlay');
 
@@ -46,6 +46,7 @@ define([
                     options: {
                         el: $container,
                         parent: parentId,
+                        locale: locale
                     }
                 }]);
             },
@@ -98,6 +99,21 @@ define([
                         options: {
                             el: $container,
                             mediaIds: mediaIds,
+                            locale: locale
+                        }
+                    }
+                ]);
+            },
+
+            startEditCollectionOverlay: function(sandbox, collectionId, locale) {
+                var $container = getOverlayContainer('edit-collection-overlay');
+
+                sandbox.start([
+                    {
+                        name: 'collections/collection-edit-overlay@sulumedia',
+                        options: {
+                            el: $container,
+                            collectionId: collectionId,
                             locale: locale
                         }
                     }

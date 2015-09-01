@@ -58,7 +58,7 @@ define(['services/sulumedia/media-manager',
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // handle data-navigation
-            var url = '/admin/api/collections?sortBy=title';
+            var url = '/admin/api/collections?sortBy=title&locale=' + UserSettingsManager.getMediaLocale();
             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
