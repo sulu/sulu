@@ -11,8 +11,10 @@ define(function() {
 
     'use strict';
 
-    var defaults = {
-            instanceName: 'collection-select',
+    var namespace = 'sulu.collection-select.',
+
+        defaults = {
+            instanceName: '',
             title: '',
             rootCollection: false,
             disableIds: [],
@@ -33,14 +35,28 @@ define(function() {
             }
         },
 
-        namespace = 'sulu.media.collection-select.',
-
         /**
          * Selected
          * @event sulu.media.collection-select.selected
          */
         SELECTED = function() {
             return createEventName.call(this, 'selected');
+        },
+
+        /**
+         * raised when the overlay get closed
+         * @event sulu.media-edit.closed
+         */
+        CLOSED = function() {
+            return createEventName.call(this, 'closed');
+        },
+
+        /**
+         * raised when component is initialized
+         * @event sulu.media-edit.closed
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
         },
 
         /** returns normalized event names */
@@ -64,7 +80,9 @@ define(function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.bindCustomEvents();
-            this.render();
+            this.renderOverlay();
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
@@ -84,13 +102,6 @@ define(function() {
                 this.sandbox.emit(SELECTED.call(this), item);
                 this.sandbox.stop();
             }.bind(this));
-        },
-
-        /**
-         * Render component
-         */
-        render: function() {
-            this.renderOverlay();
         },
 
         renderOverlay: function() {
@@ -118,7 +129,10 @@ define(function() {
                             {
                                 title: this.sandbox.translate('sulu.media.move.overlay-title'),
                                 data: templates.columnNavigation(),
-                                buttons: buttons
+                                buttons: buttons,
+                                cancelCallback: function() {
+                                    this.sandbox.stop();
+                                }.bind(this),
                             }
                         ]
                     }
@@ -155,7 +169,7 @@ define(function() {
                                 'title': this.sandbox.translate('navigation.media.collections'),
                                 'hasSub': true,
                                 '_links': {
-                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999'}
+                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale}
                                 },
                                 '_embedded': {'collections': []}
                             }
@@ -163,7 +177,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections?sortBy=title&limit=9999';
+                options.url = '/admin/api/collections?sortBy=title&limit=9999&locale' + this.options.locale;
             }
 
             this.sandbox.start(
@@ -174,6 +188,10 @@ define(function() {
                     }
                 ]
             );
+        },
+
+        destroy: function() {
+            this.sandbox.emit(CLOSED.call(this));
         }
     };
 });

@@ -51,7 +51,7 @@ define([
                 }]);
             },
 
-            startSelectCollectionOverlayMedia: function(sandbox, disableIds) {
+            startMoveMediaOverlay: function(sandbox, disableIds, locale) {
                 if (!$.isArray(disableIds)) {
                     disableIds = [disableIds];
                 }
@@ -63,12 +63,13 @@ define([
                         el: $container,
                         instanceName: 'move-media',
                         title: sandbox.translate('sulu.media.move.overlay-title'),
+                        locale: locale,
                         disableIds: disableIds
                     }
                 }]);
             },
 
-            startSelectCollectionOverlayCollection: function(sandbox, disableIds) {
+            startMoveCollectionOverlay: function(sandbox, disableIds, locale) {
                 if (!$.isArray(disableIds)) {
                     disableIds = [disableIds];
                 }
@@ -82,7 +83,8 @@ define([
                         title: sandbox.translate('sulu.collection.move.overlay-title'),
                         rootCollection: true,
                         disableIds: disableIds,
-                        disabledChildren: true
+                        disabledChildren: true,
+                        locale: locale
                     }
                 }]);
             },

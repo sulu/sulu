@@ -43,7 +43,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         },
 
         /**
-         * raised if the media-edit overlay got closed
+         * raised when the overlay get closed
          * @event sulu.media-edit.closed
          */
         CLOSED = function() {
@@ -86,6 +86,8 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             this.$multiple = null;
 
             this.loadMediaAndRender();
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         loadMediaAndRender: function() {
@@ -214,7 +216,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                                 return false;
                             }
                         }.bind(this),
-                        closeCallback: function() {
+                        cancelCallback: function() {
                             this.sandbox.stop();
                         }.bind(this)
                     }
@@ -362,7 +364,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                                 return false;
                             }
                         }.bind(this),
-                        closeCallback: function() {
+                        cancelCallback: function() {
                             this.sandbox.stop();
                         }.bind(this)
                     }
@@ -476,6 +478,10 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             }
 
             return promise;
+        },
+
+        destroy: function() {
+            this.sandbox.emit(CLOSED.call(this));
         }
     };
 });

@@ -48,6 +48,12 @@ define(['services/sulumedia/media-manager',
             this.bindListToolbarEvents();
 
             this.render();
+
+            // start edit if media was clicked in root-component
+            if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
+                var editId = this.sandbox.sulu.viewStates['media-file-edit-id'];
+                OverlayManager.startEditMediaOverlay(this.sandbox, editId, UserSettingsManager.getMediaLocale());
+            }
         },
 
         /**
@@ -113,7 +119,21 @@ define(['services/sulumedia/media-manager',
 
         bindOverlayEvents: function() {
             // chose collection to move media in collection-select overlay
-            this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
+            this.sandbox.on('sulu.collection-select.move-media.selected', this.moveMedia.bind(this));
+
+            // disable dropzone popup when overlay is active
+            this.sandbox.on('sulu.collection-add.initialized', this.disableDropzone.bind(this));
+            this.sandbox.on('sulu.collection-edit.initialized', this.disableDropzone.bind(this));
+            this.sandbox.on('sulu.collection-select.move-collection.initialized', this.disableDropzone.bind(this));
+            this.sandbox.on('sulu.collection-select.move-media.initialized', this.disableDropzone.bind(this));
+            this.sandbox.on('sulu.media-edit.initialized', this.disableDropzone.bind(this));
+
+            // enable dropzone popup on overlay close
+            this.sandbox.on('sulu.collection-add.closed', this.enableDropzone.bind(this));
+            this.sandbox.on('sulu.collection-edit.closed', this.enableDropzone.bind(this));
+            this.sandbox.on('sulu.collection-select.move-collection.closed', this.enableDropzone.bind(this));
+            this.sandbox.on('sulu.collection-select.move-media.closed', this.enableDropzone.bind(this));
+            this.sandbox.on('sulu.media-edit.closed', this.enableDropzone.bind(this));
         },
 
         bindListToolbarEvents: function() {
@@ -122,9 +142,9 @@ define(['services/sulumedia/media-manager',
             // edit media
             this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
             // move media
-            this.sandbox.on('sulu.list-toolbar.media-move', function() {
-                OverlayManager.startSelectCollectionOverlayMedia.bind(this, this.sandbox, [this.options.id]);
-            }.bind(this));
+            this.sandbox.on('sulu.list-toolbar.media-move',
+                OverlayManager.startMoveMediaOverlay
+                    .bind(this, this.sandbox, this.options.id, UserSettingsManager.getMediaLocale()));
         },
 
         /**
@@ -244,13 +264,18 @@ define(['services/sulumedia/media-manager',
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                     if (!!confirmed) {
-                        //this.sandbox.emit('husky.datagrid.medium-loader.show');
                         MediaManager.delete(ids);
                     }
                 }.bind(this));
             }.bind(this));
         },
 
+        disableDropzone: function() {
+            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.lock-popup');
+        },
 
+        enableDropzone: function() {
+            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
+        }
     };
 });

@@ -12,13 +12,36 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
 
     'use strict';
 
-    var defaults = {
+    var namespace = 'sulu.collection-edit.',
+
+        defaults = {
             parent: null,
             instanceName: '',
         },
 
         constants = {
             editFormSelector: '#collection-settings'
+        },
+
+        /**
+         * raised when the overlay get closed
+         * @event sulu.media-edit.closed
+         */
+        CLOSED = function() {
+            return createEventName.call(this, 'closed');
+        },
+
+        /**
+         * raised when component is initialized
+         * @event sulu.media-edit.closed
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
+
+        /** returns normalized event names */
+        createEventName = function(postFix) {
+            return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
@@ -39,6 +62,8 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                 this.data = collection;
                 this.openOverlay();
             }.bind(this));
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         bindEvents: function() {
@@ -82,7 +107,7 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                                 return false;
                             }
                         }.bind(this),
-                        cancelCallBack: function() {
+                        cancelCallback: function() {
                             this.sandbox.stop();
                         }.bind(this),
                         openOnStart: true,
@@ -126,6 +151,10 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                 this.sandbox.stop();
                 OverlayManager.startEditCollectionOverlay(this.sandbox._parent, this.options.collectionId, locale);
             }.bind(this));
+        },
+
+        destroy: function() {
+            this.sandbox.emit(CLOSED.call(this));
         }
     };
 });

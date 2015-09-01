@@ -75,7 +75,7 @@ define(['services/sulumedia/collection-manager',
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.move-collection', function(locale) {
-                OverlayManager.startSelectCollectionOverlayCollection(this.sandbox, this.data.id);
+                OverlayManager.startMoveCollectionOverlay(this.sandbox, this.data.id, UserSettingsManager.getMediaLocale());
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.delete-collection', function(locale) {
@@ -85,7 +85,7 @@ define(['services/sulumedia/collection-manager',
 
         bindOverlayEvents: function() {
             // chose collection to move collection in collection-select overlay
-            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
+            this.sandbox.on('sulu.collection-select.move-collection.selected', this.moveCollection.bind(this));
         },
 
         /**
