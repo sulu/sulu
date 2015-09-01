@@ -120,10 +120,7 @@ define(['services/sulumedia/media-manager',
             // delete a media
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
             // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', function() {
-                //this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.lock-popup');
-                this.editMedia.bind(this);
-            }.bind(this));
+            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
             // move media
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
                 OverlayManager.startSelectCollectionOverlayMedia.bind(this, this.sandbox, [this.options.id]);

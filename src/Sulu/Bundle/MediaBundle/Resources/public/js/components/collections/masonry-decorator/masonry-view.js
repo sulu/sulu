@@ -230,7 +230,7 @@ define(function() {
          */
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('.body', 'click.contact.list', function() {
+                this.sandbox.dom.on('body', 'click.masonry', function() {
                     this.deselectAllRecords();
                 }.bind(this));
             }
@@ -347,7 +347,7 @@ define(function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.body', 'click.contact.list');
+            this.sandbox.dom.off('.body', 'click.masonry');
             this.sandbox.masonry.destroy('#' + constants.masonryGridId);
             this.sandbox.dom.remove(this.$el);
         },
