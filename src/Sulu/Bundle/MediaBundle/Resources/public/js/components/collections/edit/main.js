@@ -61,6 +61,7 @@ define(['services/sulumedia/collection-manager',
 
             this.bindCustomEvents();
             this.bindOverlayEvents();
+            this.bindManagerEvents();
         },
 
         bindCustomEvents: function() {
@@ -88,20 +89,27 @@ define(['services/sulumedia/collection-manager',
             this.sandbox.on('sulu.collection-select.move-collection.selected', this.moveCollection.bind(this));
         },
 
+        bindManagerEvents: function() {
+            this.sandbox.on('sulu.medias.collection.saved', function(){
+                // todo: change title of component
+            }.bind(this));
+
+            this.sandbox.on('sulu.medias.collection.deleted', function() {
+                if (!!this.data._embedded.parent) {
+                    MediaRouter.toCollection(this.data._embedded.parent.id);
+                } else {
+                    MediaRouter.toRoot();
+                }
+            }.bind(this));
+        },
+
         /**
          * Deletes the current collection
          */
         deleteCollection: function() {
             this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                 if (!!confirmed) {
-                    //this.sandbox.emit('husky.datagrid.medium-loader.show');
-                    CollectionManager.delete(this.data.id).then(function() {
-                        if (!!this.data._embedded.parent) {
-                            MediaRouter.toCollection(this.data._embedded.parent.id);
-                        } else {
-                            MediaRouter.toRoot();
-                        }
-                    }.bind(this));
+                    CollectionManager.delete(this.data.id);
                 }
             }.bind(this));
         },

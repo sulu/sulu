@@ -75,10 +75,6 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                 this.sandbox.once('husky.overlay.edit-collection.language-changed', function(locale) {
                     this.languageChanged(locale);
                 }.bind(this));
-
-                this.sandbox.dom.one(constants.editFormSelector, 'keyup', function() {
-                    this.sandbox.emit('husky.overlay.edit-collection.okbutton.activate');
-                }.bind(this));
             }.bind(this));
         },
 
@@ -116,8 +112,7 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
                             preSelected: this.options.locale
-                        },
-                        okInactive: true
+                        }
                     }
                 }
             ]);
@@ -131,14 +126,19 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
             var promise = $.Deferred();
 
             if (this.sandbox.form.validate(constants.editFormSelector)) {
-                var collection = this.sandbox.form.getData(constants.editFormSelector);
-                collection.locale = this.options.locale;
-                collection.parent = (!!this.data._embedded.parent) ? this.data._embedded.parent.id : null;
-                collection = this.sandbox.util.extend(true, {}, this.data, collection);
+                var formData = this.sandbox.form.getData(constants.editFormSelector),
+                    collectionData = this.sandbox.util.extend(true, {}, this.data, formData);
 
-                CollectionManager.save(collection).then(function(collection) {
+                if (JSON.stringify(this.data) !== JSON.stringify(collectionData)) {
+                    collectionData.locale = this.options.locale;
+                    collectionData.parent = (!!this.data._embedded.parent) ? this.data._embedded.parent.id : null;
+
+                    CollectionManager.save(collectionData).then(function(collection) {
+                        promise.resolve();
+                    }.bind(this));
+                } else {
                     promise.resolve();
-                }.bind(this));
+                }
             } else {
                 promise.resolve();
             }
