@@ -883,51 +883,55 @@ h2.content-title {
   border-bottom: 2px solid #ddd;
   margin-bottom: 30px;
 }
+/* line 49, ../scss/typo.scss */
+h2.light {
+  color: #ccc;
+}
 
-/* line 50, ../scss/typo.scss */
+/* line 54, ../scss/typo.scss */
 h3 {
   font-size: 20px;
   line-height: 25px;
 }
 
-/* line 55, ../scss/typo.scss */
+/* line 59, ../scss/typo.scss */
 h4 {
   font-size: 18px;
   line-height: 20px;
 }
 
-/* line 60, ../scss/typo.scss */
+/* line 64, ../scss/typo.scss */
 h5 {
   font-size: 14px;
   line-height: 15px;
 }
 
-/* line 65, ../scss/typo.scss */
+/* line 69, ../scss/typo.scss */
 h6 {
   font-size: 12px;
   line-height: 15px;
   margin: 0;
 }
 
-/* line 72, ../scss/typo.scss */
+/* line 76, ../scss/typo.scss */
 .compoundedHeadlines :first-child {
   color: #52B6CA;
   font-size: 14px;
   margin: 0;
   line-height: 20px;
 }
-/* line 78, ../scss/typo.scss */
+/* line 82, ../scss/typo.scss */
 .compoundedHeadlines :nth-child(2) {
   margin-top: 0;
 }
 
-/* line 85, ../scss/typo.scss */
+/* line 89, ../scss/typo.scss */
 h1, h2, h3, h4, h5 {
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
-/* line 89, ../scss/typo.scss */
+/* line 93, ../scss/typo.scss */
 h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
   position: absolute;
   top: 50%;
@@ -939,105 +943,32 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   background-color: #ccc;
 }
 
-/* line 104, ../scss/typo.scss */
+/* line 108, ../scss/typo.scss */
 .bold {
   font-family: Helvetica, Arial, sans-serif !important;
 }
 
-/* line 113, ../scss/typo.scss */
+/* line 117, ../scss/typo.scss */
 .small-font {
   font-size: 12px;
 }
 
-/* line 117, ../scss/typo.scss */
+/* line 121, ../scss/typo.scss */
 .smaller-font {
   font-size: 10px;
 }
 
-/* line 121, ../scss/typo.scss */
+/* line 125, ../scss/typo.scss */
 .grey-font {
   color: #999;
 }
 
-/* line 14, ../scss/various.scss */
-.breadcrumb {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  height: 20px;
-}
-/* line 33, ../scss/mixins.scss */
-.breadcrumb:after {
-  clear: both;
-  content: ' ';
-  display: block;
-}
-/* line 25, ../scss/various.scss */
-.breadcrumb li {
-  display: block;
-  float: left;
-  font-size: 12px;
-  margin: 0 -5px 0 0;
-  padding: 0;
-  cursor: pointer;
-  height: 100%;
-}
-/* line 34, ../scss/various.scss */
-.breadcrumb li.inactive {
-  cursor: default;
-}
-/* line 36, ../scss/various.scss */
-.breadcrumb li.inactive a {
-  cursor: default;
-}
-/* line 41, ../scss/various.scss */
-.breadcrumb li a {
-  display: inline-block;
-  line-height: 18px;
-  height: 20px;
-  text-decoration: none;
-  color: #74C4D4;
-  border-style: solid;
-  border-color: #74C4D4;
-  border-width: 1px 0;
-  vertical-align: top;
-  padding: 0 5px 0 13px;
-}
-/* line 54, ../scss/various.scss */
-.breadcrumb li::before {
-  margin-right: -12px;
-  display: inline-block;
-  content: "";
-  height: 20px;
-  width: 9px;
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjExcHgiIGhlaWdodD0iMjBweCIgdmlld0JveD0iMCAwIDExIDIwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggMy4wLjEgKDc1OTcpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPlNsaWNlIDE8L3RpdGxlPgogICAgPGRlc2NyaXB0aW9uPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjcmlwdGlvbj4KICAgIDxkZWZzPjwvZGVmcz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHNrZXRjaDp0eXBlPSJNU1BhZ2UiPgogICAgICAgIDxnIGlkPSJpY29uMiIgc2tldGNoOnR5cGU9Ik1TTGF5ZXJHcm91cCIgZmlsbD0iIzhBRENFOCI+CiAgICAgICAgICAgIDxnIGlkPSJQYWdlLTEiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTExLDEgTDAuNTU4NzQ5ODkzLDEgQzAuNjMyNzU2MjY5LDEgMC44MDU4Nzc1MjUsMC45MjMwNjIxOTcgMC45MzEwNTkyMzYsMC42NjQxNjcyNDQgQzEuMDU2Mjg4NiwwLjQwNTE3MzczIDEuMDA5MTE4NzgsMC4yMjMwMzE3NDggMC45NjU5NDAxMzgsMC4xNjg2NTY2NDcgTDcuNzEwNDQ2OTcsOC42NjIwNTE2NiBDOC4zNDYyMTkwMyw5LjQ2MjY4Mjk1IDguMzQ0MjQwOTgsMTAuNjg4ODUxNyA3LjcwNTkwOTczLDExLjQ4MDgyNTcgTDAuOTYxNDAyODk0LDE5Ljg0ODY5NzggQzEuMDExNTgxNzEsMTkuNzg2NDQxMiAxLjA2MDcwNTc5LDE5LjU5NTcwOTEgMC45MzM3MzMxOCwxOS4zMzQ1ODU0IEMwLjgwODgxMDUxLDE5LjA3NzY3NzUgMC42MzUxMjQzNDYsMTkgMC41NTg3NDk4OTMsMTkgTDExLDE5IEwxMSwyMCBMMC41NTg3NDk4OTMsMjAgQzAuMDA4NDYzNTk5NzQsMjAgLTAuMTYzODc2NzExLDE5LjY1MTMwMDcgMC4xODI4MTgxNTMsMTkuMjIxMTU4MyBMNi45MjczMjQ5OSwxMC44NTMyODYyIEM3LjI3MDM0NzM0LDEwLjQyNzcwMDMgNy4yNzQwMTk4NSw5LjcyMDUxNDU1IDYuOTI3MzI0OTksOS4yODM5MTk3OCBMMC4xODI4MTgxNTMsMC43OTA1MjQ3NjYgQy0wLjE2OTU1MDMyMSwwLjM0Njc4NTE4NSAwLjAwNDQzMzY2MTkxLDAgMC41NTg3NDk4OTMsMCBMMTEsMCIgaWQ9IlJlY3RhbmdsZS00ODMiPjwvcGF0aD4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+);
-}
-/* line 63, ../scss/various.scss */
-.breadcrumb li::after {
-  margin-left: -4px;
-  display: inline-block;
-  content: "";
-  height: 20px;
-  width: 9px;
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjlweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgOSAyMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpza2V0Y2g9Imh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaC9ucyI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDMuMC4xICg3NTk3KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5VbnRpdGxlZCAyPC90aXRsZT4KICAgIDxkZXNjcmlwdGlvbj5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8ZyBpZD0iaWNvbiIgc2tldGNoOnR5cGU9Ik1TTGF5ZXJHcm91cCIgZmlsbD0iIzhBRENFOCI+CiAgICAgICAgICAgIDxnIGlkPSJQYWdlLTEiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPgogICAgICAgICAgICAgICAgPGcgaWQ9Ikl0ZW0iPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0wLjAwMTE1ODI2NTE3LDIwIEMwLjU1MjgwMzMyMywyMCAxLjI4NDcyNDI0LDE5LjY0ODczMiAxLjYyNzc0NjU4LDE5LjIyNTU0MDggTDguMzcyMjUzNDIsMTAuOTA0NzU0IEM4LjcxODk0ODI4LDEwLjQ3NzAzMiA4LjcyNDYyMTg5LDkuNzgxNTg3MDkgOC4zODU1MzcwMyw5LjM1MjIwODM5IEwxLjYxNDQ2Mjk3LDAuNzc4MDg2Mzc4IEMxLjI3NTEwNDQ0LDAuMzQ4MzYxMTM4IDAuNTQyNjc2ODA2LDAgMC4wMDExNTgyNjUxNywwIEwwLjAwMTE1ODI2NTE3LDIwIEwwLjAwMTE1ODI2NTE3LDIwIFogTTAuMDAxMTU4MjY1MTcsMSBDMC4yNDE0NTQ2OSwxIDAuNjgyODk0NDMsMS4yMTE5ODQ0MSAwLjgyOTY3MDU5NywxLjM5Nzg0NTE1IEw3LjYwMDc0NDY1LDkuOTcxOTY3MTYgQzcuNjQ5NDk4MzcsMTAuMDMzNzAzMyA3LjY0ODAxMDI2LDEwLjIxMDE2NjUgNy41OTU0MDI4MSwxMC4yNzUwNjkgTDAuODUwODk1OTc2LDE4LjU5NTg1NTggQzAuNjk2MzYzMTA0LDE4Ljc4NjUwNTEgMC4yNDkwNzAyNDUsMTkgMC4wMDExNTgyNjUxNywxOSBMMC4wMDExNTgyNjUxNywxIEwwLjAwMTE1ODI2NTE3LDEgWiIgaWQ9IlJlY3RhbmdsZS00ODMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+);
-}
-/* line 73, ../scss/various.scss */
-.breadcrumb li:first-child a {
-  padding-left: 5px;
-  border-left-width: 1px;
-  border-radius: 2px 0 0 2px;
-}
-/* line 79, ../scss/various.scss */
-.breadcrumb li:first-child::before {
-  display: none;
-}
-
-/* line 86, ../scss/various.scss */
+/* line 10, ../scss/various.scss */
 .husky-position {
   width: 100%;
   height: 100%;
 }
-/* line 90, ../scss/various.scss */
+/* line 14, ../scss/various.scss */
 .husky-position > div {
   width: 33.33%;
   height: 33.33%;
@@ -1045,24 +976,24 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   cursor: pointer;
   border: 1px solid #ddd;
 }
-/* line 97, ../scss/various.scss */
+/* line 21, ../scss/various.scss */
 .husky-position .left {
   float: left;
   clear: left;
 }
-/* line 101, ../scss/various.scss */
+/* line 25, ../scss/various.scss */
 .husky-position .middle {
   float: left;
 }
-/* line 104, ../scss/various.scss */
+/* line 28, ../scss/various.scss */
 .husky-position .right {
   float: left;
 }
-/* line 107, ../scss/various.scss */
+/* line 31, ../scss/various.scss */
 .husky-position .selected {
   background: #52B6CA;
 }
-/* line 110, ../scss/various.scss */
+/* line 34, ../scss/various.scss */
 .husky-position .inactive {
   background: transparent;
   cursor: default;
@@ -2960,7 +2891,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-style: normal;
 }
 /* line 4, ../scss/fontsawesome/_core.scss */
-.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before {
+.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before, .text-block .collapsed-container.empty::before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3046,11 +2977,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before {
+.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before, .text-block .pull-left.collapsed-container.empty::before {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before {
+.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before, .text-block .pull-right.collapsed-container.empty::before {
   margin-left: .3em;
 }
 
@@ -8277,6 +8208,8 @@ a.btn-black, a.btn-highlight {
 /*styles related to the whole container*/
 /* line 10, ../scss/modules/toolbar.scss */
 .husky-toolbar {
+  white-space: nowrap;
+  display: inline-block;
   /*group specific styles*/
   /** styles for the toolbar-items **/
   /**  dropdown styles **/
@@ -8287,82 +8220,82 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 12, ../scss/modules/toolbar.scss */
+/* line 15, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-search {
   display: inline-block;
 }
-/* line 17, ../scss/modules/toolbar.scss */
+/* line 20, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .group {
   height: 20px;
 }
-/* line 21, ../scss/modules/toolbar.scss */
+/* line 24, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .toolbar-item {
   line-height: 20px;
   min-width: 30px;
 }
-/* line 25, ../scss/modules/toolbar.scss */
+/* line 28, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .toolbar-item .icon {
   font-size: 10px;
   position: relative;
   top: -2px;
 }
-/* line 30, ../scss/modules/toolbar.scss */
+/* line 33, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .toolbar-item .title {
   font-size: 9px;
 }
-/* line 33, ../scss/modules/toolbar.scss */
+/* line 36, ../scss/modules/toolbar.scss */
 .husky-toolbar.small .toolbar-item .item-loader {
   height: 14px;
   margin-top: 2px;
   margin-left: -2px;
 }
-/* line 42, ../scss/modules/toolbar.scss */
+/* line 45, ../scss/modules/toolbar.scss */
 .husky-toolbar .group {
   padding-left: 0;
   margin: 0;
   list-style: none;
   height: 30px;
 }
-/* line 48, ../scss/modules/toolbar.scss */
+/* line 51, ../scss/modules/toolbar.scss */
 .husky-toolbar .group.right {
   float: right;
   padding-left: 10px;
 }
-/* line 52, ../scss/modules/toolbar.scss */
+/* line 55, ../scss/modules/toolbar.scss */
 .husky-toolbar .group.right .toolbar-dropdown-menu {
   left: auto;
   right: 0;
 }
-/* line 57, ../scss/modules/toolbar.scss */
+/* line 60, ../scss/modules/toolbar.scss */
 .husky-toolbar .group.left {
   float: left;
   padding-right: 10px;
 }
-/* line 60, ../scss/modules/toolbar.scss */
+/* line 63, ../scss/modules/toolbar.scss */
 .husky-toolbar .group.left.last {
   padding-right: 0;
 }
-/* line 65, ../scss/modules/toolbar.scss */
+/* line 68, ../scss/modules/toolbar.scss */
 .husky-toolbar .group .toolbar-item {
   border-style: solid;
   border-color: #CACACA;
   border-width: 1px 1px 1px 0;
 }
-/* line 70, ../scss/modules/toolbar.scss */
+/* line 73, ../scss/modules/toolbar.scss */
 .husky-toolbar .group .toolbar-item:first-child, .husky-toolbar .group .toolbar-item:first-child.hidden + .toolbar-item {
   border-radius: 3px 0 0 3px;
   border-width: 1px;
 }
-/* line 75, ../scss/modules/toolbar.scss */
+/* line 78, ../scss/modules/toolbar.scss */
 .husky-toolbar .group .toolbar-item:last-child {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
-/* line 79, ../scss/modules/toolbar.scss */
+/* line 82, ../scss/modules/toolbar.scss */
 .husky-toolbar .group .toolbar-item:only-child {
   border-radius: 3px;
 }
-/* line 86, ../scss/modules/toolbar.scss */
+/* line 89, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item {
   min-width: 50px;
   position: relative;
@@ -8376,17 +8309,17 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
   padding: 0 10px;
 }
-/* line 99, ../scss/modules/toolbar.scss */
+/* line 102, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .icon {
   font-size: 16px;
   padding-right: 0px;
   display: inline-block;
 }
-/* line 104, ../scss/modules/toolbar.scss */
+/* line 107, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .icon + .title {
   margin-top: -4px;
 }
-/* line 107, ../scss/modules/toolbar.scss */
+/* line 110, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .content {
   margin-right: 10px;
   margin-top: -5px;
@@ -8394,43 +8327,43 @@ a.btn-black, a.btn-highlight {
   vertical-align: middle;
   line-height: 50px;
 }
-/* line 115, ../scss/modules/toolbar.scss */
+/* line 118, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .title {
   font-size: 12px;
   display: inline-block;
   vertical-align: middle;
 }
-/* line 121, ../scss/modules/toolbar.scss */
+/* line 124, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .dropdown-toggle {
   display: inline-block;
   top: 0;
   padding-right: 5px;
   margin-right: -5px;
 }
-/* line 127, ../scss/modules/toolbar.scss */
+/* line 130, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .icon ~ .dropdown-toggle {
   top: -3px;
 }
-/* line 131, ../scss/modules/toolbar.scss */
+/* line 134, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.dropdown {
   position: relative;
   display: block;
   list-style: none;
   float: left;
 }
-/* line 138, ../scss/modules/toolbar.scss */
+/* line 141, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .item-loader {
   display: inline-block;
   height: 20px;
   margin-top: 4px;
 }
-/* line 144, ../scss/modules/toolbar.scss */
+/* line 147, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.disabled:hover, .husky-toolbar .toolbar-item.disabled {
   background-color: inherit;
   cursor: default;
   color: #999;
 }
-/* line 151, ../scss/modules/toolbar.scss */
+/* line 154, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.disabled::after {
   content: "";
   display: block;
@@ -8441,75 +8374,75 @@ a.btn-black, a.btn-highlight {
   height: 100%;
   z-index: 100;
 }
-/* line 162, ../scss/modules/toolbar.scss */
+/* line 165, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight {
   background-color: #52B6CA;
   border-color: transparent;
 }
-/* line 166, ../scss/modules/toolbar.scss */
+/* line 169, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight.disabled:hover, .husky-toolbar .toolbar-item.highlight.disabled {
   background-color: #ddd;
   border-color: transparent;
   color: #1e1e1e;
 }
-/* line 173, ../scss/modules/toolbar.scss */
+/* line 176, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight:hover {
   background-color: #5ebbce;
 }
-/* line 176, ../scss/modules/toolbar.scss */
+/* line 179, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight:active {
   background-color: #66bed0;
 }
-/* line 180, ../scss/modules/toolbar.scss */
+/* line 183, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight > span {
   color: #fff;
 }
-/* line 183, ../scss/modules/toolbar.scss */
+/* line 186, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight > span.dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 188, ../scss/modules/toolbar.scss */
+/* line 191, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight.is-expanded {
   background-color: #52B6CA;
 }
-/* line 193, ../scss/modules/toolbar.scss */
+/* line 196, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray {
   background-color: #ddd;
   border-color: transparent;
 }
-/* line 197, ../scss/modules/toolbar.scss */
+/* line 200, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray:hover {
   background-color: #ddd;
 }
-/* line 200, ../scss/modules/toolbar.scss */
+/* line 203, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.highlight-gray:active {
   background-color: #ddd;
 }
-/* line 206, ../scss/modules/toolbar.scss */
+/* line 209, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-expanded {
   background-color: #ddd;
 }
-/* line 209, ../scss/modules/toolbar.scss */
+/* line 212, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-expanded ul.toolbar-dropdown-menu {
   display: block;
 }
-/* line 215, ../scss/modules/toolbar.scss */
+/* line 218, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item.is-loading .title, .husky-toolbar .toolbar-item.is-loading .icon, .husky-toolbar .toolbar-item.is-loading .dropdown-toggle, .husky-toolbar .toolbar-item.is-loading .dropdown-toggle::after {
   display: none;
 }
-/* line 220, ../scss/modules/toolbar.scss */
+/* line 223, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item:hover {
   background-color: #ddd;
 }
-/* line 223, ../scss/modules/toolbar.scss */
+/* line 226, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item:active {
   background-color: #d5d5d5;
 }
-/* line 229, ../scss/modules/toolbar.scss */
+/* line 232, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-item .icon + .title:not(:empty) {
   padding-left: 10px;
 }
-/* line 234, ../scss/modules/toolbar.scss */
+/* line 237, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu {
   background-color: white;
   border: 1px solid #ddd;
@@ -8529,12 +8462,12 @@ a.btn-black, a.btn-highlight {
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
-/* line 254, ../scss/modules/toolbar.scss */
+/* line 257, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 259, ../scss/modules/toolbar.scss */
+/* line 262, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li {
   display: list-item;
   float: none;
@@ -8548,22 +8481,22 @@ a.btn-black, a.btn-highlight {
   padding: 0 20px;
   text-align: left;
 }
-/* line 272, ../scss/modules/toolbar.scss */
+/* line 275, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li a {
   color: black;
   text-decoration: none;
   padding: 0;
 }
-/* line 278, ../scss/modules/toolbar.scss */
+/* line 281, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.is-selected, .husky-toolbar .toolbar-dropdown-menu li:hover {
   background-color: #52B6CA;
   color: #fff;
 }
-/* line 282, ../scss/modules/toolbar.scss */
+/* line 285, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.is-selected a, .husky-toolbar .toolbar-dropdown-menu li:hover a {
   color: #fff;
 }
-/* line 288, ../scss/modules/toolbar.scss */
+/* line 291, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.marked::before {
   content: "";
   display: block;
@@ -8572,100 +8505,108 @@ a.btn-black, a.btn-highlight {
   left: 7px;
   font-size: 12px;
 }
-/* line 299, ../scss/modules/toolbar.scss */
+/* line 302, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover, .husky-toolbar .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 303, ../scss/modules/toolbar.scss */
+/* line 306, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover a, .husky-toolbar .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 309, ../scss/modules/toolbar.scss */
+/* line 312, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li:active {
   background-color: #66bed0;
 }
-/* line 313, ../scss/modules/toolbar.scss */
+/* line 316, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #ddd;
 }
-/* line 320, ../scss/modules/toolbar.scss */
+/* line 323, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 332, ../scss/modules/toolbar.scss */
+/* line 429, ../scss/modules/toolbar.scss */
 .husky-toolbar.big {
   height: 50px;
 }
-/* line 335, ../scss/modules/toolbar.scss */
+/* line 338, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group {
   height: 50px;
   float: none;
   display: inline-block;
   vertical-align: top;
 }
-/* line 340, ../scss/modules/toolbar.scss */
+/* line 343, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:first-child {
-  border-left: 1px solid #74C4D4;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
 }
-/* line 344, ../scss/modules/toolbar.scss */
+/* line 347, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:last-child {
   border-radius: 0;
 }
-/* line 349, ../scss/modules/toolbar.scss */
+/* line 352, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item {
   border: none;
-  border-right: 1px solid #74C4D4;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0 20px;
   border-radius: 0;
 }
-/* line 354, ../scss/modules/toolbar.scss */
+/* line 357, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon, .husky-toolbar.big .toolbar-item .title {
   color: #fff;
   line-height: 50px;
 }
-/* line 358, ../scss/modules/toolbar.scss */
+/* line 361, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon {
   font-size: 20px;
 }
-/* line 361, ../scss/modules/toolbar.scss */
+/* line 364, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon + .title {
   margin-top: -6px;
 }
-/* line 364, ../scss/modules/toolbar.scss */
+/* line 367, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 367, ../scss/modules/toolbar.scss */
+/* line 370, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle {
   padding-left: 20px;
   padding-right: 20px;
   margin-right: -20px;
 }
-/* line 372, ../scss/modules/toolbar.scss */
+/* line 375, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item:hover {
-  background: #74C4D4;
+  background: rgba(255, 255, 255, 0.2);
 }
-/* line 378, ../scss/modules/toolbar.scss */
+/* line 379, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-selected:first-child, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item.is-expanded:first-child, .husky-toolbar.big .toolbar-item:hover, .husky-toolbar.big .toolbar-item:hover:first-child {
+  border-color: transparent;
+}
+/* line 384, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:hover {
   background: transparent;
 }
-/* line 381, ../scss/modules/toolbar.scss */
+/* line 387, ../scss/modules/toolbar.scss */
+.husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:first-child, .husky-toolbar.big .toolbar-item.disabled:hover, .husky-toolbar.big .toolbar-item.disabled:hover:first-child {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+/* line 390, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .icon, .husky-toolbar.big .toolbar-item.disabled .title, .husky-toolbar.big .toolbar-item.disabled:hover .icon, .husky-toolbar.big .toolbar-item.disabled:hover .title {
-  color: #74C4D4;
+  color: rgba(255, 255, 255, 0.2);
 }
-/* line 384, ../scss/modules/toolbar.scss */
+/* line 393, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .dropdown-toggle::after, .husky-toolbar.big .toolbar-item.disabled:hover .dropdown-toggle::after {
-  border-top-color: #74C4D4;
+  border-top-color: rgba(255, 255, 255, 0.2);
 }
-/* line 389, ../scss/modules/toolbar.scss */
+/* line 398, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white {
   background-color: #fff;
   height: 30px;
@@ -8675,27 +8616,42 @@ a.btn-black, a.btn-highlight {
   margin-top: 10px;
   margin-right: 10px;
 }
-/* line 397, ../scss/modules/toolbar.scss */
+/* line 406, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .title {
   text-align: left;
   color: #000;
   line-height: 30px;
 }
-/* line 402, ../scss/modules/toolbar.scss */
+/* line 411, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .dropdown-toggle::after {
   border-top-color: #000;
 }
-/* line 405, ../scss/modules/toolbar.scss */
+/* line 414, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white:last-child, .husky-toolbar.big .toolbar-item.highlight-white:first-child {
   border-radius: 3px;
 }
-/* line 411, ../scss/modules/toolbar.scss */
+/* line 420, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-search {
   padding-top: 10px;
 }
-/* line 415, ../scss/modules/toolbar.scss */
+/* line 424, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .item-loader {
   margin-top: 15px;
+}
+
+/* line 433, ../scss/modules/toolbar.scss */
+.husky-toolbar-responsive {
+  overflow: auto;
+}
+/* line 436, ../scss/modules/toolbar.scss */
+.husky-toolbar-responsive.overflown {
+  -moz-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
+  -webkit-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
+  box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
+}
+/* line 438, ../scss/modules/toolbar.scss */
+.husky-toolbar-responsive.overflown .toolbar-dropdown-menu {
+  margin-top: 0;
 }
 
 /* line 5, ../scss/modules/matrix.scss */
@@ -9949,146 +9905,234 @@ a.btn-black, a.btn-highlight {
   left: 17px;
 }
 
-/* line 6, ../scss/modules/content-types.scss */
-.sortable .show-in-sortmode {
-  display: none;
+/* line 8, ../scss/modules/content-types.scss */
+.sortable .text-block .container,
+.sortable .text-block .collapsed-container {
+  padding-left: 40px;
 }
-/* line 11, ../scss/modules/content-types.scss */
-.sortable.is-sortmode .show-in-sortmode {
-  display: block;
-}
-/* line 15, ../scss/modules/content-types.scss */
-.sortable.is-sortmode .cke,
-.sortable.is-sortmode .hide-in-sortmode {
-  display: none;
-}
-/* line 21, ../scss/modules/content-types.scss */
-.sortable.is-sortmode .text-block label {
-  display: none;
-}
-/* line 25, ../scss/modules/content-types.scss */
-.sortable.is-sortmode .text-block .form-group {
-  margin-top: 0;
-}
-/* line 32, ../scss/modules/content-types.scss */
+/* line 13, ../scss/modules/content-types.scss */
 .sortable .text-block > .move {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15px;
+  height: 100%;
+  background: #ccc;
+  z-index: 10;
+  text-align: center;
+  cursor: move;
+  color: #000;
+  font-size: 16px;
+  border-radius: 3px 0 0 3px;
 }
-/* line 34, ../scss/modules/content-types.scss */
+/* line 26, ../scss/modules/content-types.scss */
 .sortable .text-block > .move::before {
   content: "";
-  cursor: move;
-  padding-right: 5px;
-  position: absolute;
-  top: 10px;
-  left: 2px;
-  z-index: 5;
-  color: #999;
-  font-size: 16px;
-  width: 20px;
-  text-align: center;
+  display: block;
+  position: relative;
+  top: 50%;
+  margin-top: -8px;
 }
-/* line 50, ../scss/modules/content-types.scss */
+/* line 36, ../scss/modules/content-types.scss */
 .sortable .text-block .grid-row:last-of-type {
   margin-bottom: 0;
 }
 
-/* line 56, ../scss/modules/content-types.scss */
+/* line 42, ../scss/modules/content-types.scss */
 .text-block-controls {
-  margin-bottom: -20px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
-/* line 60, ../scss/modules/content-types.scss */
+/* line 48, ../scss/modules/content-types.scss */
 .text-block {
-  margin-bottom: 20px;
+  position: relative;
+  margin-bottom: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
 }
-/* line 65, ../scss/modules/content-types.scss */
+/* line 57, ../scss/modules/content-types.scss */
 .text-block .head label {
   float: left;
   font-size: 16px;
   margin-bottom: 10px;
   cursor: default;
 }
-/* line 72, ../scss/modules/content-types.scss */
+/* line 64, ../scss/modules/content-types.scss */
 .text-block .head::after {
   content: "";
   display: block;
   clear: both;
 }
-/* line 79, ../scss/modules/content-types.scss */
-.text-block .options-change {
-  cursor: pointer;
-  font-size: 16px;
-}
-/* line 83, ../scss/modules/content-types.scss */
-.text-block .options-change .dropdown-toggle::after {
-  margin-left: 0;
-}
-/* line 88, ../scss/modules/content-types.scss */
+/* line 71, ../scss/modules/content-types.scss */
 .text-block .options-remove {
   cursor: pointer;
-  position: relative;
-  top: 2px;
   font-size: 16px;
+  width: 22px;
+  height: 30px;
+  line-height: 30px;
+  margin-left: 5px;
+  text-align: left;
 }
-/* line 95, ../scss/modules/content-types.scss */
-.text-block .container {
-  padding: 10px 20px 20px 20px;
-  background: #ddd;
-  border: 1px solid #ddd;
-  -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
+/* line 80, ../scss/modules/content-types.scss */
+.text-block .options-collapse {
+  cursor: pointer;
+  font-size: 16px;
+  width: 22px;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
 }
-/* line 101, ../scss/modules/content-types.scss */
-.text-block .container label {
+/* line 89, ../scss/modules/content-types.scss */
+.text-block .container,
+.text-block .collapsed-container {
+  padding: 20px;
+  position: relative;
+}
+/* line 94, ../scss/modules/content-types.scss */
+.text-block .container label,
+.text-block .collapsed-container label {
   margin-bottom: 10px;
 }
-/* line 105, ../scss/modules/content-types.scss */
-.text-block .container textarea {
+/* line 98, ../scss/modules/content-types.scss */
+.text-block .container textarea,
+.text-block .collapsed-container textarea {
   max-width: 100%;
   min-width: 100%;
   width: 100%;
 }
-
-/* line 113, ../scss/modules/content-types.scss */
-.text-blocks-toggle-btn {
-  padding: 5px 0;
-  height: auto;
+/* line 105, ../scss/modules/content-types.scss */
+.text-block .collapsed-container {
+  color: #999;
+  cursor: pointer;
+  padding-top: 10px;
+  display: none;
+}
+/* line 33, ../scss/mixins.scss */
+.text-block .collapsed-container:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 111, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .title {
+  font-weight: bold;
+  font-style: oblique;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-right: 100px;
+}
+/* line 120, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .image {
+  float: left;
+  overflow: hidden;
+}
+/* line 123, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .image img {
+  display: block;
+  margin-right: 10px;
+  height: 50px;
+  width: 50px;
+}
+/* line 130, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .text {
+  display: block;
+  /* Fallback for non-webkit */
+  display: -webkit-box;
+  padding-top: 3px;
+  height: 45px;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 146, ../scss/modules/content-types.scss */
+.text-block .collapsed-container .type {
+  font-size: 12px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+/* line 154, ../scss/modules/content-types.scss */
+.text-block .collapsed-container.empty::before {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  top: 10px;
+  margin: 0 auto;
+  color: #ccc;
+  font-size: 45px;
+}
+/* line 170, ../scss/modules/content-types.scss */
+.text-block.collapsed .container {
+  display: none;
+}
+/* line 173, ../scss/modules/content-types.scss */
+.text-block.collapsed .collapsed-container {
+  display: block;
 }
 
-/* line 120, ../scss/modules/content-types.scss */
+/* line 179, ../scss/modules/content-types.scss */
+.text-blocks-header {
+  line-height: 20px;
+  text-align: right;
+  margin-top: -35px;
+  position: relative;
+  z-index: 20;
+}
+
+/* line 187, ../scss/modules/content-types.scss */
+.text-blocks-toggle-btn {
+  font-size: 12px;
+  padding-bottom: 15px;
+  display: inline-block;
+  cursor: pointer;
+}
+/* line 192, ../scss/modules/content-types.scss */
+.text-blocks-toggle-btn:focus {
+  outline: none;
+}
+
+/* line 199, ../scss/modules/content-types.scss */
 .empty .text-block .options-remove {
   display: none;
 }
 
-/* line 126, ../scss/modules/content-types.scss */
+/* line 205, ../scss/modules/content-types.scss */
 .text-block-footer {
   margin-bottom: 20px;
 }
-/* line 129, ../scss/modules/content-types.scss */
+/* line 208, ../scss/modules/content-types.scss */
 .text-block-footer .desc {
   font-size: 12px;
   color: #999;
   padding-left: 10px;
 }
-/* line 134, ../scss/modules/content-types.scss */
+/* line 213, ../scss/modules/content-types.scss */
 .text-block-footer .btn.full {
   background-color: #ccc;
   cursor: default;
 }
 
-/* line 140, ../scss/modules/content-types.scss */
+/* line 219, ../scss/modules/content-types.scss */
 .block-content {
   display: none;
   color: #999;
 }
-/* line 144, ../scss/modules/content-types.scss */
+/* line 223, ../scss/modules/content-types.scss */
 .block-content p {
   margin: 5px 0;
 }
 
-/* line 153, ../scss/modules/content-types.scss */
+/* line 232, ../scss/modules/content-types.scss */
 .white-box {
   width: 100%;
   height: 100%;
@@ -10097,12 +10141,12 @@ a.btn-black, a.btn-highlight {
   border: 1px solid #ddd;
   padding: 0 0 15px 0;
 }
-/* line 161, ../scss/modules/content-types.scss */
+/* line 240, ../scss/modules/content-types.scss */
 .white-box .text {
   font-size: 12px;
   color: #999;
 }
-/* line 166, ../scss/modules/content-types.scss */
+/* line 245, ../scss/modules/content-types.scss */
 .white-box .header {
   position: relative;
   top: 0px;
@@ -10122,12 +10166,12 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 180, ../scss/modules/content-types.scss */
+/* line 259, ../scss/modules/content-types.scss */
 .white-box .header .no-content-message {
   color: #999;
   display: none;
 }
-/* line 185, ../scss/modules/content-types.scss */
+/* line 264, ../scss/modules/content-types.scss */
 .white-box .header .selected-counter {
   color: #999;
   font-size: 10px;
@@ -10136,7 +10180,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 70px;
 }
-/* line 194, ../scss/modules/content-types.scss */
+/* line 273, ../scss/modules/content-types.scss */
 .white-box .header .loader {
   position: absolute;
   top: 50%;
@@ -10145,7 +10189,7 @@ a.btn-black, a.btn-highlight {
   margin-left: -10px;
   display: none;
 }
-/* line 203, ../scss/modules/content-types.scss */
+/* line 282, ../scss/modules/content-types.scss */
 .white-box .header .icon {
   display: block;
   font-size: 16px;
@@ -10158,29 +10202,29 @@ a.btn-black, a.btn-highlight {
   margin-top: 9px;
   padding-top: 1px;
 }
-/* line 215, ../scss/modules/content-types.scss */
+/* line 294, ../scss/modules/content-types.scss */
 .white-box .header .icon.action {
   background: #52B6CA;
   color: #fff;
 }
-/* line 219, ../scss/modules/content-types.scss */
+/* line 298, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
   border: 1px solid #ccc;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
 }
-/* line 225, ../scss/modules/content-types.scss */
+/* line 304, ../scss/modules/content-types.scss */
 .white-box .header .icon.left {
   float: left;
   margin-right: -40px;
 }
-/* line 229, ../scss/modules/content-types.scss */
+/* line 308, ../scss/modules/content-types.scss */
 .white-box .header .icon.right {
   float: right;
   margin-left: -40px;
 }
-/* line 235, ../scss/modules/content-types.scss */
+/* line 314, ../scss/modules/content-types.scss */
 .white-box .header .position {
   width: 32px;
   height: 32px;
@@ -10189,7 +10233,7 @@ a.btn-black, a.btn-highlight {
   left: 50%;
   margin: -16px 0 0 -16px;
 }
-/* line 245, ../scss/modules/content-types.scss */
+/* line 324, ../scss/modules/content-types.scss */
 .white-box .content {
   position: relative;
   top: 0px;
@@ -10197,44 +10241,44 @@ a.btn-black, a.btn-highlight {
   max-height: 255px;
   overflow: auto;
 }
-/* line 252, ../scss/modules/content-types.scss */
+/* line 331, ../scss/modules/content-types.scss */
 .white-box .content .items-list {
   list-style-type: none;
   margin: 0;
   padding: 0 20px;
   color: #999;
 }
-/* line 257, ../scss/modules/content-types.scss */
+/* line 336, ../scss/modules/content-types.scss */
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
   border-bottom: 1px solid #ddd;
   position: relative;
 }
-/* line 262, ../scss/modules/content-types.scss */
+/* line 341, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .icon {
   cursor: move;
   color: #000;
   font-size: 15px;
   padding-right: 10px;
 }
-/* line 268, ../scss/modules/content-types.scss */
+/* line 347, ../scss/modules/content-types.scss */
 .white-box .content .items-list li img {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
   vertical-align: middle;
 }
-/* line 274, ../scss/modules/content-types.scss */
+/* line 353, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .num {
   color: #999;
   padding-right: 15px;
 }
-/* line 278, ../scss/modules/content-types.scss */
+/* line 357, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
   color: #999;
 }
-/* line 281, ../scss/modules/content-types.scss */
+/* line 360, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
   position: absolute;
   top: 50%;
@@ -10243,42 +10287,42 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
   color: #000;
 }
-/* line 293, ../scss/modules/content-types.scss */
+/* line 372, ../scss/modules/content-types.scss */
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
   color: #999;
   font-size: 12px;
 }
-/* line 300, ../scss/modules/content-types.scss */
+/* line 379, ../scss/modules/content-types.scss */
 .white-box.no-content {
   padding-bottom: 0;
 }
-/* line 303, ../scss/modules/content-types.scss */
+/* line 382, ../scss/modules/content-types.scss */
 .white-box.no-content .header .no-content-message {
   display: inline;
 }
-/* line 306, ../scss/modules/content-types.scss */
+/* line 385, ../scss/modules/content-types.scss */
 .white-box.no-content .header .position {
   display: none;
 }
-/* line 309, ../scss/modules/content-types.scss */
+/* line 388, ../scss/modules/content-types.scss */
 .white-box.no-content .header .selected-counter {
   display: none;
 }
-/* line 317, ../scss/modules/content-types.scss */
+/* line 396, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .loader {
   display: block;
 }
-/* line 320, ../scss/modules/content-types.scss */
+/* line 399, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .no-content-message {
   display: none;
 }
-/* line 323, ../scss/modules/content-types.scss */
+/* line 402, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .position {
   display: none;
 }
-/* line 326, ../scss/modules/content-types.scss */
+/* line 405, ../scss/modules/content-types.scss */
 .white-box.is-loading .header .selected-counter {
   display: none;
 }

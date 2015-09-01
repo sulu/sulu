@@ -19163,155 +19163,6 @@ define('validator/regex',[
 
 define("husky-validation", function(){});
 
-/*
- * HTML5 Sortable jQuery Plugin
- * https://github.com/voidberg/html5sortable
- *
- * Original code copyright 2012 Ali Farhadi.
- * This version is mantained by Alexandru Badiu <andu@ctrlz.ro>
- *
- * Thanks to the following contributors: andyburke, bistoco, daemianmack, drskullster, flying-sheep, OscarGodson, Parikshit N. Samant, rodolfospalenza, ssafejava
- *
- * Released under the MIT license.
- */
-'use strict';
-
-(function ($) {
-    var dragging, draggingHeight, placeholders = $();
-    $.fn.sortable = function (options) {
-        var method = String(options);
-
-        options = $.extend({
-            connectWith: false,
-            placeholder: null,
-            dragImage: null
-        }, options);
-
-        return this.each(function () {
-            if (method === 'reload') {
-                $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
-            }
-            if (/^enable|disable|destroy$/.test(method)) {
-                var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
-                if (method === 'destroy') {
-                    $(this).off('sortupdate');
-                    $(this).removeData('opts');
-                    citems.add(this).removeData('connectWith items')
-                        .off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
-                }
-                return;
-            }
-
-            var soptions = $(this).data('opts');
-
-            if (typeof soptions === 'undefined') {
-                $(this).data('opts', options);
-            }
-            else {
-                options = soptions;
-            }
-
-            var isHandle, index, items = $(this).children(options.items);
-            var startParent, newParent;
-            var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">') : $(options.placeholder).addClass('sortable-placeholder');
-
-            items.find(options.handle).mousedown(function () {
-                isHandle = true;
-            }).mouseup(function () {
-                isHandle = false;
-            });
-            $(this).data('items', options.items);
-            placeholders = placeholders.add(placeholder);
-            if (options.connectWith) {
-                $(options.connectWith).add(this).data('connectWith', options.connectWith);
-            }
-
-            items.attr('role', 'option');
-            items.attr('aria-grabbed', 'false');
-
-            items.attr('draggable', 'true').on('dragstart.h5s',function (e) {
-                e.stopImmediatePropagation();
-                if (options.handle && !isHandle) {
-                    return false;
-                }
-                isHandle = false;
-                var dt = e.originalEvent.dataTransfer;
-                dt.effectAllowed = 'move';
-                dt.setData('text', '');
-
-                if (options.dragImage && dt.setDragImage) {
-                    dt.setDragImage(options.dragImage, 0, 0);
-                }
-
-                index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
-                draggingHeight = dragging.outerHeight();
-                startParent = $(this).parent();
-            }).on('dragend.h5s',function () {
-                if (!dragging) {
-                    return;
-                }
-                dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
-                placeholders.detach();
-                newParent = $(this).parent();
-                if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
-                    dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
-                }
-                dragging = null;
-                draggingHeight = null;
-            }).not('a[href], img').on('selectstart.h5s',function () {
-                if (options.handle && !isHandle) {
-                    return true;
-                }
-
-                if (this.dragDrop) {
-                    this.dragDrop();
-                }
-                return false;
-            }).end().add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function (e) {
-                if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
-                    return true;
-                }
-                if (e.type === 'drop') {
-                    e.stopPropagation();
-                    placeholders.filter(':visible').after(dragging);
-                    dragging.trigger('dragend.h5s');
-                    return false;
-                }
-                e.preventDefault();
-                e.originalEvent.dataTransfer.dropEffect = 'move';
-                if (items.is(this)) {
-                    var thisHeight = $(this).outerHeight();
-                    if (options.forcePlaceholderSize) {
-                        placeholder.height(draggingHeight);
-                    }
-
-                    // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
-                    if (thisHeight > draggingHeight) {
-                        // Dead zone?
-                        var deadZone = thisHeight - draggingHeight, offsetTop = $(this).offset().top;
-                        if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZone) {
-                            return false;
-                        }
-                        else if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
-                            return false;
-                        }
-                    }
-
-                    dragging.hide();
-                    $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
-                    placeholders.not(placeholder).detach();
-                } else if (!placeholders.is(this) && !$(this).children(options.items).length) {
-                    placeholders.detach();
-                    $(this).append(placeholder);
-                }
-                return false;
-            });
-        });
-    };
-})(jQuery);
-
-define("html5sortable", function(){});
-
 /*!
  * Globalize
  *
@@ -21853,6 +21704,436 @@ return!1},null,null,20);if(e.config.autoUpdateElementJquery&&b.is("textarea")&&a
 100)},0)},null,null,9999)}});var f=new a.Deferred;this.promise=f.promise();a.when.apply(this,i).then(function(){f.resolve()});this.editor=this.eq(0).data("ckeditorInstance");return this}}),CKEDITOR.config.jqueryOverrideVal&&(a.fn.val=CKEDITOR.tools.override(a.fn.val,function(g){return function(d){if(arguments.length){var k=this,i=[],f=this.each(function(){var b=a(this),c=b.data("ckeditorInstance");if(b.is("textarea")&&c){var f=new a.Deferred;c.setData(d,function(){f.resolve()});i.push(f.promise());
 return!0}return g.call(b,d)});if(i.length){var b=new a.Deferred;a.when.apply(this,i).done(function(){b.resolveWith(k)});return b.promise()}return f}var f=a(this).eq(0),c=f.data("ckeditorInstance");return f.is("textarea")&&c?c.getData():g.call(f)}})))})(window.jQuery);
 define("jqueryAdapter", function(){});
+
+;(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define('html.sortable',['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('jquery'));
+  } else {
+    root.sortable = factory(root.jQuery);
+  }
+}(this, function($) {
+/*
+ * HTML5 Sortable jQuery Plugin
+ * https://github.com/voidberg/html5sortable
+ *
+ * Original code copyright 2012 Ali Farhadi.
+ * This version is mantained by Alexandru Badiu <andu@ctrlz.ro> & Lukas Oppermann <lukas@vea.re>
+ *
+ *
+ * Released under the MIT license.
+ */
+'use strict';
+/*
+ * variables global to the plugin
+ */
+var dragging;
+var draggingHeight;
+var placeholders = $();
+var sortables = [];
+/*
+ * remove event handlers from items
+ * @param [jquery Collection] items
+ * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
+ */
+var _removeItemEvents = function(items) {
+  items.off('dragstart.h5s');
+  items.off('dragend.h5s');
+  items.off('selectstart.h5s');
+  items.off('dragover.h5s');
+  items.off('dragenter.h5s');
+  items.off('drop.h5s');
+};
+/*
+ * remove event handlers from sortable
+ * @param [jquery Collection] sortable
+ * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
+ */
+var _removeSortableEvents = function(sortable) {
+  sortable.off('dragover.h5s');
+  sortable.off('dragenter.h5s');
+  sortable.off('drop.h5s');
+};
+/*
+ * attache ghost to dataTransfer object
+ * @param [event] original event
+ * @param [object] ghost-object with item, x and y coordinates
+ */
+var _attachGhost = function(event, ghost) {
+  // this needs to be set for HTML5 drag & drop to work
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text', '');
+
+  // check if setDragImage method is available
+  if (event.dataTransfer.setDragImage) {
+    event.dataTransfer.setDragImage(ghost.item, ghost.x, ghost.y);
+  }
+};
+/**
+ * _addGhostPos clones the dragged item and adds it as a Ghost item
+ * @param [object] event - the event fired when dragstart is triggered
+ * @param [object] ghost - .item = node, draggedItem = jQuery collection
+ */
+var _addGhostPos = function(e, ghost) {
+  if (!ghost.x) {
+    ghost.x = parseInt(e.pageX - ghost.draggedItem.offset().left);
+  }
+  if (!ghost.y) {
+    ghost.y = parseInt(e.pageY - ghost.draggedItem.offset().top);
+  }
+  return ghost;
+};
+/**
+ * _makeGhost decides which way to make a ghost and passes it to attachGhost
+ * @param [jQuery selection] $draggedItem - the item that the user drags
+ */
+var _makeGhost = function($draggedItem) {
+  return {
+    item: $draggedItem[0],
+    draggedItem: $draggedItem
+  };
+};
+/**
+ * _getGhost constructs ghost and attaches it to dataTransfer
+ * @param [event] event - the original drag event object
+ * @param [jQuery selection] $draggedItem - the item that the user drags
+ * @param [object] ghostOpt - the ghost options
+ */
+// TODO: could $draggedItem be replaced by event.target in all instances
+var _getGhost = function(event, $draggedItem) {
+  // add ghost item & draggedItem to ghost object
+  var ghost = _makeGhost($draggedItem);
+  // attach ghost position
+  ghost = _addGhostPos(event, ghost);
+  // attach ghost to dataTransfer
+  _attachGhost(event, ghost);
+};
+/*
+ * return options if not set on sortable already
+ * @param [object] soptions
+ * @param [object] options
+ */
+var _getOptions = function(soptions, options) {
+  if (typeof soptions === 'undefined') {
+    return options;
+  }
+  return soptions;
+};
+/*
+ * remove data from sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _removeSortableData = function(sortable) {
+  sortable.removeData('opts');
+  sortable.removeData('connectWith');
+  sortable.removeData('items');
+  sortable.removeAttr('aria-dropeffect');
+};
+/*
+ * remove data from items
+ * @param [jquery Collection] items
+ */
+var _removeItemData = function(items) {
+  items.removeAttr('aria-grabbed');
+  items.removeAttr('draggable');
+  items.removeAttr('role');
+};
+/*
+ * check if two lists are connected
+ * @param [jquery Collection] items
+ */
+var _listsConnected = function(curList, destList) {
+  if (curList[0] === destList[0]) {
+    return true;
+  }
+  if (curList.data('connectWith') !== undefined) {
+    return curList.data('connectWith') === destList.data('connectWith');
+  }
+  return false;
+};
+/*
+ * destroy the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _destroySortable = function(sortable) {
+  var opts = sortable.data('opts') || {};
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  // remove event handlers & data from sortable
+  _removeSortableEvents(sortable);
+  _removeSortableData(sortable);
+  // remove event handlers & data from items
+  handles.off('mousedown.h5s');
+  _removeItemEvents(items);
+  _removeItemData(items);
+};
+/*
+ * enable the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _enableSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  sortable.attr('aria-dropeffect', 'move');
+  handles.attr('draggable', 'true');
+  // IE FIX for ghost
+  // can be disabled as it has the side effect that other events
+  // (e.g. click) will be ignored
+  var spanEl = (document || window.document).createElement('span');
+  if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
+    handles.on('mousedown.h5s', function() {
+      if (items.index(this) !== -1) {
+        this.dragDrop();
+      } else {
+        $(this).parents(opts.items)[0].dragDrop();
+      }
+    });
+  }
+};
+/*
+ * disable the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _disableSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  sortable.attr('aria-dropeffect', 'none');
+  handles.attr('draggable', false);
+  handles.off('mousedown.h5s');
+};
+/*
+ * reload the sortable
+ * @param [jquery Collection] a single sortable
+ * @description events need to be removed to not be double bound
+ */
+var _reloadSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  // remove event handlers from items
+  _removeItemEvents(items);
+  handles.off('mousedown.h5s');
+  // remove event handlers from sortable
+  _removeSortableEvents(sortable);
+};
+/*
+ * public sortable object
+ * @param [object|string] options|method
+ */
+var sortable = function(selector, options) {
+
+  var $sortables = $(selector);
+  var method = String(options);
+
+  options = $.extend({
+    connectWith: false,
+    placeholder: null,
+    // dragImage can be null or a jQuery element
+    dragImage: null,
+    disableIEFix: false,
+    placeholderClass: 'sortable-placeholder',
+    draggingClass: 'sortable-dragging',
+    hoverClass: false
+  }, options);
+
+  /* TODO: maxstatements should be 25, fix and remove line below */
+  /*jshint maxstatements:false */
+  return $sortables.each(function() {
+
+    var $sortable = $(this);
+
+    if (/enable|disable|destroy/.test(method)) {
+      sortable[method]($sortable);
+      return;
+    }
+
+    // get options & set options on sortable
+    options = _getOptions($sortable.data('opts'), options);
+    $sortable.data('opts', options);
+    // reset sortable
+    _reloadSortable($sortable);
+    // initialize
+    var items = $sortable.children(options.items);
+    var index;
+    var startParent;
+    var newParent;
+    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
+
+    // setup sortable ids
+    if (!$sortable.attr('data-sortable-id')) {
+      var id = sortables.length;
+      sortables[id] = $sortable;
+      $sortable.attr('data-sortable-id', id);
+      items.attr('data-item-sortable-id', id);
+    }
+
+    $sortable.data('items', options.items);
+    placeholders = placeholders.add(placeholder);
+    if (options.connectWith) {
+      $sortable.data('connectWith', options.connectWith);
+    }
+
+    _enableSortable($sortable);
+    items.attr('role', 'option');
+    items.attr('aria-grabbed', 'false');
+
+    // Mouse over class
+    if (options.hoverClass) {
+      var hoverClass = 'sortable-over';
+      if (typeof options.hoverClass === 'string') {
+        hoverClass = options.hoverClass;
+      }
+
+      items.hover(function() {
+        $(this).addClass(hoverClass);
+      }, function() {
+        $(this).removeClass(hoverClass);
+      });
+    }
+
+    // Handle drag events on draggable items
+    items.on('dragstart.h5s', function(e) {
+      e.stopImmediatePropagation();
+
+      if (options.dragImage) {
+        _attachGhost(e.originalEvent, {
+          item: options.dragImage,
+          x: 0,
+          y: 0
+        });
+        console.log('WARNING: dragImage option is deprecated' +
+        ' and will be removed in the future!');
+      } else {
+        // add transparent clone or other ghost to cursor
+        _getGhost(e.originalEvent, $(this), options.dragImage);
+      }
+      // cache selsection & add attr for dragging
+      dragging = $(this);
+      dragging.addClass(options.draggingClass);
+      dragging.attr('aria-grabbed', 'true');
+      // grab values
+      index = dragging.index();
+      draggingHeight = dragging.height();
+      startParent = $(this).parent();
+      // trigger sortstar update
+      dragging.parent().triggerHandler('sortstart', {
+        item: dragging,
+        placeholder: placeholder,
+        startparent: startParent
+      });
+    });
+    // Handle drag events on draggable items
+    items.on('dragend.h5s', function() {
+      if (!dragging) {
+        return;
+      }
+      // remove dragging attributes and show item
+      dragging.removeClass(options.draggingClass);
+      dragging.attr('aria-grabbed', 'false');
+      dragging.show();
+
+      placeholders.detach();
+      newParent = $(this).parent();
+      dragging.parent().triggerHandler('sortstop', {
+        item: dragging,
+        startparent: startParent,
+      });
+      if (index !== dragging.index() ||
+          startParent.get(0) !== newParent.get(0)) {
+        dragging.parent().triggerHandler('sortupdate', {
+          item: dragging,
+          index: newParent.children(newParent.data('items')).index(dragging),
+          oldindex: items.index(dragging),
+          elementIndex: dragging.index(),
+          oldElementIndex: index,
+          startparent: startParent,
+          endparent: newParent
+        });
+      }
+      dragging = null;
+      draggingHeight = null;
+    });
+    // Handle drop event on sortable & placeholder
+    // TODO: REMOVE placeholder?????
+    $(this).add([placeholder]).on('drop.h5s', function(e) {
+      if (!_listsConnected($sortable, $(dragging).parent())) {
+        return;
+      }
+
+      e.stopPropagation();
+      placeholders.filter(':visible').after(dragging);
+      dragging.trigger('dragend.h5s');
+      return false;
+    });
+
+    // Handle dragover and dragenter events on draggable items
+    items.add([this]).on('dragover.h5s dragenter.h5s', function(e) {
+      if (!_listsConnected($sortable, $(dragging).parent())) {
+        return;
+      }
+
+      e.preventDefault();
+      e.originalEvent.dataTransfer.dropEffect = 'move';
+      if (items.is(this)) {
+        var thisHeight = $(this).height();
+        if (options.forcePlaceholderSize) {
+          placeholder.height(draggingHeight);
+        }
+
+        // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+        if (thisHeight > draggingHeight) {
+          // Dead zone?
+          var deadZone = thisHeight - draggingHeight;
+          var offsetTop = $(this).offset().top;
+          if (placeholder.index() < $(this).index() &&
+              e.originalEvent.pageY < offsetTop + deadZone) {
+            return false;
+          }
+          if (placeholder.index() > $(this).index() &&
+              e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
+            return false;
+          }
+        }
+
+        dragging.hide();
+        if (placeholder.index() < $(this).index()) {
+          $(this).after(placeholder);
+        } else {
+          $(this).before(placeholder);
+        }
+        placeholders.not(placeholder).detach();
+      } else {
+        if (!placeholders.is(this) && !$(this).children(options.items).length) {
+          placeholders.detach();
+          $(this).append(placeholder);
+        }
+      }
+      return false;
+    });
+  });
+};
+
+sortable.destroy = function(sortable) {
+  _destroySortable(sortable);
+};
+
+sortable.enable = function(sortable) {
+  _enableSortable(sortable);
+};
+
+sortable.disable = function(sortable) {
+  _disableSortable(sortable);
+};
+
+$.fn.sortable = function(options) {
+  return sortable(this, options);
+};
+
+return sortable;
+}));
 
 /*global unescape, module, define, window, global*/
 
@@ -28183,7 +28464,7 @@ define('husky',[
         app.use('./husky_extensions/backbone');
         app.use('./husky_extensions/collection');
         app.use('./husky_extensions/model');
-        app.use('./husky_extensions/html5sortable');
+        app.use('./husky_extensions/html.sortable');
         app.use('./husky_extensions/husky-validation');
         app.use('./husky_extensions/util');
         app.use('./husky_extensions/confirm');
@@ -35037,6 +35318,7 @@ define('__component__$tabs@husky',[],function() {
  * @param {String} [options.skin] custom skin-class to add to the component
  * @param {Boolean} [options.showTitleAsTooltip] shows the title of the button only as tooltip
  * @param {Boolean} [options.showTitle] if false doesn't display the title
+ * @param {Boolean} [options.responsive] iff true to toolbar gets collapsed/expanded if it overflows it's element
  *
  * @param {Object} [options.groups] array of groups with id and align to specify groups to put items in
  * @param {String|Number} [options.groups.id] the id of the group
@@ -35078,7 +35360,8 @@ define('__component__$toolbar@husky',[],function() {
             skin: 'default',
             small: false,
             showTitleAsTooltip: false,
-            showTitle: true
+            showTitle: true,
+            responsive: false
         },
 
         itemDefaults = {
@@ -35281,6 +35564,9 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this), 'li .content');
             this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
+            if (this.options.responsive === true) {
+                $(window).on('resize.husky-toolbar-' + this.options.instanceName, updateOverflow.bind(this));
+            }
         },
 
         /** events bound to sandbox */
@@ -35371,6 +35657,63 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
+         * Depending on if the toolbar overflows or not collapses or expands the toolbar
+         * collapsing - if the toolbar is expanded and overflown
+         * expanding - if the toolbar is underflown and collapsed and the expanded version has enough space
+         */
+        updateOverflow = function() {
+            if (this.$el.width() < this.$el[0].scrollWidth) {
+                if (!this.collapsed) {
+                    this.expandedWidth = this.$find('.husky-toolbar').outerWidth();
+                    collapseAll.call(this);
+                    updatedOverflowClass.call(this);
+                } else {
+                    updatedOverflowClass.call(this);
+                }
+            } else {
+                if (this.collapsed && this.$el.width() >= this.expandedWidth) {
+                    expandAll.call(this);
+                    this.expandedWidth = this.$find('.husky-toolbar').outerWidth();
+                    updatedOverflowClass.call(this);
+                } else {
+                    updatedOverflowClass.call(this);
+                }
+            }
+        },
+
+        /**
+         * Sets an overflow-class on the element, depending on whether or ot
+         * the toolbar overflows
+         */
+        updatedOverflowClass = function() {
+            if (this.$el.width() < this.$el[0].scrollWidth) {
+                this.$el.addClass('overflown');
+            } else {
+                this.$el.removeClass('overflown');
+            }
+        },
+
+        /**
+         * Makes the toolbar unscrollable and makes the toolbar-overflow's overflow visible
+         * so the dropdown can be seen
+         */
+        lockToolbarScroll = function() {
+            var scrollPos = this.$el.scrollLeft();
+            this.$el.css({overflow: 'visible'});
+            this.$find('.husky-toolbar').css({
+                'margin-left': ((-1) * scrollPos) + 'px'
+            });
+        },
+
+        /**
+         * Makes the toolbar-container's overflow hidden and the wrapper itself scrollable
+         */
+        unlockToolbarScroll = function() {
+            this.$el.removeAttr('style');
+            this.$find('.husky-toolbar').removeAttr('style');
+        },
+
+        /**
          * Sets an item enabled or disabled
          * @param enabled {boolean} If true button gets enabled if false button gets disabled
          * @param id {Number|String} id The id of the button
@@ -35411,6 +35754,10 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.removeClass($item, 'disabled');
             } else {
                 this.sandbox.dom.addClass($item, 'disabled');
+            }
+
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
             }
         },
 
@@ -35464,6 +35811,10 @@ define('__component__$toolbar@husky',[],function() {
                     color: color
                 }
             }]);
+
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
+            }
         },
 
 
@@ -35501,6 +35852,10 @@ define('__component__$toolbar@husky',[],function() {
                     // on every click remove sub-menu
                     this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
 
+                    if (this.options.responsive === true) {
+                        lockToolbarScroll.call(this);
+                    }
+
                     this.sandbox.emit(DROPDOWN_OPENED.call(this));
                 }
             }
@@ -35527,6 +35882,9 @@ define('__component__$toolbar@husky',[],function() {
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
             this.sandbox.dom.hide(this.$find('.toolbar-dropdown-menu'));
+            if (this.options.responsive === true) {
+                unlockToolbarScroll.call(this);
+            }
             this.sandbox.emit(DROPDOWN_CLOSED.call(this));
         },
 
@@ -35616,6 +35974,9 @@ define('__component__$toolbar@husky',[],function() {
                 item.title = this.sandbox.translate(item.title);
                 this.sandbox.dom.html(listItems.eq(1), item.title);
                 this.items[itemId].icon = item.title;
+            }
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
             }
             this.sandbox.emit(BUTTON_CHANGED.call(this));
         },
@@ -35712,7 +36073,7 @@ define('__component__$toolbar@husky',[],function() {
          * Unmark an item by removing the marked class from the item
          * @param itemId {Number|String} the id of the item
          */
-        unmarkItem = function(itemId){
+        unmarkItem = function(itemId) {
             if (!!this.items[itemId] && !!this.items[itemId].parentId) {
                 this.sandbox.dom.removeClass(this.items[itemId].$el, constants.markedClass);
             }
@@ -35952,7 +36313,7 @@ define('__component__$toolbar@husky',[],function() {
             this.collapsed = false;
             this.itemGroups = {};
             this.items = {};
-
+            this.expandedWidth = 0;
 
             // load data and call render
             if (!!this.options.url) {
@@ -35970,8 +36331,19 @@ define('__component__$toolbar@husky',[],function() {
             bindDOMEvents.call(this);
             bindCustomEvents.call(this);
 
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
+            }
+
             // initialization finished
             this.sandbox.emit(INITIALIZED.call(this));
+        },
+
+        /**
+         * Destroys the component
+         */
+        destroy: function() {
+            $(window).off('resize.husky-toolbar-' + this.options.instanceName);
         },
 
         /**
@@ -36143,6 +36515,11 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.last(this.sandbox.dom.find('.group.left', this.$el)),
                 'last'
             );
+
+            //add responsive class
+            if (this.options.responsive === true) {
+                this.$el.addClass('husky-toolbar-responsive');
+            }
         }
     };
 
@@ -40787,7 +41164,7 @@ define('__component__$ckeditor@husky',[], function() {
             table: true,
             link: true,
             pasteFromWord: true,
-            height: 200
+            height: 65
         },
 
         /**
@@ -40987,23 +41364,6 @@ define('__component__$ckeditor@husky',[], function() {
                     delete CKEDITOR.instances[this.editor.name];
                 }
             }
-        },
-
-        remove: function() {
-            var instance = this.sandbox.ckeditor.getInstance(this.options.instanceName);
-
-            if (!!instance) {
-                // FIXME HACK
-                // this hack fix 'clearCustomData' not null on template change
-                // it occurs if the editor dom element not exists
-                // check if dom element exist then destroy instance else remove the instance from global object
-                // this should also fix memory leak that the instances are not deleted from global CKEDITOR
-                if (!!instance.window && instance.window.getFrame()) {
-                    instance.destroy();
-                } else {
-                    delete CKEDITOR.instances[this.options.instanceName];
-                }
-            }
         }
     };
 
@@ -41140,6 +41500,7 @@ define('__component__$overlay@husky',[], function() {
             backdropClass: 'husky-overlay-backdrop',
             overlayOkSelector: '.overlay-ok',
             overlayCancelSelector: '.overlay-cancel',
+            overlayOtherButtonsSelector: '.overlay-button',
             tabsClass: 'tabs',
             languageChangerClass: 'language-changer',
             smallHeaderClass: 'small-header'
@@ -41227,6 +41588,14 @@ define('__component__$overlay@husky',[], function() {
             ].join(''),
             cancelButton: [
                 '<div class="btn gray black-text overlay-cancel<%= classes %>">',
+                '   <% if (!!icon) { %>',
+                '   <span class="fa-<%= icon %>"></span>',
+                '   <% } %>',
+                '   <span class="text"><%= text %></span>',
+                '</div>'
+            ].join(''),
+            button: [
+                '<div class="btn overlay-button <%= classes %>" data-button-number="<%=buttonNumber%>">',
                 '   <% if (!!icon) { %>',
                 '   <span class="fa-<%= icon %>"></span>',
                 '   <% } %>',
@@ -41768,6 +42137,8 @@ define('__component__$overlay@husky',[], function() {
                 } else if (button.type === buttonTypes.CANCEL) {
                     template = templates.cancelButton;
                     text = this.slides[slide].cancelDefaultText;
+                } else {
+                    template = templates.button;
                 }
 
                 classes = (!!button.classes) ? ' ' + button.classes : '';
@@ -41785,6 +42156,7 @@ define('__component__$overlay@husky',[], function() {
                 $button = this.sandbox.dom.createElement(this.sandbox.util.template(template, {
                     icon: button.icon,
                     text: text,
+                    buttonNumber: i,
                     classes: (inactive === true) ? classes + ' inactive gray' : classes
                 }));
 
@@ -41910,6 +42282,10 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.dom.on(this.overlay.$el, 'click',
                 this.okHandler.bind(this), constants.overlayOkSelector);
 
+            // binds the events for other buttons
+            this.sandbox.dom.on(this.overlay.$el, 'click',
+                this.buttonHandler.bind(this), constants.overlayOtherButtonsSelector);
+
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 if (this.dragged === false && this.overlay.opened === true) {
                     this.resizeHandler();
@@ -42011,6 +42387,27 @@ define('__component__$overlay@husky',[], function() {
                 ) !== false) {
                 this.closeOverlay();
             }
+        },
+
+        /**
+         * Handles the click on a button
+         * @param event
+         */
+        buttonHandler: function(event) {
+            if (!event || this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
+                return;
+            }
+
+            var buttonNumber = this.sandbox.dom.data(event.currentTarget, 'buttonNumber'),
+                button = this.slides[this.activeSlide].buttons[buttonNumber];
+
+            this.sandbox.dom.preventDefault(event);
+            this.sandbox.dom.stopPropagation(event);
+
+            this.executeCallback(
+                button.callback,
+                this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
+            );
         },
 
         /**
@@ -42811,6 +43208,14 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * listens on and show dropzone popup
+         * @event husky.dropzone.<instance-name>.open-data-source
+         */
+        SHOW_POPUP = function() {
+            return createEventName.call(this, 'show-popup');
+        },
+
+        /**
          * raised after files got uploaded and faded out from the dropzone
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
@@ -42947,6 +43352,10 @@ define('__component__$dropzone@husky',[], function() {
 
                 this.sandbox.on(UNLOCK_POPUP.call(this), function() {
                     this.lockPopUp = false;
+                }.bind(this));
+
+                this.sandbox.on(SHOW_POPUP.call(this), function() {
+                    this.openOverlay();
                 }.bind(this));
             }
         },
@@ -48842,8 +49251,8 @@ define("datepicker-zh-TW", function(){});
 
     require.config({
         paths: {
-            jquery: 'bower_components/jquery/jquery',
-            html5sortable: 'vendor/html5sortable/html5sortable'
+            'jquery': 'bower_components/jquery/jquery',
+            'html.sortable': 'bower_components/html.sortable/html.sortable'
         },
         shim: {
             jquery: { exports: '$' },
@@ -48852,10 +49261,10 @@ define("datepicker-zh-TW", function(){});
     });
 
 
-    define('husky_extensions/html5sortable',['html5sortable'], function() {
+    define('husky_extensions/html.sortable',['html.sortable'], function() {
 
         return {
-            name: 'html5sortable',
+            name: 'html.sortable',
 
             initialize: function(app) {
                 app.core.dom.sortable = function(selector, options) {
@@ -49427,7 +49836,7 @@ define('husky_extensions/itembox',[],function() {
                     this.$list = createItemList.call(this);
 
                     for (var i = -1; ++i < length;) {
-                        this.addItem(data[i], false);
+                        this.addItem(data[i], false, false);
                     }
 
                     this.sandbox.dom.html(this.$content, this.$list);
@@ -49522,10 +49931,14 @@ define('husky_extensions/itembox',[],function() {
              * Adds an item to the list
              * @param item {object} The item to display in the list
              * @param reinitialize {boolean} Defines if the sorting, order and visibility list should be reinitialized
+             * @param scroll {boolean} Defines if true scrolls to the added item
              */
-            addItem: function(item, reinitialize) {
+            addItem: function(item, reinitialize, scroll) {
                 if (typeof(reinitialize) === 'undefined') {
                     reinitialize = true;
+                }
+                if (typeof(scroll) === 'undefined') {
+                    scroll = true;
                 }
 
                 if (!this.$list) {
@@ -49551,7 +49964,9 @@ define('husky_extensions/itembox',[],function() {
                     this.updateSelectedCounter();
                 }
 
-                this.sandbox.dom.scrollAnimate(this.$content.get(0).scrollHeight, this.$content);
+                if (!!scroll) {
+                    this.sandbox.dom.scrollAnimate(this.$content.get(0).scrollHeight, this.$content);
+                }
             },
 
             /**
