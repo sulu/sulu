@@ -908,6 +908,10 @@
                 <source>public.logo</source>
                 <target>Logo</target>
             </trans-unit>
+            <trans-unit id="a321c52dae1354cc4132c0b4820e28ada" resname="public.refresh">
+                <source>public.refresh</source>
+                <target>Reload</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -25,12 +25,6 @@ define([
         TYPE_CONTENT = 1,
 
         constants = {
-            resolutionDropdownData: [
-                {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
-                {id: 2, name: 'sulu.preview.desktop', cssClass: 'desktop'},
-                {id: 3, name: 'sulu.preview.tablet', cssClass: 'tablet'},
-                {id: 4, name: 'sulu.preview.smartphone', cssClass: 'smartphone'}
-            ],
             localizationUrl: '/admin/api/webspace/localizations'
         },
 
@@ -42,26 +36,16 @@ define([
 
         templates = {
             preview: [
-                '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
-                '   <div class="wrapper">',
-                '       <div class="viewport">',
-                '           <iframe src="<%= url %>"></iframe>',
-                '       </div>',
+                '<div class="sulu-content-preview auto">',
+                '   <div class="preview-toolbar">',
+                '       <div class="toolbar"></div>',
+                '       <div class="fa-external-link new-window"></div>',
                 '   </div>',
-                '</div>',
-                '<div id="preview-toolbar" class="sulu-preview-toolbar">',
-                '    <div id="preview-toolbar-right" class="right">',
-                '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer">',
-                '           <span class="fa-external-link"></span>',
-                '       </div>',
-                '       <div id="preview-toolbar-refresh" class="refresh pull-right pointer">',
-                '           <span class="fa-refresh"></span>',
-                '       </div>',
-                '       <div id="preview-toolbar-resolutions" class="resolutions pull-right pointer">',
-                '           <label class="drop-down-trigger">',
-                '               <span class="dropdown-label"><%= resolution %></span>',
-                '               <span class="dropdown-toggle"></span>',
-                '           </label>',
+                '   <div class="container">',
+                '       <div class="wrapper">',
+                '           <div class="viewport">',
+                '               <iframe src="<%= url %>"></iframe>',
+                '           </div>',
                 '       </div>',
                 '   </div>',
                 '</div>'
@@ -292,9 +276,6 @@ define([
 
             // change url of preview
             this.sandbox.on('sulu.content.preview.change-url', this.changePreviewUrl.bind(this));
-
-            // change the preview style if the resolution dropdown gets changed
-            this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', this.changePreviewStyle.bind(this));
 
             // bind model data events
             this.bindModelEvents();
@@ -729,42 +710,41 @@ define([
                     uuid: data.id
                 });
                 this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
-                    resolution: this.sandbox.translate(constants.resolutionDropdownData[0].name),
                     url: this.previewUrl
                 }));
-                this.bindPreviewDomEvents();
-                this.startPreviewResolutionDropdown();
+                this.bindPreviewEvents();
+                this.startPreviewToolbar();
                 this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
             }
         },
 
         /**
-         * Starts the resolution dropdown for the preview
+         * Starts the toolbar for the preview
          */
-        startPreviewResolutionDropdown: function() {
-            this.sandbox.start([
-                {
-                    name: 'dropdown@husky',
-                    options: {
-                        el: this.sandbox.dom.find('#preview-toolbar-resolutions', this.$preview),
-                        trigger: '.drop-down-trigger',
-                        setParentDropDown: true,
-                        instanceName: 'resolutionsDropdown',
-                        alignment: 'left',
-                        data: constants.resolutionDropdownData
-                    }
+        startPreviewToolbar: function() {
+            this.sandbox.start([{
+                name: 'toolbar@husky',
+                options: {
+                    el: this.$preview.find('.toolbar'),
+                    instanceName: 'preview',
+                    skin: 'big',
+                    responsive: true,
+                    buttons: this.sandbox.sulu.buttons.get({
+                        displayDevices: {},
+                        refresh: {}
+                    })
                 }
-            ]);
+            }]);
         },
 
         /**
-         * Binds Dom-related events on the preview
+         * Binds events on preview elements and components
          */
-        bindPreviewDomEvents: function() {
-            this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-new-window', this.$preview),
-                'click', this.openPreviewInNewWindow.bind(this));
-            this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-refresh', this.$preview),
-                'click', this.refreshPreview.bind(this));
+        bindPreviewEvents: function() {
+            this.$preview.find('.new-window').on('click', this.openPreviewInNewWindow.bind(this));
+
+            this.sandbox.on('sulu.toolbar.refresh', this.refreshPreview.bind(this));
+            this.sandbox.on('sulu.toolbar.display-device', this.changePreviewStyle.bind(this));
         },
 
         /**
@@ -794,21 +774,13 @@ define([
 
         /**
          * Changes the style of the the preview. E.g. from desktop to smartphone
-         * @param newStyle {Object} the new style object. Has to have a cssClass property
+         * @param newStyle {String} the new style
          */
         changePreviewStyle: function(newStyle) {
             if (this.$preview !== null) {
-                var $container = this.$preview[0],
-                    $toolbar = this.$preview[1];
-                // remove all styles
-                this.sandbox.util.foreach(constants.resolutionDropdownData, function(style) {
-                    this.sandbox.dom.removeClass($container, style.cssClass);
-                }.bind(this));
-                this.sandbox.dom.addClass($container, newStyle.cssClass);
-                this.sandbox.dom.html(
-                    this.sandbox.dom.find('.dropdown-label', $toolbar),
-                    this.sandbox.translate(newStyle.name)
-                );
+                this.$preview.removeClass(this.$preview.data('sulu-preview-style'));
+                this.$preview.addClass(newStyle);
+                this.$preview.data('sulu-preview-style', newStyle);
             }
         },
 
@@ -1117,8 +1089,7 @@ define([
                 };
             } else {
                 var sidebar = {
-                    width: 'max',
-                    cssClasses: 'dark-border'
+                    width: 'max'
                 };
                 if (!this.options.preview) {
                     sidebar = false;

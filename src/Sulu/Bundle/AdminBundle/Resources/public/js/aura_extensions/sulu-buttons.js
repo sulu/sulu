@@ -203,6 +203,16 @@
                     }
                 },
                 {
+                    name: 'refresh',
+                    template: {
+                        icon: 'refresh',
+                        title: 'public.refresh',
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.refresh');
+                        }
+                    }
+                },
+                {
                     name: 'layout',
                     template: {
                         icon: 'th-large',
