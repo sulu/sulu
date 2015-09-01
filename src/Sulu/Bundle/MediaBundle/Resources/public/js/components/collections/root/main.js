@@ -21,9 +21,6 @@ define(['services/sulumedia/media-manager',
         defaults = {};
 
     return {
-
-        view: true,
-
         header: {
             noBack: true,
             toolbar: {

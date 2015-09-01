@@ -17,8 +17,6 @@ define(['services/sulumedia/collection-manager',
     var defaults = {};
 
     return {
-        view: true,
-
         header: function() {
             return {
                 noBack: true,
