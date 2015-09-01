@@ -137,6 +137,10 @@ define(['services/sulumedia/media-manager',
         },
 
         bindListToolbarEvents: function() {
+            // show dropzone popup
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.show-popup');
+            }.bind(this));
             // delete a media
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
             // edit media
@@ -166,6 +170,14 @@ define(['services/sulumedia/media-manager',
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
                     template: this.sandbox.sulu.buttons.get({
+                        add: {
+                            options: {
+                                class: null,
+                                callback: function() {
+                                    this.sandbox.emit('sulu.list-toolbar.add');
+                                }.bind(this)
+                            }
+                        },
                         edit: {
                             options: {
                                 callback: function() {

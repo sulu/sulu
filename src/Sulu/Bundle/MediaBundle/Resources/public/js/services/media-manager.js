@@ -10,7 +10,7 @@
 define([
         'services/husky/util',
         'services/husky/mediator',
-        'sulumedia/model/media'
+        'sulumedia/models/media'
     ], function(util,
                 mediator,
                 Media) {
