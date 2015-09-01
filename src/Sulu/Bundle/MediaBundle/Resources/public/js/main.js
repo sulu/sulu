@@ -27,7 +27,9 @@ require.config({
 define(['services/sulumedia/media-router',
     'services/sulumedia/overlay-manager',
     'extensions/masonry',
-    'extensions/sulu-buttons-mediabundle'], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons){
+    'extensions/sulu-buttons-mediabundle',
+    'services/sulumedia/user-settings-manager'],
+    function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons, UserSettingsManager){
 
     'use strict';
 
@@ -80,7 +82,7 @@ define(['services/sulumedia/media-router',
                 }.bind(this));
 
                 this.sandbox.on('husky.data-navigation.collections.add', function(item) {
-                    OverlayManager.startCreateCollectionOverlay(this.sandbox, item);
+                    OverlayManager.startCreateCollectionOverlay(this.sandbox, item, UserSettingsManager.getMediaLocale());
                 }.bind(this));
 
                 this.sandbox.on('sulu.media.collection-create.created', function(collection) {

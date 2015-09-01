@@ -77,7 +77,6 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.locale = this.options.locale;
 
             // for single edit
             this.media = null;
@@ -91,7 +90,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
 
         loadMediaAndRender: function() {
             this.startLoadingOverlay();
-            this.loadMedias(this.options.mediaIds, this.locale).then(function(medias) {
+            this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
                 this.editMedia(medias);
             }.bind(this));
         },
@@ -202,7 +201,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         ],
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
-                            preSelected: this.locale
+                            preSelected: this.options.locale
                         },
                         skin: 'wide',
                         openOnStart: true,
@@ -270,7 +269,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         filesAddedHandler: function(newMedia) {
             if (!!newMedia[0]) {
                 this.sandbox.stop();
-                OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, this.locale);
+                OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, this.options.locale);
             }
         },
 
@@ -350,7 +349,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         data: this.$multiple,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
-                            preSelected: this.locale
+                            preSelected: this.options.locale
                         },
                         openOnStart: true,
                         removeOnClose: true,

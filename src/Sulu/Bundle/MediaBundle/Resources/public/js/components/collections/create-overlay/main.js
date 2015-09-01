@@ -37,28 +37,6 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
         },
 
         /**
-         * Adds a new collection the the list
-         * @returns {Boolean} returns false if a new and unsafed collection exists
-         */
-        addCollection: function () {
-            if (this.sandbox.form.validate(constants.newFormSelector)) {
-                var collection = this.sandbox.form.getData(constants.newFormSelector);
-                collection.parent = this.options.parent;
-                collection.locale = this.sandbox.sulu.user.locale;
-
-                CollectionManager.save(collection).then(function(collection) {
-                        this.sandbox.emit('sulu.media.collection-create.created', collection)
-                        this.sandbox.stop();
-                    }.bind(this)).fail(function() {
-                        this.sandbox.stop();
-                    }.bind(this)
-                );
-            } else {
-                return false;
-            }
-        },
-
-        /**
          * Opens a overlay for a new collection
          */
         openOverlay: function () {
@@ -89,6 +67,28 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
                     }
                 }
             ]);
+        },
+
+        /**
+         * Adds a new collection the the list
+         * @returns {Boolean} returns false if a new and unsafed collection exists
+         */
+        addCollection: function () {
+            if (this.sandbox.form.validate(constants.newFormSelector)) {
+                var collection = this.sandbox.form.getData(constants.newFormSelector);
+                collection.parent = this.options.parent;
+                collection.locale = this.options.locale;
+
+                CollectionManager.save(collection).then(function(collection) {
+                    this.sandbox.emit('sulu.media.collection-create.created', collection)
+                    this.sandbox.stop();
+                }.bind(this)).fail(function() {
+                        this.sandbox.stop();
+                    }.bind(this)
+                );
+            } else {
+                return false;
+            }
         }
     };
 });
