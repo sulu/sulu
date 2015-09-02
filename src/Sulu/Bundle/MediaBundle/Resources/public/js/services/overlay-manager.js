@@ -42,7 +42,7 @@ define([
                     $container = getOverlayContainer('create-collection-overlay');
 
                 sandbox.start([{
-                    name: 'collections/create-overlay@sulumedia',
+                    name: 'collections/collection-create-overlay@sulumedia',
                     options: {
                         el: $container,
                         parent: parentId,
@@ -58,7 +58,7 @@ define([
                 var $container = getOverlayContainer('select-collection-overlay');
 
                 sandbox.start([{
-                    name: 'collections/select-overlay@sulumedia',
+                    name: 'collections/collection-select-overlay@sulumedia',
                     options: {
                         el: $container,
                         instanceName: 'move-media',
@@ -76,7 +76,7 @@ define([
                 var $container = getOverlayContainer('select-collection-overlay');
 
                 sandbox.start([{
-                    name: 'collections/select-overlay@sulumedia',
+                    name: 'collections/collection-select-overlay@sulumedia',
                     options: {
                         el: $container,
                         instanceName: 'move-collection',

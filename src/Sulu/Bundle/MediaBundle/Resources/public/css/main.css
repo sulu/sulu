@@ -308,34 +308,34 @@
   text-align: center;
 }
 
-/* line 6, ../scss/modules/collection-select.scss */
+/* line 6, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-header {
   margin-bottom: 0px;
 }
-/* line 10, ../scss/modules/collection-select.scss */
+/* line 10, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-content {
   margin-right: 0px;
   margin-bottom: 1px;
   margin-left: 0px;
 }
-/* line 16, ../scss/modules/collection-select.scss */
+/* line 16, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-footer {
   margin-top: -2px;
 }
 
-/* line 1, ../scss/modules/media-edit.scss */
+/* line 1, ../scss/modules/media-edit-overlay.scss */
 .media-edit-loader {
   margin: 50px 0;
 }
 
-/* line 5, ../scss/modules/media-edit.scss */
+/* line 5, ../scss/modules/media-edit-overlay.scss */
 .media-edit-versions-links {
   margin: 20px 0 0;
   border-top: 2px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
 
-/* line 11, ../scss/modules/media-edit.scss */
+/* line 11, ../scss/modules/media-edit-overlay.scss */
 .media-edit-versions-link {
   color: black;
   display: block;
@@ -344,18 +344,18 @@
   text-decoration: none;
 }
 
-/* line 20, ../scss/modules/media-edit.scss */
+/* line 20, ../scss/modules/media-edit-overlay.scss */
 .active .media-edit-versions-title {
   font-weight: bold;
 }
 
-/* line 25, ../scss/modules/media-edit.scss */
+/* line 25, ../scss/modules/media-edit-overlay.scss */
 .media-edit-versions-created {
   float: right;
   color: #999;
 }
 
-/* line 30, ../scss/modules/media-edit.scss */
+/* line 30, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image {
   background-position: center center;
   background-repeat: no-repeat;
@@ -363,18 +363,18 @@
   height: 179px;
   position: relative;
 }
-/* line 37, ../scss/modules/media-edit.scss */
+/* line 37, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-/* line 41, ../scss/modules/media-edit.scss */
+/* line 41, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 49, ../scss/modules/media-edit.scss */
+/* line 49, ../scss/modules/media-edit-overlay.scss */
 .multi-edit .language-changer {
   right: 30px;
 }
