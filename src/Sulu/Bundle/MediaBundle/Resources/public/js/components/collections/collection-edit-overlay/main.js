@@ -7,16 +7,17 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-manager'],
-    function(CollectionManager, OverlayManager) {
+define([
+    'services/sulumedia/collection-manager',
+    'services/sulumedia/overlay-manager'], function(CollectionManager, OverlayManager) {
 
     'use strict';
 
     var namespace = 'sulu.collection-edit.',
 
         defaults = {
-            parent: null,
             instanceName: '',
+            locale: app.sandbox.sulu.user.locale
         },
 
         constants = {
@@ -25,7 +26,7 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
 
         /**
          * raised when the overlay get closed
-         * @event sulu.media-edit.closed
+         * @event sulu.collection-edit.closed
          */
         CLOSED = function() {
             return createEventName.call(this, 'closed');
@@ -33,7 +34,7 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
 
         /**
          * raised when component is initialized
-         * @event sulu.media-edit.closed
+         * @event sulu.collection-edit.closed
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
@@ -51,11 +52,15 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
         ],
 
         /**
-         * Initializes the collections list
+         * Initializes the overlay component
          */
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            if (!this.options.collectionId) {
+                this.sandbox.stop();
+            }
 
             this.bindEvents();
             CollectionManager.loadOrNew(this.options.collectionId, this.options.locale).then(function(collection) {
@@ -66,6 +71,9 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
             this.sandbox.emit(INITIALIZED.call(this));
         },
 
+        /**
+         * Bind overlay-related events
+         */
         bindEvents: function() {
             this.sandbox.once('husky.overlay.edit-collection.opened', function() {
                 this.sandbox.start(constants.editFormSelector);
@@ -79,13 +87,11 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
         },
 
         /**
-         * Opens a overlay for a new collection
+         * Opens the overlay to edit the collection
          */
         openOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div class="overlay-element"/>');
             this.sandbox.dom.append(this.$el, $container);
-
-            this.$overlayContent = this.renderTemplate('/admin/media/template/collection/settings');
 
             this.sandbox.start([
                 {
@@ -94,18 +100,9 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                         el: $container,
                         title: this.sandbox.translate('sulu.media.edit-collection'),
                         instanceName: 'edit-collection',
-                        data: this.$overlayContent,
-                        okCallback: function() {
-                            if (this.sandbox.form.validate(constants.editFormSelector)) {
-                                this.saveCollection();
-                                this.sandbox.stop();
-                            } else {
-                                return false;
-                            }
-                        }.bind(this),
-                        cancelCallback: function() {
-                            this.sandbox.stop();
-                        }.bind(this),
+                        data: this.renderTemplate('/admin/media/template/collection/settings'),
+                        okCallback: this.okCallback.bind(this),
+                        cancelCallback: this.sandbox.stop.bind(this),
                         openOnStart: true,
                         removeOnClose: true,
                         closeIcon: '',
@@ -120,16 +117,31 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
         },
 
         /**
-         * Adds a new collection the the list
-         * @returns {Boolean} returns false if a new and unsafed collection exists
+         * Validates the overlay form-data and saves collection if form-data is valid
+         * @returns {boolean} false if form-data is not valid
+         */
+        okCallback: function() {
+            if (this.sandbox.form.validate(constants.editFormSelector)) {
+                this.saveCollection();
+                this.sandbox.stop();
+            } else {
+                return false;
+            }
+        },
+
+        /**
+         * Save collection if form-data is valid and something was changed
+         * @returns promise
          */
         saveCollection: function() {
             var promise = $.Deferred();
 
+            // validate form-data
             if (this.sandbox.form.validate(constants.editFormSelector)) {
                 var formData = this.sandbox.form.getData(constants.editFormSelector),
                     collectionData = this.sandbox.util.extend(true, {}, this.data, formData);
 
+                // check if form-data is different to source-collection
                 if (JSON.stringify(this.data) !== JSON.stringify(collectionData)) {
                     collectionData.locale = this.options.locale;
                     collectionData.parent = (!!this.data._embedded.parent) ? this.data._embedded.parent.id : null;
@@ -147,6 +159,10 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
             return promise;
         },
 
+        /**
+         * Change language of the overlay by restarting it
+         * @param locale
+         */
         languageChanged: function(locale) {
             this.saveCollection().then(function() {
                 this.sandbox.stop();
@@ -154,6 +170,9 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
             }.bind(this));
         },
 
+        /**
+         * Called when component gets destroyed
+         */
         destroy: function() {
             this.sandbox.emit(CLOSED.call(this));
         }

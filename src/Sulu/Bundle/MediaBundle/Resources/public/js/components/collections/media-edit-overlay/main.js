@@ -24,12 +24,12 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             versionsKey: 'sulu.media.history',
             multipleEditTitle: 'sulu.media.multiple-edit.title',
             loadingTitle: 'sulu.media.edit.loading',
+            locale: app.sandbox.sulu.user.locale,
             instanceName: ''
         },
 
         constants = {
             infoFormSelector: '#media-info',
-            versionsFormSelector: '#media-versions',
             multipleEditFormSelector: '#media-multiple-edit',
             dropzoneSelector: '#file-version-change',
             multipleEditDescSelector: '.media-description',
@@ -72,11 +72,15 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         ],
 
         /**
-         * Initializes the collections list
+         * Initializes the overlay component
          */
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            if (!this.options.mediaIds) {
+                this.sandbox.stop();
+            }
 
             // for single edit
             this.media = null;
@@ -90,6 +94,9 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             this.sandbox.emit(INITIALIZED.call(this));
         },
 
+        /**
+         * Show loading overlay and start loading media-data according to mediaIds in options
+         */
         loadMediaAndRender: function() {
             this.startLoadingOverlay();
             this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
@@ -98,7 +105,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         },
 
         /**
-         * Starts the loading overlay in hidden state
+         * Starts the loading overlay
          */
         startLoadingOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.loadingClass + '"/>'),
@@ -136,6 +143,12 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             ]);
         },
 
+        /**
+         * Load media-data from server-api
+         * @param mediaIds
+         * @param locale
+         * @returns {*}
+         */
         loadMedias: function(mediaIds, locale) {
             var requests = [],
                 promise = $.Deferred(),
@@ -211,19 +224,23 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         removeOnClose: true,
                         instanceName: 'media-edit',
                         propagateEvents: false,
-                        okCallback: function() {
-                            if (this.sandbox.form.validate(constants.infoFormSelector)) {
-                                this.saveSingleMedia();
-                            } else {
-                                return false;
-                            }
-                        }.bind(this),
-                        cancelCallback: function() {
-                            this.sandbox.stop();
-                        }.bind(this)
+                        okCallback: this.singleOkCallback.bind(this),
+                        cancelCallback: this.sandbox.stop.bind(this)
                     }
                 }
             ]);
+        },
+
+        /**
+         * Validate single form-data and save if form-data is valid
+         * @returns {boolean} false if form-data is not valid
+         */
+        singleOkCallback: function() {
+            if (this.sandbox.form.validate(constants.infoFormSelector)) {
+                this.saveSingleMedia();
+            } else {
+                return false;
+            }
         },
 
         /**
@@ -260,7 +277,8 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         },
 
         /**
-         * Handles the changing of the language in the single-edit overlay
+         * Handles the changing of the language in the single-edit overlay by saving current data
+         * and restarting the overlay component with the new locale
          * @param locale
          */
         languageChangedSingle: function(locale) {
@@ -270,6 +288,10 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             }.bind(this));
         },
 
+        /**
+         * Handles the upload of a image as new version
+         * @param newMedia
+         */
         filesAddedHandler: function(newMedia) {
             if (!!newMedia[0]) {
                 this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
@@ -279,15 +301,16 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         },
 
         /**
-         * Maps the overlay inputs back on a single model
-         * @returns {Boolean} returns false if form is invalid, true if valid
+         * Save the media if form-data is valid and something was changed
          */
         saveSingleMedia: function() {
             var promise = $.Deferred();
+            // validate form data
             if (this.sandbox.form.validate(constants.infoFormSelector)) {
                 var formData = this.sandbox.form.getData(constants.infoFormSelector),
                     mediaData = this.sandbox.util.extend(false, {}, this.media, formData);
 
+                // check if form-data is different to source-media
                 if (JSON.stringify(this.media) !== JSON.stringify(mediaData)) {
                     MediaManager.save(mediaData).then(function() {
                         promise.resolve();
@@ -306,7 +329,6 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
          * Starts the dropzone for changeing the file-version
          */
         startSingleDropzone: function() {
-            // replace the current media with the new one if a fileversion got uploaded
             this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this));
 
             this.sandbox.start([
@@ -331,7 +353,6 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         /**
          * Edits multiple media
          * @param medias {Array} array with the ids of the media to edit
-         * @param {Array} locales
          */
         editMultipleMedia: function(medias) {
             this.medias = medias;
@@ -362,24 +383,28 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         closeIcon: '',
                         instanceName: 'media-multiple-edit',
                         propagateEvents: false,
-                        okCallback: function() {
-                            if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
-                                this.saveMultipleMedia();
-                            } else {
-                                return false;
-                            }
-                        }.bind(this),
-                        cancelCallback: function() {
-                            this.sandbox.stop();
-                        }.bind(this)
+                        okCallback: this.multipleOkCallback.bind(this),
+                        cancelCallback: this.sandbox.stop.bind(this)
                     }
                 }
             ]);
         },
 
+        /**
+         * Validate single form-data and save if form-data is valid
+         * @returns {boolean} false if form-data is not valid
+         */
+        multipleOkCallback: function() {
+            if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
+                this.saveMultipleMedia();
+            } else {
+                return false;
+            }
+        },
 
         /**
-         * Handles the changing of the language in the singleedit overlay
+         * Handles the changing of the language in the multiple-edit overlay by saving current data
+         * and restarting the overlay component with the new locale
          * @param locale
          */
         languageChangedMultiple: function(locale) {
@@ -390,7 +415,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         },
 
         /**
-         * Binds events related to the single-edit overlay
+         * Binds events related to the multiple-edit overlay
          */
         bindMultipleOverlayEvents: function() {
             this.sandbox.once('husky.overlay.media-multiple-edit.opened', function() {
@@ -432,10 +457,8 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked'),
                 $elements = this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple);
             if (checked === true) {
-                this.sandbox.dom.show($elements);
                 this.sandbox.dom.removeClass($elements, 'hidden');
             } else {
-                this.sandbox.dom.hide($elements);
                 this.sandbox.dom.addClass($elements, 'hidden');
             }
             this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
@@ -448,28 +471,29 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked'),
                 $elements = this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple);
             if (checked === true) {
-                this.sandbox.dom.show($elements);
                 this.sandbox.dom.removeClass($elements, 'hidden');
             } else {
-                this.sandbox.dom.hide($elements);
                 this.sandbox.dom.addClass($elements, 'hidden');
             }
             this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
         },
 
         /**
-         * Maps the overlay input back on multiple models
+         * Saves the medias if form-data is valid and something was changed
          * @returns {Boolean} returns false if form is invalid, true if valid
          */
         saveMultipleMedia: function() {
             var promise = $.Deferred();
 
+            // validate form data
             if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
                 var formData = this.sandbox.form.getData(constants.multipleEditFormSelector),
                     requests = [];
 
+                // loop through each media
                 this.sandbox.util.foreach(this.medias, function(currentMedia, index) {
                     var newMedia = this.sandbox.util.extend(false, {}, currentMedia, formData.records[index]);
+                    // check if form-data is different to source-media
                     if (JSON.stringify(currentMedia) !== JSON.stringify(newMedia)) {
                         requests.push(MediaManager.save(newMedia));
                     }
@@ -485,6 +509,9 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             return promise;
         },
 
+        /**
+         * Called when component gets destroyed
+         */
         destroy: function() {
             this.sandbox.emit(CLOSED.call(this));
         }

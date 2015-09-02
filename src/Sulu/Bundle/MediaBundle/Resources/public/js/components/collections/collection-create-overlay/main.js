@@ -15,7 +15,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
 
         defaults = {
             parent: null,
-            instanceName: '',
+            instanceName: ''
         },
 
         constants = {
@@ -24,7 +24,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
 
         /**
          * raised when the overlay get closed
-         * @event sulu.media-edit.closed
+         * @event sulu.collection-add.closed
          */
         CLOSED = function() {
             return createEventName.call(this, 'closed');
@@ -32,7 +32,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
 
         /**
          * raised when component is initialized
-         * @event sulu.media-edit.closed
+         * @event sulu.collection-add.closed
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
@@ -50,7 +50,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
         ],
 
         /**
-         * Initializes the collections list
+         * Initializes the overlay component
          */
         initialize: function() {
             // extend defaults with options
@@ -61,14 +61,13 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
         },
 
         /**
-         * Opens a overlay for a new collection
+         * Opens the overlay to create a new collection
          */
         openOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div class="overlay-element"/>');
             this.sandbox.dom.append(this.$el, $container);
 
-            this.$overlayContent = this.renderTemplate('/admin/media/template/collection/new');
-
+            // start form when overlay is opened
             this.sandbox.once('husky.overlay.add-collection.opened', function() {
                 this.sandbox.start(constants.newFormSelector);
                 this.sandbox.form.create(constants.newFormSelector);
@@ -81,7 +80,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
                         el: $container,
                         title: this.sandbox.translate('sulu.media.add-collection'),
                         instanceName: 'add-collection',
-                        data: this.$overlayContent,
+                        data: this.renderTemplate('/admin/media/template/collection/new'),
                         okCallback: this.addCollection.bind(this),
                         cancelCallback: function() {
                             this.sandbox.stop();
@@ -95,14 +94,13 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
         },
 
         /**
-         * Adds a new collection the the list
-         * @returns {Boolean} returns false if a new and unsafed collection exists
+         * Creates a new Collections with the form-data of the overlay
+         * @returns {Boolean} returns false if form-data was not valid
          */
         addCollection: function() {
             if (this.sandbox.form.validate(constants.newFormSelector)) {
                 var collection = this.sandbox.form.getData(constants.newFormSelector);
                 collection.parent = this.options.parent;
-                collection.locale = this.options.locale;
 
                 CollectionManager.save(collection).then(function(collection) {
                     this.sandbox.emit('sulu.media.collection-create.created', collection)
@@ -111,11 +109,15 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
                         this.sandbox.stop();
                     }.bind(this)
                 );
+                return true;
             } else {
                 return false;
             }
         },
 
+        /**
+         * Called when component gets destroyed
+         */
         destroy: function() {
             this.sandbox.emit(CLOSED.call(this));
         }

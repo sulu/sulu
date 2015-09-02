@@ -37,7 +37,7 @@ define([
         }
 
         OverlayManager.prototype = {
-            startCreateCollectionOverlay: function(sandbox, parentCollection, locale) {
+            startCreateCollectionOverlay: function(sandbox, parentCollection) {
                 var parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null,
                     $container = getOverlayContainer('create-collection-overlay');
 
@@ -45,8 +45,7 @@ define([
                     name: 'collections/collection-create-overlay@sulumedia',
                     options: {
                         el: $container,
-                        parent: parentId,
-                        locale: locale
+                        parent: parentId
                     }
                 }]);
             },

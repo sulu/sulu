@@ -18,15 +18,11 @@ define(function() {
             title: '',
             rootCollection: false,
             disableIds: [],
-            disabledChildren: false
+            disabledChildren: false,
+            locale: app.sandbox.sulu.user.locale
         },
 
         templates = {
-            toggler: [
-                '<div id="show-ghost-pages"></div>',
-                '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-            ].join(''),
-
             columnNavigation: function() {
                 return [
                     '<div id="child-column-navigation"></div>',
@@ -35,9 +31,14 @@ define(function() {
             }
         },
 
+        constants = {
+            columnNavigationSelector: '#child-column-navigation',
+            columnNavigationContainerSelector: '#child-column-navigation .container',
+        },
+
         /**
-         * Selected
-         * @event sulu.media.collection-select.selected
+         * raised when an collection is selected
+         * @event sulu.collection-select.selected
          */
         SELECTED = function() {
             return createEventName.call(this, 'selected');
@@ -45,7 +46,7 @@ define(function() {
 
         /**
          * raised when the overlay get closed
-         * @event sulu.media-edit.closed
+         * @event sulu.collection-select.closed
          */
         CLOSED = function() {
             return createEventName.call(this, 'closed');
@@ -53,7 +54,7 @@ define(function() {
 
         /**
          * raised when component is initialized
-         * @event sulu.media-edit.closed
+         * @event sulu.collection-select.closed
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
@@ -61,7 +62,7 @@ define(function() {
 
         /** returns normalized event names */
         createEventName = function(postFix, eventNamespace) {
-            if(!eventNamespace){
+            if (!eventNamespace) {
                 eventNamespace = namespace;
             }
 
@@ -69,11 +70,8 @@ define(function() {
         };
 
     return {
-        $columnNavigationContainer: '#child-column-navigation',
-        $columnNavigation: '#child-column-navigation .container',
-
         /**
-         * Initializes the collections list
+         * Initializes the overlay component
          */
         initialize: function() {
             // extend defaults with options
@@ -89,7 +87,7 @@ define(function() {
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            // wait for overlay initialized to initialize columnNavigation
+            // start column navigation when overlay is openend
             this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
@@ -97,13 +95,16 @@ define(function() {
                 this.sandbox.emit(createEventName.call(this, 'set-position', 'husky.overlay.'));
             }.bind(this));
 
-            // wait for column navigation edit click
+            // wait for item select in column-navigation
             this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
                 this.sandbox.emit(SELECTED.call(this), item);
                 this.sandbox.stop();
             }.bind(this));
         },
 
+        /**
+         * Start the overlay to select a collection
+         */
         renderOverlay: function() {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 buttons = [
@@ -122,7 +123,6 @@ define(function() {
                         el: $element,
                         openOnStart: true,
                         removeOnClose: true,
-                        container: this.$el,
                         instanceName: this.options.instanceName,
                         skin: 'wide',
                         propagateEvents: false,
@@ -142,13 +142,13 @@ define(function() {
         },
 
         /**
-         * initialize column navigation
+         * Start column navigation which displays the collections
          */
         startOverlayColumnNavigation: function() {
-            this.sandbox.dom.append(this.$columnNavigationContainer, '<div class="container"/>');
+            this.sandbox.dom.append(constants.columnNavigationSelector, '<div class="container"/>');
 
             var options = {
-                el: this.$columnNavigation,
+                el: constants.columnNavigationContainerSelector,
                 instanceName: this.options.instanceName,
                 actionIcon: 'fa-check-circle',
                 resultKey: 'collections',
@@ -191,6 +191,9 @@ define(function() {
             );
         },
 
+        /**
+         * Called when component gets destroyed
+         */
         destroy: function() {
             this.sandbox.emit(CLOSED.call(this));
         }
