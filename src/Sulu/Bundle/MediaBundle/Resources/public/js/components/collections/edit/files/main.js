@@ -37,6 +37,9 @@ define(['services/sulumedia/media-manager',
             '/admin/media/template/collection/files'
         ],
 
+        /**
+         * Initialize the component
+         */
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -58,25 +61,9 @@ define(['services/sulumedia/media-manager',
         },
 
         /**
-         * Deconstructor
+         * Bind datagrid related events
          */
-        destroy: function() {
-            this.sandbox.stop(constants.dropzoneSelector);
-        },
-
         bindDatagridEvents: function() {
-            // change datagrid to table
-            this.sandbox.on('sulu.toolbar.change.table', function() {
-                UserSettingsManager.setMediaListView('table');
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
-            }.bind(this));
-
-            // change datagrid to masonry
-            this.sandbox.on('sulu.toolbar.change.masonry', function() {
-                UserSettingsManager.setMediaListView('decorators/masonry');
-                this.sandbox.emit('husky.datagrid.view.change', 'decorators/masonry');
-            }.bind(this));
-
             // download media
             this.sandbox.on('husky.datagrid.download-clicked', function(id) {
                 MediaManager.loadOrNew(id).then(function(media) {
@@ -93,31 +80,44 @@ define(['services/sulumedia/media-manager',
             }.bind(this));
         },
 
+        /**
+         * Bind dropzone related events
+         */
         bindDropzoneEvents: function() {
+            // add uploaded medias to datagrid
             this.sandbox.on('husky.dropzone.' + this.options.instanceName + '.success', function(file, mediaResponse) {
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
                 this.sandbox.emit('husky.datagrid.records.add', [mediaResponse]);
             }, this);
         },
 
+        /**
+         * Bind data management related events
+         */
         bindManagerEvents: function() {
-            //remove from datagrid
+            // remove deleted medias from datagrid
             this.sandbox.on('sulu.medias.media.deleted', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
             }.bind(this));
 
+            // remove moved medias from datagrid
             this.sandbox.on('sulu.medias.media.moved', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
                 this.sandbox.emit('husky.data-navigation.collections.reload');
             }.bind(this));
 
+            // change saved medias in datagrid
             this.sandbox.on('sulu.medias.media.saved', function(id, media) {
+                // change medias if media is saved without locale or locale is current media-locale
                 if (!media.locale || media.locale === UserSettingsManager.getMediaLocale()) {
                     this.sandbox.emit('husky.datagrid.records.change', media);
                 }
             }.bind(this));
         },
 
+        /**
+         * Bind overlay related events
+         */
         bindOverlayEvents: function() {
             // chose collection to move media in collection-select overlay
             this.sandbox.on('sulu.collection-select.move-media.selected', this.moveMedia.bind(this));
@@ -137,23 +137,46 @@ define(['services/sulumedia/media-manager',
             this.sandbox.on('sulu.media-edit.closed', this.enableDropzone.bind(this));
         },
 
+        /**
+         * Bind events which are emited from the list-toolbar
+         */
         bindListToolbarEvents: function() {
             // show dropzone popup
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.show-popup');
             }.bind(this));
+
             // delete a media
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.deleteMedia();
+            });
+
             // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
-            // move media
-            this.sandbox.on('sulu.list-toolbar.media-move',
-                OverlayManager.startMoveMediaOverlay
-                    .bind(this, this.sandbox, this.options.id, UserSettingsManager.getMediaLocale()));
+            this.sandbox.on('sulu.list-toolbar.edit', function() {
+                this.editMedia();
+            });
+
+            // start collection-select overlay on move-click
+            this.sandbox.on('sulu.list-toolbar.media-move', function() {
+                OverlayManager.
+                    startMoveMediaOverlay(this.sandbox, this.options.id, UserSettingsManager.getMediaLocale());
+            });
+
+            // change datagrid view to table
+            this.sandbox.on('sulu.toolbar.change.table', function() {
+                UserSettingsManager.setMediaListView('table');
+                this.sandbox.emit('husky.datagrid.view.change', 'table');
+            }.bind(this));
+
+            // change datagrid view to masonry
+            this.sandbox.on('sulu.toolbar.change.masonry', function() {
+                UserSettingsManager.setMediaListView('decorators/masonry');
+                this.sandbox.emit('husky.datagrid.view.change', 'decorators/masonry');
+            }.bind(this));
         },
 
         /**
-         * Renders the files tab
+         * Renders the files component
          */
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
@@ -162,7 +185,7 @@ define(['services/sulumedia/media-manager',
         },
 
         /**
-         * Starts the list-toolbar in the header
+         * Start the list toolbar and the datagrid
          */
         startDatagrid: function() {
             // init list-toolbar and datagrid
@@ -246,7 +269,7 @@ define(['services/sulumedia/media-manager',
         },
 
         /**
-         * emit events to move selected media's
+         * Move selected medias to given collection
          * @param collection
          */
         moveMedia: function(collection) {
@@ -271,7 +294,7 @@ define(['services/sulumedia/media-manager',
         },
 
         /**
-         * Deletes all selected medias
+         * Show confimation dialog and delete all selected medias if confirmed
          */
         deleteMedia: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
@@ -283,12 +306,25 @@ define(['services/sulumedia/media-manager',
             }.bind(this));
         },
 
+        /**
+         * Disable dropzone-popup on drag-over
+         */
         disableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.lock-popup');
         },
 
+        /**
+         * Enable dropzone popup on drag-over
+         */
         enableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
-        }
+        },
+
+        /**
+         * Called when component gets destroyed
+         */
+        destroy: function() {
+            this.sandbox.stop(constants.dropzoneSelector);
+        },
     };
 });

@@ -4,19 +4,19 @@
 
     require.config({
         paths: {
-            'vendor/wookmark':'../../sulumedia/js/vendor/wookmark/wookmark',
+            'vendor/wookmark': '../../sulumedia/js/vendor/wookmark/wookmark',
         },
         shim: {
             'vendor/wookmark': ['jquery']
         }
     });
 
-    // Define the window and document modules so they are available for the Wookmark plugin
-    define('window', function () {
+    // Define window and document module which are needed by wookmark
+    define('window', function() {
         return window;
     });
 
-    define('document', function () {
+    define('document', function() {
         return document;
     });
 

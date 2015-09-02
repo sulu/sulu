@@ -20,9 +20,9 @@ define([
         var instance = null,
 
             /**
-             * Delete contact by given id
-             * @param contactId contact to delete
-             * @returns {*}
+             * Create div-container with given containerId and append it to the body
+             * @param containerId
+             * @returns {*|jQuery|HTMLElement} created div-container
              */
             getOverlayContainer = function(containerId) {
                 var $element = $('<div id="' + containerId + '"/>');
@@ -37,6 +37,11 @@ define([
         }
 
         OverlayManager.prototype = {
+            /**
+             * Start collection-create overlay
+             * @param sandbox parent sandbox for the overlay
+             * @param parentCollection of the created collection
+             */
             startCreateCollectionOverlay: function(sandbox, parentCollection) {
                 var parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null,
                     $container = getOverlayContainer('create-collection-overlay');
@@ -50,6 +55,12 @@ define([
                 }]);
             },
 
+            /**
+             * Start collection-select overlay for moving medias
+             * @param sandbox parent sandbox for the overlay
+             * @param disableIds collectionIds which cannot get selected
+             * @param locale to display collection titles
+             */
             startMoveMediaOverlay: function(sandbox, disableIds, locale) {
                 if (!$.isArray(disableIds)) {
                     disableIds = [disableIds];
@@ -68,6 +79,12 @@ define([
                 }]);
             },
 
+            /**
+             * Start collection-select overlay for moving collection
+             * @param sandbox parent sandbox for the overlay
+             * @param disableIds collectionIds which cannot get selected
+             * @param locale to display collection titles
+             */
             startMoveCollectionOverlay: function(sandbox, disableIds, locale) {
                 if (!$.isArray(disableIds)) {
                     disableIds = [disableIds];
@@ -88,6 +105,12 @@ define([
                 }]);
             },
 
+            /**
+             * Start media-edit overlay to edit given mediaIds
+             * @param sandbox parent sandbox for the overlay
+             * @param mediaIds medias to edit in overlay
+             * @param locale medias are saved for given locale
+             */
             startEditMediaOverlay: function(sandbox, mediaIds, locale) {
                 if (!$.isArray(mediaIds)) {
                     mediaIds = [mediaIds];
@@ -106,6 +129,12 @@ define([
                 ]);
             },
 
+            /**
+             * Start collection-edit overlay for given collectionId
+             * @param sandbox parent sandbox for the overlay
+             * @param collectionId collection to edit
+             * @param locale collection data is saved for the given locale
+             */
             startEditCollectionOverlay: function(sandbox, collectionId, locale) {
                 var $container = getOverlayContainer('edit-collection-overlay');
 

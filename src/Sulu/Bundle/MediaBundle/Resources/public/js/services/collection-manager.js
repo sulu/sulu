@@ -42,8 +42,8 @@ define([
             },
 
             /**
-             * Delete media by given id
-             * @param collectionId media to delete
+             * Delete collection by given id
+             * @param collectionId collection to delete
              * @returns {*}
              */
             deleteCollection = function(collectionId) {
@@ -120,7 +120,7 @@ define([
             },
 
             /**
-             * Delete collection by given id
+             * Delete collections by given ids
              * @param collectionIds (Array)
              * @returns promise
              */

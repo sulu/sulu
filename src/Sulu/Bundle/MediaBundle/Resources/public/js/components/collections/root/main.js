@@ -48,29 +48,37 @@ define(['services/sulumedia/media-manager',
         ],
 
         /**
-         * Initializes the collections list
+         * Initialize the component
          */
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            // handle data-navigation
-            var url = '/admin/api/collections?sortBy=title';
-            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+            this.updateDataNavigation();
 
             this.bindCustomEvents();
             this.render();
         },
 
+        /**
+         * Set the data-navigation url
+         */
+        updateDataNavigation: function() {
+            var url = '/admin/api/collections?sortBy=title';
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+        },
+
+        /**
+         * Bind component related events
+         */
         bindCustomEvents: function() {
-            // change datagrid to table
+            // change datagrid view to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
                 UserSettingsManager.setMediaListView('table');
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
             }.bind(this));
 
-            // change datagrid to masonry
+            // change datagrid view to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
                 UserSettingsManager.setMediaListView('decorators/masonry');
                 this.sandbox.emit('husky.datagrid.view.change', 'decorators/masonry');
@@ -90,18 +98,27 @@ define(['services/sulumedia/media-manager',
             }.bind(this));
         },
 
+        /**
+         * Render the component
+         */
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
             this.startDatagrid();
         },
 
+        /**
+         * Handles an item click in datagrid. Opens the collection of the clicked media and save the
+         * clicked media to viewStates to trigger media-edit overlay when collection-component is loaded
+         * @param id
+         * @param item
+         */
         actionCallback: function(id, item) {
             this.sandbox.sulu.viewStates['media-file-edit-id'] = id;
             MediaRouter.toCollection(item.collection);
         },
 
         /**
-         * Starts the list-toolbar in the header
+         * Starts the list-toolbar and the datagrid
          */
         startDatagrid: function() {
             // init list-toolbar and datagrid

@@ -122,7 +122,7 @@ define([
             },
 
             /**
-             * Delete medias by given id
+             * Delete medias by given ids
              * @param mediaIds (Array)
              * @returns promise
              */

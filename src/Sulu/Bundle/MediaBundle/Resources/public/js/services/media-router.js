@@ -14,20 +14,26 @@ define(['services/husky/mediator'], function(mediator) {
     var instance = null;
 
     /** @constructor **/
-    function AccountRouter() {}
+    function AccountRouter() {
+    }
 
     AccountRouter.prototype = {
 
         /**
-         * Navigates to the edit of an account
-         * @param collectionId The collectionId of the account to edit
+         * Navigates to collection view of given collectionId
+         * @param collectionId
          */
         toCollection: function(collectionId) {
-            mediator.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/files', true, true);
+            if (!!collectionId) {
+                mediator.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/files', true, true);
+            } else {
+                this.toRoot();
+            }
+
         },
 
         /**
-         * Navigates to the add-page of a new account
+         * Navigates to the collection root view
          */
         toRoot: function() {
             mediator.emit('sulu.router.navigate', 'media/collections/root', true, true);
