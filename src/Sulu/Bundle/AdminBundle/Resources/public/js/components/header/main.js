@@ -63,7 +63,7 @@ define([], function() {
             languageChangerTitleSelector: '.language-changer .title',
             hideTabsClass: 'tabs-hidden',
             tabsContentClass: 'tabs-content',
-            contentTitleClass: 'content-title',
+            contentTitleClass: 'sulu-title',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'}
@@ -102,7 +102,9 @@ define([], function() {
                 '</div>'
             ].join(''),
             titleElement: [
-                '<h2 class="' + constants.contentTitleClass + '"><%= title %></h2>'
+                '<div class="' + constants.contentTitleClass + '">',
+                '   <h2 class="content-title"><%= title %></h2>',
+                '</div>'
             ].join('')
         },
 
@@ -149,13 +151,23 @@ define([], function() {
         },
 
         /**
+         * listens on and renderes a title
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title
+         * @param {String} the title to render
+         */
+        SET_TITLE = function() {
+            return createEventName.call(this, 'set-title');
+        },
+
+        /**
          * listens on and initializes a blank toolbar with given options
          *
          * @deprecated This event is deprecated. Try to set the toolbar when starting the header
          * @event sulu.header.[INSTANCE_NAME].set-toolbar
          * @param {object} the toolbar options
          */
-        SET_TOOLBAR = function () {
+        SET_TOOLBAR = function() {
             return createEventName.call(this, 'set-toolbar');
         },
 
@@ -308,6 +320,13 @@ define([], function() {
         },
 
         /**
+         * Destorys the component
+         */
+        destroy: function() {
+            this.removeTitle();
+        },
+
+        /**
          * Renders the component
          */
         render: function() {
@@ -318,8 +337,8 @@ define([], function() {
             this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.tabsRow)());
 
             // render title if there are no tabs (else they are rendered in tabChangeHandler)
-            if (!!this.options.title && !this.options.tabsData) {
-                this.sandbox.dom.prepend($(this.options.tabsParentOption.el).parent(), this.getTitleElement());
+            if (!this.options.tabsData) {
+                this.renderTitle();
             }
 
             // hide back if configured
@@ -330,11 +349,33 @@ define([], function() {
             }
         },
 
-        getTitleElement: function() {
+        /**
+         * Renders the title into the main-view or (if tabs exist) injects the title into the current tab
+         */
+        renderTitle: function() {
             var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title;
-            return this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement)({
-                title: this.sandbox.translate(title)
-            }));
+            this.removeTitle();
+            if (!!title) {
+                $('.page').prepend(this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement)({
+                    title: this.sandbox.translate(title)
+                })));
+            }
+        },
+
+        /**
+         * Sets a new title
+         * @param title {Stirng} the new title to set
+         */
+        setTitle: function(title) {
+            this.options.title = title;
+            this.renderTitle();
+        },
+
+        /**
+         * Removes the title element from the dom
+         */
+        removeTitle: function() {
+            $('.page').find('.' + constants.contentTitleClass).remove();
         },
 
         /**
@@ -494,6 +535,7 @@ define([], function() {
             this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
 
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
+            this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
         },
@@ -547,8 +589,10 @@ define([], function() {
                     options: options
                 }]).then(function(tabComponent) {
                     // render title if view title is set and tab-option noTitle title is false or not set
-                    if (!!this.options.title && (!tabComponent.tabOptions || !tabComponent.tabOptions.noTitle)) {
-                        this.sandbox.dom.prepend(this.options.tabsContainer, this.getTitleElement());
+                    if (!!tabComponent.tabOptions && !!tabComponent.tabOptions.noTitle) {
+                        this.removeTitle();
+                    } else {
+                        this.renderTitle();
                     }
                 }.bind(this));
             } else {

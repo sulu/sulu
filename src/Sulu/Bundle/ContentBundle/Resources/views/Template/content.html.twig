@@ -1,6 +1,7 @@
 {% set highlightedProperties = [] %}
 {% set regularProperties = [] %}
 
+{# seperate highlighted and regular properties #}
 {% for property in template.properties %}
     {% if property.tags is defined and "sulu.highlight" in property.tags|keys %}
         {% set highlightedProperties = highlightedProperties|merge([property]) %}

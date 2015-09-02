@@ -13,6 +13,21 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
     return {
 
+        tabOptions: {
+            noTitle: true
+        },
+
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: (!!this.options.preview) ? 'fixed' : 'max',
+                    rightSpace: false,
+                    leftSpace: false
+                }
+            };
+        },
+
         template: '',
 
         // content change detection

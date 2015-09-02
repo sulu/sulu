@@ -127,50 +127,56 @@ input, select {
 .content-column .page {
   height: 100%;
   overflow: auto;
-  padding: 0 50px 0 50px;
-  -moz-transition: padding-left 700ms, padding-right 700ms;
-  -o-transition: padding-left 700ms, padding-right 700ms;
-  -webkit-transition: padding-left 700ms, padding-right 700ms;
-  transition: padding-left 700ms, padding-right 700ms;
 }
-/* line 34, ../scss/modules/layout.scss */
+/* line 32, ../scss/modules/layout.scss */
 .content-column .page::before {
   display: block;
   content: "";
   width: 100%;
   margin-bottom: 40px;
 }
-/* line 40, ../scss/modules/layout.scss */
+/* line 38, ../scss/modules/layout.scss */
 .content-column .page::after {
   display: block;
   content: "";
   width: 100%;
   margin-bottom: 40px;
 }
-/* line 48, ../scss/modules/layout.scss */
+/* line 46, ../scss/modules/layout.scss */
 .content-column #content {
-  -moz-transition: width 700ms;
-  -o-transition: width 700ms;
-  -webkit-transition: width 700ms;
-  transition: width 700ms;
+  -moz-transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  -o-transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  -webkit-transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  transition: width 700ms, padding-left 700ms, padding-right 700ms;
   min-width: 510px;
+  padding: 0 50px 0 50px;
 }
-/* line 52, ../scss/modules/layout.scss */
+/* line 51, ../scss/modules/layout.scss */
 .content-column #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 56, ../scss/modules/layout.scss */
+/* line 55, ../scss/modules/layout.scss */
 .content-column #content h1:first-child {
   margin-top: 0;
 }
-/* line 60, ../scss/modules/layout.scss */
+/* line 59, ../scss/modules/layout.scss */
 .content-column #content .content-tabs-content {
   padding-top: 80px;
 }
-/* line 65, ../scss/modules/layout.scss */
+/* line 64, ../scss/modules/layout.scss */
+.content-column .sulu-title {
+  -moz-transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  -o-transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  -webkit-transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  transition: width 700ms, padding-left 700ms, padding-right 700ms;
+  padding-left: 50px;
+  padding-right: 50px;
+  min-width: 510px;
+}
+/* line 71, ../scss/modules/layout.scss */
 .content-column .fixed-width {
   min-width: 510px;
-  width: 900px;
+  width: 920px;
   padding-left: 50px;
   padding-right: 50px;
   -moz-transition: width 700ms, padding-right 700ms, padding-left 700ms;
@@ -184,49 +190,56 @@ input, select {
   content: ' ';
   display: block;
 }
-/* line 72, ../scss/modules/layout.scss */
+/* line 78, ../scss/modules/layout.scss */
 .content-column .fixed-width.no-left-space {
   padding-left: 0;
 }
-/* line 75, ../scss/modules/layout.scss */
+/* line 81, ../scss/modules/layout.scss */
 .content-column .fixed-width.no-right-space {
   padding-right: 0;
 }
-/* line 81, ../scss/modules/layout.scss */
-.content-column.no-left-space .page {
+/* line 87, ../scss/modules/layout.scss */
+.content-column.no-left-space #content {
   padding-left: 0;
 }
-/* line 87, ../scss/modules/layout.scss */
-.content-column.no-right-space .page {
+/* line 93, ../scss/modules/layout.scss */
+.content-column.no-right-space #content {
   padding-right: 0;
 }
-/* line 93, ../scss/modules/layout.scss */
+/* line 99, ../scss/modules/layout.scss */
 .content-column.no-top-space .page::before {
   height: 0;
   margin-bottom: 0;
 }
-/* line 99, ../scss/modules/layout.scss */
+/* line 105, ../scss/modules/layout.scss */
 .content-column.no-transitions {
   -moz-transition: none;
   -o-transition: none;
   -webkit-transition: none;
   transition: none;
 }
-/* line 101, ../scss/modules/layout.scss */
+/* line 107, ../scss/modules/layout.scss */
 .content-column.no-transitions #content, .content-column.no-transitions .page {
   -moz-transition: none;
   -o-transition: none;
   -webkit-transition: none;
   transition: none;
 }
-/* line 103, ../scss/modules/layout.scss */
+/* line 109, ../scss/modules/layout.scss */
 .content-column.no-transitions #content .fixed-width, .content-column.no-transitions .page .fixed-width {
   -moz-transition: none;
   -o-transition: none;
   -webkit-transition: none;
   transition: none;
 }
-/* line 109, ../scss/modules/layout.scss */
+/* line 113, ../scss/modules/layout.scss */
+.content-column.no-transitions .sulu-title {
+  -moz-transition: none;
+  -o-transition: none;
+  -webkit-transition: none;
+  transition: none;
+}
+/* line 118, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink {
   position: absolute;
   top: 0px;
@@ -241,65 +254,65 @@ input, select {
   text-align: center;
   line-height: 25px;
 }
-/* line 122, ../scss/modules/layout.scss */
+/* line 131, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink .fa-chevron-right {
   padding-left: 2px;
 }
-/* line 125, ../scss/modules/layout.scss */
+/* line 134, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink .fa-chevron-left {
   padding-right: 2px;
 }
-/* line 130, ../scss/modules/layout.scss */
+/* line 139, ../scss/modules/layout.scss */
 .content-column.max {
   float: none;
   width: auto;
 }
-/* line 135, ../scss/modules/layout.scss */
+/* line 144, ../scss/modules/layout.scss */
 .content-column.fixed {
   float: none;
   width: auto;
 }
-/* line 139, ../scss/modules/layout.scss */
-.content-column.fixed #content {
-  width: 900px;
+/* line 148, ../scss/modules/layout.scss */
+.content-column.fixed #content, .content-column.fixed .sulu-title {
+  width: 920px;
 }
-/* line 145, ../scss/modules/layout.scss */
-.content-column.small-fixed.fixed:not(.no-right-space) .page {
+/* line 155, ../scss/modules/layout.scss */
+.content-column.small-fixed.fixed:not(.no-right-space) #content, .content-column.small-fixed.fixed:not(.no-right-space) .sulu-title {
   padding-right: 10px;
 }
-/* line 148, ../scss/modules/layout.scss */
-.content-column.small-fixed.fixed:not(.no-left-space) .page {
+/* line 160, ../scss/modules/layout.scss */
+.content-column.small-fixed.fixed:not(.no-left-space) #content, .content-column.small-fixed.fixed:not(.no-left-space) .sulu-title {
   padding-left: 10px;
 }
-/* line 151, ../scss/modules/layout.scss */
-.content-column.small-fixed.fixed #content {
+/* line 165, ../scss/modules/layout.scss */
+.content-column.small-fixed.fixed #content, .content-column.small-fixed.fixed .sulu-title {
   width: 510px;
 }
-/* line 154, ../scss/modules/layout.scss */
+/* line 169, ../scss/modules/layout.scss */
 .content-column.small-fixed .fixed-width {
   width: 510px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
-/* line 162, ../scss/modules/layout.scss */
+/* line 177, ../scss/modules/layout.scss */
 .sidebar-column {
   height: 100%;
   overflow: hidden;
   z-index: 99;
   position: relative;
 }
-/* line 168, ../scss/modules/layout.scss */
+/* line 183, ../scss/modules/layout.scss */
 .sidebar-column.fixed {
   width: 450px;
   float: right;
 }
-/* line 173, ../scss/modules/layout.scss */
+/* line 188, ../scss/modules/layout.scss */
 .sidebar-column.max {
   float: none;
   width: auto;
 }
-/* line 178, ../scss/modules/layout.scss */
+/* line 193, ../scss/modules/layout.scss */
 .sidebar-column.hidden {
   width: 0;
   height: 0;
@@ -307,88 +320,88 @@ input, select {
 }
 
 @media only screen and (max-width: 1110px) {
-  /* line 192, ../scss/modules/layout.scss */
+  /* line 207, ../scss/modules/layout.scss */
   .sidebar-column.fixed {
     width: 0;
     height: 0;
   }
 }
-@media only screen and (max-width: 1290px) {
-  /* line 207, ../scss/modules/layout.scss */
-  .has-visible-sidebar .content-column.fixed #content {
+@media only screen and (max-width: 1310px) {
+  /* line 222, ../scss/modules/layout.scss */
+  .has-visible-sidebar .content-column.fixed #content, .has-visible-sidebar .content-column.fixed .sulu-title {
     width: 700px;
   }
-  /* line 211, ../scss/modules/layout.scss */
+  /* line 226, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
     width: 700px;
   }
 }
 @media only screen and (max-width: 1090px) {
-  /* line 221, ../scss/modules/layout.scss */
-  .has-visible-sidebar .content-column.fixed #content {
+  /* line 236, ../scss/modules/layout.scss */
+  .has-visible-sidebar .content-column.fixed #content, .has-visible-sidebar .content-column.fixed .sulu-title {
     width: 510px;
   }
-  /* line 225, ../scss/modules/layout.scss */
+  /* line 240, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
     width: 510px;
   }
 }
 @media only screen and (max-width: 900px) {
-  /* line 233, ../scss/modules/layout.scss */
+  /* line 248, ../scss/modules/layout.scss */
   .sidebar-column.max {
     width: 0;
     height: 0;
   }
 
-  /* line 239, ../scss/modules/layout.scss */
+  /* line 254, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     float: none;
   }
-  /* line 241, ../scss/modules/layout.scss */
-  .has-visible-sidebar .content-column.fixed #content {
-    max-width: 900px;
+  /* line 256, ../scss/modules/layout.scss */
+  .has-visible-sidebar .content-column.fixed #content, .has-visible-sidebar .content-column.fixed .sulu-title {
+    max-width: 920px;
     width: auto;
   }
-  /* line 246, ../scss/modules/layout.scss */
+  /* line 261, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
-    max-width: 900px;
+    max-width: 920px;
     width: auto;
   }
 
-  /* line 252, ../scss/modules/layout.scss */
+  /* line 267, ../scss/modules/layout.scss */
   .sulu-app-shrink {
     display: none;
   }
 }
-@media only screen and (max-width: 950px) {
-  /* line 265, ../scss/modules/layout.scss */
+@media only screen and (max-width: 970px) {
+  /* line 280, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed {
     float: none;
   }
-  /* line 267, ../scss/modules/layout.scss */
-  .has-no-visible-sidebar .content-column.fixed #content {
-    max-width: 900px;
+  /* line 282, ../scss/modules/layout.scss */
+  .has-no-visible-sidebar .content-column.fixed #content, .has-no-visible-sidebar .content-column.fixed .sulu-title {
+    max-width: 920px;
     width: auto;
   }
-  /* line 272, ../scss/modules/layout.scss */
+  /* line 287, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column .fixed-width {
-    max-width: 900px;
+    max-width: 920px;
     width: auto;
   }
 }
-@media only screen and (max-width: 1600px) {
-  /* line 287, ../scss/modules/layout.scss */
+@media only screen and (max-width: 1620px) {
+  /* line 302, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
     float: none;
   }
-  /* line 289, ../scss/modules/layout.scss */
-  .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed #content {
-    max-width: 900px;
+  /* line 304, ../scss/modules/layout.scss */
+  .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed #content, .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed .sulu-title {
+    max-width: 920px;
     width: auto;
   }
-  /* line 294, ../scss/modules/layout.scss */
+  /* line 309, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column .fixed-width {
-    max-width: 900px;
+    max-width: 920px;
     width: auto;
   }
 }
@@ -833,7 +846,7 @@ input, select {
 
 /* line 115, ../scss/modules/header.scss */
 .fixed .toolbar-row {
-  max-width: 1000px;
+  max-width: 1020px;
 }
 
 /* line 120, ../scss/modules/header.scss */

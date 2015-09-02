@@ -84,6 +84,15 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
 
     return {
 
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false,
+                topSpace: false
+            }
+        },
+
         initialize: function() {
             this.render();
             // shows a delete success label. If a node just got deleted

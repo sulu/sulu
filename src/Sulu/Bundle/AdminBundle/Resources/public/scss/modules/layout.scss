@@ -29,8 +29,6 @@
     .page {
         height: 100%;
         overflow: auto;
-        padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
-        @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
         &::before {
             display: block;
             content: "";
@@ -46,8 +44,9 @@
     }
 
     #content {
-        @include transition(width $shrinkAnimationDuration);
+        @include transition(width $shrinkAnimationDuration, padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
         min-width: $contentMinWidth;
+        padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
 
         h2.mainheadline {
             margin-top: 35px;
@@ -62,6 +61,13 @@
         }
     }
 
+    .sulu-title {
+      @include transition(width $shrinkAnimationDuration, padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+        padding-left: $contentPaddingLeft;
+        padding-right: $contentPaddingRight;
+        min-width: $contentMinWidth;
+    }
+
     .fixed-width {
         @include clear-float;
         min-width: $contentMinWidth;
@@ -69,7 +75,7 @@
         padding-left: $contentPaddingLeft;
         padding-right: $contentPaddingRight;
         @include transition(width $shrinkAnimationDuration, padding-right $shrinkAnimationDuration, padding-left $shrinkAnimationDuration);
-      &.no-left-space {
+        &.no-left-space {
             padding-left: 0;
         }
         &.no-right-space {
@@ -78,13 +84,13 @@
     }
 
     &.no-left-space {
-        .page {
+        #content {
             padding-left: 0;
         }
     }
 
     &.no-right-space {
-      .page {
+      #content {
           padding-right: 0;
       }
     }
@@ -103,6 +109,9 @@
             .fixed-width {
               @include transition(none);
             }
+        }
+        .sulu-title {
+            @include transition(none);
         }
     }
 
@@ -136,20 +145,26 @@
         float: none;
         width: auto;
 
-        #content {
+        #content, .sulu-title {
           width: $contentFixedWidth;
         }
     }
 
     &.small-fixed {
-        &.fixed:not(.no-right-space) .page {
-          padding-right: $contentPaddingRightSmall;
+        &.fixed:not(.no-right-space) {
+          #content, .sulu-title {
+            padding-right: $contentPaddingRightSmall;
+          }
         }
-        &.fixed:not(.no-left-space) .page {
-          padding-left: $contentPaddingLeftSmall;
+        &.fixed:not(.no-left-space) {
+          #content, .sulu-title {
+            padding-left: $contentPaddingLeftSmall;
+          }
         }
-        &.fixed #content {
-          width: $contentFixedSmallWidth;
+        &.fixed  {
+          #content, .sulu-title {
+            width: $contentFixedSmallWidth;
+          }
         }
         .fixed-width {
           width: $contentFixedSmallWidth;
@@ -204,7 +219,7 @@
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
     .has-visible-sidebar .content-column {
         &.fixed {
-            #content {
+            #content, .sulu-title {
                 width: $contentFixedMediumWidth;
             }
         }
@@ -218,7 +233,7 @@
 @media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
     .has-visible-sidebar .content-column {
         &.fixed {
-            #content {
+            #content, .sulu-title {
                 width: $contentFixedSmallWidth;
             }
         }
@@ -238,7 +253,7 @@
     .has-visible-sidebar .content-column {
         &.fixed {
             float: none;
-            #content {
+            #content, .sulu-title {
                 max-width: $contentFixedWidth;
                 width: auto;
             }
@@ -264,7 +279,7 @@
     .has-no-visible-sidebar .content-column {
         &.fixed {
             float: none;
-            #content {
+            #content, .sulu-title {
                 max-width: $contentFixedWidth;
                 width: auto;
             }
@@ -286,7 +301,7 @@
     .has-visible-sidebar .sidebar-column.fixed + .content-column {
         &.fixed {
             float: none;
-            #content {
+            #content, .sulu-title {
                 max-width: $contentFixedWidth;
                 width: auto;
             }
