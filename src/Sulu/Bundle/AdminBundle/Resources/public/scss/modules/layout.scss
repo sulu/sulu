@@ -35,13 +35,13 @@
             display: block;
             content: "";
             width: 100%;
-            height: $contentPaddingTop;
+            margin-bottom: $contentPaddingTop;
         }
         &::after {
           display: block;
           content: "";
           width: 100%;
-          height: $contentPaddingBottom;
+          margin-bottom: $contentPaddingBottom;
         }
     }
 
@@ -63,8 +63,18 @@
     }
 
     .fixed-width {
+        @include clear-float;
         min-width: $contentMinWidth;
         width: $contentFixedWidth;
+        padding-left: $contentPaddingLeft;
+        padding-right: $contentPaddingRight;
+        @include transition(width $shrinkAnimationDuration, padding-right $shrinkAnimationDuration, padding-left $shrinkAnimationDuration);
+      &.no-left-space {
+            padding-left: 0;
+        }
+        &.no-right-space {
+            padding-right: 0;
+        }
     }
 
     &.no-left-space {
@@ -90,6 +100,9 @@
         @include transition(none);
         #content, .page {
             @include transition(none);
+            .fixed-width {
+              @include transition(none);
+            }
         }
     }
 
@@ -126,15 +139,22 @@
         #content {
           width: $contentFixedWidth;
         }
+    }
 
-        &.small-fixed {
-            .page {
-                padding-left: $contentPaddingLeftSmall;
-                padding-right: $contentPaddingRightSmall;
-            }
-            #content {
-                width: $contentFixedSmallWidth;
-            }
+    &.small-fixed {
+        &.fixed:not(.no-right-space) .page {
+          padding-right: $contentPaddingRightSmall;
+        }
+        &.fixed:not(.no-left-space) .page {
+          padding-left: $contentPaddingLeftSmall;
+        }
+        &.fixed #content {
+          width: $contentFixedSmallWidth;
+        }
+        .fixed-width {
+          width: $contentFixedSmallWidth;
+          padding-left: $contentPaddingLeftSmall;
+          padding-right: $contentPaddingRightSmall;
         }
     }
 }

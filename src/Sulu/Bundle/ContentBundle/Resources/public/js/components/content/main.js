@@ -1100,7 +1100,10 @@ define([
                     },
                     content: {
                         width: 'fixed',
-                        shrinkable: !!this.options.preview
+                        shrinkable: !!this.options.preview,
+                        topSpace: false,
+                        rightSpace: false,
+                        leftSpace: false
                     },
                     sidebar: sidebar
                 };

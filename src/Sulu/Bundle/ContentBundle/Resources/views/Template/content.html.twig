@@ -10,13 +10,33 @@
 {% endfor %}
 
 <form id="content-form" class="grid">
-    {% for property in highlightedProperties %}
-        {% include 'SuluContentBundle:Template:macros/property.html.twig' with {'property': property, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} %}
-    {% endfor %}
+    {% if highlightedProperties is not empty %}
+        <div class="highlight-section">
+            <div class="fixed-width">
+                <div class="content">
+                    {% for property in highlightedProperties %}
+                        {% include 'SuluContentBundle:Template:macros/property.html.twig' with {
+                        'property': property,
+                        'webspaceKey': webspaceKey,
+                        'languageCode': languageCode,
+                        'userLocale': userLocale
+                        } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
-    {% for property in regularProperties %}
-        {% include 'SuluContentBundle:Template:macros/property.html.twig' with {'property': property, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} %}
-    {% endfor %}
+    <div class="fixed-width">
+        {% for property in regularProperties %}
+            {% include 'SuluContentBundle:Template:macros/property.html.twig' with {
+            'property': property,
+            'webspaceKey': webspaceKey,
+            'languageCode': languageCode,
+            'userLocale': userLocale
+            } %}
+        {% endfor %}
+    </div>
 </form>
 
 <script type="text/javascript">
