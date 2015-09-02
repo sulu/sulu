@@ -53,6 +53,7 @@ define(['services/sulumedia/media-manager',
             if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
                 var editId = this.sandbox.sulu.viewStates['media-file-edit-id'];
                 OverlayManager.startEditMediaOverlay(this.sandbox, editId, UserSettingsManager.getMediaLocale());
+                delete this.sandbox.sulu.viewStates['media-file-edit-id'];
             }
         },
 
