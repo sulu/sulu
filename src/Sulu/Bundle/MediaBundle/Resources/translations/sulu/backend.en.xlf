@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
                 <source>navigation.media.collections.search</source>
-                <target>Filter collections ...</target>
+                <target>Filter collections...</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -52,7 +52,7 @@
             </trans-unit>
             <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
                 <source>labels.success.media-upload-desc</source>
-                <target>Media successfully uploaded.</target>
+                <target>Media successfully uploaded</target>
             </trans-unit>
             <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
                 <source>media-selection.collections</source>
@@ -112,11 +112,11 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
                 <source>labels.success.media-move-desc</source>
-                <target>Media successfully moved.</target>
+                <target>Media successfully moved</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
                 <source>labels.success.collection-move-desc</source>
-                <target>Collection successfully moved.</target>
+                <target>Collection successfully moved</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
                 <source>sulu.media.edit.loading</source>
