@@ -32,6 +32,17 @@
     background-repeat: no-repeat;
     width: 179px;
     height: 179px;
+    position: relative;
+
+    #file-version-change {
+        width: 100%;
+        height: 100%;
+
+        .dropzone-container {
+            width: 150px;
+            height: 150px;
+        }
+    }
 }
 
 .multi-edit {

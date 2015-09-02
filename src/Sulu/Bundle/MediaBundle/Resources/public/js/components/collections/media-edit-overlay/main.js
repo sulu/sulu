@@ -270,6 +270,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
 
         filesAddedHandler: function(newMedia) {
             if (!!newMedia[0]) {
+                this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
                 this.sandbox.stop();
                 OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, this.options.locale);
             }
@@ -304,7 +305,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
          */
         startSingleDropzone: function() {
             // replace the current media with the new one if a fileversion got uploaded
-            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler, this);
+            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this));
 
             this.sandbox.start([
                 {
@@ -315,8 +316,9 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,
-                        skin: 'small',
-                        titleKey: 'sulu.upload.small-dropzone-title',
+                        skin: 'overlay',
+                        titleKey: '',
+                        descriptionKey: 'sulu.media.upload-new-version', //todo: add translation
                         instanceName: 'file-version-' + this.media.id,
                         maxFiles: 1
                     }

@@ -111,7 +111,7 @@ define(['services/sulumedia/media-manager',
             }.bind(this));
 
             this.sandbox.on('sulu.medias.media.saved', function(id, media) {
-                if (!!media.locale && media.locale === UserSettingsManager.getMediaLocale()) {
+                if (!media.locale || media.locale === UserSettingsManager.getMediaLocale()) {
                     this.sandbox.emit('husky.datagrid.records.change', media);
                 }
             }.bind(this));
