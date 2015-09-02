@@ -20,12 +20,8 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            infoKey: 'public.info',
-            versionsKey: 'sulu.media.history',
-            multipleEditTitle: 'sulu.media.multiple-edit.title',
-            loadingTitle: 'sulu.media.edit.loading',
-            locale: app.sandbox.sulu.user.locale,
-            instanceName: ''
+            instanceName: '',
+            locale: app.sandbox.sulu.user.locale
         },
 
         constants = {
@@ -129,7 +125,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.sandbox.translate(this.options.loadingTitle),
+                        title: this.sandbox.translate('sulu.media.edit.loading'),
                         data: $loader,
                         skin: 'wide',
                         openOnStart: true,
@@ -212,8 +208,8 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         el: $container,
                         title: this.media.title,
                         tabs: [
-                            {title: this.sandbox.translate(this.options.infoKey), data: $info},
-                            {title: this.sandbox.translate(this.options.versionsKey), data: $versions}
+                            {title: this.sandbox.translate('public.info'), data: $info},
+                            {title: this.sandbox.translate('sulu.media.history'), data: $versions}
                         ],
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
@@ -260,7 +256,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                 this.sandbox.emit('husky.overlay.media-edit.loading.close');
             }.bind(this));
 
-            this.sandbox.once('husky.dropzone.file-version-' + this.media.id + '.initialized', function() {
+            this.sandbox.once('husky.dropzone.file-version.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
 
@@ -292,9 +288,11 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
          * Handles the upload of a image as new version
          * @param newMedia
          */
-        filesAddedHandler: function(newMedia) {
+        newVersionUploadedHandler: function(newMedia) {
             if (!!newMedia[0]) {
                 this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
+
                 this.sandbox.stop();
                 OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, this.options.locale);
             }
@@ -326,10 +324,10 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
         },
 
         /**
-         * Starts the dropzone for changeing the file-version
+         * Starts the dropzone for changing the file-version
          */
         startSingleDropzone: function() {
-            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler.bind(this));
+            this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
 
             this.sandbox.start([
                 {
@@ -343,7 +341,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         skin: 'overlay',
                         titleKey: '',
                         descriptionKey: 'sulu.media.upload-new-version', //todo: add translation
-                        instanceName: 'file-version-' + this.media.id,
+                        instanceName: 'file-version',
                         maxFiles: 1
                     }
                 }
@@ -372,7 +370,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.sandbox.translate(this.options.multipleEditTitle),
+                        title: this.sandbox.translate('sulu.media.multiple-edit.title'),
                         data: this.$multiple,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,

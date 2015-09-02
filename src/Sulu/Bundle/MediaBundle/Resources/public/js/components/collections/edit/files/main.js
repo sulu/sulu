@@ -318,13 +318,6 @@ define(['services/sulumedia/media-manager',
          */
         enableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
-        },
-
-        /**
-         * Called when component gets destroyed
-         */
-        destroy: function() {
-            this.sandbox.stop(constants.dropzoneSelector);
-        },
+        }
     };
 });

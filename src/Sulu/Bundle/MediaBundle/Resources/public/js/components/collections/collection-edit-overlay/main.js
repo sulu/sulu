@@ -98,7 +98,7 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.sandbox.translate('sulu.media.edit-collection'),
+                        title: this.sandbox.translate('sulu.media.edit-collection'), // todo: add translation
                         instanceName: 'edit-collection',
                         data: this.renderTemplate('/admin/media/template/collection/settings'),
                         okCallback: this.okCallback.bind(this),
