@@ -340,7 +340,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         showOverlay: false,
                         skin: 'overlay',
                         titleKey: '',
-                        descriptionKey: 'sulu.media.upload-new-version', //todo: add translation
+                        descriptionKey: 'sulu.media.upload-new-version',
                         instanceName: 'file-version',
                         maxFiles: 1
                     }

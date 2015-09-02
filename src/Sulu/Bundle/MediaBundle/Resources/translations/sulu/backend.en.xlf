@@ -178,6 +178,34 @@
                 <source>media-selection.list-toolbar.upload-info</source>
                 <target>Click or Drag'n'Drop</target>
             </trans-unit>
+            <trans-unit id="243d88fse564652633a5ca2169f22407" resname="sulu.media.edit-collection">
+                <source>sulu.media.edit-collection</source>
+                <target>Edit collection</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5cr443gf22407" resname="sulu.media.upload-new-version">
+                <source>sulu.media.upload-new-version</source>
+                <target>Upload new version</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64gs7533a5ca2169f22407" resname="labels.success.media-deleted-desc">
+                <source>labels.success.media-deleted-desc</source>
+                <target>Media successfully deleted</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633778k2169f22407" resname="sulu.toolbar.masonry">
+                <source>sulu.toolbar.masonry</source>
+                <target>Masonry</target>
+            </trans-unit>
+            <trans-unit id="243d88440f24652633778k2169f22407" resname="sulu.header.edit-collection">
+                <source>sulu.header.edit-collection</source>
+                <target>Edit collection</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22407" resname="sulu.header.delete-collection">
+                <source>sulu.header.delete-collection</source>
+                <target>Delete collection</target>
+            </trans-unit>
+            <trans-unit id="243d8846l295h52633778k2169f22407" resname="sulu.header.move-collection">
+                <source>sulu.header.move-collection</source>
+                <target>Move Collection</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

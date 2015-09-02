@@ -31,7 +31,7 @@ define([
                 media.destroy({
                     success: function() {
                         mediator.emit('sulu.medias.media.deleted', mediaId);
-                        mediator.emit('sulu.labels.success.show', 'labels.success.media-deleted-desc'); // todo: add translation
+                        mediator.emit('sulu.labels.success.show', 'labels.success.media-deleted-desc');
                         promise.resolve();
                     }.bind(this),
                     error: function() {

@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
                 <source>navigation.media.collections.search</source>
-                <target>Kollektionen filtern ...</target>
+                <target>Kollektionen filtern...</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -52,7 +52,7 @@
             </trans-unit>
             <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
                 <source>labels.success.media-upload-desc</source>
-                <target>Medien erfolgreich hochgeladen.</target>
+                <target>Medien erfolgreich hochgeladen</target>
             </trans-unit>
             <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
                 <source>media-selection.collections</source>
@@ -112,11 +112,11 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
                 <source>labels.success.media-move-desc</source>
-                <target>Medien erfolgreich verschoben.</target>
+                <target>Medien erfolgreich verschoben</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
                 <source>labels.success.collection-move-desc</source>
-                <target>Kollektion erfolgreich verschoben.</target>
+                <target>Kollektion erfolgreich verschoben</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
                 <source>sulu.media.edit.loading</source>
@@ -177,6 +177,34 @@
             <trans-unit id="243d88cf2f64652633a5ca2169f22407" resname="media-selection.list-toolbar.upload-info">
                 <source>media-selection.list-toolbar.upload-info</source>
                 <target>Klick oder Drag'n'Drop</target>
+            </trans-unit>
+            <trans-unit id="243d88fse564652633a5ca2169f22407" resname="sulu.media.edit-collection">
+                <source>sulu.media.edit-collection</source>
+                <target>Kollektion bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5cr443gf22407" resname="sulu.media.upload-new-version">
+                <source>sulu.media.upload-new-version</source>
+                <target>Neue Version hochladen</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64gs7533a5ca2169f22407" resname="labels.success.media-deleted-desc">
+                <source>labels.success.media-deleted-desc</source>
+                <target>Medien erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633778k2169f22407" resname="sulu.toolbar.masonry">
+                <source>sulu.toolbar.masonry</source>
+                <target>Masonry</target>
+            </trans-unit>
+            <trans-unit id="243d88440f24652633778k2169f22407" resname="sulu.header.edit-collection">
+                <source>sulu.header.edit-collection</source>
+                <target>Kollektion bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22407" resname="sulu.header.delete-collection">
+                <source>sulu.header.delete-collection</source>
+                <target>Kollektion löschen</target>
+            </trans-unit>
+            <trans-unit id="243d8846l295h52633778k2169f22407" resname="sulu.header.move-collection">
+                <source>sulu.header.move-collection</source>
+                <target>Kollektion verschieben</target>
             </trans-unit>
         </body>
     </file>
