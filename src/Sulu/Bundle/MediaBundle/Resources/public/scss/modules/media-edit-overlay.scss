@@ -1,52 +1,52 @@
 .media-edit-loader {
-    margin: 50px 0;
+  margin: 50px 0;
 }
 
 .media-edit-versions-links {
-    margin: 20px 0 0;
-    border-top: 2px solid $grayLighter;
-    border-bottom: 1px solid $grayLighter;
+  margin: 20px 0 0;
+  border-top: 2px solid $grayLighter;
+  border-bottom: 1px solid $grayLighter;
 }
 
 .media-edit-versions-link {
-    color: black;
-    display: block;
-    padding: 15px 3px;
-    border-bottom: 1px solid $grayLighter;
-    text-decoration: none;
+  color: black;
+  display: block;
+  padding: 15px 3px;
+  border-bottom: 1px solid $grayLighter;
+  text-decoration: none;
 }
 
 .media-edit-versions-title {
-    .active & {
-        font-weight: bold;
-    }
+  .active & {
+    font-weight: bold;
+  }
 }
 
 .media-edit-versions-created {
-    float: right;
-    color: $grayLight;
+  float: right;
+  color: $grayLight;
 }
 
 .media-edit-preview-image {
-    background-position: center center;
-    background-repeat: no-repeat;
-    width: 179px;
-    height: 179px;
-    position: relative;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 179px;
+  height: 179px;
+  position: relative;
 
-    #file-version-change {
-        width: 100%;
-        height: 100%;
+  #file-version-change {
+    width: 100%;
+    height: 100%;
 
-        .dropzone-container {
-            width: 150px;
-            height: 150px;
-        }
+    .dropzone-container {
+      width: 150px;
+      height: 150px;
     }
+  }
 }
 
 .multi-edit {
-    .language-changer {
-        right: 30px;
-    }
+  .language-changer {
+    right: 30px;
+  }
 }
