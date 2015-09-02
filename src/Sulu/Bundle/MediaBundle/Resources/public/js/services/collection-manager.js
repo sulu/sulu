@@ -53,6 +53,7 @@ define([
                 collection.destroy({
                     success: function() {
                         mediator.emit('sulu.medias.collection.deleted', collectionId);
+                        mediator.emit('sulu.labels.success.show', 'labels.success.collection-deleted-desc');
                         promise.resolve();
                     }.bind(this),
                     error: function() {
@@ -137,7 +138,6 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.labels.success.show', 'labels.success.collection-deleted-desc');
                     promise.resolve();
                 }.bind(this));
 

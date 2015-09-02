@@ -31,6 +31,7 @@ define([
                 media.destroy({
                     success: function() {
                         mediator.emit('sulu.medias.media.deleted', mediaId);
+                        mediator.emit('sulu.labels.success.show', 'labels.success.media-deleted-desc'); // todo: add translation
                         promise.resolve();
                     }.bind(this),
                     error: function() {
@@ -53,6 +54,7 @@ define([
                 util.save('/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId, 'POST')
                     .then(function() {
                         mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
+                        mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
                         promise.resolve();
                     }.bind(this))
                     .fail(function() {
@@ -139,7 +141,6 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.labels.success.show', 'labels.success.media-deleted-desc');
                     promise.resolve();
                 }.bind(this));
 
@@ -185,7 +186,6 @@ define([
                 }.bind(this));
 
                 $.when.apply(null, requests).then(function() {
-                    mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
                     promise.resolve();
                 }.bind(this));
 
