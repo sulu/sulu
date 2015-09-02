@@ -149,18 +149,18 @@ define(['services/sulumedia/media-manager',
             // delete a media
             this.sandbox.on('sulu.list-toolbar.delete', function() {
                 this.deleteMedia();
-            });
+            }.bind(this));
 
             // edit media
             this.sandbox.on('sulu.list-toolbar.edit', function() {
                 this.editMedia();
-            });
+            }.bind(this));
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
                 OverlayManager.
                     startMoveMediaOverlay(this.sandbox, this.options.id, UserSettingsManager.getMediaLocale());
-            });
+            }.bind(this));
 
             // change datagrid view to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
@@ -241,7 +241,10 @@ define(['services/sulumedia/media-manager',
                     view: UserSettingsManager.getMediaListView(),
                     resultKey: 'media',
                     sortable: false,
-                    actionCallback: this.editMedia.bind(this),
+                    actionCallback: function(clickedId) {
+                        this.sandbox.emit('husky.datagrid.select.item', clickedId);
+                        this.editMedia();
+                    }.bind(this),
                     viewOptions: {
                         table: {
                             actionIconColumn: 'name'
@@ -280,15 +283,9 @@ define(['services/sulumedia/media-manager',
 
         /**
          * Edits all selected medias
-         * @param clickedMedia {Number|String} id of a media which should, besides the selected ones, also be edited (e.g. if it was clicked)
          */
-        editMedia: function(clickedMedia) {
+        editMedia: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
-                if (!!clickedMedia && mediaIds.indexOf(clickedMedia) === -1) {
-                    mediaIds = mediaIds.concat(clickedMedia);
-                    //todo: select clickedmedia in datagrid
-                }
-
                 OverlayManager.startEditMediaOverlay(this.sandbox, mediaIds, UserSettingsManager.getMediaLocale());
             }.bind(this));
         },
