@@ -109,6 +109,7 @@ define(['services/sulumedia/collection-manager', 'services/sulumedia/overlay-man
                         openOnStart: true,
                         removeOnClose: true,
                         closeIcon: '',
+                        propagateEvents: false,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
                             preSelected: this.options.locale

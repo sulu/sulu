@@ -129,7 +129,8 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         removeOnClose: true,
                         instanceName: 'media-edit.loading',
                         closeIcon: '',
-                        okInactive: true
+                        okInactive: true,
+                        propagateEvents: false
                     }
                 }
             ]);
@@ -209,6 +210,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
+                        propagateEvents: false,
                         okCallback: function() {
                             if (this.sandbox.form.validate(constants.infoFormSelector)) {
                                 this.saveSingleMedia();
@@ -359,6 +361,7 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
                         removeOnClose: true,
                         closeIcon: '',
                         instanceName: 'media-multiple-edit',
+                        propagateEvents: false,
                         okCallback: function() {
                             if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
                                 this.saveMultipleMedia();

@@ -87,7 +87,8 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
                             this.sandbox.stop();
                         }.bind(this),
                         openOnStart: true,
-                        removeOnClose: true
+                        removeOnClose: true,
+                        propagateEvents: false
                     }
                 }
             ]);

@@ -125,6 +125,7 @@ define(function() {
                         container: this.$el,
                         instanceName: this.options.instanceName,
                         skin: 'wide',
+                        propagateEvents: false,
                         slides: [
                             {
                                 title: this.sandbox.translate('sulu.media.move.overlay-title'),
