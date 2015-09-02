@@ -1,5 +1,5 @@
 /**
- * @class Masonryview (Datagrid Decorator)
+ * @class MasonryView (Datagrid Decorator)
  * @constructor
  *
  * @param {Object} [viewOptions] Configuration object
@@ -11,7 +11,7 @@
  * @param {String} [fields.image]
  * @param {Array} [fields.title]
  * @param {Array} [fields.description]
- * @param {Object} [separators] Defines separators between data-columns
+ * @param {Object} [separators] Defines separators between data-columns content
  * @param {String} [separators.description]
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
@@ -265,7 +265,7 @@ define(function() {
          */
         renderItem: function(id, image, title, description) {
             this.$items[id] = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.item)({
+                this.sandbox.util.template(templates.item, {
                     image: image,
                     title: this.sandbox.util.cropMiddle(String(title), 24),
                     description: this.sandbox.util.cropMiddle(String(description), 32),
@@ -310,14 +310,14 @@ define(function() {
          * @param id
          */
         bindItemLoadingEvents: function(id) {
-            this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'load', function() {
-                this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headIconClass, this.$items[id]));
+            this.sandbox.dom.one($(this.$items[id]).find('.' + constants.headImageClass), 'load', function() {
+                this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.headIconClass));
                 this.sandbox.masonry.refresh('#' + constants.masonryGridId, true);
                 this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
             }.bind(this));
 
-            this.sandbox.dom.one(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]), 'error', function() {
-                this.sandbox.dom.remove(this.sandbox.dom.find('.' + constants.headImageClass, this.$items[id]));
+            this.sandbox.dom.one($(this.$items[id]).find('.' + constants.headImageClass), 'error', function() {
+                this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.headImageClass));
                 this.sandbox.masonry.refresh('#' + constants.masonryGridId, true);
                 this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
             }.bind(this));
