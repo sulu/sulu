@@ -28,6 +28,10 @@ require.config({
     ]
 });
 
+define('underscore', function() {
+    return window._;
+});
+
 require(['husky'], function(Husky) {
 
     'use strict';

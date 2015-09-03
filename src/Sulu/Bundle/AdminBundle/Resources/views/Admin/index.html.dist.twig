@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1440659565922.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1441292166689.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.css"/>
@@ -30,23 +30,25 @@
             <div class="double-bounce2 bouncer"></div>
         </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
-            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                 data-aura-user-name="{{ user.fullName }}"
-                 data-aura-system-name="{{ name }}"
-                 data-aura-system-version="{{ suluVersion }}"
-                 data-aura-user-locales='{{ locales | json_encode }}'
-                 data-aura-user-locale="{{ user.locale }}"
-                 data-aura-logout-route="{{ path('logout') }}"
-                 class="navigation-column">
+            <div class="navigation-container">
+                <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
+                     data-aura-user-name="{{ user.fullName }}"
+                     data-aura-system-name="{{ name }}"
+                     data-aura-system-version="{{ suluVersion }}"
+                     data-aura-user-locales='{{ locales | json_encode }}'
+                     data-aura-user-locale="{{ user.locale }}"
+                     data-aura-logout-route="{{ path('logout') }}"
+                     class="navigation-column">
+                </div>
             </div>
             <div class="content-container">
+                <div id="labels-container" data-aura-component="labels@suluadmin"></div>
                 <div class="content-column fixed">
                     <div class="wrapper">
                         <div class="page">
                             <main class="grid" id="content"></main>
                         </div>
                     </div>
-                    <div id="labels-container" data-aura-component="labels@suluadmin"></div>
                 </div>
 
                 <div class="sidebar-column max">
@@ -73,6 +75,6 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1440659565922" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1441292166689" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
     </body>
 </html>
