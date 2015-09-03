@@ -42527,10 +42527,9 @@ define('__component__$overlay@husky',[], function() {
  * @param {Number} [options.counter] Counter to display in the label
  * @param {String} [options.description] Description of the lable (if html is null)
  * @param {Boolean} [options.hasClose] if true close button gets appended to the label
- * @param {Boolean} [options.autoVanish] if true label vanishes automatically
- * @param {Number} [options.vanishDelay] time in ms after which the vanish effect starts
- * @param {Number} [options.vanishDuration] duration of the vanish effect in ms
- * @param {Number} [options.showDuration] duration of the show effect in ms
+ * @param {Boolean} [options.fadeOut] if true label fades out automatically
+ * @param {Number} [options.fadeOutDelay] time in ms after which the fade-out starts
+ * @param {Number} [options.fadeDuration] duration of the fade-out in ms
  * @param {Function} [options.closeCallback] callback to execute if the close-button is clicked
  * @param {String} [options.insertMethod] insert method to use for inserting the label (append or prepend)
  */
@@ -42546,10 +42545,9 @@ define('__component__$label@husky',[],function() {
         counter: 1,
         description: null,
         hasClose: true,
-        autoVanish: true,
-        vanishDelay: 0,
-        vanishDuration: 250,
-        showDuration: 250,
+        fadeOut: true,
+        fadeOutDelay: 0,
+        fadeDuration: 500,
         closeCallback: null,
         insertMethod: 'append'
     },
@@ -42573,15 +42571,15 @@ define('__component__$label@husky',[],function() {
         ERROR: {
             title: 'Error',
             labelClass: 'husky-label-error',
-            vanishDelay: 10000
+            fadeOutDelay: 10000
         },
         WARNING: {
-            vanishDelay: 5000,
+            fadeOutDelay: 5000,
             title: 'Warning',
             labelClass: 'husky-label-warning'
         },
         SUCCESS: {
-            vanishDelay: 5000,
+            fadeOutDelay: 2000,
             title: 'Success',
             labelClass: 'husky-label-success'
         }
@@ -42620,7 +42618,7 @@ define('__component__$label@husky',[],function() {
     },
 
     /**
-     * listens on and refreshes the vanish-out delay
+     * listens on and refreshes the fade out delay
      * @event husky.label.[INSTANCE_NAME].refresh
      * @param {String|Number} counter The counter number to display
      */
@@ -42642,7 +42640,7 @@ define('__component__$label@husky',[],function() {
 
             //merge defaults with defaults of type and options
             this.options = this.sandbox.util.extend(true, {}, defaults, typesDefaults[this.options.type], this.options);
-            this.vanishTimer = null;
+            this.fadeOutTimer = null;
             this.label = {
                 $el: null,
                 $content: null,
@@ -42669,7 +42667,7 @@ define('__component__$label@husky',[],function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.label.$close, 'click', function() {
-                this.vanish();
+                this.fadeOut();
                 if (typeof this.options.closeCallback === 'function') {
                     this.options.closeCallback();
                 }
@@ -42684,7 +42682,7 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
-         * Refreshes the vanish and rerenders the counter
+         * Refreshes the fade out increases and rerenders the counter
          */
         refresh: function() {
             this.options.counter += 1;
@@ -42695,42 +42693,36 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
-         * Starts the vanish effect
+         * Starts the fade-out effect
          */
         startEffects: function() {
-            if (this.options.autoVanish === true) {
-                this.vanishTimer = _.delay(function() {
-                    this.vanish();
-                }.bind(this), this.options.vanishDelay);
+            if (this.options.fadeOut === true) {
+                this.fadeOutTimer = _.delay(function() {
+                    this.fadeOut();
+                }.bind(this), this.options.fadeOutDelay);
             }
         },
 
         /**
-         * Cancels the vanish effect
+         * Cancles the fade-out effect
          */
         abortEffects: function() {
             this.label.$el.stop();
             this.label.$el.removeAttr('style');
-            clearTimeout(this.vanishTimer);
+            clearTimeout(this.fadeOutTimer);
         },
 
         /**
-         * Makes the label disapear
+         * Fades the label out
          */
-        vanish: function() {
-            this.label.$el.slideUp({
-                duration: this.options.vanishDuration,
-                done: this.close.bind(this)
-            });
-        },
-
-        /**
-         * Makes the label appear
-         */
-        show: function() {
-            this.label.$el.slideDown({
-                duration: this.options.showDuration
-            });
+        fadeOut: function() {
+            this.sandbox.dom.fadeOut(this.label.$el, this.options.fadeDuration, function() {
+                this.sandbox.dom.css(this.label.$el, {
+                    'visibility': 'hidden',
+                    'display': 'block'
+                });
+                this.sandbox.dom.slideUp(this.label.$el, 300, this.close.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -42743,15 +42735,13 @@ define('__component__$label@husky',[],function() {
 
             this.updateCounterVisibility();
             this.insertLabel();
-            this.show();
         },
 
         /**
          * Renders the main element
          */
         renderElement: function() {
-            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>');
-            this.label.$el.hide();
+            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>')
         },
 
         /**
