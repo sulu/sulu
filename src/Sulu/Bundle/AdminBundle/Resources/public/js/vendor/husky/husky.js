@@ -32675,6 +32675,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
+             * selects an item with a given id
+             * @event husky.datagrid.items.deselect
+             * @param {String|Number} The id of the item to select
+             */
+            SELECT_ITEM = function() {
+                return this.createEventName('select.item');
+            },
+
+            /**
              * deselect all items
              * @event husky.datagrid.items.deselect
              */
@@ -33455,49 +33464,26 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.sandbox.on('husky.navigation.size.changed', this.windowResizeListener.bind(this));
                 }
 
-                // listen for private events
                 this.sandbox.on(UPDATE.call(this), this.updateGrid.bind(this));
-
-                // provide the datagrid-data via event
                 this.sandbox.on(DATA_GET.call(this), this.provideData.bind(this));
-
-                // filter data
                 this.sandbox.on(DATA_SEARCH.call(this), this.searchGrid.bind(this));
-
-                // filter data
                 this.sandbox.on(URL_UPDATE.call(this), this.updateUrl.bind(this));
-
-                // changes the view of the datagrid
                 this.sandbox.on(CHANGE_VIEW.call(this), this.changeView.bind(this));
-
-                // changes the view of the datagrid
                 this.sandbox.on(CHANGE_PAGINATION.call(this), this.changePagination.bind(this));
-
-                // trigger selectedItems
-                this.sandbox.on(ITEMS_GET_SELECTED.call(this), function(callback) {
-                    callback(this.getSelectedItemIds());
-                }.bind(this));
-
-                // add a single data record
                 this.sandbox.on(RECORD_ADD.call(this), this.addRecordHandler.bind(this));
-                // add multiple data records
                 this.sandbox.on(RECORDS_ADD.call(this), this.addRecordsHandler.bind(this));
-
-                // remove a data record
                 this.sandbox.on(RECORD_REMOVE.call(this), this.removeRecordHandler.bind(this));
-
-                // change an exsiting data-record
                 this.sandbox.on(RECORDS_CHANGE.call(this), this.changeRecordsHandler.bind(this));
-
-                // update selected-counter
                 this.sandbox.on(NUMBER_SELECTIONS.call(this), this.updateSelectedCounter.bind(this));
-
                 this.sandbox.on(MEDIUM_LOADER_SHOW.call(this), this.showMediumLoader.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
-
                 this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
+                this.sandbox.on(SELECT_ITEM.call(this), this.selectItem.bind(this));
                 this.sandbox.on(ITEMS_DESELECT.call(this), function() {
                     this.gridViews[this.viewId].deselectAllRecords();
+                }.bind(this));
+                this.sandbox.on(ITEMS_GET_SELECTED.call(this), function(callback) {
+                    callback(this.getSelectedItemIds());
                 }.bind(this));
 
                 this.startColumnOptionsListener();
@@ -33748,6 +33734,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 for (i = -1, length = selection.length; ++i < length;) {
                     this.gridViews[this.viewId].selectRecord(selection[i]);
                 }
+            },
+
+            /**
+             * Selects an item with a given id
+             * @param itemId {Number|String} the id of the item to select
+             */
+            selectItem: function(itemId) {
+                this.gridViews[this.viewId].selectRecord(itemId);
             },
 
             /**
@@ -42533,9 +42527,10 @@ define('__component__$overlay@husky',[], function() {
  * @param {Number} [options.counter] Counter to display in the label
  * @param {String} [options.description] Description of the lable (if html is null)
  * @param {Boolean} [options.hasClose] if true close button gets appended to the label
- * @param {Boolean} [options.fadeOut] if true label fades out automatically
- * @param {Number} [options.fadeOutDelay] time in ms after which the fade-out starts
- * @param {Number} [options.fadeDuration] duration of the fade-out in ms
+ * @param {Boolean} [options.autoVanish] if true label vanishes automatically
+ * @param {Number} [options.vanishDelay] time in ms after which the vanish effect starts
+ * @param {Number} [options.vanishDuration] duration of the vanish effect in ms
+ * @param {Number} [options.showDuration] duration of the show effect in ms
  * @param {Function} [options.closeCallback] callback to execute if the close-button is clicked
  * @param {String} [options.insertMethod] insert method to use for inserting the label (append or prepend)
  */
@@ -42551,9 +42546,10 @@ define('__component__$label@husky',[],function() {
         counter: 1,
         description: null,
         hasClose: true,
-        fadeOut: true,
-        fadeOutDelay: 0,
-        fadeDuration: 500,
+        autoVanish: true,
+        vanishDelay: 0,
+        vanishDuration: 250,
+        showDuration: 250,
         closeCallback: null,
         insertMethod: 'append'
     },
@@ -42577,15 +42573,15 @@ define('__component__$label@husky',[],function() {
         ERROR: {
             title: 'Error',
             labelClass: 'husky-label-error',
-            fadeOutDelay: 10000
+            vanishDelay: 10000
         },
         WARNING: {
-            fadeOutDelay: 5000,
+            vanishDelay: 5000,
             title: 'Warning',
             labelClass: 'husky-label-warning'
         },
         SUCCESS: {
-            fadeOutDelay: 2000,
+            vanishDelay: 5000,
             title: 'Success',
             labelClass: 'husky-label-success'
         }
@@ -42624,7 +42620,7 @@ define('__component__$label@husky',[],function() {
     },
 
     /**
-     * listens on and refreshes the fade out delay
+     * listens on and refreshes the vanish-out delay
      * @event husky.label.[INSTANCE_NAME].refresh
      * @param {String|Number} counter The counter number to display
      */
@@ -42646,7 +42642,7 @@ define('__component__$label@husky',[],function() {
 
             //merge defaults with defaults of type and options
             this.options = this.sandbox.util.extend(true, {}, defaults, typesDefaults[this.options.type], this.options);
-            this.fadeOutTimer = null;
+            this.vanishTimer = null;
             this.label = {
                 $el: null,
                 $content: null,
@@ -42673,7 +42669,7 @@ define('__component__$label@husky',[],function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.label.$close, 'click', function() {
-                this.fadeOut();
+                this.vanish();
                 if (typeof this.options.closeCallback === 'function') {
                     this.options.closeCallback();
                 }
@@ -42688,7 +42684,7 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
-         * Refreshes the fade out increases and rerenders the counter
+         * Refreshes the vanish and rerenders the counter
          */
         refresh: function() {
             this.options.counter += 1;
@@ -42699,36 +42695,42 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
-         * Starts the fade-out effect
+         * Starts the vanish effect
          */
         startEffects: function() {
-            if (this.options.fadeOut === true) {
-                this.fadeOutTimer = _.delay(function() {
-                    this.fadeOut();
-                }.bind(this), this.options.fadeOutDelay);
+            if (this.options.autoVanish === true) {
+                this.vanishTimer = _.delay(function() {
+                    this.vanish();
+                }.bind(this), this.options.vanishDelay);
             }
         },
 
         /**
-         * Cancles the fade-out effect
+         * Cancels the vanish effect
          */
         abortEffects: function() {
             this.label.$el.stop();
             this.label.$el.removeAttr('style');
-            clearTimeout(this.fadeOutTimer);
+            clearTimeout(this.vanishTimer);
         },
 
         /**
-         * Fades the label out
+         * Makes the label disapear
          */
-        fadeOut: function() {
-            this.sandbox.dom.fadeOut(this.label.$el, this.options.fadeDuration, function() {
-                this.sandbox.dom.css(this.label.$el, {
-                    'visibility': 'hidden',
-                    'display': 'block'
-                });
-                this.sandbox.dom.slideUp(this.label.$el, 300, this.close.bind(this));
-            }.bind(this));
+        vanish: function() {
+            this.label.$el.slideUp({
+                duration: this.options.vanishDuration,
+                done: this.close.bind(this)
+            });
+        },
+
+        /**
+         * Makes the label appear
+         */
+        show: function() {
+            this.label.$el.slideDown({
+                duration: this.options.showDuration
+            });
         },
 
         /**
@@ -42741,13 +42743,15 @@ define('__component__$label@husky',[],function() {
 
             this.updateCounterVisibility();
             this.insertLabel();
+            this.show();
         },
 
         /**
          * Renders the main element
          */
         renderElement: function() {
-            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>')
+            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>');
+            this.label.$el.hide();
         },
 
         /**
@@ -43208,6 +43212,14 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * listens on and shows dropzone popup
+         * @event husky.dropzone.<instance-name>.show-popup
+         */
+        SHOW_POPUP = function() {
+            return createEventName.call(this, 'show-popup');
+        },
+
+        /**
          * raised after files got uploaded and faded out from the dropzone
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
@@ -43344,6 +43356,10 @@ define('__component__$dropzone@husky',[], function() {
 
                 this.sandbox.on(UNLOCK_POPUP.call(this), function() {
                     this.lockPopUp = false;
+                }.bind(this));
+
+                this.sandbox.on(SHOW_POPUP.call(this), function() {
+                    this.openOverlay();
                 }.bind(this));
             }
         },
