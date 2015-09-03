@@ -32,14 +32,16 @@
             <div class="double-bounce2 bouncer"></div>
         </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
-            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                 data-aura-user-name="{{ user.fullName }}"
-                 data-aura-system-name="{{ name }}"
-                 data-aura-system-version="{{ suluVersion }}"
-                 data-aura-user-locales='{{ locales | json_encode }}'
-                 data-aura-user-locale="{{ user.locale }}"
-                 data-aura-logout-route="{{ path('logout') }}"
-                 class="navigation-column">
+            <div class="navigation-container">
+                <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
+                     data-aura-user-name="{{ user.fullName }}"
+                     data-aura-system-name="{{ name }}"
+                     data-aura-system-version="{{ suluVersion }}"
+                     data-aura-user-locales='{{ locales | json_encode }}'
+                     data-aura-user-locale="{{ user.locale }}"
+                     data-aura-logout-route="{{ path('logout') }}"
+                     class="navigation-column">
+                </div>
             </div>
             <div class="content-container">
                 <div id="labels-container" data-aura-component="labels@suluadmin"></div>

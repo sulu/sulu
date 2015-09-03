@@ -6,6 +6,12 @@
     min-width: 50px + $contentMinWidth;
 }
 
+.navigation-container {
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
 .content-container {
     height: 100%;
     overflow: hidden;
