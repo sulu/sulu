@@ -86,7 +86,7 @@ define(function() {
          *
          * @param {Object|Boolean|Function} layout The layout object or true for default values.
          *        If a function, gets called and takes the return value to work with.
-         * @param {Boolean} [layout.extendExisting] If true true, the existing layout stays as it is and only the spcified
+         * @param {Boolean} [layout.extendExisting] Iff true, the existing layout stays as it is and only the spcified
          *        properties cause effects
          * @param {Object} [layout.navigation] The object which holds the layout configuration for the navigation.
          * @param {Boolean} [layout.navigation.collapsed] If true navigation is collapsed.
@@ -143,18 +143,18 @@ define(function() {
          * Handles the navigation part of the layout object.
          *
          * @param {Object} navigation The navigation config object.
-         * @param {Boolean} defaults Iff true default actions will be executed
+         * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
-        handleLayoutNavigation = function(navigation, defaults) {
+        handleLayoutNavigation = function(navigation, applyDefaults) {
             if (navigation.collapsed === true) {
                 this.sandbox.emit('husky.navigation.collapse', true);
-            } else if (defaults === true) {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('husky.navigation.uncollapse');
             }
 
             if (navigation.hidden === true) {
                 this.sandbox.emit('husky.navigation.hide');
-            } else if (defaults === true) {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('husky.navigation.show');
             }
         },
@@ -163,18 +163,18 @@ define(function() {
          * Handles the content part of the layout object.
          *
          * @param {Object} content The content config object.
-         * @param {Boolean} defaults Iff true default actions will be executed
+         * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
-        handleLayoutContent = function(content, defaults) {
+        handleLayoutContent = function(content, applyDefaults) {
             var width = content.width,
-                leftSpace = (defaults) ? !!content.leftSpace : content.leftSpace,
-                rightSpace = (defaults) ? !!content.rightSpace : content.rightSpace,
-                topSpace = (defaults) ? !!content.topSpace : content.topSpace;
-            if (defaults === true || !!width) {
-                this.sandbox.emit('sulu.app.change-width', width, defaults);
+                leftSpace = (applyDefaults) ? !!content.leftSpace : content.leftSpace,
+                rightSpace = (applyDefaults) ? !!content.rightSpace : content.rightSpace,
+                topSpace = (applyDefaults) ? !!content.topSpace : content.topSpace;
+            if (applyDefaults === true || !!width) {
+                this.sandbox.emit('sulu.app.change-width', width, applyDefaults);
             }
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
-            if (defaults === true || typeof content.shrinkable !== 'undefined') {
+            if (applyDefaults === true || typeof content.shrinkable !== 'undefined') {
                 this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
             }
         },
@@ -183,23 +183,23 @@ define(function() {
          * Handles the sidebar part of the layout object.
          *
          * @param {Object} sidebar The sidebar config object. If false sidebar gets hidden.
-         * @param {Boolean} defaults Iff true default actions will be executed
+         * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
-        handleLayoutSidebar = function(sidebar, defaults) {
+        handleLayoutSidebar = function(sidebar, applyDefaults) {
             if (!!sidebar && !!sidebar.url) {
                 this.sandbox.emit('sulu.sidebar.set-widget', sidebar.url);
-            } else if (defaults === true) {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('sulu.sidebar.empty');
             }
 
             if (!!sidebar) {
                 var width = sidebar.width || 'max';
                 this.sandbox.emit('sulu.sidebar.change-width', width);
-            } else if (defaults === true) {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('sulu.sidebar.hide');
             }
 
-            if (defaults === true) {
+            if (applyDefaults === true) {
                 this.sandbox.emit('sulu.sidebar.reset-classes');
             }
 

@@ -1,41 +1,80 @@
-{% set highlightedProperties = [] %}
-{% set regularProperties = [] %}
-
-{# seperate highlighted and regular properties #}
-{% for property in template.properties %}
-    {% if property.tags is defined and "sulu.highlight" in property.tags|keys %}
-        {% set highlightedProperties = highlightedProperties|merge([property]) %}
-    {% else %}
-        {% set regularProperties = regularProperties|merge([property]) %}
-    {% endif %}
-{% endfor %}
-
 <form id="content-form" class="grid">
-    {% if highlightedProperties is not empty %}
-        <div class="highlight-section">
-            <div class="fixed-width">
-                <div class="content">
-                    {% for property in highlightedProperties %}
-                        {% include 'SuluContentBundle:Template:macros/property.html.twig' with {
-                        'property': property,
+
+    {# if first property is a section render it as the highlighted section#}
+    {% set firstProperty = null %}
+    {% if template.properties|length > 0 %}
+        {% set firstProperty = template.properties|first %}
+        {% if firstProperty.contentTypeName == 'section' %}
+            <div class="highlight-section">
+                <div class="fixed-width">
+                    <div class="content">
+                        {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+                        'property': firstProperty,
+                        'params': sulu_get_params(firstProperty),
+                        'id': firstProperty.name,
                         'webspaceKey': webspaceKey,
                         'languageCode': languageCode,
-                        'userLocale': userLocale
-                        } %}
-                    {% endfor %}
+                        'userLocale': userLocale,
+                        'title': false
+                        } only %}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     {% endif %}
 
     <div class="fixed-width">
-        {% for property in regularProperties %}
-            {% include 'SuluContentBundle:Template:macros/property.html.twig' with {
-            'property': property,
-            'webspaceKey': webspaceKey,
-            'languageCode': languageCode,
-            'userLocale': userLocale
-            } %}
+        {% for property in template.properties if property != firstProperty %}
+
+            {# get params for property #}
+            {% set params = sulu_get_params(property) %}
+
+            {% if property.contentTypeName == 'section' %}
+                {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+                'property': property,
+                'params': params,
+                'id': property.name,
+                'webspaceKey': webspaceKey,
+                'languageCode': languageCode,
+                'userLocale': userLocale,
+                'title': true
+                } only %}
+            {% else %}
+                {# get type for property #}
+                {% set type = sulu_get_type(property.contentTypeName) %}
+
+                {% if property.contentTypeName == 'block' %}
+                    {% include type.template with {
+                    'property': property,
+                    'params': params,
+                    'type': type,
+                    'id': property.name,
+                    'webspaceKey': webspaceKey,
+                    'languageCode': languageCode,
+                    'userLocale': userLocale
+                    } only %}
+                {% elseif property is multiple %}
+                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {
+                    'property': property,
+                    'params': params,
+                    'type': type,
+                    'id': property.name,
+                    'webspaceKey': webspaceKey,
+                    'languageCode': languageCode,
+                    'userLocale': userLocale
+                    } only %}
+                {% else %}
+                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {
+                    'property': property,
+                    'params': params,
+                    'type': type,
+                    'id': property.name,
+                    'webspaceKey': webspaceKey,
+                    'languageCode': languageCode,
+                    'userLocale': userLocale
+                    } only %}
+                {% endif %}
+            {% endif %}
         {% endfor %}
     </div>
 </form>
