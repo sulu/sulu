@@ -27,9 +27,8 @@ require.config({
 define(['services/sulumedia/media-router',
     'services/sulumedia/overlay-manager',
     'extensions/masonry',
-    'extensions/sulu-buttons-mediabundle',
-    'services/sulumedia/user-settings-manager'],
-    function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons, UserSettingsManager){
+    'extensions/sulu-buttons-mediabundle'],
+    function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons){
 
     'use strict';
 

@@ -37,7 +37,7 @@ define(['services/husky/mediator'], function(mediator) {
          */
         toRoot: function() {
             mediator.emit('sulu.router.navigate', 'media/collections/root', true, true);
-        },
+        }
     };
 
     AccountRouter.getInstance = function() {

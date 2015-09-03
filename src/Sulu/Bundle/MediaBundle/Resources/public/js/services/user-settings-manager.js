@@ -37,10 +37,6 @@ define(function() {
                 app.sandbox.sulu.saveUserSetting(mediaListViewKey, viewId);
             },
 
-            getLastVisitedCollection: function() {
-                return app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey);
-            },
-
             setLastVisitedCollection: function(collectionId) {
                 app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
             }
