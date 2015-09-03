@@ -16,7 +16,6 @@
             'highlight': counter == 0
             } only %}
         {% else %}
-            <div class="fixed-width">
                 {# get type for property #}
                 {% set type = sulu_get_type(property.contentTypeName) %}
 
@@ -51,7 +50,6 @@
                     'userLocale': userLocale
                     } only %}
                 {% endif %}
-            </div>
         {% endif %}
         {% set counter = counter + 1 %}
     {% endfor %}

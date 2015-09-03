@@ -1,8 +1,8 @@
 {% if highlight == true %}
 <div class="highlight-section">
-    <div class="content">
+    <div class="fixed-width">
+        <div class="content">
 {% endif %}
-        <div class="fixed-width">
             <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating section section-{{ property.name }}">
                 {% if highlight != true %}
                     <h2 class="divider m-bottom-20"
@@ -28,8 +28,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 {% if highlight == true %}
+        </div>
     </div>
 </div>
 {% endif %}
