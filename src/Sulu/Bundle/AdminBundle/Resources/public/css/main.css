@@ -662,34 +662,29 @@ input, select {
   left: 50%;
 }
 
-/* line 245, ../scss/modules/login.scss */
-.login-label-container {
-  left: 75% !important;
-}
-
 @media screen and (max-width: 800px), screen and (orientation: portrait) {
-  /* line 252, ../scss/modules/login.scss */
+  /* line 247, ../scss/modules/login.scss */
   .sulu-login .media-container {
     display: none;
   }
-  /* line 256, ../scss/modules/login.scss */
+  /* line 251, ../scss/modules/login.scss */
   .sulu-login .content-container {
     width: 100%;
   }
-  /* line 260, ../scss/modules/login.scss */
+  /* line 255, ../scss/modules/login.scss */
   .sulu-login .content-container .content-box .content-logo {
     display: block;
   }
-  /* line 265, ../scss/modules/login.scss */
+  /* line 260, ../scss/modules/login.scss */
   .sulu-login .content-container .login-content-footer {
     display: none;
   }
-  /* line 271, ../scss/modules/login.scss */
+  /* line 266, ../scss/modules/login.scss */
   .sulu-login.content-success .content-container {
     left: -100%;
   }
 
-  /* line 277, ../scss/modules/login.scss */
+  /* line 272, ../scss/modules/login.scss */
   .login-label-container {
     left: 50% !important;
   }
@@ -697,22 +692,16 @@ input, select {
 /* line 1, ../scss/modules/labels.scss */
 #labels-container {
   z-index: 1000;
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  padding: 0 50px 0 50px;
 }
 
-/* line 10, ../scss/modules/labels.scss */
+/* line 6, ../scss/modules/labels.scss */
 .login #labels-container {
   z-index: 1000;
   position: absolute;
   top: 0;
   left: 50%;
-  margin-left: -200px;
-  width: 400px;
-  padding: 0;
+  width: 50%;
 }
 
 /* line 1, ../scss/modules/header.scss */

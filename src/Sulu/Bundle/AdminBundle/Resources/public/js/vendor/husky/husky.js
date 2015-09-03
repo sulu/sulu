@@ -42527,9 +42527,10 @@ define('__component__$overlay@husky',[], function() {
  * @param {Number} [options.counter] Counter to display in the label
  * @param {String} [options.description] Description of the lable (if html is null)
  * @param {Boolean} [options.hasClose] if true close button gets appended to the label
- * @param {Boolean} [options.fadeOut] if true label fades out automatically
- * @param {Number} [options.fadeOutDelay] time in ms after which the fade-out starts
- * @param {Number} [options.fadeDuration] duration of the fade-out in ms
+ * @param {Boolean} [options.autoVanish] if true label vanishes automatically
+ * @param {Number} [options.vanishDelay] time in ms after which the vanish effect starts
+ * @param {Number} [options.vanishDuration] duration of the vanish effect in ms
+ * @param {Number} [options.showDuration] duration of the show effect in ms
  * @param {Function} [options.closeCallback] callback to execute if the close-button is clicked
  * @param {String} [options.insertMethod] insert method to use for inserting the label (append or prepend)
  */
@@ -42545,9 +42546,10 @@ define('__component__$label@husky',[],function() {
         counter: 1,
         description: null,
         hasClose: true,
-        fadeOut: true,
-        fadeOutDelay: 0,
-        fadeDuration: 500,
+        autoVanish: true,
+        vanishDelay: 0,
+        vanishDuration: 250,
+        showDuration: 250,
         closeCallback: null,
         insertMethod: 'append'
     },
@@ -42571,15 +42573,15 @@ define('__component__$label@husky',[],function() {
         ERROR: {
             title: 'Error',
             labelClass: 'husky-label-error',
-            fadeOutDelay: 10000
+            vanishDelay: 10000
         },
         WARNING: {
-            fadeOutDelay: 5000,
+            vanishDelay: 5000,
             title: 'Warning',
             labelClass: 'husky-label-warning'
         },
         SUCCESS: {
-            fadeOutDelay: 2000,
+            vanishDelay: 5000,
             title: 'Success',
             labelClass: 'husky-label-success'
         }
@@ -42618,7 +42620,7 @@ define('__component__$label@husky',[],function() {
     },
 
     /**
-     * listens on and refreshes the fade out delay
+     * listens on and refreshes the vanish-out delay
      * @event husky.label.[INSTANCE_NAME].refresh
      * @param {String|Number} counter The counter number to display
      */
@@ -42640,7 +42642,7 @@ define('__component__$label@husky',[],function() {
 
             //merge defaults with defaults of type and options
             this.options = this.sandbox.util.extend(true, {}, defaults, typesDefaults[this.options.type], this.options);
-            this.fadeOutTimer = null;
+            this.vanishTimer = null;
             this.label = {
                 $el: null,
                 $content: null,
@@ -42667,7 +42669,7 @@ define('__component__$label@husky',[],function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.label.$close, 'click', function() {
-                this.fadeOut();
+                this.vanish();
                 if (typeof this.options.closeCallback === 'function') {
                     this.options.closeCallback();
                 }
@@ -42682,7 +42684,7 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
-         * Refreshes the fade out increases and rerenders the counter
+         * Refreshes the vanish and rerenders the counter
          */
         refresh: function() {
             this.options.counter += 1;
@@ -42693,36 +42695,42 @@ define('__component__$label@husky',[],function() {
         },
 
         /**
-         * Starts the fade-out effect
+         * Starts the vanish effect
          */
         startEffects: function() {
-            if (this.options.fadeOut === true) {
-                this.fadeOutTimer = _.delay(function() {
-                    this.fadeOut();
-                }.bind(this), this.options.fadeOutDelay);
+            if (this.options.autoVanish === true) {
+                this.vanishTimer = _.delay(function() {
+                    this.vanish();
+                }.bind(this), this.options.vanishDelay);
             }
         },
 
         /**
-         * Cancles the fade-out effect
+         * Cancels the vanish effect
          */
         abortEffects: function() {
             this.label.$el.stop();
             this.label.$el.removeAttr('style');
-            clearTimeout(this.fadeOutTimer);
+            clearTimeout(this.vanishTimer);
         },
 
         /**
-         * Fades the label out
+         * Makes the label disapear
          */
-        fadeOut: function() {
-            this.sandbox.dom.fadeOut(this.label.$el, this.options.fadeDuration, function() {
-                this.sandbox.dom.css(this.label.$el, {
-                    'visibility': 'hidden',
-                    'display': 'block'
-                });
-                this.sandbox.dom.slideUp(this.label.$el, 300, this.close.bind(this));
-            }.bind(this));
+        vanish: function() {
+            this.label.$el.slideUp({
+                duration: this.options.vanishDuration,
+                done: this.close.bind(this)
+            });
+        },
+
+        /**
+         * Makes the label appear
+         */
+        show: function() {
+            this.label.$el.slideDown({
+                duration: this.options.showDuration
+            });
         },
 
         /**
@@ -42735,13 +42743,15 @@ define('__component__$label@husky',[],function() {
 
             this.updateCounterVisibility();
             this.insertLabel();
+            this.show();
         },
 
         /**
          * Renders the main element
          */
         renderElement: function() {
-            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>')
+            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>');
+            this.label.$el.hide();
         },
 
         /**
@@ -43202,6 +43212,14 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * listens on and shows dropzone popup
+         * @event husky.dropzone.<instance-name>.show-popup
+         */
+        SHOW_POPUP = function() {
+            return createEventName.call(this, 'show-popup');
+        },
+
+        /**
          * raised after files got uploaded and faded out from the dropzone
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
@@ -43338,6 +43356,10 @@ define('__component__$dropzone@husky',[], function() {
 
                 this.sandbox.on(UNLOCK_POPUP.call(this), function() {
                     this.lockPopUp = false;
+                }.bind(this));
+
+                this.sandbox.on(SHOW_POPUP.call(this), function() {
+                    this.openOverlay();
                 }.bind(this));
             }
         },
