@@ -1,23 +1,35 @@
-<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating section section-{{ property.name }}">
-    <h2 class="divider m-bottom-20"
-        title="{{ property.getInfoText(userLocale) }}">{{ property.getTitle(userLocale) }}</h2>
-
-    <div class="grid">
-        <div class="grid-row">
-            {% for child in property.childProperties %}
-                {# get Type for property #}
-                {% set type = sulu_get_type(child.contentTypeName) %}
-                {# get params for property #}
-                {% set params = sulu_get_params(child) %}
-
-                {% if child.contentTypeName == 'block' %}
-                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-                {% elseif child is multiple %}
-                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-                {% else %}
-                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+{% if highlight == true %}
+<div class="highlight-section">
+    <div class="content">
+{% endif %}
+        <div class="fixed-width">
+            <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating section section-{{ property.name }}">
+                {% if highlight != true %}
+                    <h2 class="divider m-bottom-20"
+                        title="{{ property.getInfoText(userLocale) }}">{{ property.getTitle(userLocale) }}</h2>
                 {% endif %}
-            {% endfor %}
+
+                <div class="grid">
+                    <div class="grid-row">
+                        {% for child in property.childProperties %}
+                            {# get Type for property #}
+                            {% set type = sulu_get_type(child.contentTypeName) %}
+                            {# get params for property #}
+                            {% set params = sulu_get_params(child) %}
+
+                            {% if child.contentTypeName == 'block' %}
+                                {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                            {% elseif child is multiple %}
+                                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                            {% else %}
+                                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
+{% if highlight == true %}
     </div>
 </div>
+{% endif %}
