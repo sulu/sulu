@@ -149,7 +149,7 @@ define([], function() {
 
             this.sandbox.dom.attr(container, 'id', 'sulu-labels-' + uniqueId);
             this.sandbox.dom.attr(container, 'data-id', uniqueId);
-            this.sandbox.dom.append(this.$el, container);
+            this.sandbox.dom.prepend(this.$el, container);
 
             return container;
         },
