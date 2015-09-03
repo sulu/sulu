@@ -1,21 +1,45 @@
 <form id="content-form" class="grid">
-    {% set counter = 0 %}
-    {% for property in template.properties %}
 
-        {# get params for property #}
-        {% set params = sulu_get_params(property) %}
+    {# if first property is a section render it as the highlighted section#}
+    {% set firstProperty = null %}
+    {% if template.properties|length > 0 %}
+        {% set firstProperty = template.properties|first %}
+        {% if firstProperty.contentTypeName == 'section' %}
+            <div class="highlight-section">
+                <div class="fixed-width">
+                    <div class="content">
+                        {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+                        'property': firstProperty,
+                        'params': sulu_get_params(firstProperty),
+                        'id': firstProperty.name,
+                        'webspaceKey': webspaceKey,
+                        'languageCode': languageCode,
+                        'userLocale': userLocale,
+                        'title': false
+                        } only %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
-        {% if property.contentTypeName == 'section' %}
-            {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
-            'property': property,
-            'params': params,
-            'id': property.name,
-            'webspaceKey': webspaceKey,
-            'languageCode': languageCode,
-            'userLocale': userLocale,
-            'highlight': counter == 0
-            } only %}
-        {% else %}
+    <div class="fixed-width">
+        {% for property in template.properties if property != firstProperty %}
+
+            {# get params for property #}
+            {% set params = sulu_get_params(property) %}
+
+            {% if property.contentTypeName == 'section' %}
+                {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+                'property': property,
+                'params': params,
+                'id': property.name,
+                'webspaceKey': webspaceKey,
+                'languageCode': languageCode,
+                'userLocale': userLocale,
+                'title': true
+                } only %}
+            {% else %}
                 {# get type for property #}
                 {% set type = sulu_get_type(property.contentTypeName) %}
 
@@ -50,9 +74,9 @@
                     'userLocale': userLocale
                     } only %}
                 {% endif %}
-        {% endif %}
-        {% set counter = counter + 1 %}
-    {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </form>
 
 <script type="text/javascript">
