@@ -151,17 +151,15 @@
     }
 
     &.small-fixed {
-        &.fixed:not(.no-right-space) {
-          #content, .sulu-title {
+        &.fixed:not(.no-right-space) #content,
+        &.fixed .sulu-title {
             padding-right: $contentPaddingRightSmall;
-          }
         }
-        &.fixed:not(.no-left-space) {
-          #content, .sulu-title {
+        &.fixed:not(.no-left-space) #content,
+        &.fixed .sulu-title {
             padding-left: $contentPaddingLeftSmall;
-          }
         }
-        &.fixed  {
+        &.fixed {
           #content, .sulu-title {
             width: $contentFixedSmallWidth;
           }
