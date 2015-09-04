@@ -1,10 +1,11 @@
 <form id="content-form" class="grid">
 
     {# if first property is a section render it as the highlighted section#}
-    {% set firstProperty = null %}
+    {% set firstSection = null %}
     {% if template.properties|length > 0 %}
         {% set firstProperty = template.properties|first %}
         {% if firstProperty.contentTypeName == 'section' %}
+            {% set firstSection = template.properties|first %}
             <div class="highlight-section">
                 <div class="fixed-width">
                     <div class="content">
@@ -24,7 +25,7 @@
     {% endif %}
 
     <div class="fixed-width">
-        {% for property in template.properties if property != firstProperty %}
+        {% for property in template.properties if property != firstSection %}
 
             {# get params for property #}
             {% set params = sulu_get_params(property) %}
