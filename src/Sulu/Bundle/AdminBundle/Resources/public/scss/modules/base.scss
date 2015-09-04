@@ -61,6 +61,7 @@ input, select {
     $imageWidth: 310px;
     $imageHeight: 270px;
     width: 100%;
+    margin-top: -$contentPaddingTop;
 
     background: $grayLighterer;
     margin-bottom: 30px;

@@ -57,7 +57,6 @@ define([
                 content: {
                     width: 'max',
                     leftSpace: false,
-                    topSpace: false,
                     rightSpace: false
                 }
             };

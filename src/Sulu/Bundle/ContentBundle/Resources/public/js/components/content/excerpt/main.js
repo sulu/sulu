@@ -13,6 +13,17 @@ define([], function() {
 
     return {
 
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    rightSpace: false,
+                    leftSpace: false
+                }
+            };
+        },
+
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);

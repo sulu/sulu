@@ -86,7 +86,8 @@ define(function() {
          *
          * @param {Object|Boolean|Function} layout The layout object or true for default values.
          *        If a function, gets called and takes the return value to work with.
-         * @param {Boolean} [layout.changeNothing] If true the layout as it is won't be touched.
+         * @param {Boolean} [layout.extendExisting] Iff true, the existing layout stays as it is and only the spcified
+         *        properties cause effects
          * @param {Object} [layout.navigation] The object which holds the layout configuration for the navigation.
          * @param {Boolean} [layout.navigation.collapsed] If true navigation is collapsed.
          * @param {Boolean} [layout.navigation.hidden] If true navigation gets hidden.
@@ -124,11 +125,17 @@ define(function() {
             if (typeof layout === 'function') {
                 layout = layout.call(this);
             }
-            if (!layout.changeNothing) {
+            if (!layout.extendExisting) {
                 layout = this.sandbox.util.extend(true, {}, defaults.layout, layout);
-                handleLayoutNavigation.call(this, layout.navigation);
-                handleLayoutContent.call(this, layout.content);
-                handleLayoutSidebar.call(this, layout.sidebar);
+            }
+            if (typeof layout.navigation !== 'undefined') {
+                handleLayoutNavigation.call(this, layout.navigation, !layout.extendExisting);
+            }
+            if (typeof layout.content !== 'undefined') {
+                handleLayoutContent.call(this, layout.content, !layout.extendExisting);
+            }
+            if (typeof layout.sidebar !== 'undefined') {
+                handleLayoutSidebar.call(this, layout.sidebar, !layout.extendExisting);
             }
         },
 
@@ -136,17 +143,18 @@ define(function() {
          * Handles the navigation part of the layout object.
          *
          * @param {Object} navigation The navigation config object.
+         * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
-        handleLayoutNavigation = function(navigation) {
+        handleLayoutNavigation = function(navigation, applyDefaults) {
             if (navigation.collapsed === true) {
                 this.sandbox.emit('husky.navigation.collapse', true);
-            } else {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('husky.navigation.uncollapse');
             }
 
             if (navigation.hidden === true) {
                 this.sandbox.emit('husky.navigation.hide');
-            } else {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('husky.navigation.show');
             }
         },
@@ -155,37 +163,45 @@ define(function() {
          * Handles the content part of the layout object.
          *
          * @param {Object} content The content config object.
+         * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
-        handleLayoutContent = function(content) {
+        handleLayoutContent = function(content, applyDefaults) {
             var width = content.width,
-                leftSpace = !!content.leftSpace,
-                rightSpace = !!content.rightSpace,
-                topSpace = !!content.topSpace;
-            this.sandbox.emit('sulu.app.change-width', width);
+                leftSpace = (applyDefaults) ? !!content.leftSpace : content.leftSpace,
+                rightSpace = (applyDefaults) ? !!content.rightSpace : content.rightSpace,
+                topSpace = (applyDefaults) ? !!content.topSpace : content.topSpace;
+            if (applyDefaults === true || !!width) {
+                this.sandbox.emit('sulu.app.change-width', width, applyDefaults);
+            }
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
-            this.sandbox.emit('sulu.app.toggle-shrinker', false);
+            if (applyDefaults === true || typeof content.shrinkable !== 'undefined') {
+                this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
+            }
         },
 
         /**
          * Handles the sidebar part of the layout object.
          *
          * @param {Object} sidebar The sidebar config object. If false sidebar gets hidden.
+         * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
-        handleLayoutSidebar = function(sidebar) {
+        handleLayoutSidebar = function(sidebar, applyDefaults) {
             if (!!sidebar && !!sidebar.url) {
                 this.sandbox.emit('sulu.sidebar.set-widget', sidebar.url);
-            } else {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('sulu.sidebar.empty');
             }
 
             if (!!sidebar) {
                 var width = sidebar.width || 'max';
                 this.sandbox.emit('sulu.sidebar.change-width', width);
-            } else {
+            } else if (applyDefaults === true) {
                 this.sandbox.emit('sulu.sidebar.hide');
             }
 
-            this.sandbox.emit('sulu.sidebar.reset-classes');
+            if (applyDefaults === true) {
+                this.sandbox.emit('sulu.sidebar.reset-classes');
+            }
 
             if (!!sidebar && !!sidebar.cssClasses) {
                 this.sandbox.emit('sulu.sidebar.add-classes', sidebar.cssClasses);
