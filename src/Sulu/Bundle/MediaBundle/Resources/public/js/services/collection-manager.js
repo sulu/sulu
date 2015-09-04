@@ -109,7 +109,7 @@ define([
                 var promise = $.Deferred();
 
                 saveCollection(data).then(function(collection) {
-                    mediator.emit('sulu.medias.collection.saved', collection.id);
+                    mediator.emit('sulu.medias.collection.saved', collection.id, collection);
                     mediator.emit('sulu.labels.success.show', 'labels.success.collection-save-desc');
                     promise.resolve(collection);
                 }.bind(this)).fail(function() {

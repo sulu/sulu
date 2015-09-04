@@ -115,8 +115,12 @@ define(['services/sulumedia/collection-manager',
          * Bind data-management related events
          */
         bindManagerEvents: function() {
-            this.sandbox.on('sulu.medias.collection.saved', function() {
-                // todo: change title of component
+            this.sandbox.on('sulu.medias.collection.saved', function(id, collection) {
+                if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
+                    this.data = collection;
+                    this.sandbox.emit('sulu.header.set-title', this.data.title);
+                    this.sandbox.emit('husky.data-navigation.collections.reload');
+                }
             }.bind(this));
 
             this.sandbox.on('sulu.medias.collection.deleted', function() {
