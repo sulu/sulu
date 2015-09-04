@@ -12,11 +12,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Structure;
 
 use PHPCR\NodeInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension;
-
-abstract class TestProperty implements \Iterator, NodeInterface
-{
-}
 
 /**
  * @group unit
@@ -26,7 +23,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @var NodeInterface
      */
-    private $nodeMock;
+    private $node;
 
     /**
      * @var SeoStructureExtension
@@ -35,7 +32,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->nodeMock = $this->getMock('Sulu\Bundle\ContentBundle\Tests\Unit\Structure\TestProperty');
+        $this->node = $this->prophesize(NodeInterface::class);
         $this->extension = new SeoStructureExtension();
     }
 
@@ -47,16 +44,11 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     public function testSave()
     {
         $content = [];
-        $this->nodeMock
-            ->expects($this->exactly(7))
-            ->method('setProperty')
-            ->will(
-                $this->returnCallback(
-                    function ($property, $value) use (&$content) {
-                        $content[$property] = $value;
-                    }
-                )
-            );
+        $this->node->setProperty(Argument::any(), Argument::any())->will(
+            function ($arguments) use (&$content) {
+                $content[$arguments[0]] = $arguments[1];
+            }
+        );
 
         $data = [
             'title' => 'Title',
@@ -68,7 +60,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'hideInSitemap' => true,
         ];
         $this->extension->setLanguageCode('de', 'i18n', null);
-        $this->extension->save($this->nodeMock, $data, 'default', 'de');
+        $this->extension->save($this->node->reveal(), $data, 'default', 'de');
 
         $this->assertEquals(
             [
@@ -87,20 +79,15 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     public function testSaveWithoutData()
     {
         $content = [];
-        $this->nodeMock
-            ->expects($this->exactly(7))
-            ->method('setProperty')
-            ->will(
-                $this->returnCallback(
-                    function ($property, $value) use (&$content) {
-                        $content[$property] = $value;
-                    }
-                )
-            );
+        $this->node->setProperty(Argument::any(), Argument::any())->will(
+            function ($arguments) use (&$content) {
+                $content[$arguments[0]] = $arguments[1];
+            }
+        );
 
         $data = [];
         $this->extension->setLanguageCode('de', 'i18n', null);
-        $this->extension->save($this->nodeMock, $data, 'default', 'de');
+        $this->extension->save($this->node->reveal(), $data, 'default', 'de');
 
         $this->assertEquals(
             [
@@ -137,23 +124,19 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'i18n:de-seo-noFollow' => $data['noFollow'],
             'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
         ];
-        $this->nodeMock
-            ->expects($this->exactly(7))
-            ->method('getPropertyValueWithDefault')
-            ->will(
-                $this->returnCallback(
-                    function ($property, $default) use (&$content) {
-                        if (isset($content[$property])) {
-                            return $content[$property];
-                        } else {
-                            return $default;
-                        }
-                    }
-                )
-            );
+
+        $this->node->getPropertyValueWithDefault(Argument::any(), Argument::any())->will(
+            function ($arguments) use (&$content) {
+                if (isset($content[$arguments[0]])) {
+                    return $content[$arguments[0]];
+                } else {
+                    return $arguments[1];
+                }
+            }
+        );
 
         $this->extension->setLanguageCode('de', 'i18n', null);
-        $this->extension->load($this->nodeMock, 'default', 'de');
+        $this->extension->load($this->node->reveal(), 'default', 'de');
 
         $this->assertEquals(
             [
@@ -172,23 +155,19 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     public function testLoadWithoutData()
     {
         $content = [];
-        $this->nodeMock
-            ->expects($this->exactly(7))
-            ->method('getPropertyValueWithDefault')
-            ->will(
-                $this->returnCallback(
-                    function ($property, $default) use (&$content) {
-                        if (isset($content[$property])) {
-                            return $content[$property];
-                        } else {
-                            return $default;
-                        }
-                    }
-                )
-            );
+
+        $this->node->getPropertyValueWithDefault(Argument::any(), Argument::any())->will(
+            function ($arguments) use (&$content) {
+                if (isset($content[$arguments[0]])) {
+                    return $content[$arguments[0]];
+                } else {
+                    return $arguments[1];
+                }
+            }
+        );
 
         $this->extension->setLanguageCode('de', 'i18n', null);
-        $result = $this->extension->load($this->nodeMock, 'default', 'de');
+        $result = $this->extension->load($this->node->reveal(), 'default', 'de');
 
         $this->assertEquals(
             [

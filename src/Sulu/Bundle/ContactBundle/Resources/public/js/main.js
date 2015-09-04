@@ -101,13 +101,27 @@ define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], f
                 ]
             });
 
-            // filter integration
-            Config.set('suluresource.filters.type.contacts', {
-                routeToList: 'contacts/contacts'
+            // breadcrumbs
+            Config.set('sulucontact.breadcrumb.account', [
+                {title: 'navigation.contacts'},
+                {title: 'contact.accounts.title', link: 'contacts/accounts'}
+            ]);
+
+            Config.set('sulucontact.breadcrumb.contact', [
+                {title: 'navigation.contacts'},
+                {title: 'contact.contacts.title', link: 'contacts/contacts'}
+            ]);
+
+            // route to list
+            Config.set('sulucontact.routeToList.contact','contacts/contacts');
+            Config.set('sulucontact.routeToList.account','contacts/accounts');
+
+            Config.set('suluresource.filters.type.accounts', {
+                routeToList: Config.get('sulucontact.routeToList.contact')
             });
 
             Config.set('suluresource.filters.type.accounts', {
-                routeToList: 'contacts/accounts'
+                routeToList: Config.get('sulucontact.routeToList.account')
             });
 
             app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');

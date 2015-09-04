@@ -42,14 +42,6 @@ define(function() {
         },
 
         /**
-         * raised when selection is changed
-         * @event sulu.media-selection.document-selection.data-changed
-         */
-        DATA_CHANGED = function() {
-            return createEventName.call(this, 'data-changed');
-        },
-
-        /**
          * raised when a record has been deselected
          * @event sulu.media-selection.record-deselected
          */
@@ -105,7 +97,6 @@ define(function() {
                     data.ids.push(itemId);
                     this.setData(data, false);
                     this.addItem(item);
-                    this.sandbox.emit(DATA_CHANGED.call(this));
                 }.bind(this)
             );
 
@@ -122,7 +113,6 @@ define(function() {
 
                     this.setData(data, false);
                     this.removeItemById(itemId);
-                    this.sandbox.emit(DATA_CHANGED.call(this));
                 }.bind(this)
             );
 

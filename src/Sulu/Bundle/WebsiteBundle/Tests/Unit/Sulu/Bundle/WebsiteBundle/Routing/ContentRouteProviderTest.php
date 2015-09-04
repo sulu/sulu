@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
-use Prophecy\Argument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
@@ -42,7 +41,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $localization = new Localization();
         $localization->setLanguage('de');
 
-        $structure = $this->getStructureMock($uuid, 1);
+        $structure = $this->getStructureMock($uuid, null, 1);
         $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization);
         $activeTheme = $this->getActiveThemeMock();
 
@@ -295,7 +294,12 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
 
-        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_INTERNAL_LINK);
+        $structure = $this->getStructureMock(
+            $uuid,
+            '/other-test',
+            Structure::STATE_PUBLISHED,
+            Structure::NODE_TYPE_INTERNAL_LINK
+        );
 
         $locale = new Localization();
         $locale->setLanguage('en');
@@ -337,7 +341,12 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
 
-        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_EXTERNAL_LINK);
+        $structure = $this->getStructureMock(
+            $uuid,
+            'http://www.example.org',
+            Structure::STATE_PUBLISHED,
+            Structure::NODE_TYPE_EXTERNAL_LINK
+        );
 
         $locale = new Localization();
         $locale->setLanguage('en');
@@ -457,8 +466,12 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return PageBridge
      */
-    protected function getStructureMock($uuid, $state = Structure::STATE_PUBLISHED, $type = Structure::NODE_TYPE_CONTENT)
-    {
+    protected function getStructureMock(
+        $uuid,
+        $resourceLocator = null,
+        $state = Structure::STATE_PUBLISHED,
+        $type = Structure::NODE_TYPE_CONTENT
+    ) {
         $structure = $this->prophesize(PageBridge::class);
 
         $structure->getUuid()->willReturn($uuid);
@@ -467,8 +480,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $structure->getHasTranslation()->willReturn(true);
         $structure->getController()->willReturn('');
         $structure->getKey()->willReturn('key');
-        $structure->getResourceLocator()->willReturn('/other-test');
-        $structure->getPropertyValueByTagName(Argument::any())->willReturn('www.example.org');
+        $structure->getResourceLocator()->willReturn($resourceLocator);
 
         return $structure->reveal();
     }

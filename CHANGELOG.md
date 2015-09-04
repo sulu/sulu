@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+<<<<<<< HEAD
     * FEATURE     #1543 [MediaBundle]     new view for collection-list
     * ENHANCEMENT #1543 [MediaBundle]     changed front-end bundle structure with the use of services
     * FEATURE     #1481 [ContactBundle]   titles in JS-views
@@ -15,6 +16,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1417 [AdminBundle]     Style upgrade for header and tabs
     * FEATURE     #1472 [ContactBundle]   Rest-Api support for contact-avatars
     * FEAETURE    #1503 [All]             Updated to doctrine 2.5
+    * ENHANCEMENT #1550 [ContactBundle]   Added flat response option to accountContact collection in js
+    * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make it reusable by other bundles
     * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
     * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository
     * BUGFIX      #1508 [AdminBundle]     Fixed bug with serializing user settings
@@ -55,6 +58,27 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+<<<<<<< HEAD
+=======
+* 1.0.8 (2015-08-31)
+    * HOTFIX      #1539 [WebsiteBundle]  Fixed canonical tag for shadow pages
+    * HOTFIX      #1537 [WebsiteBundle]  Fixed format of hreflang-tag locale
+    * HOTFIX      #1532 [WebsiteBundle]  Fixed redirect to external pages
+    * HOTFIX      #1511 [ContentBundle]  Fixed single-internal-link overlay URL
+    * HOTFIX      #1521 [MediaBundle]    Fixed media-selection events for preview update
+
+* 1.0.7 (2015-08-11)
+    * HOTFIX      #1469 [ContentBundle]  fixed displayOptions in media selection
+    * HOTFIX      #1468 [SnippetBundle]  Fixed default language for snippets in administration
+>>>>>>> master
+
+* 1.0.6 (2015-08-05)
+    * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
+
+* 1.0.5 (2015-08-03)
+    * HOTFIX      #--   [AdminBundle]    Fixed ckeditor overlay buttons for windows
+
+>>>>>>> 2ba57d68fac0116e66a8575021ef807e54d3d630
 * 1.0.4 (2015-07-28)
     * HOTFIX      #1427 [ContentBundle]  Added external link migration
     * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
