@@ -21,7 +21,7 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
 
         defaults = {
             instanceName: '',
-            locale: app.sandbox.sulu.user.locale
+            locale: Husky.sulu.user.locale
         },
 
         constants = {

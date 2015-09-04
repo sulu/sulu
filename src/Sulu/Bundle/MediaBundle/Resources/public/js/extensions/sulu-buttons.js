@@ -7,30 +7,30 @@
         return {
 
             getButtons: function() {
-                var decoratorDropdown = app.sandbox.sulu.buttons.getApiButton('layout');
+                var decoratorDropdown = Husky.sulu.buttons.getApiButton('layout');
                 decoratorDropdown.dropdownItems = {
                     masonry: {},
                     table: {}
                 };
 
-                var editCollection = app.sandbox.sulu.buttons.getApiButton('edit');
+                var editCollection = Husky.sulu.buttons.getApiButton('edit');
                 editCollection.title = 'sulu.header.edit-collection';
                 editCollection.disabled = false;
                 editCollection.callback = function() {
-                    app.sandbox.emit('sulu.toolbar.edit-collection');
+                    Husky.emit('sulu.toolbar.edit-collection');
                 };
 
-                var deleteCollection = app.sandbox.sulu.buttons.getApiButton('delete');
+                var deleteCollection = Husky.sulu.buttons.getApiButton('delete');
                 deleteCollection.title = 'sulu.header.delete-collection';
                 deleteCollection.callback = function() {
-                    app.sandbox.emit('sulu.toolbar.delete-collection');
+                    Husky.emit('sulu.toolbar.delete-collection');
                 };
 
-                var moveCollection = app.sandbox.sulu.buttons.getApiButton('move');
+                var moveCollection = Husky.sulu.buttons.getApiButton('move');
                 moveCollection.title = 'sulu.header.move-collection';
                 moveCollection.icon = 'arrows';
                 moveCollection.callback = function() {
-                    app.sandbox.emit('sulu.toolbar.move-collection');
+                    Husky.emit('sulu.toolbar.move-collection');
                 };
 
                 return [
@@ -59,7 +59,7 @@
                         template: {
                             title: 'sulu.toolbar.masonry',
                             callback: function() {
-                                app.sandbox.emit('sulu.toolbar.change.masonry');
+                                Husky.emit('sulu.toolbar.change.masonry');
                             }.bind(app)
                         }
                     }

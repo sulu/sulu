@@ -19,7 +19,7 @@ define(function() {
             rootCollection: false,
             disableIds: [],
             disabledChildren: false,
-            locale: app.sandbox.sulu.user.locale
+            locale: Husky.sulu.user.locale
         },
 
         templates = {

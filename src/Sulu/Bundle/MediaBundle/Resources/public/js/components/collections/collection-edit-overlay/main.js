@@ -16,7 +16,7 @@ define([
 
         defaults = {
             instanceName: '',
-            locale: app.sandbox.sulu.user.locale
+            locale: Husky.sulu.user.locale
         },
 
         constants = {
