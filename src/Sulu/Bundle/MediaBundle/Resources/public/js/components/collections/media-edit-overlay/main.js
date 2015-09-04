@@ -13,7 +13,10 @@
  * @constructor
  *
  **/
-define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'], function(MediaManager, OverlayManager) {
+define([
+    'services/sulumedia/media-manager',
+    'services/sulumedia/overlay-manager'
+], function(MediaManager, OverlayManager) {
 
     'use strict';
 
@@ -85,19 +88,12 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             this.medias = null;
             this.$multiple = null;
 
-            this.loadMediaAndRender();
-
-            this.sandbox.emit(INITIALIZED.call(this));
-        },
-
-        /**
-         * Show loading overlay and start loading media-data according to mediaIds in options
-         */
-        loadMediaAndRender: function() {
             this.startLoadingOverlay();
             this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
                 this.editMedia(medias);
             }.bind(this));
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
@@ -354,7 +350,9 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
          */
         editMultipleMedia: function(medias) {
             this.medias = medias;
-            this.$multiple = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/multiple-edit'));
+            this.$multiple = this.sandbox.dom.createElement(
+                this.renderTemplate('/admin/media/template/media/multiple-edit')
+            );
             this.startMultipleEditOverlay();
         },
 
@@ -445,14 +443,18 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
             );
 
             // change language (multi-edit)
-            this.sandbox.on('husky.overlay.media-multiple-edit.language-changed', this.languageChangedMultiple.bind(this));
+            this.sandbox.on(
+                'husky.overlay.media-multiple-edit.language-changed', this.languageChangedMultiple.bind(this)
+            );
         },
 
         /**
          * Toggles the descriptions in the multiple-edit element
          */
         toggleDescriptions: function() {
-            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked'),
+            var checked = this.sandbox.dom.is(
+                    this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked'
+                ),
                 $elements = this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple);
             if (checked === true) {
                 this.sandbox.dom.removeClass($elements, 'hidden');
@@ -466,7 +468,9 @@ define(['services/sulumedia/media-manager', 'services/sulumedia/overlay-manager'
          * Toggles the tag-components in the multiple-edit element
          */
         toggleTags: function() {
-            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked'),
+            var checked = this.sandbox.dom.is(
+                    this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked'
+                ),
                 $elements = this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple);
             if (checked === true) {
                 this.sandbox.dom.removeClass($elements, 'hidden');

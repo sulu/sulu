@@ -159,8 +159,9 @@ define(['services/sulumedia/media-manager',
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
-                OverlayManager.
-                    startMoveMediaOverlay(this.sandbox, this.options.id, UserSettingsManager.getMediaLocale());
+                OverlayManager.startMoveMediaOverlay(
+                    this.sandbox, this.options.id, UserSettingsManager.getMediaLocale()
+                );
             }.bind(this));
 
             // change datagrid view to table

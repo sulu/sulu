@@ -78,7 +78,7 @@ define(function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.bindCustomEvents();
-            this.renderOverlay();
+            this.openOverlay();
 
             this.sandbox.emit(INITIALIZED.call(this));
         },
@@ -105,7 +105,7 @@ define(function() {
         /**
          * Start the overlay to select a collection
          */
-        renderOverlay: function() {
+        openOverlay: function() {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 buttons = [
                     {
@@ -145,7 +145,7 @@ define(function() {
          * Start column navigation which displays the collections
          */
         startOverlayColumnNavigation: function() {
-            this.sandbox.dom.append(constants.columnNavigationSelector, '<div class="container"/>');
+            this.$find(constants.columnNavigationSelector).append($('<div class="container"/>'));
 
             var options = {
                 el: constants.columnNavigationContainerSelector,

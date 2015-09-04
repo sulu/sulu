@@ -59,7 +59,7 @@ define([
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             if (!this.options.collectionId) {
-                this.sandbox.stop();
+                throw new Error('collection-id is not defined');
             }
 
             this.bindEvents();
