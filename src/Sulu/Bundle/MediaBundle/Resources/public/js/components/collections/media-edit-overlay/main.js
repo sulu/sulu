@@ -13,10 +13,7 @@
  * @constructor
  *
  **/
-define([
-    'services/sulumedia/media-manager',
-    'services/sulumedia/overlay-manager'
-], function(MediaManager, OverlayManager) {
+define(['services/sulumedia/media-manager'], function(MediaManager) {
 
     'use strict';
 
@@ -78,7 +75,7 @@ define([
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             if (!this.options.mediaIds) {
-                this.sandbox.stop();
+                throw new Error('media-ids are not defined');
             }
 
             // for single edit
@@ -217,7 +214,9 @@ define([
                         instanceName: 'media-edit',
                         propagateEvents: false,
                         okCallback: this.singleOkCallback.bind(this),
-                        cancelCallback: this.sandbox.stop.bind(this)
+                        cancelCallback: function() {
+                            this.sandbox.stop();
+                        }.bind(this)
                     }
                 }
             ]);
@@ -230,6 +229,7 @@ define([
         singleOkCallback: function() {
             if (this.sandbox.form.validate(constants.infoFormSelector)) {
                 this.saveSingleMedia();
+                this.sandbox.stop();
             } else {
                 return false;
             }
@@ -275,8 +275,9 @@ define([
          */
         languageChangedSingle: function(locale) {
             this.saveSingleMedia().then(function() {
-                this.sandbox.stop();
-                OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, locale);
+                this.sandbox.stop(this.$find('*'));
+                this.options.locale = locale;
+                this.initialize();
             }.bind(this));
         },
 
@@ -289,8 +290,8 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
-                this.sandbox.stop();
-                OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, this.options.locale);
+                this.sandbox.stop(this.$find('*'));
+                this.initialize();
             }
         },
 
@@ -380,7 +381,9 @@ define([
                         instanceName: 'media-multiple-edit',
                         propagateEvents: false,
                         okCallback: this.multipleOkCallback.bind(this),
-                        cancelCallback: this.sandbox.stop.bind(this)
+                        cancelCallback: function() {
+                            this.sandbox.stop();
+                        }.bind(this)
                     }
                 }
             ]);
@@ -393,6 +396,7 @@ define([
         multipleOkCallback: function() {
             if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
                 this.saveMultipleMedia();
+                this.sandbox.stop();
             } else {
                 return false;
             }
@@ -405,8 +409,9 @@ define([
          */
         languageChangedMultiple: function(locale) {
             this.saveMultipleMedia().then(function() {
-                this.sandbox.stop();
-                OverlayManager.startEditMediaOverlay(this.sandbox._parent, this.options.mediaIds, locale);
+                this.sandbox.stop(this.$find('*'));
+                this.options.locale = locale;
+                this.initialize();
             }.bind(this));
         },
 
