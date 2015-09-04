@@ -43202,6 +43202,14 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * listens on and shows dropzone popup
+         * @event husky.dropzone.<instance-name>.show-popup
+         */
+        SHOW_POPUP = function() {
+            return createEventName.call(this, 'show-popup');
+        },
+
+        /**
          * raised after files got uploaded and faded out from the dropzone
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
@@ -43338,6 +43346,10 @@ define('__component__$dropzone@husky',[], function() {
 
                 this.sandbox.on(UNLOCK_POPUP.call(this), function() {
                     this.lockPopUp = false;
+                }.bind(this));
+
+                this.sandbox.on(SHOW_POPUP.call(this), function() {
+                    this.openOverlay();
                 }.bind(this));
             }
         },
