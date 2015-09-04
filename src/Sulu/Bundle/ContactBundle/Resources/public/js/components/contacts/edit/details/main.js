@@ -9,9 +9,8 @@
 
 define([
     'config',
-    'widget-groups',
     'services/sulucontact/contact-manager'
-], function(Config, WidgetGroups, ContactManager) {
+], function(Config, ContactManager) {
 
     'use strict';
 
@@ -48,7 +47,6 @@ define([
         };
 
     return {
-        view: true,
 
         tabOptions: {
             noTitle: true
@@ -61,10 +59,6 @@ define([
                     leftSpace: false,
                     topSpace: false,
                     rightSpace: false
-                },
-                sidebar: {
-                    width: 'max',
-                    cssClasses: 'sidebar-padding-50'
                 }
             };
         },
@@ -87,22 +81,11 @@ define([
 
             this.render();
             this.listenForChange();
-
-            if (!!this.data && !!this.data.id && WidgetGroups.exists('contact-detail')) {
-                this.initSidebar(
-                    '/admin/widget-groups/contact-detail?contact=',
-                    this.data.id
-                );
-            }
         },
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
             this.cleanUp();
-        },
-
-        initSidebar: function(url, id) {
-            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {
@@ -188,7 +171,7 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false, maxFiles: 1,
+                        showOverlay: false, maxFiles: 1
                     }
                 }
             ]);

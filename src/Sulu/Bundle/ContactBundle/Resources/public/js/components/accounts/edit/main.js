@@ -75,13 +75,20 @@ define([
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.header.back', AccountRouter.toList);
+            this.sandbox.on('sulu.header.back', this.toList.bind(this));
             this.sandbox.on('sulu.tab.dirty', this.enableSave.bind(this));
             this.sandbox.on('sulu.router.navigate', this.disableSave.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.save.bind(this));
             this.sandbox.on('sulu.tab.saving', this.loadingSave.bind(this));
             this.sandbox.on('sulu.tab.data-changed', this.changeData.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteAccount.bind(this));
+        },
+
+        /**
+         * Routes back to the list
+         */
+        toList: function() {
+            AccountRouter.toList();
         },
 
         /**

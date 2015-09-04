@@ -12,11 +12,10 @@ define([
     'text!sulucontact/components/accounts/edit/contacts/contact-relation.form.html',
     'text!sulucontact/components/accounts/edit/contacts/contact.form.html',
     'config',
-    'widget-groups',
     'services/sulucontact/account-manager',
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups, AccountManager, ContactManager, ContactRouter) {
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, AccountManager, ContactManager, ContactRouter) {
 
     'use strict';
 
@@ -249,16 +248,11 @@ define([
         };
 
     return {
-        view: true,
 
         layout: function() {
             return {
                 content: {
                     width: 'fixed'
-                },
-                sidebar: {
-                    width: 'max',
-                    cssClasses: 'sidebar-padding-50'
                 }
             };
         },
@@ -271,14 +265,6 @@ define([
             this.companyPosition = null;
             bindCustomEvents.call(this);
             this.render();
-
-            if (!!this.data && !!this.data.id && WidgetGroups.exists('account-detail')) {
-                this.initSidebar('/admin/widget-groups/account-detail?account=', this.data.id);
-            }
-        },
-
-        initSidebar: function(url, id) {
-            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {

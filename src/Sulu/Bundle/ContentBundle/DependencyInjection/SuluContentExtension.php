@@ -84,6 +84,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
 
         $loader->load('services.xml');
+        $loader->load('smart_content.xml');
         $loader->load('content_types.xml');
         $loader->load('preview.xml');
         $loader->load('structure.xml');

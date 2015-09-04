@@ -118,6 +118,11 @@ input, select {
   overflow: hidden;
 }
 /* line 24, ../scss/modules/layout.scss */
+.content-column .wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+/* line 29, ../scss/modules/layout.scss */
 .content-column .page {
   height: 100%;
   overflow: auto;
@@ -127,23 +132,21 @@ input, select {
   -webkit-transition: padding-left 700ms, padding-right 700ms;
   transition: padding-left 700ms, padding-right 700ms;
 }
-/* line 31, ../scss/modules/layout.scss */
-.content-column .page::before, .content-column .page::after {
-  content: "";
-  display: block;
-  width: 100%;
-}
-/* line 36, ../scss/modules/layout.scss */
+/* line 34, ../scss/modules/layout.scss */
 .content-column .page::before {
-  height: 1px;
-  margin-bottom: 39px;
+  display: block;
+  content: "";
+  width: 100%;
+  height: 40px;
 }
 /* line 40, ../scss/modules/layout.scss */
 .content-column .page::after {
-  height: 1px;
-  margin-top: 39px;
+  display: block;
+  content: "";
+  width: 100%;
+  height: 40px;
 }
-/* line 46, ../scss/modules/layout.scss */
+/* line 48, ../scss/modules/layout.scss */
 .content-column #content {
   -moz-transition: width 700ms;
   -o-transition: width 700ms;
@@ -151,51 +154,51 @@ input, select {
   transition: width 700ms;
   min-width: 510px;
 }
-/* line 50, ../scss/modules/layout.scss */
+/* line 52, ../scss/modules/layout.scss */
 .content-column #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 54, ../scss/modules/layout.scss */
+/* line 56, ../scss/modules/layout.scss */
 .content-column #content h1:first-child {
   margin-top: 0;
 }
-/* line 58, ../scss/modules/layout.scss */
+/* line 60, ../scss/modules/layout.scss */
 .content-column #content .content-tabs-content {
   padding-top: 80px;
 }
-/* line 63, ../scss/modules/layout.scss */
+/* line 65, ../scss/modules/layout.scss */
 .content-column .fixed-width {
   min-width: 510px;
   width: 900px;
 }
-/* line 69, ../scss/modules/layout.scss */
+/* line 71, ../scss/modules/layout.scss */
 .content-column.no-left-space .page {
   padding-left: 0;
 }
-/* line 75, ../scss/modules/layout.scss */
+/* line 77, ../scss/modules/layout.scss */
 .content-column.no-right-space .page {
   padding-right: 0;
 }
-/* line 81, ../scss/modules/layout.scss */
+/* line 83, ../scss/modules/layout.scss */
 .content-column.no-top-space .page::before {
   height: 0;
   margin-bottom: 0;
 }
-/* line 87, ../scss/modules/layout.scss */
+/* line 89, ../scss/modules/layout.scss */
 .content-column.no-transitions {
   -moz-transition: none;
   -o-transition: none;
   -webkit-transition: none;
   transition: none;
 }
-/* line 89, ../scss/modules/layout.scss */
+/* line 91, ../scss/modules/layout.scss */
 .content-column.no-transitions #content, .content-column.no-transitions .page {
   -moz-transition: none;
   -o-transition: none;
   -webkit-transition: none;
   transition: none;
 }
-/* line 94, ../scss/modules/layout.scss */
+/* line 96, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink {
   position: absolute;
   top: 0px;
@@ -210,56 +213,56 @@ input, select {
   text-align: center;
   line-height: 25px;
 }
-/* line 107, ../scss/modules/layout.scss */
+/* line 109, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink .fa-chevron-right {
   padding-left: 2px;
 }
-/* line 110, ../scss/modules/layout.scss */
+/* line 112, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink .fa-chevron-left {
   padding-right: 2px;
 }
-/* line 115, ../scss/modules/layout.scss */
+/* line 117, ../scss/modules/layout.scss */
 .content-column.max {
   float: none;
   width: auto;
 }
-/* line 120, ../scss/modules/layout.scss */
+/* line 122, ../scss/modules/layout.scss */
 .content-column.fixed {
   float: none;
   width: auto;
 }
-/* line 124, ../scss/modules/layout.scss */
+/* line 126, ../scss/modules/layout.scss */
 .content-column.fixed #content {
   width: 900px;
 }
-/* line 129, ../scss/modules/layout.scss */
+/* line 131, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed .page {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 133, ../scss/modules/layout.scss */
+/* line 135, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed #content {
   width: 510px;
 }
 
-/* line 140, ../scss/modules/layout.scss */
+/* line 142, ../scss/modules/layout.scss */
 .sidebar-column {
   height: 100%;
   overflow: hidden;
   z-index: 99;
   position: relative;
 }
-/* line 146, ../scss/modules/layout.scss */
+/* line 148, ../scss/modules/layout.scss */
 .sidebar-column.fixed {
   width: 450px;
   float: right;
 }
-/* line 151, ../scss/modules/layout.scss */
+/* line 153, ../scss/modules/layout.scss */
 .sidebar-column.max {
   float: none;
   width: auto;
 }
-/* line 156, ../scss/modules/layout.scss */
+/* line 158, ../scss/modules/layout.scss */
 .sidebar-column.hidden {
   width: 0;
   height: 0;
@@ -267,86 +270,86 @@ input, select {
 }
 
 @media only screen and (max-width: 1110px) {
-  /* line 170, ../scss/modules/layout.scss */
+  /* line 172, ../scss/modules/layout.scss */
   .sidebar-column.fixed {
     width: 0;
     height: 0;
   }
 }
 @media only screen and (max-width: 1290px) {
-  /* line 185, ../scss/modules/layout.scss */
+  /* line 187, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed #content {
     width: 700px;
   }
-  /* line 189, ../scss/modules/layout.scss */
+  /* line 191, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
     width: 700px;
   }
 }
 @media only screen and (max-width: 1090px) {
-  /* line 199, ../scss/modules/layout.scss */
+  /* line 201, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed #content {
     width: 510px;
   }
-  /* line 203, ../scss/modules/layout.scss */
+  /* line 205, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
     width: 510px;
   }
 }
 @media only screen and (max-width: 900px) {
-  /* line 211, ../scss/modules/layout.scss */
+  /* line 213, ../scss/modules/layout.scss */
   .sidebar-column.max {
     width: 0;
     height: 0;
   }
 
-  /* line 217, ../scss/modules/layout.scss */
+  /* line 219, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     float: none;
   }
-  /* line 219, ../scss/modules/layout.scss */
+  /* line 221, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed #content {
     max-width: 900px;
     width: auto;
   }
-  /* line 224, ../scss/modules/layout.scss */
+  /* line 226, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
     max-width: 900px;
     width: auto;
   }
 
-  /* line 230, ../scss/modules/layout.scss */
+  /* line 232, ../scss/modules/layout.scss */
   .sulu-app-shrink {
     display: none;
   }
 }
 @media only screen and (max-width: 950px) {
-  /* line 243, ../scss/modules/layout.scss */
+  /* line 245, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed {
     float: none;
   }
-  /* line 245, ../scss/modules/layout.scss */
+  /* line 247, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed #content {
     max-width: 900px;
     width: auto;
   }
-  /* line 250, ../scss/modules/layout.scss */
+  /* line 252, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column .fixed-width {
     max-width: 900px;
     width: auto;
   }
 }
 @media only screen and (max-width: 1600px) {
-  /* line 265, ../scss/modules/layout.scss */
+  /* line 267, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
     float: none;
   }
-  /* line 267, ../scss/modules/layout.scss */
+  /* line 269, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed #content {
     max-width: 900px;
     width: auto;
   }
-  /* line 272, ../scss/modules/layout.scss */
+  /* line 274, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column .fixed-width {
     max-width: 900px;
     width: auto;
@@ -688,9 +691,10 @@ input, select {
   height: 50px;
   width: 100%;
   position: relative;
+  left: -1px;
   z-index: 1000;
 }
-/* line 26, ../scss/modules/header.scss */
+/* line 27, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .left-container {
   display: table-cell;
   width: 50px;
@@ -703,31 +707,15 @@ input, select {
   -webkit-transition: width 700ms;
   transition: width 700ms;
 }
-/* line 35, ../scss/modules/header.scss */
+/* line 36, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .toolbar-container {
   display: table-cell;
-  overflow: auto;
   vertical-align: top;
   width: 100%;
   position: relative;
   z-index: 100;
 }
 /* line 43, ../scss/modules/header.scss */
-.sulu-header .toolbar-row .toolbar-container .toolbar-wrapper {
-  display: inline-block;
-  white-space: nowrap;
-}
-/* line 48, ../scss/modules/header.scss */
-.sulu-header .toolbar-row .toolbar-container.overflown {
-  -moz-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
-  -webkit-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
-  box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
-}
-/* line 50, ../scss/modules/header.scss */
-.sulu-header .toolbar-row .toolbar-container.overflown .husky-toolbar .toolbar-dropdown-menu {
-  margin-top: 0;
-}
-/* line 55, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .right-container {
   display: table-cell;
   width: 108px;
@@ -737,14 +725,14 @@ input, select {
   z-index: 500;
   background: #52B6CA;
 }
-/* line 64, ../scss/modules/header.scss */
+/* line 52, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .back {
   color: #fff;
   text-align: center;
   line-height: 50px;
   cursor: pointer;
 }
-/* line 70, ../scss/modules/header.scss */
+/* line 58, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .language-changer {
   display: inline-block;
   vertical-align: top;
@@ -757,13 +745,13 @@ input, select {
   position: relative;
   cursor: pointer;
 }
-/* line 81, ../scss/modules/header.scss */
+/* line 69, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .language-changer .dropdown-toggle {
   display: inline-block;
   vertical-align: top;
   padding: 0 8px 0 10px;
 }
-/* line 86, ../scss/modules/header.scss */
+/* line 74, ../scss/modules/header.scss */
 .sulu-header .toolbar-row .language-changer .dropdown-menu {
   right: 0;
   left: auto;
@@ -772,7 +760,7 @@ input, select {
   min-width: 160px;
   width: auto;
 }
-/* line 96, ../scss/modules/header.scss */
+/* line 84, ../scss/modules/header.scss */
 .sulu-header .tabs-row {
   position: relative;
   top: 0px;
@@ -783,7 +771,7 @@ input, select {
   -webkit-transition-delay: 150ms;
   transition: top 200ms ease 150ms;
 }
-/* line 102, ../scss/modules/header.scss */
+/* line 90, ../scss/modules/header.scss */
 .sulu-header .tabs-row .tabs {
   padding: 0 50px;
   overflow: auto;
@@ -793,44 +781,39 @@ input, select {
   -webkit-transition: padding 700ms;
   transition: padding 700ms;
 }
-/* line 111, ../scss/modules/header.scss */
+/* line 99, ../scss/modules/header.scss */
 .sulu-header.tabs-hidden .tabs-row {
   top: -50px;
 }
-/* line 117, ../scss/modules/header.scss */
-.sulu-header + .page {
-  margin-top: 50px;
+/* line 105, ../scss/modules/header.scss */
+.sulu-header + .wrapper {
+  padding-top: 50px;
 }
-/* line 119, ../scss/modules/header.scss */
-.sulu-header + .page::after {
-  padding-bottom: 50px;
+/* line 108, ../scss/modules/header.scss */
+.sulu-header.has-tabs + .wrapper {
+  padding-top: 50px;
 }
-/* line 124, ../scss/modules/header.scss */
-.sulu-header.has-tabs + .page::before {
-  margin-bottom: 89px;
+/* line 110, ../scss/modules/header.scss */
+.sulu-header.has-tabs + .wrapper .page::before {
+  height: 90px;
 }
 
-/* line 130, ../scss/modules/header.scss */
+/* line 116, ../scss/modules/header.scss */
 .fixed .toolbar-row {
   max-width: 1000px;
 }
 
-/* line 135, ../scss/modules/header.scss */
+/* line 121, ../scss/modules/header.scss */
 .small-fixed .tabs-row .tabs {
   padding-left: 10px;
 }
-/* line 138, ../scss/modules/header.scss */
+/* line 124, ../scss/modules/header.scss */
 .small-fixed .sulu-header .left-container {
   width: 0px;
 }
-/* line 140, ../scss/modules/header.scss */
+/* line 126, ../scss/modules/header.scss */
 .small-fixed .sulu-header .left-container * {
   display: none;
-}
-
-/* line 146, ../scss/modules/header.scss */
-.no-top-space .sulu-header.has-tabs + .page::before {
-  margin-bottom: 49px;
 }
 
 /*----------------------------------------*/
@@ -840,32 +823,27 @@ input, select {
   height: 100%;
   background: #fff;
   overflow: auto;
-  border-left: 1px solid #f1f1f1;
 }
-/* line 11, ../scss/modules/sidebar.scss */
-.sulu-sidebar.dark-border {
-  border-left: 1px solid #666;
-}
-/* line 15, ../scss/modules/sidebar.scss */
+/* line 10, ../scss/modules/sidebar.scss */
 .sulu-sidebar .sidebar-loader {
   position: relative;
   left: 0;
   top: 50%;
   margin-top: -50px;
 }
-/* line 22, ../scss/modules/sidebar.scss */
+/* line 17, ../scss/modules/sidebar.scss */
 .sulu-sidebar .action {
   color: #000;
   cursor: pointer;
   text-decoration: none;
 }
-/* line 28, ../scss/modules/sidebar.scss */
+/* line 23, ../scss/modules/sidebar.scss */
 .sulu-sidebar .label {
   font-weight: 600;
   margin: 0 0 5px 0;
   color: #999;
 }
-/* line 34, ../scss/modules/sidebar.scss */
+/* line 29, ../scss/modules/sidebar.scss */
 .sulu-sidebar .blue-icon {
   width: 30px;
   height: 20px;
@@ -884,23 +862,23 @@ input, select {
   -o-transition: opacity 100ms ease-in 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 53, ../scss/modules/sidebar.scss */
+/* line 48, ../scss/modules/sidebar.scss */
 .sulu-sidebar h2 .blue-icon > span {
   vertical-align: text-top;
   margin-top: -4px;
 }
-/* line 58, ../scss/modules/sidebar.scss */
+/* line 53, ../scss/modules/sidebar.scss */
 .sulu-sidebar .show-icon:hover .blue-icon {
   opacity: 1;
 }
-/* line 62, ../scss/modules/sidebar.scss */
+/* line 57, ../scss/modules/sidebar.scss */
 .sulu-sidebar hr {
   border: 0;
   height: 1px;
   background: #ddd;
 }
 
-/* line 70, ../scss/modules/sidebar.scss */
+/* line 65, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }

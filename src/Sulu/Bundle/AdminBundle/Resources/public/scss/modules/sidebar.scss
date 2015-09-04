@@ -6,11 +6,6 @@
     height: 100%;
     background: $white;
     overflow: auto;
-    border-left: 1px solid $backgroundColor;
-
-    &.dark-border {
-      border-left: 1px solid $gray;
-    }
 
     .sidebar-loader {
         position: relative;

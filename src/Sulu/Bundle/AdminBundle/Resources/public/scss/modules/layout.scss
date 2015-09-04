@@ -21,25 +21,27 @@
     position: relative;
     overflow: hidden;
 
+    .wrapper {
+        height: 100%;
+        overflow: hidden;
+    }
+
     .page {
         height: 100%;
         overflow: auto;
         padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
         @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
-
-        // vertical paddings defined this way because of scrolling
-        &::before, &::after {
-          content: "";
-          display: block;
-          width: 100%;
-        }
         &::before {
-          height: 1px;
-          margin-bottom: $contentPaddingTop - 1px;
+            display: block;
+            content: "";
+            width: 100%;
+            height: $contentPaddingTop;
         }
         &::after {
-          height: 1px;
-          margin-top: $contentPaddingBottom - 1px;
+          display: block;
+          content: "";
+          width: 100%;
+          height: $contentPaddingBottom;
         }
     }
 

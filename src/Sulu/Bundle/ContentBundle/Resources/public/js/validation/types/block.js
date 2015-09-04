@@ -9,11 +9,192 @@
  */
 
 define([
-    'type/default',
-    'app-config'
-], function(Default, AppConfig) {
+    'type/default'
+], function(Default) {
 
     'use strict';
+
+    /**
+     * Initializes and starts the select in which the type of the block can be chosen
+     * @param $parent {Object} the dom-object of the block
+     * @param options {Object} the options of the block
+     * @param callback {Function} the function to call on change
+     */
+    var initializeTypeSelect = function($parent, options, callback) {
+            $parent.find('.type-select').parent().removeClass('hidden');
+            Husky.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: $parent.find('.type-select'),
+                        instanceName: 'change' + options.index,
+                        valueName: 'title',
+                        selectCallback: callback,
+                        data: this.types,
+                        defaultLabel: $.grep(this.types, function(type) {
+                            return type.id === options.type;
+                        })[0].title
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Expands a given block
+         * @param $block {Object} the jquery-dom-object
+         */
+        expandBlock = function($block) {
+            $block.removeClass('collapsed');
+            $('#collapse-text-blocks-' + this.id).removeClass('hidden');
+            $('#expand-text-blocks-' + this.id).addClass('hidden');
+        },
+
+        /**
+         * Collapses a given block
+         * @param $block {Object} the jquery-dom-object
+         */
+        collapseBlock = function($block) {
+            prepareCollapsedData.call(this, $block);
+
+            $block.addClass('collapsed');
+            // if all blocks are collapsed
+            if (this.$el.find('.' + this.propertyName + '-element:not(".collapsed")').length === 0) {
+                $('#expand-text-blocks-' + this.id).removeClass('hidden');
+                $('#collapse-text-blocks-' + this.id).addClass('hidden');
+            }
+        },
+
+        /**
+         * Prepares and renderes the collapsed element
+         * @param $block {Object} the jquery-dom-object of the corresponding block
+         */
+        prepareCollapsedData = function($block) {
+            var titleFound, imageFound, textFound;
+            titleFound = imageFound = textFound = false;
+            $block.find('.collapsed-container .hidden').removeClass('hidden');
+            $block.find('.collapsed-container').removeClass('empty');
+            this.iterateBlockFields([$block], function($field) {
+                if (!titleFound) {
+                    titleFound = setCollapsedTitle.call(this, $field, $block);
+                }
+                if (!imageFound) {
+                    imageFound = setCollapsedImage.call(this, $field, $block);
+                }
+                if (!textFound) {
+                    textFound = setCollapsedText.call(this, $field, $block);
+                }
+            }.bind(this));
+            if (!textFound) {
+                $block.find('.collapsed-container .text').addClass('hidden');
+            }
+            if (!titleFound && !imageFound && !textFound) {
+                $block.find('.collapsed-container').addClass('empty');
+            }
+        },
+
+        /**
+         * Takes a field and sets the value-string as the title in the collapsed element.
+         * @param $field {Object} the dom-object of the field
+         * @param $block {Object} the dom-object of the block
+         * @returns {Boolean} true iff a title has been found
+         */
+        setCollapsedTitle = function($field, $block) {
+            if ($field.is(':visible') && $field.is('input') && !!$field.data('element')) {
+                if (!!$field.data('element').getValue()) {
+                    $block.find('.collapsed-container .title').html($field.data('element').getValue());
+                    return true;
+                }
+            }
+            $block.find('.collapsed-container .title').empty();
+
+            return false;
+        },
+
+        /**
+         * Takes a field. If it's a media-selection take the first found image, else wait
+         * for incoming data for the media-selection. The found image gets set as the image in the collapsed element.
+         * @param $field {Object} the dom-object of the field
+         * @param $block {Object} the dom-object of the block
+         * @returns {Boolean} true iff a a image has been found immediatelly
+         */
+        setCollapsedImage = function($field, $block) {
+            if (!!$field.data('type') && $field.data('type') === 'mediaSelection') {
+                if (!!$field.find('img').attr('src')) {
+                    $block.find('.collapsed-container .image').html(
+                        '<img src="' + $field.find('img').attr('src') + '"/>'
+                    );
+                    return true;
+                } else {
+                    // no media was found, now wait for the data-retrieved event
+                    Husky.once(
+                        'sulu.media-selection.' + $field.data('typeInstanceName') + '.data-retrieved',
+                        function(images) {
+                            if (images.length > 0) {
+                                $block.find('.collapsed-container').removeClass('empty');
+                                $block.find('.collapsed-container .image').html(
+                                    '<img src="' + images[0].thumbnails['50x50'] + '"/>'
+                                );
+                            }
+                        }.bind(this)
+                    );
+                }
+            }
+            $block.find('.collapsed-container .image').empty();
+
+            return false;
+        },
+
+        /**
+         * Takes a field and sets the value of the first textEditor or textArea as the text in the collapsed element.
+         * @param $field {Object} the dom-object of the field
+         * @param $block {Object} the dom-object of the block
+         * @returns {Boolean} true iff a title has been found
+         */
+        setCollapsedText = function($field, $block) {
+            if (!!$field.data('element')) {
+                if (!!$field.data('element').getType && $field.data('element').getType().name === 'textEditor') {
+                    if (!!$($field.data('element').getValue()).text()) {
+                        $block.find('.collapsed-container .text').html($($field.data('element').getValue()).text());
+                        return true;
+                    }
+                }
+                if ($field.is('textarea')) {
+                    if (!!$field.data('element').getValue()) {
+                        $block.find('.collapsed-container .text').html($field.data('element').getValue());
+                        return true;
+                    }
+                }
+            }
+            $block.find('.collapsed-container .text').empty();
+
+            return false;
+        },
+
+        /**
+         * Destroys all text-editors in a given block
+         * @param $block {Object} the jquery-object of the block
+         */
+        destroyTextEditors = function($block) {
+            this.iterateBlockFields([$block], function($field) {
+                if ($field.data('type') === 'textEditor') {
+                    $field.closest('.form-group').height($field.closest('.form-group').outerHeight());
+                    Husky.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Start all text-editors in a given block
+         * @param $block {Object} the jquery-object of the block
+         */
+        startTextEditors = function($block) {
+            this.iterateBlockFields([$block], function($field) {
+                if ($field.data('type') === 'textEditor') {
+                    $field.closest('.form-group').height('');
+                    Husky.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.start');
+                }
+            }.bind(this));
+        };
 
     return function($el, options, form) {
         var defaults = {},
@@ -24,26 +205,26 @@ define([
                     this.templates = {};
                     for (i = 0, len = this.options.config.length; i < len; i++) {
                         item = this.options.config[i];
-                        this.templates[item.data] = App.dom.find('#' + item.tpl, this.$el).html();
+                        this.templates[item.data] = Husky.dom.find('#' + item.tpl, this.$el).html();
 
                         item.id = item.data;
-                        item.name = App.translate(item.title);
+                        item.name = Husky.translate(item.title);
                         selectData.push(item);
                     }
 
                     this.id = this.$el.attr('id');
-                    this.propertyName = App.dom.data(this.$el, 'mapperProperty');
+                    this.propertyName = Husky.dom.data(this.$el, 'mapperProperty');
                     this.types = selectData;
 
                     this.$addButton = $('#' + this.id + '-add');
                     if (this.getMinOccurs() !== this.getMaxOccurs()) {
                         this.initSelectComponent(selectData);
                     } else {
-                        App.dom.remove(this.$addButton);
+                        Husky.dom.remove(this.$addButton);
                     }
 
                     this.bindDomEvents();
-
+                    this.checkSortable();
                     this.setValue([]);
                 },
 
@@ -70,26 +251,26 @@ define([
                 },
 
                 initSelectComponent: function(selectData) {
-                    App.start([
+                    Husky.start([
                         {
                             name: 'select@husky',
                             options: {
                                 el: this.$addButton,
                                 instanceName: this.id,
-                                defaultLabel: App.translate('sulu.content.add-type'),
+                                defaultLabel: Husky.translate('sulu.content.add-type'),
                                 fixedLabel: true,
                                 style: 'action',
                                 icon: 'plus-circle',
                                 data: (selectData.length > 1 ? selectData : []),
                                 repeatSelect: true,
                                 selectCallback: function(item) {
-                                    this.addChild(item, {}, true);
+                                    this.addChild(item, {}, true, null, true);
                                 }.bind(this),
                                 deselectCallback: function(item) {
-                                    this.addChild(item, {}, true);
+                                    this.addChild(item, {}, true, null, true);
                                 }.bind(this),
                                 noItemsCallback: function() {
-                                    this.addChild(this.types[0].data, {}, true);
+                                    this.addChild(this.types[0].data, {}, true, null, true);
                                 }.bind(this)
                             }
                         }
@@ -98,28 +279,79 @@ define([
 
                 bindDomEvents: function() {
                     this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeBlockHandler.bind(this));
+                    this.$el.on('click', '.options-collapse', this.collapseBlockHandler.bind(this));
+                    this.$el.on('click', '.collapsed-container', this.expandBlockHandler.bind(this));
+                    this.$el.on('sortstart', function(event, ui) {
+                        destroyTextEditors.call(this, $(ui.item));
+                    }.bind(this));
+                    this.$el.on('sortstop', function(event, ui) {
+                        startTextEditors.call(this, $(ui.item));
+                    }.bind(this));
 
-                    $('#sort-text-blocks-' + this.id).on('click', this.showSortMode.bind(this));
-                    $('#edit-text-blocks-' + this.id).on('click', this.showEditMode.bind(this));
+                    $('#collapse-text-blocks-' + this.id).on('click', this.collapseAll.bind(this));
+                    $('#expand-text-blocks-' + this.id).on('click', this.expandAll.bind(this));
                 },
 
                 removeBlockHandler: function(event) {
-                    var $removeButton = $(event.target),
-                        $element = $removeButton.closest('.' + this.propertyName + '-element');
+                    var action = function() {
+                        var $removeButton = $(event.target),
+                            $element = $removeButton.closest('.' + this.propertyName + '-element');
 
-                    if (this.canRemove()) {
-                        this.form.removeFields($element);
-                        $element.remove();
+                        if (this.canRemove()) {
+                            this.form.removeFields($element);
+                            $element.remove();
 
-                        $(form.$el).trigger('form-remove', [this.propertyName]);
-                        this.checkFullAndEmpty();
-                    }
+                            $(form.$el).trigger('form-remove', [this.propertyName]);
+                            this.checkFullAndEmpty();
+                        }
+                    }.bind(this);
+                    // show warning dialog
+                    Husky.emit(
+                        'sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc',
+                        null, action
+                    );
+                },
+
+                /**
+                 * Handles the click on the collapse icon
+                 * @param event {Object} click-event
+                 */
+                collapseBlockHandler: function(event) {
+                    var $block = $(event.target).closest('.' + this.propertyName + '-element');
+                    collapseBlock.call(this, $block);
+                },
+
+                /**
+                 * Handles the click on the collapsed-block
+                 * @param event {Object} click-event
+                 */
+                expandBlockHandler: function(event) {
+                    var $block = $(event.target).closest('.' + this.propertyName + '-element');
+                    expandBlock.call(this, $block);
+                },
+
+                /**
+                 * Collapses all text-blocks
+                 */
+                collapseAll: function() {
+
+                    this.getChildren().each(function(i, block) {
+                        collapseBlock.call(this, $(block));
+                    }.bind(this));
+                },
+
+                /**
+                 * Expands all text-blocks
+                 */
+                expandAll: function() {
+                    this.getChildren().each(function(i, block) {
+                        expandBlock.call(this, $(block));
+                    }.bind(this));
                 },
 
                 checkSortable: function() {
                     // check for dragable
                     if (this.getChildren().length <= 1) {
-                        App.dom.attr(App.dom.children(this.$el), 'draggable', false);
                         this.setSortable(false);
                     } else {
                         this.setSortable(true);
@@ -131,9 +363,10 @@ define([
                     return true;
                 },
 
-                addChild: function(type, data, fireEvent, index) {
+                //TODO: make cleaner
+                addChild: function(type, data, fireEvent, index, keepExpanded) {
                     var options, template, $template,
-                        dfd = App.data.deferred();
+                        dfd = Husky.data.deferred();
 
                     if (typeof index === 'undefined' || index === null) {
                         index = this.getChildren().length;
@@ -145,50 +378,36 @@ define([
 
                     if (this.canAdd()) {
                         // remove index
-                        App.dom.remove(App.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
+                        Husky.dom.remove(Husky.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
 
                         // FIXME this should not be necessary (see https://github.com/sulu-io/sulu/issues/1263)
                         data.type = type;
 
                         // render block
-                        options = $.extend({}, {index: index, translate: App.translate, type: type}, data);
+                        options = $.extend({}, {index: index, translate: Husky.translate, type: type}, data);
                         template = _.template(this.templates[type], options, form.options.delimiter);
                         $template = $(template);
 
-                        App.dom.insertAt(index, '> *', this.$el, $template);
+                        Husky.dom.insertAt(index, '> *', this.$el, $template);
 
                         if (this.types.length > 1) {
-                            App.start([
-                                {
-                                    name: 'dropdown@husky',
-                                    options: {
-                                        el: App.dom.find('#change' + options.index, $template),
-                                        trigger: App.dom.find('.drop-down-trigger', $template),
-                                        setParentDropDown: true,
-                                        instanceName: 'change' + options.index,
-                                        alignment: 'right',
-                                        valueName: 'title',
-                                        translateLabels: true,
-                                        clickCallback: function(item, $trigger) {
-                                            // TODO change type
-                                            var data = form.mapper.getData($template);
-                                            this.addChild(item.data, data, true, index);
-                                        }.bind(this),
-                                        data: this.types
-                                    }
-                                }
-                            ]);
-                        } else {
-                            App.dom.remove(App.dom.find('.drop-down-trigger', $template));
+                            initializeTypeSelect.call(this, $template, options, function(item) {
+                                var data = form.mapper.getData($template);
+                                Husky.stop($template.find('*'));
+                                this.addChild(item, data, true, $template.index(), true);
+                            }.bind(this));
                         }
 
                         // remove delete button
                         if (this.getMinOccurs() === this.getMaxOccurs()) {
-                            App.dom.remove(App.dom.find('.options-remove', $template));
+                            Husky.dom.remove(Husky.dom.find('.options-remove', $template));
                         }
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
+                                if (!keepExpanded) {
+                                    collapseBlock.call(this, $template);
+                                }
                                 dfd.resolve();
                                 if (!!fireEvent) {
                                     $(form.$el).trigger('form-add', [this.propertyName, data, index]);
@@ -226,7 +445,7 @@ define([
 
                 internalSetValue: function(value) {
                     var i, len, count, item,
-                        dfd = App.data.deferred(),
+                        dfd = Husky.data.deferred(),
                         resolve = function() {
                             count--;
                             if (count <= 0) {
@@ -235,7 +454,7 @@ define([
                         };
 
                     this.form.removeFields(this.$el);
-                    App.dom.children(this.$el).remove();
+                    Husky.dom.children(this.$el).remove();
                     len = value.length < this.getMinOccurs() ? this.getMinOccurs() : value.length;
                     count = len;
 
@@ -255,27 +474,23 @@ define([
 
                 setValue: function(value) {
                     // server returns an object for single block (min: 1, max: 1)
-                    if (typeof value === 'object' && !App.dom.isArray(value)) {
+                    if (typeof value === 'object' && !Husky.dom.isArray(value)) {
                         value = [value];
                     }
 
-                    var resolve = this.internalSetValue(value);
-                    resolve.then(function() {
-                        App.logger.log('resolved block set value');
-                    });
-                    return resolve;
+                    return this.internalSetValue(value);
                 },
 
                 getValue: function() {
                     var data = [];
-                    App.dom.children(this.$el).each(function() {
+                    Husky.dom.children(this.$el).each(function() {
                         data.push(form.mapper.getData($(this)));
                     });
                     return data;
                 },
 
                 iterateBlockFields: function($blocks, cb) {
-                    if ($blocks.size()) {
+                    if (!!$blocks.length) {
                         $.each($blocks, function(idx, block) {
                             var $block = $(block),
                                 $fields = $block.find('[data-mapper-property]');
@@ -293,68 +508,12 @@ define([
                     }
                 },
 
-                showSortMode: function() {
-                    var $blocks = this.getChildren(),
-                        section = AppConfig.getSection('sulu-content');
-
-                    $('#sort-text-blocks-' + this.id).addClass('hidden');
-                    $('#edit-text-blocks-' + this.id).removeClass('hidden');
-
-                    this.$el.addClass('is-sortmode');
-
-                    this.iterateBlockFields($blocks, function($field, $block) {
-                        var property = $field.data('property') || {},
-                            tags = property.tags || [];
-
-                        if ($field.data('type') === 'textEditor') {
-                            App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
-                        }
-
-                        if (tags.length && _.where(tags, { name: section.showInSortModeTag }).length) {
-                            this.showSortModeField($field, $block);
-                        }
-                    }.bind(this));
-
-                    this.checkSortable();
-                },
-
-                showSortModeField: function($field, $block) {
-                    var content = $field.data('element').getValue(),
-                        fieldId = $field.attr('id'),
-                        $sortModeField = $('[data-sort-mode-id="' + fieldId + '"]', $block);
-
-                    if ($sortModeField.size()) {
-                        $sortModeField
-                            .html(!!content && content.replace(/<(?:.|\n)*?>/gm, ''))
-                            .addClass('show-in-sortmode');
-                    }
-                },
-
-                showEditMode: function() {
-                    var $blocks = this.getChildren();
-
-                    this.setSortable(false);
-
-                    App.dom.removeClass('#sort-text-blocks-' + this.id, 'hidden');
-                    App.dom.addClass('#edit-text-blocks-' + this.id, 'hidden');
-
-                    this.$el.removeClass('is-sortmode');
-
-                    this.iterateBlockFields($blocks, function($field, $block) {
-                        $field.removeClass('show-in-sortmode');
-
-                        if ($field.data('type') === 'textEditor') {
-                            App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.start');
-                        }
-                    }.bind(this));
-                },
-
                 setSortable: function(state) {
                     if (!state) {
-                        App.dom.removeClass(this.$el, 'sortable');
-                        App.dom.sortable(this.$el, 'destroy');
-                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
-                        App.dom.addClass(this.$el, 'sortable');
+                        Husky.dom.removeClass(this.$el, 'sortable');
+                        Husky.dom.sortable(this.$el, 'destroy');
+                    } else if (!Husky.dom.hasClass(this.$el, 'sortable')) {
+                        Husky.dom.addClass(this.$el, 'sortable');
                     }
 
                     $(form.$el).trigger('init-sortable');

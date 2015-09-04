@@ -63,7 +63,7 @@ interface PropertyInterface extends ArrayableInterface
     /**
      * parameter of property.
      *
-     * @return array
+     * @return PropertyParameter[]
      */
     public function getParams();
 

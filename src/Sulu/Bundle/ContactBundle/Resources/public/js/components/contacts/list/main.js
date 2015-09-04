@@ -11,8 +11,7 @@ define([
     'services/sulucontact/contact-manager',
     'services/sulucontact/contact-router',
     'services/sulucontact/contact-delete-dialog',
-    'widget-groups'
-], function(ContactManager, ContactRouter, DeleteDialog, WidgetGroups) {
+], function(ContactManager, ContactRouter, DeleteDialog) {
 
     'use strict';
 
@@ -61,25 +60,15 @@ define([
             }.bind(this));
         },
 
-        clickCallback = function(item) {
-            // show sidebar for selected item
-            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
-        },
-
         actionCallback = function(id) {
             ContactRouter.toEdit(id);
         };
 
     return {
-        view: true,
 
         layout: {
             content: {
                 width: 'max'
-            },
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -102,57 +91,70 @@ define([
             bindCustomEvents.call(this);
         },
 
+        /**
+         * @returns {Object} the list-toolbars config object
+         */
+        getListToolbarConfig: function() {
+            return {
+                el: this.$find('#list-toolbar-container'),
+                instanceName: 'contacts',
+                template: this.sandbox.sulu.buttons.get({
+                    contactDecoratorDropdown: {},
+                    settings: {
+                        options: {
+                            dropdownItems: [
+                                {
+                                    type: 'columnOptions'
+                                }
+                            ]
+                        }
+                    }
+                })
+            };
+        },
+
+        /**
+         * @returns {Object} the datagrids config object
+         */
+        getDatagridConfig: function() {
+            return {
+                el: this.sandbox.dom.find('#people-list', this.$el),
+                url: '/admin/api/contacts?flat=true',
+                searchInstanceName: 'contacts',
+                searchFields: ['fullName'],
+                resultKey: 'contacts',
+                instanceName: constants.datagridInstanceName,
+                actionCallback: actionCallback.bind(this),
+                view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                viewOptions: {
+                    'decorators/cards': {
+                        fields: {
+                            picture: 'avatar',
+                            title: ['firstName', 'lastName'],
+                            firstInfoRow: ['city', 'countryCode'],
+                            secondInfoRow: ['mainEmail'],
+                        },
+                        separators: {
+                            title: ' ',
+                            infoRow: ', '
+                        },
+                        icons: {
+                            picture: 'fa-user',
+                            firstInfoRow: 'fa-map-marker',
+                            secondInfoRow: 'fa-envelope'
+                        }
+                    }
+                }
+            };
+        },
+
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'contacts', '/admin/api/contacts/fields',
-                {
-                    el: this.$find('#list-toolbar-container'),
-                    instanceName: 'contacts',
-                    template: this.sandbox.sulu.buttons.get({
-                        contactDecoratorDropdown: {},
-                        settings: {
-                            options: {
-                                dropdownItems: [
-                                    {
-                                        type: 'columnOptions'
-                                    }
-                                ]
-                            }
-                        }
-                    })
-                },
-                {
-                    el: this.sandbox.dom.find('#people-list', this.$el),
-                    url: '/admin/api/contacts?flat=true',
-                    searchInstanceName: 'contacts',
-                    searchFields: ['fullName'],
-                    resultKey: 'contacts',
-                    instanceName: constants.datagridInstanceName,
-                    clickCallback: (WidgetGroups.exists('contact-info')) ? clickCallback.bind(this) : null,
-                    actionCallback: actionCallback.bind(this),
-                    view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
-                    viewOptions: {
-                        'decorators/cards': {
-                            fields: {
-                                picture: 'avatar',
-                                title: ['firstName', 'lastName'],
-                                firstInfoRow: ['city', 'countryCode'],
-                                secondInfoRow: ['mainEmail'],
-                            },
-                            separators: {
-                                title: ' ',
-                                infoRow: ', '
-                            },
-                            icons: {
-                                picture: 'fa-user',
-                                firstInfoRow: 'fa-map-marker',
-                                secondInfoRow: 'fa-envelope'
-                            }
-                        }
-                    }
-                },
+                this.getListToolbarConfig(),
+                this.getDatagridConfig(),
                 'contacts',
                 '#people-list-info'
             );

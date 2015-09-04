@@ -24,6 +24,7 @@ define(['services/sulumedia/media-manager',
         };
 
     return {
+
         layout: {
             navigation: {
                 collapsed: true

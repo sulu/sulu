@@ -82,15 +82,6 @@ define(function() {
         },
 
         /**
-         * Handles the components which are marked with a view property.
-         *
-         * @param {Object} view The view property of a component.
-         */
-        handleViewMarker = function(view) {
-            this.sandbox.emit('sulu.view.initialize', view);
-        },
-
-        /**
          * Handles layout marked components
          *
          * @param {Object|Boolean|Function} layout The layout object or true for default values.
@@ -212,9 +203,10 @@ define(function() {
          *        If not set no tabs will be displayed.
          * @param {String} [header.tabs.url] Url to fetch tabs related data from.
          * @param {Object} [header.tabs.data] tabs-data to pass to the header if no tabs-url is specified
+         * @param {Object} [header.tabs.componentOptions] options to pass to the husky-tab-component
          * @param {Object} [header.tabs.options] options that get passed to all tab-components
          * @param {String|Object} [header.tabs.container] the container to render the tabs-content in.
-         *        If not set the content gets insertet directly into the current component
+         *        If not set the content gets inserted directly into the current component
          * @param {Object} [header.toolbar] Object that contains configurations for the toolbar.
          *        If not set no toolbar will be displayed.
          * @param {Array} [header.toolbar.buttons] array of arguments to pass to sulu.buttons.get to recieve the toolbar buttons
@@ -295,7 +287,8 @@ define(function() {
                         tabsData: tabsData,
                         tabsContainer: (!!header.tabs && !!header.tabs.container) ? header.tabs.container : this.options.el,
                         tabsParentOption: this.options,
-                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {}
+                        tabsOption: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
+                        tabsComponentOptions: (!!header.tabs && !!header.tabs.componentOptions) ? header.tabs.componentOptions : {}
                     }
                 }]);
 
@@ -324,13 +317,10 @@ define(function() {
          * Executes handlers before the load-component-data-hook
          */
         executeBeforeDataHandler = function() {
-            if (!!this.view) {
-                handleViewMarker.call(this, this.view);
-
+            //TODO this.view is deprecated for resetting the layout. use 'layout: {}' instead
+            if (!!this.view && !this.layout) {
                 // if a view has no layout specified use the default one
-                if (!this.layout) {
-                    handleLayoutMarker.call(this, {});
-                }
+                handleLayoutMarker.call(this, {});
             }
             if (!!this.layout) {
                 handleLayoutMarker.call(this, this.layout);
@@ -341,9 +331,16 @@ define(function() {
          * Executes handlers after the load-component-data-hook
          */
         executeAfterDataHandler = function() {
+            var headerStarted = $.Deferred();
             if (!!this.header) {
                 handleHeaderMarker.call(this, this.header);
+                this.sandbox.once('sulu.header.initialized', function() {
+                    headerStarted.resolve();
+                }.bind(this));
+            } else {
+                headerStarted.resolve();
             }
+            return headerStarted;
         };
 
     return function(app) {
@@ -353,7 +350,8 @@ define(function() {
          */
         app.components.before('initialize', function() {
             //load view data before rendering tabs
-            var dataLoaded = this.sandbox.data.deferred();
+            var dataLoaded = $.Deferred(),
+                afterData = $.Deferred();
 
             executeBeforeDataHandler.call(this);
 
@@ -367,10 +365,12 @@ define(function() {
                 if (!!data) {
                     this.data = data;
                 }
-                executeAfterDataHandler.call(this);
+                executeAfterDataHandler.call(this).then(function() {
+                    afterData.resolve();
+                }.bind(this));
             }.bind(this));
 
-            return dataLoaded;
+            return $.when(dataLoaded, afterData);
         });
     };
 });

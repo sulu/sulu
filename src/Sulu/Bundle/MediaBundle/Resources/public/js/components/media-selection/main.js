@@ -23,6 +23,7 @@ define(function() {
             thumbnailSize: '50x50',
             resultKey: 'media',
             dataAttribute: 'media-selection',
+            actionIcon: 'fa-file-image-o',
             dataDefault: {
                 displayOption: 'top',
                 ids: []
