@@ -179,55 +179,55 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'name' => 'leftTop',
                                     'value' => true,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'top',
                                     'value' => false,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'rightTop',
                                     'value' => true,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'left',
                                     'value' => false,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'middle',
                                     'value' => false,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'right',
                                     'value' => false,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'leftBottom',
                                     'value' => true,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'bottom',
                                     'value' => false,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                                 [
                                     'name' => 'rightBottom',
                                     'value' => true,
                                     'type' => 'string',
-                                    'meta' => []
+                                    'meta' => [],
                                 ],
                             ],
                             'type' => 'collection',

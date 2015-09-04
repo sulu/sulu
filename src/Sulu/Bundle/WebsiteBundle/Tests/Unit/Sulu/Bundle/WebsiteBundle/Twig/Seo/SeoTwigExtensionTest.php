@@ -219,7 +219,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 [
                     'en' => '/url-en',
                     'de' => '/url-de',
-                    'de_at' => '/url-de-at'
+                    'de_at' => '/url-de-at',
                 ],
                 'de',
                 null,
