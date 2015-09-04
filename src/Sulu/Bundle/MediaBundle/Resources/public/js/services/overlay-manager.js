@@ -33,14 +33,13 @@ define(function() {
     OverlayManager.prototype = {
         /**
          * Start collection-create overlay
-         * @param sandbox parent sandbox for the overlay
          * @param parentCollection of the created collection
          */
-        startCreateCollectionOverlay: function(sandbox, parentCollection) {
+        startCreateCollectionOverlay: function(parentCollection) {
             var parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null,
                 $container = getOverlayContainer('create-collection-overlay');
 
-            sandbox.start([{
+            this.sandbox.start([{
                 name: 'collections/collection-create-overlay@sulumedia',
                 options: {
                     el: $container,
@@ -51,22 +50,21 @@ define(function() {
 
         /**
          * Start collection-select overlay for moving medias
-         * @param sandbox parent sandbox for the overlay
          * @param disableIds collectionIds which cannot get selected
          * @param locale to display collection titles
          */
-        startMoveMediaOverlay: function(sandbox, disableIds, locale) {
+        startMoveMediaOverlay: function(disableIds, locale) {
             if (!$.isArray(disableIds)) {
                 disableIds = [disableIds];
             }
             var $container = getOverlayContainer('select-collection-overlay');
 
-            sandbox.start([{
+            this.sandbox.start([{
                 name: 'collections/collection-select-overlay@sulumedia',
                 options: {
                     el: $container,
                     instanceName: 'move-media',
-                    title: sandbox.translate('sulu.media.move.overlay-title'),
+                    title: this.sandbox.translate('sulu.media.move.overlay-title'),
                     locale: locale,
                     disableIds: disableIds
                 }
@@ -75,22 +73,21 @@ define(function() {
 
         /**
          * Start collection-select overlay for moving collection
-         * @param sandbox parent sandbox for the overlay
          * @param disableIds collectionIds which cannot get selected
          * @param locale to display collection titles
          */
-        startMoveCollectionOverlay: function(sandbox, disableIds, locale) {
+        startMoveCollectionOverlay: function(disableIds, locale) {
             if (!$.isArray(disableIds)) {
                 disableIds = [disableIds];
             }
             var $container = getOverlayContainer('select-collection-overlay');
 
-            sandbox.start([{
+            this.sandbox.start([{
                 name: 'collections/collection-select-overlay@sulumedia',
                 options: {
                     el: $container,
                     instanceName: 'move-collection',
-                    title: sandbox.translate('sulu.collection.move.overlay-title'),
+                    title: this.sandbox.translate('sulu.collection.move.overlay-title'),
                     rootCollection: true,
                     disableIds: disableIds,
                     disabledChildren: true,
@@ -101,17 +98,16 @@ define(function() {
 
         /**
          * Start media-edit overlay to edit given mediaIds
-         * @param sandbox parent sandbox for the overlay
          * @param mediaIds medias to edit in overlay
          * @param locale medias are saved for given locale
          */
-        startEditMediaOverlay: function(sandbox, mediaIds, locale) {
+        startEditMediaOverlay: function(mediaIds, locale) {
             if (!$.isArray(mediaIds)) {
                 mediaIds = [mediaIds];
             }
             var $container = getOverlayContainer('edit-media-overlay');
 
-            sandbox.start([
+            this.sandbox.start([
                 {
                     name: 'collections/media-edit-overlay@sulumedia',
                     options: {
@@ -125,14 +121,13 @@ define(function() {
 
         /**
          * Start collection-edit overlay for given collectionId
-         * @param sandbox parent sandbox for the overlay
          * @param collectionId collection to edit
          * @param locale collection data is saved for the given locale
          */
-        startEditCollectionOverlay: function(sandbox, collectionId, locale) {
+        startEditCollectionOverlay: function(collectionId, locale) {
             var $container = getOverlayContainer('edit-collection-overlay');
 
-            sandbox.start([
+            this.sandbox.start([
                 {
                     name: 'collections/collection-edit-overlay@sulumedia',
                     options: {

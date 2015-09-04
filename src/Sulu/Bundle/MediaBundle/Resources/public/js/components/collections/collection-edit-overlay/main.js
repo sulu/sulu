@@ -8,8 +8,7 @@
  */
 
 define([
-    'services/sulumedia/collection-manager',
-    'services/sulumedia/overlay-manager'], function(CollectionManager, OverlayManager) {
+    'services/sulumedia/collection-manager'], function(CollectionManager) {
 
     'use strict';
 
@@ -17,7 +16,7 @@ define([
 
         defaults = {
             instanceName: '',
-            locale: app.sandbox.sulu.user.locale
+            locale: Husky.sulu.user.locale
         },
 
         constants = {
@@ -59,7 +58,7 @@ define([
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             if (!this.options.collectionId) {
-                this.sandbox.stop();
+                throw new Error('collection-id is not defined');
             }
 
             this.bindEvents();
@@ -102,7 +101,9 @@ define([
                         instanceName: 'edit-collection',
                         data: this.renderTemplate('/admin/media/template/collection/settings'),
                         okCallback: this.okCallback.bind(this),
-                        cancelCallback: this.sandbox.stop.bind(this),
+                        cancelCallback: function() {
+                            this.sandbox.stop();
+                        }.bind(this),
                         openOnStart: true,
                         removeOnClose: true,
                         closeIcon: '',
@@ -165,8 +166,9 @@ define([
          */
         languageChanged: function(locale) {
             this.saveCollection().then(function() {
-                this.sandbox.stop();
-                OverlayManager.startEditCollectionOverlay(this.sandbox._parent, this.options.collectionId, locale);
+                this.sandbox.stop(this.$find('*'));
+                this.options.locale = locale;
+                this.initialize();
             }.bind(this));
         },
 

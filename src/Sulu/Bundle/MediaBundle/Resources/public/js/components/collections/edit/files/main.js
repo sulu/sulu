@@ -56,7 +56,7 @@ define(['services/sulumedia/media-manager',
             // start edit if media was clicked in root-component
             if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
                 var editId = this.sandbox.sulu.viewStates['media-file-edit-id'];
-                OverlayManager.startEditMediaOverlay(this.sandbox, editId, UserSettingsManager.getMediaLocale());
+                OverlayManager.startEditMediaOverlay.call(this, editId, UserSettingsManager.getMediaLocale());
                 delete this.sandbox.sulu.viewStates['media-file-edit-id'];
             }
         },
@@ -159,8 +159,9 @@ define(['services/sulumedia/media-manager',
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
-                OverlayManager.
-                    startMoveMediaOverlay(this.sandbox, this.options.id, UserSettingsManager.getMediaLocale());
+                OverlayManager.startMoveMediaOverlay.call(
+                    this, this.options.id, UserSettingsManager.getMediaLocale()
+                );
             }.bind(this));
 
             // change datagrid view to table
@@ -287,7 +288,7 @@ define(['services/sulumedia/media-manager',
          */
         editMedia: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
-                OverlayManager.startEditMediaOverlay(this.sandbox, mediaIds, UserSettingsManager.getMediaLocale());
+                OverlayManager.startEditMediaOverlay.call(this, mediaIds, UserSettingsManager.getMediaLocale());
             }.bind(this));
         },
 

@@ -22,23 +22,23 @@ define(function() {
 
         UserSettingsManager.prototype = {
             getMediaLocale: function() {
-                return app.sandbox.sulu.getUserSetting(mediaLanguageKey) || this.sandbox.sulu.user.locale;
+                return Husky.sulu.getUserSetting(mediaLanguageKey) || Husky.sulu.user.locale;
             },
 
             setMediaLocale: function(locale) {
-                app.sandbox.sulu.saveUserSetting(mediaLanguageKey, locale);
+                Husky.sulu.saveUserSetting(mediaLanguageKey, locale);
             },
 
             getMediaListView: function() {
-                return app.sandbox.sulu.getUserSetting(mediaListViewKey) || 'decorators/masonry';
+                return Husky.sulu.getUserSetting(mediaListViewKey) || 'decorators/masonry';
             },
 
             setMediaListView: function(viewId) {
-                app.sandbox.sulu.saveUserSetting(mediaListViewKey, viewId);
+                Husky.sulu.saveUserSetting(mediaListViewKey, viewId);
             },
 
             setLastVisitedCollection: function(collectionId) {
-                app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+                Husky.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
             }
         };
 

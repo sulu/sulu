@@ -87,13 +87,15 @@ define(['services/sulumedia/collection-manager',
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.edit-collection', function() {
-                OverlayManager
-                    .startEditCollectionOverlay(this.sandbox, this.data.id, UserSettingsManager.getMediaLocale());
+                OverlayManager.startEditCollectionOverlay.call(
+                    this, this.data.id, UserSettingsManager.getMediaLocale()
+                );
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.move-collection', function() {
-                OverlayManager
-                    .startMoveCollectionOverlay(this.sandbox, this.data.id, UserSettingsManager.getMediaLocale());
+                OverlayManager.startMoveCollectionOverlay.call(
+                    this, this.data.id, UserSettingsManager.getMediaLocale()
+                );
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.delete-collection', function() {

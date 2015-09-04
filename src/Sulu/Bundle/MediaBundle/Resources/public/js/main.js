@@ -19,7 +19,7 @@ require.config({
         'services/sulumedia/media-manager': '../../sulumedia/js/services/media-manager',
         'services/sulumedia/user-settings-manager': '../../sulumedia/js/services/user-settings-manager',
 
-        "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection',
+        "type/media-selection": '../../sulumedia/js/validation/types/media-selection',
         'decorators/masonry': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
     }
 });
@@ -65,7 +65,7 @@ define(['services/sulumedia/media-router',
                 route: 'media/collections/edit::id/:content/edit::mediaId',
                 callback: function(id, content, mediaId) {
                     sandbox.sulu.viewStates['media-file-edit-id'] = parseInt(mediaId);
-                    sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + id + '/' + content);
+                    MediaRouter.toCollection(id);
                 }
             });
 
@@ -81,7 +81,7 @@ define(['services/sulumedia/media-router',
                 }.bind(this));
 
                 this.sandbox.on('husky.data-navigation.collections.add', function(item) {
-                    OverlayManager.startCreateCollectionOverlay(this.sandbox, item);
+                    OverlayManager.startCreateCollectionOverlay.call(this, item);
                 }.bind(this));
 
                 this.sandbox.on('sulu.media.collection-create.created', function(collection) {
