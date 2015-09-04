@@ -8210,7 +8210,7 @@ a.btn-black, a.btn-highlight {
   white-space: nowrap;
   display: inline-block;
   vertical-align: bottom;
-  width: 100%;
+  width: auto;
   /*group specific styles*/
   /** styles for the toolbar-items **/
   /**  dropdown styles **/
