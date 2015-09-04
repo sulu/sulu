@@ -3,6 +3,17 @@
     width: 100%;
 }
 
+.sulu-navigation-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 500;
+    max-height: 100px;
+    overflow: hidden;
+    @include transition(width 500ms);
+}
+
 .login #labels-container {
     z-index: 1000;
     position: absolute;
