@@ -13,7 +13,7 @@
  * @class MediaSelection
  * @constructor
  */
-define(['sulumedia/collection/collections', 'sulumedia/model/collection'], function(Collections, Collection) {
+define(['sulumedia/collections/collections', 'sulumedia/models/collection'], function(Collections, Collection) {
 
     'use strict';
 

@@ -9,7 +9,7 @@
 
 define([
     'mvc/collection',
-    'sulumedia/model/collection'
+    'sulumedia/models/collection'
 ], function(Collection, CollectionModel) {
 
     return Collection({

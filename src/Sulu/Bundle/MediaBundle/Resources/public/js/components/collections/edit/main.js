@@ -7,120 +7,147 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['services/sulumedia/collection-manager',
+    'services/sulumedia/user-settings-manager',
+    'services/sulumedia/media-router',
+    'services/sulumedia/overlay-manager'], function(CollectionManager, UserSettingsManager, MediaRouter, OverlayManager) {
 
     'use strict';
 
-    var namespace = 'sulu.media.collections.edit.',
-
-    /**
-     * emitted if the collection object has changed
-     * @event sulu.media.collections.edit.updated
-     * @param data {Object} the new collection object
-     */
-    UPDATED = function() {
-        return createEventName.call(this, 'updated');
-    },
-
-    /** returns normalized event names */
-    createEventName = function(postFix) {
-        return namespace + postFix;
-    };
+    var defaults = {};
 
     return {
-
         header: function() {
             return {
                 noBack: true,
+                title: this.data.title,
                 tabs: {
                     url: '/admin/content-navigations?alias=media'
                 },
                 toolbar: {
                     buttons: {
-                        save: {},
-                        settings: {
-                            options: {
-                                dropdownItems: [
-                                    {
-                                        id: 'collection-move',
-                                        title: this.sandbox.translate('sulu.collection.move'),
-                                        callback: this.startMoveCollectionOverlay.bind(this)
-                                    },
-                                    {
-                                        id: 'delete',
-                                        title: this.sandbox.translate('sulu.collections.delete-collection'),
-                                        callback: this.deleteCollection.bind(this)
-                                    }
-                                ]
-                            }
-                        }
+                        editCollection: {},
+                        moveCollection: {},
+                        deleteCollection: {}
                     },
                     languageChanger: {
                         url: '/admin/api/localizations',
                         resultKey: 'localizations',
                         titleAttribute: 'localization',
-                        preSelected: this.options.locale
+                        preSelected: UserSettingsManager.getMediaLocale()
                     }
                 }
             };
         },
 
-        initialize: function() {
-            this.bindCustomEvents();
-        },
-
-        bindCustomEvents: function() {
-            // move collection overlay
-            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
-            // change the editing language
-            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
+        /**
+         * loads the collection-data into this.data. is automatically executed before component initialization
+         * @returns {*}
+         */
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
+                promise.resolve(data);
+            });
+            return promise;
         },
 
         /**
-         * Deletes the current collection
+         * Initialize the component
+         */
+        initialize: function() {
+            // extend defaults with options
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            UserSettingsManager.setLastVisitedCollection(this.data.id);
+            this.updateDataNavigation();
+
+            this.bindCustomEvents();
+            this.bindOverlayEvents();
+            this.bindManagerEvents();
+        },
+
+        /**
+         * Set the data-navigation url accourding to the current collection
+         */
+        updateDataNavigation: function() {
+            var url = '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title';
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+        },
+
+        /**
+         * Bind header-toolbar related events
+         */
+        bindCustomEvents: function() {
+            // change the editing language
+            this.sandbox.on('sulu.header.language-changed', function(locale) {
+                UserSettingsManager.setMediaLocale(locale.id);
+                MediaRouter.toCollection(this.data.id);
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.edit-collection', function() {
+                OverlayManager.startEditCollectionOverlay.call(
+                    this, this.data.id, UserSettingsManager.getMediaLocale()
+                );
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.move-collection', function() {
+                OverlayManager.startMoveCollectionOverlay.call(
+                    this, this.data.id, UserSettingsManager.getMediaLocale()
+                );
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.delete-collection', function() {
+                this.deleteCollection();
+            }.bind(this));
+        },
+
+        /**
+         * Bind overlay related events
+         */
+        bindOverlayEvents: function() {
+            // chose collection to move collection in collection-select overlay
+            this.sandbox.on('sulu.collection-select.move-collection.selected', this.moveCollection.bind(this));
+        },
+
+        /**
+         * Bind data-management related events
+         */
+        bindManagerEvents: function() {
+            this.sandbox.on('sulu.medias.collection.saved', function(id, collection) {
+                if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
+                    this.data = collection;
+                    this.sandbox.emit('sulu.header.set-title', this.data.title);
+                    this.sandbox.emit('husky.data-navigation.collections.reload');
+                }
+            }.bind(this));
+
+            this.sandbox.on('sulu.medias.collection.deleted', function() {
+                var parentId = (!!this.data._embedded.parent) ? this.data._embedded.parent.id : null;
+                MediaRouter.toCollection(parentId);
+            }.bind(this));
+        },
+
+        /**
+         * Show confirmation dialog and delete collection if confirmed
          */
         deleteCollection: function() {
-            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.id);
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    CollectionManager.delete(this.data.id);
+                }
+            }.bind(this));
         },
 
         /**
-         * starts overlay for collection media
+         * Move current collection into given parent collection
+         * @param parentCollection
          */
-        startMoveCollectionOverlay: function() {
-            this.sandbox.emit('sulu.media.collection-select.move-collection.open');
-        },
-
-        /**
-         * Changes the editing language
-         * @param language {string} the new locale to edit the collection in
-         */
-        changeLanguage: function(language) {
-            this.sandbox.emit(
-                'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: language.id, breadcrumb: 'true'},
-                function(collection) {
-                    this.sandbox.emit(UPDATED.call(this), collection);
-                }.bind(this)
-            );
-            this.sandbox.emit('sulu.media.collections.set-locale', language.id);
-        },
-
-        /**
-         * emit events to move collection
-         * @param collection
-         */
-        moveCollection: function(collection) {
-            this.sandbox.emit('sulu.media.collections.move', this.options.id, collection,
-                function() {
-                    var url = '/admin/api/collections/' + this.options.id + '?depth=1&sortBy=title';
-
-                    this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-move-desc', 'labels.success');
-                }.bind(this)
-            );
-
-            this.sandbox.emit('sulu.media.collection-select.move-collection.restart');
-            this.sandbox.emit('sulu.media.collection-select.move-collection.close');
+        moveCollection: function(parentCollection) {
+            CollectionManager.move(this.data.id, parentCollection.id).then(function() {
+                MediaRouter.toCollection(this.data.id);
+            }.bind(this));
         }
     };
 });

@@ -15,7 +15,7 @@ define([
     'sulucontact/models/accountContact',
     'sulucontact/models/email',
     'sulucontact/models/emailType',
-    'sulumedia/model/media',
+    'sulumedia/models/media',
     'sulucategory/model/category',
     'sulucategory/model/category'
 ], function(util,

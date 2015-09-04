@@ -1,6 +1,6 @@
 @import '../../../../AdminBundle/Resources/public/scss/variables',
-        'modules/collection-list',
-        'modules/collection',
-        'modules/media-selection',
-        'modules/collection-select',
-        'modules/media-edit';
+  '../../../../AdminBundle/Resources/public/scss/mixins',
+  'modules/collection',
+  'modules/media-selection',
+  'modules/collection-select-overlay',
+  'modules/media-edit-overlay';

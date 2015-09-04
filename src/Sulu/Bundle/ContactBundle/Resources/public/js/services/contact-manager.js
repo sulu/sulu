@@ -14,7 +14,7 @@ define([
         'sulucontact/models/title',
         'sulucontact/models/position',
         'sulucategory/model/category',
-        'sulumedia/model/media',
+        'sulumedia/models/media',
     ], function(util,
                 mediator,
                 Contact,

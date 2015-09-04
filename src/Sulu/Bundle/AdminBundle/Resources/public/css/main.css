@@ -1,11 +1,11 @@
 /*----------------------------------------*/
-/* line 6, ../scss/modules/base.scss */
+/* line 3, ../scss/modules/base.scss */
 body {
   background-color: #f1f1f1;
 }
 
 /*----------------------------------------*/
-/* line 12, ../scss/modules/base.scss */
+/* line 9, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -13,35 +13,35 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 20, ../scss/modules/base.scss */
+/* line 17, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 27, ../scss/modules/base.scss */
+/* line 24, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 31, ../scss/modules/base.scss */
+/* line 28, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 38, ../scss/modules/base.scss */
+/* line 35, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
 
 /*----------------------------------------*/
-/* line 45, ../scss/modules/base.scss */
+/* line 42, ../scss/modules/base.scss */
 .list-toolbar {
   padding-bottom: 20px;
 }
 
-/* line 50, ../scss/modules/base.scss */
+/* line 47, ../scss/modules/base.scss */
 .initial-loader {
   width: 100px;
   height: 100px;
@@ -53,12 +53,12 @@ input, select {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 55, ../scss/modules/base.scss */
+/* line 52, ../scss/modules/base.scss */
 .initial-loader .bouncer {
   background: #ccc;
 }
 
-/* line 60, ../scss/modules/base.scss */
+/* line 57, ../scss/modules/base.scss */
 .highlight-section {
   width: 100%;
   margin-top: -40px;
@@ -71,14 +71,14 @@ input, select {
   content: ' ';
   display: block;
 }
-/* line 70, ../scss/modules/base.scss */
+/* line 67, ../scss/modules/base.scss */
 .highlight-section .image {
   float: left;
   width: 310px;
   height: 270px;
   overflow: hidden;
 }
-/* line 77, ../scss/modules/base.scss */
+/* line 74, ../scss/modules/base.scss */
 .highlight-section .content {
   width: calc(100% - 310px);
   float: left;
@@ -89,7 +89,7 @@ input, select {
   content: ' ';
   display: block;
 }
-/* line 82, ../scss/modules/base.scss */
+/* line 79, ../scss/modules/base.scss */
 .highlight-section .content:only-child {
   width: 100%;
 }
