@@ -1,9 +1,14 @@
 <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
     <h2 class="light">{{ property.getTitle(userLocale) }}</h2>
+
     <div class="grid">
         <div id="text-block-header-{{ id|raw }}" class="text-blocks-header">
-            <div id="collapse-text-blocks-{{ id|raw }}" tabindex="0" class="text-blocks-toggle-btn"><%= translate('sulu.content.collapse.blocks') %></div>
-            <div id="expand-text-blocks-{{ id|raw }}" tabindex="0" class="text-blocks-toggle-btn"><%= translate('sulu.content.expand.blocks') %></div>
+            <div id="collapse-text-blocks-{{ id|raw }}" tabindex="0" class="text-blocks-toggle-btn"><%=
+                translate('sulu.content.collapse.blocks') %>
+            </div>
+            <div id="expand-text-blocks-{{ id|raw }}" tabindex="0" class="text-blocks-toggle-btn"><%=
+                translate('sulu.content.expand.blocks') %>
+            </div>
             <div class="clear"></div>
         </div>
         <div class="grid-row small"

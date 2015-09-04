@@ -397,21 +397,21 @@ define(function() {
             // left space
             if (leftSpacing === false) {
                 this.sandbox.dom.addClass($column, constants.noLeftSpaceClass);
-            } else {
+            } else if (leftSpacing === true) {
                 this.sandbox.dom.removeClass($column, constants.noLeftSpaceClass);
             }
 
             // right space
             if (rightSpacing === false) {
                 this.sandbox.dom.addClass($column, constants.noRightSpaceClass);
-            } else {
+            } else if (rightSpacing === true) {
                 this.sandbox.dom.removeClass($column, constants.noRightSpaceClass);
             }
 
             // top space
             if (topSpacing === false) {
                 this.sandbox.dom.addClass($column, constants.noTopSpaceClass);
-            } else {
+            } else if (topSpacing === true) {
                 this.sandbox.dom.removeClass($column, constants.noTopSpaceClass);
             }
         },
@@ -419,10 +419,14 @@ define(function() {
         /**
          * Changes the width of content to fixed or to max
          * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
+         * @param reset {Boolean} iff true resets the fixed-small class
          */
-        changeWidth: function(width) {
+        changeWidth: function(width, reset) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
+            if (reset === true) {
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
+            }
             if (width === 'fixed') {
                 this.changeToFixedWidth(false);
             } else if (width === 'max') {
@@ -447,8 +451,6 @@ define(function() {
             }
             if (small === true) {
                 this.sandbox.dom.addClass($column, constants.smallFixedClass);
-            } else {
-                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
             }
         },
 
@@ -459,7 +461,6 @@ define(function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
-                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
                 this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
                 this.sandbox.dom.addClass($column, constants.maxWidthClass);
             }

@@ -4,6 +4,11 @@
 
 #content-form {
     @include clear-float;
+
+    .highlight-section .content {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
 }
 
 .sortable-placeholder {

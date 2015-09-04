@@ -31,6 +31,17 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
 
     return {
 
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    leftSpace: true,
+                    rightSpace: true
+                }
+            };
+        },
+
         initialize: function() {
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
             this.load();

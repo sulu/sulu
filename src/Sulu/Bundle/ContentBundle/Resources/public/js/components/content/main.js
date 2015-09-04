@@ -1015,6 +1015,10 @@ define([
                         url: navigationUrl
                     },
 
+                    title: function() {
+                        return this.data.title;
+                    }.bind(this),
+
                     toolbar: {
                         languageChanger: {
                             data: dropdownLocalizations,
@@ -1079,30 +1083,16 @@ define([
 
         layout: function() {
             if (this.options.display === 'column') {
-                return {
-                    content: {
-                        width: 'max',
-                        leftSpace: false,
-                        rightSpace: false,
-                        topSpace: false
-                    }
-                };
+                return {};
             } else {
-                var sidebar = {
-                    width: 'max'
-                };
-                if (!this.options.preview) {
-                    sidebar = false;
-                }
                 return {
                     navigation: {
                         collapsed: true
                     },
                     content: {
-                        width: 'fixed',
-                        shrinkable: !!this.options.preview
+                        shrinkable: (!!this.options.preview) ? true : false
                     },
-                    sidebar: sidebar
+                    sidebar: (!!this.options.preview) ? 'max' : false
                 };
             }
         }

@@ -22,6 +22,17 @@ define([], function() {
 
         templates: ['/admin/content/template/content/seo'],
 
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    rightSpace: true,
+                    leftSpace: true
+                }
+            };
+        },
+
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});

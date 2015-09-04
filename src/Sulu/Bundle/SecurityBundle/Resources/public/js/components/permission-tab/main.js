@@ -54,5 +54,5 @@ define([], function() {
             renderForm.call(this);
             bindCustomEvents.call(this);
         }
-    }
+    };
 });

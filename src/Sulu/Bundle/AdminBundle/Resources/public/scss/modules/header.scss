@@ -106,9 +106,8 @@
         padding-top: $headerHeight;
     }
     &.has-tabs + .wrapper {
-        padding-top: $headerHeight;
         .page::before {
-            height: $contentPaddingTop + $tabsHeight;
+            height: $tabsHeight;
         }
     }
 }
