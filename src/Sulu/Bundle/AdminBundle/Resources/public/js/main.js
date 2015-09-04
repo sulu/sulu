@@ -56,6 +56,10 @@ require.config({
     ]
 });
 
+define('underscore', function() {
+    return window._;
+});
+
 require(['husky', 'app-config'], function(Husky, AppConfig) {
 
     'use strict';
