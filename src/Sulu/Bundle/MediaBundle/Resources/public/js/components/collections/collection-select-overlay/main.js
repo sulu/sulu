@@ -11,20 +11,18 @@ define(function() {
 
     'use strict';
 
-    var defaults = {
-            instanceName: 'collection-select',
+    var namespace = 'sulu.collection-select.',
+
+        defaults = {
+            instanceName: '',
             title: '',
             rootCollection: false,
             disableIds: [],
-            disabledChildren: false
+            disabledChildren: false,
+            locale: Husky.sulu.user.locale
         },
 
         templates = {
-            toggler: [
-                '<div id="show-ghost-pages"></div>',
-                '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-            ].join(''),
-
             columnNavigation: function() {
                 return [
                     '<div id="child-column-navigation"></div>',
@@ -33,43 +31,38 @@ define(function() {
             }
         },
 
-        namespace = 'sulu.media.collection-select.',
-
-        /**
-         * Open overlay
-         * @event sulu.media.collection-select.open
-         */
-        OPEN = function() {
-            return createEventName.call(this, 'open');
+        constants = {
+            columnNavigationSelector: '#child-column-navigation',
+            columnNavigationContainerSelector: '#child-column-navigation .container',
         },
 
         /**
-         * Close overlay
-         * @event sulu.media.collection-select.close
-         */
-        CLOSE = function() {
-            return createEventName.call(this, 'close');
-        },
-
-        /**
-         * Restart overlay content
-         * @event sulu.media.collection-select.close
-         */
-        RESTART = function() {
-            return createEventName.call(this, 'restart');
-        },
-
-        /**
-         * Selected
-         * @event sulu.media.collection-select.selected
+         * raised when an collection is selected
+         * @event sulu.collection-select.selected
          */
         SELECTED = function() {
             return createEventName.call(this, 'selected');
         },
 
+        /**
+         * raised when the overlay get closed
+         * @event sulu.collection-select.closed
+         */
+        CLOSED = function() {
+            return createEventName.call(this, 'closed');
+        },
+
+        /**
+         * raised when component is initialized
+         * @event sulu.collection-select.closed
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix, eventNamespace) {
-            if(!eventNamespace){
+            if (!eventNamespace) {
                 eventNamespace = namespace;
             }
 
@@ -77,60 +70,42 @@ define(function() {
         };
 
     return {
-        $columnNavigationContainer: '#child-column-navigation',
-        $columnNavigation: '#child-column-navigation .container',
-
         /**
-         * Initializes the collections list
+         * Initializes the overlay component
          */
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.bindCustomEvents();
-            this.render();
+            this.openOverlay();
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
          * Binds custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on(OPEN.call(this), function() {
-                this.sandbox.emit(createEventName.call(this, 'open', 'husky.overlay.'));
-            }.bind(this));
-
-            this.sandbox.on(CLOSE.call(this), function() {
-                this.sandbox.emit(createEventName.call(this, 'close', 'husky.overlay.'));
-            }.bind(this));
-
-            this.sandbox.on(RESTART.call(this), function() {
-                this.sandbox.stop(this.$columnNavigation);
-
-                this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
-            }.bind(this));
-
-            // wait for overlay initialized to initialize overlay
+            // start column navigation when overlay is openend
             this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
-
-            // wait for column navigation edit click
-            this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
-                this.sandbox.emit(SELECTED.call(this), item);
-            }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on(createEventName.call(this, 'initialized', 'husky.column-navigation.'), function() {
                 this.sandbox.emit(createEventName.call(this, 'set-position', 'husky.overlay.'));
             }.bind(this));
+
+            // wait for item select in column-navigation
+            this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
+                this.sandbox.emit(SELECTED.call(this), item);
+                this.sandbox.stop();
+            }.bind(this));
         },
 
         /**
-         * Render component
+         * Start the overlay to select a collection
          */
-        render: function() {
-            this.renderOverlay();
-        },
-
-        renderOverlay: function() {
+        openOverlay: function() {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 buttons = [
                     {
@@ -146,15 +121,19 @@ define(function() {
                     options: {
                         cssClass: 'collection-select',
                         el: $element,
-                        removeOnClose: false,
-                        container: this.$el,
+                        openOnStart: true,
+                        removeOnClose: true,
                         instanceName: this.options.instanceName,
                         skin: 'wide',
+                        propagateEvents: false,
                         slides: [
                             {
                                 title: this.sandbox.translate('sulu.media.move.overlay-title'),
                                 data: templates.columnNavigation(),
-                                buttons: buttons
+                                buttons: buttons,
+                                cancelCallback: function() {
+                                    this.sandbox.stop();
+                                }.bind(this),
                             }
                         ]
                     }
@@ -163,13 +142,13 @@ define(function() {
         },
 
         /**
-         * initialize column navigation
+         * Start column navigation which displays the collections
          */
         startOverlayColumnNavigation: function() {
-            this.sandbox.dom.append(this.$columnNavigationContainer, '<div class="container"/>');
+            this.$find(constants.columnNavigationSelector).append($('<div class="container"/>'));
 
             var options = {
-                el: this.$columnNavigation,
+                el: constants.columnNavigationContainerSelector,
                 instanceName: this.options.instanceName,
                 actionIcon: 'fa-check-circle',
                 resultKey: 'collections',
@@ -191,7 +170,7 @@ define(function() {
                                 'title': this.sandbox.translate('navigation.media.collections'),
                                 'hasSub': true,
                                 '_links': {
-                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999'}
+                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale}
                                 },
                                 '_embedded': {'collections': []}
                             }
@@ -199,7 +178,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections?sortBy=title&limit=9999';
+                options.url = '/admin/api/collections?sortBy=title&limit=9999&locale' + this.options.locale;
             }
 
             this.sandbox.start(
@@ -210,6 +189,13 @@ define(function() {
                     }
                 ]
             );
+        },
+
+        /**
+         * Called when component gets destroyed
+         */
+        destroy: function() {
+            this.sandbox.emit(CLOSED.call(this));
         }
     };
 });
