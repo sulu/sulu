@@ -1,10 +1,17 @@
 #labels-container {
     z-index: 1000;
+    width: 100%;
+}
+
+.sulu-navigation-labels {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
+    z-index: 500;
+    max-height: 100px;
+    overflow: hidden;
+    @include transition(width 500ms);
 }
 
 .login #labels-container {
@@ -12,7 +19,5 @@
     position: absolute;
     top: 0;
     left: 50%;
-    margin-left: -200px;
-    width: 400px;
-    padding: 0;
+    width: 50%;
 }

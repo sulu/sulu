@@ -18,7 +18,11 @@ define([], function() {
 
     'use strict';
 
-    var eventNamespace = 'sulu.labels.',
+    var defaults = {
+        navigationLabelsSelector: '.sulu-navigation-labels'
+    },
+
+    eventNamespace = 'sulu.labels.',
 
     /**
      * error label event
@@ -84,12 +88,16 @@ define([], function() {
          * Initializes the component
          */
         initialize: function() {
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
             this.labelId = 0;
             this.labels = {};
             this.labels.SUCCESS = {};
+            this.labels.SUCCESS_ICON = {};
             this.labels.WARNING = {};
             this.labels.ERROR = {};
             this.labelsById = {};
+            this.$navigationLabels = $(this.options.navigationLabelsSelector);
             this.bindCustomEvents();
         },
 
@@ -98,15 +106,15 @@ define([], function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(SHOW_ERROR.call(this), function(description, title, id) {
-                this.showLabel('ERROR', description, title, id);
+                this.showLabel('ERROR', description, title, id, false);
             }.bind(this));
 
             this.sandbox.on(SHOW_WARNING.call(this), function(description, title, id) {
-                this.showLabel('WARNING', description, title, id);
+                this.showLabel('WARNING', description, title, id, false);
             }.bind(this));
 
             this.sandbox.on(SHOW_SUCCESS.call(this), function(description, title, id) {
-                this.showLabel('SUCCESS', description, title, id);
+                this.showLabel('SUCCESS_ICON', description, title, id, true);
             }.bind(this));
 
             this.sandbox.on(SHOW_LABEL.call(this), function(configs, id) {
@@ -121,6 +129,22 @@ define([], function() {
             this.sandbox.on(LABEL_REMOVE.call(this), function(id) {
                 this.removeLabelWithId(id);
             }.bind(this));
+
+            // if the navigation gets uncollapsed forcibly, the column stays the same size.
+            // Therfore the navigation labels container needs get the same size as the navigation
+            this.sandbox.on('husky.navigation.uncollapsed', function(width, forced) {
+                if (forced) {
+                    this.$navigationLabels.width(width);
+                }
+            }.bind(this));
+
+            this.sandbox.on('husky.navigation.collapsed', function() {
+                this.$navigationLabels.width('');
+            }.bind(this));
+
+            this.sandbox.on('husky.navigation.show', function() {
+                this.$navigationLabels.width('');
+            }.bind(this));
         },
 
         /**
@@ -132,10 +156,11 @@ define([], function() {
 
         /**
          * creates and returns containers for the labels. generates a unique id
+         * @oaram inNavigation {Boolean} iff true inserts the container in the navigation-column
          * @returns {*|HTMLElement}
          */
-        createLabelContainer: function(id) {
-            var container = this.sandbox.dom.createElement('<div/>'),
+        createLabelContainer: function(id, inNavigation) {
+            var $container = this.sandbox.dom.createElement('<div/>'),
                 uniqueId;
 
             if (typeof id !== 'undefined') {
@@ -147,11 +172,15 @@ define([], function() {
                 uniqueId = this.labelId;
             }
 
-            this.sandbox.dom.attr(container, 'id', 'sulu-labels-' + uniqueId);
-            this.sandbox.dom.attr(container, 'data-id', uniqueId);
-            this.sandbox.dom.append(this.$el, container);
+            this.sandbox.dom.attr($container, 'id', 'sulu-labels-' + uniqueId);
+            this.sandbox.dom.attr($container, 'data-id', uniqueId);
+            if (inNavigation) {
+                this.$navigationLabels.prepend($container);
+            } else {
+                this.sandbox.dom.prepend(this.$el, $container);
+            }
 
-            return container;
+            return $container;
         },
 
         /**
@@ -173,8 +202,9 @@ define([], function() {
          * @param description
          * @param title
          * @oaram id
+         * @oaram inNavigation
          */
-        showLabel: function(type, description, title, id) {
+        showLabel: function(type, description, title, id, inNavigation) {
             id = id || ++this.labelId;
             if (!!this.labels[type][description]) {
                 this.sandbox.emit('husky.label.' + this.labels[type][description] + '.refresh');
@@ -183,7 +213,7 @@ define([], function() {
                     type: type,
                     description: this.sandbox.translate(description),
                     title: this.sandbox.translate(title),
-                    el: this.createLabelContainer(id),
+                    el: this.createLabelContainer(id, inNavigation),
                     instanceName: id
                 });
                 this.labels[type][description] = id;
