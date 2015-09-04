@@ -35,7 +35,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectADataGridToAppear()
     {
-        $this->waitForSelectorAndAssert('.husky-datagrid .row');
+        $this->waitForSelectorAndAssert('.husky-datagrid');
     }
 
     /**
@@ -143,21 +143,21 @@ EOT;
     {
         $this->waitForText($text);
         $script = <<<EOT
-var f = function () {
-    var items = document.querySelectorAll("td span.cell-content");
+            var f = function () {
+                var items = document.querySelectorAll("td span.cell-content");
 
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].textContent == '%s') {
-            var elements = items[i].parentNode.parentNode.getElementsByClassName('fa-pencil');
-            for (var i = 0; i <= elements.length; i++) {
-                elements[i].click();
-                return;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].textContent == '%s') {
+                        var elements = items[i].parentNode.parentNode.getElementsByClassName('fa-pencil');
+                        for (var i = 0; i <= elements.length; i++) {
+                            elements[i].click();
+                            return;
+                        }
+                    }
+                };
             }
-        }
-    };
-}
 
-f();
+            f();
 EOT;
 
         $script = sprintf($script, $text);
