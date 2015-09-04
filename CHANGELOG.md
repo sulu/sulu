@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1550 [ContactBundle]   Added flat response option to accountContact collection in js 
     * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make it reusable by other bundles
     * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
                                           `[field.name => order]` 

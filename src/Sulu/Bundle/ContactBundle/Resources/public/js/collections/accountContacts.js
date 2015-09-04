@@ -17,6 +17,8 @@ define([
 
         model: Contact,
 
+        flatResponse: false,
+
         accountId: null,
 
         setAccountId: function (accountId) {
@@ -36,7 +38,9 @@ define([
         },
 
         url: function () {
-            return '/admin/api/accounts/' + this.accountId + '/contacts';
+            return '/admin/api/accounts/' + this.accountId
+                + '/contacts'
+                + '?flat=' + this.flatResponse;
         }
     });
 });

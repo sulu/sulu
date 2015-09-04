@@ -147,6 +147,7 @@ class SeoTwigExtension extends \Twig_Extension
      *
      * @param string $name The name of the meta tag
      * @param string $content The content of the meta tag
+     *
      * @return string The HTMl meta tag filled with the given values
      */
     private function renderMetaTag($name, $content)
