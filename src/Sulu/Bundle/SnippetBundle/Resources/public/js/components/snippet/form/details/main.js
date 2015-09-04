@@ -12,7 +12,12 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     return {
-        layout: {},
+        layout: {
+            content: {
+                leftSpace: false,
+                rightSpace: false
+            }
+        },
 
         initialize: function() {
             this.bindCustomEvents();

@@ -65,14 +65,6 @@ define(['config'], function(Config) {
                     return '<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>';
                 }
             });
-
-            // add form
-            sandbox.mvc.routes.push({
-                route: 'snippet/snippets/:language/add',
-                callback: function(language) {
-                    this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>');
-                }
-            });
         }
     };
 });
