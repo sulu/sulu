@@ -93,3 +93,19 @@
         }
     }
 }
+
+.smart-content-container.no-content {
+    .header {
+        .text {
+            display: none;
+        }
+    }
+}
+
+.smart-content-container.is-loading {
+    .header {
+        .text {
+            display: none;
+        }
+    }
+}

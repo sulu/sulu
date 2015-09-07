@@ -6,11 +6,6 @@
     height: 100%;
     background: $white;
     overflow: auto;
-    border-left: 1px solid $backgroundColor;
-
-    &.dark-border {
-      border-left: 1px solid #666;
-    }
 
     .sidebar-loader {
         position: relative;
@@ -35,8 +30,8 @@
         width: 30px;
         height: 20px;
         cursor: pointer;
-        color: #fff;
-        background: #52b6ca;
+        color: $white;
+        background: $blue;
         text-align: center;
         border-radius: 2px;
         margin-left: 10px;
@@ -62,7 +57,7 @@
     hr {
         border: 0;
         height: 1px;
-        background: #ddd;
+        background: $grayLighterer;
     }
 
 }

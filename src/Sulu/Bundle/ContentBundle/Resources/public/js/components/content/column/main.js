@@ -67,11 +67,6 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
         },
 
         templates = {
-            toggler: [
-                '<div id="show-ghost-pages"></div>',
-                '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-            ].join(''),
-
             columnNavigation: function() {
                 return [
                     '<div id="child-column-navigation"/>',
@@ -89,10 +84,13 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
 
     return {
 
-        view: true,
-
         layout: {
-            changeNothing: true
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false,
+                topSpace: false
+            }
         },
 
         initialize: function() {
@@ -158,13 +156,13 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                 this.localizations = localizations;
             }, this);
 
-            this.sandbox.on('husky.toggler.show-ghost-pages.changed', function(checked) {
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', function(checked) {
                 this.showGhostPages = checked;
                 this.sandbox.sulu.saveUserSetting(SHOW_GHOST_PAGES_KEY, this.showGhostPages);
                 this.startColumnNavigation();
             }, this);
 
-            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem, columnItems) {
+            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem) {
                 if (dropdownItem.id === MOVE_BUTTON_ID) {
                     this.moveSelected(selectedItem);
                 } else if (dropdownItem.id === COPY_BUTTON_ID) {
@@ -570,31 +568,37 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
-                this.addToggler();
-
                 // start column-navigation
                 this.startColumnNavigation();
             }.bind(this));
         },
 
-        /**
-         * Generates the toggler and adds it to the header
-         */
-        addToggler: function() {
-            this.sandbox.emit('sulu.header.set-bottom-content', this.sandbox.util.template(templates.toggler)({
-                label: this.sandbox.translate('content.contents.show-ghost-pages')
-            }));
+        openGhost: function(item) {
+            this.startOverlay(
+                'content.contents.settings.copy-locale.title',
+                templates.openGhost.call(this), true, 'copy-locale-overlay',
+                function() {
+                    var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
+                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues'),
+                        dest = this.options.language;
 
-            this.sandbox.start([
-                {
-                    name: 'toggler@husky',
-                    options: {
-                        el: '#show-ghost-pages',
-                        checked: this.showGhostPages,
-                        outline: true
+                    if (!!copy) {
+                        if (!src || src.length === 0) {
+                            return false;
+                        }
+
+                        this.sandbox.emit('sulu.content.contents.copy-locale', item.id, src[0], [dest], function() {
+                            this.sandbox.emit('sulu.content.contents.load', item);
+                        }.bind(this));
+                    } else {
+                        this.sandbox.emit('sulu.content.contents.load', item);
                     }
-                }
-            ]);
+                }.bind(this)
+            );
+
+            this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
+                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true);
+            }.bind(this));
         }
     };
 });

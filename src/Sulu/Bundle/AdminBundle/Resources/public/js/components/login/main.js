@@ -104,7 +104,7 @@ define([], function() {
                 '       <span class="navigator ' + constants.websiteSwitchClass + '"><%= backWebsiteMessage %></span>',
                 '   </div>',
                 '   <div class="' + constants.successOverlayClass + '">',
-                '       <span class="fa-check success-icon"></span>', //testing
+                '       <div class="success-icon"></div>',
                 '   </div>',
                 '</div>'].join(''),
 

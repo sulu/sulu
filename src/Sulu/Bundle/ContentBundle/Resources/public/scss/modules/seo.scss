@@ -1,5 +1,5 @@
 .seo-excerpt {
-    background: #fff;
+    background: $white;
     width: 440px;
     position: relative;
     margin: 0 auto;
@@ -16,12 +16,12 @@
     }
     .description {
         font-size: 14px;
-        color: #000;
+        color: $black;
         line-height: 16px;
     }
 }
 
 // FXIME: general warning class?
 .seo-warning {
-    color: #EA524E;
+    color: $red;
 }

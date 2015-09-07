@@ -1,32 +1,15 @@
-/* line 6, ../scss/modules/collection-list.scss */
-#collections-list-container .toggle-all {
-  display: inline-block;
-  cursor: pointer;
-  font-size: 12px;
-}
-/* line 10, ../scss/modules/collection-list.scss */
-#collections-list-container .toggle-all .icon {
-  font-size: 14px;
-  color: #3E3E3E;
-  margin-right: 5px;
-}
-
+/*----------------------------------------*/
 /* line 1, ../scss/modules/collection.scss */
-.datagrid-container {
-  margin-top: 20px;
-}
-
-/* line 5, ../scss/modules/collection.scss */
 .list-toolbar-container {
   margin-top: 20px;
 }
 
-/* line 9, ../scss/modules/collection.scss */
+/* line 5, ../scss/modules/collection.scss */
 #collections-root.no-content {
   text-align: center;
   height: 210px;
 }
-/* line 13, ../scss/modules/collection.scss */
+/* line 9, ../scss/modules/collection.scss */
 #collections-root.no-content .icon {
   display: block;
   left: 50%;
@@ -34,12 +17,95 @@
   font-size: 125px;
   color: #e4e4e4;
 }
-/* line 20, ../scss/modules/collection.scss */
+/* line 16, ../scss/modules/collection.scss */
 #collections-root.no-content .text {
   font-weight: bold;
   color: #e4e4e4;
   font-size: 24px;
   margin-top: 20px;
+}
+
+/* line 25, ../scss/modules/collection.scss */
+.dropzone-container .husky-dropzone {
+  display: none;
+}
+/* line 30, ../scss/modules/collection.scss */
+.dropzone-container .husky-overlay-container .husky-dropzone {
+  display: block;
+}
+
+/* line 37, ../scss/modules/collection.scss */
+.masonry-container .empty-list {
+  background: none;
+}
+/* line 41, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid {
+  position: relative;
+  text-align: center;
+}
+/* line 45, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item {
+  width: 190px;
+  background-color: #fff;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 1;
+  -moz-transition: opacity 100ms, top 100ms, left 100ms;
+  -o-transition: opacity 100ms, top 100ms, left 100ms;
+  -webkit-transition: opacity 100ms, top 100ms, left 100ms;
+  transition: opacity 100ms, top 100ms, left 100ms;
+}
+/* line 53, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item.loading {
+  opacity: 0;
+}
+/* line 57, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-head {
+  background-color: #ddd;
+  width: 100%;
+}
+/* line 61, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-head .head-icon {
+  color: white;
+  font-size: 70px;
+  margin: 30px;
+}
+/* line 67, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-head .head-image {
+  vertical-align: middle;
+}
+/* line 72, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-info {
+  width: 100%;
+  height: 45px;
+  margin-top: 10px;
+}
+/* line 77, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-info span.description {
+  font-size: 12px;
+  color: #999;
+}
+/* line 83, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-footer {
+  width: 100%;
+  height: 15px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+/* line 89, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-checkbox {
+  float: left;
+}
+/* line 93, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-download {
+  position: relative;
+  top: 2px;
+  font-size: 17px;
+  float: right;
+}
+/* line 101, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .action-navigator, .masonry-container #masonry-grid .masonry-item .download-navigator {
+  cursor: pointer;
 }
 
 /* line 5, ../scss/modules/media-selection.scss */
@@ -144,7 +210,7 @@
 /* line 99, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
-  height: calc(100% - 40px);
+  height: calc(100% - 55px);
 }
 
 /* line 104, ../scss/modules/media-selection.scss */
@@ -218,19 +284,21 @@
 /* line 169, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   color: #999;
+  padding-bottom: 10px;
 }
 
-/* line 173, ../scss/modules/media-selection.scss */
+/* line 174, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+  padding-bottom: 20px;
 }
 
-/* line 177, ../scss/modules/media-selection.scss */
+/* line 179, ../scss/modules/media-selection.scss */
 .media-selection-overlay-header {
   white-space: nowrap;
 }
 
-/* line 181, ../scss/modules/media-selection.scss */
+/* line 183, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;
@@ -240,34 +308,34 @@
   text-align: center;
 }
 
-/* line 6, ../scss/modules/collection-select.scss */
+/* line 6, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-header {
   margin-bottom: 0px;
 }
-/* line 10, ../scss/modules/collection-select.scss */
+/* line 10, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-content {
   margin-right: 0px;
   margin-bottom: 1px;
   margin-left: 0px;
 }
-/* line 16, ../scss/modules/collection-select.scss */
+/* line 16, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-footer {
   margin-top: -2px;
 }
 
-/* line 1, ../scss/modules/media-edit.scss */
+/* line 1, ../scss/modules/media-edit-overlay.scss */
 .media-edit-loader {
   margin: 50px 0;
 }
 
-/* line 5, ../scss/modules/media-edit.scss */
+/* line 5, ../scss/modules/media-edit-overlay.scss */
 .media-edit-versions-links {
   margin: 20px 0 0;
   border-top: 2px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
 
-/* line 11, ../scss/modules/media-edit.scss */
+/* line 11, ../scss/modules/media-edit-overlay.scss */
 .media-edit-versions-link {
   color: black;
   display: block;
@@ -276,26 +344,37 @@
   text-decoration: none;
 }
 
-/* line 20, ../scss/modules/media-edit.scss */
+/* line 20, ../scss/modules/media-edit-overlay.scss */
 .active .media-edit-versions-title {
   font-weight: bold;
 }
 
-/* line 25, ../scss/modules/media-edit.scss */
+/* line 25, ../scss/modules/media-edit-overlay.scss */
 .media-edit-versions-created {
   float: right;
-  color: #999999;
+  color: #999;
 }
 
-/* line 30, ../scss/modules/media-edit.scss */
+/* line 30, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image {
   background-position: center center;
   background-repeat: no-repeat;
   width: 179px;
   height: 179px;
+  position: relative;
+}
+/* line 37, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-image #file-version-change {
+  width: 100%;
+  height: 100%;
+}
+/* line 41, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-image #file-version-change .dropzone-container {
+  width: 150px;
+  height: 150px;
 }
 
-/* line 38, ../scss/modules/media-edit.scss */
+/* line 49, ../scss/modules/media-edit-overlay.scss */
 .multi-edit .language-changer {
   right: 30px;
 }

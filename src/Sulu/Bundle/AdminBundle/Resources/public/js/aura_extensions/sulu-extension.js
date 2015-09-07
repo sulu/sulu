@@ -260,7 +260,7 @@
                  * @param order
                  */
                 insertOrderParamsInUrl = function(url, order) {
-                    if (!!order) {
+                    if (!!order && !!order.length) {
                         var idxBy = url.indexOf('sortBy'),
                             idxOrder = url.indexOf('sortOrder'),
                             divider = '&';
@@ -399,7 +399,6 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false,
                                 context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
@@ -453,7 +452,7 @@
                         ]);
 
                         if(!!gridOptions.instanceName) {
-                            datagridEventNamespace += gridOptions.instanceName + '.'
+                            datagridEventNamespace += gridOptions.instanceName + '.';
                         }
 
                         // save page size when changed

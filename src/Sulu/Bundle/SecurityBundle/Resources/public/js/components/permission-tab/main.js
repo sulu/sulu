@@ -32,7 +32,7 @@ define([], function() {
         },
 
         save = function(permissionData) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.sandbox.util.ajax(
                 '/admin/api/permissions',
@@ -43,7 +43,7 @@ define([], function() {
                         this.sandbox.emit('sulu.permission-tab.saved', permissionData);
                     }.bind(this),
                     error: function() {
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
+                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                     }.bind(this)
                 }
             );
@@ -54,5 +54,5 @@ define([], function() {
             renderForm.call(this);
             bindCustomEvents.call(this);
         }
-    }
+    };
 });

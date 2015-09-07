@@ -163,6 +163,10 @@
                         }
                     }
 
+                    .form-element {
+                        border-color: $white;
+                    }
+
                     &.content-loading {
                         .box-frame-footer {
                             .btn {
@@ -205,9 +209,12 @@
             @include transition(opacity 300ms);
 
             .success-icon {
-                @include centerBlock;
-                font-size: 200px;
-                color: $white;
+                width: 200px;
+                height: 200px;
+                @include centerFixedSizeBlock(200px, 200px);
+
+                background: url('../img/login-success.svg') no-repeat center center;
+                @include background-size(contain);
             }
         }
 
@@ -233,11 +240,6 @@
             left: 50%;
         }
     }
-}
-
-.login-label-container {
-    // center labels in content-container
-    left: 75% !important;
 }
 
 @media screen and (max-width: 800px) , screen and (orientation: portrait) {

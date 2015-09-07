@@ -31,7 +31,7 @@
     height: 800px;
     min-height: 400px;
     margin: 0;
-    background-color: #f1f1f1;
+    background-color: $baseBackgroundColor;
   }
 
   .overlay-footer {
@@ -98,7 +98,7 @@
 
 .media-selection-overlay-content-area {
   overflow: auto;
-  height: calc(100% - 40px);
+  height: calc(100% - 55px);
 }
 
 .media-selection-overlay-close {
@@ -110,18 +110,18 @@
 }
 
 .media-selection-overlay-add {
-    .heading {
-        width: 100%;
-        border-bottom: 2px $grayLighter solid;
-    }
-    h3 {
-      font-size: 16px;
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-    .overlay-loader {
-      margin: 20px 0;
-    }
+  .heading {
+    width: 100%;
+    border-bottom: 2px $grayLighter solid;
+  }
+  h3 {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .overlay-loader {
+    margin: 20px 0;
+  }
 }
 
 .media-selection-overlay-dropzone-container {
@@ -167,11 +167,13 @@
 }
 
 .media-selection-overlay-content-title {
-  color: #999;
+  color: $grayLight;
+  padding-bottom: 10px;
 }
 
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
+  padding-bottom: 20px;
 }
 
 .media-selection-overlay-header {

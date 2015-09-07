@@ -1,11 +1,17 @@
 <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
+    <h2 class="light">{{ property.getTitle(userLocale) }}</h2>
+
     <div class="grid">
         <div id="text-block-header-{{ id|raw }}" class="text-blocks-header">
-            <div id="sort-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.sort.blocks') %></div>
-            <div id="edit-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right hidden"><%= translate('sulu.content.edit.blocks') %></div>
+            <div id="collapse-text-blocks-{{ id|raw }}" tabindex="0" class="text-blocks-toggle-btn"><%=
+                translate('sulu.content.collapse.blocks') %>
+            </div>
+            <div id="expand-text-blocks-{{ id|raw }}" tabindex="0" class="text-blocks-toggle-btn"><%=
+                translate('sulu.content.expand.blocks') %>
+            </div>
             <div class="clear"></div>
         </div>
-        <div class="grid-row"
+        <div class="grid-row small"
              id="{{ id|raw }}"
              data-form="true"
              data-type="block"
@@ -20,23 +26,29 @@
                 <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
                     <div class="text-block {{ type.name }}-element {{ property.name }}-element"
                          data-mapper-property-tpl="{{ type.name }}">
-                        <div class="show-in-sortmode move"></div>
+                        <div class="move"></div>
                         <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
+
+                        <div class="collapsed-container empty">
+                            {% if property.types|length > 1 %}
+                                <div class="type">{{ type.getTitle(userLocale) }}</div>
+                            {% endif %}
+                            <div class="title"></div>
+                            <div class="image"></div>
+                            <div class="text hidden"></div>
+                        </div>
 
                         <div class="container grid pos-rel">
                             <div class="text-block-controls pull-right">
+                                <div class="fa-eye-slash options-collapse"></div>
                                 <div data-mapper-remove="{{ property.name }}"
-                                     class="fa-trash-o options-remove hide-in-sortmode pull-right m-left-20 mapper-remove-{{ type.name }}"></div>
-
-                                <div class="options-change hide-in-sortmode pull-right" id="change<~=index~>">
-                                    <span data-mapper-change-type="{{ property.name }}"
-                                          class="fa-gear drop-down-trigger"></span>
-                                            <span class="dropdown-toggle drop-down-trigger"></span>
-                                </div>
-
+                                     class="fa-times options-remove mapper-remove-{{ type.name }}"></div>
                                 <div class="clear"></div>
                             </div>
-                            <div class="block block-{{ property.name }} grid-row">
+                            <div class="block block-{{ property.name }} grid-row small">
+                                <div class="grid-col-3 m-top-10 floating form-group hidden">
+                                    <div class="type-select"></div>
+                                </div>
                                 {% for child in type.childProperties %}
 
                                     {# get Type for property #}

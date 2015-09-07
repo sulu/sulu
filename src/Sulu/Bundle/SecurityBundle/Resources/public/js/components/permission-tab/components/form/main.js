@@ -122,6 +122,8 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                     this.sandbox.dom.removeClass($matrix, 'loading');
                 }.bind(this)
             );
+
+            this.sandbox.emit('sulu.preview.initialize');
         },
 
         changePermission = function(data) {
@@ -167,9 +169,18 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
     return {
         name: 'Sulu Security Object Permission Tab',
 
-        view: true,
-
         templates: ['/admin/security/template/permission-tab/form'],
+
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    leftSpace: true,
+                    rightSpace: true
+                }
+            };
+        },
 
         initialize: function() {
             permissionData.id = this.options.id;
@@ -181,5 +192,5 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
             bindCustomEvents.call(this);
             listenForChange.call(this);
         }
-    }
+    };
 });

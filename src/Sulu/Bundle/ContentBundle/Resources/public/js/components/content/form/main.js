@@ -13,10 +13,19 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
     return {
 
-        view: true,
+        tabOptions: {
+            noTitle: true
+        },
 
-        layout: {
-            changeNothing: true
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: (!!this.options.preview) ? 'fixed' : 'max',
+                    rightSpace: false,
+                    leftSpace: false
+                }
+            };
         },
 
         template: '',
@@ -43,8 +52,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }, this);
 
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
         },
 
@@ -434,7 +443,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.animateTemplateDropdown = false;
         },
 
-        submit: function() {
+        submit: function(action) {
             var data;
 
             if (this.sandbox.form.validate(this.formId)) {
@@ -445,7 +454,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data, action);
             }
         }
     };

@@ -27,10 +27,6 @@ define(['config'], function(Config) {
             var sandbox = app.sandbox;
 
             Config.set('suluresource.filters.type.tags', {
-                breadCrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'tag.tags.title', link: 'settings/tags'}
-                ],
                 routeToList: 'settings/tags'
             });
 
@@ -39,7 +35,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/tags',
                 callback: function() {
-                    this.html('<div data-aura-component="tags@sulutag" data-aura-display="list"/>');
+                    return '<div data-aura-component="tags@sulutag" data-aura-display="list"/>';
                 }
             });
         }

@@ -39,11 +39,11 @@ Feature: Smart content content type
         And I expect the "husky.column-navigation.smart-contentsmart_content.loaded" event
         And I double click the column navigation item "Articles"
         And I wait a second for the "husky.overlay.smart-content.smart_content.slide-left" event
-        And I click the tick button
+        And I click the "Save" button
         And I expect the "husky.smartfcontent.smart_content.data-retrieved" event
         Then I should see "Article 1"
         And I should see "Article 2"
         And I should see "Article 3"
-        And I should see "3 of 3 visible"
         And I click the save icon
-        # TODO: Content changed not triggered: And I expect a success notification to appear
+        Then I expect a success notification to appear
+

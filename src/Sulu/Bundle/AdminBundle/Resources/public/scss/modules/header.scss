@@ -1,137 +1,129 @@
 .sulu-header {
-    background-color: $blue;
     width: 100%;
-
+    height: $headerHeight;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 90;
+    z-index: 120;
 
-    .inner {
+    .blue-row {
+        background: $blue;
+        height: $headerHeight;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 900;
+    }
+    .toolbar-row {
+        display: table;
+        table-layout: fixed;
+        height: $headerHeight;
+        width: 100%;
+        position: relative;
+        left: -1px;
+        z-index: 1000;
+
+        .left-container {
+            display: table-cell;
+            width: 50px;
+            background: $blue;
+            vertical-align: top;
+            position: relative;
+            z-index: 500;
+            @include single-transition(width, $shrinkAnimationDuration);
+        }
+        .toolbar-container {
+            display: table-cell;
+            vertical-align: top;
+            width: 100%;
+            position: relative;
+            z-index: 100;
+        }
+        .right-container {
+            display: table-cell;
+            width: 108px;
+            height: $headerHeight;
+            vertical-align: top;
+            position: relative;
+            z-index: 500;
+            background: $blue;
+        }
+        .back {
+            color: $white;
+            text-align: center;
+            line-height: $headerHeight;
+            cursor: pointer;
+        }
+        .language-changer {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 10px;
+            line-height: 30px;
+            padding-left: 8px;
+            background: $white;
+            border-radius: $borderRadius;
+            font-size: $smallFontSize;
+            position: relative;
+            cursor: pointer;
+            .dropdown-toggle {
+                display: inline-block;
+                vertical-align: top;
+                padding: 0 8px 0 10px;
+            }
+            .dropdown-menu {
+                right: 0;
+                left: auto;
+                margin-top: 0;
+                display: inline-block;
+                min-width: 160px;
+                width: auto;
+            }
+        }
+    }
+    .tabs-row {
         position: relative;
         top: 0px;
-        left: 0px;
-        margin: 0 50px;
-        height: $headerHeight;
-        @include single-transition(margin, $shrinkAnimationDuration);
-    }
+        z-index: 500;
+        @include single-transition(top, $tabsHideAnimationDuration, $tabsHideAnimationDelay, ease);
 
-    .headline {
-        position: absolute;
-        top: 45px;
-        left: 0;
-
-        &::after {
-            display: table;
-            content: "";
-            clear: both;
-        }
-
-        .back {
-            display: block;
-            padding: 10px;
-            position: absolute;
-            top: 12px;
-            left: -30px;
-            font-size: 16px;
-            color: $white;
-            cursor: pointer;
-            opacity: 1;
-            @include single-transition(opacity, $transitionDuration);
-        }
-        .h1 {
-            float: left;
-        }
-        .title-color {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            float: left;
-            margin-top: 19px;
-            margin-right: 10px;
-            &.color-set {
-                display: block;
-            }
-        }
-    }
-
-    .bottom-row {
-        position: absolute;
-        bottom: 10px;
-        left: 0;
-        width: 100%;
-
-        &::after {
-            content: ".";
-            display: block;
-            clear: both;
-            visibility: hidden;
-            line-height: 0;
-            height: 0;
-        }
-
-        .bottom-content {
-            float: left;
-            line-height: 29px;
-            * {
-                color: $white;
-            }
-        }
-    }
-
-    .tabs {
-        height: $tabsHeight;
-        .tabs-container {
+        .tabs {
+            padding: 0 50px;
+            overflow: auto;
+            background: $white;
             @include single-transition(padding, $shrinkAnimationDuration);
         }
     }
 
-    .info {
-        position: absolute;
-        top: 10px;
-        left: 0px;
+    &.tabs-hidden {
+        .tabs-row {
+            top: (-1) * $tabsHeight;
+        }
     }
 
     // add top space to the content-container beneath the header
-    & + .page {
-        margin-top: $headerHeight;
-        padding-bottom: $headerHeight
+    & + .wrapper {
+        padding-top: $headerHeight;
     }
-    &.has-tabs + .page {
-        margin-top: $headerHeight + $tabsHeight;
-        padding-bottom: $headerHeight + $tabsHeight;
-    }
-    &.invisible + .page {
-        margin-top: 0;
-        padding-bottom: 0;
+    &.has-tabs + .wrapper {
+        .page::before {
+            height: $tabsHeight;
+        }
     }
 }
-
-.sulu-header-background {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    background: $blue;
-    height: $headerHeight;
-    width: 100%;
-    z-index: -1;
-
-    &.has-tabs {
-        height: $headerHeight + $tabsHeight;
-        border-bottom: $tabsHeight solid $white;
+.fixed {
+    .toolbar-row {
+        max-width: $contentFixedWidth + 100px;
     }
 }
-
 .small-fixed {
-    .sulu-header .inner {
-        margin-left: $contentPaddingLeftSmall;
-        margin-right: $contentPaddingRightSmall;
-    }
-    .tabs-container {
+    .tabs-row .tabs {
         padding-left: $contentPaddingLeftSmall;
     }
-    .sulu-header .back {
-        opacity: 0;
+    .sulu-header .left-container {
+        width: 0px;
+        * {
+            display: none;
+        }
     }
 }

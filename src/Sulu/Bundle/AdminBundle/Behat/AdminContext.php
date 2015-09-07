@@ -26,7 +26,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectASuccessNotificationToAppear()
     {
-        $this->waitForSelectorAndAssert('.husky-label-success', BaseContext::LONG_WAIT_TIME);
+        $this->waitForSelectorAndAssert('.husky-label-success-icon', BaseContext::LONG_WAIT_TIME);
     }
 
     /**
@@ -35,7 +35,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectADataGridToAppear()
     {
-        $this->waitForSelectorAndAssert('.husky-datagrid .row');
+        $this->waitForSelectorAndAssert('.husky-datagrid');
     }
 
     /**
@@ -112,6 +112,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Then I click the action icon
+     */
+    public function iClickOnTheActionIcon()
+    {
+        $this->clickSelector('.action');
+    }
+
+    /**
      * @Given I click the row containing ":text"
      */
     public function iClickOnTheRowContaining($text)
@@ -143,21 +151,21 @@ EOT;
     {
         $this->waitForText($text);
         $script = <<<EOT
-var f = function () {
-    var items = document.querySelectorAll("td span.cell-content");
+            var f = function () {
+                var items = document.querySelectorAll("td span.cell-content");
 
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].textContent == '%s') {
-            var elements = items[i].parentNode.parentNode.getElementsByClassName('fa-pencil');
-            for (var i = 0; i <= elements.length; i++) {
-                elements[i].click();
-                return;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].textContent == '%s') {
+                        var elements = items[i].parentNode.parentNode.getElementsByClassName('fa-pencil');
+                        for (var i = 0; i <= elements.length; i++) {
+                            elements[i].click();
+                            return;
+                        }
+                    }
+                };
             }
-        }
-    };
-}
 
-f();
+            f();
 EOT;
 
         $script = sprintf($script, $text);
@@ -177,7 +185,7 @@ EOT;
      */
     public function iClickDelete()
     {
-        $script = "$(\"li[data-id='delete-button']\")";
+        $script = "$(\"li[data-id='delete']\")";
 
         $this->waitForAuraEvents(
             [
@@ -284,6 +292,14 @@ EOT;
     public function iClickTheColumnNavigationItem($itemTitle)
     {
         $this->clickByTitle('.column-navigation .item-text', $itemTitle);
+    }
+
+    /**
+     * @Then I click the toolbar button :itemTitle
+     */
+    public function iClickTheToolbarButton($itemTitle)
+    {
+        $this->clickByTitle('li.toolbar-item', $itemTitle);
     }
 
     /**

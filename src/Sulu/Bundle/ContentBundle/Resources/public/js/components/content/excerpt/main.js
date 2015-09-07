@@ -12,10 +12,16 @@ define([], function() {
     'use strict';
 
     return {
-        view: true,
 
-        layout: {
-            changeNothing: true
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    rightSpace: false,
+                    leftSpace: false
+                }
+            };
         },
 
         initialize: function() {

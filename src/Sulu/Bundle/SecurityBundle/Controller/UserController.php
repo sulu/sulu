@@ -45,6 +45,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     protected $fieldDescriptors;
 
     // TODO: move field descriptors to a manager
+
     protected function getFieldDescriptors()
     {
         if (empty($this->fieldDescriptors)) {
@@ -255,6 +256,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
+
     private function checkArguments(Request $request)
     {
         if ($request->get('username') == null) {

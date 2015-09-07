@@ -149,6 +149,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
             $this->assertTrue(UUIDHelper::isUuid($uuid));
         }
     }
+
     public function testRemove()
     {
         $this->property->expects($this->any())

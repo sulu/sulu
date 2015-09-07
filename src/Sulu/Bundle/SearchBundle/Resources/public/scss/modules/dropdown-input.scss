@@ -29,7 +29,6 @@
 .dropdown-input-trigger-container {
     width: 25%;
     background-color: #28B6CA;
-    color: #fff;
     vertical-align: middle;
     border-radius: 2px 0 0 2px;
     cursor: pointer;
@@ -38,6 +37,7 @@
         font-size: 14px;
         line-height: 40px;
         background-color: transparent;
+        color: $white;
 
         .toggle-icon {
             line-height: 40px;
@@ -45,7 +45,7 @@
     }
 
     .dropdown-list {
-        color: #000;
+        color: $black;
     }
 }
 
@@ -75,6 +75,6 @@
     top: 13px;
     right: 45px;
     font-size: 16px;
-    color: #999999;
+    color: $grayLight;
     cursor: pointer;
 }

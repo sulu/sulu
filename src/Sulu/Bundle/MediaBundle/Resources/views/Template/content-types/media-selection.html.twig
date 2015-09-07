@@ -1,9 +1,8 @@
 <div id="{{ id|raw }}"
-     class="hide-in-sortmode"
      data-property='{{ property|json_encode }}'
      data-mapper-property="{{ property.name }}"
      data-form="true"
-     data-type="mediaSelection"
+     data-type="media-selection"
      data-type-instance-name="{{ id|raw }}"
      data-aura-types="{{ params.types.value }}"
      data-aura-display-options="{{ sulu_parameter_to_key_value(params.displayOptions.value)|json_encode }}"

@@ -17,6 +17,7 @@ define(function() {
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
             fixedWidthClass: 'fixed',
             smallFixedClass: 'small-fixed',
+            initialLoaderClass: 'initial-loader',
             maxWidthClass: 'max',
             columnSelector: '.content-column',
             noLeftSpaceClass: 'no-left-space',
@@ -164,32 +165,39 @@ define(function() {
          * Initializes the backbone router
          */
         initializeRouter: function() {
-            var AppRouter = this.sandbox.mvc.Router({
-                routes: {
-                    // Dashboard
-                    '': 'dashboard',
+            var AppRouter = this.sandbox.mvc.Router();
+            router = new AppRouter();
 
-                    // Default
-                    '*actions': 'default'
-                },
-
-                dashboard: function() {
-                    this.html('<div class="sulu-dashboard" data-aura-component="dashboard@suluadmin"/>');
-                }.bind(this),
-
-                default: function() {
-                    // We have no matching route
+            // Dashboard
+            this.sandbox.mvc.routes.push({
+                route: '',
+                callback: function() {
+                    return '<div class="sulu-dashboard" data-aura-component="dashboard@suluadmin"/>';
                 }
             });
-            router = new AppRouter();
 
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
-                    this.sandbox.mvc.Store.reset();
-                    this.beforeNavigateCleanup(route);
-                    route.callback.apply(this, arguments);
+                    this.routeCallback.call(this, route, arguments);
                 }.bind(this));
             }.bind(this));
+        },
+
+        /**
+         * Cleans up and calls the callback of a route. If it recieves content
+         * through the route-callback add it to the dom
+         * @param route {Object} backbone route
+         * @param routeArgs the arguments to pass to the route-callback
+         */
+        routeCallback: function(route, routeArgs) {
+            this.sandbox.mvc.Store.reset();
+            this.beforeNavigateCleanup(route);
+            var content = route.callback.apply(this, routeArgs);
+            if (!!content) {
+                content = this.sandbox.dom.createElement(content);
+                this.sandbox.dom.html('#content', content);
+                this.sandbox.start('#content', {reset: true});
+            }
         },
 
         /**
@@ -232,7 +240,7 @@ define(function() {
                 if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
-                    this.emitNavigationEvent({ action: event.currentTarget.attributes.href.value }, true, true);
+                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
 
@@ -243,11 +251,9 @@ define(function() {
          * Handler for the sulu.router.navigate event. Calls the backbone-router
          * @param route {String} the route to navigate to
          * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the browser-url will be updated
-         * @param noLoader {Boolean} if false no loader will be instantiated
          * @param forceReload {Boolean} force page to reload
          */
-        navigate: function(route, trigger, noLoader, forceReload) {
-
+        navigate: function(route, trigger, forceReload) {
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
@@ -258,25 +264,17 @@ define(function() {
             }
 
             // navigate
-            router.navigate(route, { trigger: trigger });
+            router.navigate(route, {trigger: trigger});
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
         },
 
         /**
          * Cleans things up before navigating
-         * @param {String} route
          */
-        beforeNavigateCleanup: function(route) {
-            this.currentRoute = route;
-
-            // hide the header
-            App.emit('sulu.header.hide');
-
-            // FIXME App.stop is used in global context; possibly there is a better solution
-            // and the stop method will be called
-            App.stop('#sulu-content-container');
-            App.stop('#content > *');
-            App.stop('#sidebar > *');
+        beforeNavigateCleanup: function() {
+            this.sandbox.stop('.sulu-header');
+            this.sandbox.stop('#content > *');
+            this.sandbox.stop('#sidebar > *');
             app.cleanUp();
         },
 
@@ -299,7 +297,7 @@ define(function() {
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.navigation.header.clicked', function(){
+            this.sandbox.on('husky.navigation.header.clicked', function() {
                 this.navigate('', true, false, false);
             }.bind(this));
 
@@ -307,11 +305,6 @@ define(function() {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
-            }.bind(this));
-
-            // content tabs event
-            this.sandbox.on('husky.tabs.content.item.select', function(event) {
-                this.emitNavigationEvent(event, true);
             }.bind(this));
 
             // content tabs event
@@ -325,6 +318,7 @@ define(function() {
 
             // select right navigation-item on navigation startup
             this.sandbox.on('husky.navigation.initialized', function() {
+                this.sandbox.dom.remove('.' + constants.initialLoaderClass);
                 if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
                     this.selectNavigationItem(this.sandbox.mvc.history.fragment);
                 }
@@ -372,6 +366,9 @@ define(function() {
         toggleShrinkColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
+            this.sandbox.dom.on($column, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function() {
+                this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
+            }.bind(this));
             if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
                 // expand
                 this.sandbox.emit('husky.navigation.show');
@@ -399,33 +396,37 @@ define(function() {
             this.sandbox.dom.addClass($column, constants.noTransitionsClass);
             // left space
             if (leftSpacing === false) {
-                this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
-            } else {
-                this.sandbox.dom.removeClass(this.$el, constants.noLeftSpaceClass);
+                this.sandbox.dom.addClass($column, constants.noLeftSpaceClass);
+            } else if (leftSpacing === true) {
+                this.sandbox.dom.removeClass($column, constants.noLeftSpaceClass);
             }
 
             // right space
             if (rightSpacing === false) {
-                this.sandbox.dom.addClass(this.$el, constants.noRightSpaceClass);
-            } else {
-                this.sandbox.dom.removeClass(this.$el, constants.noRightSpaceClass);
+                this.sandbox.dom.addClass($column, constants.noRightSpaceClass);
+            } else if (rightSpacing === true) {
+                this.sandbox.dom.removeClass($column, constants.noRightSpaceClass);
             }
 
             // top space
             if (topSpacing === false) {
-                this.sandbox.dom.addClass(this.$el, constants.noTopSpaceClass);
-            } else {
-                this.sandbox.dom.removeClass(this.$el, constants.noTopSpaceClass);
+                this.sandbox.dom.addClass($column, constants.noTopSpaceClass);
+            } else if (topSpacing === true) {
+                this.sandbox.dom.removeClass($column, constants.noTopSpaceClass);
             }
         },
 
         /**
          * Changes the width of content to fixed or to max
          * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
+         * @param reset {Boolean} iff true resets the fixed-small class
          */
-        changeWidth: function(width) {
+        changeWidth: function(width, reset) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
+            if (reset === true) {
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
+            }
             if (width === 'fixed') {
                 this.changeToFixedWidth(false);
             } else if (width === 'max') {
@@ -450,8 +451,6 @@ define(function() {
             }
             if (small === true) {
                 this.sandbox.dom.addClass($column, constants.smallFixedClass);
-            } else {
-                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
             }
         },
 
@@ -462,7 +461,6 @@ define(function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
-                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
                 this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
                 this.sandbox.dom.addClass($column, constants.maxWidthClass);
             }
@@ -508,15 +506,14 @@ define(function() {
         /**
          * Emits the router.navigate event
          * @param event
-         * @param {boolean} loader If true a loader will be displayed
          * @param {boolean} updateNavigation If true the navigation will be updated with the passed route
          */
-        emitNavigationEvent: function(event, loader, updateNavigation) {
+        emitNavigationEvent: function(event, updateNavigation) {
             if (updateNavigation === true) {
                 this.selectNavigationItem(event.action);
             }
             if (!!event.action) {
-                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload, loader);
+                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }
         }
     };

@@ -12,7 +12,12 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     return {
-        view: true,
+        layout: {
+            content: {
+                leftSpace: false,
+                rightSpace: false
+            }
+        },
 
         initialize: function() {
             this.bindCustomEvents();
@@ -29,8 +34,8 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
         },
 
@@ -244,7 +249,7 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        submit: function() {
+        submit: function(action) {
             this.sandbox.logger.log('save Model');
             var data;
 
@@ -254,7 +259,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.snippets.snippet.save', data);
+                this.sandbox.emit('sulu.snippets.snippet.save', data, action);
             }
         }
     };

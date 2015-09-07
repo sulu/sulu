@@ -9,7 +9,7 @@
 
 define([
     'mvc/collection',
-    'sulucontact/model/contact'
+    'sulucontact/models/contact'
 ], function (Collection, Contact) {
     'use strict';
 

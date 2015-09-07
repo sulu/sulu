@@ -7,13 +7,13 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
+define(['config'], function(Config) {
 
     'use strict';
 
     var bindCustomEvents = function() {
         // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
+        this.sandbox.on('sulu.toolbar.add', function() {
             this.sandbox.emit('sulu.resource.filters.new');
         }.bind(this));
 
@@ -26,15 +26,20 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         }.bind(this));
 
         // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
+        this.sandbox.on('sulu.toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.resource.filters.delete', ids);
             }.bind(this));
         }.bind(this));
+
+        // checkbox clicked
+        this.sandbox.on('husky.datagrid.number.selections', function(number) {
+            var postfix = number > 0 ? 'enable' : 'disable';
+            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+        }, this);
     };
 
     return {
-        view: true,
 
         fullSize: {
             width: true
@@ -48,8 +53,13 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
 
         header: function() {
             return {
-                title: 'resource.filter',
-                noBack: false
+                noBack: false,
+                toolbar: {
+                    buttons: {
+                        add: {},
+                        deleteSelected: {}
+                    }
+                }
             };
         },
 
@@ -68,8 +78,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'filterSearch',
-                    parentTemplate: 'default',
-                    inHeader: true
+                    template: 'default'
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
@@ -85,19 +94,10 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
         },
 
         /**
-         * Renders the grid and the header information
+         * Renders the grid
          */
         render: function() {
             this.renderGrid();
-            this.setHeaderInformation();
-        },
-
-        /**
-         * Sets header information like title and breadcrumb
-         */
-        setHeaderInformation: function() {
-            HeaderUtil.setTitle(this.sandbox, null);
-            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, null);
         }
     };
 });

@@ -46,7 +46,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'snippet/snippets/:language',
                 callback: function(language) {
-                    this.html('<div data-aura-component="snippet/list@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>');
+                    return '<div data-aura-component="snippet/list@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>';
                 }
             });
 
@@ -54,7 +54,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'snippet/snippets/:language/edit::id',
                 callback: function(language, id) {
-                    this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '"/>');
+                    return '<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '"/>';
                 }
             });
 
@@ -62,9 +62,9 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'snippet/snippets/:language/add',
                 callback: function(language) {
-                    this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>');
+                    return '<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>';
                 }
             });
         }
-    }
+    };
 });

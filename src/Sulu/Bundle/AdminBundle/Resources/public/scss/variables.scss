@@ -8,7 +8,7 @@ $grey: $grayLight;
 $transitionDuration : 0.5s;
 
 // Header
-$headerHeight: 150px;
+$headerHeight: 50px;
 $tabsHeight: 50px;
 
 
@@ -17,7 +17,7 @@ $tabsHeight: 50px;
 
 //  content size
 
-$contentFixedWidth: 900px;
+$contentFixedWidth: 920px;
 $maxContentMinWidth: 610px;
 $contentMinWidth: 510px;
 $contentFixedMediumWidth: 700px;
@@ -40,3 +40,7 @@ $sidebarMaxCollapseWidth: 340px; // if the max-sidebar is smaller than this widt
 
 // shrink animation
 $shrinkAnimationDuration: 700ms;
+
+// tabs hide animation
+$tabsHideAnimationDuration: 200ms;
+$tabsHideAnimationDelay: 150ms;

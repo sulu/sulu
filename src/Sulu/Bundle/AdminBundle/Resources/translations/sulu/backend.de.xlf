@@ -162,8 +162,8 @@
                 <source>country.germany</source>
                 <target>Deutschland</target>
             </trans-unit>
-            <trans-unit id="769a438685ade58b963d872013c70edd" resname="toolbar.delete">
-                <source>toolbar.delete</source>
+            <trans-unit id="769a438685ade58b963d872013c70edd" resname="public.delete">
+                <source>public.delete</source>
                 <target>Löschen</target>
             </trans-unit>
             <trans-unit id="b0e756e39c8e2107ac4461ba08222b46" resname="sulu.list-toolbar.import">
@@ -552,17 +552,17 @@
                 <source>sulu.upload.dropzone-desc</source>
                 <target>oder klicken um hinzuzufügen</target>
             </trans-unit>
-            <trans-unit id="2e3b70e82001f5bfc22e941e65376ee6" resname="sulu.list-toolbar.small-thumbnails">
-                <source>sulu.list-toolbar.small-thumbnails</source>
+            <trans-unit id="2e3b70e82001f5bfc22e941e65376ee6" resname="sulu.toolbar.small-thumbnails">
+                <source>sulu.toolbar.small-thumbnails</source>
                 <target>Kleine Vorschaubilder</target>
             </trans-unit>
-            <trans-unit id="8c04c5d1dbf406f6222a2c4338e26663" resname="sulu.list-toolbar.big-thumbnails">
-                <source>sulu.list-toolbar.big-thumbnails</source>
+            <trans-unit id="8c04c5d1dbf406f6222a2c4338e26663" resname="sulu.toolbar.big-thumbnails">
+                <source>sulu.toolbar.big-thumbnails</source>
                 <target>Große Vorschaubilder</target>
             </trans-unit>
-            <trans-unit id="aa005e19189f861dc79bc978a5caa663" resname="sulu.list-toolbar.table">
-                <source>sulu.list-toolbar.table</source>
-                <target>Tabelle</target>
+            <trans-unit id="aa005e19189f861dc79bc978a5caa663" resname="sulu.toolbar.table">
+                <source>sulu.toolbar.table</source>
+                <target>Liste</target>
             </trans-unit>
             <trans-unit id="b7c8c053e39fcd8e8a627e91dd6b650e" resname="public.disabled">
                 <source>public.disabled</source>
@@ -863,6 +863,46 @@
             <trans-unit id="b504f52dde2354cc4132c0b4820e28adc" resname="public.elements-selected">
                 <source>public.elements-selected</source>
                 <target>Elemente ausgewählt</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde2354cc4132c0b4820e28ade" resname="public.save">
+                <source>public.save</source>
+                <target>Speichern</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde2354cc4132c0b4820e22ade" resname="public.save-and-back">
+                <source>public.save-and-back</source>
+                <target>Speichern und zurück</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e22ade" resname="public.save-and-new">
+                <source>public.save-and-new</source>
+                <target>Speichern und neu</target>
+            </trans-unit>
+            <trans-unit id="b504a54dde1354cc4132c0b4820e22ade" resname="public.settings">
+                <source>public.settings</source>
+                <target>Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e22ada" resname="public.delete">
+                <source>public.delete</source>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e28ada" resname="public.delete-selected">
+                <source>public.delete-selected</source>
+                <target>Ausgewählte löschen</target>
+            </trans-unit>
+            <trans-unit id="b503a53dde1354cc4132c0b4820e28ada" resname="public.add-new">
+                <source>public.add-new</source>
+                <target>Neu hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="b500b52dde1354cc4132c0b4820e28ada" resname="public.avatar">
+                <source>public.avatar</source>
+                <target>Avatar</target>
+            </trans-unit>
+            <trans-unit id="a300b52dde1354cc4132c0b4820e28ada" resname="public.logo">
+                <source>public.logo</source>
+                <target>Logo</target>
+            </trans-unit>
+            <trans-unit id="a321c52dae1354cc4132c0b4820e28ada" resname="public.refresh">
+                <source>public.refresh</source>
+                <target>Neu laden</target>
             </trans-unit>
         </body>
     </file>

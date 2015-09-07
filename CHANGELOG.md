@@ -2,14 +2,26 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1550 [ContactBundle]   Added flat response option to accountContact collection in js 
+<<<<<<< HEAD
+    * FEATURE     #1543 [MediaBundle]     new view for collection-list
+    * ENHANCEMENT #1543 [MediaBundle]     changed front-end bundle structure with the use of services
+    * FEATURE     #1481 [ContactBundle]   titles in JS-views
+    * FEATURE     #1481 [AdminBundle]     extension-hook for loading data in JS-files
+    * FEATURE     #1476 [ContactBundle]   Avatar upload via dropzone
+    * FEATURE     #1478 [ContactBundle]   Rest-Api for media lists for contacts and accounts
+    * FEATURE     #1467 [ContactBundle]   New view for contacts- and accounts-edit
+    * FEATURE     #1431 [ContactBundle]   New view for contacts-list
+    * ENHANCEMENT #1444 [ContactBundle]   changed front-end bundle structure with the use of services
+    * ENHANCEMENT #1421 [AdminBundle]     New button-api for header and tabs
+    * ENHANCEMENT #1417 [AdminBundle]     Style upgrade for header and tabs
+    * FEATURE     #1472 [ContactBundle]   Rest-Api support for contact-avatars
+    * FEAETURE    #1503 [All]             Updated to doctrine 2.5
+    * ENHANCEMENT #1550 [ContactBundle]   Added flat response option to accountContact collection in js
     * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make it reusable by other bundles
     * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
-                                          `[field.name => order]` 
-    * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository 
+    * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository
     * BUGFIX      #1508 [AdminBundle]     Fixed bug with serializing user settings
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
-    * FEATURE     #1503 [All]             Updated to doctrine 2.5
     * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
     * FEATURE     #1529 [ContentBundle]   Added reset smart content button
     * FEATURE     #1517 [ContactBundle]   Added account DataProvider
@@ -46,6 +58,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+<<<<<<< HEAD
+=======
 * 1.0.8 (2015-08-31)
     * HOTFIX      #1539 [WebsiteBundle]  Fixed canonical tag for shadow pages
     * HOTFIX      #1537 [WebsiteBundle]  Fixed format of hreflang-tag locale
@@ -64,6 +78,7 @@ CHANGELOG for Sulu
 * 1.0.5 (2015-08-03)
     * HOTFIX      #--   [AdminBundle]    Fixed ckeditor overlay buttons for windows
 
+>>>>>>> 2ba57d68fac0116e66a8575021ef807e54d3d630
 * 1.0.4 (2015-07-28)
     * HOTFIX      #1427 [ContentBundle]  Added external link migration
     * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
@@ -108,7 +123,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle
-    * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
+    * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable.
                                          Added this functionality for the contact entity.
     * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
     * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
@@ -116,7 +131,7 @@ CHANGELOG for Sulu
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  Fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
-    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
+    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete
     * BUGFIX      #1250 [ContactBundle]  Fixed document assigment delete in contact area
     * ENHANCEMENT #1251 [SecurityBundle] Refactored PasswordResetting controller for better reusability
@@ -158,7 +173,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1088 [ContactBundle]  Moved initialization of field-descriptors before init of list-builder in
                                          accounts cget action
     * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
-    * ENHANCEMENT #1038 [MediaBundle]    Added counter for selected images; Disabled drag event for links and 
+    * ENHANCEMENT #1038 [MediaBundle]    Added counter for selected images; Disabled drag event for links and
                                          images inside the overlay; Store media assignement display options in user settings
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
     * BUGFIX      #1089 [Media/Search]   Do not set image URL for non-images in the search results
@@ -182,7 +197,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen
     * BUGFIX      #--   [AdminBundle]    Fixed login for IE see [commit](https://github.com/sulu-io/sulu/commit/a50e48aa83d360b93b5db0a63300c2799d3bc8ab)
     * BUGFIX      #1045 [MediaBundle]    Fixed upload new media version
-    * FEATURE     #496  [ContentBundle]  SmartContent: change default tag filter to OR operation and user can decide to use OR or AND    
+    * FEATURE     #496  [ContentBundle]  SmartContent: change default tag filter to OR operation and user can decide to use OR or AND
     * ENHANCEMENT #1039 [ContactBundle]  Auto select new title or positions in contact form
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
@@ -191,7 +206,7 @@ CHANGELOG for Sulu
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
     * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay
-    * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests 
+    * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests
     * BUGFIX      #1030 [WebsiteBundle]  Fixed exception-controller to resolve parameters like website-controller
     * FEATURE     #1030 [WebsiteBundle]  Added configuration for error templates to webspace-config
     * BUGFIX      #1044 [ContentBundle]  Update CKEditor parameters to snake_case and allow dynamic override of ckeditor config
@@ -359,7 +374,7 @@ CHANGELOG for Sulu
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
-    * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener) 
+    * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener)
 
 * 0.13.1 (2014-12-11)
     * HOTFIX      #--- [AdminBundle]    Added missing frontend (css/js) build

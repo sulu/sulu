@@ -18,7 +18,7 @@ define([], function() {
 
         return {
 
-            view: true,
+            layout: {},
 
             templates: ['/admin/translate/template/package/form'],
 

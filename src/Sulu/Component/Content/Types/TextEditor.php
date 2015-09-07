@@ -48,8 +48,8 @@ class TextEditor extends SimpleContentType
         return [
             'table' => new PropertyParameter('table', true),
             'link' => new PropertyParameter('link', true),
-            'height' => new PropertyParameter('height', 300),
-            'max_height' => new PropertyParameter('max_height', 500),
+            'height' => new PropertyParameter('height', 65),
+            'max_height' => new PropertyParameter('max_height', 300),
             'paste_from_word' => new PropertyParameter('paste_from_word', true),
         ];
     }

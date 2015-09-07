@@ -12,7 +12,6 @@
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {Integer} [options.visibleItems] maximum of items visible at the start and in the view-less state
  * @params {String} [options.dataSource] default value for the data-source
  * @params {Boolean} [options.includeSubFolders] if true sub folders are included right from the beginning
  * @params {Array} [options.categories] array of categories with id and name property
@@ -82,7 +81,6 @@ define([], function() {
     'use strict';
 
     var defaults = {
-            visibleItems: 5,
             dataSource: '',
             subFoldersDisabled: false,
             categories: [],
@@ -139,8 +137,6 @@ define([], function() {
             headerSelector: '.header',
             contentSelector: '.content',
             sourceSelector: '.source',
-            footerClass: 'footer',
-            viewTogglerClass: 'view-toggler',
             buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
             categoryDDClass: 'category-dropdown',
@@ -152,14 +148,22 @@ define([], function() {
             limitToSelector: '.limit-to',
             dataSourceSelector: '.data-source',
             contentListClass: 'items-list',
-            loaderClass: 'loader'
+            loaderClass: 'loader',
+            noContentClass: 'no-content',
+            isLoadingClass: 'is-loading'
         },
 
         /** templates for component */
         templates = {
             skeleton: [
                 '<div class="white-box smart-content-container form-element">',
-                '<div class="header"></div>',
+                '<div class="header">',
+                '   <span class="selected-counter">',
+                '       <span class="num">0</span>',
+                '       <span><%= selectedCounterStr %></span>',
+                '   </span>',
+                '   <span class="no-content-message"><%= noContentStr %></span>',
+                '</div>',
                 '<div class="content"></div>',
                 '</div>'
             ].join(''),
@@ -170,12 +174,6 @@ define([], function() {
                 '<span class="val"><%= val %></span>',
                 '</span>',
                 '</span>'
-            ].join(''),
-            noContent: [
-                '<div class="no-content">',
-                '<span class="fa-coffee icon"></span>',
-                '<div class="text"><%= noContentStr %></div>',
-                '</div>'
             ].join(''),
             contentItem: [
                 '<li data-id="<%= dataId %>">',
@@ -228,7 +226,7 @@ define([], function() {
                 tagOperator: [
                     '<div class="item-half<%= disabled %>">',
                     '<span class="desc">&nbsp;</span>',
-                        '<div class="' + constants.tagOperatorClass + '"></div>',
+                    '<div class="' + constants.tagOperatorClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -242,7 +240,7 @@ define([], function() {
                 sortMethod: [
                     '<div class="item-half">',
                     '<span class="desc">&nbsp;</span>',
-                        '<div class="' + constants.sortMethodDDClass + '"></div>',
+                    '<div class="' + constants.sortMethodDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -363,6 +361,7 @@ define([], function() {
             this.setVariables();
             this.render();
             this.renderStartContent();
+            this.startLoader();
             this.startOverlay();
             this.bindEvents();
             this.setURI();
@@ -380,9 +379,8 @@ define([], function() {
             this.$container = null;
             this.$header = null;
             this.$content = null;
-            this.$footer = null;
+            this.$loader = null;
             this.$button = null;
-            this.itemsVisible = this.options.visibleItems;
             this.items = [];
             this.URI = {
                 data: {},
@@ -393,6 +391,7 @@ define([], function() {
             this.initOverlayData();
 
             this.translations = {
+                elementsSelected: 'public.elements-selected',
                 noContentFound: 'smart-content.nocontent-found',
                 noContentSelected: 'smart-content.nocontent-selected',
                 visible: 'smart-content.visible',
@@ -466,7 +465,10 @@ define([], function() {
          * Inserts the skeleton-template and finds the main-container
          */
         renderContainer: function() {
-            this.sandbox.dom.html(this.$el, templates.skeleton);
+            this.sandbox.dom.html(this.$el, this.sandbox.util.template(templates.skeleton, {
+                noContentStr: this.sandbox.translate(this.translations.noContentSelected),
+                selectedCounterStr: this.sandbox.translate(this.translations.elementsSelected)
+            }));
             this.$container = this.sandbox.dom.find(constants.containerSelector, this.$el);
         },
 
@@ -511,12 +513,12 @@ define([], function() {
         },
 
         /**
-         * Renders and appends the toggle-button
+         * Renders and appends the overlay open button
          */
         renderButton: function() {
-            this.$button = this.sandbox.dom.createElement('<span class="icon right border"/>');
+            this.$button = this.sandbox.dom.createElement('<span class="icon left action"/>');
             this.sandbox.dom.prependClass(this.$button, constants.buttonIcon);
-            this.sandbox.dom.append(this.$header, this.$button);
+            this.sandbox.dom.prepend(this.$header, this.$button);
         },
 
         /**
@@ -530,33 +532,29 @@ define([], function() {
         },
 
         /**
-         * Renders the content decides whether the footer is rendered or not
+         * Renders the content
          */
         renderContent: function() {
             this.initContentContainer();
 
             if (this.items.length !== 0) {
+                this.$container.removeClass(constants.noContentClass);
 
-                var ul, i = -1, length = this.items.length;
-                ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
+                var ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
 
-                //loop stops if no more items are left or if number of rendered items matches itemsVisible
-                for (; ++i < length && i < this.itemsVisible;) {
+                this.sandbox.util.foreach(this.items, function(item, index) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
-                        dataId: this.items[i][this.options.idKey],
-                        value: this.items[i][this.options.titleKey],
-                        num: (i + 1)
+                        dataId: item[this.options.idKey],
+                        value: item[this.options.titleKey],
+                        num: (index + 1)
                     }));
-                }
+                }.bind(this));
 
-                this.sandbox.dom.html(this.$content, ul);
-                this.renderFooter();
+                this.sandbox.dom.append(this.$content, ul);
             } else {
-                //render no-content-template and detach the footer
-                this.sandbox.dom.html(this.$content, _.template(templates.noContent)({
-                    noContentStr: this.sandbox.translate(this.translations.noContentSelected)
-                }));
-                this.detachFooter();
+                this.$content.empty();
+                this.$header.find('.no-content-message').html(this.sandbox.translate(this.translations.noContentFound));
+                this.$container.addClass(constants.noContentClass);
             }
         },
 
@@ -566,59 +564,7 @@ define([], function() {
          */
         renderStartContent: function() {
             this.initContentContainer();
-
-            this.sandbox.dom.html(this.$content, _.template(templates.noContent)({
-                noContentStr: this.sandbox.translate(this.translations.noContentSelected)
-            }));
-        },
-
-        /**
-         * Renders the footer and calls a method to bind the events for itself
-         */
-        renderFooter: function() {
-            this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
-
-            if (this.$footer === null) {
-                this.$footer = this.sandbox.dom.createElement('<div/>');
-                this.sandbox.dom.addClass(this.$footer, constants.footerClass);
-            }
-
-            this.sandbox.dom.html(this.$footer, [
-                '<span>',
-                '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.translations.of), ' ',
-                '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.translations.visible),
-                '</span>'
-            ].join(''));
-
-            this.appendViewToggler();
-            this.sandbox.dom.append(this.$container, this.$footer);
-            this.bindFooterEvents();
-        },
-
-        /**
-         * Appends the view-toggler to the footer
-         */
-        appendViewToggler: function() {
-            if (this.itemsVisible < this.items.length) {
-                this.sandbox.dom.append(
-                    this.$footer,
-                    '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewAll) + ')</span>'
-                );
-            } else if (this.items.length > this.options.visibleItems) {
-                this.sandbox.dom.append(
-                    this.$footer,
-                    '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewLess) + ')</span>'
-                );
-            }
-        },
-
-        /**
-         * Removes the footer
-         */
-        detachFooter: function() {
-            if (this.$footer !== null) {
-                this.sandbox.dom.remove(this.$footer);
-            }
+            this.$container.addClass(constants.noContentClass);
         },
 
         /**
@@ -656,50 +602,22 @@ define([], function() {
         },
 
         /**
-         * Binds footer events
-         */
-        bindFooterEvents: function() {
-            this.sandbox.dom.on(
-                this.sandbox.dom.find('.' + constants.viewTogglerClass, this.$footer),
-                'click',
-                function() {
-                    this.toggleView();
-                }.bind(this)
-            );
-        },
-
-        /**
          * Starts the loader component
          */
         startLoader: function() {
-            this.detachFooter();
-
-            var loaderContainer = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
-            this.sandbox.dom.html(this.$content, loaderContainer);
+            this.$loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
+            this.sandbox.dom.append(this.$header, this.$loader);
 
             this.sandbox.start([
                 {
                     name: 'loader@husky',
                     options: {
-                        el: loaderContainer,
-                        size: '100px',
-                        color: '#e4e4e4'
+                        el: this.$loader,
+                        size: '20px',
+                        color: '#999999'
                     }
                 }
             ]);
-        },
-
-        /**
-         * Changes the itemsVisible property and calls the render content method
-         * (more or less items are visible)
-         */
-        toggleView: function() {
-            if (this.itemsVisible < this.items.length) {
-                this.itemsVisible = this.items.length;
-            } else {
-                this.itemsVisible = this.options.visibleItems;
-            }
-            this.renderContent();
         },
 
         /**
@@ -927,16 +845,16 @@ define([], function() {
                 },
                 {
                     name: 'select@husky',
-                        options: {
-                            el: this.sandbox.dom.find('.' + constants.tagOperatorClass, this.$overlayContent),
-                            instanceName: this.options.instanceName + constants.tagOperatorClass,
-                            value: 'name',
-                            data: [
-                                {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
-                                {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
-                            ],
-                            preSelectedElements: [operators[this.options.preSelectedTagOperator]],
-                            disabled: this.overlayDisabled.tags
+                    options: {
+                        el: this.sandbox.dom.find('.' + constants.tagOperatorClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.tagOperatorClass,
+                        value: 'name',
+                        data: [
+                            {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
+                            {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
+                        ],
+                        preSelectedElements: [operators[this.options.preSelectedTagOperator]],
+                        disabled: this.overlayDisabled.tags
                     }
                 },
                 {
@@ -1031,18 +949,21 @@ define([], function() {
                 }
 
                 this.sandbox.emit(DATA_REQUEST.call(this));
-                this.startLoader();
+                this.$find('.' + constants.contentListClass).empty();
+                this.$container.addClass(constants.isLoadingClass);
                 this.sandbox.util.ajax({
                     method: 'GET',
                     url: this.URI.str,
                     data: this.URI.data,
 
                     success: function(data) {
-                        if (!!this.options.has.datasource) {
+                        this.$container.removeClass(constants.isLoadingClass);
+                        if (!!this.options.has.datasource && !!data[this.options.datasourceKey]) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
                             this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
                         }
                         this.items = data._embedded[this.options.resultKey];
+                        this.updateSelectedCounter(this.items.length);
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),
 
@@ -1051,6 +972,14 @@ define([], function() {
                     }.bind(this)
                 });
             }
+        },
+
+        /**
+         * Writes a passed number into the select-counter dom element
+         * @param num
+         */
+        updateSelectedCounter: function(num) {
+            this.$header.find('.selected-counter .num').html(num);
         },
 
         /**
@@ -1136,8 +1065,7 @@ define([], function() {
         setElementData: function(newData) {
             var data = this.sandbox.util.extend(true, {}, newData);
             this.sandbox.dom.data(this.$el, this.options.elementDataName, data);
-        }
-        ,
+        },
 
         /**
          * Resets content.
