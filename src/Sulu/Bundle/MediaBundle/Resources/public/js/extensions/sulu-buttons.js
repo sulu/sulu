@@ -27,7 +27,7 @@
                 };
 
                 var moveCollection = Husky.sulu.buttons.getApiButton('move');
-                moveCollection.title = 'sulu.header.move-collection';
+                moveCollection.title = 'sulu.collection.move';
                 moveCollection.icon = 'arrows';
                 moveCollection.callback = function() {
                     Husky.emit('sulu.toolbar.move-collection');

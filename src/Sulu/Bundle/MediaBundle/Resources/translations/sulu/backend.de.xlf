@@ -202,10 +202,6 @@
                 <source>sulu.header.delete-collection</source>
                 <target>Kollektion löschen</target>
             </trans-unit>
-            <trans-unit id="243d8846l295h52633778k2169f22407" resname="sulu.header.move-collection">
-                <source>sulu.header.move-collection</source>
-                <target>Kollektion verschieben</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>

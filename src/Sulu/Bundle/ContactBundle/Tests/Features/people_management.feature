@@ -20,9 +20,7 @@ Feature: Manage people
         And I clear and fill in "first-name" with "John"
         And I clear and fill in "last-name" with "Smith"
         When I click the save icon
-        # TODO: Then I expect a success notification to appear
-        # See: https://github.com/sulu-cmf/sulu/issues/708
-        And I wait for the ajax request
+        Then I expect a success notification to appear
         Then the contact "John" "Smith" should exist
 
 
@@ -36,9 +34,7 @@ Feature: Manage people
         When I click delete from the drop down
         And I expect a confirmation dialog to appear
         And I confirm
-        # TODO: Then I expect a success notification to appear
-        # See: https://github.com/sulu-cmf/sulu/issues/708
-        And I wait for the ajax request
+        Then I expect a success notification to appear
         Then the contact "Daniel" "Leech" should not exist
 
     Scenario: Create a person
@@ -53,8 +49,5 @@ Feature: Manage people
         And I fill in husky field "email" with "jane@doe.com"
         And I select "Mrs." from the husky "form-of-address"
         When I click the save icon
-        # We should wait for the notification, not the AJAX request
-        And I wait for the ajax request
-        # TODO: Notification does not work
-        # See: https://github.com/sulu-cmf/sulu/issues/708
+        Then I expect a success notification to appear
         Then the contact "Jane" "Doe" should exist

@@ -41169,6 +41169,14 @@ define('__component__$ckeditor@husky',[], function() {
         eventNamespace = 'husky.ckeditor.',
 
         /**
+         * @event husky.ckeditor.initialized
+         * @description emitted when the component is fully initialized
+         */
+        INITIALIZED = function() {
+            return eventNamespace + (this.options.instanceName !== null ? this.options.instanceName + '.' : '') + 'initialized';
+        },
+
+        /**
          * @event husky.ckeditor.changed
          * @description the component has loaded everything successfully and will be rendered
          */
@@ -41301,6 +41309,7 @@ define('__component__$ckeditor@husky',[], function() {
             this.editor.on('instanceReady', function() {
                 // bind class to editor
                 this.sandbox.dom.addClass(this.sandbox.dom.find('.cke', this.sandbox.dom.parent(this.$el)), 'form-element');
+                this.sandbox.emit(INITIALIZED.call(this));
             }.bind(this));
 
             this.editor.on('blur', function() {
@@ -41308,7 +41317,6 @@ define('__component__$ckeditor@husky',[], function() {
             }.bind(this));
 
             this.sandbox.on(START.call(this), this.startEditor.bind(this));
-
             this.sandbox.on(DESTROY.call(this), this.destroyEditor.bind(this));
         },
 
@@ -42354,7 +42362,10 @@ define('__component__$overlay@husky',[], function() {
             if (!!event && this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
                 return;
             }
-            !!event && this.sandbox.dom.preventDefault(event);
+            if (!!event) {
+                this.sandbox.dom.preventDefault(event);
+                this.sandbox.dom.stopPropagation(event);
+            }
 
             if (this.executeCallback(
                     this.slides[this.activeSlide].okCallback,
@@ -43826,6 +43837,10 @@ define('__component__$input@husky',[], function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', function() {
+                this.sandbox.dom.focus(this.input.$input);
+            }.bind(this));
+
+            this.sandbox.dom.on(this.input.$input, 'click', function() {
                 this.sandbox.dom.focus(this.input.$input);
             }.bind(this));
 

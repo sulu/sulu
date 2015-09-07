@@ -71,6 +71,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
             this.sandbox.once('husky.overlay.add-collection.opened', function() {
                 this.sandbox.start(constants.newFormSelector);
                 this.sandbox.form.create(constants.newFormSelector);
+                $(constants.newFormSelector + ' input').first().focus();
             }.bind(this));
 
             this.sandbox.start([

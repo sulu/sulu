@@ -78,6 +78,7 @@ define([
                 this.sandbox.start(constants.editFormSelector);
                 this.sandbox.form.create(constants.editFormSelector);
                 this.sandbox.form.setData(constants.editFormSelector, this.data);
+                $(constants.editFormSelector + ' input').first().focus();
 
                 this.sandbox.once('husky.overlay.edit-collection.language-changed', function(locale) {
                     this.languageChanged(locale);

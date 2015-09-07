@@ -26,7 +26,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectASuccessNotificationToAppear()
     {
-        $this->waitForSelectorAndAssert('.husky-label-success', BaseContext::LONG_WAIT_TIME);
+        $this->waitForSelectorAndAssert('.husky-label-success-icon', BaseContext::LONG_WAIT_TIME);
     }
 
     /**
@@ -109,6 +109,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheAddIcon()
     {
         $this->clickSelector('.fa-plus-circle');
+    }
+
+    /**
+     * @Then I click the action icon
+     */
+    public function iClickOnTheActionIcon()
+    {
+        $this->clickSelector('.action');
     }
 
     /**
@@ -284,6 +292,14 @@ EOT;
     public function iClickTheColumnNavigationItem($itemTitle)
     {
         $this->clickByTitle('.column-navigation .item-text', $itemTitle);
+    }
+
+    /**
+     * @Then I click the toolbar button :itemTitle
+     */
+    public function iClickTheToolbarButton($itemTitle)
+    {
+        $this->clickByTitle('li.toolbar-item', $itemTitle);
     }
 
     /**

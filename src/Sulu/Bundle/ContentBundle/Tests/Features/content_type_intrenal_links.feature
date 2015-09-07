@@ -29,7 +29,7 @@ Feature: Internal links content type
     Scenario: Internal links select
         Given I am editing a page of type "internal_links_page"
         And I expect the aura component "links" to appear
-        And I click the add icon
+        And I click the action icon
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.links.loaded" event
         When I click the column navigation item "sulu.io"
@@ -37,6 +37,5 @@ Feature: Internal links content type
         And I double click the column navigation item "Articles"
         And I click the tick button
         And I should see "Articles"
-        And I should see "1 of 1 visible"
         And I click the save icon
         Then I expect a success notification to appear
