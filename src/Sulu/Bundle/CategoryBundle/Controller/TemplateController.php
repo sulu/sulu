@@ -24,6 +24,7 @@ class TemplateController extends Controller
     {
         return $this->render('SuluCategoryBundle:Template:category.list.html.twig');
     }
+
     /**
      * Returns Template for the details-tab in the category-form.
      *

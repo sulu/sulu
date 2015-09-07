@@ -741,6 +741,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
+
     private function checkArguments(Request $request)
     {
         if ($request->get('firstName') == null) {

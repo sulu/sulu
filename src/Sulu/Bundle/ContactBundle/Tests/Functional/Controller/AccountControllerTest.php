@@ -1464,8 +1464,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(3, $response->total);
     }
 
-    /*
-     * test if deleteinfo returns correct data
+    /**
+     * Test if deleteinfo returns correct data.
      */
     public function testMultipleDeleteInfo()
     {
@@ -1525,8 +1525,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->numChildren);
     }
 
-    /*
-     * test if deleteinfo returns correct data
+    /**
+     * Test if deleteinfo returns correct data.
      */
     public function testGetDeleteInfoById()
     {
@@ -1570,8 +1570,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->numChildren);
     }
 
-    /*
-     * test if delete info returns right isAllowed, when there is a superaccount
+    /**
+     * Test if delete info returns right isAllowed, when there is a superaccount.
      */
     public function testGetDeletInfoByIdWithSuperAccount()
     {
