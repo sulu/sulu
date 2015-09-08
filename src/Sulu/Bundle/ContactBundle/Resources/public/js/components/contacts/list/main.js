@@ -127,6 +127,9 @@ define([
                 actionCallback: actionCallback.bind(this),
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                 viewOptions: {
+                    table: {
+                        actionIconColumn: 'firstName'
+                    },
                     'decorators/cards': {
                         fields: {
                             picture: 'avatar',
