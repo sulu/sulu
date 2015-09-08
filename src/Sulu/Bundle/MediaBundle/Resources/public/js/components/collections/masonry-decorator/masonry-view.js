@@ -347,7 +347,7 @@ define(function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.body', 'click.masonry');
+            this.sandbox.dom.off('body', 'click.masonry');
             this.sandbox.masonry.destroy('#' + constants.masonryGridId);
             this.sandbox.dom.remove(this.$el);
         },

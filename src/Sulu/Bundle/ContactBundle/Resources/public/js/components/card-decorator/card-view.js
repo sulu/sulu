@@ -144,7 +144,7 @@ define(function() {
 
             this.bindGeneralDomEvents();
             if (this.data.total > 0) {
-                this.renderItems(this.data.embedded);
+                this.renderRecords(this.data.embedded);
             } else {
                 this.renderEmptyIndicator();
             }
@@ -157,7 +157,7 @@ define(function() {
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
                 this.sandbox.dom.on('body', 'click.cards', function() {
-                    this.unselectAllItems();
+                    this.deselectAllRecords();
                 }.bind(this));
             }
         },
@@ -166,7 +166,7 @@ define(function() {
          * Parses the data and passes it item by item to a render function
          * @param items {Array} array with items to render
          */
-        renderItems: function(items) {
+        renderRecords: function(items) {
             this.removeEmptyIndicator();
             this.sandbox.util.foreach(items, function(record) {
                 var id, picture, title, firstInfoRow, secondInfoRow;
@@ -201,13 +201,12 @@ define(function() {
         },
 
         /**
-         * Renders the actual contact item
-         * @param id {String|Number} the identifier of the data record
-         * @param imgSrc {String} the thumbnail src of the data record
-         * @param imgAlt {String} the thumbnail alt tag of the data record
-         * @param title {String} the title of the data record
-         * @param description {String} the thumbnail description to render
-         * @param record {Object} the original data record
+         * Renders a card-grid item with the given properties
+         * @param id
+         * @param picture
+         * @param title
+         * @param firstInfoRow
+         * @param secondInfoRow
          */
         renderItem: function(id, picture, title, firstInfoRow, secondInfoRow) {
             this.$items[id] = this.sandbox.dom.createElement(
@@ -231,7 +230,7 @@ define(function() {
             }
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
-                this.selectItem(id);
+                this.selectRecord(id);
             }
 
             this.sandbox.dom.append(this.$el, this.$items[id]);
@@ -259,15 +258,23 @@ define(function() {
         },
 
         /**
+         * Takes an object with options and extends the current ones
+         * @param options {Object} new options to merge to the current ones
+         */
+        extendOptions: function(options) {
+            this.options = this.sandbox.util.extend(true, {}, this.options, options);
+        },
+
+        /**
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.body', 'click.cards');
+            this.sandbox.dom.off('body', 'click.cards');
             this.sandbox.dom.remove(this.$el);
         },
 
         /**
-         * Binds Dom-Events for a thumbnail
+         * Binds Dom-Events for a card-item
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindItemDomEvents: function(id) {
@@ -288,9 +295,9 @@ define(function() {
          */
         toggleItemSelected: function(id) {
             if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
-                this.unselectItem(id);
+                this.deselectRecord(id);
             } else {
-                this.selectItem(id);
+                this.selectRecord(id);
             }
         },
 
@@ -298,7 +305,7 @@ define(function() {
          * Selects an item with a given id
          * @param id {Number|String} the id of the item
          */
-        selectItem: function(id) {
+        selectRecord: function(id) {
             this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
             if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
@@ -310,7 +317,7 @@ define(function() {
          * Unselects an item with a given id
          * @param id {Number|String} the id of the item
          */
-        unselectItem: function(id) {
+        deselectRecord: function(id) {
             this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
             if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
@@ -324,7 +331,7 @@ define(function() {
          * @public
          */
         addRecord: function(record) {
-            this.renderItems([record]);
+            this.renderRecords([record]);
         },
 
         /**
@@ -344,9 +351,9 @@ define(function() {
         /**
          * Unselects all card items
          */
-        unselectAllItems: function() {
+        deselectAllRecords: function() {
             this.sandbox.util.each(this.$items, function(id) {
-                this.unselectItem(Number(id));
+                this.deselectRecord(Number(id));
             }.bind(this));
         }
     };
