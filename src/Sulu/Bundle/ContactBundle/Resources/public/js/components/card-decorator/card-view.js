@@ -39,8 +39,8 @@ define(function() {
         },
 
         constants = {
-            containerClass: 'card-grid',
-            emptyListClass: 'empty-list',
+            cardGridClass: 'card-grid',
+            emptyIndicatorClass: 'empty-list',
             selectedClass: 'selected',
             actionNavigatorClass: 'action-navigator',
 
@@ -73,7 +73,7 @@ define(function() {
                 '</div>'
             ].join(''),
             emptyIndicator: [
-                '<div class="' + constants.emptyListClass + '">',
+                '<div class="' + constants.emptyIndicatorClass + '">',
                 '   <div class="fa-coffee icon"></div>',
                 '   <span><%= text %></span>',
                 '</div>'
@@ -146,7 +146,6 @@ define(function() {
          */
         setVariables: function() {
             this.rendered = false;
-            this.data = null;
             this.$el = null;
 
             // global array to store the dom elements
@@ -159,17 +158,43 @@ define(function() {
          * @param $container dom-element to render datagrid in
          */
         render: function(data, $container) {
-            this.data = data;
-            this.$el = this.sandbox.dom.createElement('<div class="' + constants.containerClass + '"/>');
-            this.sandbox.dom.append($container, this.$el);
-
+            this.renderCardContainer($container);
             this.bindGeneralDomEvents();
-            if (this.data.total > 0) {
-                this.renderRecords(this.data.embedded);
-            } else {
-                this.renderEmptyIndicator();
-            }
+
+            this.renderRecords(data.embedded);
             this.rendered = true;
+        },
+
+        /**
+         * Render the card-container into the given dom element
+         * The card-container contains the empty-list-indicator and the card-grid
+         * @param $container
+         */
+        renderCardContainer: function($container) {
+            this.$el = this.sandbox.dom.createElement('<div class="card-grid-container"/>');
+
+            // render empty indicator
+            var $empty = this.sandbox.util.template(templates.emptyIndicator, {
+                text: this.sandbox.translate(this.options.emptyListTranslation)
+            });
+            this.sandbox.dom.append(this.$el, $empty);
+
+            // render card-grid
+            var $grid = this.sandbox.dom.createElement('<div class="' + constants.cardGridClass + '"/>');
+            this.sandbox.dom.append(this.$el, $grid);
+
+            this.sandbox.dom.append($container, this.$el);
+        },
+
+        /**
+         * Show the empty-list-indicator if datagrid contains no data, else hide it
+         */
+        updateEmptyIndicatorVisibility: function() {
+            if (!!this.datagrid.data.embedded && this.datagrid.data.embedded.length > 0) {
+                this.sandbox.dom.hide('.' + constants.emptyIndicatorClass);
+            } else {
+                this.sandbox.dom.show('.' + constants.emptyIndicatorClass);
+            }
         },
 
         /**
@@ -188,7 +213,7 @@ define(function() {
          * @param items {Array} array with items to render
          */
         renderRecords: function(items) {
-            this.removeEmptyIndicator();
+            this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(items, function(record) {
                 var item = processContentFilters.call(this, record);
                 var id, picture, title, firstInfoRow, secondInfoRow;
@@ -203,22 +228,6 @@ define(function() {
                 // pass the found data to a render method
                 this.renderItem(id, picture, title, firstInfoRow, secondInfoRow);
             }.bind(this));
-        },
-
-        /**
-         * Renders an item which indicates that the list is empty
-         */
-        renderEmptyIndicator: function() {
-            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.emptyIndicator, {
-                text: this.sandbox.translate(this.options.emptyListTranslation)
-            }));
-        },
-
-        /**
-         * Removes the empty-indicator from the list
-         */
-        removeEmptyIndicator: function() {
-            this.$el.find('.' + constants.emptyListClass).remove();
         },
 
         /**
@@ -254,7 +263,7 @@ define(function() {
                 this.selectRecord(id);
             }
 
-            this.sandbox.dom.append(this.$el, this.$items[id]);
+            $('.' + constants.cardGridClass).append(this.$items[id]);
             this.bindItemDomEvents(id);
         },
 
@@ -364,6 +373,7 @@ define(function() {
             if (!!this.$items[recordId]) {
                 this.sandbox.dom.remove(this.$items[recordId]);
                 this.datagrid.removeRecord.call(this.datagrid, recordId);
+                this.updateEmptyIndicatorVisibility();
                 return true;
             }
             return false;
