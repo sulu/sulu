@@ -27553,6 +27553,15 @@ define('services/husky/util',[],function() {
         });
     };
 
+    /**
+     * Makes the first letter uppercase
+     * @param string
+     * @returns {string}
+     */
+    Util.prototype.capitalizeFirstLetter = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
     Util.getInstance = function() {
         if (instance == null) {
             instance = new Util();
@@ -34954,7 +34963,6 @@ define('__component__$search@husky',[], function() {
  *      - selected: the item that's selected on initialize
  *      - instanceName - enables custom events (in case of multiple tabs on one page)
  *      - preselect - either true (for url) or position / name  (see preselector for more information)
- *      - skin - string of class to add to the components element (e.g. 'overlay')
  *      - preselector:
  *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by options.fragment) - preselector itself is not going to be taken into account in this case
  *          - position: compares items position against whats defined in options.preselect
@@ -34989,7 +34997,6 @@ define('__component__$tabs@husky',[],function() {
             forceReload: false,
             callback: null,
             forceSelect: true,
-            skin: '',
             preSelectEvent: {
                 enabled: false,
                 triggerSelectItem: true
@@ -35237,9 +35244,6 @@ define('__component__$tabs@husky',[],function() {
                 $list = this.sandbox.dom.createElement('<ul/>'),
                 selectedItem = null,
                 $item = null;
-
-            //add skin class
-            this.sandbox.dom.addClass($element, this.options.skin);
 
             this.$marker = this.sandbox.dom.createElement('<div class="marker"></div>');
             this.sandbox.dom.append($element, this.$marker);
@@ -41391,29 +41395,23 @@ define('__component__$ckeditor@husky',[], function() {
  * @params {String} [options.trigger] List of events on which the overlay should be opened
  * @params {String} [options.triggerEl] Element that triggers the overlay
  * @params {String} [options.instanceName] instance name of the component
- * @params {Boolean} [options.draggable] if true overlay is draggable
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
- * @params {Boolean} [options.backdrop] if true backdrop will be shown
- * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'wide' or 'medium'
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'dropzone'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
- * @params {String} [options.backdropColor] Color of the backdrop
- * @params {Number} [options.backdropAlpha] Alpha-value of the backdrop
  * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
- * @params {Array} [options.propagateEvents] If false click-events will be stoped at the components-element
- * @params {Array} [options.verticalSpacing] defines the minimum spacing in pixel to the bottom and the top
  * @params {Null|Number} [options.left] to fix the left position of the overlay. (px)
  * @params {Null|Number} [options.top] to fix the top position of the overlay. (px)
+ * @params {Array} [options.propagateEvents] If false click-events will be stoped at the components-element
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
  * @params {String} [options.slides[].subTitle] the sub-title of the overlay
- * @params {String|Boolean} [options.slides[].closeIcon] icon class for the close button. If false no close icon will be displayed
  * @params {Function} [options.slides[].closeCallback] @deprecated Use 'cancelCallback' instead
  * @params {Function} [options.slides[].cancelCallback] callback which gets executed after the overlay gets canceled
- * @params {Function} [options.slides[].okCallback] callback which gets executed after the overlay gets submited
+ * @params {Function} [options.slides[].okCallback] callback which gets executed after the overlay gets submitted
  * @params {String|Object} [options.slides[].data] HTML or DOM-object which acts as the overlay-content
  * @params {String} [options.slides[].message] String to render as content. Used by warnings and errors
  * @params {Boolean} [options.slides[].okInactive] If true all ok-buttons start deactivated
@@ -41442,19 +41440,14 @@ define('__component__$overlay@husky',[], function() {
     var defaults = {
             trigger: 'click',
             triggerEl: null,
-            verticalSpacing: 100, //px
             instanceName: 'undefined',
-            draggable: true,
             openOnStart: false,
             removeOnClose: true,
-            backdrop: true,
             backdropClose: true,
-            backdropColor: '#000000',
             skin: '',
             supportKeyInput: true,
             propagateEvents: true,
             type: 'normal',
-            backdropAlpha: 0.5,
             cssClass: '',
             slides: [],
             top: null,
@@ -41465,7 +41458,6 @@ define('__component__$overlay@husky',[], function() {
             index: -1,
             title: '',
             subTitle: null,
-            closeIcon: 'times',
             message: '',
             closeCallback: null,
             cancelCallback: null,
@@ -41475,15 +41467,13 @@ define('__component__$overlay@husky',[], function() {
             tabs: null,
             okInactive: false,
             buttonsDefaultAlign: 'center',
-            cancelDefaultText: 'Cancel',
-            okDefaultText: 'Ok',
+            cancelDefaultText: 'public.cancel',
+            okDefaultText: 'public.ok',
             languageChanger: null,
-            cssClass: '',
-            smallHeader: false
+            cssClass: ''
         },
 
         internalSlideDefaults = {
-            $close: null,
             $el: null,
             $footer: null,
             $header: null,
@@ -41499,34 +41489,15 @@ define('__component__$overlay@husky',[], function() {
             contentSelector: '.overlay-content',
             headerSelector: '.overlay-header',
             slidesSelector: '.slides',
-            draggableClass: 'draggable',
-            backdropClass: 'husky-overlay-backdrop',
             overlayOkSelector: '.overlay-ok',
             overlayCancelSelector: '.overlay-cancel',
             overlayOtherButtonsSelector: '.overlay-button',
-            tabsClass: 'tabs',
-            languageChangerClass: 'language-changer',
-            smallHeaderClass: 'small-header'
+            tabsClass: 'overlay-tabs',
+            languageChangerClass: 'language-changer'
         },
 
         types = {
             normal: {
-                buttons: [
-                    {
-                        type: 'ok',
-                        icon: 'check',
-                        classes: 'tick',
-                        inactive: false
-                    }
-                ]
-            },
-            warning: {
-                cssClass: 'warning',
-                backdropClose: false,
-                removeOnClose: true,
-                openOnStart: true,
-                instanceName: 'warning',
-                closeIcon: false,
                 buttons: [
                     {
                         type: 'ok',
@@ -41540,18 +41511,21 @@ define('__component__$overlay@husky',[], function() {
                     }
                 ]
             },
-            error: {
-                cssClass: 'error',
-                backdropClose: false,
-                cancelDefaultText: 'Ok',
+            alert: {
+                cssClass: 'alert',
                 removeOnClose: true,
                 openOnStart: true,
-                instanceName: 'error',
-                closeIcon: false,
+                instanceName: 'alert',
                 buttons: [
                     {
+                        type: 'ok',
+                        inactive: false,
+                        align: 'right'
+                    },
+                    {
                         type: 'cancel',
-                        inactive: false
+                        inactive: false,
+                        align: 'left'
                     }
                 ]
             }
@@ -41565,7 +41539,7 @@ define('__component__$overlay@husky',[], function() {
         /** templates for component */
         templates = {
             overlaySkeleton: [
-                '<div class="husky-overlay-container <%= overflowClass %> <%= skin %> <%= cssClass %> smart-content-overlay">',
+                '<div class="husky-overlay-container <%= overflowClass %> <%= skin %> <%= cssClass %>">',
                 '   <div class="slides"></div>',
                 '</div>'
             ].join(''),
@@ -41574,7 +41548,6 @@ define('__component__$overlay@husky',[], function() {
                 '   <div class="overlay-header<% if(subTitle) { %> with-sub-title<% } %>">',
                 '       <span class="title"><%= title %></span>',
                 '       <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
-                '       <% if (!!closeIcon) { %><a class="fa-<%= closeIcon %> close-button" href="#"></a><% } %>',
                 '   </div>',
                 '   <div class="overlay-content"></div>',
                 '   <div class="overlay-footer">',
@@ -41605,8 +41578,8 @@ define('__component__$overlay@husky',[], function() {
                 '   <span class="text"><%= text %></span>',
                 '</div>'
             ].join(''),
-            backdrop: [
-                '<div class="husky-overlay-backdrop"></div>'
+            wrapper: [
+                '<div class="husky-overlay-wrapper"></div>'
             ].join(''),
             message: [
                 '<div class="message"><%= message %></div>'
@@ -41692,14 +41665,6 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * calls the resize handler of the overlay to set the position, height etc.
-         * @event husky.overlay.<instance-name>.set-position
-         */
-        SET_POSITION = function() {
-            return createEventName.call(this, 'set-position');
-        },
-
-        /**
          * emited after the language changer is changed
          * @event husky.overlay.<instance-name>.language-changed
          * @param {String} selected language
@@ -41741,10 +41706,6 @@ define('__component__$overlay@husky',[], function() {
             var type = this.options.type || defaults.type;
             // merge defaults, type defaults and options
             this.options = this.sandbox.util.extend(true, {}, defaults, types[type], this.options);
-
-            // make component element invisible (overlay and backdrop are fixed)
-            this.sandbox.dom.width(this.$el, 0);
-            this.sandbox.dom.height(this.$el, 0);
 
             this.setVariables();
             this.initSlideOptions();
@@ -41806,11 +41767,6 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.on(OPEN.call(this), this.triggerHandler.bind(this));
             this.sandbox.on(CLOSE.call(this), this.closeHandler.bind(this));
 
-            this.sandbox.on(SET_POSITION.call(this), function() {
-                this.resetResizeVariables();
-                this.resizeHandler();
-            }.bind(this));
-
             // emit language-changed-event when language dropdown gets changed
             this.sandbox.on('husky.select.' + this.options.instanceName + '.selected.item', function(localeIndex) {
                 this.sandbox.emit(LANGUAGE_CHANGED.call(this),
@@ -41866,8 +41822,7 @@ define('__component__$overlay@husky',[], function() {
                 $slides: null,
                 slides: []
             };
-            this.$backdrop = null;
-            this.dragged = false;
+            this.$wrapper = null;
             this.activeTab = null;
             this.slides = [];
             this.activeSlide = 0;
@@ -41887,11 +41842,9 @@ define('__component__$overlay@husky',[], function() {
             //only open if closed
             if (this.overlay.opened === false) {
                 this.overlay.opened = true;
-                //init backrop element
-                if (this.$backdrop === null && this.options.backdrop === true) {
-                    this.initBackdrop();
+                if (this.$wrapper == null) {
+                    this.initWrapper();
                 }
-                //if overlay-element doesn't exist initialize it
                 if (this.overlay.$el === null) {
                     this.initSkeleton();
                     this.bindOverlayEvents();
@@ -41903,33 +41856,12 @@ define('__component__$overlay@husky',[], function() {
 
                     this.sandbox.emit(INITIALIZED.call(this));
 
-                    this.insertOverlay(false);
-
                     this.overlay.$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.$el);
 
                     this.insertOverlay(true);
-                    this.setSlidesHeight();
                 } else {
                     this.insertOverlay(true);
                 }
-            }
-        },
-
-        /**
-         * Sets the height of all slides equal
-         */
-        setSlidesHeight: function() {
-            if (this.slides.length > 1) {
-                var maxHeight = -1;
-                // set width to n-width
-                this.overlay.width = this.sandbox.dom.outerWidth(this.sandbox.dom.find('.slide', this.overlay.$slides));
-                this.sandbox.dom.css(this.overlay.$slides, 'width', (this.slides.length * this.overlay.width) + 'px');
-
-                $(this.overlay.$content).each(function() {
-                    maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
-                });
-
-                this.sandbox.dom.css(this.overlay.$content, 'height', this.sandbox.dom.height(this.sandbox.dom.get(this.overlay.$content, 0)) + 'px');
             }
         },
 
@@ -41967,18 +41899,16 @@ define('__component__$overlay@husky',[], function() {
          * slide to given number
          */
         slideTo: function(slide) {
-            this.sandbox.dom.css(this.overlay.$slides, 'left', '-' + slide * this.overlay.width + 'px');
+            var width = this.sandbox.dom.outerWidth(this.sandbox.dom.find('.slide', this.overlay.$slides));
+            this.sandbox.dom.css(this.overlay.$slides, 'left', '-' + slide * width + 'px');
         },
 
         /**
-         * Initializes the Backdrop
+         * Initializes the wrapper
          */
-        initBackdrop: function() {
-            this.$backdrop = this.sandbox.dom.createElement(templates.backdrop);
-            this.sandbox.dom.css(this.$backdrop, {
-                'background-color': this.options.backdropColor
-            });
-            this.sandbox.dom.fadeTo(this.$backdrop, 0, this.options.backdropAlpha);
+        initWrapper: function() {
+            this.$wrapper = this.sandbox.dom.createElement(templates.wrapper);
+            this.$wrapper.hide();
         },
 
         /**
@@ -41988,20 +41918,13 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.emit(CLOSING.call(this));
 
             this.overlay.opened = false;
-            this.dragged = false;
-            this.collapsed = false;
-            this.overlay.$content.css('height', '');
 
             this.sandbox.emit(CLOSED.call(this));
 
             this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
-
+            this.$wrapper.hide();
             if (!this.options.removeOnClose) {
                 this.sandbox.dom.detach(this.overlay.$el);
-
-                if (this.options.backdrop === true) {
-                    this.sandbox.dom.detach(this.$backdrop);
-                }
             } else {
                 this.removeComponent();
             }
@@ -42011,17 +41934,9 @@ define('__component__$overlay@husky',[], function() {
          * Inserts the overlay-element into the DOM
          */
         insertOverlay: function(emitEvent) {
-            this.sandbox.dom.append(this.$el, this.overlay.$el);
-
-            // ensures that the overlay box fits the window form the beginning
-            this.resetResizeVariables();
-            this.resizeHandler();
-
-            this.setCoordinates();
-
-            if (this.options.backdrop === true) {
-                this.sandbox.dom.append(this.$el, this.$backdrop);
-            }
+            this.sandbox.dom.append(this.$wrapper, this.overlay.$el);
+            this.sandbox.dom.append(this.$el, this.$wrapper);
+            this.$wrapper.show();
 
             if (!!emitEvent) {
                 this.sandbox.emit(OPENED.call(this));
@@ -42066,14 +41981,12 @@ define('__component__$overlay@husky',[], function() {
 
             this.overlay.slides[slide].$el = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.slideSkeleton, {
-                    title: this.sandbox.util.cropMiddle(this.slides[slide].title, 38),
+                    title: this.sandbox.util.cropMiddle(this.slides[slide].title, 58),
                     subTitle: !!this.slides[slide].subTitle ? this.slides[slide].subTitle : null,
-                    closeIcon: this.slides[slide].closeIcon,
                     index: this.slides[slide].index,
                     cssClass: this.slides[slide].cssClass
                 })
             );
-            this.overlay.slides[slide].$close = this.sandbox.dom.find(constants.closeSelector, this.overlay.slides[slide].$el);
             this.overlay.slides[slide].$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.slides[slide].$el);
             this.overlay.slides[slide].$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.slides[slide].$el);
             this.overlay.slides[slide].$header = this.sandbox.dom.find(constants.headerSelector, this.overlay.slides[slide].$el);
@@ -42081,16 +41994,6 @@ define('__component__$overlay@husky',[], function() {
             // render a language changer into the header if configured
             if (this.slides[slide].languageChanger !== null) {
                 this.renderLanguageChanger(slide);
-            }
-
-            // add draggable class if overlay is draggable
-            if (this.options.draggable === true) {
-                this.sandbox.dom.addClass(this.overlay.slides[slide].$el, constants.draggableClass);
-            }
-
-            // add small-header class if configured
-            if (this.slides[slide].smallHeader === true) {
-                this.sandbox.dom.addClass(this.overlay.slides[slide].$header, constants.smallHeaderClass);
             }
 
             // add classes for various styling
@@ -42109,7 +42012,7 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.slides[slide].$languageChanger = this.sandbox.dom.createElement(
                 '<div class="' + constants.languageChangerClass + '"/>'
             );
-            this.sandbox.dom.append(this.overlay.slides[slide].$header, this.overlay.slides[slide].$languageChanger);
+            this.sandbox.dom.append(this.overlay.slides[slide].$content, this.overlay.slides[slide].$languageChanger);
             this.sandbox.dom.append(this.overlay.slides[slide].$languageChanger, $element);
 
             this.sandbox.start([
@@ -42119,7 +42022,6 @@ define('__component__$overlay@husky',[], function() {
                         el: $element,
                         data: this.slides[slide].languageChanger.locales,
                         preSelectedElements: [this.slides[slide].languageChanger.preSelected],
-                        skin: 'white',
                         instanceName: this.options.instanceName
                     }
                 }
@@ -42158,7 +42060,7 @@ define('__component__$overlay@husky',[], function() {
 
                 $button = this.sandbox.dom.createElement(this.sandbox.util.template(template, {
                     icon: button.icon,
-                    text: text,
+                    text: this.sandbox.translate(text),
                     buttonNumber: i,
                     classes: (inactive === true) ? classes + ' inactive gray' : classes
                 }));
@@ -42198,7 +42100,7 @@ define('__component__$overlay@husky',[], function() {
         renderTabs: function(slide) {
             this.overlay.slides[slide].tabs = [];
             this.overlay.slides[slide].$tabs = this.sandbox.dom.createElement('<div class="' + constants.tabsClass + '"/>');
-            this.sandbox.dom.append(this.overlay.slides[slide].$header, this.overlay.slides[slide].$tabs);
+            this.sandbox.dom.after(this.overlay.slides[slide].$header, this.overlay.slides[slide].$tabs);
 
             for (var i = -1, length = this.slides[slide].tabs.length; ++i < length;) {
                 this.overlay.slides[slide].tabs.push({
@@ -42255,27 +42157,14 @@ define('__component__$overlay@husky',[], function() {
          * Binds overlay events
          */
         bindOverlayEvents: function() {
-            //set current overlay in front of all other overlays
-            this.sandbox.dom.on(this.overlay.$el, 'mousedown', function() {
-                this.sandbox.dom.css(this.sandbox.dom.$('.husky-overlay-container'), {'z-index': 'auto'});
-                this.sandbox.dom.css(this.overlay.$el, {'z-index': 10000});
-            }.bind(this));
-
-            //stop propagation
             if (this.options.propagateEvents === false) {
                 this.sandbox.dom.on(this.overlay.$el, 'click', function(event) {
                     this.sandbox.dom.stopPropagation(event);
                 }.bind(this));
-                if (this.options.backdrop === true) {
-                    this.sandbox.dom.on(this.$backdrop, 'click', function(event) {
-                        this.sandbox.dom.stopPropagation(event);
-                    }.bind(this));
-                }
+                this.sandbox.dom.on(this.$wrapper, 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                }.bind(this));
             }
-
-            // close handler for close icon
-            this.sandbox.dom.on(this.overlay.$el, 'click',
-                this.closeHandler.bind(this), constants.closeSelector);
 
             // close handler for cancel buttons
             this.sandbox.dom.on(this.overlay.$el, 'click',
@@ -42289,32 +42178,11 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.dom.on(this.overlay.$el, 'click',
                 this.buttonHandler.bind(this), constants.overlayOtherButtonsSelector);
 
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
-                if (this.dragged === false && this.overlay.opened === true) {
-                    this.resizeHandler();
-                }
-            }.bind(this));
-
-            if (this.options.backdrop === true && this.options.backdropClose === true) {
-                this.sandbox.dom.on(this.$backdrop, 'click', this.closeHandler.bind(this));
-            }
-
-            if (this.options.draggable === true) {
-                this.sandbox.util.foreach(this.overlay.slides, function(slide) {
-                    this.sandbox.dom.on(slide.$header, 'mousedown', function(e) {
-                        var origin = {
-                            y: e.clientY - (this.sandbox.dom.offset(this.overlay.slides[this.activeSlide].$header).top - this.sandbox.dom.scrollTop(this.sandbox.dom.$window)),
-                            x: e.clientX - (this.sandbox.dom.offset(this.overlay.slides[this.activeSlide].$header).left - this.sandbox.dom.scrollLeft(this.sandbox.dom.$window))
-                        };
-
-                        //bind the mousemove event if mouse is down on header
-                        this.sandbox.dom.on(this.sandbox.dom.$document, 'mousemove.overlay' + this.options.instanceName, function(event) {
-                            this.draggableHandler(event, origin);
-                        }.bind(this));
-                    }.bind(this));
-                }.bind(this));
-                this.sandbox.dom.on(this.sandbox.dom.$document, 'mouseup', function() {
-                    this.sandbox.dom.off(this.sandbox.dom.$document, 'mousemove.overlay' + this.options.instanceName);
+            if (this.options.backdropClose === true) {
+                this.sandbox.dom.on(this.$wrapper, 'click', function(event) {
+                    if (event.target === this.$wrapper.get(0)) {
+                        this.closeHandler(event);
+                    }
                 }.bind(this));
             }
 
@@ -42338,10 +42206,6 @@ define('__component__$overlay@husky',[], function() {
             this.activeTab = tab;
             this.hideAllTabsElements(slide);
             this.sandbox.dom.show(tab.$el);
-            if (this.dragged === false) {
-                this.resetResizeVariables();
-                this.resizeHandler();
-            }
         },
 
         /**
@@ -42414,92 +42278,6 @@ define('__component__$overlay@husky',[], function() {
                 button.callback,
                 this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
             );
-        },
-
-        /**
-         * Handles the mousemove event for making the overlay draggable
-         * @param event {object} the event-object of the mousemove event
-         * @param origin {object} object with x and y properties which hold the starting position of the cursor
-         */
-        draggableHandler: function(event, origin) {
-            this.updateCoordinates((event.clientY - origin.y), (event.clientX - origin.x));
-            this.dragged = true;
-
-            if (this.overlay.collapsed === true) {
-                this.overlay.collapsed = false;
-            }
-        },
-
-        /**
-         * Sets all properties and variables responsible for the correct resize experience back
-         * to their initial state or re-initializes them
-         */
-        resetResizeVariables: function() {
-            this.overlay.collapsed = false;
-            // FIXME shrink does not work without that but it doesnt scroll to to each time:
-            // this.sandbox.dom.height(this.overlay.$content, '');
-            this.overlay.normalHeight = this.sandbox.dom.height(this.overlay.$el);
-            this.setSlidesHeight();
-        },
-
-        /**
-         * Handles the shrinking and enlarging of the overlay
-         * if the window gets smaller
-         */
-        resizeHandler: function() {
-            //window is getting smaller - make overlay smaller
-            if (this.sandbox.dom.height(this.sandbox.dom.$window) < this.sandbox.dom.outerHeight(this.overlay.$el) + this.options.verticalSpacing * 2) {
-                this.sandbox.dom.height(this.overlay.$content,
-                    (this.sandbox.dom.height(this.sandbox.dom.$window) - this.sandbox.dom.height(this.overlay.$el) + this.sandbox.dom.height(this.overlay.$content) - this.options.verticalSpacing * 2)
-                );
-                this.overlay.collapsed = true;
-
-                //window is getting bigger - make the overlay bigger
-            } else if (this.sandbox.dom.height(this.sandbox.dom.$window) > this.sandbox.dom.outerHeight(this.overlay.$el) + this.options.verticalSpacing * 2 &&
-                this.overlay.collapsed === true) {
-
-                //if overlay reached its beginning height - stop
-                if (this.sandbox.dom.height(this.overlay.$el) >= this.overlay.normalHeight) {
-                    this.overlay.collapsed = false;
-
-                    // else enlarge further
-                } else {
-                    this.sandbox.dom.height(this.overlay.$content,
-                        (this.sandbox.dom.height(this.sandbox.dom.$window) - this.sandbox.dom.height(this.overlay.$el) + this.sandbox.dom.height(this.overlay.$content) - this.options.verticalSpacing * 2)
-                    );
-                }
-            }
-
-            // update position
-            this.setCoordinates();
-        },
-
-        /**
-         * Positions the overlay in the middle of the screen
-         */
-        setCoordinates: function() {
-            var top, left;
-            if (!!this.options.top) {
-                top = this.options.top;
-            } else {
-                top = (this.sandbox.dom.$window.height() - this.overlay.$el.outerHeight()) / 2;
-            }
-            if (!!this.options.left) {
-                left = this.options.left;
-            } else {
-                left = (this.sandbox.dom.$window.width() - this.overlay.$el.outerWidth()) / 2;
-            }
-            this.updateCoordinates(top, left);
-        },
-
-        /**
-         * Updates the coordinates of the overlay
-         * @param top {Integer} new top of overlay
-         * @param left {Integer} new left of overlay
-         */
-        updateCoordinates: function(top, left) {
-            this.sandbox.dom.css(this.overlay.$el, {'top': top + 'px'});
-            this.sandbox.dom.css(this.overlay.$el, {'left': left + 'px'});
         },
 
         /**
@@ -51039,6 +50817,8 @@ define('husky_extensions/util',['services/husky/util'], function(Util) {
             app.core.util.arrayGetColumn = Util.arrayGetColumn;
 
             app.core.util.removeFromArray = Util.removeFromArray;
+
+            app.core.util.capitalizeFirstLetter = Util.capitalizeFirstLetter;
         }
     };
 });
