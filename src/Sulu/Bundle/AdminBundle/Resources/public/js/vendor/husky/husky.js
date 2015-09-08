@@ -44092,8 +44092,8 @@ define('husky_components/data-navigation/list-view',[], function() {
                 '       <li class="not-selectable">',
                 '           <div class="data-navigation-loader-container">',
                 '               <div class="spinner">',
-                '                   <div class="double-bounce1"></div>',
-                '                   <div class="double-bounce2"></div>',
+                '                   <div class="double-bounce1" style="background-color: rgb(204, 204, 204);"></div>',
+                '                   <div class="double-bounce2" style="background-color: rgb(204, 204, 204);"></div>',
                 '               </div>',
                 '           </div>',
                 '       </li>',
@@ -44427,7 +44427,7 @@ define('__component__$data-navigation@husky',[
                     name: 'loader@husky',
                     options: {
                         el: this.sandbox.dom.find('.loader', this.$el),
-                        hidden: true
+                        color: '#ccc'
                     }
                 }
             ]);
@@ -44471,7 +44471,7 @@ define('__component__$data-navigation@husky',[
          * @method startInfiniteScroll
          */
         startInfiniteScroll: function() {
-            this.sandbox.infiniteScroll('.iscroll', this.loadNextPage.bind(this), 50);
+            this.sandbox.infiniteScroll('.iscroll', this.loadNextPage.bind(this), 10);
         },
 
         /**
