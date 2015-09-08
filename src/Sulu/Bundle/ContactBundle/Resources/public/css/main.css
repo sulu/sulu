@@ -111,12 +111,12 @@
   width: 35px;
 }
 
-/* line 2, ../scss/modules/list.scss */
-#people-list .contact-grid, #companies-list .contact-grid {
+/* line 2, ../scss/modules/card-grid.scss */
+#people-list .card-grid, #companies-list .card-grid {
   margin: 0 -20px -30px 0;
 }
-/* line 5, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item, #companies-list .contact-grid .contact-item {
+/* line 5, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item, #companies-list .card-grid .card-item {
   width: 190px;
   height: 260px;
   margin: 0 20px 30px 0;
@@ -126,41 +126,41 @@
   vertical-align: top;
   border-radius: 3px;
 }
-/* line 18, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item:hover .item-head .head-checkbox, #companies-list .contact-grid .contact-item:hover .item-head .head-checkbox {
+/* line 18, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item:hover .item-head .head-checkbox, #companies-list .card-grid .card-item:hover .item-head .head-checkbox {
   display: block;
 }
-/* line 24, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head, #companies-list .contact-grid .contact-item .item-head {
+/* line 24, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head, #companies-list .card-grid .card-item .item-head {
   width: 100%;
   height: 190px;
   padding-top: 30px;
 }
-/* line 29, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container, #companies-list .contact-grid .contact-item .item-head .head-container {
+/* line 29, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-container, #companies-list .card-grid .card-item .item-head .head-container {
   width: 100px;
   margin: 0 auto;
   text-align: center;
 }
-/* line 34, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-image, #companies-list .contact-grid .contact-item .item-head .head-container .head-image {
+/* line 34, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-container .head-image, #companies-list .card-grid .card-item .item-head .head-container .head-image {
   height: 100px;
   overflow: hidden;
   position: relative;
   z-index: 0;
 }
-/* line 41, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-image.no-default .image-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image.no-default .image-default {
+/* line 41, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-container .head-image.no-default .image-default, #companies-list .card-grid .card-item .item-head .head-container .head-image.no-default .image-default {
   display: none;
 }
-/* line 46, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-image .image-default, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-default {
+/* line 46, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-container .head-image .image-default, #companies-list .card-grid .card-item .item-head .head-container .head-image .image-default {
   position: relative;
   font-size: 100px;
   color: #e9e9e9;
 }
-/* line 52, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-image .image-content, #companies-list .contact-grid .contact-item .item-head .head-container .head-image .image-content {
+/* line 52, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-container .head-image .image-content, #companies-list .card-grid .card-item .item-head .head-container .head-image .image-content {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -169,71 +169,67 @@
   background-repeat: no-repeat;
   background-position: center;
 }
-/* line 64, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-container .head-name, #companies-list .contact-grid .contact-item .item-head .head-container .head-name {
+/* line 64, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-container .head-name, #companies-list .card-grid .card-item .item-head .head-container .head-name {
   margin-top: 14px;
   line-height: 18px;
 }
-/* line 70, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-head .head-checkbox, #companies-list .contact-grid .contact-item .item-head .head-checkbox {
+/* line 70, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-head .head-checkbox, #companies-list .card-grid .card-item .item-head .head-checkbox {
   display: none;
   position: absolute;
   top: 15px;
   left: 15px;
   margin: 0;
 }
-/* line 80, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-info, #companies-list .contact-grid .contact-item .item-info {
+/* line 80, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-info, #companies-list .card-grid .card-item .item-info {
   width: 100%;
   height: 70px;
   padding: 15px;
   background-color: #ddd;
   border-radius: 0 0 3px 3px;
 }
-/* line 88, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-info .info-row, #companies-list .contact-grid .contact-item .item-info .info-row {
+/* line 88, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-info .info-row, #companies-list .card-grid .card-item .item-info .info-row {
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 92, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-info .info-row .info-icon, #companies-list .contact-grid .contact-item .item-info .info-row .info-icon {
+/* line 92, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-info .info-row .info-icon, #companies-list .card-grid .card-item .item-info .info-row .info-icon {
   width: 15px;
   margin-right: 8px;
   color: white;
   text-align: center;
 }
-/* line 100, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .item-info .info-row .info-text, #companies-list .contact-grid .contact-item .item-info .info-row .info-text {
+/* line 100, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .item-info .info-row .info-text, #companies-list .card-grid .card-item .item-info .info-row .info-text {
   color: #999;
   font-size: 12px;
 }
-/* line 107, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item .action-navigator, #companies-list .contact-grid .contact-item .action-navigator {
+/* line 107, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item .action-navigator, #companies-list .card-grid .card-item .action-navigator {
   cursor: pointer;
 }
-/* line 112, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item.selected .head-checkbox, #companies-list .contact-grid .contact-item.selected .head-checkbox {
+/* line 112, ../scss/modules/card-grid.scss */
+#people-list .card-grid .card-item.selected .head-checkbox, #companies-list .card-grid .card-item.selected .head-checkbox {
   display: block;
 }
-/* line 118, ../scss/modules/list.scss */
-#people-list .contact-grid .contact-item.sulu-user .head-sulubox, #companies-list .contact-grid .contact-item.sulu-user .head-sulubox {
-  display: block;
-}
-/* line 124, ../scss/modules/list.scss */
-#people-list .contact-grid .empty-list, #companies-list .contact-grid .empty-list {
+/* line 118, ../scss/modules/card-grid.scss */
+#people-list .card-grid .empty-list, #companies-list .card-grid .empty-list {
   background: none;
 }
 
-/* line 131, ../scss/modules/list.scss */
+/* line 125, ../scss/modules/card-grid.scss */
 #people-list .head-image {
   border: 1px solid #e9e9e9;
   border-radius: 50px;
 }
-/* line 135, ../scss/modules/list.scss */
+/* line 129, ../scss/modules/card-grid.scss */
 #people-list .head-image .image-default {
   top: 15px;
 }
-/* line 139, ../scss/modules/list.scss */
+/* line 133, ../scss/modules/card-grid.scss */
 #people-list .head-image .image-content {
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -241,15 +237,15 @@
   background-size: cover;
 }
 
-/* line 146, ../scss/modules/list.scss */
+/* line 140, ../scss/modules/card-grid.scss */
 #companies-list .head-image {
   border: none;
 }
-/* line 149, ../scss/modules/list.scss */
+/* line 143, ../scss/modules/card-grid.scss */
 #companies-list .head-image .image-default {
   top: 0;
 }
-/* line 153, ../scss/modules/list.scss */
+/* line 147, ../scss/modules/card-grid.scss */
 #companies-list .head-image .image-content {
   -webkit-background-size: contain;
   -moz-background-size: contain;

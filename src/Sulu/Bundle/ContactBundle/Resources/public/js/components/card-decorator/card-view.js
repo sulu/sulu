@@ -156,7 +156,7 @@ define(function() {
          */
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('.body', 'click.cards', function() {
+                this.sandbox.dom.on('body', 'click.cards', function() {
                     this.unselectAllItems();
                 }.bind(this));
             }
