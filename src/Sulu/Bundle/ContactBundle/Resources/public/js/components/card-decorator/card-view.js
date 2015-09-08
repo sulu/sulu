@@ -39,7 +39,7 @@ define(function() {
         },
 
         constants = {
-            containerClass: 'contact-grid',
+            containerClass: 'card-grid',
             emptyListClass: 'empty-list',
             selectedClass: 'selected',
             actionNavigatorClass: 'action-navigator',
@@ -50,7 +50,7 @@ define(function() {
 
         templates = {
             item: [
-                '<div class="contact-item">',
+                '<div class="card-item">',
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="head-image ' + constants.actionNavigatorClass + '">',
@@ -156,7 +156,7 @@ define(function() {
          */
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('.body', 'click.contact.list', function() {
+                this.sandbox.dom.on('.body', 'click.cards', function() {
                     this.unselectAllItems();
                 }.bind(this));
             }
@@ -262,7 +262,7 @@ define(function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.body', 'click.contact.list');
+            this.sandbox.dom.off('.body', 'click.cards');
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -342,7 +342,7 @@ define(function() {
         },
 
         /**
-         * Unselects all contact items
+         * Unselects all card items
          */
         unselectAllItems: function() {
             this.sandbox.util.each(this.$items, function(id) {

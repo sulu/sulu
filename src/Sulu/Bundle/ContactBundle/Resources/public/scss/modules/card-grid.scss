@@ -1,8 +1,8 @@
 #people-list, #companies-list {
-  .contact-grid {
+  .card-grid {
     margin: 0 -20px -30px 0; //outbalance contact-item margins
 
-    .contact-item {
+    .card-item {
       width: 190px;
       height: 260px;
       margin: 0 20px 30px 0;
@@ -110,12 +110,6 @@
 
       &.selected {
         .head-checkbox {
-          display: block;
-        }
-      }
-
-      &.sulu-user {
-        .head-sulubox {
           display: block;
         }
       }
