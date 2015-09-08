@@ -98,6 +98,27 @@ define(function() {
                 });
                 return strings.join(separator);
             }
+        },
+
+        /**
+         * Apply datagrid-content-filters on the given record column by column
+         * datagrid-content-filters are used to format the raw database-values (for example size)
+         * @param record
+         * @returns {*}
+         */
+        processContentFilters = function(record) {
+            var item = this.sandbox.util.extend(false, {}, record);
+            this.datagrid.matchings.forEach(function(matching) {
+                var argument = (matching.type === this.datagrid.types.THUMBNAILS) ? this.options.imageFormat : '';
+                item[matching.attribute] = this.datagrid.processContentFilter.call(
+                    this.datagrid,
+                    matching.attribute,
+                    item[matching.attribute],
+                    matching.type,
+                    argument
+                );
+            }.bind(this));
+            return item;
         };
 
     return {
@@ -169,15 +190,15 @@ define(function() {
         renderRecords: function(items) {
             this.removeEmptyIndicator();
             this.sandbox.util.foreach(items, function(record) {
+                var item = processContentFilters.call(this, record);
                 var id, picture, title, firstInfoRow, secondInfoRow;
 
-                id = record.id;
-                picture = (!!record[this.options.fields.picture]) ?
-                    record[this.options.fields.picture][this.options.imageFormat] : '';
+                id = item.id;
+                picture = item[this.options.fields.picture].url || '';
 
-                title = concatRecordColumns(record, this.options.fields.title, this.options.separators.title);
-                firstInfoRow = concatRecordColumns(record, this.options.fields.firstInfoRow, this.options.separators.infoRow);
-                secondInfoRow = concatRecordColumns(record, this.options.fields.secondInfoRow, this.options.separators.infoRow);
+                title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title);
+                firstInfoRow = concatRecordColumns(item, this.options.fields.firstInfoRow, this.options.separators.infoRow);
+                secondInfoRow = concatRecordColumns(item, this.options.fields.secondInfoRow, this.options.separators.infoRow);
 
                 // pass the found data to a render method
                 this.renderItem(id, picture, title, firstInfoRow, secondInfoRow);
